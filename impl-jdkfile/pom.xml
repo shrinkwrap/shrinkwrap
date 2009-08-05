@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!--
+  vi:ts=2:sw=2:expandtab:
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- Parent -->
+  <parent>
+    <groupId>org.jboss.declarchive</groupId>
+    <artifactId>jboss-declarchive-build</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <relativePath>../build/pom.xml</relativePath>
+  </parent>
+
+  <!-- Model Version -->
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Artifact Configuration -->
+  <artifactId>declarchive-impl-jdkfile</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <name>Declarchive JDK File-based Implementations</name>
+  <description>JDK File-based Implementations of the Declarchive Project</description>
+
+
+  <!-- Properties -->
+  <properties>
+
+    <!-- Versioning -->
+    <version.org.jboss.declarchive_declarchive.impl.base>0.1.0-SNAPSHOT</version.org.jboss.declarchive_declarchive.impl.base>
+    <version.org.jboss.declarchive_declarchive.spi.jdkfile>0.1.0-SNAPSHOT</version.org.jboss.declarchive_declarchive.spi.jdkfile>
+
+  </properties>
+
+  <!-- Dependencies -->
+  <dependencies>
+
+    <!-- 
+    org.jboss.declarchive    
+     -->
+    <dependency>
+      <groupId>org.jboss.declarchive</groupId>
+      <artifactId>declarchive-impl-base</artifactId>
+      <version>${version.org.jboss.declarchive_declarchive.impl.base}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.declarchive</groupId>
+      <artifactId>declarchive-spi-jdkfile</artifactId>
+      <version>${version.org.jboss.declarchive_declarchive.spi.jdkfile}</version>
+    </dependency>
+    
+    <!-- 
+    External Projects
+     -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
+  </dependencies>
+
+</project>
+

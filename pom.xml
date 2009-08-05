@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!--
+  vi:ts=2:sw=2:expandtab:
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- Parent -->
+  <parent>
+    <groupId>org.jboss</groupId>
+    <artifactId>jboss-parent</artifactId>
+    <version>4</version>
+  </parent>
+
+  <!-- Model Information -->
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Artifact Information  -->
+  <groupId>org.jboss.declarchive</groupId>
+  <artifactId>declarchive-parent</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Declarchive Aggregator</name>
+  <url>http://www.jboss.org</url>
+  <description>Declarchive Aggregator</description>
+
+  <!-- Aggregate Modules -->
+  <modules>
+    <module>api</module>
+    <module>build</module>
+    <module>impl-base</module>
+    <module>impl-jdkfile</module>
+    <module>impl-vfs</module>
+    <module>spi-jdkfile</module>
+    <module>spi-vfs</module>
+  </modules>
+
+</project>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!--
+  vi:ts=2:sw=2:expandtab:
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- Parent -->
+  <parent>
+    <groupId>org.jboss.declarchive</groupId>
+    <artifactId>jboss-declarchive-build</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <relativePath>../build/pom.xml</relativePath>
+  </parent>
+
+  <!-- Model Version -->
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Artifact Configuration -->
+  <artifactId>declarchive-spi-jdkfile</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <name>Declarchive SPI for JDK File I/O</name>
+  <description>Service Provider Contract for JDK File I/O Implementations of the Declarchive Project</description>
+
+
+  <!-- Properties -->
+  <properties>
+
+    <!-- Versioning -->
+    <version.org.jboss.declarchive_declarchive.api>0.1.0-SNAPSHOT</version.org.jboss.declarchive_declarchive.api>
+
+  </properties>
+
+  <!-- Dependencies -->
+  <dependencies>
+
+    <!-- 
+    org.jboss.declarchive    
+     -->
+    <dependency>
+      <groupId>org.jboss.declarchive</groupId>
+      <artifactId>declarchive-api</artifactId>
+      <version>${version.org.jboss.declarchive_declarchive.api}</version>
+    </dependency>
+     
+    <!-- 
+    External Projects
+     -->
+  </dependencies>
+
+</project>
+

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!--
+  vi:ts=2:sw=2:expandtab:
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- Parent -->
+  <parent>
+    <groupId>org.jboss</groupId>
+    <artifactId>jboss-parent</artifactId>
+    <version>4</version>
+  </parent>
+
+  <!-- Model Version -->
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Artifact Configuration -->
+  <groupId>org.jboss.declarchive</groupId>
+  <artifactId>declarchive-build</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <name>Declarchive Build</name>
+  <description>Declarchive Build Configuration</description>
+  <packaging>pom</packaging>
+
+  <!-- Properties -->
+  <properties>
+
+    <!-- Versioning -->
+    <version.junit_junit>4.6</version.junit_junit>
+
+  </properties>
+
+  <!-- SCM -->
+  <scm>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/common/declarchive/trunk</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/common/declarchive/trunk</developerConnection>
+    <url>http://anonsvn.jboss.org/repos/common/declarchive/trunk</url>
+  </scm>
+
+  <!--
+    Issues TODO: Update this when we have a JIRA Key <issueManagement>
+    <system>jira</system>
+    <url>http://jira.jboss.com/jira/browse/EMB</url> </issueManagement>
+  -->
+
+  <!-- Build -->
+  <build>
+
+    <plugins>
+
+      <!-- JBoss-specific Packaging -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jboss-packaging-maven-plugin</artifactId>
+        <version>2.0-beta-1</version>
+        <extensions>true</extensions>
+      </plugin>
+
+      <!-- Compiler -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <inherited>true</inherited>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+          <showDeprecation>false</showDeprecation>
+          <showWarnings>true</showWarnings>
+          <optimize>true</optimize>
+          <compilerVersion>1.6</compilerVersion>
+          <fork>true</fork>
+          <argLine>-Xmx512M</argLine>
+          <executable>${JAVA_HOME}/bin/javac</executable>
+        </configuration>
+      </plugin>
+
+      <!-- Surefire -->
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          <trimStackTrace>false</trimStackTrace>
+          <printSummary>true</printSummary>
+          <includes>
+            <include>**/*TestCase.java</include>
+            <include>**/*TestSuite.java</include>
+          </includes>
+          <forkMode>always</forkMode>
+        </configuration>
+      </plugin>
+
+      <!-- Maven Release Plugin Configuration -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <tagBase>https://svn.jboss.org/repos/common/declarchive/tags</tagBase>
+        </configuration>
+      </plugin>
+
+      <!-- Enforce Maven Environment -->
+      <plugin>
+        <artifactId>maven-enforcer-plugin
+                      </artifactId>
+        <executions>
+          <execution>
+            <id>enforce-maven-environment</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <rules>
+            <requireMavenVersion>
+              <version>[2.0.9,2.1)</version> <!-- Must be Maven 2.0.9 >= x > 2.1  -->
+            </requireMavenVersion>
+            <requireJavaVersion>
+              <version>1.6.0</version> <!-- Must be JDK6 -->
+            </requireJavaVersion>
+          </rules>
+        </configuration>
+      </plugin>
+
+    </plugins>
+
+  </build>
+
+  <!-- Dependency Management -->
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${version.junit_junit}</version>
+        <scope>test</scope>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
+</project>
+
