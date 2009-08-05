@@ -8,7 +8,7 @@
   <!-- Parent -->
   <parent>
     <groupId>org.jboss.declarchive</groupId>
-    <artifactId>jboss-declarchive-build</artifactId>
+    <artifactId>declarchive-build</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <relativePath>../build/pom.xml</relativePath>
   </parent>
@@ -60,4 +60,3 @@
   </dependencies>
 
 </project>
-
