@@ -354,9 +354,9 @@ public abstract class ArchiveBase implements Archive
       final InputStream in = connection.getInputStream();
       byte[] contents = new byte[length];
       int offset = 0;
-      while (offset < contents.length)
+      while (offset < length)
       {
-         final int readLength = contents.length - offset;
+         final int readLength = length - offset;
          int bytesRead = in.read(contents, offset, readLength);
          if (bytesRead == -1)
          {
