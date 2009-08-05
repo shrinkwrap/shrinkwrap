@@ -351,28 +351,18 @@ public abstract class ArchiveBase implements Archive
       final URLConnection connection = location.openConnection();
       final int length = connection.getContentLength();
       assert length > -1 : "Content length is not known";
-      byte contents[] = new byte[length];
       final InputStream in = connection.getInputStream();
-      int read = 0;
-      int currentLocation = 0;
-      int bytesToRead = 1024;
-      // Avoid ArrayIndexOutOfBounds by adjusting back the bytes we read in
-      if (bytesToRead + currentLocation > length)
+      byte[] contents = new byte[length];
+      int offset = 0;
+      while (offset < contents.length)
       {
-         bytesToRead = length;
-      }
-
-      // Read into the byte array
-      while ((read = (in.read(contents, currentLocation, bytesToRead))) > 0)
-      {
-         // Mark our new offset
-         currentLocation += read;
-
-         // Avoid ArrayIndexOutOfBounds
-         if (bytesToRead + currentLocation > length)
+         final int readLength = contents.length - offset;
+         int bytesRead = in.read(contents, offset, readLength);
+         if (bytesRead == -1)
          {
-            bytesToRead = length - currentLocation;
+            break; // EOF
          }
+         offset += bytesRead;
       }
 
       // Close up the stream

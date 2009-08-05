@@ -83,6 +83,7 @@ public class VfsMemoryArchiveFactoryTestCase
 
       // Make an archive
       final Archive archive = VfsMemoryArchiveFactory.createVirtualArchive("testArchive.jar");
+      archive.addClass(VfsMemoryArchiveFactory.class);
       log.info("Archive: " + archive.toString(true));
 
       // Ensure exists
