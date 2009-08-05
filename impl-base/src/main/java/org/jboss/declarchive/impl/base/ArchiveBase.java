@@ -352,26 +352,39 @@ public abstract class ArchiveBase implements Archive
       final int length = connection.getContentLength();
       assert length > -1 : "Content length is not known";
       final InputStream in = connection.getInputStream();
-      byte[] contents = new byte[length];
-      int offset = 0;
-      while (offset < length)
+      final byte[] contents;
+      try
       {
-         final int readLength = length - offset;
-         int bytesRead = in.read(contents, offset, readLength);
-         if (bytesRead == -1)
+         contents = new byte[length];
+         int offset = 0;
+         while (offset < length)
          {
-            break; // EOF
+            final int readLength = length - offset;
+            int bytesRead = in.read(contents, offset, readLength);
+            if (bytesRead == -1)
+            {
+               break; // EOF
+            }
+            offset += bytesRead;
          }
-         offset += bytesRead;
       }
+      finally
+      {
+         try
+         {
+            // Close up the stream
+            in.close();
+         }
+         catch (final IOException ignore)
+         {
 
-      // Close up the stream
-      in.close();
+         }
+      }
 
       // Return the byte array
       if (log.isLoggable(Level.FINER))
       {
-         log.log(Level.FINER, "Read " + contents.length + " bytes for: " + location);
+         log.log(Level.FINER, "Read " + length + " bytes for: " + location);
       }
       return contents;
    }
