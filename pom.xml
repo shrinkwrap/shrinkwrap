@@ -31,6 +31,7 @@
     <module>impl-base</module>
     <module>impl-jdkfile</module>
     <module>impl-vfs</module>
+    <module>spi</module>
     <module>spi-jdkfile</module>
     <module>spi-vfs</module>
   </modules>
