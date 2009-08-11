@@ -151,9 +151,8 @@ public class MemoryArchiveImpl extends VfsArchiveBase implements VfsArchive
 
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.jboss.embedded.core.incubation.virtual.impl.base.AbstractVirtualArchive#addContent(byte[], java.lang.String)
+   /**
+    * @see org.jboss.declarchive.impl.base.ArchiveBase#addContent(byte[], java.lang.String)
     */
    @Override
    protected void addContent(final byte[] content, final String location) throws IllegalArgumentException
@@ -188,6 +187,15 @@ public class MemoryArchiveImpl extends VfsArchiveBase implements VfsArchive
 
       // Add the content
       this.addContent(content, url);
+   }
+
+   /**
+    * @see org.jboss.declarchive.impl.base.ArchiveBase#getActualClass()
+    */
+   @Override
+   protected Class<VfsArchive> getActualClass()
+   {
+      return VfsArchive.class;
    }
 
 }

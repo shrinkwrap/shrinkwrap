@@ -32,7 +32,7 @@ import org.jboss.declarchive.api.Archive;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public interface FileArchive extends Archive
+public interface FileArchive extends Archive<FileArchive>
 {
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||

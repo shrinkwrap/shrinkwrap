@@ -34,7 +34,7 @@ import org.jboss.declarchive.api.Archive;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public abstract class ArchiveBase implements Archive
+public abstract class ArchiveBase<T extends Archive<?>> implements Archive<T>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -122,7 +122,7 @@ public abstract class ArchiveBase implements Archive
     * @see org.jboss.declarchive.api.Archive#addClass(java.lang.Class)
     */
    @Override
-   public Archive addClass(final Class<?> clazz) throws IllegalArgumentException
+   public T addClass(final Class<?> clazz) throws IllegalArgumentException
    {
       // Precondition check
       if (clazz == null)
@@ -148,7 +148,7 @@ public abstract class ArchiveBase implements Archive
     * @see org.jboss.declarchive.api.Archive#addClasses(java.lang.Class<?>[])
     */
    @Override
-   public Archive addClasses(final Class<?>... classes) throws IllegalArgumentException
+   public T addClasses(final Class<?>... classes) throws IllegalArgumentException
    {
       // Precondition check
       if (classes == null || classes.length == 0)
@@ -163,14 +163,14 @@ public abstract class ArchiveBase implements Archive
       }
 
       // Return
-      return this;
+      return this.covarientReturn();
    }
 
    /**
     * @see org.jboss.declarchive.api.Archive#addResource(java.lang.String)
     */
    @Override
-   public Archive addResource(final String name) throws IllegalArgumentException
+   public T addResource(final String name) throws IllegalArgumentException
    {
       return this.addResource(name, this.getClassLoader());
    }
@@ -179,7 +179,7 @@ public abstract class ArchiveBase implements Archive
     * @see org.jboss.declarchive.api.Archive#addResource(java.net.URL)
     */
    @Override
-   public Archive addResource(final URL location) throws IllegalArgumentException
+   public T addResource(final URL location) throws IllegalArgumentException
    {
       // Delegate to the other implementation
       return this.addResource(location, null);
@@ -189,7 +189,7 @@ public abstract class ArchiveBase implements Archive
     * @see org.jboss.declarchive.api.Archive#addResource(java.lang.String, java.lang.ClassLoader)
     */
    @Override
-   public final Archive addResource(final String name, final ClassLoader cl) throws IllegalArgumentException
+   public final T addResource(final String name, final ClassLoader cl) throws IllegalArgumentException
    {
       // Precondition check
       if (name == null || name.length() == 0)
@@ -216,14 +216,14 @@ public abstract class ArchiveBase implements Archive
       this.addContent(content, name);
 
       // Return
-      return this;
+      return this.covarientReturn();
    }
 
    /**
     * @see org.jboss.declarchive.api.Archive#addResource(java.net.URL, java.lang.String)
     */
    @Override
-   public Archive addResource(final URL location, final String newPath) throws IllegalArgumentException
+   public T addResource(final URL location, final String newPath) throws IllegalArgumentException
    {
       // Precondition check
       if (location == null)
@@ -257,7 +257,7 @@ public abstract class ArchiveBase implements Archive
       this.addContent(content, path);
 
       // Return
-      return this;
+      return this.covarientReturn();
    }
 
    //-------------------------------------------------------------------------------------||
@@ -273,9 +273,35 @@ public abstract class ArchiveBase implements Archive
     */
    protected abstract void addContent(final byte[] content, final String location) throws IllegalArgumentException;
 
+   /**
+    * Returns the actual typed class for this instance, used in safe casting 
+    * for covarient return types
+    * 
+    * @return
+    */
+   protected abstract Class<T> getActualClass();
+
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
+
+   /**
+    * Provides typesafe covarient return of this instance
+    */
+   protected final T covarientReturn()
+   {
+      try
+      {
+         return this.getActualClass().cast(this);
+      }
+      catch (final ClassCastException cce)
+      {
+         log.log(Level.SEVERE,
+               "The class specified by getActualClass is not a valid assignment target for this instance;"
+                     + " developer error");
+         throw cce;
+      }
+   }
 
    /**
     * Returns the name of the class such that it may be accessed via ClassLoader.getResource()

@@ -90,7 +90,7 @@ public class VfsMemoryArchiveFactory
     * @param name
     * @throws IllegalArgumentException If the name is not specified
     */
-   public static Archive createVirtualArchive(final String name) throws IllegalArgumentException
+   public static Archive<?> createVirtualArchive(final String name) throws IllegalArgumentException
    {
       // Precondition check
       if (name == null || name.length() == 0)
@@ -121,7 +121,7 @@ public class VfsMemoryArchiveFactory
       }
 
       // Cast 
-      final Archive archive;
+      final Archive<?> archive;
       try
       {
          archive = Archive.class.cast(obj);

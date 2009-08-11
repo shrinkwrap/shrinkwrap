@@ -37,7 +37,7 @@ import org.jboss.declarchive.spi.jdk.file.FileArchive;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class TempFileArchiveImpl extends ArchiveBase implements FileArchive
+public class TempFileArchiveImpl extends ArchiveBase<FileArchive> implements FileArchive
 {
 
    //-------------------------------------------------------------------------------------||
@@ -166,9 +166,8 @@ public class TempFileArchiveImpl extends ArchiveBase implements FileArchive
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   /*
-    * (non-Javadoc)
-    * @see org.jboss.embedded.core.incubation.virtual.impl.base.AbstractVirtualArchive#addContent(byte[], java.lang.String)
+   /**
+    * @see org.jboss.declarchive.impl.base.ArchiveBase#addContent(byte[], java.lang.String)
     */
    @Override
    protected void addContent(final byte[] content, final String location) throws IllegalArgumentException
@@ -220,9 +219,8 @@ public class TempFileArchiveImpl extends ArchiveBase implements FileArchive
       }
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.jboss.embedded.core.incubation.virtual.api.VirtualArchive#toString(boolean)
+   /**
+    * @see org.jboss.declarchive.api.Archive#toString(boolean)
     */
    @Override
    public String toString(final boolean verbose)
@@ -241,7 +239,7 @@ public class TempFileArchiveImpl extends ArchiveBase implements FileArchive
       }
    }
 
-   /* (non-Javadoc)
+   /**
     * @see java.lang.Object#toString()
     */
    @Override
@@ -250,14 +248,22 @@ public class TempFileArchiveImpl extends ArchiveBase implements FileArchive
       return super.toString() + ": " + this.getRoot().getAbsolutePath();
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.jboss.embedded.core.incubation.virtual.spi.jdk.VirtualJdkArchive#getRoot()
+   /**
+    * @see org.jboss.declarchive.spi.jdk.file.FileArchive#getRoot()
     */
    @Override
    public File getRoot()
    {
       return this.root;
+   }
+
+   /**
+    * @see org.jboss.declarchive.impl.base.ArchiveBase#getActualClass()
+    */
+   @Override
+   protected Class<FileArchive> getActualClass()
+   {
+      return FileArchive.class;
    }
 
    //-------------------------------------------------------------------------------------||

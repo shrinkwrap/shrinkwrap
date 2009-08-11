@@ -27,7 +27,7 @@ import java.net.URL;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public interface Archive
+public interface Archive<T extends Archive<?>>
 {
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
@@ -40,7 +40,7 @@ public interface Archive
     * @return This virtual deployment
     * @throws IllegalArgumentException If no class was specified
     */
-   Archive addClass(Class<?> clazz) throws IllegalArgumentException;
+   T addClass(Class<?> clazz) throws IllegalArgumentException;
 
    /**
     * Adds the specified Classes to the archive.  
@@ -49,7 +49,7 @@ public interface Archive
     * @return This virtual deployment
     * @throws IllegalArgumentException If no classes were specified
     */
-   Archive addClasses(Class<?>... classes) throws IllegalArgumentException;
+   T addClasses(Class<?>... classes) throws IllegalArgumentException;
 
    /**
     * Adds the resource with the specified name to the 
@@ -60,7 +60,7 @@ public interface Archive
     * @return
     * @throws IllegalArgumentException If the name was not specified
     */
-   Archive addResource(String name) throws IllegalArgumentException;
+   T addResource(String name) throws IllegalArgumentException;
 
    /**
     * Adds the specified resource to the archive, using the specified ClassLoader
@@ -71,7 +71,7 @@ public interface Archive
     * @return
     * @throws IllegalArgumentException If either the name or ClassLoader is not specified
     */
-   Archive addResource(String name, ClassLoader cl) throws IllegalArgumentException;
+   T addResource(String name, ClassLoader cl) throws IllegalArgumentException;
 
    /**
     * Adds the resource located at the specified URL to the archive.  The
@@ -82,7 +82,7 @@ public interface Archive
     * @return
     * @throws IllegalArgumentException If the location is not specified
     */
-   Archive addResource(URL location) throws IllegalArgumentException;
+   T addResource(URL location) throws IllegalArgumentException;
 
    /**
     * Adds the resource located at the specified URL to
@@ -94,7 +94,7 @@ public interface Archive
     * @return
     * @throws IllegalArgumentException If the location is not specified 
     */
-   Archive addResource(URL location, String newPath) throws IllegalArgumentException;
+   T addResource(URL location, String newPath) throws IllegalArgumentException;
 
    /**
     * Returns a multiline "ls -l"-equse output of the contents of

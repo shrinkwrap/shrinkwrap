@@ -30,7 +30,7 @@ import org.jboss.virtual.VirtualFile;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public interface VfsArchive extends Archive
+public interface VfsArchive extends Archive<VfsArchive>
 {
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
