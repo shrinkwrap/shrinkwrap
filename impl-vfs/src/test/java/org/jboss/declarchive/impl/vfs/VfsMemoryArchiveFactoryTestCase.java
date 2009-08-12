@@ -20,7 +20,6 @@ import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
-import org.jboss.declarchive.api.Archive;
 import org.jboss.declarchive.api.VfsMemoryArchiveFactory;
 import org.jboss.declarchive.spi.vfs.VfsArchive;
 import org.jboss.virtual.VFS;
@@ -77,7 +76,7 @@ public class VfsMemoryArchiveFactoryTestCase
       log.info("testVirtualArchiveFactory");
 
       // Make an archive
-      final Archive archive = VfsMemoryArchiveFactory.createVirtualArchive("testArchive.jar");
+      final VfsArchive archive = VfsMemoryArchiveFactory.createVirtualArchive("testArchive.jar", VfsArchive.class);
       archive.addClass(VfsMemoryArchiveFactory.class);
       log.info("Archive: " + archive.toString(true));
 
