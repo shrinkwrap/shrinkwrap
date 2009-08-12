@@ -76,7 +76,7 @@ public class VfsMemoryArchiveFactoryTestCase
       log.info("testVirtualArchiveFactory");
 
       // Make an archive
-      final VfsArchive archive = VfsMemoryArchiveFactory.createVirtualArchive("testArchive.jar", VfsArchive.class);
+      final VfsArchive archive = VfsMemoryArchiveFactory.createArchive("testArchive.jar", VfsArchive.class);
       archive.addClass(VfsMemoryArchiveFactory.class);
       log.info("Archive: " + archive.toString(true));
 

@@ -90,7 +90,7 @@ public class VfsMemoryArchiveFactory
     * @param name
     * @throws IllegalArgumentException If the name is not specified
     */
-   public static <T extends Archive<T>> T createVirtualArchive(final String name, final Class<T> archiveType)
+   public static <T extends Archive<T>> T createArchive(final String name, final Class<T> archiveType)
          throws IllegalArgumentException
    {
       // Precondition check
