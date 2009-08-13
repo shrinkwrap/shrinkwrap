@@ -43,6 +43,15 @@
       <version>${version.org.jboss.declarchive_declarchive.spi}</version>
     </dependency>
 
+    <!-- 
+    External Projects
+     -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
 </project>
