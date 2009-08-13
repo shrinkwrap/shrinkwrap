@@ -1,3 +1,19 @@
+/*
+ * JBoss, Home of Professional Open Source
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.jboss.declarchive.impl.base.resource;
 
 import java.io.File;
@@ -19,58 +35,56 @@ import org.junit.Test;
 public class FileResourceTestCase
 {
    private static final String BASE_PATH = "src/test/resources/org/jboss/declarchive/impl/base/resource/";
+
    private static final String EXISTING_FILE = BASE_PATH + "Test.properties";
+
    private static final String NON_EXISTING_FILE = BASE_PATH + "NoFileShouldBePlacedHere.properties";
-   
+
    @Test
-   public void shouldBeAbleToReadFile() throws Exception 
+   public void shouldBeAbleToReadFile() throws Exception
    {
       Resource resource = new FileResource(new File(EXISTING_FILE));
       InputStream io = resource.getStream();
-      
+
       Assert.assertNotNull(io);
-      Assert.assertEquals(
-            "Should be able to read the content of the resource",
-            "declarch=true", TestUtils.convertToString(io));
+      Assert.assertEquals("Should be able to read the content of the resource", "declarch=true", TestUtils
+            .convertToString(io));
    }
-   
+
    @Test
-   public void shouldBeAbleToReadDefaultName() throws Exception 
+   public void shouldBeAbleToReadDefaultName() throws Exception
    {
       Resource resource = new FileResource(new File(EXISTING_FILE));
-      Assert.assertEquals(
-            "A File resource should use the file name as default name, not absolute path",
+      Assert.assertEquals("A File resource should use the file name as default name, not absolute path",
             "Test.properties", resource.getDefaultName());
    }
-   
+
    @Test
-   public void shouldThrowExceptionOnNullFile() throws Exception 
+   public void shouldThrowExceptionOnNullFile() throws Exception
    {
-      try 
+      try
       {
          new FileResource(null);
          Assert.fail("Should have thrown IllegalArgumentException");
-      } 
-      catch (Exception e) 
+      }
+      catch (Exception e)
       {
-         Assert.assertEquals(
-               "A null file argument should result in a IllegalArgumentException",
+         Assert.assertEquals("A null file argument should result in a IllegalArgumentException",
                IllegalArgumentException.class, e.getClass());
       }
    }
 
    @Test
-   public void shouldThrowExceptionOnMissingFile() throws Exception 
+   public void shouldThrowExceptionOnMissingFile() throws Exception
    {
-      try 
+      try
       {
          new FileResource(new File(NON_EXISTING_FILE));
          Assert.fail("Should have thrown IllegalArgumentException");
-      } 
-      catch (Exception e) 
+      }
+      catch (Exception e)
       {
-         Assert.assertEquals(
-               "A non existing file should result in a IllegalArgumentException",
+         Assert.assertEquals("A non existing file should result in a IllegalArgumentException",
                IllegalArgumentException.class, e.getClass());
       }
    }

@@ -1,3 +1,19 @@
+/*
+ * JBoss, Home of Professional Open Source
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.jboss.declarchive.impl.base.resource;
 
 import java.io.InputStream;
@@ -22,30 +38,24 @@ public class URLResourceTestCase
    @Test
    public void shouldBeAbleToReadURL() throws Exception
    {
-      Resource resource = new URLResource(
-            Thread.currentThread()
-               .getContextClassLoader().getResource(EXISTING_RESOURCE));
+      Resource resource = new URLResource(Thread.currentThread().getContextClassLoader().getResource(EXISTING_RESOURCE));
 
       InputStream io = resource.getStream();
 
       Assert.assertNotNull(io);
-      Assert.assertEquals(
-            "Should be able to read the content of the resource",
-            "declarch=true", TestUtils.convertToString(io));
+      Assert.assertEquals("Should be able to read the content of the resource", "declarch=true", TestUtils
+            .convertToString(io));
    }
 
    @Test
-   public void shouldBeAbleToReadDefaultName() throws Exception 
+   public void shouldBeAbleToReadDefaultName() throws Exception
    {
-      Resource resource = new URLResource(
-            Thread.currentThread().getContextClassLoader()
-            .getResource(EXISTING_RESOURCE));
-      
-      Assert.assertEquals(
-            "A URL resource should use the file name as default name, not absolute path",
+      Resource resource = new URLResource(Thread.currentThread().getContextClassLoader().getResource(EXISTING_RESOURCE));
+
+      Assert.assertEquals("A URL resource should use the file name as default name, not absolute path",
             "Test.properties", resource.getDefaultName());
    }
-   
+
    @Test
    public void shouldThrowExceptionOnNullURL() throws Exception
    {
@@ -53,11 +63,10 @@ public class URLResourceTestCase
       {
          new URLResource(null);
          Assert.fail("Should have thrown IllegalArgumentException");
-      } 
+      }
       catch (Exception e)
       {
-         Assert.assertEquals(
-               "A null url argument should result in a IllegalArgumentException",
+         Assert.assertEquals("A null url argument should result in a IllegalArgumentException",
                IllegalArgumentException.class, e.getClass());
       }
    }
