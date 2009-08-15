@@ -14,27 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.spi;
+package org.jboss.declarchive.api;
 
 import java.io.InputStream;
 
 /**
- * Generic interface for resource loading. 
- * 
- * Used to move the resource loading logic out of the archive backends.  
+ * Represents a Class, file, or any other collection
+ * of bytes stored under some context within an {@link Archive} 
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- *
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public interface Resource
+public interface Asset
 {
 
    /**
-    * Get the default name for this resource, can be overriden by the user.
+    * Get the default name for this resource, which will 
+    * be the name under with the resource is placed into
+    * an archive unless explicitly specified otherwise.
     * 
     * @return A name for this Resource
     */
    String getDefaultName();
+
+   /**
+    * Get the default path for this resource, which will 
+    * be the context under with the resource is placed into
+    * an archive unless explicitly specified otherwise.
+    * 
+    * @return A path for this Resource
+    */
+   Path getDefaultPath();
 
    /**
     * Get a open stream for the resource content.

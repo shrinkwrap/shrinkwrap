@@ -14,26 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.api.jar;
+package org.jboss.declarchive.impl.base.jar;
 
 import org.jboss.declarchive.api.Archive;
 import org.jboss.declarchive.api.container.ClassContainer;
 import org.jboss.declarchive.api.container.ManifestContainer;
 import org.jboss.declarchive.api.container.ResourceContainer;
+import org.jboss.declarchive.api.container.WebContainer;
 
 /**
- * JavaArchive
+ * TestArchive
  * 
- * Traditional JAR (Java Archive) structure.  Used in 
- * construction of libraries and applications.
+ * Archive types used only in testing, offers no additional features 
+ * to those inherited, and closes the generic context 
  *
- * @see http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a> 
  * @version $Revision: $
  */
-public interface JavaArchive extends Archive<JavaArchive>, 
-      ResourceContainer<JavaArchive>, ManifestContainer<JavaArchive>, ClassContainer<JavaArchive>
+public interface TestArchive
+      extends
+         Archive<TestArchive>,
+         ClassContainer<TestArchive>,
+         ResourceContainer<TestArchive>,
+         ManifestContainer<TestArchive>,
+         WebContainer<TestArchive>
 {
 
 }

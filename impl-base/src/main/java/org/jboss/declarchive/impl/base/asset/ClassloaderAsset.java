@@ -14,20 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.impl.base.resource;
+package org.jboss.declarchive.impl.base.asset;
 
 import java.io.InputStream;
 import java.net.URL;
 
-import org.jboss.declarchive.spi.Resource;
+import org.jboss.declarchive.api.Asset;
+import org.jboss.declarchive.api.Path;
+import org.jboss.declarchive.impl.base.Validate;
+import org.jboss.declarchive.impl.base.path.BasePath;
 
 /**
- * Loads the content of any resource located in the Classloader.
+ * ClassloaderAsset
+ * 
+ * Implementation of a {@link Asset} backed by a 
+ * resource located in the Classloader.
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- *
  */
-public class ClassloaderResource implements Resource
+public class ClassloaderAsset implements Asset
 {
    private String resourceName;
 
@@ -40,7 +45,7 @@ public class ClassloaderResource implements Resource
     * @throws IllegalArgumentException resourceName can not be null
     * @throws IllegalArgumentException resourceName must be found in given classloader
     */
-   public ClassloaderResource(String resourceName)
+   public ClassloaderAsset(String resourceName)
    {
       this(resourceName, SecurityActions.getThreadContextClassLoader());
    }
@@ -54,20 +59,13 @@ public class ClassloaderResource implements Resource
     * @throws IllegalArgumentException classloader can not be null
     * @throws IllegalArgumentException resourceName must be found in given classloader
     */
-   public ClassloaderResource(String resourceName, ClassLoader classLoader)
+   public ClassloaderAsset(String resourceName, ClassLoader classLoader)
    {
-      if (resourceName == null)
-      {
-         throw new IllegalArgumentException("ResourceName must be specified");
-      }
-      if (classLoader == null)
-      {
-         throw new IllegalArgumentException("ClassLoader must be specified");
-      }
-      if (classLoader.getResource(resourceName) == null)
-      {
-         throw new IllegalArgumentException(resourceName + " not found in classloader " + classLoader);
-      }
+      Validate.notNull(resourceName, "ResourceName must be specified");
+      Validate.notNull(classLoader, "ClassLoader must be specified");
+      Validate
+            .notNull(classLoader.getResource(resourceName), resourceName + " not found in classloader " + classLoader);
+
       this.resourceName = resourceName;
       this.classLoader = classLoader;
    }
@@ -81,6 +79,12 @@ public class ClassloaderResource implements Resource
    public String getDefaultName()
    {
       return extractFileName(classLoader.getResource(resourceName));
+   }
+
+   @Override
+   public Path getDefaultPath()
+   {
+      return new BasePath(extractPath(resourceName));
    }
 
    /**
@@ -106,4 +110,18 @@ public class ClassloaderResource implements Resource
       }
       return fileName;
    }
+
+   /*
+    * Extract the file part of the given resourcename excluding file name.
+    * ie: /user/test/file.properties = /user/test/
+    */
+   private String extractPath(String resourceName)
+   {
+      if (resourceName.lastIndexOf('/') != -1)
+      {
+         return resourceName.substring(0, resourceName.lastIndexOf('/'));
+      }
+      return resourceName;
+   }
+
 }

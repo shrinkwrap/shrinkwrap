@@ -20,7 +20,8 @@ import java.io.InputStream;
 
 import junit.framework.Assert;
 
-import org.jboss.declarchive.spi.Resource;
+import org.jboss.declarchive.api.Asset;
+import org.jboss.declarchive.impl.base.asset.ClassloaderAsset;
 import org.junit.Test;
 
 /**
@@ -40,7 +41,7 @@ public class ClassloaderResourceTestCase
    @Test
    public void shouldBeAbleToReadResource() throws Exception
    {
-      Resource resource = new ClassloaderResource(EXISTING_RESOURCE);
+      Asset resource = new ClassloaderAsset(EXISTING_RESOURCE);
       InputStream io = resource.getStream();
 
       Assert.assertNotNull(io);
@@ -51,9 +52,17 @@ public class ClassloaderResourceTestCase
    @Test
    public void shouldBeAbleToReadDefaultName() throws Exception
    {
-      Resource resource = new ClassloaderResource(EXISTING_RESOURCE);
+      Asset resource = new ClassloaderAsset(EXISTING_RESOURCE);
       Assert.assertEquals("A Classloader resource should use file name as default name, not absolute path",
             "Test.properties", resource.getDefaultName());
+   }
+
+   @Test
+   public void shouldBeAbleToReadDefaultPath() throws Exception
+   {
+      Asset resource = new ClassloaderAsset(EXISTING_RESOURCE);
+      Assert.assertEquals("A Classloader resource should use given resource path as default path",
+            "/org/jboss/declarchive/impl/base/resource/", resource.getDefaultPath().get());
    }
 
    @Test
@@ -61,7 +70,7 @@ public class ClassloaderResourceTestCase
    {
       try
       {
-         new ClassloaderResource(null);
+         new ClassloaderAsset(null);
          Assert.fail("Should have thrown IllegalArgumentException");
       }
       catch (Exception e)
@@ -76,7 +85,7 @@ public class ClassloaderResourceTestCase
    {
       try
       {
-         new ClassloaderResource(EXISTING_RESOURCE, null);
+         new ClassloaderAsset(EXISTING_RESOURCE, null);
          Assert.fail("Should have thrown IllegalArgumentException");
       }
       catch (Exception e)
@@ -91,7 +100,7 @@ public class ClassloaderResourceTestCase
    {
       try
       {
-         new ClassloaderResource(NON_EXISTING_RESOURCE);
+         new ClassloaderAsset(NON_EXISTING_RESOURCE);
          Assert.fail("Should have thrown IllegalArgumentException");
       }
       catch (Exception e)

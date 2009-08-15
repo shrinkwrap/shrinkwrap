@@ -1,5 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
+
  * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -14,26 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.api.jar;
+package org.jboss.declarchive.api.container;
 
 import org.jboss.declarchive.api.Archive;
-import org.jboss.declarchive.api.container.ClassContainer;
-import org.jboss.declarchive.api.container.ManifestContainer;
-import org.jboss.declarchive.api.container.ResourceContainer;
 
 /**
- * JavaArchive
- * 
- * Traditional JAR (Java Archive) structure.  Used in 
- * construction of libraries and applications.
+ * WebContainer
  *
- * @see http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html
- * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a> 
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
+ * @param <T>
  */
-public interface JavaArchive extends Archive<JavaArchive>, 
-      ResourceContainer<JavaArchive>, ManifestContainer<JavaArchive>, ClassContainer<JavaArchive>
+public interface WebContainer<T extends Archive<T>>
 {
+   //-------------------------------------------------------------------------------------||
+   // Contracts --------------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
 
+   T setWebXML(String resourceName);
 }

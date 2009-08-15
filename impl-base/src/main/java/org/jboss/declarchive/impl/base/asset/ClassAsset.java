@@ -14,19 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.impl.base.resource;
+package org.jboss.declarchive.impl.base.asset;
 
 import java.io.InputStream;
 
-import org.jboss.declarchive.spi.Resource;
+import org.jboss.declarchive.api.Asset;
+import org.jboss.declarchive.api.Path;
+import org.jboss.declarchive.impl.base.Validate;
+import org.jboss.declarchive.impl.base.path.BasePath;
 
 /**
- * Loads the given class using the class's ClassLoader.
+ * ClassAsset
+ * 
+ * Implementation of a {@link Asset} backed by a loaded {@link Class}
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  *
  */
-public class ClassResource implements Resource
+public class ClassAsset implements Asset
 {
    /**
     * Delimiter for paths while looking for resources 
@@ -51,13 +56,10 @@ public class ClassResource implements Resource
     * @param clazz The class to load
     * @throws IllegalArgumentException Class can not be null
     */
-   public ClassResource(Class<?> clazz)
+   public ClassAsset(final Class<?> clazz)
    {
       // Precondition check
-      if (clazz == null)
-      {
-         throw new IllegalArgumentException("Class must be specified");
-      }
+      Validate.notNull(clazz, "Class must be specified");
       this.clazz = clazz;
    }
 
@@ -67,7 +69,13 @@ public class ClassResource implements Resource
    @Override
    public String getDefaultName()
    {
-      return getResourceNameOfClass(clazz);
+      return getNameOfClass(clazz);
+   }
+
+   @Override
+   public Path getDefaultPath()
+   {
+      return new BasePath(getPathOfClass(clazz));
    }
 
    /**
@@ -77,7 +85,7 @@ public class ClassResource implements Resource
    @Override
    public InputStream getStream()
    {
-      return new ClassloaderResource(getResourceNameOfClass(clazz), clazz.getClassLoader()).getStream();
+      return new ClassloaderAsset(getResourceNameOfClass(clazz), clazz.getClassLoader()).getStream();
    }
 
    /**
@@ -95,5 +103,31 @@ public class ClassResource implements Resource
 
       // Return 
       return resourceName;
+   }
+
+   /**
+    * Returns the path of the class
+    * 
+    * @param clazz The class
+    * @throws IllegalArgumentException If the class was not specified
+    */
+   private String getPathOfClass(final Class<?> clazz) throws IllegalArgumentException
+   {
+      // Build the name
+      final String fqn = clazz.getPackage().getName();
+      final String pathName = fqn.replace(DELIMITER_CLASS_NAME_PATH, DELIMITER_RESOURCE_PATH);
+
+      // Return 
+      return pathName;
+   }
+
+   private String getNameOfClass(final Class<?> clazz) throws IllegalArgumentException
+   {
+      // Build the name
+      final String fqn = clazz.getSimpleName();
+      final String className = fqn + EXTENSION_CLASS;
+
+      // Return 
+      return className;
    }
 }

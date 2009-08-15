@@ -18,7 +18,8 @@ package org.jboss.declarchive.impl.base.resource;
 
 import java.io.InputStream;
 
-import org.jboss.declarchive.spi.Resource;
+import org.jboss.declarchive.api.Asset;
+import org.jboss.declarchive.impl.base.asset.ClassAsset;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,7 +37,7 @@ public class ClassResourceTestCase
    @Test
    public void shouldBeAbleToReadThisClass() throws Exception
    {
-      Resource resource = new ClassResource(ClassResourceTestCase.class);
+      Asset resource = new ClassAsset(ClassResourceTestCase.class);
       InputStream io = resource.getStream();
 
       Assert.assertNotNull(io);
@@ -47,9 +48,17 @@ public class ClassResourceTestCase
    @Test
    public void shouldBeAbleToReadDefaultName() throws Exception
    {
-      Resource resource = new ClassResource(ClassResourceTestCase.class);
-      Assert.assertEquals("A Class resource should use class name + '.class' as default name",
-            "org/jboss/declarchive/impl/base/resource/ClassResourceTestCase.class", resource.getDefaultName());
+      Asset resource = new ClassAsset(ClassResourceTestCase.class);
+      Assert.assertEquals("A Class resource should use class simple name + '.class' as default name",
+            "ClassResourceTestCase.class", resource.getDefaultName());
+   }
+
+   @Test
+   public void shouldBeAbleToReadPathName() throws Exception
+   {
+      Asset resource = new ClassAsset(ClassResourceTestCase.class);
+      Assert.assertEquals("A Class resource should use class package name as default path",
+            "/org/jboss/declarchive/impl/base/resource/", resource.getDefaultPath().get());
    }
 
    @Test
@@ -57,7 +66,7 @@ public class ClassResourceTestCase
    {
       try
       {
-         new ClassResource(null);
+         new ClassAsset(null);
          Assert.fail("Should have thrown IllegalArgumentException");
       }
       catch (Exception e)

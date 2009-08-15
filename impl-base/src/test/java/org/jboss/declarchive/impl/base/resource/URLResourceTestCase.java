@@ -20,7 +20,8 @@ import java.io.InputStream;
 
 import junit.framework.Assert;
 
-import org.jboss.declarchive.spi.Resource;
+import org.jboss.declarchive.api.Asset;
+import org.jboss.declarchive.impl.base.asset.UrlAsset;
 import org.junit.Test;
 
 /**
@@ -38,7 +39,8 @@ public class URLResourceTestCase
    @Test
    public void shouldBeAbleToReadURL() throws Exception
    {
-      Resource resource = new URLResource(Thread.currentThread().getContextClassLoader().getResource(EXISTING_RESOURCE));
+      Asset resource = new UrlAsset(
+            Thread.currentThread().getContextClassLoader().getResource(EXISTING_RESOURCE));
 
       InputStream io = resource.getStream();
 
@@ -50,10 +52,21 @@ public class URLResourceTestCase
    @Test
    public void shouldBeAbleToReadDefaultName() throws Exception
    {
-      Resource resource = new URLResource(Thread.currentThread().getContextClassLoader().getResource(EXISTING_RESOURCE));
+      Asset resource = new UrlAsset(
+            Thread.currentThread().getContextClassLoader().getResource(EXISTING_RESOURCE));
 
       Assert.assertEquals("A URL resource should use the file name as default name, not absolute path",
             "Test.properties", resource.getDefaultName());
+   }
+
+   @Test
+   public void shouldBeAbleToReadDefaultPath() throws Exception
+   {
+      Asset resource = new UrlAsset(
+            Thread.currentThread().getContextClassLoader().getResource(EXISTING_RESOURCE));
+
+      Assert.assertEquals("A URL resource should use / as default path",
+            "/", resource.getDefaultPath().get());
    }
 
    @Test
@@ -61,7 +74,7 @@ public class URLResourceTestCase
    {
       try
       {
-         new URLResource(null);
+         new UrlAsset(null);
          Assert.fail("Should have thrown IllegalArgumentException");
       }
       catch (Exception e)

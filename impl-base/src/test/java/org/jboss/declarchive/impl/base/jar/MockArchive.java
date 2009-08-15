@@ -1,5 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
+
  * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -14,50 +15,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.impl.base;
+package org.jboss.declarchive.impl.base.jar;
+
+import org.jboss.declarchive.impl.base.GenericArchive;
 
 /**
- * ResourceNotFoundException
+ * MockArchive
  * 
- * Thrown when a resource is requested, but could not be found 
- * within the context of the given ClassLoader
+ * Simple archive which provides no functionality beyond the
+ * internal Map of content maintained by the base.
  *
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
+ * @param <T>
  */
-public class ResourceNotFoundException extends IllegalArgumentException
+public class MockArchive extends GenericArchive<TestArchive> implements TestArchive
 {
+
    //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
+   // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    *  serialVersionUID
+    * Creates a new archive with the specified name
     */
-   private static final long serialVersionUID = 1L;
-
-   //-------------------------------------------------------------------------------------||
-   // Constructors -----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   public ResourceNotFoundException()
+   public MockArchive(final String name) throws IllegalArgumentException
    {
-      super();
+      super(name, TestArchive.class);
    }
-
-   public ResourceNotFoundException(final String message, final Throwable cause)
-   {
-      super(message, cause);
-   }
-
-   public ResourceNotFoundException(final String s)
-   {
-      super(s);
-   }
-
-   public ResourceNotFoundException(final Throwable cause)
-   {
-      super(cause);
-   }
-
 }

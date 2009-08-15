@@ -90,7 +90,7 @@ public class MemoryArchiveImpl extends VfsArchiveBase implements VfsArchive
    public MemoryArchiveImpl(final String name, final ClassLoader cl) throws IllegalArgumentException
    {
       // Invoke super
-      super(cl);
+      super(name,cl);
 
       // Precondition Check
       if (name == null || name.length() == 0)
@@ -152,9 +152,9 @@ public class MemoryArchiveImpl extends VfsArchiveBase implements VfsArchive
    }
 
    /**
-    * @see org.jboss.declarchive.impl.base.ArchiveBase#addContent(byte[], java.lang.String)
+    * @see org.jboss.declarchive.impl.base.GenericArchive#addContent(byte[], java.lang.String)
     */
-   @Override
+//   @Override
    protected void addContent(final byte[] content, final String location) throws IllegalArgumentException
    {
       // Precondition check
@@ -187,15 +187,6 @@ public class MemoryArchiveImpl extends VfsArchiveBase implements VfsArchive
 
       // Add the content
       this.addContent(content, url);
-   }
-
-   /**
-    * @see org.jboss.declarchive.impl.base.ArchiveBase#getActualClass()
-    */
-   @Override
-   protected Class<VfsArchive> getActualClass()
-   {
-      return VfsArchive.class;
    }
 
 }
