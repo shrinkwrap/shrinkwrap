@@ -1,6 +1,5 @@
 /*
  * JBoss, Home of Professional Open Source
-
  * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,33 +14,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.impl.base.jar;
-
-import org.jboss.declarchive.impl.base.GenericArchive;
+package org.jboss.declarchive.impl.base;
 
 /**
- * MockArchive
+ * ResourceNotFoundException
  * 
- * Simple archive which provides no functionality beyond the
- * internal Map of content maintained by the base.
+ * Thrown when a resource is requested, but could not be found 
+ * within the context of the given ClassLoader
  *
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
- * @param <T>
  */
-public class MockArchive extends GenericArchive<TestArchive> implements TestArchive
+public class ResourceNotFoundException extends IllegalArgumentException
 {
-
    //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
+   // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Creates a new archive with the specified name
+    *  serialVersionUID
     */
-   public MockArchive(final String name) throws IllegalArgumentException
+   private static final long serialVersionUID = 1L;
+
+   //-------------------------------------------------------------------------------------||
+   // Constructors -----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   public ResourceNotFoundException()
    {
-      super(name, TestArchive.class);
+      super();
    }
+
+   public ResourceNotFoundException(final String message, final Throwable cause)
+   {
+      super(message, cause);
+   }
+
+   public ResourceNotFoundException(final String s)
+   {
+      super(s);
+   }
+
+   public ResourceNotFoundException(final Throwable cause)
+   {
+      super(cause);
+   }
+
 }

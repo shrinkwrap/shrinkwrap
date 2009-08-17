@@ -14,26 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.impl.base.asset;
+package org.jboss.declarchive.impl.base.resource;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import org.jboss.declarchive.api.Asset;
-import org.jboss.declarchive.api.Path;
-import org.jboss.declarchive.impl.base.Validate;
-import org.jboss.declarchive.impl.base.path.BasePath;
+import org.jboss.declarchive.spi.Resource;
 
 /**
- * FileAsset
- * 
- * Implementation of a {@link Asset} backed by a {@link File}
+ * Loads any File.
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ *
  */
-public class FileAsset implements Asset
+public class FileResource implements Resource
 {
    private File file;
 
@@ -44,10 +40,13 @@ public class FileAsset implements Asset
     * @throws IllegalArgumentException File can not be null
     * @throws IllegalArgumentException File must exist
     */
-   public FileAsset(File file)
+   public FileResource(File file)
    {
       // Precondition check
-      Validate.notNull(file, "File must be specified");
+      if (file == null)
+      {
+         throw new IllegalArgumentException("File must be specified");
+      }
       if (!file.exists())
       {
          throw new IllegalArgumentException("File must exist: " + file.getAbsolutePath());
@@ -62,12 +61,6 @@ public class FileAsset implements Asset
    public String getDefaultName()
    {
       return file.getName();
-   }
-
-   @Override
-   public Path getDefaultPath()
-   {
-      return new BasePath(file.getParentFile().getPath());
    }
 
    /**

@@ -14,45 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.impl.base.asset;
+package org.jboss.declarchive.impl.base.resource;
 
 import java.io.InputStream;
 import java.net.URL;
 
-import org.jboss.declarchive.api.Asset;
-import org.jboss.declarchive.api.Path;
-import org.jboss.declarchive.impl.base.Validate;
-import org.jboss.declarchive.impl.base.path.BasePath;
+import org.jboss.declarchive.spi.Resource;
 
 /**
- * UrlAsset
- * 
- * Implementation of a {@link Asset} backed by a {@link URL}.  
- * The URL may be of any backing protocol supported by the runtime
- * (ie. has a handler registered).
+ * Loads the content of any URL supported by the runtime.
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  *
  */
-public class UrlAsset implements Asset
+public class URLResource implements Resource
 {
    private URL url;
 
    /**
-    * Create a new resource with a <code>URL</code> source.
+    * Create a new resource with a URL source.
     * 
     * @param url A valid URL
-    * @throws IllegalArgumentException <Code>URL</code> can not be null
+    * @throws IllegalArgumentException URL can not be null
     */
-   public UrlAsset(URL url)
+   public URLResource(URL url)
    {
       // Precondition check
-      Validate.notNull(url, "URL must be specified");
+      if (url == null)
+      {
+         throw new IllegalArgumentException("URL must be specified");
+      }
       this.url = url;
    }
 
    /**
-    * Get the default name using <code>URL.getFile()</code>.
+    * Get the default name using URL.getFile().
     */
    @Override
    public String getDefaultName()
@@ -60,14 +56,8 @@ public class UrlAsset implements Asset
       return extractFileName(url);
    }
 
-   @Override
-   public Path getDefaultPath()
-   {
-      return new BasePath("/");
-   }
-
    /**
-    * Open the <code>URL</code> stream.
+    * Open the URL stream.
     * 
     * @return A open stream with the content of the URL
     */

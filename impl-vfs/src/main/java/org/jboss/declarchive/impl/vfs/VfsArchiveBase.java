@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.jboss.declarchive.api.Archive;
-import org.jboss.declarchive.impl.base.GenericArchive;
+import org.jboss.declarchive.impl.base.ArchiveBase;
 import org.jboss.declarchive.spi.vfs.VfsArchive;
 import org.jboss.virtual.VirtualFile;
 
@@ -34,7 +34,7 @@ import org.jboss.virtual.VirtualFile;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-abstract class VfsArchiveBase extends GenericArchive<VfsArchive> implements VfsArchive
+abstract class VfsArchiveBase extends ArchiveBase<VfsArchive>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -72,15 +72,16 @@ abstract class VfsArchiveBase extends GenericArchive<VfsArchive> implements VfsA
    /**
     * Constructor
     * 
-    * Creates a new instance with the specified name and ClassLoader
+    * Creates a new instance with the specified root and rootURL
     * 
-    * @param name
+    * @param root
+    * @param rootUrl
     * @param cl
     */
-   public VfsArchiveBase(final String name, final ClassLoader cl)
+   public VfsArchiveBase(final ClassLoader cl)
    {
       // Invoke super
-      super(name, cl, VfsArchive.class);
+      super(cl);
    }
 
    //-------------------------------------------------------------------------------------||

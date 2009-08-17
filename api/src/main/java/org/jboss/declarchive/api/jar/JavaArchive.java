@@ -16,24 +16,56 @@
  */
 package org.jboss.declarchive.api.jar;
 
+import java.io.File;
+import java.net.URL;
+
 import org.jboss.declarchive.api.Archive;
-import org.jboss.declarchive.api.container.ClassContainer;
-import org.jboss.declarchive.api.container.ManifestContainer;
-import org.jboss.declarchive.api.container.ResourceContainer;
 
 /**
  * JavaArchive
  * 
- * Traditional JAR (Java Archive) structure.  Used in 
+ * Traditional JAR (Java ARchive) structure.  Used in 
  * construction of libraries and applications.
  *
  * @see http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a> 
  * @version $Revision: $
  */
-public interface JavaArchive extends Archive<JavaArchive>, 
-      ResourceContainer<JavaArchive>, ManifestContainer<JavaArchive>, ClassContainer<JavaArchive>
+public interface JavaArchive extends Archive<JavaArchive>
 {
+
+   //-------------------------------------------------------------------------------------||
+   // Contracts --------------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Adds the File with the specified path as the JAR Manifest.  This will
+    * be placed into the archive as <code>META-INF/MANIFEST.MF</code>
+    * 
+    * @param manifestFilePath The path to the file file to use as the JAR Manifest.
+    * @throws IllegalArgumentException If the path does not point to a valid file 
+    *       or was not specified
+    */
+   JavaArchive addManifest(String manifestFilePath) throws IllegalArgumentException;
+
+   /**
+    * Adds the specified File as the JAR Manifest.  This will
+    * be placed into the archive as <code>META-INF/MANIFEST.MF</code>
+    * 
+    * @param manifestFile The file to use as the JAR Manifest.
+    * @throws IllegalArgumentException If the file does not exist or
+    *       was not specified
+    */
+   JavaArchive addManifest(File manifestFile) throws IllegalArgumentException;
+
+   /**
+    * Adds the specified URL as the JAR Manifest.  This will
+    * be placed into the archive as <code>META-INF/MANIFEST.MF</code>
+    * 
+    * @param manifestFile The file to use as the JAR Manifest.
+    * @throws IllegalArgumentException If the URL could not be obtained or
+    *       was not specified
+    */
+   JavaArchive addManifest(URL manifestFile) throws IllegalArgumentException;
 
 }

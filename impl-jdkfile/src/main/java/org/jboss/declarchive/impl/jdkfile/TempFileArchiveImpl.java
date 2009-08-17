@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.declarchive.api.Archive;
-import org.jboss.declarchive.impl.base.GenericArchive;
+import org.jboss.declarchive.impl.base.ArchiveBase;
 import org.jboss.declarchive.spi.jdk.file.FileArchive;
 
 /**
@@ -37,7 +37,7 @@ import org.jboss.declarchive.spi.jdk.file.FileArchive;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class TempFileArchiveImpl extends GenericArchive<FileArchive> implements FileArchive
+public class TempFileArchiveImpl extends ArchiveBase<FileArchive> implements FileArchive
 {
 
    //-------------------------------------------------------------------------------------||
@@ -132,7 +132,7 @@ public class TempFileArchiveImpl extends GenericArchive<FileArchive> implements 
    public TempFileArchiveImpl(final String name, final ClassLoader cl) throws IllegalArgumentException
    {
       // Invoke super
-      super(name,cl,FileArchive.class);
+      super(cl);
 
       // Precondition Check
       if (name == null || name.length() == 0)
@@ -167,9 +167,9 @@ public class TempFileArchiveImpl extends GenericArchive<FileArchive> implements 
    //-------------------------------------------------------------------------------------||
 
    /**
-    * @see org.jboss.declarchive.impl.base.GenericArchive#addContent(byte[], java.lang.String)
+    * @see org.jboss.declarchive.impl.base.ArchiveBase#addContent(byte[], java.lang.String)
     */
-//   @Override
+   @Override
    protected void addContent(final byte[] content, final String location) throws IllegalArgumentException
    {
       // Make the new pointer
@@ -255,6 +255,15 @@ public class TempFileArchiveImpl extends GenericArchive<FileArchive> implements 
    public File getRoot()
    {
       return this.root;
+   }
+
+   /**
+    * @see org.jboss.declarchive.impl.base.ArchiveBase#getActualClass()
+    */
+   @Override
+   protected Class<FileArchive> getActualClass()
+   {
+      return FileArchive.class;
    }
 
    //-------------------------------------------------------------------------------------||

@@ -21,8 +21,7 @@ import java.io.InputStream;
 
 import junit.framework.Assert;
 
-import org.jboss.declarchive.api.Asset;
-import org.jboss.declarchive.impl.base.asset.FileAsset;
+import org.jboss.declarchive.spi.Resource;
 import org.junit.Test;
 
 /**
@@ -44,28 +43,20 @@ public class FileResourceTestCase
    @Test
    public void shouldBeAbleToReadFile() throws Exception
    {
-      Asset resource = new FileAsset(new File(EXISTING_FILE));
+      Resource resource = new FileResource(new File(EXISTING_FILE));
       InputStream io = resource.getStream();
 
       Assert.assertNotNull(io);
-      Assert.assertEquals("Should be able to read the content of the resource", "declarch=true", 
-            TestUtils.convertToString(io));
+      Assert.assertEquals("Should be able to read the content of the resource", "declarch=true", TestUtils
+            .convertToString(io));
    }
 
    @Test
    public void shouldBeAbleToReadDefaultName() throws Exception
    {
-      Asset resource = new FileAsset(new File(EXISTING_FILE));
+      Resource resource = new FileResource(new File(EXISTING_FILE));
       Assert.assertEquals("A File resource should use the file name as default name, not absolute path",
             "Test.properties", resource.getDefaultName());
-   }
-
-   @Test
-   public void shouldBeAbleToReadDefaultPath() throws Exception
-   {
-      Asset resource = new FileAsset(new File(EXISTING_FILE));
-      Assert.assertEquals("A File resource should use the file parent name as default path",
-            "/src/test/resources/org/jboss/declarchive/impl/base/resource/", resource.getDefaultPath().get());
    }
 
    @Test
@@ -73,7 +64,7 @@ public class FileResourceTestCase
    {
       try
       {
-         new FileAsset(null);
+         new FileResource(null);
          Assert.fail("Should have thrown IllegalArgumentException");
       }
       catch (Exception e)
@@ -88,7 +79,7 @@ public class FileResourceTestCase
    {
       try
       {
-         new FileAsset(new File(NON_EXISTING_FILE));
+         new FileResource(new File(NON_EXISTING_FILE));
          Assert.fail("Should have thrown IllegalArgumentException");
       }
       catch (Exception e)

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import junit.framework.Assert;
 
 import org.jboss.declarchive.api.VfsMemoryArchiveFactory;
-import org.jboss.declarchive.api.jar.JavaArchive;
+import org.jboss.declarchive.spi.vfs.VfsArchive;
 import org.jboss.virtual.VFS;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -72,18 +72,17 @@ public class VfsMemoryArchiveFactoryTestCase
    @Test
    public void testVirtualArchiveFactory() throws Exception
    {
-      //TODO Put back
-//      // Log
-//      log.info("testVirtualArchiveFactory");
-//
-//      // Make an archive
-//      final JavaArchive archive = VfsMemoryArchiveFactory.createArchive("testArchive.jar", JavaArchive.class);
-//      archive.add(VfsMemoryArchiveFactory.class);
-//      log.info("Archive: " + archive.toString(true));
-//
-//      // Ensure exists
-//      Assert.assertNotNull("Archive was not created/null", archive);
-//      // Ensure of expected type
-//      Assert.assertTrue("Created archive was not of expected type", archive instanceof JavaArchive);
+      // Log
+      log.info("testVirtualArchiveFactory");
+
+      // Make an archive
+      final VfsArchive archive = VfsMemoryArchiveFactory.createArchive("testArchive.jar", VfsArchive.class);
+      archive.addClass(VfsMemoryArchiveFactory.class);
+      log.info("Archive: " + archive.toString(true));
+
+      // Ensure exists
+      Assert.assertNotNull("Archive was not created/null", archive);
+      // Ensure of expected type
+      Assert.assertTrue("Created archive was not of expected type", archive instanceof VfsArchive);
    }
 }
