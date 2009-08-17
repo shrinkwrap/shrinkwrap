@@ -34,7 +34,7 @@ import org.jboss.declarchive.api.Archive;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public abstract class ArchiveBase<T extends Archive<?>> implements Archive<T>
+public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
 {
 
    //-------------------------------------------------------------------------------------||
