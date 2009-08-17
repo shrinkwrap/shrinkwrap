@@ -87,23 +87,23 @@ abstract class VfsArchiveBase extends ArchiveBase<VfsArchive>
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   /* (non-Javadoc)
-    * @see org.jboss.embedded.core.deployment.ExtensibleVirtualDeployment#toString(boolean)
-    */
-   @Override
-   public String toString(final boolean verbose)
-   {
-      // If we want verbose output
-      if (verbose)
-      {
-         // Describe the root
-         return this.describe(this.getRoot());
-      }
-
-      // Fall back on toString
-      return this.toString();
-   }
+//
+//   /* (non-Javadoc)
+//    * @see org.jboss.embedded.core.deployment.ExtensibleVirtualDeployment#toString(boolean)
+//    */
+//   @Override
+//   public String toString(final boolean verbose)
+//   {
+//      // If we want verbose output
+//      if (verbose)
+//      {
+//         // Describe the root
+//         return this.describe(this.getRoot());
+//      }
+//
+//      // Fall back on toString
+//      return this.toString();
+//   }
 
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||

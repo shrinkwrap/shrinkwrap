@@ -34,7 +34,7 @@ import org.jboss.declarchive.api.Archive;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
+public abstract class ArchiveBase<T extends Archive<T>> 
 {
 
    //-------------------------------------------------------------------------------------||
@@ -114,151 +114,151 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       this.classLoader = cl;
    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * @see org.jboss.declarchive.api.Archive#addClass(java.lang.Class)
-    */
-   @Override
-   public T addClass(final Class<?> clazz) throws IllegalArgumentException
-   {
-      // Precondition check
-      if (clazz == null)
-      {
-         throw new IllegalArgumentException("Class must be specified");
-      }
-
-      // Get the resource name of the class
-      final String name = this.getResourceNameOfClass(clazz);
-
-      // Get the CL of the Class
-      final ClassLoader cl = clazz.getClassLoader();
-
-      // Add it as a resource
-      if (log.isLoggable(Level.FINER))
-      {
-         log.log(Level.FINER, "Adding class as resource: " + clazz);
-      }
-      return this.addResource(name, cl);
-   }
-
-   /**
-    * @see org.jboss.declarchive.api.Archive#addClasses(java.lang.Class<?>[])
-    */
-   @Override
-   public T addClasses(final Class<?>... classes) throws IllegalArgumentException
-   {
-      // Precondition check
-      if (classes == null || classes.length == 0)
-      {
-         throw new IllegalArgumentException("At least one class must be specified");
-      }
-
-      // For each class
-      for (final Class<?> clazz : classes)
-      {
-         this.addClass(clazz);
-      }
-
-      // Return
-      return this.covarientReturn();
-   }
-
-   /**
-    * @see org.jboss.declarchive.api.Archive#addResource(java.lang.String)
-    */
-   @Override
-   public T addResource(final String name) throws IllegalArgumentException
-   {
-      return this.addResource(name, this.getClassLoader());
-   }
-
-   /**
-    * @see org.jboss.declarchive.api.Archive#addResource(java.net.URL)
-    */
-   @Override
-   public T addResource(final URL location) throws IllegalArgumentException
-   {
-      // Delegate to the other implementation
-      return this.addResource(location, null);
-   }
-
-   /**
-    * @see org.jboss.declarchive.api.Archive#addResource(java.lang.String, java.lang.ClassLoader)
-    */
-   @Override
-   public final T addResource(final String name, final ClassLoader cl) throws IllegalArgumentException
-   {
-      // Precondition check
-      if (name == null || name.length() == 0)
-      {
-         throw new IllegalArgumentException("name must be specified");
-      }
-      if (cl == null)
-      {
-         throw new IllegalArgumentException("ClassLoader must be specified");
-      }
-
-      // Get the content of the resource
-      byte[] content = null;
-      try
-      {
-         content = this.getBytesOfResource(name, cl);
-      }
-      catch (final IOException ioe)
-      {
-         throw new RuntimeException("Could not add resource \"" + name + "\" to " + this, ioe);
-      }
-
-      // Add
-      this.addContent(content, name);
-
-      // Return
-      return this.covarientReturn();
-   }
-
-   /**
-    * @see org.jboss.declarchive.api.Archive#addResource(java.net.URL, java.lang.String)
-    */
-   @Override
-   public T addResource(final URL location, final String newPath) throws IllegalArgumentException
-   {
-      // Precondition check
-      if (location == null)
-      {
-         throw new IllegalArgumentException("location must be specified");
-      }
-
-      // Get the content of the location
-      byte[] content = null;
-      try
-      {
-         content = this.getBytesOfResource(location);
-      }
-      catch (final IOException ioe)
-      {
-         throw new RuntimeException("Could not add location \"" + location + "\" to " + this, ioe);
-      }
-
-      // Adjust the path if not explicitly defined
-      String path = newPath;
-      if (path == null)
-      {
-         path = location.getPath();
-         if (log.isLoggable(Level.FINER))
-         {
-            log.log(Level.FINER, "Implicitly set new path to \"" + path + "\" while adding: " + location);
-         }
-      }
-
-      // Add
-      this.addContent(content, path);
-
-      // Return
-      return this.covarientReturn();
-   }
+//   //-------------------------------------------------------------------------------------||
+//   // Required Implementations -----------------------------------------------------------||
+//   //-------------------------------------------------------------------------------------||
+//
+//   /**
+//    * @see org.jboss.declarchive.api.Archive#addClass(java.lang.Class)
+//    */
+//   @Override
+//   public T addClass(final Class<?> clazz) throws IllegalArgumentException
+//   {
+//      // Precondition check
+//      if (clazz == null)
+//      {
+//         throw new IllegalArgumentException("Class must be specified");
+//      }
+//
+//      // Get the resource name of the class
+//      final String name = this.getResourceNameOfClass(clazz);
+//
+//      // Get the CL of the Class
+//      final ClassLoader cl = clazz.getClassLoader();
+//
+//      // Add it as a resource
+//      if (log.isLoggable(Level.FINER))
+//      {
+//         log.log(Level.FINER, "Adding class as resource: " + clazz);
+//      }
+//      return this.addResource(name, cl);
+//   }
+//
+//   /**
+//    * @see org.jboss.declarchive.api.Archive#addClasses(java.lang.Class<?>[])
+//    */
+//   @Override
+//   public T addClasses(final Class<?>... classes) throws IllegalArgumentException
+//   {
+//      // Precondition check
+//      if (classes == null || classes.length == 0)
+//      {
+//         throw new IllegalArgumentException("At least one class must be specified");
+//      }
+//
+//      // For each class
+//      for (final Class<?> clazz : classes)
+//      {
+//         this.addClass(clazz);
+//      }
+//
+//      // Return
+//      return this.covarientReturn();
+//   }
+//
+//   /**
+//    * @see org.jboss.declarchive.api.Archive#addResource(java.lang.String)
+//    */
+//   @Override
+//   public T addResource(final String name) throws IllegalArgumentException
+//   {
+//      return this.addResource(name, this.getClassLoader());
+//   }
+//
+//   /**
+//    * @see org.jboss.declarchive.api.Archive#addResource(java.net.URL)
+//    */
+//   @Override
+//   public T addResource(final URL location) throws IllegalArgumentException
+//   {
+//      // Delegate to the other implementation
+//      return this.addResource(location, null);
+//   }
+//
+//   /**
+//    * @see org.jboss.declarchive.api.Archive#addResource(java.lang.String, java.lang.ClassLoader)
+//    */
+//   @Override
+//   public final T addResource(final String name, final ClassLoader cl) throws IllegalArgumentException
+//   {
+//      // Precondition check
+//      if (name == null || name.length() == 0)
+//      {
+//         throw new IllegalArgumentException("name must be specified");
+//      }
+//      if (cl == null)
+//      {
+//         throw new IllegalArgumentException("ClassLoader must be specified");
+//      }
+//
+//      // Get the content of the resource
+//      byte[] content = null;
+//      try
+//      {
+//         content = this.getBytesOfResource(name, cl);
+//      }
+//      catch (final IOException ioe)
+//      {
+//         throw new RuntimeException("Could not add resource \"" + name + "\" to " + this, ioe);
+//      }
+//
+//      // Add
+//      this.addContent(content, name);
+//
+//      // Return
+//      return this.covarientReturn();
+//   }
+//
+//   /**
+//    * @see org.jboss.declarchive.api.Archive#addResource(java.net.URL, java.lang.String)
+//    */
+//   @Override
+//   public T addResource(final URL location, final String newPath) throws IllegalArgumentException
+//   {
+//      // Precondition check
+//      if (location == null)
+//      {
+//         throw new IllegalArgumentException("location must be specified");
+//      }
+//
+//      // Get the content of the location
+//      byte[] content = null;
+//      try
+//      {
+//         content = this.getBytesOfResource(location);
+//      }
+//      catch (final IOException ioe)
+//      {
+//         throw new RuntimeException("Could not add location \"" + location + "\" to " + this, ioe);
+//      }
+//
+//      // Adjust the path if not explicitly defined
+//      String path = newPath;
+//      if (path == null)
+//      {
+//         path = location.getPath();
+//         if (log.isLoggable(Level.FINER))
+//         {
+//            log.log(Level.FINER, "Implicitly set new path to \"" + path + "\" while adding: " + location);
+//         }
+//      }
+//
+//      // Add
+//      this.addContent(content, path);
+//
+//      // Return
+//      return this.covarientReturn();
+//   }
 
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||

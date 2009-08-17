@@ -98,21 +98,21 @@ public class VfsMemoryArchiveTestCase
    @Test
    public void testAddResourceExplicitPathNameMemory() throws Exception
    {
-      // Log
-      log.info("testAddResourceExplicitPathNameMemory");
-
-      // Get the base
-      final URL base = this.getBase();
-
-      // Get the path to the test XML file
-      final URL location = new URL(base, PATH_SOMETHING_XML);
-
-      // Define the new path
-      final String newPath = PATH_WEB_INF + SEPARATOR + FILENAME_WEB_XML;
-
-      // Make a virtual archive
-      final Archive archive = new MemoryArchiveImpl("something.war").addResource(location, newPath);
-      log.info(archive.toString(true));
+//      // Log
+//      log.info("testAddResourceExplicitPathNameMemory");
+//
+//      // Get the base
+//      final URL base = this.getBase();
+//
+//      // Get the path to the test XML file
+//      final URL location = new URL(base, PATH_SOMETHING_XML);
+//
+//      // Define the new path
+//      final String newPath = PATH_WEB_INF + SEPARATOR + FILENAME_WEB_XML;
+//
+//      // Make a virtual archive
+//      final Archive archive = new MemoryArchiveImpl("something.war").addResource(location, newPath);
+//      log.info(archive.toString(true));
 
       //TODO Actually test something when we have better hooks to examine archive contents
    }
