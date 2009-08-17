@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
-import org.jboss.declarchive.api.VfsMemoryArchiveFactory;
+import org.jboss.declarchive.api.mightmoveordelete.VfsMemoryArchiveFactory;
 import org.jboss.declarchive.spi.vfs.VfsArchive;
 import org.jboss.virtual.VFS;
 import org.junit.BeforeClass;
