@@ -14,33 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.impl.base.resource;
+package org.jboss.declarchive.impl.base.asset;
 
+import java.io.File;
 import java.io.InputStream;
 
 import junit.framework.Assert;
 
-import org.jboss.declarchive.spi.Resource;
+import org.jboss.declarchive.api.Asset;
 import org.junit.Test;
 
 /**
- * Test to ensure that we can use a URL as a resource.
+ * Test to ensure that we can use a File as a resource.
  * 
  * https://jira.jboss.org/jira/browse/TMPARCH-5
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  *
  */
-public class URLResourceTestCase
+public class FileAssetTestCase
 {
-   private static final String EXISTING_RESOURCE = "org/jboss/declarchive/impl/base/resource/Test.properties";
+   private static final String BASE_PATH = "src/test/resources/org/jboss/declarchive/impl/base/asset/";
+
+   private static final String EXISTING_FILE = BASE_PATH + "Test.properties";
+
+   private static final String NON_EXISTING_FILE = BASE_PATH + "NoFileShouldBePlacedHere.properties";
 
    @Test
-   public void shouldBeAbleToReadURL() throws Exception
+   public void shouldBeAbleToReadFile() throws Exception
    {
-      Resource resource = new URLResource(Thread.currentThread().getContextClassLoader().getResource(EXISTING_RESOURCE));
-
-      InputStream io = resource.getStream();
+      Asset asset = new FileAsset(new File(EXISTING_FILE));
+      InputStream io = asset.getStream();
 
       Assert.assertNotNull(io);
       Assert.assertEquals("Should be able to read the content of the resource", "declarch=true", TestUtils
@@ -48,25 +52,31 @@ public class URLResourceTestCase
    }
 
    @Test
-   public void shouldBeAbleToReadDefaultName() throws Exception
-   {
-      Resource resource = new URLResource(Thread.currentThread().getContextClassLoader().getResource(EXISTING_RESOURCE));
-
-      Assert.assertEquals("A URL resource should use the file name as default name, not absolute path",
-            "Test.properties", resource.getDefaultName());
-   }
-
-   @Test
-   public void shouldThrowExceptionOnNullURL() throws Exception
+   public void shouldThrowExceptionOnNullFile() throws Exception
    {
       try
       {
-         new URLResource(null);
+         new FileAsset(null);
          Assert.fail("Should have thrown IllegalArgumentException");
       }
       catch (Exception e)
       {
-         Assert.assertEquals("A null url argument should result in a IllegalArgumentException",
+         Assert.assertEquals("A null file argument should result in a IllegalArgumentException",
+               IllegalArgumentException.class, e.getClass());
+      }
+   }
+
+   @Test
+   public void shouldThrowExceptionOnMissingFile() throws Exception
+   {
+      try
+      {
+         new FileAsset(new File(NON_EXISTING_FILE));
+         Assert.fail("Should have thrown IllegalArgumentException");
+      }
+      catch (Exception e)
+      {
+         Assert.assertEquals("A non existing file should result in a IllegalArgumentException",
                IllegalArgumentException.class, e.getClass());
       }
    }

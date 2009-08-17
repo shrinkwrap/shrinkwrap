@@ -14,40 +14,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.impl.base.resource;
+package org.jboss.declarchive.impl.base.asset;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
+import org.jboss.declarchive.api.Asset;
+import org.junit.Assert;
+import org.junit.Test;
+
 /**
+ * Test to ensure that we are able to use Classes as Resources.
+ *
+ * https://jira.jboss.org/jira/browse/TMPARCH-5
+ * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  *
  */
-class TestUtils
+public class ClassAssetTestCase
 {
-   private TestUtils()
+
+   @Test
+   public void shouldBeAbleToReadThisClass() throws Exception
    {
+      Asset asset = new ClassAsset(ClassAssetTestCase.class);
+      InputStream io = asset.getStream();
+
+      Assert.assertNotNull(io);
    }
 
-   /**
-    * Convert a inputstream to a UTF-8 string. 
-    * 
-    * Helper for testing the content of loaded resources.
-    * 
-    * @param in Open inputstream
-    * @return The inputstream as a String
-    * @throws Exception
-    */
-   static String convertToString(InputStream in) throws Exception
+   @Test
+   public void shouldThrowExceptionOnNullClass() throws Exception
    {
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      int b;
-      while ((b = in.read()) != -1)
+      try
       {
-         out.write(b);
+         new ClassAsset(null);
+         Assert.fail("Should have thrown IllegalArgumentException");
       }
-      out.close();
-      in.close();
-      return new String(out.toByteArray(), "UTF-8");
+      catch (Exception e)
+      {
+         Assert.assertEquals("A null clazz argument should result in a IllegalArgumentException",
+               IllegalArgumentException.class, e.getClass());
+      }
    }
 }

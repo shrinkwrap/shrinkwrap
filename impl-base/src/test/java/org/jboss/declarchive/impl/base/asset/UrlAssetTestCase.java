@@ -14,55 +14,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.impl.base.resource;
+package org.jboss.declarchive.impl.base.asset;
 
 import java.io.InputStream;
 
-import org.jboss.declarchive.spi.Resource;
-import org.junit.Assert;
+import junit.framework.Assert;
+
+import org.jboss.declarchive.api.Asset;
 import org.junit.Test;
 
 /**
- * Test to ensure that we are able to use Classes as Resources.
- *
+ * Test to ensure that we can use a URL as a resource.
+ * 
  * https://jira.jboss.org/jira/browse/TMPARCH-5
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  *
  */
-public class ClassResourceTestCase
+public class UrlAssetTestCase
 {
+   private static final String EXISTING_RESOURCE = "org/jboss/declarchive/impl/base/asset/Test.properties";
 
    @Test
-   public void shouldBeAbleToReadThisClass() throws Exception
+   public void shouldBeAbleToReadURL() throws Exception
    {
-      Resource resource = new ClassResource(ClassResourceTestCase.class);
-      InputStream io = resource.getStream();
+      Asset asset = new UrlAsset(Thread.currentThread().getContextClassLoader().getResource(EXISTING_RESOURCE));
+
+      InputStream io = asset.getStream();
 
       Assert.assertNotNull(io);
-   }
-
-   // TODO: add test to byte compare expected result?
-
-   @Test
-   public void shouldBeAbleToReadDefaultName() throws Exception
-   {
-      Resource resource = new ClassResource(ClassResourceTestCase.class);
-      Assert.assertEquals("A Class resource should use class name + '.class' as default name",
-            "org/jboss/declarchive/impl/base/resource/ClassResourceTestCase.class", resource.getDefaultName());
+      Assert.assertEquals("Should be able to read the content of the resource", "declarch=true", TestUtils
+            .convertToString(io));
    }
 
    @Test
-   public void shouldThrowExceptionOnNullClass() throws Exception
+   public void shouldThrowExceptionOnNullURL() throws Exception
    {
       try
       {
-         new ClassResource(null);
+         new UrlAsset(null);
          Assert.fail("Should have thrown IllegalArgumentException");
       }
       catch (Exception e)
       {
-         Assert.assertEquals("A null clazz argument should result in a IllegalArgumentException",
+         Assert.assertEquals("A null url argument should result in a IllegalArgumentException",
                IllegalArgumentException.class, e.getClass());
       }
    }

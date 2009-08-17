@@ -14,19 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.impl.base.resource;
+package org.jboss.declarchive.impl.base.asset;
 
 import java.io.InputStream;
 
-import org.jboss.declarchive.spi.Resource;
+import org.jboss.declarchive.api.Asset;
+import org.jboss.declarchive.impl.base.Validate;
 
 /**
- * Loads the given class using the class's ClassLoader.
+ * ClassAsset
+ * 
+ * Implementation of a {@link Asset} backed by a loaded {@link Class}
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  *
  */
-public class ClassResource implements Resource
+public class ClassAsset implements Asset
 {
    /**
     * Delimiter for paths while looking for resources 
@@ -51,23 +54,11 @@ public class ClassResource implements Resource
     * @param clazz The class to load
     * @throws IllegalArgumentException Class can not be null
     */
-   public ClassResource(Class<?> clazz)
+   public ClassAsset(final Class<?> clazz)
    {
       // Precondition check
-      if (clazz == null)
-      {
-         throw new IllegalArgumentException("Class must be specified");
-      }
+      Validate.notNull(clazz, "Class must be specified");
       this.clazz = clazz;
-   }
-
-   /**
-    * Get the default name using Class.getSimpleName().
-    */
-   @Override
-   public String getDefaultName()
-   {
-      return getResourceNameOfClass(clazz);
    }
 
    /**
@@ -77,7 +68,7 @@ public class ClassResource implements Resource
    @Override
    public InputStream getStream()
    {
-      return new ClassloaderResource(getResourceNameOfClass(clazz), clazz.getClassLoader()).getStream();
+      return new ClassLoaderAsset(getResourceNameOfClass(clazz), clazz.getClassLoader()).getStream();
    }
 
    /**

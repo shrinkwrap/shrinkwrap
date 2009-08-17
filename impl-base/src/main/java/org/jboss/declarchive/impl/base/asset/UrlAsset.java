@@ -14,50 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.impl.base.resource;
+package org.jboss.declarchive.impl.base.asset;
 
 import java.io.InputStream;
 import java.net.URL;
 
-import org.jboss.declarchive.spi.Resource;
+import org.jboss.declarchive.api.Asset;
+import org.jboss.declarchive.impl.base.Validate;
 
 /**
- * Loads the content of any URL supported by the runtime.
+ * UrlAsset
+ * 
+ * Implementation of a {@link Asset} backed by a {@link URL}.  
+ * The URL may be of any backing protocol supported by the runtime
+ * (ie. has a handler registered).
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  *
  */
-public class URLResource implements Resource
+public class UrlAsset implements Asset
 {
    private URL url;
 
    /**
-    * Create a new resource with a URL source.
+    * Create a new resource with a <code>URL</code> source.
     * 
     * @param url A valid URL
-    * @throws IllegalArgumentException URL can not be null
+    * @throws IllegalArgumentException <Code>URL</code> can not be null
     */
-   public URLResource(URL url)
+   public UrlAsset(URL url)
    {
       // Precondition check
-      if (url == null)
-      {
-         throw new IllegalArgumentException("URL must be specified");
-      }
+      Validate.notNull(url, "URL must be specified");
       this.url = url;
    }
 
    /**
-    * Get the default name using URL.getFile().
-    */
-   @Override
-   public String getDefaultName()
-   {
-      return extractFileName(url);
-   }
-
-   /**
-    * Open the URL stream.
+    * Open the <code>URL</code> stream.
     * 
     * @return A open stream with the content of the URL
     */
@@ -72,19 +65,5 @@ public class URLResource implements Resource
       {
          throw new RuntimeException("Could not open stream for url " + url.toExternalForm(), e);
       }
-   }
-
-   /*
-    * Extract the file name part of a URL excluding the directory structure.
-    * ie: /user/test/file.properties = file.properties
-    */
-   private String extractFileName(URL url)
-   {
-      String fileName = url.getFile();
-      if (fileName.indexOf('/') != -1)
-      {
-         return fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
-      }
-      return fileName;
    }
 }

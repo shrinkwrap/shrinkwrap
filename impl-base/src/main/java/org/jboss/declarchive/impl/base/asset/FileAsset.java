@@ -14,22 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.impl.base.resource;
+package org.jboss.declarchive.impl.base.asset;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import org.jboss.declarchive.spi.Resource;
+import org.jboss.declarchive.api.Asset;
+import org.jboss.declarchive.impl.base.Validate;
 
 /**
- * Loads any File.
+ * FileAsset
+ * 
+ * Implementation of a {@link Asset} backed by a {@link File}
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- *
  */
-public class FileResource implements Resource
+public class FileAsset implements Asset
 {
    private File file;
 
@@ -40,27 +42,15 @@ public class FileResource implements Resource
     * @throws IllegalArgumentException File can not be null
     * @throws IllegalArgumentException File must exist
     */
-   public FileResource(File file)
+   public FileAsset(File file)
    {
       // Precondition check
-      if (file == null)
-      {
-         throw new IllegalArgumentException("File must be specified");
-      }
+      Validate.notNull(file, "File must be specified");
       if (!file.exists())
       {
          throw new IllegalArgumentException("File must exist: " + file.getAbsolutePath());
       }
       this.file = file;
-   }
-
-   /**
-    * Get the default name using File.getName();
-    */
-   @Override
-   public String getDefaultName()
-   {
-      return file.getName();
    }
 
    /**

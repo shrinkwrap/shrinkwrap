@@ -14,20 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.impl.base.resource;
+package org.jboss.declarchive.impl.base.asset;
 
 import java.io.InputStream;
-import java.net.URL;
 
-import org.jboss.declarchive.spi.Resource;
+import org.jboss.declarchive.api.Asset;
+import org.jboss.declarchive.impl.base.Validate;
 
 /**
- * Loads the content of any resource located in the Classloader.
+ * ClassloaderAsset
+ * 
+ * Implementation of a {@link Asset} backed by a 
+ * resource located in the Classloader.
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- *
  */
-public class ClassloaderResource implements Resource
+public class ClassLoaderAsset implements Asset
 {
    private String resourceName;
 
@@ -40,7 +42,7 @@ public class ClassloaderResource implements Resource
     * @throws IllegalArgumentException resourceName can not be null
     * @throws IllegalArgumentException resourceName must be found in given classloader
     */
-   public ClassloaderResource(String resourceName)
+   public ClassLoaderAsset(String resourceName)
    {
       this(resourceName, SecurityActions.getThreadContextClassLoader());
    }
@@ -54,33 +56,15 @@ public class ClassloaderResource implements Resource
     * @throws IllegalArgumentException classloader can not be null
     * @throws IllegalArgumentException resourceName must be found in given classloader
     */
-   public ClassloaderResource(String resourceName, ClassLoader classLoader)
+   public ClassLoaderAsset(String resourceName, ClassLoader classLoader)
    {
-      if (resourceName == null)
-      {
-         throw new IllegalArgumentException("ResourceName must be specified");
-      }
-      if (classLoader == null)
-      {
-         throw new IllegalArgumentException("ClassLoader must be specified");
-      }
-      if (classLoader.getResource(resourceName) == null)
-      {
-         throw new IllegalArgumentException(resourceName + " not found in classloader " + classLoader);
-      }
+      Validate.notNull(resourceName, "ResourceName must be specified");
+      Validate.notNull(classLoader, "ClassLoader must be specified");
+      Validate
+            .notNull(classLoader.getResource(resourceName), resourceName + " not found in classloader " + classLoader);
+
       this.resourceName = resourceName;
       this.classLoader = classLoader;
-   }
-
-   /**
-    * Get the default name using Resource URL.getFile().
-    * 
-    * @return Returns only the file name part of a URL, not the absolute path.
-    */
-   @Override
-   public String getDefaultName()
-   {
-      return extractFileName(classLoader.getResource(resourceName));
    }
 
    /**
@@ -93,17 +77,4 @@ public class ClassloaderResource implements Resource
       return classLoader.getResourceAsStream(resourceName);
    }
 
-   /*
-    * Extract the file name part of a URL excluding the directory structure.
-    * ie: /user/test/file.properties = file.properties
-    */
-   private String extractFileName(URL url)
-   {
-      String fileName = url.getFile();
-      if (fileName.indexOf('/') != -1)
-      {
-         return fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
-      }
-      return fileName;
-   }
 }
