@@ -16,7 +16,7 @@
  */
 package org.jboss.declarchive.api;
 
-import java.net.URL;
+import java.util.Map;
 
 /**
  * Archive
@@ -34,67 +34,100 @@ public interface Archive<T extends Archive<T>>
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Adds the specified Class to the archive
-    * 
-    * @param The class to add
-    * @return This virtual deployment
-    * @throws IllegalArgumentException If no class was specified
+    * Obtains the name of this archive (ie. myLibrary.jar)
     */
-   T addClass(Class<?> clazz) throws IllegalArgumentException;
+   String getName();
 
    /**
-    * Adds the specified Classes to the archive.  
-    * 
-    * @param classes
-    * @return This virtual deployment
-    * @throws IllegalArgumentException If no classes were specified
-    */
-   T addClasses(Class<?>... classes) throws IllegalArgumentException;
-
-   /**
-    * Adds the resource with the specified name to the 
-    * deployment.  The resource name must be visible to the ClassLoader
-    * of the archive
-    * 
-    * @param name
+    * Adds the specified assets to the archive and returns this reference
+    *  
+    * @param assets
     * @return
-    * @throws IllegalArgumentException If the name was not specified
+    * @throws IllegalArgumentException If no assets were specified
     */
-   T addResource(String name) throws IllegalArgumentException;
+   T add(Asset... assets) throws IllegalArgumentException;
 
    /**
-    * Adds the specified resource to the archive, using the specified ClassLoader
-    * to load the resource
+    * Adds the specified assets under the specified path into the
+    * target context
     * 
-    * @param name
-    * @param cl
+    * @param target The context under which to add the assets 
+    * @param assets
     * @return
-    * @throws IllegalArgumentException If either the name or ClassLoader is not specified
+    * @throws IllegalArgumentException If no target or assets were specified
     */
-   T addResource(String name, ClassLoader cl) throws IllegalArgumentException;
+   T add(Path target, Asset... assets) throws IllegalArgumentException;
 
    /**
-    * Adds the resource located at the specified URL to the archive.  The
-    * location within the archive will be equal to the path portion of the 
-    * specified URL.
+    * Adds the specified asset under the specified target (directory)
+    * using the specified name.  The resultant path will be treating 
+    * the specified path as a prefix namespace, then appending the name.
     * 
-    * @param location
+    * @param target The context directory under which to add the asset
+    * @param name The name to assign the assent under the target namespace
+    * @param asset
     * @return
-    * @throws IllegalArgumentException If the location is not specified
+    * @throws IllegalArgumentException If the target, name, or asset was not specified
     */
-   T addResource(URL location) throws IllegalArgumentException;
+   T add(Path target, String name, Asset asset) throws IllegalArgumentException;
 
    /**
-    * Adds the resource located at the specified URL to
-    * the archive at the specified path.
+    * Adds the specified resource under the context denoted by the specified target
     * 
-    * @param location
-    * @param newPath The new path to assign, or null if 
-    *   the path portion of the location should be used
+    * @param target
+    * @param asset
     * @return
-    * @throws IllegalArgumentException If the location is not specified 
+    * @throws IllegalArgumentException If either the target or asset is not specified 
     */
-   T addResource(URL location, String newPath) throws IllegalArgumentException;
+   T add(String target, Asset asset) throws IllegalArgumentException;
+
+   /**
+    * Obtains the asset located at the specified path
+    * 
+    * @param path
+    * @return
+    * @throws AssetNotFoundException If the specified path does not 
+    *   point to any asset in the archive
+    * @throws IllegalArgumentException If the path is not specified
+    */
+   Asset get(Path path) throws AssetNotFoundException, IllegalArgumentException;
+
+   /**
+    * Obtains the asset located at the specified path
+    * 
+    * @param path
+    * @return
+    * @throws AssetNotFoundException If the specified path does not 
+    *   point to any resource in the archive
+    * @throws IllegalArgumentException If the path is not specified
+    */
+   Asset get(String path) throws AssetNotFoundException, IllegalArgumentException;
+
+   /**
+    * Denotes whether this archive contains a resource at the specified
+    * path
+    * 
+    * @param path
+    * @return
+    * @throws IllegalArgumentException If the path is not specified
+    */
+   boolean contains(Path path) throws IllegalArgumentException;
+
+   /**
+    * Removes the asset in the archive at the specified Path.  If the path
+    * is a directory, recursively removes all contents.
+    * 
+    * @param path
+    * @return Whether or not a deletion was made
+    */
+   boolean delete(Path path) throws IllegalArgumentException;
+
+   /**
+    * Obtains all assets in this archive, along with its respective Path.
+    * The returned Map will be an immutable view.
+    * @return
+    */
+   Map<Path, Asset> getContent();
 
    /**
     * Returns a multiline "ls -l"-equse output of the contents of
