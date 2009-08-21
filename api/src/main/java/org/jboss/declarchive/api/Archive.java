@@ -130,6 +130,37 @@ public interface Archive<T extends Archive<T>>
    Map<Path, Asset> getContent();
 
    /**
+    * Add an archive under a specific and maintain the archive name a context path.
+    * 
+    * @param path to use 
+    * @param arhive to add
+    * @return
+    * @throws IllegalArgumentException If the path or archive are not specified 
+    */
+   T add(Path path, Archive<?> arhive);
+
+   /**
+    * Add the contents from an existing archive without 
+    * maintaining the archive name in the context path.  
+    * 
+    * @param source Archive to add contents from
+    * @return  
+    * @throws IllegalArgumentException If the existing archive is not specified
+    */
+   T addContents(Archive<?> source) throws IllegalArgumentException;
+
+   /**
+    * Add the contents from an existing archive in a specific path 
+    * without maintaining the archive name in the context path.
+    * 
+    * @param path Path to add contents to
+    * @param source Archive to add contents from
+    * @return  
+    * @throws IllegalArgumentException If the path or existing archive is not specified
+    */
+   T addContents(Path path, Archive<?> source) throws IllegalArgumentException;
+
+   /**
     * Returns a multiline "ls -l"-equse output of the contents of
     * this deployment and (recursively) its children if the verbosity 
     * flag is set to "true".  Otherwise the no-arg version is invoked
