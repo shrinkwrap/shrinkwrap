@@ -25,7 +25,7 @@ import org.junit.Test;
 /**
  * PathUtilTestCase
  * 
- * Test cases to ensure the path utilities are working as expected
+ * Test cases to ensure the path utilities are working as expected.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
