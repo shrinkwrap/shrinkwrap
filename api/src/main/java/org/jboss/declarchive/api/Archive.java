@@ -39,24 +39,15 @@ public interface Archive<T extends Archive<T>>
    String getName();
 
    /**
-    * Adds the specified assets to the archive and returns this reference
-    *  
-    * @param assets
-    * @return
-    * @throws IllegalArgumentException If no assets were specified
-    */
-   T add(Asset... assets) throws IllegalArgumentException;
-
-   /**
-    * Adds the specified assets under the specified path into the
+    * Adds the specified asset under the specified path into the
     * target context
     * 
     * @param target The context under which to add the assets 
-    * @param assets
+    * @param asset
     * @return
     * @throws IllegalArgumentException If no target or assets were specified
     */
-   T add(Path target, Asset... assets) throws IllegalArgumentException;
+   T add(Path target, Asset asset) throws IllegalArgumentException;
 
    /**
     * Adds the specified asset under the specified target (directory)
@@ -137,7 +128,7 @@ public interface Archive<T extends Archive<T>>
     * @return
     * @throws IllegalArgumentException If the path or archive are not specified 
     */
-   T add(Path path, Archive<?> arhive);
+   T add(Path path, Archive<?> archive);
 
    /**
     * Add the contents from an existing archive without 
