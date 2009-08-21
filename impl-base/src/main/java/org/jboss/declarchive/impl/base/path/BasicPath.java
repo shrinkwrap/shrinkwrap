@@ -16,19 +16,21 @@
  */
 package org.jboss.declarchive.impl.base.path;
 
+import java.util.logging.Logger;
+
 import org.jboss.declarchive.api.Path;
 import org.jboss.declarchive.impl.base.Validate;
 
 /**
- * PrefixPath
+ * BasicPath
  * 
  * A Path which may be optionally prefixed with some common
- * namespace
+ * namespace context at construction time.  Thread-safe.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-abstract class PrefixPath implements Path, Comparable<Path>
+public class BasicPath implements Path, Comparable<Path>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -36,16 +38,17 @@ abstract class PrefixPath implements Path, Comparable<Path>
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Empty String
+    * Logger
     */
-   private static final String EMPTY_STRING = "";
+   private static final Logger log = Logger.getLogger(BasicPath.class.getName());
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * The context which this path represents
+    * The context which this path represents; immutable so we're
+    * thread-safe.
     */
    private final String context;
 
@@ -57,14 +60,50 @@ abstract class PrefixPath implements Path, Comparable<Path>
     * Creates a new Path with the specified context
     * 
     * @param prefix The prefix to prepend to every context returned
-    * in {@link PrefixPath#get()}.  May be null or blank
+    * in {@link BasicPath#get()}.  May be null or blank
     * @param context The context which this path represents.  Null or 
     * blank represents the root.
     */
-   PrefixPath(final String context)
+   public BasicPath(final String context)
    {
       Validate.notNull(context, "Context must be specified");
       this.context = context;
+   }
+
+   /**
+    * Creates a new Path using the specified base 
+    * and specified relative context.
+    * 
+    * @param basePath
+    * @param context
+    */
+   public BasicPath(final Path basePath, final Path context)
+   {
+      this(basePath, context.get());
+   }
+
+   /**
+    * Creates a new Path using the specified base 
+    * and specified relative context.
+    * 
+    * @param basePath
+    * @param context
+    */
+   public BasicPath(final Path basePath, final String context)
+   {
+      this(basePath.get(), context);
+   }
+
+   /**
+    * Creates a new Path using the specified base 
+    * and specified relative context.
+    * 
+    * @param basePath
+    * @param context
+    */
+   public BasicPath(final String basePath, String context)
+   {
+      this(PathUtil.composeAbsoluteContext(basePath, context));
    }
 
    //-------------------------------------------------------------------------------------||
@@ -77,11 +116,7 @@ abstract class PrefixPath implements Path, Comparable<Path>
    @Override
    public String get()
    {
-      // Return the prefix plus the context
-      final String prefix = this.getPrefix();
-      final String prefixToUse = prefix == null ? EMPTY_STRING : prefix;
-      final String resolvedContext = prefixToUse + context;
-      return resolvedContext;
+      return context;
    }
 
    /**
@@ -100,15 +135,6 @@ abstract class PrefixPath implements Path, Comparable<Path>
          return this.get().compareTo(path.get());
       }
    }
-
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Obtains the prefix to prepend to all path contexts
-    */
-   abstract String getPrefix();
 
    //-------------------------------------------------------------------------------------||
    // Overridden Implementations ---------------------------------------------------------||
@@ -138,7 +164,7 @@ abstract class PrefixPath implements Path, Comparable<Path>
          return false;
       if (getClass() != obj.getClass())
          return false;
-      final PrefixPath other = (PrefixPath) obj;
+      final BasicPath other = (BasicPath) obj;
       if (context == null)
       {
          if (other.context != null)

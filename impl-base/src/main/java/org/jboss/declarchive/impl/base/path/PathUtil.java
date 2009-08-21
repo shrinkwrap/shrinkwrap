@@ -19,66 +19,219 @@ package org.jboss.declarchive.impl.base.path;
 
 /**
  * PathUtil
+ * 
+ * A series of internal-only path utilities for
+ * adjusting relative forms, removing double-slashes, etc.
+ * Used in correcting inputs in the creation of new Paths
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class PathUtil
+class PathUtil
 {
 
+   //-------------------------------------------------------------------------------------||
+   // Class Members ----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Slash character
+    */
+   static final char SLASH = '/';
+
+   //-------------------------------------------------------------------------------------||
+   // Constructor ------------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * No instantiation
+    */
    private PathUtil()
    {
+      throw new UnsupportedOperationException("Constructor should never be invoked; this is a static util class");
    }
 
-   public static String fixRelativePath(String path)
+   //-------------------------------------------------------------------------------------||
+   // Utilities --------------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Composes an absolute context from a given base and actual context
+    * relative to the base, returning the result.  ie. base of
+    * "base" and context of "context" will
+    * result in form "/base/context".
+    */
+   static String composeAbsoluteContext(final String base, final String context)
    {
+      // Precondition checks
+      assertSpecified(base);
+      assertSpecified(context);
+
+      // Compose
+      final String relative = PathUtil.adjustToAbsoluteDirectoryContext(base);
+      final String reformedContext = PathUtil.removePrecedingSlash(context);
+      final String actual = relative + reformedContext;
+
+      // Return
+      return actual;
+   }
+
+   /**
+    * Adjusts the specified path to relative form:
+    * 
+    * 1) Removes, if present, a preceding slash
+    * 2) Adds, if not present, a trailing slash
+    * 
+    * Null arguments are returned as-is
+    * 
+    * @param path
+    */
+   static String adjustToRelativeDirectoryContext(final String path)
+   {
+      // Return nulls
       if (path == null)
       {
          return path;
       }
-      String removedPrefix = removePrefix(path);
-      String addedPostfix = addPostfix(removedPrefix);
 
+      // Strip absolute form
+      final String removedPrefix = removePrecedingSlash(path);
+      // Add end of context slash
+      final String addedPostfix = optionallyAppendSlash(removedPrefix);
+
+      // Return
       return addedPostfix;
    }
 
-   public static String fixBasePath(String path)
+   /**
+    * Adjusts the specified path to absolute form:
+    * 
+    * 1) Adds, if not present, a preceding slash
+    * 2) Adds, if not present, a trailing slash
+    * 
+    * Null arguments are returned as-is
+    * 
+    * @param path
+    */
+   static String adjustToAbsoluteDirectoryContext(String path)
    {
+      // Return nulls
       if (path == null)
       {
          return path;
       }
-      String prefixedPath = addPrefix(path);
-      String prePostfixedPath = addPostfix(prefixedPath);
 
-      return prePostfixedPath;
+      // Add prefic slash
+      final String prefixedPath = optionallyPrependSlash(path);
+      // Add end of context slash
+      final String addedPostfix = optionallyAppendSlash(prefixedPath);
+
+      // Return
+      return addedPostfix;
    }
 
-   private static String removePrefix(String path)
+   /**
+    * Removes, if present, the absolute slash preceding
+    * the specified path, and returns the adjusted result
+    * 
+    * @param path
+    * @return
+    */
+   static String removePrecedingSlash(final String path)
    {
-      if (path.charAt(0) == '/')
+      // Precondition check
+      assertSpecified(path);
+
+      // Is there's a first character of slash
+      if (isFirstCharSlash(path))
       {
+         // Return everything but first char
          return path.substring(1);
       }
+
+      // Return as-is
       return path;
    }
 
-   private static String addPostfix(String path)
+   /**
+    * Adds, if not already present, the absolute slash following
+    * the specified path, and returns the adjusted result
+    * 
+    * @param path
+    * @return
+    */
+   static String optionallyAppendSlash(final String path)
    {
-      if (path.charAt(path.length() - 1) != '/')
+      // Precondition check
+      assertSpecified(path);
+
+      // If the last character is not a slash
+      if (!isLastCharSlash(path))
       {
-         return path + '/';
+         // Append
+         return path + SLASH;
       }
+
+      // Return as-is
       return path;
    }
 
-   private static String addPrefix(String path)
+   /**
+    * Adds, if not already present, the absolute slash preceding
+    * the specified path, and returns the adjusted result
+    * 
+    * @param path
+    * @return
+    */
+   static String optionallyPrependSlash(final String path)
    {
-      if (path.charAt(0) != '/')
+      // Precondition check
+      assertSpecified(path);
+
+      // If the first character is not a slash
+      if (!isFirstCharSlash(path))
       {
-         return '/' + path;
+         // Prepend the slash
+         return SLASH + path;
       }
+
+      // Return as-is
       return path;
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Internal Helper Methods ------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Returns whether or not the first character in the specified String is
+    * a slash  
+    */
+   private static boolean isFirstCharSlash(final String path)
+   {
+      assertSpecified(path);
+      return path.charAt(0) == SLASH;
+   }
+
+   /**
+    * Returns whether or not the last character in the specified String is
+    * a slash  
+    */
+   private static boolean isLastCharSlash(final String path)
+   {
+      assertSpecified(path);
+      return path.charAt(path.length() - 1) == '/';
+   }
+
+   /**
+    * Ensures the path is specified
+    * @param path
+    */
+   private static void assertSpecified(final String path)
+   {
+      // Precondition check
+      assert path != null : "Path must be specified";
    }
 
 }
