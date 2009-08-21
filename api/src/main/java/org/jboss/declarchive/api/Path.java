@@ -25,7 +25,7 @@ package org.jboss.declarchive.api;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public interface Path extends Comparable<Path>
+public interface Path
 {
    /**
     * Obtains the context which this Path represents

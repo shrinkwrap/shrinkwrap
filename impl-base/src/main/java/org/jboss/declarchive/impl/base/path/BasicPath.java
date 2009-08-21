@@ -31,7 +31,7 @@ import org.jboss.declarchive.api.Path;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class BasicPath implements Path, Comparable<Path>
+public class BasicPath implements Path
 {
 
    //-------------------------------------------------------------------------------------||
@@ -121,23 +121,6 @@ public class BasicPath implements Path, Comparable<Path>
    public String get()
    {
       return context;
-   }
-
-   /**
-    * @see java.lang.Comparable#compareTo(java.lang.Object)
-    */
-   @Override
-   public int compareTo(final Path path)
-   {
-      if (path == null)
-      {
-         return 1;
-      }
-      else
-      {
-         // Compare the contexts
-         return this.get().compareTo(path.get());
-      }
    }
 
    //-------------------------------------------------------------------------------------||
