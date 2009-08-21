@@ -31,7 +31,7 @@ import org.jboss.declarchive.api.Path;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class BasicPath implements Path
+public class BasicPath implements Path, Comparable<Path>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -115,6 +115,7 @@ public class BasicPath implements Path
    //-------------------------------------------------------------------------------------||
 
    /**
+    * {@inheritDoc}
     * @see org.jboss.declarchive.api.Path#get()
     */
    @Override
@@ -123,11 +124,29 @@ public class BasicPath implements Path
       return context;
    }
 
+   /**
+    * {@inheritDoc}
+    * @see java.lang.Comparable#compareTo(java.lang.Object)
+    */
+   @Override
+   public int compareTo(final Path path)
+   {
+      // If a null argument, we're greater
+      if (path == null)
+      {
+         return 1;
+      }
+
+      // Just delegate to underlying Strings
+      return path.get().compareTo(this.get());
+   }
+
    //-------------------------------------------------------------------------------------||
    // Overridden Implementations ---------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
+    * {@inheritDoc}
     * @see java.lang.Object#hashCode()
     */
    @Override
@@ -140,6 +159,7 @@ public class BasicPath implements Path
    }
 
    /**
+    * {@inheritDoc}
     * @see java.lang.Object#equals(java.lang.Object)
     */
    @Override
@@ -163,6 +183,7 @@ public class BasicPath implements Path
    }
 
    /**
+    * {@inheritDoc}
     * @see java.lang.Object#toString()
     */
    @Override
