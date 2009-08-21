@@ -40,6 +40,11 @@ class PathUtil
     */
    static final char SLASH = '/';
 
+   /**
+    * Empty String
+    */
+   static final String EMPTY = "";
+
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -70,7 +75,7 @@ class PathUtil
 
       // Compose
       final String relative = PathUtil.adjustToAbsoluteDirectoryContext(base);
-      final String reformedContext = PathUtil.removePrecedingSlash(context);
+      final String reformedContext = PathUtil.optionallyRemovePrecedingSlash(context);
       final String actual = relative + reformedContext;
 
       // Return
@@ -96,7 +101,7 @@ class PathUtil
       }
 
       // Strip absolute form
-      final String removedPrefix = removePrecedingSlash(path);
+      final String removedPrefix = optionallyRemovePrecedingSlash(path);
       // Add end of context slash
       final String addedPostfix = optionallyAppendSlash(removedPrefix);
 
@@ -133,12 +138,12 @@ class PathUtil
 
    /**
     * Removes, if present, the absolute slash preceding
-    * the specified path, and returns the adjusted result
+    * the specified path, and returns the adjusted result. 
     * 
     * @param path
     * @return
     */
-   static String removePrecedingSlash(final String path)
+   static String optionallyRemovePrecedingSlash(final String path)
    {
       // Precondition check
       assertSpecified(path);
@@ -156,7 +161,7 @@ class PathUtil
 
    /**
     * Adds, if not already present, the absolute slash following
-    * the specified path, and returns the adjusted result
+    * the specified path, and returns the adjusted result.  
     * 
     * @param path
     * @return
@@ -179,25 +184,31 @@ class PathUtil
 
    /**
     * Adds, if not already present, the absolute slash preceding
-    * the specified path, and returns the adjusted result
+    * the specified path, and returns the adjusted result.  If 
+    * the argument is null, adjusts to an empty String 
+    * before processing.
     * 
     * @param path
     * @return
     */
    static String optionallyPrependSlash(final String path)
    {
-      // Precondition check
-      assertSpecified(path);
+      // Adjust null
+      String resolved = path;
+      if (resolved == null)
+      {
+         resolved = EMPTY;
+      }
 
       // If the first character is not a slash
-      if (!isFirstCharSlash(path))
+      if (!isFirstCharSlash(resolved))
       {
          // Prepend the slash
-         return SLASH + path;
+         return SLASH + resolved;
       }
 
       // Return as-is
-      return path;
+      return resolved;
    }
 
    //-------------------------------------------------------------------------------------||
@@ -211,6 +222,10 @@ class PathUtil
    private static boolean isFirstCharSlash(final String path)
    {
       assertSpecified(path);
+      if (path.length() == 0)
+      {
+         return false;
+      }
       return path.charAt(0) == SLASH;
    }
 
@@ -221,7 +236,11 @@ class PathUtil
    private static boolean isLastCharSlash(final String path)
    {
       assertSpecified(path);
-      return path.charAt(path.length() - 1) == '/';
+      if (path.length() == 0)
+      {
+         return false;
+      }
+      return path.charAt(path.length() - 1) == SLASH;
    }
 
    /**

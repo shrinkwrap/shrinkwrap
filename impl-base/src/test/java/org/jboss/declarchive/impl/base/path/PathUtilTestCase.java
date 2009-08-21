@@ -55,7 +55,7 @@ public class PathUtilTestCase
       log.info("testRemovePrecedingSlash");
       final String precedingSlash = "/test/something";
       final String expected = precedingSlash.substring(1);
-      final String result = PathUtil.removePrecedingSlash(precedingSlash);
+      final String result = PathUtil.optionallyRemovePrecedingSlash(precedingSlash);
       Assert.assertEquals("Call to remove preceding slash should return everything in input except the first slash",
             expected, result);
    }
@@ -68,7 +68,7 @@ public class PathUtilTestCase
    {
       log.info("testRemovePrecedingSlash");
       final String noPrecedingSlash = "test/something";
-      final String result = PathUtil.removePrecedingSlash(noPrecedingSlash);
+      final String result = PathUtil.optionallyRemovePrecedingSlash(noPrecedingSlash);
       Assert.assertEquals(
             "Call to remove preceding slash on input with no preceding slash should return equal by value to input",
             noPrecedingSlash, result);

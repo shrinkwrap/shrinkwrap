@@ -16,10 +16,10 @@
  */
 package org.jboss.declarchive.impl.base.path;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.declarchive.api.Path;
-import org.jboss.declarchive.impl.base.Validate;
 
 /**
  * BasicPath
@@ -28,6 +28,7 @@ import org.jboss.declarchive.impl.base.Validate;
  * namespace context at construction time.  Thread-safe.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
 public class BasicPath implements Path, Comparable<Path>
@@ -59,15 +60,18 @@ public class BasicPath implements Path, Comparable<Path>
    /**
     * Creates a new Path with the specified context
     * 
-    * @param prefix The prefix to prepend to every context returned
-    * in {@link BasicPath#get()}.  May be null or blank
     * @param context The context which this path represents.  Null or 
-    * blank represents the root.
+    * blank represents the root.  Relative paths will be adjusted
+    * to absolute form.
     */
    public BasicPath(final String context)
    {
-      Validate.notNull(context, "Context must be specified");
-      this.context = context;
+      final String resolvedContext = PathUtil.optionallyPrependSlash(context);
+      if (log.isLoggable(Level.FINER))
+      {
+         log.finer("Resolved \"" + context + "\" to absolute form: " + resolvedContext);
+      }
+      this.context = resolvedContext;
    }
 
    /**
