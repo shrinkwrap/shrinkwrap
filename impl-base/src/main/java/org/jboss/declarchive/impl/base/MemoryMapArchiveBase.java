@@ -18,7 +18,6 @@ package org.jboss.declarchive.impl.base;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -37,7 +36,7 @@ import org.jboss.declarchive.spi.MemoryMapArchive;
 /**
  * MemoryMapArchiveBase
  * 
- * A base implementation for all MemoryMap archives
+ * A base implementation for all MemoryMap archives. Thread-safe.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
@@ -261,16 +260,7 @@ public abstract class MemoryMapArchiveBase<T extends MemoryMapArchive> implement
    {
       StringBuilder sb = new StringBuilder();
       List<Path> paths = new ArrayList<Path>(content.keySet());
-      // TODO: Make sure Paths impl Comparable
-      Collections.sort(paths, new Comparator<Path>()
-      {
-         @Override
-         public int compare(Path path1, Path path2)
-         {
-            return path1.get().compareTo(path2.get());
-         }
-
-      });
+      Collections.sort(paths);
 
       for (Path path : paths)
       {

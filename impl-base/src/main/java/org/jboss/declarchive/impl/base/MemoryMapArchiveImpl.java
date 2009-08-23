@@ -22,7 +22,7 @@ import org.jboss.declarchive.spi.MemoryMapArchive;
 /**
  * MemoryMapArchiveImpl
  * 
- * A default implementation for all MemoryMap archives.
+ * A default implementation for all MemoryMap archives. Thread-safe.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
