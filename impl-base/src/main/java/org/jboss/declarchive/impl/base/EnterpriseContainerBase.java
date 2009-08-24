@@ -117,6 +117,9 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>>
     */
    protected abstract Path getModulePath();
    
+   /* (non-Javadoc)
+    * @see org.jboss.declarchive.api.container.EnterpriseContainer#addModule(org.jboss.declarchive.api.Archive)
+    */
    @Override
    public T addModule(Archive<?> archive) throws IllegalArgumentException
    {
@@ -126,6 +129,9 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>>
       return add(location, archive);
    }
    
+   /* (non-Javadoc)
+    * @see org.jboss.declarchive.api.container.EnterpriseContainer#addModule(java.lang.String)
+    */
    @Override
    public T addModule(String resourceName)
    {
