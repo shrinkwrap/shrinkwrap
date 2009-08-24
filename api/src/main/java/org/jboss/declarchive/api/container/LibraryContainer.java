@@ -25,7 +25,7 @@ import org.jboss.declarchive.api.Path;
  * Defines the contract for a component capable of storing 
  * Libraries.
  * <br/><br/>
- * The actual path to the Library resources within the Archive 
+ * The actual path to the Library resources within the {@link Archive} 
  * is up to the implementations/specifications.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
@@ -41,14 +41,14 @@ public interface LibraryContainer<T extends Archive<T>>
     * Adds the resource with the specified name
     * as a library to the container, returning the container itself.
     * <br/><br/>
-    * The ClassLoader used to obtain the resource is up to
+    * The {@link ClassLoader} used to obtain the resource is up to
     * the implementation.  The resource will be placed into 
     * the Container Library path under the same context from which it was retrieved.
     * <br/>
     * For instance a resourceName of "test/library.jar" could be placed
     * "/lib/test/library.jar".
     * 
-    * @param resourceName Name of the ClassLoader resource to add
+    * @param resourceName Name of the {@link ClassLoader} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     */
@@ -58,7 +58,7 @@ public interface LibraryContainer<T extends Archive<T>>
     * Adds the resource with the specified name
     * as a library to the container under the target path, returning the container itself.
     * <br/><br/>
-    * The ClassLoader used to obtain the resource is up to
+    * The {@link ClassLoader} used to obtain the resource is up to
     * the implementation.  The resource will be placed into 
     * the Containers Library path under the relative target path.
     * <br/>
@@ -66,7 +66,7 @@ public interface LibraryContainer<T extends Archive<T>>
     * "/lib/test/example.jar".
     * 
     * @param target New name of the resource in the container
-    * @param resourceName Name of the ClassLoader resource to add
+    * @param resourceName Name of the {@link ClassLoader} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if target is null
     * @throws IllegalArgumentException if resourceName is null
@@ -74,14 +74,14 @@ public interface LibraryContainer<T extends Archive<T>>
    T addLibrary(Path target, String resourceName) throws IllegalArgumentException;
    
    /**
-    * Add another Archive<?> to this Archive as a Library.
+    * Add another {@link Archive} to this {@link Archive} as a Library.
     * <br/><br/>
     * For instance a Archive with name 'example.jar' could be placed in
     * "/lib/example.jar".
     * 
-    * @param archive The Archive to be added to the Library path
+    * @param archive The {@link Archive} to be added to the Library path
     * @return This virtual archive
-    * @throws IllegalArgumentException if Archive is null
+    * @throws IllegalArgumentException if {@link Archive} is null
     */
    T addLibrary(Archive<?> archive) throws IllegalArgumentException;
 }

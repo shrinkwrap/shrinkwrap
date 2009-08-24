@@ -25,7 +25,7 @@ import org.jboss.declarchive.api.Path;
  * Defines the contract for a component capable of storing 
  * Enterprise related resources.
  * <br/><br/>
- * The actual path to the Enterprise resources within the Archive 
+ * The actual path to the Enterprise resources within the {@link Archive} 
  * is up to the implementations/specifications.
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
@@ -38,50 +38,72 @@ public interface EnterpriseContainer<T extends Archive<T>>
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Adds a resource to this Archive as application.xml.
+    * Adds a resource to this {@link Archive}s as application.xml.
     * <br/><br/>
-    * The ClassLoader used to obtain the resource is up to
+    * The {@link ClassLoader} used to obtain the resource is up to
     * the implementation. 
     * <br/>
     * For instance a resourceName of "test/example.xml" could be placed in 
     * "/META-INF/application.xml"
     * 
-    * @param resourceName Name of the ClassLoader resource to add 
+    * @param resourceName Name of the {@link ClassLoader} resource to add 
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     */
    T setApplicationXML(String resourceName) throws IllegalArgumentException;
    
    /**
-    * Adds a resource to this Archives application context.
+    * Adds a resource to this {@link Archive}s application context.
     * <br/><br/>
-    * The ClassLoader used to obtain the resource is up to
+    * The {@link ClassLoader} used to obtain the resource is up to
     * the implementation.
     * <br/>
     * For instance a resourceName of "test/example.xml" could be placed in 
     * "/META-INF/test/example.xml"
     *   
-    * @param resourceName Name of the ClassLoader resource to add
+    * @param resourceName Name of the {@link ClassLoader} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     */
    T addApplicationResource(String resourceName) throws IllegalArgumentException;
    
    /**
-    * Adds a resource to this Archives application context.
+    * Adds a resource to this {@link Archive}s application context.
     * <br/><br/>
-    * The ClassLoader used to obtain the resource is up to
+    * The {@link ClassLoader} used to obtain the resource is up to
     * the implementation.
     * <br/>
     * For instance a resourceName of "test/example.xml" and a 
     * target of "example/myexample.xml" could be placed in 
     * "/META-INF/example/myexample.xml"
     *   
-    * @param resourceName Name of the ClassLoader resource to add
+    * @param resourceName Name of the {@link ClassLoader} resource to add
     * @param newName New name of the resource in the container
     * @return This virtual archive
     * @throws IllegalArgumentException if target is null
     * @throws IllegalArgumentException if resourceName is null
     */
    T addApplicationResource(Path target, String resourceName) throws IllegalArgumentException;
+
+   /**
+    * Adds a archive to this {@link Archive}s module context.
+    * <br/><br/>
+    * The {@link Archive} name is used as path.
+    *  
+    * @param archive The archive to use
+    * @return This virtual archive
+    * @throws IllegalArgumentException if archive is null
+    */
+   T addModule(Archive<?> archive) throws IllegalArgumentException;
+   
+   /**
+    * Adds a resource to this {@link Archive}s module context.
+    * <br/><br/>
+    * The resource name is used as path.
+    * 
+    * @param resourceName
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourceName is null
+    */
+   T addModule(String resourceName);
 }

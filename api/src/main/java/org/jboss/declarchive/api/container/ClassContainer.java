@@ -24,7 +24,7 @@ import org.jboss.declarchive.api.Archive;
  * Defines the contract for a component capable of storing 
  * Java Classes.
  * <br/><br/>
- * The actual path to the Class resources within the Archive 
+ * The actual path to the {@link Class} resources within the {@link Archive} 
  * is up to the implementations/specifications.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
@@ -37,21 +37,21 @@ public interface ClassContainer<T extends Archive<T>>
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Adds the specified Classes to the archive.
+    * Adds the specified Classes to the {@link Archive}.
     * 
-    * @param classes
+    * @param classes The classes to add to the Archive
     * @return This virtual archive
     * @throws IllegalArgumentException If no classes were specified
     */
-   T add(Class<?>... classes) throws IllegalArgumentException;
+   T addClasses(Class<?>... classes) throws IllegalArgumentException;
 
    /**
-    * Adds all classes in the specified Packages to the archive.
+    * Adds all classes in the specified {@link Package}s to the {@link Archive}.
     * 
-    * @param recursive Should the packages be added recursively
+    * @param recursive Should the sub packages be added
     * @param packages All the packages to add
     * @return This virtual archive
     * @throws IllegalArgumentException If no packages were specified
     */
-   T add(boolean recursive, Package... packages) throws IllegalArgumentException;
+   T addPackages(boolean recursive, Package... packages) throws IllegalArgumentException;
 }

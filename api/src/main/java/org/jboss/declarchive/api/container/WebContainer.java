@@ -41,13 +41,13 @@ public interface WebContainer<T extends Archive<T>>
    /**
     * Adds a resource to this Archive as web.xml.
     * <br/><br/>
-    * The ClassLoader used to obtain the resource is up to
+    * The {@link ClassLoader} used to obtain the resource is up to
     * the implementation. 
     * <br/>
     * For instance a resourceName of "test/example.xml" could be placed in 
     * "/WEB-INF/web.xml"
     * 
-    * @param resourceName Name of the ClassLoader resource to add 
+    * @param resourceName Name of the {@link ClassLoader} resource to add 
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     */
@@ -57,7 +57,7 @@ public interface WebContainer<T extends Archive<T>>
     * Adds the resource with the specified name
     * to the container, returning the container itself.
     * <br/><br/>
-    * The ClassLoader used to obtain the resource is up to
+    * The {@link ClassLoader} used to obtain the resource is up to
     * the implementation. 
     * <br/>
     * For instance a resourceName of "test/example.xml" could be placed in 
@@ -73,14 +73,14 @@ public interface WebContainer<T extends Archive<T>>
     * Adds the resource with the specified name
     * to the container, returning the container itself.
     * <br/><br/>
-    * The ClassLoader used to obtain the resource is up to
+    * The {@link ClassLoader} used to obtain the resource is up to
     * the implementation. 
     * <br/>
     * For instance a resourceName of "test/library.xml" and target of "/test/example.xml" could be placed in
     * "/lib/test/example.xml".
     * 
     * @param target The target relative to Manifest path within the archive into which we'll place the resource
-    * @param resourceName Name of the ClassLoader resource to add
+    * @param resourceName Name of the {@link ClassLoader} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if target is null
     * @throws IllegalArgumentException if resourceName is null

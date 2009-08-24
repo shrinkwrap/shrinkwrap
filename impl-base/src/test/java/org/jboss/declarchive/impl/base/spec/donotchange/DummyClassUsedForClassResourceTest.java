@@ -14,28 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.declarchive.api.spec;
+package org.jboss.declarchive.impl.base.spec.donotchange;
 
-import org.jboss.declarchive.api.Archive;
-import org.jboss.declarchive.api.container.ClassContainer;
-import org.jboss.declarchive.api.container.ManifestContainer;
-import org.jboss.declarchive.api.container.ResourceContainer;
 
 /**
- * JavaArchive
+ * DummyClassUsedForClassResourceTest
  * 
- * Traditional JAR (Java Archive) structure. Used in 
- * construction of libraries and applications.
+ * This class is just here for the ClassContainer.addPackage/addClass tests.
  *
- * @see http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html
- * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface JavaArchive extends 
-      Archive<JavaArchive>, 
-      ResourceContainer<JavaArchive>, 
-      ManifestContainer<JavaArchive>, 
-      ClassContainer<JavaArchive>
+public class DummyClassUsedForClassResourceTest
 {
 }
