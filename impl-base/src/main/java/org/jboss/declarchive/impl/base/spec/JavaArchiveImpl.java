@@ -82,7 +82,7 @@ public class JavaArchiveImpl
    //-------------------------------------------------------------------------------------||
 
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerSupport#getManinfestPath()
+    * @see org.jboss.declarchive.impl.base.ContainerBase#getManinfestPath()
     */
    @Override
    protected Path getManinfestPath()
@@ -91,7 +91,7 @@ public class JavaArchiveImpl
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerSupport#getClassesPath()
+    * @see org.jboss.declarchive.impl.base.ContainerBase#getClassesPath()
     */
    @Override
    protected Path getClassesPath()
@@ -100,7 +100,7 @@ public class JavaArchiveImpl
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerSupport#getResourcePath()
+    * @see org.jboss.declarchive.impl.base.ContainerBase#getResourcePath()
     */
    @Override
    protected Path getResourcePath()

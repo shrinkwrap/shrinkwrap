@@ -74,7 +74,7 @@ public class WebArchiveImpl
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Create a new JavaArchive with any type storage engine as backing.
+    * Create a new WebArchive with any type storage engine as backing.
     * 
     * @param delegate The storage backing.
     */
@@ -88,7 +88,7 @@ public class WebArchiveImpl
    //-------------------------------------------------------------------------------------||
 
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerSupport#getManinfestPath()
+    * @see org.jboss.declarchive.impl.base.ContainerBase#getManinfestPath()
     */
    @Override
    protected Path getManinfestPath()
@@ -97,7 +97,7 @@ public class WebArchiveImpl
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerSupport#getClassesPath()
+    * @see org.jboss.declarchive.impl.base.ContainerBase#getClassesPath()
     */
    @Override
    protected Path getClassesPath()
@@ -106,7 +106,7 @@ public class WebArchiveImpl
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerSupport#getResourcePath()
+    * @see org.jboss.declarchive.impl.base.ContainerBase#getResourcePath()
     */
    @Override
    protected Path getResourcePath()
@@ -115,7 +115,7 @@ public class WebArchiveImpl
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerSupport#getLibraryPath()
+    * @see org.jboss.declarchive.impl.base.ContainerBase#getLibraryPath()
     */
    @Override
    public Path getLibraryPath()
@@ -124,7 +124,7 @@ public class WebArchiveImpl
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.WebContainerSupport#getWebPath()
+    * @see org.jboss.declarchive.impl.base.WebContainerBase#getWebPath()
     */
    @Override
    protected Path getWebPath()

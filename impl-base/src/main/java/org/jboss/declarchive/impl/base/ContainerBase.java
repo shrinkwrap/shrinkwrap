@@ -36,7 +36,7 @@ import org.jboss.declarchive.impl.base.asset.UrlAsset;
 import org.jboss.declarchive.impl.base.path.BasicPath;
 
 /**
- * ContainerSupport
+ * ContainerBase
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $

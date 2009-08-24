@@ -82,36 +82,57 @@ public class EnterpriseArchiveImpl
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
+   
+   /* (non-Javadoc)
+    * @see org.jboss.declarchive.impl.base.ContainerBase#getLibraryPath()
+    */
    @Override
    public Path getLibraryPath()
    {
       return PATH_LIBRARY;
    }
    
+   /* (non-Javadoc)
+    * @see org.jboss.declarchive.impl.base.ContainerBase#getResourcePath()
+    */
    @Override
    protected Path getResourcePath()
    {
       return PATH_RESOURCE;
    }
    
+   /* (non-Javadoc)
+    * @see org.jboss.declarchive.impl.base.ContainerBase#getManinfestPath()
+    */
    @Override
    protected Path getManinfestPath()
    {
       return PATH_MANIFEST;
    }
    
+   /* (non-Javadoc)
+    * @see org.jboss.declarchive.impl.base.EnterpriseContainerBase#getApplicationPath()
+    */
    @Override
    protected Path getApplicationPath()
    {
       return PATH_APPLICATION;
    }
    
+   /* (non-Javadoc)
+    * @see org.jboss.declarchive.impl.base.EnterpriseContainerBase#getModulePath()
+    */
    @Override
    protected Path getModulePath()
    {
       return PATH_MODULE;
    }
    
+   /**
+    * Classes are not supported by EnterpriseArchive.
+    * 
+    * @throws UnsupportedOperationException EnterpriseArchive does not support classes
+    */
    @Override
    protected Path getClassesPath()
    {

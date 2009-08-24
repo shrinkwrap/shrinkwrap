@@ -26,7 +26,7 @@ import org.jboss.declarchive.impl.base.asset.ClassLoaderAsset;
 import org.jboss.declarchive.impl.base.path.BasicPath;
 
 /**
- * WebContainerSupport
+ * WebContainerBase
  * 
  * Abstract class that helps implement the WebContainer. 
  * Used by specs that extends the WebContainer.
