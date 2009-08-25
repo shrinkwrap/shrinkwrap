@@ -68,7 +68,16 @@ public class ClassAsset implements Asset
    @Override
    public InputStream getStream()
    {
-      return new ClassLoaderAsset(getResourceNameOfClass(clazz), clazz.getClassLoader()).getStream();
+      /*
+       * https://jira.jboss.org/jira/browse/TMPARCH-19
+       * If class is loaded by the Bootstrap ClassLoader, getClassLoader will return null.
+       * Use Thread Current Context ClassLoader instead.
+       */
+      ClassLoader classLoader= clazz.getClassLoader();
+      if(classLoader == null) {
+         classLoader = Thread.currentThread().getContextClassLoader();
+      }
+      return new ClassLoaderAsset(getResourceNameOfClass(clazz), classLoader).getStream();
    }
 
    /**

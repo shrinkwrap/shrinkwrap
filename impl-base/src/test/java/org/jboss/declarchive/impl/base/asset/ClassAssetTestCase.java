@@ -56,4 +56,19 @@ public class ClassAssetTestCase
                IllegalArgumentException.class, e.getClass());
       }
    }
+   
+   /**
+    * https://jira.jboss.org/jira/browse/TMPARCH-19
+    * <br/><br/>
+    * A {@link Class} loaded by the Bootstrap ClassLoader will return a null {@link ClassLoader}, 
+    * should use {@link Thread} current context {@link ClassLoader} instead.
+    * 
+    * @throws Exception
+    */
+   @Test
+   public void shouldSwitchToTCCLIfClassIsLoadedByBootstrapClassLoader() throws Exception 
+   {
+      Asset asset = new ClassAsset(Class.class);
+      asset.getStream();
+   }
 }
