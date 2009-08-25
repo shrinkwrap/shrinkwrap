@@ -21,10 +21,12 @@
  */
 package org.jboss.declarchive.impl.vfs;
 
-import java.net.URL;
+import java.util.logging.Logger;
 
-import org.jboss.declarchive.api.Archive;
-import org.jboss.logging.Logger;
+import org.jboss.declarchive.api.Path;
+import org.jboss.declarchive.impl.base.asset.ClassAsset;
+import org.jboss.declarchive.impl.base.path.BasicPath;
+import org.jboss.declarchive.spi.vfs.VfsArchive;
 import org.jboss.virtual.VFS;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -38,6 +40,8 @@ import org.junit.Test;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
+//TODO Build upon a common test base just as the MemoryMap impl uses,
+// and swap in a method to get the VFS Memory Archive impl
 public class VfsMemoryArchiveTestCase
 {
 
@@ -48,31 +52,7 @@ public class VfsMemoryArchiveTestCase
    /**
     * Logger
     */
-   private static final Logger log = Logger.getLogger(VfsMemoryArchiveTestCase.class);
-
-   /**
-    * Path to "WEB-INF" 
-    */
-   private static final String PATH_WEB_INF = "WEB-INF";
-
-   /**
-    * Filename of web.xml
-    */
-   private static final String FILENAME_WEB_XML = "web.xml";
-
-   /**
-    * Path, relative to the resources base, of a test XML file
-    */
-   private static final String PATH_SOMETHING_XML = "xml/something.xml";
-
-   /**
-    * Separator character within archives
-    */
-   private static final char SEPARATOR = '/';
-
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+   private static final Logger log = Logger.getLogger(VfsMemoryArchiveTestCase.class.getName());
 
    //-------------------------------------------------------------------------------------||
    // Lifecycle --------------------------------------------------------------------------||
@@ -92,40 +72,31 @@ public class VfsMemoryArchiveTestCase
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Tests that a resource may be added to an archive from a given location, 
-    * and assigned a new path within the archive
+    * Used in building the impl, not a true test yet
     */
    @Test
-   public void testAddResourceExplicitPathNameMemory() throws Exception
+   //TODO Implement this test
+   public void testMuckingAroundPrototypesNotARealTestYet() throws Exception
    {
-//      // Log
-//      log.info("testAddResourceExplicitPathNameMemory");
-//
-//      // Get the base
-//      final URL base = this.getBase();
-//
-//      // Get the path to the test XML file
-//      final URL location = new URL(base, PATH_SOMETHING_XML);
-//
-//      // Define the new path
-//      final String newPath = PATH_WEB_INF + SEPARATOR + FILENAME_WEB_XML;
-//
-//      // Make a virtual archive
-//      final Archive archive = new MemoryArchiveImpl("something.war").addResource(location, newPath);
-//      log.info(archive.toString(true));
+      // Log
+      log.info("testMuckingAroundPrototypesNotARealTestYet");
 
-      //TODO Actually test something when we have better hooks to examine archive contents
-   }
+      //      // Get the base
+      //      final URL base = this.getBase();
+      //
+      //      // Get the path to the test XML file
+      //      final URL location = new URL(base, PATH_SOMETHING_XML);
+      //
+      //      // Define the new path
+      //      final String newPath = PATH_WEB_INF + SEPARATOR + FILENAME_WEB_XML;
 
-   //-------------------------------------------------------------------------------------||
-   // Internal Helper Methods ------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Obtains the test resources base
-    */
-   private URL getBase() throws Exception
-   {
-      return this.getClass().getProtectionDomain().getCodeSource().getLocation();
+      // Make a virtual archive
+      final VfsArchive archive = new VfsMemoryArchiveImpl("something.jar");
+      archive.add(new BasicPath("something"), new ClassAsset(this.getClass()));
+      final Path elsePath = new BasicPath("somethingelse");
+      archive.add(elsePath, new ClassAsset(VfsMemoryArchiveImpl.class));
+      log.info(archive.toString(true));
+      archive.delete(elsePath);
+      log.info(archive.toString(true));
    }
 }

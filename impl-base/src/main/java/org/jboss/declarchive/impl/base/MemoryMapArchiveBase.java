@@ -21,17 +21,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.declarchive.api.Archive;
 import org.jboss.declarchive.api.Asset;
-import org.jboss.declarchive.api.AssetNotFoundException;
 import org.jboss.declarchive.api.Path;
-import org.jboss.declarchive.impl.base.path.BasicPath;
-import org.jboss.declarchive.spi.MemoryMapArchive;
 
 /**
  * MemoryMapArchiveBase
@@ -43,7 +38,7 @@ import org.jboss.declarchive.spi.MemoryMapArchive;
  * @version $Revision: $
  * @param <T>
  */
-public abstract class MemoryMapArchiveBase<T extends MemoryMapArchive> implements Archive<MemoryMapArchive>
+public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends ArchiveBase<T> implements Archive<T>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -63,11 +58,6 @@ public abstract class MemoryMapArchiveBase<T extends MemoryMapArchive> implement
     * Storage for the {@link Asset}s.
     */
    private final Map<Path, Asset> content = new ConcurrentHashMap<Path, Asset>();
-
-   /**
-    * The file name for this {@link Archive}.
-    */
-   private final String archiveName;
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -93,26 +83,14 @@ public abstract class MemoryMapArchiveBase<T extends MemoryMapArchive> implement
     *  
     * @param archiveName
     */
-   public MemoryMapArchiveBase(String archiveName)
+   public MemoryMapArchiveBase(final String archiveName)
    {
-      super();
-      Validate.notNull(archiveName, "Archive name is required");
-
-      this.archiveName = archiveName;
+      super(archiveName);
    }
 
    //-------------------------------------------------------------------------------------||
    // Required Implementations - Archive -------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#getName()
-    */
-   @Override
-   public String getName()
-   {
-      return archiveName;
-   }
 
    /* (non-Javadoc)
     * @see org.jboss.declarchive.api.Archive#add(org.jboss.declarchive.api.Path, org.jboss.declarchive.api.Asset[])
@@ -125,29 +103,6 @@ public abstract class MemoryMapArchiveBase<T extends MemoryMapArchive> implement
 
       content.put(path, asset);
       return covariantReturn();
-   }
-
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#add(org.jboss.declarchive.api.Path, java.lang.String, org.jboss.declarchive.api.Asset)
-    */
-   @Override
-   public T add(Path path, String name, Asset asset)
-   {
-      Validate.notNull(path, "No path path was specified");
-      Validate.notNull(name, "No asset name was specified");
-      Validate.notNull(asset, "No asset was was specified");
-
-      content.put(new BasicPath(path, name), asset);
-      return covariantReturn();
-   }
-
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#add(java.lang.String, org.jboss.declarchive.api.Asset)
-    */
-   @Override
-   public T add(String name, Asset asset)
-   {
-      throw new UnsupportedOperationException("Remove when API updated");
    }
 
    /* (non-Javadoc)
@@ -181,75 +136,12 @@ public abstract class MemoryMapArchiveBase<T extends MemoryMapArchive> implement
    }
 
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#get(java.lang.String)
-    */
-   @Override
-   public Asset get(String path) throws AssetNotFoundException, IllegalArgumentException
-   {
-      Validate.notNull(path, "No path was specified");
-      return get(new BasicPath(path));
-   }
-
-   /* (non-Javadoc)
     * @see org.jboss.declarchive.api.Archive#getContent()
     */
    @Override
    public Map<Path, Asset> getContent()
    {
       return Collections.unmodifiableMap(content);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#add(org.jboss.declarchive.api.Path, org.jboss.declarchive.api.Archive)
-    */
-   @Override
-   public T add(Path path, Archive<?> archive)
-   {
-      Validate.notNull(path, "No path was specified");
-      Validate.notNull(archive, "No archive was specified");
-
-      final Path contentPath = new BasicPath(path, archive.getName());
-
-      return addContents(contentPath, archive);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#addContents(org.jboss.declarchive.api.Archive)
-    */
-   @Override
-   public T addContents(Archive<?> source) throws IllegalArgumentException
-   {
-      return addContents(new BasicPath(""), source);
-   }
-
-   /*
-    * (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#addContents(org.jboss.declarchive.api.Path, org.jboss.declarchive.api.Archive)
-    */
-   @Override
-   public T addContents(Path path, Archive<?> source) throws IllegalArgumentException
-   {
-      Validate.notNull(path, "No path was specified");
-      Validate.notNull(source, "No source archive was specified");
-
-      // Get existing contents from source archive
-      final Map<Path, Asset> sourceContent = source.getContent();
-      Validate.notNull(sourceContent, "Source archive content can not be null.");
-
-      // Add each asset from the source archive
-      for (Entry<Path, Asset> contentEntry : sourceContent.entrySet())
-      {
-         final Asset asset = contentEntry.getValue();
-         Path assetPath = contentEntry.getKey();
-         if (path != null)
-         {
-            assetPath = new BasicPath(path, assetPath);
-         }
-         add(assetPath, asset);
-      }
-      return covariantReturn();
    }
 
    /* (non-Javadoc)
@@ -279,31 +171,4 @@ public abstract class MemoryMapArchiveBase<T extends MemoryMapArchive> implement
       return toString(false);
    }
 
-   //-------------------------------------------------------------------------------------||
-   // Internal Helper Methods ------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Provides typesafe covariant return of this instance
-    */
-   protected final T covariantReturn()
-   {
-      try
-      {
-         return getActualClass().cast(this);
-      }
-      catch (final ClassCastException cce)
-      {
-         log.log(Level.SEVERE,
-               "The class specified by getActualClass is not a valid assignment target for this instance;"
-                     + " developer error");
-         throw cce;
-      }
-   }
-
-   /**
-    * 
-    * @return actual MemoryMapArchive type
-    */
-   protected abstract Class<T> getActualClass();
 }

@@ -16,25 +16,30 @@
  */
 package org.jboss.declarchive.impl.base;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.declarchive.api.Archive;
+import org.jboss.declarchive.api.Asset;
+import org.jboss.declarchive.api.AssetNotFoundException;
+import org.jboss.declarchive.api.Path;
+import org.jboss.declarchive.impl.base.path.BasicPath;
 
 /**
  * ArchiveBase
  * 
- * Base implementation of {@link Archive}
+ * Base implementation of {@link Archive}.  Contains
+ * support for operations (typically overloaded) that are 
+ * not specific to any particular storage implementation, 
+ * and may be delegated to other forms.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public abstract class ArchiveBase<T extends Archive<T>> 
+public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -46,236 +51,169 @@ public abstract class ArchiveBase<T extends Archive<T>>
     */
    private static final Logger log = Logger.getLogger(ArchiveBase.class.getName());
 
-   /**
-    * Extension for Java Archives 
-    */
-   public static final String EXTENSION_JAR = ".jar";
-
-   /**
-    * Delimiter for paths while looking for resources 
-    */
-   private static final char DELIMITER_RESOURCE_PATH = '/';
-
-   /**
-    * Delimiter for paths in fully-qualified class names 
-    */
-   private static final char DELIMITER_CLASS_NAME_PATH = '.';
-
-   /**
-    * The filename extension appended to classes
-    */
-   private static final String EXTENSION_CLASS = ".class";
-
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * The ClassLoader used in loading resources and classes into the virtual deployment
+    * Name of the archive
     */
-   private final ClassLoader classLoader;
+   private final String name;
 
    //-------------------------------------------------------------------------------------||
-   // Constructors -----------------------------------------------------------------------||
+   // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
     * Constructor
     * 
-    * Creates a new instance using the Thread Context ClassLoader
-    * from which we'll load resources by default
+    * Creates a new Archive with the specified name
+    * 
+    * @param name Name of the archive
+    * @throws IllegalArgumentException If the name was not specified
     */
-   protected ArchiveBase()
+   protected ArchiveBase(final String name) throws IllegalArgumentException
    {
-      // Use the TCCL 
-      this(SecurityActions.getThreadContextClassLoader());
+      // Precondition checks
+      Validate.notNullOrEmpty(name, "name must be specified");
+
+      // Set
+      this.name = name;
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Required Implementations -----------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.declarchive.api.Archive#add(java.lang.String, org.jboss.declarchive.api.Asset)
+    */
+   @Override
+   public T add(final String target, final Asset asset) throws IllegalArgumentException
+   {
+      // Precondition checks
+      Validate.notNullOrEmpty(target, "target must be specified");
+      Validate.notNull(asset, "asset must be specified");
+
+      // Make a Path from the target
+      final Path path = new BasicPath(target);
+
+      // Delegate
+      return this.add(path, asset);
    }
 
    /**
-    * Constructor
-    * 
-    * Creates a new instance using the specified ClassLoader
-    * from which we'll load resources by default
-    * 
-    * @param The ClassLoader to use by default
+    * {@inheritDoc}
+    * @see org.jboss.declarchive.api.Archive#add(org.jboss.declarchive.api.Path, java.lang.String, org.jboss.declarchive.api.Asset)
     */
-   protected ArchiveBase(final ClassLoader cl)
+   @Override
+   public T add(final Path path, final String name, final Asset asset)
    {
-      // Invoke super
-      super();
+      // Precondition checks
+      Validate.notNull(path, "No path was specified");
+      Validate.notNullOrEmpty(name, "No target name name was specified");
+      Validate.notNull(asset, "No asset was was specified");
 
-      // Precondition check
-      if (cl == null)
+      // Make a relative path
+      final Path resolvedPath = new BasicPath(path, name);
+
+      // Delegate
+      return this.add(resolvedPath, asset);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.declarchive.api.Archive#get(java.lang.String)
+    */
+   @Override
+   public Asset get(final String path) throws AssetNotFoundException, IllegalArgumentException
+   {
+      // Precondition checks
+      Validate.notNullOrEmpty(path, "No path was specified");
+
+      // Make a Path
+      final Path realPath = new BasicPath(path);
+
+      // Delegate
+      return get(realPath);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.declarchive.api.Archive#add(org.jboss.declarchive.api.Path, org.jboss.declarchive.api.Archive)
+    */
+   @Override
+   public T add(final Path path, final Archive<?> archive)
+   {
+      // Precondition checks
+      Validate.notNull(path, "No path was specified");
+      Validate.notNull(archive, "No archive was specified");
+
+      // Make a Path
+      final String archiveName = archive.getName();
+      final Path contentPath = new BasicPath(path, archiveName);
+
+      // Delegate
+      return addContents(contentPath, archive);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.declarchive.api.Archive#getName()
+    */
+   public final String getName()
+   {
+      return name;
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.declarchive.api.Archive#addContents(org.jboss.declarchive.api.Archive)
+    */
+   @Override
+   public T addContents(final Archive<?> source) throws IllegalArgumentException
+   {
+      return addContents(new BasicPath(), source);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.declarchive.api.Archive#addContents(org.jboss.declarchive.api.Path, org.jboss.declarchive.api.Archive)
+    */
+   @Override
+   public T addContents(final Path path, final Archive<?> source) throws IllegalArgumentException
+   {
+      // Precondition checks
+      Validate.notNull(path, "No path was specified");
+      Validate.notNull(source, "No source archive was specified");
+
+      // Get existing contents from source archive
+      final Map<Path, Asset> sourceContent = source.getContent();
+      Validate.notNull(sourceContent, "Source archive content can not be null.");
+
+      // Add each asset from the source archive
+      for (final Entry<Path, Asset> contentEntry : sourceContent.entrySet())
       {
-         throw new IllegalArgumentException("ClassLoader must be specified");
+         final Asset asset = contentEntry.getValue();
+         Path assetPath = contentEntry.getKey();
+         if (path != null)
+         {
+            assetPath = new BasicPath(path, assetPath);
+         }
+         // Delegate
+         add(assetPath, asset);
       }
-
-      // Set properties
-      this.classLoader = cl;
+      return covariantReturn();
    }
-
-//   //-------------------------------------------------------------------------------------||
-//   // Required Implementations -----------------------------------------------------------||
-//   //-------------------------------------------------------------------------------------||
-//
-//   /**
-//    * @see org.jboss.declarchive.api.Archive#addClass(java.lang.Class)
-//    */
-//   @Override
-//   public T addClass(final Class<?> clazz) throws IllegalArgumentException
-//   {
-//      // Precondition check
-//      if (clazz == null)
-//      {
-//         throw new IllegalArgumentException("Class must be specified");
-//      }
-//
-//      // Get the resource name of the class
-//      final String name = this.getResourceNameOfClass(clazz);
-//
-//      // Get the CL of the Class
-//      final ClassLoader cl = clazz.getClassLoader();
-//
-//      // Add it as a resource
-//      if (log.isLoggable(Level.FINER))
-//      {
-//         log.log(Level.FINER, "Adding class as resource: " + clazz);
-//      }
-//      return this.addResource(name, cl);
-//   }
-//
-//   /**
-//    * @see org.jboss.declarchive.api.Archive#addClasses(java.lang.Class<?>[])
-//    */
-//   @Override
-//   public T addClasses(final Class<?>... classes) throws IllegalArgumentException
-//   {
-//      // Precondition check
-//      if (classes == null || classes.length == 0)
-//      {
-//         throw new IllegalArgumentException("At least one class must be specified");
-//      }
-//
-//      // For each class
-//      for (final Class<?> clazz : classes)
-//      {
-//         this.addClass(clazz);
-//      }
-//
-//      // Return
-//      return this.covarientReturn();
-//   }
-//
-//   /**
-//    * @see org.jboss.declarchive.api.Archive#addResource(java.lang.String)
-//    */
-//   @Override
-//   public T addResource(final String name) throws IllegalArgumentException
-//   {
-//      return this.addResource(name, this.getClassLoader());
-//   }
-//
-//   /**
-//    * @see org.jboss.declarchive.api.Archive#addResource(java.net.URL)
-//    */
-//   @Override
-//   public T addResource(final URL location) throws IllegalArgumentException
-//   {
-//      // Delegate to the other implementation
-//      return this.addResource(location, null);
-//   }
-//
-//   /**
-//    * @see org.jboss.declarchive.api.Archive#addResource(java.lang.String, java.lang.ClassLoader)
-//    */
-//   @Override
-//   public final T addResource(final String name, final ClassLoader cl) throws IllegalArgumentException
-//   {
-//      // Precondition check
-//      if (name == null || name.length() == 0)
-//      {
-//         throw new IllegalArgumentException("name must be specified");
-//      }
-//      if (cl == null)
-//      {
-//         throw new IllegalArgumentException("ClassLoader must be specified");
-//      }
-//
-//      // Get the content of the resource
-//      byte[] content = null;
-//      try
-//      {
-//         content = this.getBytesOfResource(name, cl);
-//      }
-//      catch (final IOException ioe)
-//      {
-//         throw new RuntimeException("Could not add resource \"" + name + "\" to " + this, ioe);
-//      }
-//
-//      // Add
-//      this.addContent(content, name);
-//
-//      // Return
-//      return this.covarientReturn();
-//   }
-//
-//   /**
-//    * @see org.jboss.declarchive.api.Archive#addResource(java.net.URL, java.lang.String)
-//    */
-//   @Override
-//   public T addResource(final URL location, final String newPath) throws IllegalArgumentException
-//   {
-//      // Precondition check
-//      if (location == null)
-//      {
-//         throw new IllegalArgumentException("location must be specified");
-//      }
-//
-//      // Get the content of the location
-//      byte[] content = null;
-//      try
-//      {
-//         content = this.getBytesOfResource(location);
-//      }
-//      catch (final IOException ioe)
-//      {
-//         throw new RuntimeException("Could not add location \"" + location + "\" to " + this, ioe);
-//      }
-//
-//      // Adjust the path if not explicitly defined
-//      String path = newPath;
-//      if (path == null)
-//      {
-//         path = location.getPath();
-//         if (log.isLoggable(Level.FINER))
-//         {
-//            log.log(Level.FINER, "Implicitly set new path to \"" + path + "\" while adding: " + location);
-//         }
-//      }
-//
-//      // Add
-//      this.addContent(content, path);
-//
-//      // Return
-//      return this.covarientReturn();
-//   }
 
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Adds the specified content to the archive at the specified location
-    * 
-    * @param content
-    * @param location
-    * @throws IllegalArgumentException
-    */
-   protected abstract void addContent(final byte[] content, final String location) throws IllegalArgumentException;
-
-   /**
     * Returns the actual typed class for this instance, used in safe casting 
-    * for covarient return types
+    * for covariant return types
     * 
     * @return
     */
@@ -286,9 +224,9 @@ public abstract class ArchiveBase<T extends Archive<T>>
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Provides typesafe covarient return of this instance
+    * Provides typesafe covariant return of this instance
     */
-   protected final T covarientReturn()
+   protected final T covariantReturn()
    {
       try
       {
@@ -301,192 +239,6 @@ public abstract class ArchiveBase<T extends Archive<T>>
                      + " developer error");
          throw cce;
       }
-   }
-
-   /**
-    * Returns the name of the class such that it may be accessed via ClassLoader.getResource()
-    * 
-    * @param clazz The class
-    * @throws IllegalArgumentException If the class was not specified
-    */
-   private String getResourceNameOfClass(final Class<?> clazz) throws IllegalArgumentException
-   {
-      // Precondition check
-      if (clazz == null)
-      {
-         throw new IllegalArgumentException("Class must be specified");
-      }
-
-      // Build the name
-      final String fqn = clazz.getName();
-      final String nameAsResourcePath = fqn.replace(DELIMITER_CLASS_NAME_PATH, DELIMITER_RESOURCE_PATH);
-      final String resourceName = nameAsResourcePath + EXTENSION_CLASS;
-
-      // Return 
-      return resourceName;
-   }
-
-   /**
-    * Copies and returns the specified URL.  Used
-    * to ensure we don't export mutable URLs
-    * 
-    * @param url
-    * @return
-    */
-   protected final URL copyURL(final URL url)
-   {
-      // If null, return
-      if (url == null)
-      {
-         return url;
-      }
-
-      try
-      {
-         // Copy 
-         return new URL(url.toExternalForm());
-      }
-      catch (MalformedURLException e)
-      {
-         throw new RuntimeException("Error in copying URL", e);
-      }
-   }
-
-   /**
-    * Obtains the contents (bytes) of the specified location
-    * 
-    * @param location
-    * @return
-    * @throws IOException
-    * @throws IllegalArgumentException If the location is not specified
-    */
-   private byte[] getBytesOfResource(final URL location) throws IOException, IllegalArgumentException
-   {
-      // Precondition check
-      if (location == null)
-      {
-         throw new IllegalArgumentException("location must be specified");
-      }
-
-      // Open a connection and read in all the bytes
-      final URLConnection connection = location.openConnection();
-      final int length = connection.getContentLength();
-      assert length > -1 : "Content length is not known";
-      final InputStream in = connection.getInputStream();
-      final byte[] contents;
-      try
-      {
-         contents = new byte[length];
-         int offset = 0;
-         while (offset < length)
-         {
-            final int readLength = length - offset;
-            int bytesRead = in.read(contents, offset, readLength);
-            if (bytesRead == -1)
-            {
-               break; // EOF
-            }
-            offset += bytesRead;
-         }
-      }
-      finally
-      {
-         try
-         {
-            // Close up the stream
-            in.close();
-         }
-         catch (final IOException ignore)
-         {
-
-         }
-      }
-
-      // Return the byte array
-      if (log.isLoggable(Level.FINER))
-      {
-         log.log(Level.FINER, "Read " + length + " bytes for: " + location);
-      }
-      return contents;
-   }
-
-   /**
-    * Obtains the contents (bytes) of the specified resource using the 
-    * specified ClassLoader
-    * 
-    * @param name
-    * @param cl
-    * @return
-    * @throws IOException
-    * @throws IllegalArgumentException If the name or ClassLoader is not specified
-    */
-   private byte[] getBytesOfResource(final String name, final ClassLoader cl) throws IOException,
-         IllegalArgumentException
-   {
-      // Precondition check
-      if (name == null || name.length() == 0)
-      {
-         throw new IllegalArgumentException("name must be specified");
-      }
-      if (cl == null)
-      {
-         throw new IllegalArgumentException("ClassLoader must be specified");
-      }
-
-      // Get the URL
-      final URL resourceUrl = this.getResourceUrl(name, cl);
-
-      // Return
-      return this.getBytesOfResource(resourceUrl);
-   }
-
-   /**
-    * Obtains the URL of the resource with the requested name.
-    * The search order is described by {@link ClassLoader#getResource(String)}
-    * 
-    * @param name
-    * @return
-    * @throws IllegalArgumentException If name is not specified or could not be found, 
-    *   or if the ClassLoader is not specified 
-    */
-   private URL getResourceUrl(final String name, final ClassLoader cl) throws IllegalArgumentException
-   {
-      // Precondition check
-      if (name == null || name.length() == 0)
-      {
-         throw new IllegalArgumentException("name must be specified");
-      }
-      if (cl == null)
-      {
-         throw new IllegalArgumentException("ClassLoader must be specified");
-      }
-
-      // Find
-      final URL url = cl.getResource(name);
-
-      // Ensure found
-      if (url == null)
-      {
-         throw new ResourceNotFoundException("Could not find resource with name \"" + name + "\" in: " + cl);
-      }
-
-      // Return
-      return url;
-   }
-
-   //-------------------------------------------------------------------------------------||
-   // Accessors / Mutators ---------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Returns the ClassLoader used to load classes
-    * and resources into this virtual deployment
-    * 
-    * @return
-    */
-   protected final ClassLoader getClassLoader()
-   {
-      return this.classLoader;
    }
 
 }

@@ -121,10 +121,10 @@ public interface Archive<T extends Archive<T>>
    Map<Path, Asset> getContent();
 
    /**
-    * Add an archive under a specific and maintain the archive name a context path.
+    * Add an archive under a specific context and maintain the archive name as context path.
     * 
     * @param path to use 
-    * @param arhive to add
+    * @param archive to add
     * @return
     * @throws IllegalArgumentException If the path or archive are not specified 
     */

@@ -58,6 +58,14 @@ public class BasicPath implements Path, Comparable<Path>
    //-------------------------------------------------------------------------------------||
 
    /**
+    * Creates a new Path representing the root context
+    */
+   public BasicPath()
+   {
+      this(null);
+   }
+
+   /**
     * Creates a new Path with the specified context
     * 
     * @param context The context which this path represents.  Null or 

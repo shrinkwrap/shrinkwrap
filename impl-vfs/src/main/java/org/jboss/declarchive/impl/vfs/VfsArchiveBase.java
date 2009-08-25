@@ -17,6 +17,7 @@
 package org.jboss.declarchive.impl.vfs;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Logger;
@@ -34,7 +35,7 @@ import org.jboss.virtual.VirtualFile;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-abstract class VfsArchiveBase extends ArchiveBase<VfsArchive>
+abstract class VfsArchiveBase extends ArchiveBase<VfsArchive> implements VfsArchive
 {
 
    //-------------------------------------------------------------------------------------||
@@ -70,40 +71,36 @@ abstract class VfsArchiveBase extends ArchiveBase<VfsArchive>
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Constructor
+    * Creates a {@link VfsArchive} with the specified name
     * 
-    * Creates a new instance with the specified root and rootURL
-    * 
-    * @param root
-    * @param rootUrl
-    * @param cl
+    * @param name
     */
-   public VfsArchiveBase(final ClassLoader cl)
+   protected VfsArchiveBase(final String name)
    {
-      // Invoke super
-      super(cl);
+      super(name);
    }
 
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-//
-//   /* (non-Javadoc)
-//    * @see org.jboss.embedded.core.deployment.ExtensibleVirtualDeployment#toString(boolean)
-//    */
-//   @Override
-//   public String toString(final boolean verbose)
-//   {
-//      // If we want verbose output
-//      if (verbose)
-//      {
-//         // Describe the root
-//         return this.describe(this.getRoot());
-//      }
-//
-//      // Fall back on toString
-//      return this.toString();
-//   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.declarchive.api.Archive#toString(boolean)
+    */
+   @Override
+   public String toString(final boolean verbose)
+   {
+      // If we want verbose output
+      if (verbose)
+      {
+         // Describe the root
+         return this.describe(this.getRoot());
+      }
+
+      // Fall back on toString
+      return this.toString();
+   }
 
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||
@@ -246,8 +243,16 @@ abstract class VfsArchiveBase extends ArchiveBase<VfsArchive>
     * state from mutation)
     * @return
     */
-   final URL getRootUrl()
+   protected final URL getRootUrl()
    {
-      return this.copyURL(this.rootUrl);
+      final String form = this.rootUrl.toExternalForm();
+      try
+      {
+         return new URL(form);
+      }
+      catch (final MalformedURLException murle)
+      {
+         throw new RuntimeException("Error in copying URL as new URL: " + form);
+      }
    }
 }
