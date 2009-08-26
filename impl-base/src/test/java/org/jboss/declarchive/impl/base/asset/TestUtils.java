@@ -20,8 +20,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 /**
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * TestUtils
  *
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * @version $Revision: $
  */
 class TestUtils
 {
@@ -30,12 +32,14 @@ class TestUtils
    }
 
    /**
-    * Convert a inputstream to a UTF-8 string. 
-    * 
+    * Convert a {@link InputStream} to a UTF-8 string. 
+    * <br/>
     * Helper for testing the content of loaded resources.
+    * <br/>
+    * This method will close the stream when done.
     * 
-    * @param in Open inputstream
-    * @return The inputstream as a String
+    * @param in Open InputStream
+    * @return The InputStream as a String
     * @throws Exception
     */
    static String convertToString(InputStream in) throws Exception
@@ -49,5 +53,55 @@ class TestUtils
       out.close();
       in.close();
       return new String(out.toByteArray(), "UTF-8");
+   }
+   
+   /**
+    * Read the byte size of a {@link InputStream}.
+    * <br/>
+    * This method will close the stream when done. 
+    * 
+    * @param in Stream to get the size of.
+    * @return The byte size of the stream
+    * @throws Exception
+    */
+   static int findLengthOfStream(InputStream in) throws Exception 
+   {
+      int length = 0;
+      while(in.read() != -1) 
+      {
+         length++;
+      }
+      in.close();
+      return length;
+   }
+
+   /**
+    * Read the byte size of a {@link Class}.
+    * 
+    * @param clazz The class
+    * @return The byte size of the given {@link Class}
+    * @throws Exception
+    */
+   static int findLengthOfClass(Class<?> clazz) throws Exception 
+   {
+      String classResourceName = getResourceNameForClass(clazz);
+      InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(classResourceName);
+      return findLengthOfStream(in);
+   }
+   
+   /**
+    * Get a resourceName for a {@link Class} so that it can be found in the {@link ClassLoader}.
+    * <br/>
+    * class.getName.relace( . -> / ) + ".class"
+    * 
+    * @param clazz The class to lookup
+    * @return
+    */
+   static String getResourceNameForClass(Class<?> clazz) 
+   {
+      String classResourceDelimiter = clazz.getName()
+                  .replaceAll("\\.", "/");
+      String classFullPath = classResourceDelimiter + ".class";
+      return classFullPath;
    }
 }

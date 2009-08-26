@@ -36,10 +36,37 @@ public class ClassAssetTestCase
    @Test
    public void shouldBeAbleToReadThisClass() throws Exception
    {
-      Asset asset = new ClassAsset(ClassAssetTestCase.class);
+      Class<?> clazz = ClassAssetTestCase.class;
+      Asset asset = new ClassAsset(clazz);
       InputStream io = asset.getStream();
 
       Assert.assertNotNull(io);
+      Assert.assertEquals(
+            "Loaded class should have the same size", 
+            TestUtils.findLengthOfStream(io), 
+            TestUtils.findLengthOfClass(clazz));
+   }
+
+   /**
+    * https://jira.jboss.org/jira/browse/TMPARCH-19
+    * <br/><br/>
+    * A {@link Class} loaded by the Bootstrap ClassLoader will return a null {@link ClassLoader}, 
+    * should use {@link Thread} current context {@link ClassLoader} instead.
+    * 
+    * @throws Exception
+    */
+   @Test
+   public void shouldBeAbleAddBootstrapClass() throws Exception 
+   {
+      Class<?> bootstrapClass = Class.class;
+      Asset asset = new ClassAsset(bootstrapClass);
+      InputStream io = asset.getStream();
+
+      Assert.assertNotNull(io);
+      Assert.assertEquals(
+            "Loaded class should have the same size",
+            TestUtils.findLengthOfStream(io),
+            TestUtils.findLengthOfClass(bootstrapClass));
    }
 
    @Test
@@ -52,23 +79,10 @@ public class ClassAssetTestCase
       }
       catch (Exception e)
       {
-         Assert.assertEquals("A null clazz argument should result in a IllegalArgumentException",
-               IllegalArgumentException.class, e.getClass());
+         Assert.assertEquals(
+               "A null clazz argument should result in a IllegalArgumentException",
+               IllegalArgumentException.class, 
+               e.getClass());
       }
-   }
-   
-   /**
-    * https://jira.jboss.org/jira/browse/TMPARCH-19
-    * <br/><br/>
-    * A {@link Class} loaded by the Bootstrap ClassLoader will return a null {@link ClassLoader}, 
-    * should use {@link Thread} current context {@link ClassLoader} instead.
-    * 
-    * @throws Exception
-    */
-   @Test
-   public void shouldSwitchToTCCLIfClassIsLoadedByBootstrapClassLoader() throws Exception 
-   {
-      Asset asset = new ClassAsset(Class.class);
-      asset.getStream();
    }
 }
