@@ -34,17 +34,33 @@ import org.junit.Test;
 /**
  * ArchiveTestBase
  * 
- * Base test for all Archive service providers to help 
+ * Base test for all Archive service providers to help ensure consistency between implementations.
  *
+ * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
 public abstract class ArchiveTestBase<T extends Archive<T>>
 {
-
+   /**
+    * Get the {@link Archive} to test.
+    * 
+    * @return A Archive<T> instance.
+    */
    protected abstract Archive<T> getArchive();
 
+   /**
+    * Create a new {@link Archive} instance.
+    * <br/> 
+    * Used to test Archive.add(Archive) type addings.
+    * 
+    * @return A new Archive<T> instance.
+    */
+   protected abstract Archive<T> createNewArchive();
    
+   /**
+    * Simple printout of the tested archive. 
+    */
    @After
    public void ls()
    {
@@ -291,18 +307,13 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       Map<Path, Asset> content = archive.getContent();
       
-      byte[] addedData = IOUtil.asByteArray(asset.getStream());
-      byte[] addedDataTwo = IOUtil.asByteArray(assetTwo.getStream());
-      byte[] fetchedData = IOUtil.asByteArray(content.get(location).getStream());
-      byte[] fetchedDataTwo = IOUtil.asByteArray(content.get(locationTwo).getStream());
-      
       Assert.assertTrue(
             "Asset should existing in content with key: " + location.get(), 
-            Arrays.equals(addedData, fetchedData));
+            ArchiveTestUtil.compareAssets(asset, content.get(location)));
       
       Assert.assertTrue(
             "Asset should existing in content with key: " + locationTwo.get(), 
-            Arrays.equals(addedDataTwo, fetchedDataTwo));
+            ArchiveTestUtil.compareAssets(assetTwo, content.get(locationTwo)));
    }
    
    /**
@@ -339,6 +350,131 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       catch (IllegalArgumentException expectedException)
       {
       }
+   }
+
+   /**
+    * Ensure adding content requires a source archive
+    * @throws Exception
+    */
+   @Test
+   public void testAddContentsRequiresSource() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      try
+      {
+         archive.addContents(null);
+         Assert.fail("Should have throw an IllegalArgumentException");
+      }
+      catch (IllegalArgumentException expectedException)
+      {
+      }
+   }
+
+   /**
+    * Ensure adding content from another archive successfully stores all assets
+    * @throws Exception
+    */
+   @Test
+   public void testAddContents() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      Archive<T> sourceArchive = createNewArchive();
+      Path location = new BasicPath("/", "test.properties");
+      Path locationTwo = new BasicPath("/", "test2.properties");
+
+      Asset asset = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
+      Asset assetTwo = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test2.properties");
+      sourceArchive.add(location, asset).add(locationTwo, assetTwo);
+
+      archive.addContents(sourceArchive);
+      Assert.assertTrue(
+            "Asset should have been added to path: " + location.get(), 
+            ArchiveTestUtil.compareAssets(archive.get(location), asset));
+      
+      Assert.assertTrue(
+            "Asset should have been added to path: " + location.get(), 
+            ArchiveTestUtil.compareAssets(archive.get(locationTwo), assetTwo));
+   }
+
+   /**
+    * Ensure adding content from another archive to a path successfully stores all assets to specific path
+    * @throws Exception
+    */
+   @Test
+   public void testAddContentsToPath() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      Archive<T> sourceArchive = createNewArchive();
+      Path location = new BasicPath("/", "test.properties");
+      Path locationTwo = new BasicPath("/", "test2.properties");
+
+      Asset asset = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
+      Asset assetTwo = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test2.properties");
+      sourceArchive.add(location, asset).add(locationTwo, assetTwo);
+
+      Path baseLocation = new BasicPath("somewhere");
+
+      archive.addContents(baseLocation, sourceArchive);
+
+      Path expectedPath = new BasicPath(baseLocation, location);
+      Path expectedPathTwo = new BasicPath(baseLocation, locationTwo);
+
+      Assert.assertTrue(
+            "Asset should have been added to path: " + expectedPath.get(), 
+            ArchiveTestUtil.compareAssets(archive.get(expectedPath), asset));
+      
+      Assert.assertTrue(
+            "Asset should have been added to path: " + expectedPathTwo.getClass(), 
+            ArchiveTestUtil.compareAssets(archive.get(expectedPathTwo), assetTwo));
+   }
+
+   /**
+    * Ensure adding content from another archive requires a path
+    * @throws Exception
+    */
+   @Test
+   public void testAddContentsToPathRequiresPath() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      try
+      {
+         archive.addContents(null, createNewArchive());
+         Assert.fail("Should have throw an IllegalArgumentException");
+      }
+      catch (IllegalArgumentException expectedException)
+      {
+      }
+   }
+
+   /**
+    * Ensure adding an archive to a path successfully stores all assets to specific path including the archive name
+    * @throws Exception
+    */
+   @Test
+   public void testAddArchiveToPath() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      Archive<T> sourceArchive = createNewArchive();
+      Path location = new BasicPath("/", "test.properties");
+      Path locationTwo = new BasicPath("/", "test2.properties");
+      Asset asset = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
+      Asset assetTwo = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test2.properties");
+      sourceArchive.add(location, asset).add(locationTwo, assetTwo);
+
+      Path baseLocation = new BasicPath("somewhere");
+
+      archive.add(baseLocation, sourceArchive);
+
+      Path expectedPath = new BasicPath(new BasicPath(baseLocation, sourceArchive.getName()), location);
+      Path expectedPathTwo = new BasicPath(new BasicPath(baseLocation, sourceArchive.getName()), locationTwo);
+
+      Assert.assertTrue(
+            "Asset should have been added to path: " + expectedPath.get(), 
+            ArchiveTestUtil.compareAssets(archive.get(expectedPath), asset));
+      
+      Assert.assertTrue(
+            "Asset should have been added to path: " + expectedPathTwo.get(), 
+            ArchiveTestUtil.compareAssets(archive.get(expectedPathTwo), assetTwo));
    }
 
 }

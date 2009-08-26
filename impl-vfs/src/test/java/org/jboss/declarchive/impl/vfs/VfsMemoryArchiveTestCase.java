@@ -25,10 +25,6 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.jboss.declarchive.api.Archive;
-import org.jboss.declarchive.api.Asset;
-import org.jboss.declarchive.api.Path;
-import org.jboss.declarchive.impl.base.asset.ClassAsset;
-import org.jboss.declarchive.impl.base.path.BasicPath;
 import org.jboss.declarchive.impl.base.test.ArchiveTestBase;
 import org.jboss.declarchive.spi.vfs.VfsArchive;
 import org.jboss.virtual.VFS;
@@ -42,10 +38,9 @@ import org.junit.BeforeClass;
  * working as expected
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-//TODO Build upon a common test base just as the MemoryMap impl uses,
-// and swap in a method to get the VFS Memory Archive impl
 public class VfsMemoryArchiveTestCase extends ArchiveTestBase<VfsArchive>
 {
 
@@ -80,7 +75,7 @@ public class VfsMemoryArchiveTestCase extends ArchiveTestBase<VfsArchive>
    @Before
    public void createArchive() throws Exception  
    {
-      archive = new VfsMemoryArchiveImpl("test-" + UUID.randomUUID().toString() + ".jar");
+      archive = createNewArchive();
    }
    
    //-------------------------------------------------------------------------------------||
@@ -88,41 +83,13 @@ public class VfsMemoryArchiveTestCase extends ArchiveTestBase<VfsArchive>
    //-------------------------------------------------------------------------------------||
 
    @Override
+   protected VfsArchive createNewArchive() {
+      return new VfsMemoryArchiveImpl("test-" + UUID.randomUUID().toString() + ".jar");
+   }
+   
+   @Override
    protected Archive<VfsArchive> getArchive()
    {
       return archive;
-   }
-
-   //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Used in building the impl, not a true test yet
-    */
-   //@Test
-   //TODO Implement this test
-   public void testMuckingAroundPrototypesNotARealTestYet() throws Exception
-   {
-      // Log
-      log.info("testMuckingAroundPrototypesNotARealTestYet");
-
-
-      // Make a virtual archive
-      final VfsArchive archive = new VfsMemoryArchiveImpl("something.jar");
-      final Path path = new BasicPath("something");
-      archive.add(path, new ClassAsset(this.getClass()));
-      final Path elsePath = new BasicPath("somethingelse");
-      archive.add(elsePath, new ClassAsset(VfsMemoryArchiveImpl.class));
-      log.info(archive.toString(true));
-      archive.delete(elsePath);
-      log.info(archive.toString(true));
-      final Asset retrieved = archive.get(path);
-      final boolean exists = archive.contains(path);
-      log.info(path + " exists: " + exists);
-      final Path fakePath = new BasicPath("shouldntexist");
-      log.info(fakePath + " exists: " + archive.contains(fakePath));
-      log.info(retrieved.toString());
-      log.info("Contents: "+ archive.getContent());
    }
 }

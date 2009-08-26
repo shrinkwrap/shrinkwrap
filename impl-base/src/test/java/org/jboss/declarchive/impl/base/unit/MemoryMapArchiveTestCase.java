@@ -19,11 +19,7 @@ package org.jboss.declarchive.impl.base.unit;
 import junit.framework.Assert;
 
 import org.jboss.declarchive.api.Archive;
-import org.jboss.declarchive.api.Asset;
-import org.jboss.declarchive.api.Path;
 import org.jboss.declarchive.impl.base.MemoryMapArchiveImpl;
-import org.jboss.declarchive.impl.base.asset.ClassLoaderAsset;
-import org.jboss.declarchive.impl.base.path.BasicPath;
 import org.jboss.declarchive.impl.base.test.ArchiveTestBase;
 import org.jboss.declarchive.spi.MemoryMapArchive;
 import org.junit.Before;
@@ -35,19 +31,34 @@ import org.junit.Test;
  * TestCase to ensure that the MemoryMapArchive works as expected.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
- *  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
 public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive>
 {
    private MemoryMapArchive archive;
 
+   /**
+    * Create a new Archive instance pr Test.
+    * 
+    * @throws Exception
+    */
    @Before
    public void createArchive() throws Exception  
    {
-      archive = new MemoryMapArchiveImpl();
+      archive = createNewArchive();
+   }
+
+   @Override
+   protected MemoryMapArchive createNewArchive()
+   {
+      return new MemoryMapArchiveImpl();
    }
    
+   /**
+    * Return the created instance to the super class 
+    * so it can perform the common test cases.
+    */
    @Override
    protected Archive<MemoryMapArchive> getArchive()
    {
@@ -82,113 +93,4 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive>
       {
       }
    }
-
-
-   /**
-    * Ensure adding content from another archive successfully stores all assets
-    * @throws Exception
-    */
-   @Test
-   public void testAddContents() throws Exception
-   {
-      MemoryMapArchive sourceArchive = new MemoryMapArchiveImpl();
-      Path location = new BasicPath("/", "test.properties");
-      Path locationTwo = new BasicPath("/", "test2.properties");
-
-      Asset asset = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
-      Asset assetTwo = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test2.properties");
-      sourceArchive.add(location, asset).add(locationTwo, assetTwo);
-
-      archive.addContents(sourceArchive);
-      Assert.assertEquals("Asset should have been added to path: " + location.get(), archive.get(location), asset);
-      Assert.assertEquals("Asset should have been added to path: " + location.get(), archive.get(locationTwo), assetTwo);
-   }
-
-   /**
-    * Ensure adding content requires a source archive
-    * @throws Exception
-    */
-   @Test
-   public void testAddContentsRequiresSource() throws Exception
-   {
-      try
-      {
-         archive.addContents(null);
-         Assert.fail("Should have throw an IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expectedException)
-      {
-      }
-   }
-
-   /**
-    * Ensure adding content from another archive to a path successfully stores all assets to specific path
-    * @throws Exception
-    */
-   @Test
-   public void testAddContentsToPath() throws Exception
-   {
-      MemoryMapArchive sourceArchive = new MemoryMapArchiveImpl();
-      Path location = new BasicPath("/", "test.properties");
-      Path locationTwo = new BasicPath("/", "test2.properties");
-
-      Asset asset = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
-      Asset assetTwo = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test2.properties");
-      sourceArchive.add(location, asset).add(locationTwo, assetTwo);
-
-      Path baseLocation = new BasicPath("somewhere");
-
-      archive.addContents(baseLocation, sourceArchive);
-
-      Path expectedPath = new BasicPath(baseLocation, location);
-      Path expectedPathTwo = new BasicPath(baseLocation, locationTwo);
-
-      Assert.assertEquals("Asset should have been added to path: " + expectedPath.get(), archive.get(expectedPath), asset);
-      Assert.assertEquals("Asset should have been added to path: " + expectedPathTwo.getClass(), archive
-            .get(expectedPathTwo), assetTwo);
-   }
-
-   /**
-    * Ensure adding content from another archive requires a path
-    * @throws Exception
-    */
-   @Test
-   public void testAddContentsToPathRequiresPath() throws Exception
-   {
-      try
-      {
-         archive.addContents(null, new MemoryMapArchiveImpl());
-         Assert.fail("Should have throw an IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expectedException)
-      {
-      }
-   }
-
-   /**
-    * Ensure adding an archive to a path successfully stores all assets to specific path including the archive name
-    * @throws Exception
-    */
-   @Test
-   public void testAddArchiveToPath() throws Exception
-   {
-      MemoryMapArchive sourceArchive = new MemoryMapArchiveImpl("test.jar");
-      Path location = new BasicPath("/", "test.properties");
-      Path locationTwo = new BasicPath("/", "test2.properties");
-      Asset asset = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
-      Asset assetTwo = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test2.properties");
-      sourceArchive.add(location, asset).add(locationTwo, assetTwo);
-
-      Path baseLocation = new BasicPath("somewhere");
-
-      archive.add(baseLocation, sourceArchive);
-
-      Path expectedPath = new BasicPath(new BasicPath(baseLocation, "test.jar"), location);
-      Path expectedPathTwo = new BasicPath(new BasicPath(baseLocation, "test.jar"), locationTwo);
-
-      Assert.assertEquals("Asset should have been added to path: " + expectedPath.get(), archive.get(expectedPath), asset);
-      Assert.assertEquals("Asset should have been added to path: " + expectedPathTwo.get(), archive.get(expectedPathTwo),
-            assetTwo);
-   }
-
 }
