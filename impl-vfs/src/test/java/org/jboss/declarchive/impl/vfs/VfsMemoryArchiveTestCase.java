@@ -21,16 +21,19 @@
  */
 package org.jboss.declarchive.impl.vfs;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
+import org.jboss.declarchive.api.Archive;
 import org.jboss.declarchive.api.Asset;
 import org.jboss.declarchive.api.Path;
 import org.jboss.declarchive.impl.base.asset.ClassAsset;
 import org.jboss.declarchive.impl.base.path.BasicPath;
+import org.jboss.declarchive.impl.base.test.ArchiveTestBase;
 import org.jboss.declarchive.spi.vfs.VfsArchive;
 import org.jboss.virtual.VFS;
+import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  * VfsMemoryArchiveTestCase
@@ -43,7 +46,7 @@ import org.junit.Test;
  */
 //TODO Build upon a common test base just as the MemoryMap impl uses,
 // and swap in a method to get the VFS Memory Archive impl
-public class VfsMemoryArchiveTestCase
+public class VfsMemoryArchiveTestCase extends ArchiveTestBase<VfsArchive>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -55,6 +58,12 @@ public class VfsMemoryArchiveTestCase
     */
    private static final Logger log = Logger.getLogger(VfsMemoryArchiveTestCase.class.getName());
 
+   //-------------------------------------------------------------------------------------||
+   // Instance Members -------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+   
+   private VfsArchive archive;
+   
    //-------------------------------------------------------------------------------------||
    // Lifecycle --------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -68,6 +77,22 @@ public class VfsMemoryArchiveTestCase
       VFS.init();
    }
 
+   @Before
+   public void createArchive() throws Exception  
+   {
+      archive = new VfsMemoryArchiveImpl("test-" + UUID.randomUUID().toString() + ".jar");
+   }
+   
+   //-------------------------------------------------------------------------------------||
+   // Required Implementations -----------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   @Override
+   protected Archive<VfsArchive> getArchive()
+   {
+      return archive;
+   }
+
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -75,7 +100,7 @@ public class VfsMemoryArchiveTestCase
    /**
     * Used in building the impl, not a true test yet
     */
-   @Test
+   //@Test
    //TODO Implement this test
    public void testMuckingAroundPrototypesNotARealTestYet() throws Exception
    {

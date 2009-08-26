@@ -16,8 +16,6 @@
  */
 package org.jboss.declarchive.impl.base.unit;
 
-import java.util.Map;
-
 import junit.framework.Assert;
 
 import org.jboss.declarchive.api.Archive;
@@ -26,8 +24,8 @@ import org.jboss.declarchive.api.Path;
 import org.jboss.declarchive.impl.base.MemoryMapArchiveImpl;
 import org.jboss.declarchive.impl.base.asset.ClassLoaderAsset;
 import org.jboss.declarchive.impl.base.path.BasicPath;
+import org.jboss.declarchive.impl.base.test.ArchiveTestBase;
 import org.jboss.declarchive.spi.MemoryMapArchive;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,21 +38,20 @@ import org.junit.Test;
  *  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class MemoryMapArchiveTestCase
+public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive>
 {
    private MemoryMapArchive archive;
 
    @Before
-   public void createMemoryArchive() throws Exception
+   public void createArchive() throws Exception  
    {
       archive = new MemoryMapArchiveImpl();
    }
-
-   @After
-   public void ls()
+   
+   @Override
+   protected Archive<MemoryMapArchive> getArchive()
    {
-      System.out.println("test@jboss:/$ ls -l " + archive.getName());
-      System.out.println(archive.toString(true));
+      return archive;
    }
 
    /**
@@ -86,229 +83,6 @@ public class MemoryMapArchiveTestCase
       }
    }
 
-   /**
-    * Ensure adding an asset to the path results in successful storage.
-    * @throws Exception
-    */
-   @Test
-   public void testAddAssetToPath() throws Exception
-   {
-      Asset asset = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
-      Path location = new BasicPath("/", "test.properties");
-
-      archive.add(location, asset);
-
-      Assert.assertTrue("Asset should be placed on " + location.get(), archive.contains(location));
-   }
-
-   /**
-    * Ensure adding an asset to the path requires path.
-    * @throws Exception
-    */
-   @Test
-   public void testAddRequiresPath() throws Exception
-   {
-      Asset asset = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
-
-      try
-      {
-         archive.add((Path) null, asset);
-         Assert.fail("Should have throw an IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expectedException)
-      {
-      }
-   }
-
-   /**
-    * Ensure adding an asset to the path requires an asset.
-    * @throws Exception
-    */
-   @Test
-   public void testAddRequiresAssets() throws Exception
-   {
-      try
-      {
-         archive.add(new BasicPath("/", "Test.properties"), (Asset) null);
-         Assert.fail("Should have throw an IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expectedException)
-      {
-      }
-   }
-
-   /** 
-    * Ensure adding an asset with a name results in successful storage
-    * @throws Exception
-    */
-   @Test
-   public void testAddAssetWithName() throws Exception
-   {
-      final String name = "test.properties";
-      final Asset asset = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
-      Path location = new BasicPath("/");
-
-      archive.add(location, name, asset);
-
-      Path expectedPath = new BasicPath("/", "test.properties");
-
-      Assert.assertTrue("Asset should be placed on " + expectedPath.get(), archive.contains(expectedPath));
-   }
-
-   /**
-    * Ensure adding an asset with name requires the path attribute
-    * @throws Exception
-    */
-   @Test
-   public void testAddAssetWithNameRequiresPath() throws Exception
-   {
-      final String name = "test.properties";
-      final Asset asset = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
-      try
-      {
-         archive.add(null, name, asset);
-         Assert.fail("Should have throw an IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expectedException)
-      {
-      }
-   }
-
-   /**
-    * Ensure adding an asset with name requires the name attribute
-    * @throws Exception
-    */
-   @Test
-   public void testAddAssetWithNameRequiresName() throws Exception
-   {
-      final Path path = new BasicPath("/", "Test.properties");
-      final String resource = "org/jboss/declarchive/impl/base/asset/Test.properties";
-      try
-      {
-         archive.add(path, null, new ClassLoaderAsset(resource));
-         Assert.fail("Should have throw an IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expectedException)
-      {
-      }
-   }
-
-   /**
-    * Ensure adding an asset with name requires the asset attribute
-    * @throws Exception
-    */
-   @Test
-   public void testAddAssetWithNameRequiresAsset() throws Exception
-   {
-      final String name = "test.properties";
-      final Path path = new BasicPath("/", "Test.properties");
-      try
-      {
-         archive.add(path, name, null);
-         Assert.fail("Should have throw an IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expectedException)
-      {
-      }
-   }
-
-   /**
-    * Ensure deleting an asset successfully removes asset from storage
-    * @throws Exception
-    */
-   @Test
-   public void testDeleteAsset() throws Exception
-   {
-      String resource = "org/jboss/declarchive/impl/base/asset/Test.properties";
-      Path location = new BasicPath("/", "test.properties");
-      archive.add(location, new ClassLoaderAsset(resource));
-      Assert.assertTrue(archive.contains(location)); // Sanity check
-
-      Assert.assertTrue("Successfully deleting an Asset should ruturn true", archive.delete(location));
-
-      Assert.assertFalse("There should no longer be an asset at: " + location.get() + " after deleted", archive
-            .contains(location));
-   }
-
-   /**
-    * Ensure deleting a missing asset returns correct status
-    * @throws Exception
-    */
-   @Test
-   public void testDeleteMissingAsset() throws Exception
-   {
-      Path location = new BasicPath("/", "test.properties");
-
-      Assert.assertFalse("Deleting a non-existent Asset should ruturn false", archive.delete(location));
-   }
-
-   /**
-    * Ensure deleting an asset requires a path
-    * @throws Exception
-    */
-   @Test
-   public void testDeleteAssetRequiresPath() throws Exception
-   {
-      try
-      {
-         archive.delete(null);
-         Assert.fail("Should have throw an IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expectedException)
-      {
-      }
-   }
-
-   /**
-    * Ensure an asset can be retrieved by its path
-    * @throws Exception
-    */
-   @Test
-   public void testGetAsset() throws Exception
-   {
-      Path location = new BasicPath("/", "test.properties");
-      Asset asset = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
-      archive.add(location, asset);
-
-      Assert.assertEquals("Asset should be returned from path: " + location.get(), asset, archive.get(location));
-   }
-
-   /**
-    * Ensure get asset requires a path
-    * @throws Exception
-    */
-   @Test
-   public void testGetAssetRequiresPath() throws Exception
-   {
-      try
-      {
-         archive.get((Path) null);
-         Assert.fail("Should have throw an IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expectedException)
-      {
-      }
-   }
-
-   /**
-    * Ensure get content returns the correct map of content
-    * @throws Exception
-    */
-   @Test
-   public void testToGetContent() throws Exception
-   {
-      Path location = new BasicPath("/", "test.properties");
-      Path locationTwo = new BasicPath("/", "test2.properties");
-
-      Asset asset = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
-      Asset assetTwo = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test2.properties");
-      archive.add(location, asset).add(locationTwo, assetTwo);
-
-      Map<Path, Asset> content = archive.getContent();
-      Assert.assertEquals("Asset should existing in content with key: " + location.get(), content.get(location), asset);
-      Assert.assertEquals("Asset should existing in content with key: " + locationTwo.get(), content.get(locationTwo),
-            assetTwo);
-   }
 
    /**
     * Ensure adding content from another archive successfully stores all assets
@@ -415,40 +189,6 @@ public class MemoryMapArchiveTestCase
       Assert.assertEquals("Asset should have been added to path: " + expectedPath.get(), archive.get(expectedPath), asset);
       Assert.assertEquals("Asset should have been added to path: " + expectedPathTwo.get(), archive.get(expectedPathTwo),
             assetTwo);
-   }
-
-   /**
-    * Ensure adding an archive to a path requires a path
-    * @throws Exception
-    */
-   @Test
-   public void testAddArchiveToPathRequirePath() throws Exception
-   {
-      try
-      {
-         archive.add(null, new MemoryMapArchiveImpl());
-         Assert.fail("Should have throw an IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expectedException)
-      {
-      }
-   }
-
-   /**
-    * Ensure adding an archive to a path requires an archive
-    * @throws Exception
-    */
-   @Test
-   public void testAddArchiveToPathRequireArchive() throws Exception
-   {
-      try
-      {
-         archive.add(new BasicPath("/"), (Archive<?>) null);
-         Assert.fail("Should have throw an IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expectedException)
-      {
-      }
    }
 
 }

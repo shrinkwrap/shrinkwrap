@@ -45,6 +45,13 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.declarchive</groupId>
+      <artifactId>declarchive-impl-base</artifactId>
+      <version>${version.org.jboss.declarchive_declarchive.impl.base}</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.declarchive</groupId>
       <artifactId>declarchive-spi-vfs</artifactId>
       <version>${version.org.jboss.declarchive_declarchive.spi.vfs}</version>
     </dependency>
