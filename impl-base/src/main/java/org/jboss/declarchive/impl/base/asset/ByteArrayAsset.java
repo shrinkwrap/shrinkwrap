@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import org.jboss.declarchive.api.Asset;
 import org.jboss.declarchive.impl.base.Validate;
+import org.jboss.declarchive.impl.base.io.IOUtil;
 
 /**
  * ByteArrayAsset
@@ -58,7 +59,7 @@ public class ByteArrayAsset implements Asset
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Creates a new instance backed by the specified
+    * Creates a new {@link Asset} instance backed by the specified
     * byte array
     * 
     * @param content
@@ -77,6 +78,19 @@ public class ByteArrayAsset implements Asset
       }
    }
 
+   /**
+    * Creates a new {@link Asset} instance backed by the bytes
+    * contained in the the specified {@link InputStream}
+    * 
+    * @param stream
+    * @throws IllegalArgumentException If the stream is not specified
+    */
+   public ByteArrayAsset(final InputStream stream)
+   {
+      // Delegate
+      this(IOUtil.asByteArray(stream));
+   }
+
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -88,5 +102,15 @@ public class ByteArrayAsset implements Asset
    public InputStream getStream()
    {
       return new ByteArrayInputStream(this.content);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see java.lang.Object#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return "ByteArrayAsset [content size=" + content.length + "bytes]";
    }
 }
