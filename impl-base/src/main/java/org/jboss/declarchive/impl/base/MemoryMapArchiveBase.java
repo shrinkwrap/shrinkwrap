@@ -150,25 +150,21 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
    @Override
    public String toString(boolean verbose)
    {
-      StringBuilder sb = new StringBuilder();
-      List<Path> paths = new ArrayList<Path>(content.keySet());
-      Collections.sort(paths);
-
-      for (Path path : paths)
+      // If we want verbose output
+      if (verbose)
       {
-         sb.append(path.get()).append('\n');
-      }
-      return sb.toString();
-   }
+         StringBuilder sb = new StringBuilder();
+         List<Path> paths = new ArrayList<Path>(content.keySet());
+         Collections.sort(paths);
 
-   /*
-    * (non-Javadoc)
-    * @see java.lang.Object#toString()
-    */
-   @Override
-   public String toString()
-   {
-      return toString(false);
+         for (Path path : paths)
+         {
+            sb.append(path.get()).append('\n');
+         }
+         return sb.toString();
+      }
+      // Fall back on toString
+      return this.toString();
    }
 
 }
