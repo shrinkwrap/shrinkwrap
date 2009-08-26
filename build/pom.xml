@@ -118,6 +118,10 @@
             <requireJavaVersion>
               <version>1.6.0</version> <!-- Must be JDK6 -->
             </requireJavaVersion>
+            <requireProperty>
+              <property>env.JAVA_HOME</property>
+              <message>"JAVA_HOME needs to be set to compile"</message>
+            </requireProperty>
           </rules>
         </configuration>
       </plugin>
