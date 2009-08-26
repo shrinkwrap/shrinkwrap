@@ -128,7 +128,7 @@ public interface Archive<T extends Archive<T>>
     * @return
     * @throws IllegalArgumentException If the path or archive are not specified 
     */
-   T add(Path path, Archive<?> archive);
+   T add(Path path, Archive<?> archive) throws IllegalArgumentException;
 
    /**
     * Add the contents from an existing archive without 

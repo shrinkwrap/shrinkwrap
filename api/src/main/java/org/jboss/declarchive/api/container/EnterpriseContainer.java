@@ -105,5 +105,5 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     */
-   T addModule(String resourceName);
+   T addModule(String resourceName) throws IllegalArgumentException;
 }
