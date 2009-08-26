@@ -16,11 +16,13 @@
  */
 package org.jboss.declarchive.impl.vfs;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,10 +31,14 @@ import org.jboss.declarchive.api.Asset;
 import org.jboss.declarchive.api.AssetNotFoundException;
 import org.jboss.declarchive.api.Path;
 import org.jboss.declarchive.impl.base.Validate;
+import org.jboss.declarchive.impl.base.asset.ByteArrayAsset;
+import org.jboss.declarchive.impl.base.io.IOUtil;
+import org.jboss.declarchive.impl.base.path.BasicPath;
 import org.jboss.declarchive.spi.vfs.VfsArchive;
 import org.jboss.virtual.MemoryFileFactory;
 import org.jboss.virtual.VFS;
 import org.jboss.virtual.VirtualFile;
+import org.jboss.virtual.plugins.vfs.VirtualFileURLConnection;
 
 /**
  * VfsMemoryArchiveImpl
@@ -142,37 +148,9 @@ public class VfsMemoryArchiveImpl extends VfsArchiveBase implements VfsArchive
 
       // Get content as an array of bytes
       final InputStream in = asset.getStream();
-      final ByteArrayOutputStream out = new ByteArrayOutputStream();
-      final int len = 1024;
-      final byte[] buffer = new byte[len];
-      try
-      {
-
-         while ((in.read(buffer) != -1))
-         {
-            out.write(buffer);
-         }
-      }
-      catch (final IOException ioe)
-      {
-         throw new RuntimeException("Error in adding asset to location: " + url.toExternalForm() + " in archive "
-               + this.getName(), ioe);
-      }
-      finally
-      {
-         try
-         {
-            in.close();
-         }
-         catch (final IOException ignore)
-         {
-
-         }
-         // We don't need to close the outstream, it's a byte array out
-      }
+      final byte[] content = IOUtil.asByteArray(in);
 
       // Put the new memory file in place
-      final byte[] content = out.toByteArray();
       MemoryFileFactory.putFile(url, content);
       if (log.isLoggable(Level.FINE))
       {
@@ -196,14 +174,15 @@ public class VfsMemoryArchiveImpl extends VfsArchiveBase implements VfsArchive
 
       // Get the String form of the Path
       final URL url = this.urlFromPath(path);
-      final String pathString = url.toExternalForm();
 
-      // Determine if this path exists
-      final VFS vfs = MemoryFileFactory.find(pathString);
-      final boolean contains = vfs != null;
-      //      return contains;
-      throw new UnsupportedOperationException("VFS " + MemoryFileFactory.class.getSimpleName()
-            + " currently does not back this operation.");
+      // Get the File at this Path
+      final VirtualFile vf = this.getFile(url);
+
+      // Determine if exists
+      final boolean exists = vf != null;
+
+      // Return
+      return exists;
    }
 
    /**
@@ -232,29 +211,129 @@ public class VfsMemoryArchiveImpl extends VfsArchiveBase implements VfsArchive
     * {@inheritDoc}
     * @see org.jboss.declarchive.api.Archive#get(org.jboss.declarchive.api.Path)
     */
-   //TODO Add support into VFS for this
    @Override
    public Asset get(final Path path) throws AssetNotFoundException, IllegalArgumentException
    {
-      throw new UnsupportedOperationException("VFS " + MemoryFileFactory.class.getSimpleName()
-            + " currently does not back this operation.");
+      // Precondition check
+      Validate.notNull(path, "No path was was specified");
+
+      // Get the URL form of the Path
+      final URL url = this.urlFromPath(path);
+
+      // Obtain the virtual file
+      final VirtualFile vf = this.getFile(url);
+
+      // Create an Asset from the contents of the file
+      final Asset asset = this.getAsset(vf);
+
+      // Return
+      return asset;
    }
 
    /**
     * {@inheritDoc}
     * @see org.jboss.declarchive.api.Archive#getContent()
     */
-   //TODO Add support into VFS for this
    @Override
    public Map<Path, Asset> getContent()
    {
-      throw new UnsupportedOperationException("VFS " + MemoryFileFactory.class.getSimpleName()
-            + " currently does not back this operation.");
+      // Declare a Map for the content
+      final Map<Path, Asset> content = new HashMap<Path, Asset>();
+
+      // Obtain the root file
+      final VirtualFile root = this.getRoot();
+
+      // Populate the content Map
+      this.populateContentMap(root, content);
+
+      // Return
+      return content;
    }
 
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
+
+   /**
+    * Obtains an Asset from the specified {@link VirtualFile}
+    *  
+    * @param vf
+    * @throws IllegalArgumentException If the file is not specified
+    */
+   private Asset getAsset(final VirtualFile vf) throws IllegalArgumentException
+   {
+      // Precondition check
+      Validate.notNull(vf, "No file was was specified");
+
+      // Obtain URL of the File
+      final URL rootUrl = this.getRootUrl();
+      final String pathName = vf.getPathName();
+      final URL url;
+      try
+      {
+         url = new URL(rootUrl, pathName);
+      }
+      catch (final MalformedURLException murle)
+      {
+         throw new RuntimeException("Could not create URL for " + vf, murle);
+      }
+
+      // Create an Asset from the contents of the file
+      final URLConnection conn = new VirtualFileURLConnection(url, vf);
+      final InputStream in;
+      try
+      {
+         in = conn.getInputStream();
+      }
+      catch (final IOException ioe)
+      {
+         throw new RuntimeException("Could not obtain stream from " + conn, ioe);
+      }
+      final Asset asset = new ByteArrayAsset(in);
+
+      // Return
+      return asset;
+   }
+
+   /**
+    * Populates the specified content Map with all children, recursively,
+    * of the specified root
+    * 
+    * @param root
+    * @param content
+    */
+   private void populateContentMap(final VirtualFile root, final Map<Path, Asset> content)
+         throws IllegalArgumentException
+   {
+      // Precondition checks
+      Validate.notNull(root, "No root was was specified");
+      Validate.notNull(content, "No content map was was specified");
+
+      // Obtain all children of this root
+      final List<VirtualFile> files;
+      try
+      {
+         files = root.getChildren();
+      }
+      catch (final IOException ioe)
+      {
+         throw new RuntimeException("Could not obtain children for " + root, ioe);
+      }
+
+      // For each child
+      for (final VirtualFile file : files)
+      {
+         // Populate the Map
+         final String pathName = file.getPathName();
+         final Path path = new BasicPath(pathName);
+         final Asset asset = this.getAsset(file);
+         content.put(path, asset);
+
+         // ...and repeat for all children
+         this.populateContentMap(file, content);
+      }
+
+   }
 
    /**
     * Obtains a URL internal to this archive from the
@@ -290,6 +369,45 @@ public class VfsMemoryArchiveImpl extends VfsArchiveBase implements VfsArchive
 
       // Return
       return url;
+   }
+
+   /**
+    * Obtains the VirtualFile located at the specified URL within this archive.
+    * If no Asset has been added at this location, this method will return null
+    *  
+    * @param url
+    * @return
+    * @throws IllegalArgumentException If the url is not specified
+    */
+   private VirtualFile getFile(final URL url) throws IllegalArgumentException
+   {
+      // Precondition check
+      Validate.notNull(url, "No url was specified");
+
+      // Get the String form of the Path
+      final String host = url.getHost();
+
+      // Determine if this path exists
+      final VFS vfs = MemoryFileFactory.find(host);
+      if (vfs == null)
+      {
+         throw new AssetNotFoundException("Path does not exist: " + url);
+      }
+
+      // Obtain the virtual file
+      final VirtualFile vf;
+      final String urlPath = url.getPath();
+      try
+      {
+         vf = vfs.getChild(urlPath);
+      }
+      catch (final IOException ioe)
+      {
+         throw new RuntimeException("Could not obtain " + urlPath, ioe);
+      }
+
+      // Return
+      return vf;
    }
 
 }

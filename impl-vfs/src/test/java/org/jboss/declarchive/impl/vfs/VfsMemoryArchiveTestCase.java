@@ -23,6 +23,7 @@ package org.jboss.declarchive.impl.vfs;
 
 import java.util.logging.Logger;
 
+import org.jboss.declarchive.api.Asset;
 import org.jboss.declarchive.api.Path;
 import org.jboss.declarchive.impl.base.asset.ClassAsset;
 import org.jboss.declarchive.impl.base.path.BasicPath;
@@ -81,22 +82,22 @@ public class VfsMemoryArchiveTestCase
       // Log
       log.info("testMuckingAroundPrototypesNotARealTestYet");
 
-      //      // Get the base
-      //      final URL base = this.getBase();
-      //
-      //      // Get the path to the test XML file
-      //      final URL location = new URL(base, PATH_SOMETHING_XML);
-      //
-      //      // Define the new path
-      //      final String newPath = PATH_WEB_INF + SEPARATOR + FILENAME_WEB_XML;
 
       // Make a virtual archive
       final VfsArchive archive = new VfsMemoryArchiveImpl("something.jar");
-      archive.add(new BasicPath("something"), new ClassAsset(this.getClass()));
+      final Path path = new BasicPath("something");
+      archive.add(path, new ClassAsset(this.getClass()));
       final Path elsePath = new BasicPath("somethingelse");
       archive.add(elsePath, new ClassAsset(VfsMemoryArchiveImpl.class));
       log.info(archive.toString(true));
       archive.delete(elsePath);
       log.info(archive.toString(true));
+      final Asset retrieved = archive.get(path);
+      final boolean exists = archive.contains(path);
+      log.info(path + " exists: " + exists);
+      final Path fakePath = new BasicPath("shouldntexist");
+      log.info(fakePath + " exists: " + archive.contains(fakePath));
+      log.info(retrieved.toString());
+      log.info("Contents: "+ archive.getContent());
    }
 }
