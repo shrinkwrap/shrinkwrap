@@ -17,8 +17,10 @@
 package org.jboss.declarchive.impl.base.io;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.jboss.declarchive.impl.base.Validate;
 
@@ -103,6 +105,93 @@ public class IOUtil
 
       // Return
       return content;
+   }
+
+   /**
+    * Copies the contents from an InputStream to an OutputStream
+    * 
+    * @param input
+    * @param output
+    */
+   public static void copy(InputStream input, OutputStream output)
+   {
+      final byte[] buffer = new byte[1024];
+      int read = 0;
+      try
+      {
+         while ((read = input.read(buffer)) != -1)
+         {
+            output.write(buffer, 0, read);
+         }
+      }
+      catch (final IOException ioe)
+      {
+         throw new RuntimeException("Error copying contents from " + input + " to " + output, ioe);
+      }
+   }
+
+   /**
+    * Copies the contents from an InputStream to an OutputStream and closes both streams.
+    * 
+    * @param input
+    * @param output
+    */
+   public static void copyWithClose(InputStream input, OutputStream output)
+   {
+      try
+      {
+         copy(input, output);
+      }
+      finally
+      {
+         try
+         {
+            input.close();
+            output.close();
+         }
+         catch (final IOException ignore)
+         {
+
+         }
+      }
+   }
+
+   /**
+    * Recursively deletes a directory and all its contents 
+    * @param directory
+    */
+   public static void deleteDirectory(File directory)
+   {
+      if (directory.isDirectory() && directory.exists())
+      {
+         // For each file in the directory run cleanup
+         for (File file : directory.listFiles())
+         {
+            if (file.isDirectory())
+            {
+               // A nested directory, recurse 
+               deleteDirectory(file);
+            }
+            else
+            {
+               // Just a file delete it
+               if (!file.delete())
+               {
+                  throw new RuntimeException("Failed to delete file: " + file);
+               }
+            }
+         }
+         // Delete the directory
+         if (!directory.delete())
+         {
+            throw new RuntimeException("Failed to delete directory: " + directory);
+         }
+      }
+      else
+      {
+         throw new RuntimeException("Unable to delete directory: " + directory
+               + ".  It is either not a directory or does not exist.");
+      }
    }
 
    //-------------------------------------------------------------------------------------||
