@@ -195,6 +195,16 @@ public class VfsMemoryArchiveImpl extends VfsArchiveBase implements VfsArchive
       // Precondition check
       Validate.notNull(path, "No path was specified");
 
+      // Ensure contains
+      if (!this.contains(path))
+      {
+         if (log.isLoggable(Level.FINE))
+         {
+            log.fine("Not deleting non-existent path: " + path + " from " + this);
+         }
+         return false;
+      }
+
       // Get the URL form of the Path
       final URL url = this.urlFromPath(path);
 
@@ -320,14 +330,39 @@ public class VfsMemoryArchiveImpl extends VfsArchiveBase implements VfsArchive
          throw new RuntimeException("Could not obtain children for " + root, ioe);
       }
 
+      // Define the internal root context name, which we ignore
+      final String rootContextName = this.getRootUrl().getPath();
+      int rootContextNameLength = rootContextName.length();
+
       // For each child
       for (final VirtualFile file : files)
       {
-         // Populate the Map
-         final String pathName = file.getPathName();
-         final Path path = new BasicPath(pathName);
-         final Asset asset = this.getAsset(file);
-         content.put(path, asset);
+         // Don't add the internal context root
+         boolean isInternalConextRoot = false;
+         try
+         {
+            final VirtualFile parent = file.getParent();
+            final VirtualFile internalRoot = this.getRoot();
+            isInternalConextRoot = parent.equals(internalRoot);
+         }
+         catch (final IOException ioe)
+         {
+            throw new RuntimeException("Could not obtain parent of " + file, ioe);
+         }
+
+         // Only add stuff in this representation if this is not the 
+         // internal context root
+         if (!isInternalConextRoot)
+         {
+            // Populate the Map
+            final String pathName = file.getPathName();
+            // Strip out the internal context root name
+            final String adjustedPathName = pathName.substring(rootContextNameLength);
+            final Path path = new BasicPath(adjustedPathName);
+            final Asset asset = this.getAsset(file);
+            content.put(path, asset);
+
+         }
 
          // ...and repeat for all children
          this.populateContentMap(file, content);
