@@ -25,6 +25,7 @@ import org.jboss.declarchive.api.Archive;
 import org.jboss.declarchive.api.Asset;
 import org.jboss.declarchive.api.Path;
 import org.jboss.declarchive.impl.base.MemoryMapArchiveImpl;
+import org.jboss.declarchive.impl.base.Validate;
 import org.jboss.declarchive.impl.base.asset.ClassLoaderAsset;
 import org.jboss.declarchive.impl.base.io.IOUtil;
 import org.jboss.declarchive.impl.base.path.BasicPath;
@@ -57,7 +58,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
     * @return A new Archive<T> instance.
     */
    protected abstract Archive<T> createNewArchive();
-   
+
    /**
     * Simple printout of the tested archive. 
     */
@@ -266,10 +267,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       byte[] addedData = IOUtil.asByteArray(asset.getStream());
       byte[] fetchedData = IOUtil.asByteArray(archive.get(location).getStream());
-      
-      Assert.assertTrue(
-            "Asset should be returned from path: " + location.get(), 
-            Arrays.equals(addedData, fetchedData));
+
+      Assert.assertTrue("Asset should be returned from path: " + location.get(), Arrays.equals(addedData, fetchedData));
    }
 
    /**
@@ -306,16 +305,17 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       archive.add(location, asset).add(locationTwo, assetTwo);
 
       Map<Path, Asset> content = archive.getContent();
-      
-      Assert.assertTrue(
-            "Asset should existing in content with key: " + location.get(), 
-            ArchiveTestUtil.compareAssets(asset, content.get(location)));
-      
-      Assert.assertTrue(
-            "Asset should existing in content with key: " + locationTwo.get(), 
-            ArchiveTestUtil.compareAssets(assetTwo, content.get(locationTwo)));
+
+      final Asset asset1 = content.get(location);
+      final Asset asset2 = content.get(locationTwo);
+
+      Assert.assertTrue("Asset should existing in content with key: " + location.get(), this.compareAssets(asset,
+            asset1));
+
+      Assert.assertTrue("Asset should existing in content with key: " + locationTwo.get(), this.compareAssets(assetTwo,
+            asset2));
    }
-   
+
    /**
     * Ensure adding an archive to a path requires a path
     * @throws Exception
@@ -387,13 +387,11 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       sourceArchive.add(location, asset).add(locationTwo, assetTwo);
 
       archive.addContents(sourceArchive);
-      Assert.assertTrue(
-            "Asset should have been added to path: " + location.get(), 
-            ArchiveTestUtil.compareAssets(archive.get(location), asset));
-      
-      Assert.assertTrue(
-            "Asset should have been added to path: " + location.get(), 
-            ArchiveTestUtil.compareAssets(archive.get(locationTwo), assetTwo));
+      Assert.assertTrue("Asset should have been added to path: " + location.get(), this.compareAssets(archive
+            .get(location), asset));
+
+      Assert.assertTrue("Asset should have been added to path: " + location.get(), this.compareAssets(archive
+            .get(locationTwo), assetTwo));
    }
 
    /**
@@ -419,13 +417,11 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Path expectedPath = new BasicPath(baseLocation, location);
       Path expectedPathTwo = new BasicPath(baseLocation, locationTwo);
 
-      Assert.assertTrue(
-            "Asset should have been added to path: " + expectedPath.get(), 
-            ArchiveTestUtil.compareAssets(archive.get(expectedPath), asset));
-      
-      Assert.assertTrue(
-            "Asset should have been added to path: " + expectedPathTwo.getClass(), 
-            ArchiveTestUtil.compareAssets(archive.get(expectedPathTwo), assetTwo));
+      Assert.assertTrue("Asset should have been added to path: " + expectedPath.get(), this.compareAssets(archive
+            .get(expectedPath), asset));
+
+      Assert.assertTrue("Asset should have been added to path: " + expectedPathTwo.getClass(), this.compareAssets(
+            archive.get(expectedPathTwo), assetTwo));
    }
 
    /**
@@ -468,13 +464,37 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Path expectedPath = new BasicPath(new BasicPath(baseLocation, sourceArchive.getName()), location);
       Path expectedPathTwo = new BasicPath(new BasicPath(baseLocation, sourceArchive.getName()), locationTwo);
 
-      Assert.assertTrue(
-            "Asset should have been added to path: " + expectedPath.get(), 
-            ArchiveTestUtil.compareAssets(archive.get(expectedPath), asset));
-      
-      Assert.assertTrue(
-            "Asset should have been added to path: " + expectedPathTwo.get(), 
-            ArchiveTestUtil.compareAssets(archive.get(expectedPathTwo), assetTwo));
+      Assert.assertTrue("Asset should have been added to path: " + expectedPath.get(), this.compareAssets(archive
+            .get(expectedPath), asset));
+
+      Assert.assertTrue("Asset should have been added to path: " + expectedPathTwo.get(), this.compareAssets(archive
+            .get(expectedPathTwo), assetTwo));
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Internal Helper Methods ------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Compare two Asset with each other.
+    * <br/>
+    * Does not check instances but content.
+    * 
+    * @param one Asset to compare
+    * @param two Asset to compare
+    * @return true if they are equal
+    * @throws IllegalArgumentException If either asset is not specified
+    */
+   private boolean compareAssets(final Asset one, final Asset two) throws IllegalArgumentException
+   {
+      // Precondition check
+      Validate.notNull(one, "Asset one must be specified");
+      Validate.notNull(two, "Asset two must be specified");
+
+      byte[] oneData = IOUtil.asByteArray(one.getStream());
+      byte[] twoData = IOUtil.asByteArray(two.getStream());
+
+      return Arrays.equals(oneData, twoData);
    }
 
 }
