@@ -265,10 +265,11 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Asset asset = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
       archive.add(location, asset);
 
-      byte[] addedData = IOUtil.asByteArray(asset.getStream());
-      byte[] fetchedData = IOUtil.asByteArray(archive.get(location).getStream());
+      Asset fetchedAsset = archive.get(location);
 
-      Assert.assertTrue("Asset should be returned from path: " + location.get(), Arrays.equals(addedData, fetchedData));
+      Assert.assertTrue(
+            "Asset should be returned from path: " + location.get(), 
+            compareAssets(asset, fetchedAsset));
    }
 
    /**
