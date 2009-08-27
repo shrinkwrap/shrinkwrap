@@ -32,7 +32,7 @@ import org.jboss.declarchive.impl.base.Validate;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class IOUtil
+public final class IOUtil
 {
 
    //-------------------------------------------------------------------------------------||

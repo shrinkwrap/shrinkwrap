@@ -29,7 +29,7 @@ import org.jboss.declarchive.impl.base.path.BasicPath;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class AssetUtil
+public final class AssetUtil
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -38,12 +38,12 @@ public class AssetUtil
    /**
     * The delimiter used for classes. 
     */
-   public static String DELIMITER_CLASS_NAME_PATH = "\\.";
+   public static final String DELIMITER_CLASS_NAME_PATH = "\\.";
    
    /**
     * The delimiter used for classes represented in resource form.
     */
-   public static String DELIMITER_RESOURCE_PATH = "/";
+   public static final String DELIMITER_RESOURCE_PATH = "/";
    
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||

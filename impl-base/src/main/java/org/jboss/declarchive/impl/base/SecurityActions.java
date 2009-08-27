@@ -28,7 +28,7 @@ import java.security.PrivilegedAction;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-class SecurityActions
+final class SecurityActions
 {
 
    //-------------------------------------------------------------------------------||

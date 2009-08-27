@@ -28,7 +28,7 @@ package org.jboss.declarchive.impl.base.path;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-class PathUtil
+final class PathUtil
 {
 
    //-------------------------------------------------------------------------------------||

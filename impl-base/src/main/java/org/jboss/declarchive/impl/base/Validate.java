@@ -24,7 +24,7 @@ package org.jboss.declarchive.impl.base;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class Validate
+public final class Validate
 {
    private Validate()
    {
