@@ -17,8 +17,6 @@
 package org.jboss.declarchive.api.export;
 
 import java.io.InputStream;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 import org.jboss.declarchive.api.Archive;
 
@@ -56,6 +54,8 @@ public abstract class ZipExporter
     * 
     * @param archive
     * @return InputStram for exported Zip
+    * @throws IllegalArgumentException if the archive is not valid
+    * @throws ArchiveExportException if the export process fails
     */
    public static InputStream exportZip(Archive<?> archive)
    {
@@ -75,26 +75,14 @@ public abstract class ZipExporter
       return instance;
    }
 
+   /**
+    * Create an instance of the ZipExporter implementation
+    * 
+    * @return
+    */
    private static ZipExporter createInstance()
    {
-      return AccessController.doPrivileged(new PrivilegedAction<ZipExporter>()
-      {
-         @SuppressWarnings("unchecked")
-         public ZipExporter run()
-         {
-            try
-            {
-               ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-               Class<? extends ZipExporter> exporterImpl = (Class<? extends ZipExporter>) classLoader
-                     .loadClass(IMPL_TYPE);
-               return exporterImpl.newInstance();
-            }
-            catch (Exception e)
-            {
-               throw new IllegalArgumentException("Unable to create ExplodedExporter implemenation.", e);
-            }
-         }
-      });
+      return FactoryUtil.createInstance(IMPL_TYPE, ZipExporter.class);
    }
 
    //-------------------------------------------------------------------------------------||
@@ -103,6 +91,7 @@ public abstract class ZipExporter
 
    /**
     * Template export method for concrete implementations  
+    * 
     * @param archive
     * @return InputStream for exported Zip
     */

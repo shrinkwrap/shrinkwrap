@@ -31,9 +31,7 @@ import org.jboss.declarchive.impl.base.asset.ClassLoaderAsset;
 import org.jboss.declarchive.impl.base.io.IOUtil;
 import org.jboss.declarchive.impl.base.path.BasicPath;
 import org.jboss.declarchive.spi.MemoryMapArchive;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -44,7 +42,7 @@ import org.junit.Test;
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public class ExplodedExporterTestCase
+public class ExplodedExporterTestCase extends ExportTestBase
 {
 
    //-------------------------------------------------------------------------------------||
@@ -55,43 +53,6 @@ public class ExplodedExporterTestCase
     * Logger
     */
    private static final Logger log = Logger.getLogger(ExplodedExporterTestCase.class.getName());
-
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Temp directory
-    */
-   private File tempDirectory;
-
-   //-------------------------------------------------------------------------------------||
-   // Lifecycle Methods ------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /** 
-    * Create the temp directory used as the base for exploded archives
-    *  
-    * @throws Exception
-    */
-   @Before
-   public void createTempDirectory() throws Exception
-   {
-      tempDirectory = File.createTempFile("tmp", "");
-      tempDirectory.delete();
-      tempDirectory.mkdir();
-   }
-
-   /**
-    * Clean up the temp directory
-    * 
-    * @throws Exception
-    */
-   @After
-   public void cleanTempDirectory() throws Exception
-   {
-      IOUtil.deleteDirectory(tempDirectory);
-   }
 
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
@@ -107,6 +68,9 @@ public class ExplodedExporterTestCase
    {
       log.info("testExportExploded");
 
+      // Get a temp directory
+      File tempDirectory = createTempDirectory("testExportExploded");
+
       // Get an archive instance
       MemoryMapArchive archive = new MemoryMapArchiveImpl("testArchive.jar");
 
@@ -117,7 +81,7 @@ public class ExplodedExporterTestCase
       Asset assetTwo = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test2.properties");
       Path pathTwo = new BasicPath("nested", "test2.properties");
       archive.add(pathTwo, assetTwo);
-      
+
       // Add a nested archive for good measure
       MemoryMapArchive nestedArchive = new MemoryMapArchiveImpl("nestedArchive.jar");
       nestedArchive.add(pathOne, assetOne);
@@ -158,7 +122,7 @@ public class ExplodedExporterTestCase
 
       try
       {
-         ExplodedExporter.exportExploded(null, tempDirectory);
+         ExplodedExporter.exportExploded(null, getNonexistantDirectory());
          Assert.fail("Should have thrown IllegalArgumentException");
       }
       catch (IllegalArgumentException expected)
@@ -198,8 +162,7 @@ public class ExplodedExporterTestCase
 
       try
       {
-         File directory = new File("someNonExistentDirectory");
-
+         final File directory = this.getNonexistantDirectory();
          ExplodedExporter.exportExploded(new MemoryMapArchiveImpl(), directory);
          Assert.fail("Should have thrown IllegalArgumentException");
       }
@@ -214,13 +177,12 @@ public class ExplodedExporterTestCase
     * @throws Exception
     */
    @Test
-   public void testExportExplodedRequiresValidDirectroy() throws Exception
+   public void testExportExplodedRequiresValidDirectory() throws Exception
    {
-      log.info("testExportExplodedRequiresValidDirectroy");
+      log.info("testExportExplodedRequiresValidDirectory");
       try
       {
-         File directory = File.createTempFile("tmp", "");
-
+         final File directory = this.getNonexistantDirectory();
          ExplodedExporter.exportExploded(new MemoryMapArchiveImpl(), directory);
          Assert.fail("Should have thrown IllegalArgumentException");
       }
@@ -232,6 +194,20 @@ public class ExplodedExporterTestCase
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
+
+   /**
+    * Obtains a reference to a directory that does not exist
+    */
+   private File getNonexistantDirectory()
+   {
+      final File directory = new File(this.getTarget(), "someNonExistentDirectory");
+      if (directory.exists())
+      {
+         IOUtil.deleteDirectory(directory);
+      }
+      Assert.assertTrue("Precondition Failure: Directory should not exist: " + directory, !directory.exists());
+      return directory;
+   }
 
    /**
     * Assert an asset is actually in the exploded directory

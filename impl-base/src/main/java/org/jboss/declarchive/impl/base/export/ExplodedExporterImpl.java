@@ -17,20 +17,12 @@
 package org.jboss.declarchive.impl.base.export;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.declarchive.api.Archive;
-import org.jboss.declarchive.api.Asset;
-import org.jboss.declarchive.api.Path;
-import org.jboss.declarchive.api.export.ArchiveExportException;
 import org.jboss.declarchive.api.export.ExplodedExporter;
 import org.jboss.declarchive.impl.base.Validate;
-import org.jboss.declarchive.impl.base.io.IOUtil;
 
 /**
  * ExplodedExporterImpl
@@ -56,9 +48,10 @@ public class ExplodedExporterImpl extends ExplodedExporter
    // Required Implementations - ExplodedExporter ----------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   /*
-    * (non-Javadoc)
-    * @see org.jboss.declarchive.api.export.ExplodedExporter#doExportExploded(org.jboss.declarchive.api.Archive, java.io.File)
+   
+   /**
+    * {@inheritDoc} 
+    * @see ExplodedExporter#doExportExploded(Archive, File)
     */
    @Override
    protected File doExportExploded(Archive<?> archive, File baseDirectory)
@@ -77,76 +70,18 @@ public class ExplodedExporterImpl extends ExplodedExporter
          throw new IllegalArgumentException("Provided parent directory is not a valid directory");
       }
 
-      // Obtain all contents
-      final Map<Path, Asset> content = archive.getContent();
+      // Get the export delegate
+      ExplodedExporterDelegate exporterDelegate = new ExplodedExporterDelegate(archive, baseDirectory);
 
-      // Create output directory
-      final File outputDirectory = new File(baseDirectory, archive.getName());
-      if (!outputDirectory.mkdir())
-      {
-         throw new ArchiveExportException("Unable to create archive output directory - " + outputDirectory);
-      }
-
-      // For every Path in the Archive
-      for (final Entry<Path, Asset> contentEntry : content.entrySet())
-      {
-         // Get Asset information
-         final Path path = contentEntry.getKey();
-         final Asset asset = contentEntry.getValue();
-         // Write asset content to file
-         writeAsset(outputDirectory, path, asset);
-      }
+      // Run the export
+      File explodedDirectory = exporterDelegate.export();
 
       if (log.isLoggable(Level.FINE))
       {
-         log.fine("Created Exploded Atchive: " + outputDirectory.getAbsolutePath());
+         log.fine("Created Exploded Atchive: " + explodedDirectory.getAbsolutePath());
       }
-      // Return the output dir
-      return outputDirectory;
-   }
-
-   //-------------------------------------------------------------------------------------||
-   // Internal Helper Methods ------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Write the asset file to the output directory
-    * 
-    * @param outputDirectory
-    * @param path
-    * @param asset
-    */
-   private void writeAsset(File outputDirectory, Path path, Asset asset)
-   {
-      // Get path to file
-      final String assetFilePath = path.get();
-
-      // Create a file for the asset
-      final File assetFile = new File(outputDirectory, assetFilePath);
-
-      // Get the assets parent parent directory and make sure it exists
-      final File assetParent = assetFile.getParentFile();
-      if (!assetParent.exists())
-      {
-         if (!assetParent.mkdirs())
-         {
-            throw new ArchiveExportException("Failed to write asset.  Unable to create parent directory.");
-         }
-      }
-
-      try
-      {
-         // Get the asset streams
-         final InputStream assetInputStream = asset.getStream();
-         final FileOutputStream assetFileOutputStream = new FileOutputStream(assetFile);
-
-         // Write contents
-         IOUtil.copyWithClose(assetInputStream, assetFileOutputStream);
-      }
-      catch (Throwable t)
-      {
-         throw new ArchiveExportException("Failed to write asset " + path + " to " + assetFile);
-      }
+      // Return the exploded dir
+      return explodedDirectory;
    }
 
 }

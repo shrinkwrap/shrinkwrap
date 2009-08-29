@@ -17,8 +17,6 @@
 package org.jboss.declarchive.api.export;
 
 import java.io.File;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 import org.jboss.declarchive.api.Archive;
 
@@ -57,6 +55,8 @@ public abstract class ExplodedExporter
     * @param archive
     * @param parentDirectory
     * @return File for exploded archive contents
+    * @throws IllegalArgumentException if the archive or parent directory not valid
+    * @throws ArchiveExportException if the export process fails
     */
    public static File exportExploded(Archive<?> archive, File parentDirectory)
    {
@@ -64,7 +64,8 @@ public abstract class ExplodedExporter
    }
 
    /**
-    * Get an instance of the ExplodedExporter implementation 
+    * Get an instance of the ExplodedExporter implementation
+    *  
     * @return
     */
    private synchronized static ExplodedExporter getInstance()
@@ -76,25 +77,14 @@ public abstract class ExplodedExporter
       return instance;
    }
 
+   /** 
+    * Create an instance of the ExplodedEporter implementation 
+    * 
+    * @return
+    */
    private static ExplodedExporter createInstance()
    {
-      return AccessController.doPrivileged(new PrivilegedAction<ExplodedExporter>()
-      {
-         @SuppressWarnings("unchecked")
-         public ExplodedExporter run()
-         {
-            try
-            {
-               ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-               Class<? extends ExplodedExporter> exporterImpl = (Class<? extends ExplodedExporter>) classLoader.loadClass(IMPL_TYPE);
-               return exporterImpl.newInstance();
-            }
-            catch (Exception e)
-            {
-               throw new IllegalArgumentException("Unable to create ExplodedExporter implemenation.", e);
-            }
-         }
-      });
+      return FactoryUtil.createInstance(IMPL_TYPE, ExplodedExporter.class);
    }
 
    //-------------------------------------------------------------------------------------||
@@ -103,6 +93,7 @@ public abstract class ExplodedExporter
 
    /**
     * Template export method for concrete implementations  
+    * 
     * @param archive
     * @param parentDirectory
     * @return File for exploded archive contents

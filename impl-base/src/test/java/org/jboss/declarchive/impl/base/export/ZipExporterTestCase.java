@@ -44,7 +44,7 @@ import org.junit.Test;
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public class ZipExporterTestCase
+public class ZipExporterTestCase extends ExportTestBase
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -68,6 +68,9 @@ public class ZipExporterTestCase
    {
       log.info("testExportZip");
 
+      // Get a temp directory for the test
+      File tempDirectory = createTempDirectory("testExportZip");
+      
       // Get an archive instance
       MemoryMapArchive archive = new MemoryMapArchiveImpl("testArchive.jar");
 
@@ -92,7 +95,8 @@ public class ZipExporterTestCase
       Assert.assertNotNull(zipStream);
 
       // Create a temp file
-      File outFile = File.createTempFile("test", ".zip");
+      File outFile = new File(tempDirectory, archive.getName());
+      
       // Write Zip contents to file
       writeOutFile(outFile, zipStream);
 
