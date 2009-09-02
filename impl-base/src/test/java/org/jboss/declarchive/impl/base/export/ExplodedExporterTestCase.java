@@ -82,12 +82,6 @@ public class ExplodedExporterTestCase extends ExportTestBase
       Path pathTwo = new BasicPath("nested", "test2.properties");
       archive.add(pathTwo, assetTwo);
 
-      // Add a nested archive for good measure
-      MemoryMapArchive nestedArchive = new MemoryMapArchiveImpl("nestedArchive.jar");
-      nestedArchive.add(pathOne, assetOne);
-      nestedArchive.add(pathTwo, assetTwo);
-      archive.add(new BasicPath(), nestedArchive);
-
       // Export as Exploded directory
       File explodedDirectory = ExplodedExporter.exportExploded(archive, tempDirectory);
 
@@ -102,12 +96,67 @@ public class ExplodedExporterTestCase extends ExportTestBase
       assertAssetInExploded(explodedDirectory, pathOne, assetOne);
       assertAssetInExploded(explodedDirectory, pathTwo, assetTwo);
 
+   }
+
+   /**
+    * Ensure an archive exported to an exploded directory properly explodes nested archives.
+    * 
+    * @throws Exception
+    */
+   @Test
+   public void testExportNestedExploded() throws Exception
+   {
+      log.info("testExportNestedExploded");
+
+      // Get a temp directory
+      File tempDirectory = createTempDirectory("testExportNestedExploded");
+
+      // Get an archive instance
+      MemoryMapArchive archive = new MemoryMapArchiveImpl("testArchive.jar");
+
+      // Add a nested archive
+      MemoryMapArchive nestedArchive = new MemoryMapArchiveImpl("nestedArchive.jar");
+
+      // Add some content
+      Asset assetOne = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
+      Path pathOne = new BasicPath("test.properties");
+      nestedArchive.add(pathOne, assetOne);
+      Asset assetTwo = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test2.properties");
+      Path pathTwo = new BasicPath("nested", "test2.properties");
+      nestedArchive.add(pathTwo, assetTwo);
+      
+      archive.add(new BasicPath(), nestedArchive);
+
+      // Add an archive nested in a directory
+      MemoryMapArchive nestedArchiveTwo = new MemoryMapArchiveImpl("nestedArchive.jar");
+      Path nestedPath = new BasicPath("nested");
+
+      // Add some content
+      nestedArchiveTwo.add(pathOne, assetOne);
+      nestedArchiveTwo.add(pathTwo, assetTwo);
+
+      archive.add(nestedPath, nestedArchiveTwo);
+
+      // Export as Exploded directory
+      File explodedDirectory = ExplodedExporter.exportExploded(archive, tempDirectory);
+
+      // Validate the exploded directory was created 
+      Assert.assertNotNull(explodedDirectory);
+
+      // Assert the directory has the correct name
+      File expectedDirectory = new File(tempDirectory, archive.getName());
+      Assert.assertEquals(expectedDirectory, explodedDirectory);
+
       // Validate nested archive entries were written out
       Path nestedArchivePath = new BasicPath(nestedArchive.getName());
 
       assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePath, pathOne), assetOne);
       assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePath, pathTwo), assetTwo);
+      
+      Path nestedArchivePathTwo = new BasicPath(nestedPath, nestedArchiveTwo.getName());
 
+      assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePathTwo, pathOne), assetOne);
+      assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePathTwo, pathTwo), assetTwo);
    }
 
    /**

@@ -26,6 +26,7 @@ import org.jboss.declarchive.api.Asset;
 import org.jboss.declarchive.api.Path;
 import org.jboss.declarchive.impl.base.MemoryMapArchiveImpl;
 import org.jboss.declarchive.impl.base.Validate;
+import org.jboss.declarchive.impl.base.asset.ArchiveAsset;
 import org.jboss.declarchive.impl.base.asset.ClassLoaderAsset;
 import org.jboss.declarchive.impl.base.io.IOUtil;
 import org.jboss.declarchive.impl.base.path.BasicPath;
@@ -267,9 +268,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       Asset fetchedAsset = archive.get(location);
 
-      Assert.assertTrue(
-            "Asset should be returned from path: " + location.get(), 
-            compareAssets(asset, fetchedAsset));
+      Assert.assertTrue("Asset should be returned from path: " + location.get(), compareAssets(asset, fetchedAsset));
    }
 
    /**
@@ -452,24 +451,22 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
    {
       Archive<T> archive = getArchive();
       Archive<T> sourceArchive = createNewArchive();
-      Path location = new BasicPath("/", "test.properties");
-      Path locationTwo = new BasicPath("/", "test2.properties");
-      Asset asset = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
-      Asset assetTwo = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test2.properties");
-      sourceArchive.add(location, asset).add(locationTwo, assetTwo);
 
       Path baseLocation = new BasicPath("somewhere");
 
       archive.add(baseLocation, sourceArchive);
 
-      Path expectedPath = new BasicPath(new BasicPath(baseLocation, sourceArchive.getName()), location);
-      Path expectedPathTwo = new BasicPath(new BasicPath(baseLocation, sourceArchive.getName()), locationTwo);
+      Path expectedPath = new BasicPath(baseLocation, sourceArchive.getName());
 
-      Assert.assertTrue("Asset should have been added to path: " + expectedPath.get(), this.compareAssets(archive
-            .get(expectedPath), asset));
+      Asset asset = archive.get(expectedPath);
+      Assert.assertNotNull("Asset should have been added to path: " + expectedPath.get(), asset);
+      Assert.assertTrue("An instance of ArchiveAsset should have been added to path: " + expectedPath.get(),
+            asset instanceof ArchiveAsset);
+      ArchiveAsset archiveAsset = ArchiveAsset.class.cast(asset);
 
-      Assert.assertTrue("Asset should have been added to path: " + expectedPathTwo.get(), this.compareAssets(archive
-            .get(expectedPathTwo), assetTwo));
+      Archive<?> nestedArchive = archiveAsset.getArchive();
+      Assert.assertEquals("Nested Archive should be same archive that was added", sourceArchive, nestedArchive);
+
    }
 
    //-------------------------------------------------------------------------------------||

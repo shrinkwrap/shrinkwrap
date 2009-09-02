@@ -26,6 +26,8 @@ import org.jboss.declarchive.api.Archive;
 import org.jboss.declarchive.api.Asset;
 import org.jboss.declarchive.api.Path;
 import org.jboss.declarchive.api.export.ArchiveExportException;
+import org.jboss.declarchive.api.export.ExplodedExporter;
+import org.jboss.declarchive.impl.base.asset.ArchiveAsset;
 import org.jboss.declarchive.impl.base.io.IOUtil;
 
 /**
@@ -96,6 +98,14 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
          }
       }
 
+      // Handle Archive assets separately 
+      if (asset instanceof ArchiveAsset)
+      {
+         ArchiveAsset nesteArchiveAsset = ArchiveAsset.class.cast(asset);
+         processArchiveAsset(assetParent, nesteArchiveAsset);
+         return;
+      }
+
       try
       {
          if (log.isLoggable(Level.FINE))
@@ -128,6 +138,19 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
+
+   /**
+    * Processes a nested archive by delegating to the ExplodedArchiveExporter
+    * @param parentDirectory
+    * @param nestedArchiveAsset
+    */
+   private void processArchiveAsset(File parentDirectory, ArchiveAsset nestedArchiveAsset)
+   {
+      // Get the nested archive
+      Archive<?> nestedArchive = nestedArchiveAsset.getArchive();
+
+      ExplodedExporter.exportExploded(nestedArchive, parentDirectory);
+   }
 
    /**
     * Initializes the output directory

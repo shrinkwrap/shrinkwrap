@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.jboss.declarchive.api.Archive;
 import org.jboss.declarchive.api.Asset;
 import org.jboss.declarchive.api.Path;
 import org.jboss.declarchive.api.export.ZipExporter;
@@ -70,7 +71,7 @@ public class ZipExporterTestCase extends ExportTestBase
 
       // Get a temp directory for the test
       File tempDirectory = createTempDirectory("testExportZip");
-      
+
       // Get an archive instance
       MemoryMapArchive archive = new MemoryMapArchiveImpl("testArchive.jar");
 
@@ -81,7 +82,42 @@ public class ZipExporterTestCase extends ExportTestBase
       Asset assetTwo = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test2.properties");
       Path pathTwo = new BasicPath("nested", "test2.properties");
       archive.add(pathTwo, assetTwo);
-      
+
+      // Export as Zip InputStream
+      InputStream zipStream = ZipExporter.exportZip(archive);
+
+      // Write zip content to temporary file 
+      ZipFile expectedZip = getExportedZipFile(archive, zipStream, tempDirectory);
+
+      // Validate entries were written out
+      assertAssetInZip(expectedZip, pathOne, assetOne);
+      assertAssetInZip(expectedZip, pathTwo, assetTwo);
+
+   }
+
+   /**
+    * Test to make sue an archive can be exported to Zip and nested archives are also in exported as nested Zip.
+    * @throws Exception
+    */
+   @Test
+   public void testExportNestedZip() throws Exception
+   {
+      log.info("testExportNestedZip");
+
+      // Get a temp directory for the test
+      File tempDirectory = createTempDirectory("testExportNestedZip");
+
+      // Get an archive instance
+      MemoryMapArchive archive = new MemoryMapArchiveImpl("testArchive.jar");
+
+      // Add some content
+      Asset assetOne = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test.properties");
+      Path pathOne = new BasicPath("test.properties");
+      archive.add(pathOne, assetOne);
+      Asset assetTwo = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test2.properties");
+      Path pathTwo = new BasicPath("nested", "test2.properties");
+      archive.add(pathTwo, assetTwo);
+
       // Add a nested archive for good measure
       MemoryMapArchive nestedArchive = new MemoryMapArchiveImpl("nestedArchive.jar");
       nestedArchive.add(pathOne, assetOne);
@@ -91,32 +127,28 @@ public class ZipExporterTestCase extends ExportTestBase
       // Export as Zip InputStream
       InputStream zipStream = ZipExporter.exportZip(archive);
 
-      // Validate the InputStream was created 
-      Assert.assertNotNull(zipStream);
-
-      // Create a temp file
-      File outFile = new File(tempDirectory, archive.getName());
-      
-      // Write Zip contents to file
-      writeOutFile(outFile, zipStream);
-
-      // Use standard ZipFile library to read in written Zip file
-      ZipFile expectedZip = new ZipFile(outFile);
+      // Write out and retrieve Zip 
+      ZipFile expectedZip = getExportedZipFile(archive, zipStream, tempDirectory);
 
       // Validate entries were written out
       assertAssetInZip(expectedZip, pathOne, assetOne);
       assertAssetInZip(expectedZip, pathTwo, assetTwo);
-      
+
       // Validate nested archive entries were written out
       Path nestedArchivePath = new BasicPath(nestedArchive.getName());
 
-      assertAssetInZip(expectedZip, new BasicPath(nestedArchivePath, pathOne), assetOne);
-      assertAssetInZip(expectedZip, new BasicPath(nestedArchivePath, pathTwo), assetTwo);
-   }
+      // Get nested archive entry from exported zip
+      ZipEntry nestedArchiveEntry = expectedZip.getEntry(nestedArchivePath.get());
+      
+      // Get inputstream for entry 
+      InputStream nesterArchiveStream = expectedZip.getInputStream(nestedArchiveEntry);
 
-   //-------------------------------------------------------------------------------------||
-   // Internal Helper Methods ------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+      // Write out and retrieve Zip
+      ZipFile nestedZip = getExportedZipFile(nestedArchive, nesterArchiveStream, tempDirectory);
+
+      assertAssetInZip(nestedZip, pathOne, assetOne);
+      assertAssetInZip(nestedZip, pathTwo, assetTwo);
+   }
 
    /**
     * Ensure an archive is required to export.
@@ -135,6 +167,30 @@ public class ZipExporterTestCase extends ExportTestBase
       catch (IllegalArgumentException expected)
       {
       }
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Internal Helper Methods ------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   private ZipFile getExportedZipFile(Archive<?> archive, InputStream zipStream, File tempDirectory) throws Exception
+   {
+
+      // Validate the InputStream was created 
+      Assert.assertNotNull(zipStream);
+
+      // Create a temp file
+      File outFile = new File(tempDirectory, archive.getName());
+
+      // Write Zip contents to file
+      writeOutFile(outFile, zipStream);
+      
+     System.out.println(outFile.length());
+     
+      // Use standard ZipFile library to read in written Zip file
+      ZipFile expectedZip = new ZipFile(outFile);
+
+      return expectedZip;
    }
 
    /**

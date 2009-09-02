@@ -71,12 +71,13 @@ public final class IOUtil
       final ByteArrayOutputStream out = new ByteArrayOutputStream();
       final int len = 1024;
       final byte[] buffer = new byte[len];
+      int read = 0;
       try
       {
 
-         while ((in.read(buffer) != -1))
+         while (((read = in.read(buffer)) != -1))
          {
-            out.write(buffer);
+            out.write(buffer, 0, read);
          }
       }
       catch (final IOException ioe)

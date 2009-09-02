@@ -90,7 +90,8 @@ public abstract class AbstractExporterDelegate<T>
          // Get Asset information
          final Path path = contentEntry.getKey();
          final Asset asset = contentEntry.getValue();
-         // Write asset content to file
+
+         // Process the asset 
          processAsset(path, asset);
       }
 

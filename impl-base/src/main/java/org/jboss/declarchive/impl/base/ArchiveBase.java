@@ -16,6 +16,7 @@
  */
 package org.jboss.declarchive.impl.base;
 
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -25,6 +26,9 @@ import org.jboss.declarchive.api.Archive;
 import org.jboss.declarchive.api.Asset;
 import org.jboss.declarchive.api.AssetNotFoundException;
 import org.jboss.declarchive.api.Path;
+import org.jboss.declarchive.api.export.ZipExporter;
+import org.jboss.declarchive.impl.base.asset.ArchiveAsset;
+import org.jboss.declarchive.impl.base.io.IOUtil;
 import org.jboss.declarchive.impl.base.path.BasicPath;
 
 /**
@@ -154,8 +158,17 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       final String archiveName = archive.getName();
       final Path contentPath = new BasicPath(path, archiveName);
 
+      // Get archive input stream
+      InputStream inputStream = ZipExporter.exportZip(archive);
+
+      // Get the bytes for the archive
+      byte[] archiveBytes = IOUtil.asByteArray(inputStream);
+
+      // Create ArchiveAsset 
+      ArchiveAsset archiveAsset = new ArchiveAsset(archive, archiveBytes);
+
       // Delegate
-      return addContents(contentPath, archive);
+      return add(contentPath, archiveAsset);
    }
 
    /**
