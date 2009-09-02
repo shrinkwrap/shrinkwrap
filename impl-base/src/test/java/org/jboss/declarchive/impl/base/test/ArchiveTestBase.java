@@ -353,16 +353,16 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
    }
 
    /**
-    * Ensure adding content requires a source archive
+    * Ensure merging content requires a source archive
     * @throws Exception
     */
    @Test
-   public void testAddContentsRequiresSource() throws Exception
+   public void testMergeRequiresSource() throws Exception
    {
       Archive<T> archive = getArchive();
       try
       {
-         archive.addContents(null);
+         archive.merge(null);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
@@ -371,11 +371,11 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
    }
 
    /**
-    * Ensure adding content from another archive successfully stores all assets
+    * Ensure merging content from another archive successfully stores all assets
     * @throws Exception
     */
    @Test
-   public void testAddContents() throws Exception
+   public void testMerge() throws Exception
    {
       Archive<T> archive = getArchive();
       Archive<T> sourceArchive = createNewArchive();
@@ -386,7 +386,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Asset assetTwo = new ClassLoaderAsset("org/jboss/declarchive/impl/base/asset/Test2.properties");
       sourceArchive.add(location, asset).add(locationTwo, assetTwo);
 
-      archive.addContents(sourceArchive);
+      archive.merge(sourceArchive);
       Assert.assertTrue("Asset should have been added to path: " + location.get(), this.compareAssets(archive
             .get(location), asset));
 
@@ -395,11 +395,11 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
    }
 
    /**
-    * Ensure adding content from another archive to a path successfully stores all assets to specific path
+    * Ensure merging content from another archive to a path successfully stores all assets to specific path
     * @throws Exception
     */
    @Test
-   public void testAddContentsToPath() throws Exception
+   public void testMergeToPath() throws Exception
    {
       Archive<T> archive = getArchive();
       Archive<T> sourceArchive = createNewArchive();
@@ -412,7 +412,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       Path baseLocation = new BasicPath("somewhere");
 
-      archive.addContents(baseLocation, sourceArchive);
+      archive.merge(baseLocation, sourceArchive);
 
       Path expectedPath = new BasicPath(baseLocation, location);
       Path expectedPathTwo = new BasicPath(baseLocation, locationTwo);
@@ -425,16 +425,16 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
    }
 
    /**
-    * Ensure adding content from another archive requires a path
+    * Ensure merging content from another archive requires a path
     * @throws Exception
     */
    @Test
-   public void testAddContentsToPathRequiresPath() throws Exception
+   public void testMergeToPathRequiresPath() throws Exception
    {
       Archive<T> archive = getArchive();
       try
       {
-         archive.addContents(null, createNewArchive());
+         archive.merge(null, createNewArchive());
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)

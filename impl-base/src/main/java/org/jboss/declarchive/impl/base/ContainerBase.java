@@ -133,19 +133,19 @@ public abstract class ContainerBase<T extends Archive<T>> implements
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#addContents(org.jboss.declarchive.api.Archive)
+    * @see org.jboss.declarchive.api.Archive#merge(org.jboss.declarchive.api.Archive)
     */
    @Override
-   public T addContents(Archive<?> source) throws IllegalArgumentException
+   public T merge(Archive<?> source) throws IllegalArgumentException
    {
-      archive.addContents(source);
+      archive.merge(source);
       return covarientReturn();
    }
    
    @Override
-   public T addContents(Path path, Archive<?> source) throws IllegalArgumentException
+   public T merge(Path path, Archive<?> source) throws IllegalArgumentException
    {
-      archive.addContents(path, source);
+      archive.merge(path, source);
       return covarientReturn();
    }
    

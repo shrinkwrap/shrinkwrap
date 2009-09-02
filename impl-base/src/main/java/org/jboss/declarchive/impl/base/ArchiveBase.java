@@ -182,20 +182,20 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.declarchive.api.Archive#addContents(org.jboss.declarchive.api.Archive)
+    * @see org.jboss.declarchive.api.Archive#merge(org.jboss.declarchive.api.Archive)
     */
    @Override
-   public T addContents(final Archive<?> source) throws IllegalArgumentException
+   public T merge(final Archive<?> source) throws IllegalArgumentException
    {
-      return addContents(new BasicPath(), source);
+      return merge(new BasicPath(), source);
    }
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.declarchive.api.Archive#addContents(org.jboss.declarchive.api.Path, org.jboss.declarchive.api.Archive)
+    * @see org.jboss.declarchive.api.Archive#merge(org.jboss.declarchive.api.Path, org.jboss.declarchive.api.Archive)
     */
    @Override
-   public T addContents(final Path path, final Archive<?> source) throws IllegalArgumentException
+   public T merge(final Path path, final Archive<?> source) throws IllegalArgumentException
    {
       // Precondition checks
       Validate.notNull(path, "No path was specified");
