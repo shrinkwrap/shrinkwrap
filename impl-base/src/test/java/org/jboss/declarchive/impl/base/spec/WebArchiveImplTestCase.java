@@ -45,6 +45,8 @@ public class WebArchiveImplTestCase
 
    private static final Path PATH_CLASSES = new BasicPath(PATH_WEBINF, "classes");
 
+   private static final Path PATH_RESOURCE = new BasicPath();
+
    private WebArchive archive;
 
    @Before
@@ -136,6 +138,18 @@ public class WebArchiveImplTestCase
             
       Assert.assertTrue(
             "A class should be located in /WEB-INF/classes/", 
+            archive.contains(expectedPath));
+   }
+   
+   @Test
+   public void shouldBeAbleToAddResource() throws Exception 
+   {
+      archive.addResource(TEST_RESOURCE);
+      
+      Path expectedPath = new BasicPath(PATH_RESOURCE, TEST_RESOURCE);
+      
+      Assert.assertTrue(
+            "A resource should be located in /",
             archive.contains(expectedPath));
    }
 }

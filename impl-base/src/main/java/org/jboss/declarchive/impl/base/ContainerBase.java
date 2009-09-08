@@ -382,6 +382,17 @@ public abstract class ContainerBase<T extends Archive<T>> implements
    protected abstract Path getClassesPath();
 
    /* (non-Javadoc)
+    * @see org.jboss.declarchive.api.container.ClassContainer#addClass(java.lang.Class)
+    */
+   @Override
+   public T addClass(Class<?> clazz) throws IllegalArgumentException
+   {
+      Validate.notNull(clazz, "Clazz must be specified");
+     
+      return addClasses(clazz);
+   }
+   
+   /* (non-Javadoc)
     * @see org.jboss.declarchive.api.container.ClassContainer#addClasses(java.lang.Class<?>[])
     */
    public T addClasses(Class<?>... classes) throws IllegalArgumentException 
@@ -396,6 +407,17 @@ public abstract class ContainerBase<T extends Archive<T>> implements
       }
       return covarientReturn();
    };
+   
+   /* (non-Javadoc)
+    * @see org.jboss.declarchive.api.container.ClassContainer#addPackage(java.lang.Package)
+    */
+   @Override
+   public T addPackage(Package pack) throws IllegalArgumentException
+   {
+      Validate.notNull(pack, "Pack must be specified");
+      
+      return addPackages(false, pack);
+   }
    
    /* (non-Javadoc)
     * @see org.jboss.declarchive.api.container.ClassContainer#addPackages(boolean, java.lang.Package[])
@@ -430,7 +452,7 @@ public abstract class ContainerBase<T extends Archive<T>> implements
     * 
     * @return Base Path for the LibraryContainer resources
     */
-   public abstract Path getLibraryPath();
+   protected abstract Path getLibraryPath();
    
    /* (non-Javadoc)
     * @see org.jboss.declarchive.api.container.LibraryContainer#addLibrary(org.jboss.declarchive.api.Archive)

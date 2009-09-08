@@ -37,6 +37,15 @@ public interface ClassContainer<T extends Archive<T>>
    //-------------------------------------------------------------------------------------||
 
    /**
+    * Adds the specified Class to the {@link Archive}.
+    * 
+    * @param class The class to add to the Archive
+    * @return This virtual archive
+    * @throws IllegalArgumentException If no class were specified
+    */
+   T addClass(Class<?> clazz) throws IllegalArgumentException;
+
+   /**
     * Adds the specified Classes to the {@link Archive}.
     * 
     * @param classes The classes to add to the Archive
@@ -45,6 +54,15 @@ public interface ClassContainer<T extends Archive<T>>
     */
    T addClasses(Class<?>... classes) throws IllegalArgumentException;
 
+   /**
+    * Adds all classes in the specified {@link Package} to the {@link Archive}.
+    * 
+    * @param pack The {@link Package} to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException If no package were specified
+    */
+   T addPackage(Package pack) throws IllegalArgumentException;
+   
    /**
     * Adds all classes in the specified {@link Package}s to the {@link Archive}.
     * 

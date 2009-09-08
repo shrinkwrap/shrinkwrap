@@ -21,6 +21,7 @@ import org.jboss.declarchive.api.Archive;
 import org.jboss.declarchive.api.container.ClassContainer;
 import org.jboss.declarchive.api.container.LibraryContainer;
 import org.jboss.declarchive.api.container.ManifestContainer;
+import org.jboss.declarchive.api.container.ResourceContainer;
 import org.jboss.declarchive.api.container.WebContainer;
 
 /**
@@ -38,6 +39,7 @@ public interface WebArchive extends
       ManifestContainer<WebArchive>,
       ClassContainer<WebArchive>,
       LibraryContainer<WebArchive>,
+      ResourceContainer<WebArchive>,
       WebContainer<WebArchive>
 {
 }

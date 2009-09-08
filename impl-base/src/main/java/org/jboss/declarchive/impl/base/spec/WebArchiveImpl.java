@@ -118,7 +118,7 @@ public class WebArchiveImpl
     * @see org.jboss.declarchive.impl.base.ContainerBase#getLibraryPath()
     */
    @Override
-   public Path getLibraryPath()
+   protected Path getLibraryPath()
    {
       return PATH_LIBRARY;
    }
