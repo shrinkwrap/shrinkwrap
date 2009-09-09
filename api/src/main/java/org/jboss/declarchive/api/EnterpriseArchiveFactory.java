@@ -64,7 +64,7 @@ public abstract class EnterpriseArchiveFactory extends ArchiveFactory<Enterprise
     * 
     * @return
     */
-   private static EnterpriseArchiveFactory getInstance()
+   private synchronized static EnterpriseArchiveFactory getInstance()
    {
       if (instance == null)
       {

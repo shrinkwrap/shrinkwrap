@@ -64,7 +64,7 @@ public abstract class WebArchiveFactory extends ArchiveFactory<WebArchive>
     * 
     * @return
     */
-   private static WebArchiveFactory getInstance()
+   private synchronized static WebArchiveFactory getInstance()
    {
       if (instance == null)
       {

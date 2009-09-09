@@ -64,7 +64,7 @@ public abstract class JavaArchiveFactory extends ArchiveFactory<JavaArchive>
     * 
     * @return
     */
-   private static JavaArchiveFactory getInstance()
+   private synchronized static JavaArchiveFactory getInstance()
    {
       if (instance == null)
       {
