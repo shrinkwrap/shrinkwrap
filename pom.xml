@@ -16,13 +16,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <!-- Artifact Information  -->
-  <groupId>org.jboss.declarchive</groupId>
-  <artifactId>declarchive-parent</artifactId>
+  <groupId>org.jboss.shrinkwrap</groupId>
+  <artifactId>shrinkwrap-parent</artifactId>
   <version>0.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Declarchive Aggregator</name>
+  <name>ShrinkWrap Aggregator</name>
   <url>http://www.jboss.org</url>
-  <description>Declarchive Aggregator</description>
+  <description>ShrinkWrap Aggregator</description>
 
   <!-- Aggregate Modules -->
   <modules>

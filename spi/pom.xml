@@ -7,8 +7,8 @@
 
   <!-- Parent -->
   <parent>
-    <groupId>org.jboss.declarchive</groupId>
-    <artifactId>declarchive-build</artifactId>
+    <groupId>org.jboss.shrinkwrap</groupId>
+    <artifactId>shrinkwrap-build</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <relativePath>../build/pom.xml</relativePath>
   </parent>
@@ -17,17 +17,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <!-- Artifact Configuration -->
-  <artifactId>declarchive-spi</artifactId>
+  <artifactId>shrinkwrap-spi</artifactId>
   <version>0.1.0-SNAPSHOT</version>
-  <name>Declarchive SPI</name>
-  <description>Generic Service Provider Contract of the Declarchive Project</description>
+  <name>ShrinkWrap SPI</name>
+  <description>Generic Service Provider Contract of the ShrinkWrap Project</description>
 
 
   <!-- Properties -->
   <properties>
 
     <!-- Versioning -->
-    <version.org.jboss.declarchive_declarchive.api>0.1.0-SNAPSHOT</version.org.jboss.declarchive_declarchive.api>
+    <version.org.jboss.shrinkwrap_shrinkwrap.api>0.1.0-SNAPSHOT</version.org.jboss.shrinkwrap_shrinkwrap.api>
 
   </properties>
 
@@ -35,9 +35,9 @@
   <dependencies>
   
     <dependency>
-      <groupId>org.jboss.declarchive</groupId>
-      <artifactId>declarchive-api</artifactId>
-      <version>${version.org.jboss.declarchive_declarchive.api}</version>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-api</artifactId>
+      <version>${version.org.jboss.shrinkwrap_shrinkwrap.api}</version>
     </dependency>
 
   </dependencies>

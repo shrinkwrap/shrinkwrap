@@ -7,8 +7,8 @@
 
   <!-- Parent -->
   <parent>
-    <groupId>org.jboss.declarchive</groupId>
-    <artifactId>declarchive-build</artifactId>
+    <groupId>org.jboss.shrinkwrap</groupId>
+    <artifactId>shrinkwrap-build</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <relativePath>../build/pom.xml</relativePath>
   </parent>
@@ -17,18 +17,18 @@
   <modelVersion>4.0.0</modelVersion>
 
   <!-- Artifact Configuration -->
-  <artifactId>declarchive-impl-vfs</artifactId>
+  <artifactId>shrinkwrap-impl-vfs</artifactId>
   <version>0.1.0-SNAPSHOT</version>
-  <name>Declarchive VFS Implementations</name>
-  <description>VFS Implementations of the Declarchive Project</description>
+  <name>ShrinkWrap VFS Implementations</name>
+  <description>VFS Implementations of the ShrinkWrap Project</description>
 
 
   <!-- Properties -->
   <properties>
 
     <!-- Versioning -->
-    <version.org.jboss.declarchive_declarchive.impl.base>0.1.0-SNAPSHOT</version.org.jboss.declarchive_declarchive.impl.base>
-    <version.org.jboss.declarchive_declarchive.spi.vfs>0.1.0-SNAPSHOT</version.org.jboss.declarchive_declarchive.spi.vfs>
+    <version.org.jboss.shrinkwrap_shrinkwrap.impl.base>0.1.0-SNAPSHOT</version.org.jboss.shrinkwrap_shrinkwrap.impl.base>
+    <version.org.jboss.shrinkwrap_shrinkwrap.spi.vfs>0.1.0-SNAPSHOT</version.org.jboss.shrinkwrap_shrinkwrap.spi.vfs>
 
   </properties>
 
@@ -36,24 +36,24 @@
   <dependencies>
 
     <!-- 
-    org.jboss.declarchive    
+    org.jboss.shrinkwrap    
      -->
     <dependency>
-      <groupId>org.jboss.declarchive</groupId>
-      <artifactId>declarchive-impl-base</artifactId>
-      <version>${version.org.jboss.declarchive_declarchive.impl.base}</version>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-impl-base</artifactId>
+      <version>${version.org.jboss.shrinkwrap_shrinkwrap.impl.base}</version>
     </dependency>
     <dependency>
-      <groupId>org.jboss.declarchive</groupId>
-      <artifactId>declarchive-impl-base</artifactId>
-      <version>${version.org.jboss.declarchive_declarchive.impl.base}</version>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-impl-base</artifactId>
+      <version>${version.org.jboss.shrinkwrap_shrinkwrap.impl.base}</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.jboss.declarchive</groupId>
-      <artifactId>declarchive-spi-vfs</artifactId>
-      <version>${version.org.jboss.declarchive_declarchive.spi.vfs}</version>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-spi-vfs</artifactId>
+      <version>${version.org.jboss.shrinkwrap_shrinkwrap.spi.vfs}</version>
     </dependency>
     
     <!-- 
