@@ -23,14 +23,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
+import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.export.ExplodedExporter;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
-import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
-import org.jboss.shrinkwrap.spi.MemoryMapArchive;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -54,16 +53,6 @@ public class ExplodedExporterTestCase extends ExportTestBase
     */
    private static final Logger log = Logger.getLogger(ExplodedExporterTestCase.class.getName());
 
-   /**
-    * Name of a properties file upon the test CP
-    */
-   private static final String NAME_TEST_PROPERTIES = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
-
-   /**
-    * Name of another properties file upon the test CP
-    */
-   private static final String NAME_TEST_PROPERTIES_2 = "org/jboss/shrinkwrap/impl/base/asset/Test2.properties";
-
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -82,15 +71,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
       File tempDirectory = createTempDirectory("testExportExploded");
 
       // Get an archive instance
-      MemoryMapArchive archive = new MemoryMapArchiveImpl("testArchive.jar");
-
-      // Add some content
-      Asset assetOne = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
-      Path pathOne = new BasicPath("test.properties");
-      archive.add(pathOne, assetOne);
-      Asset assetTwo = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
-      Path pathTwo = new BasicPath("nested", "test2.properties");
-      archive.add(pathTwo, assetTwo);
+      Archive<?> archive = createArchiveWithAssets();
 
       // Export as Exploded directory
       File explodedDirectory = ExplodedExporter.exportExploded(archive, tempDirectory);
@@ -103,9 +84,8 @@ public class ExplodedExporterTestCase extends ExportTestBase
       Assert.assertEquals(expectedDirectory, explodedDirectory);
 
       // Validate entries were written out
-      assertAssetInExploded(explodedDirectory, pathOne, assetOne);
-      assertAssetInExploded(explodedDirectory, pathTwo, assetTwo);
-
+      assertAssetInExploded(explodedDirectory, PATH_ONE, ASSET_ONE);
+      assertAssetInExploded(explodedDirectory, PATH_TWO, ASSET_TWO);
    }
 
    /**
@@ -122,31 +102,8 @@ public class ExplodedExporterTestCase extends ExportTestBase
       File tempDirectory = createTempDirectory("testExportNestedExploded");
 
       // Get an archive instance
-      MemoryMapArchive archive = new MemoryMapArchiveImpl("testArchive.jar");
-
-      // Add a nested archive
-      MemoryMapArchive nestedArchive = new MemoryMapArchiveImpl("nestedArchive.jar");
-
-      // Add some content
-      Asset assetOne = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
-      Path pathOne = new BasicPath("test.properties");
-      nestedArchive.add(pathOne, assetOne);
-      Asset assetTwo = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
-      Path pathTwo = new BasicPath("nested", "test2.properties");
-      nestedArchive.add(pathTwo, assetTwo);
-
-      archive.add(new BasicPath(), nestedArchive);
-
-      // Add an archive nested in a directory
-      MemoryMapArchive nestedArchiveTwo = new MemoryMapArchiveImpl("nestedArchive.jar");
-      Path nestedPath = new BasicPath("nested");
-
-      // Add some content
-      nestedArchiveTwo.add(pathOne, assetOne);
-      nestedArchiveTwo.add(pathTwo, assetTwo);
-
-      archive.add(nestedPath, nestedArchiveTwo);
-
+      Archive<?> archive = createArchiveWithNestedArchives();
+      
       // Export as Exploded directory
       File explodedDirectory = ExplodedExporter.exportExploded(archive, tempDirectory);
 
@@ -158,15 +115,15 @@ public class ExplodedExporterTestCase extends ExportTestBase
       Assert.assertEquals(expectedDirectory, explodedDirectory);
 
       // Validate nested archive entries were written out
-      Path nestedArchivePath = new BasicPath(nestedArchive.getName());
+      Path nestedArchivePath = new BasicPath(NAME_NESTED_ARCHIVE);
 
-      assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePath, pathOne), assetOne);
-      assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePath, pathTwo), assetTwo);
+      assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePath, PATH_ONE), ASSET_ONE);
+      assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePath, PATH_TWO), ASSET_TWO);
 
-      Path nestedArchivePathTwo = new BasicPath(nestedPath, nestedArchiveTwo.getName());
+      Path nestedArchivePathTwo = new BasicPath(NESTED_PATH, NAME_NESTED_ARCHIVE_2);
 
-      assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePathTwo, pathOne), assetOne);
-      assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePathTwo, pathTwo), assetTwo);
+      assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePathTwo, PATH_ONE), ASSET_ONE);
+      assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePathTwo, PATH_TWO), ASSET_TWO);
    }
 
    /**

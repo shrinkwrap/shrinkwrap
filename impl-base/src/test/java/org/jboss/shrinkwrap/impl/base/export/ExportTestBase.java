@@ -20,7 +20,14 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
+import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
+import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
+import org.jboss.shrinkwrap.impl.base.path.BasicPath;
+import org.jboss.shrinkwrap.spi.MemoryMapArchive;
 import org.junit.Assert;
 
 /**
@@ -29,9 +36,10 @@ import org.junit.Assert;
  * Base support for the exporter test cases 
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-class ExportTestBase
+public abstract class ExportTestBase
 {
 
    //-------------------------------------------------------------------------------------||
@@ -42,6 +50,56 @@ class ExportTestBase
     * Logger
     */
    private static final Logger log = Logger.getLogger(ExportTestBase.class.getName());
+
+   /**
+    * Name of an Archive
+    */
+   protected static final String NAME_ARCHIVE = "testArchive.jar";
+
+   /**
+    * Name of a properties file upon the test CP
+    */
+   protected static final String NAME_TEST_PROPERTIES = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
+
+   /**
+    * Name of another properties file upon the test CP
+    */
+   protected static final String NAME_TEST_PROPERTIES_2 = "org/jboss/shrinkwrap/impl/base/asset/Test2.properties";
+
+   /**
+    * Path of for nested content
+    */
+   protected static final Path NESTED_PATH = new BasicPath("nested");
+
+   /**
+    * Name of a nested archive
+    */
+   protected static final String NAME_NESTED_ARCHIVE = "nestedArchive.jar";
+
+   /**
+    * Name of another nested archive
+    */
+   protected static final String NAME_NESTED_ARCHIVE_2 = "nestedArchive2.jar";
+
+   /** 
+    * Asset used for testing
+    */
+   protected static final Asset ASSET_ONE = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+
+   /** 
+    * Path used for testing
+    */
+   protected static final Path PATH_ONE = new BasicPath("Test.properties");
+
+   /** 
+    * Another asset used for testing
+    */
+   protected static final Asset ASSET_TWO = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
+
+   /** 
+   * Another path used for testing
+   */
+   protected static final Path PATH_TWO = new BasicPath(NESTED_PATH, "Test2.properties");
 
    //-------------------------------------------------------------------------------------||
    // Functional Methods -----------------------------------------------------------------||
@@ -79,6 +137,60 @@ class ExportTestBase
       {
          throw new RuntimeException("Could not obtain the target URI", urise);
       }
+   }
+
+   /**
+    * Create an archive instance and add some assets
+    */
+   protected Archive<?> createArchiveWithAssets()
+   {
+      // Create an archive
+      Archive<?> archive = new MemoryMapArchiveImpl(NAME_ARCHIVE);
+      // Add some content
+      addContent(archive);
+      // Return archive
+      return archive;
+   }
+
+   /**
+    * Create an archive instance and add some assets and some nested archives
+    */
+   protected Archive<?> createArchiveWithNestedArchives()
+   {
+      // Create an archive
+      Archive<?> archive = createArchiveWithAssets();
+
+      // Create a nested archive
+      MemoryMapArchive nestedArchive = new MemoryMapArchiveImpl(NAME_NESTED_ARCHIVE);
+
+      // Add some content
+      addContent(nestedArchive);
+
+      // Add nested archive
+      archive.add(new BasicPath(), nestedArchive);
+
+      // Add an archive nested in a directory
+      MemoryMapArchive nestedArchiveTwo = new MemoryMapArchiveImpl(NAME_NESTED_ARCHIVE_2);
+
+      // Add some content
+      addContent(nestedArchiveTwo);
+
+      // Add the archive under a nested path
+      archive.add(NESTED_PATH, nestedArchiveTwo);
+
+      // Return archive
+      return archive;
+   }
+
+   /**
+    * Add basic contents to the archive
+    * 
+    * @param archive
+    */
+   protected void addContent(Archive<?> archive)
+   {
+      archive.add(PATH_ONE, ASSET_ONE);
+      archive.add(PATH_TWO, ASSET_TWO);
    }
 
 }
