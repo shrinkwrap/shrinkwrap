@@ -112,8 +112,11 @@ public class ZipExporterTestCase extends ExportTestBase
       // Validate nested archive entries were written out
       Path nestedArchivePath = new BasicPath(NAME_NESTED_ARCHIVE);
 
+      // Get Zip entry path
+      String nestedArchiveZipEntryPath = ZipExporterUtil.toZipEntryPath(nestedArchivePath);
+
       // Get nested archive entry from exported zip
-      ZipEntry nestedArchiveEntry = expectedZip.getEntry(nestedArchivePath.get());
+      ZipEntry nestedArchiveEntry = expectedZip.getEntry(nestedArchiveZipEntryPath);
 
       // Get inputstream for entry 
       InputStream nesterArchiveStream = expectedZip.getInputStream(nestedArchiveEntry);
@@ -127,8 +130,11 @@ public class ZipExporterTestCase extends ExportTestBase
       // Validate nested archive entries were written out
       Path nestedArchiveTwoPath = new BasicPath(NESTED_PATH, NAME_NESTED_ARCHIVE_2);
 
+      // Get Zip entry path
+      String nestedArchiveTwoZipEntryPath = ZipExporterUtil.toZipEntryPath(nestedArchiveTwoPath);
+
       // Get second nested archive entry from exported zip
-      ZipEntry nestedArchiveTwoEntry = expectedZip.getEntry(nestedArchiveTwoPath.get());
+      ZipEntry nestedArchiveTwoEntry = expectedZip.getEntry(nestedArchiveTwoZipEntryPath);
 
       // Get inputstream for entry 
       InputStream nesterArchiveTwoStream = expectedZip.getInputStream(nestedArchiveTwoEntry);
@@ -190,7 +196,8 @@ public class ZipExporterTestCase extends ExportTestBase
    private void assertAssetInZip(ZipFile expectedZip, Path path, Asset asset) throws IllegalArgumentException,
          IOException
    {
-      ZipEntry entry = expectedZip.getEntry(path.get());
+      String entryPath = ZipExporterUtil.toZipEntryPath(path);
+      ZipEntry entry = expectedZip.getEntry(entryPath);
       Assert.assertNotNull(entry);
       byte[] expectedContents = IOUtil.asByteArray(asset.getStream());
       byte[] actualContents = IOUtil.asByteArray(expectedZip.getInputStream(entry));

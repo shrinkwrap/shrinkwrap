@@ -103,7 +103,8 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
    @Override
    protected void processAsset(Path path, Asset asset)
    {
-      final String pathName = path.get();
+      final String pathName = ZipExporterUtil.toZipEntryPath(path);
+
       final ZipEntry entry = new ZipEntry(pathName);
 
       final InputStream in = asset.getStream();
