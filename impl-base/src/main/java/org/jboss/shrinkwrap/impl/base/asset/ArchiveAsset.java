@@ -16,8 +16,11 @@
  */
 package org.jboss.shrinkwrap.impl.base.asset;
 
+import java.io.InputStream;
+
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.impl.base.ArchiveInputStreamFactory;
 import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
@@ -28,7 +31,7 @@ import org.jboss.shrinkwrap.impl.base.Validate;
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public class ArchiveAsset extends ByteArrayAsset implements Asset
+public class ArchiveAsset implements Asset
 {
 
    //-------------------------------------------------------------------------------------||
@@ -48,12 +51,26 @@ public class ArchiveAsset extends ByteArrayAsset implements Asset
     * Creates an ArchiveAsset with and archive and a byte array of archive contents
     * @throws IllegalArgumentException if no archive is provided 
     */
-   public ArchiveAsset(Archive<?> archive, byte[] archiveContent)
+   public ArchiveAsset(Archive<?> archive)
    {
-      super(archiveContent);
       Validate.notNull(archive, "archive must be specified");
 
       this.archive = archive;
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Required Implementations -----------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /*
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Asset#getStream()
+    */
+   @Override
+   public InputStream getStream()
+   {
+      // Get the input stream from the ArchiveInputStreamFactory
+      return ArchiveInputStreamFactory.getInputStream(getArchive());
    }
 
    /**

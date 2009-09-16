@@ -16,7 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
-import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -26,9 +25,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.AssetNotFoundException;
 import org.jboss.shrinkwrap.api.Path;
-import org.jboss.shrinkwrap.api.export.ZipExporter;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
-import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
@@ -158,14 +155,8 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       final String archiveName = archive.getName();
       final Path contentPath = new BasicPath(path, archiveName);
 
-      // Get archive input stream
-      InputStream inputStream = ZipExporter.exportZip(archive);
-
-      // Get the bytes for the archive
-      byte[] archiveBytes = IOUtil.asByteArray(inputStream);
-
       // Create ArchiveAsset 
-      ArchiveAsset archiveAsset = new ArchiveAsset(archive, archiveBytes);
+      ArchiveAsset archiveAsset = new ArchiveAsset(archive);
 
       // Delegate
       return add(contentPath, archiveAsset);
