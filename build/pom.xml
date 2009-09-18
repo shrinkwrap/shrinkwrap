@@ -156,28 +156,33 @@
   <!-- Reporting -->
   <reporting>
     <plugins>
-    
+
       <!-- Cobertura (Code Coverage) -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
         <configuration>
-          <format>xml</format>
+          <formats>
+            <format>html</format>
+            <format>xml</format>
+          </formats>
         </configuration>
       </plugin>
-      
+
       <!-- FindBugs -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
         <configuration>
-        <!--  Hudson under Maven2 Launchers won't find this anyway, so use default HTML reports
-        for now and look manually
-          <xmlOutput>true</xmlOutput>
-          <findbugsXmlOutputDirectory>target/site</findbugsXmlOutputDirectory>  -->
+          <!--
+            Hudson under Maven2 Launchers won't find this anyway, so use
+            default HTML reports for now and look manually
+            <xmlOutput>true</xmlOutput>
+            <findbugsXmlOutputDirectory>target/site</findbugsXmlOutputDirectory>
+          -->
         </configuration>
       </plugin>
-      
+
     </plugins>
   </reporting>
 
