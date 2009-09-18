@@ -172,6 +172,7 @@
         <artifactId>findbugs-maven-plugin</artifactId>
         <configuration>
           <xmlOutput>true</xmlOutput>
+          <findbugsXmlOutputDirectory>target/site</findbugsXmlOutputDirectory>
         </configuration>
       </plugin>
       
