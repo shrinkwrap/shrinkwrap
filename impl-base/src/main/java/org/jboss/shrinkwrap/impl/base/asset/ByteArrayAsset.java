@@ -70,11 +70,19 @@ public class ByteArrayAsset implements Asset
       // Precondition check
       Validate.notNull(content, "content must be specified");
 
+      // Defensive copy on set, SHRINKWRAP-38
+      final int length = content.length;
+      byte[] newArray = new byte[length];
+      for (int i = 0; i < length; i++)
+      {
+         newArray[i] = content[i];
+      }
+
       // Set
-      this.content = content;
+      this.content = newArray;
       if (log.isLoggable(Level.FINER))
       {
-         log.finer("Created " + this + " with backing byte array of size " + content.length + "b");
+         log.finer("Created " + this + " with backing byte array of size " + length + "b");
       }
    }
 
