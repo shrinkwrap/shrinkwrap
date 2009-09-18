@@ -49,6 +49,16 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * Logger
     */
    private static final Logger log = Logger.getLogger(MemoryMapArchiveBase.class.getName());
+   
+   /**
+    * Newline character
+    */
+   private static final char NEWLINE = '\n';
+   
+   /**
+    * Colon character
+    */
+   private static final char COLON = ':';
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -153,13 +163,19 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
       // If we want verbose output
       if (verbose)
       {
+         // Make a builder
          StringBuilder sb = new StringBuilder();
-         List<Path> paths = new ArrayList<Path>(content.keySet());
+         
+         // Add the name
+         sb.append(this.getName()).append(COLON).append(NEWLINE);
+         
+         // Sort all paths
+         final List<Path> paths = new ArrayList<Path>(content.keySet());
          Collections.sort(paths);
 
-         for (Path path : paths)
+         for (final Path path : paths)
          {
-            sb.append(path.get()).append('\n');
+            sb.append(path.get()).append(NEWLINE);
          }
          return sb.toString();
       }
