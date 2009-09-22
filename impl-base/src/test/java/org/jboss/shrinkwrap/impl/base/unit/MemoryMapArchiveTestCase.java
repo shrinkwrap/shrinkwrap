@@ -18,7 +18,6 @@ package org.jboss.shrinkwrap.impl.base.unit;
 
 import junit.framework.Assert;
 
-import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveTestBase;
 import org.jboss.shrinkwrap.spi.MemoryMapArchive;
@@ -39,7 +38,7 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive>
    private MemoryMapArchive archive;
 
    /**
-    * Create a new Archive instance pr Test.
+    * Create a new Archive instance per Test.
     * 
     * @throws Exception
     */
@@ -47,6 +46,7 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive>
    public void createArchive() throws Exception  
    {
       archive = createNewArchive();
+      archive.toString(false);
    }
 
    @Override
@@ -60,7 +60,7 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive>
     * so it can perform the common test cases.
     */
    @Override
-   protected Archive<MemoryMapArchive> getArchive()
+   protected MemoryMapArchive getArchive()
    {
       return archive;
    }

@@ -192,7 +192,7 @@ public abstract class ContainerBase<T extends Archive<T>> implements
    @Override
    public Asset get(String path) throws AssetNotFoundException, IllegalArgumentException
    {
-      return get(new BasicPath(path));
+      return archive.get(path);
    }
    
    /* (non-Javadoc)
@@ -461,13 +461,7 @@ public abstract class ContainerBase<T extends Archive<T>> implements
    {
       Validate.notNull(archive, "Archive must be specified");
       
-      Map<Path, Asset> content = archive.getContent();
-      for(Map.Entry<Path, Asset> entry : content.entrySet()) 
-      {
-         Path location = new BasicPath(getLibraryPath(), entry.getKey());
-         add(location, entry.getValue());
-      }
-      return covarientReturn();
+      return add(getLibraryPath(), archive);
    };
 
    /* (non-Javadoc)

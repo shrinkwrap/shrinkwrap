@@ -67,7 +67,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
     * 
     * @return A Archive<T> instance.
     */
-   protected abstract Archive<T> getArchive();
+   protected abstract T getArchive();
 
    /**
     * Create a new {@link Archive} instance.
@@ -140,6 +140,60 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       try
       {
          archive.add(new BasicPath("/", "Test.properties"), (Asset) null);
+         Assert.fail("Should have throw an IllegalArgumentException");
+      }
+      catch (IllegalArgumentException expectedException)
+      {
+      }
+   }
+   
+   /**
+    * Ensure adding an asset to a string path results in successful storage.
+    * @throws Exception
+    */
+   @Test
+   public void testAddWithStringPath() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+      Path location = new BasicPath("/", "test.properties");
+
+      archive.add(location.get(), asset);
+
+      Assert.assertTrue("Asset should be placed on " + new BasicPath("/", "test.properties"), archive.contains(location));
+   }
+   
+   /**
+    * Ensure adding an asset to a string path requires path.
+    * @throws Exception
+    */
+   @Test
+   public void testAddWithStringPathRequiresPath() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+
+      try
+      {
+         archive.add((String) null, asset);
+         Assert.fail("Should have throw an IllegalArgumentException");
+      }
+      catch (IllegalArgumentException expectedException)
+      {
+      }
+   }
+   
+   /**
+    * Ensure adding an asset to the path string requires an asset.
+    * @throws Exception
+    */
+   @Test
+   public void testAddWithStringPathRequiresAssets() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      try
+      {
+         archive.add("/Test.properties", (Asset) null);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
@@ -304,6 +358,41 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       try
       {
          archive.get((Path) null);
+         Assert.fail("Should have throw an IllegalArgumentException");
+      }
+      catch (IllegalArgumentException expectedException)
+      {
+      }
+   }
+   
+   /**
+    * Ensure an asset can be retrieved by a string path
+    * @throws Exception
+    */
+   @Test
+   public void testGetAssetWithString() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      Path location = new BasicPath("/", "test.properties");
+      Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+      archive.add(location, asset);
+
+      Asset fetchedAsset = archive.get(location.get());
+
+      Assert.assertTrue("Asset should be returned from path: " + location.get(), compareAssets(asset, fetchedAsset));
+   }
+   
+   /**
+    * Ensure get asset by string requires a path
+    * @throws Exception
+    */
+   @Test
+   public void testGetAssetWithStringRequiresPath() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      try
+      {
+         archive.get((String) null);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)

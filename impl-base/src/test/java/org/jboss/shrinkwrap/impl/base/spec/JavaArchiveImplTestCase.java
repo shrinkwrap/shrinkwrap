@@ -19,15 +19,18 @@ package org.jboss.shrinkwrap.impl.base.spec;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.container.ClassContainer;
+import org.jboss.shrinkwrap.api.container.LibraryContainer;
+import org.jboss.shrinkwrap.api.container.ManifestContainer;
+import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
-import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
-import org.jboss.shrinkwrap.impl.base.spec.JavaArchiveImpl;
-import org.jboss.shrinkwrap.impl.base.spec.donotchange.DummyClassUsedForClassResourceTest;
+import org.jboss.shrinkwrap.impl.base.test.ContainerTestBase;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -36,26 +39,39 @@ import org.junit.Test;
  * Test case to ensure that the JavaArchive follows the Jar spec.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public class JavaArchiveImplTestCase
+public class JavaArchiveImplTestCase extends ContainerTestBase<JavaArchive>
 {
+   //-------------------------------------------------------------------------------------||
+   // Class Members ----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
    private static final Logger log = Logger.getLogger(JavaArchiveImplTestCase.class.getName());
-   
+
    private static final String TEST_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
 
    private static final Path PATH_MANIFEST = new BasicPath("META-INF");
 
-   private static final Path PATH_RESOURCE = new BasicPath("/");
-
    private static final Path PATH_CLASS = new BasicPath("/");
 
+   private static final Path PATH_RESOURCE = new BasicPath();
+
+   //-------------------------------------------------------------------------------------||
+   // Instance Members -------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
    private JavaArchive archive;
+
+   //-------------------------------------------------------------------------------------||
+   // Lifecycle Methods ------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
 
    @Before
    public void createArchive()
    {
-      archive = new JavaArchiveImpl(new MemoryMapArchiveImpl());
+      archive = createNewArchive();
    }
 
    @After
@@ -65,96 +81,111 @@ public class JavaArchiveImplTestCase
       System.out.println(archive.toString(true));
    }
 
+   //-------------------------------------------------------------------------------------||
+   // Required Impls - ArchiveTestBase ---------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Return the archive to super class
+    */
+   @Override
+   protected JavaArchive getArchive()
+   {
+      return archive;
+   }
+
+   /** 
+    * Create a new JavaArchive instance
+    */
+   @Override
+   protected JavaArchive createNewArchive()
+   {
+      return new JavaArchiveImpl(new MemoryMapArchiveImpl());
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Required Impls - ContainerTestBase ---------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   @Override
+   protected ManifestContainer<JavaArchive> getManifestContainer()
+   {
+      return getArchive();
+   }
+
+   @Override
+   protected ResourceContainer<JavaArchive> getResourceContainer()
+   {
+      return getArchive();
+   }
+
+   @Override
+   protected ClassContainer<JavaArchive> getClassContainer()
+   {
+      return archive;
+   }
+
+   @Override
+   protected LibraryContainer<JavaArchive> getLibraryContainer()
+   {
+      throw new UnsupportedOperationException("JavaArchive does not support libraries");
+   }
+
+   @Override
+   protected Path getManifestPath()
+   {
+      return PATH_MANIFEST;
+   }
+
+   @Override
+   protected Path getResourcePath()
+   {
+      return PATH_RESOURCE;
+   }
+
+   @Override
+   protected Path getClassesPath()
+   {
+      return PATH_CLASS;
+   }
+
+   @Override
+   protected Path getLibraryPath()
+   {
+      throw new UnsupportedOperationException("JavaArchive does not support libraries");
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Tests ------------------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
    @Test
    public void shouldBeAbleToSetManifestFile() throws Exception
    {
       archive.setManifest(TEST_RESOURCE);
-      
+
       Path expectedPath = new BasicPath(PATH_MANIFEST, "MANIFEST.MF");
-      
-      Assert.assertTrue(
-            "The MANIFEST.MF file should be located under /META-INF/MANIFEST.MF", 
-            archive.contains(expectedPath));
+
+      Assert.assertTrue("The MANIFEST.MF file should be located under /META-INF/MANIFEST.MF", archive
+            .contains(expectedPath));
    }
 
-   @Test
-   public void shouldBeAbleToAddManifestResource() throws Exception
+   @Ignore
+   @Override
+   public void testAddLibrary() throws Exception
    {
-      archive.addManifestResource(TEST_RESOURCE);
-      
-      Path expectedPath = new BasicPath(PATH_MANIFEST, TEST_RESOURCE);
-      
-      Assert.assertTrue(
-            "A manifest resource should be located under /META-INF/", 
-            archive.contains(expectedPath));
    }
 
-   @Test
-   public void shouldBeAbleToAddManifestResourceWithNewName() throws Exception
+   @Ignore
+   @Override
+   public void testAddLibraryToPath() throws Exception
    {
-      String newName = "test.txt";
-      archive.addManifestResource(new BasicPath(newName), TEST_RESOURCE);
-      
-      Path expectedPath = new BasicPath(PATH_MANIFEST, newName);
-      
-      Assert.assertTrue(
-            "A manifest resoruce should be located under /META-INF/", 
-            archive.contains(expectedPath));
    }
 
-   @Test
-   public void shouldBeAbleToAddResource() throws Exception
+   @Ignore
+   @Override
+   public void testAddArchiveAsLibrary() throws Exception
    {
-      archive.addResource(TEST_RESOURCE);
-      
-      Path expectedPath = new BasicPath(PATH_RESOURCE, TEST_RESOURCE);
-      
-      Assert.assertTrue(
-            "A resoruce should be located under /", 
-            archive.contains(expectedPath));
-   }
-
-   @Test
-   public void shouldBeAbleToAddResourceWithNewName() throws Exception
-   {
-      String newName = "test.txt";
-      archive.addResource(TEST_RESOURCE, newName);
-      
-      Path expectedPath = new BasicPath(
-            PATH_RESOURCE, 
-            "/org/jboss/shrinkwrap/impl/base/asset/" + newName);
-      
-      Assert.assertTrue(
-            "A resoruce should be located under /", 
-            archive.contains(expectedPath));
-   }
-
-   @Test
-   public void shouldBeAbleToAddClass() throws Exception
-   {
-      archive.addClasses(DummyClassUsedForClassResourceTest.class);
-
-      Path expectedPath = new BasicPath(
-            PATH_CLASS, 
-            AssetUtil.getFullPathForClassResource(DummyClassUsedForClassResourceTest.class));
-      
-      Assert.assertTrue(
-            "A class should be located under /", 
-            archive.contains(expectedPath));
-   }
-
-   @Test
-   public void shouldBeAbleToAddPackage() throws Exception
-   {
-      archive.addPackages(false, DummyClassUsedForClassResourceTest.class.getPackage());
-
-      Path expectedPath = new BasicPath(
-            PATH_CLASS, 
-            AssetUtil.getFullPathForClassResource(DummyClassUsedForClassResourceTest.class));
-      
-      Assert.assertTrue(
-            "A class should be located under /", 
-            archive.contains(expectedPath));
    }
 
 }
