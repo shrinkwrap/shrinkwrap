@@ -73,10 +73,7 @@ public class ByteArrayAsset implements Asset
       // Defensive copy on set, SHRINKWRAP-38
       final int length = content.length;
       byte[] newArray = new byte[length];
-      for (int i = 0; i < length; i++)
-      {
-         newArray[i] = content[i];
-      }
+      System.arraycopy(content, 0, newArray, 0, length);
 
       // Set
       this.content = newArray;
