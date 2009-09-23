@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.impl.base.io;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +39,20 @@ public final class IOUtil
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
+
+   /**
+    * Default Error Handler
+    */
+   private static final StreamErrorHandler DEFAULT_ERROR_HANDLER = new StreamErrorHandler()
+   {
+
+      @Override
+      public void handle(Throwable t)
+      {
+         throw new RuntimeException(t);
+      }
+
+   };
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -188,6 +203,62 @@ public final class IOUtil
       {
          throw new RuntimeException("Unable to delete directory: " + directory
                + ".  It is either not a directory or does not exist.");
+      }
+   }
+
+   /**
+    * Helper method to run a specified task and automatically handle the closing of the stream.
+    * 
+    * @param <S>
+    * @param task
+    * @param errorHandler
+    */
+   public static <S extends Closeable> void closeOnComplete(StreamTask<S> task, StreamErrorHandler errorHandler)
+   {
+
+   }
+
+   /**
+    * Helper method to run a specified task and automatically handle the closing of the stream.
+    * 
+    * @param stream
+    * @param task
+    */
+   public static <S extends Closeable> void closeOnComplete(S stream, StreamTask<S> task)
+   {
+      closeOnComplete(stream, task, DEFAULT_ERROR_HANDLER);
+   }
+
+   /**
+    * Helper method to run a specified task and automatically handle the closing of the stream.
+    * 
+    * @param <S>
+    * @param task
+    * @param errorHandler
+    */
+   public static <S extends Closeable> void closeOnComplete(S stream, StreamTask<S> task,
+         StreamErrorHandler errorHandler)
+   {
+      try
+      {
+         task.execute(stream);
+      }
+      catch (Throwable t)
+      {
+         errorHandler.handle(t);
+      }
+      finally
+      {
+         try
+         {
+            if (stream != null)
+            {
+               stream.close();
+            }
+         }
+         catch (Exception ex)
+         {
+         }
       }
    }
 }

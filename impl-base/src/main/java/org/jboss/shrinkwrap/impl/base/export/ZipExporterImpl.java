@@ -29,7 +29,6 @@ import org.jboss.shrinkwrap.impl.base.Validate;
  * Implementation of ZipExporter used to export an Archive as a Zip format. 
  * 
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
- * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
 public class ZipExporterImpl extends ZipExporter
@@ -61,7 +60,9 @@ public class ZipExporterImpl extends ZipExporter
       ZipExportDelegate exportDelegate = new ZipExportDelegate(archive);
 
       // Execute export
-      InputStream inputStream = exportDelegate.export();
+      exportDelegate.export();
+      // Get results
+      InputStream inputStream = exportDelegate.getResult(); 
 
       // Return input stream
       return inputStream;

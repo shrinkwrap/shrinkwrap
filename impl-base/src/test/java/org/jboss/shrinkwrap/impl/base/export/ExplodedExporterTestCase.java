@@ -26,8 +26,10 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.export.ArchiveExportException;
 import org.jboss.shrinkwrap.api.export.ExplodedExporter;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
+import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Assert;
@@ -103,7 +105,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
 
       // Get an archive instance
       Archive<?> archive = createArchiveWithNestedArchives();
-      
+
       // Export as Exploded directory
       File explodedDirectory = ExplodedExporter.exportExploded(archive, tempDirectory);
 
@@ -193,9 +195,9 @@ public class ExplodedExporterTestCase extends ExportTestBase
     * @throws Exception
     */
    @Test
-   public void testExportExplodedRequiresValidDirectory() throws Exception
+   public void testExportExplodedRequiresExistingDirectory() throws Exception
    {
-      log.info("testExportExplodedRequiresValidDirectory");
+      log.info("testExportExplodedRequiresExistingDirectory");
       try
       {
          final File directory = this.getNonexistantDirectory();
@@ -203,6 +205,76 @@ public class ExplodedExporterTestCase extends ExportTestBase
          Assert.fail("Should have thrown IllegalArgumentException");
       }
       catch (IllegalArgumentException expected)
+      {
+      }
+   }
+
+   /**
+    * Ensure ExpolodedExporter requires a directory
+    */
+   @Test
+   public void testExportExplodedRequiresValidDirectory() throws Exception
+   {
+      log.info("testExportExplodedRequiresValidDirectory");
+      try
+      {
+         final File nonDirectory = new File(this.getTarget(), "tempFile.txt");
+         nonDirectory.createNewFile();
+         ExplodedExporter.exportExploded(new MemoryMapArchiveImpl(), nonDirectory);
+         Assert.fail("Should have thrown IllegalArgumentException");
+      }
+      catch (IllegalArgumentException expected)
+      {
+      }
+   }
+
+   /**
+    * Ensure an ArchiveExportException is thrown when output directory can not be created
+    */
+   @Test
+   public void testExportExplodedOutpuDirCreationFails() throws Exception
+   {
+      log.info("testExportExplodedOutpuDirCreationFails");
+      try
+      {
+         final File directory = createTempDirectory("testExportExplodedOutpuDirCreationFails");
+         // Will cause the creation of Archive directory to fail
+         final File existingFile = new File(directory, NAME_ARCHIVE);
+         existingFile.createNewFile();
+         ExplodedExporter.exportExploded(new MemoryMapArchiveImpl(NAME_ARCHIVE), directory);
+         Assert.fail("Should have thrown ArchiveExportException");
+      }
+      catch (ArchiveExportException expected)
+      {
+      }
+   }
+
+   /**
+    * Ensure ArchiveException is thrown if Asset can not be written
+    */
+   @Test
+   public void testExportExplodedThrowsExceptionOnAssetWrite() throws Exception
+   {
+      log.info("testExportExplodedThrowsExceptionOnAssetWrite");
+      try
+      {
+         Archive<?> archive = createArchiveWithAssets();
+         archive.add(new BasicPath("badAsset"), new Asset()
+         {
+
+            @Override
+            public InputStream getStream()
+            {
+               throw new RuntimeException("Mock Esception getting Stream");
+            }
+
+         });
+         final File directory = createTempDirectory("testExportExplodedThrowsExceptionOnAssetWrite");
+
+         ExplodedExporter.exportExploded(archive, directory);
+         Assert.fail("Should have thrown ArchiveExportException");
+      }
+      catch (ArchiveExportException expected)
       {
       }
    }

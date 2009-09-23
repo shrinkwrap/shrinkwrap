@@ -74,11 +74,14 @@ public class ExplodedExporterImpl extends ExplodedExporter
       ExplodedExporterDelegate exporterDelegate = new ExplodedExporterDelegate(archive, baseDirectory);
 
       // Run the export
-      File explodedDirectory = exporterDelegate.export();
+      exporterDelegate.export();
+      
+      // Get Result
+      File explodedDirectory = exporterDelegate.getResult();
 
       if (log.isLoggable(Level.FINE))
       {
-         log.fine("Created Exploded Atchive: " + explodedDirectory.getAbsolutePath());
+         log.fine("Created Exploded Archive: " + explodedDirectory.getAbsolutePath());
       }
       // Return the exploded dir
       return explodedDirectory;

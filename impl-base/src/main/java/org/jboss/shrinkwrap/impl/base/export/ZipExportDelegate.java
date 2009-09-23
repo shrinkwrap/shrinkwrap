@@ -18,7 +18,6 @@ package org.jboss.shrinkwrap.impl.base.export;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +29,8 @@ import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.export.ArchiveExportException;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
+import org.jboss.shrinkwrap.impl.base.io.StreamErrorHandler;
+import org.jboss.shrinkwrap.impl.base.io.StreamTask;
 
 public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
 {
@@ -77,23 +78,30 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
     * @see org.jboss.shrinkwrap.impl.base.export.AbstractExporterDelegate#export()
     */
    @Override
-   protected InputStream export()
+   protected void export()
    {
+      zipOutputStream = new ZipOutputStream(output);
 
       // Enclose every IO Operation so we can close up cleanly
-      try
+      IOUtil.closeOnComplete(zipOutputStream, new StreamTask<ZipOutputStream>()
       {
-         // Initialize the output streams
-         zipOutputStream = new ZipOutputStream(output);
 
-         return super.export();
-      }
-      catch (Exception ex)
+         @Override
+         public void execute(ZipOutputStream stream) throws Exception
+         {
+            ZipExportDelegate.super.export();
+         }
+
+      }, new StreamErrorHandler()
       {
-         // Problem occurred make sure the output is closed 
-         closeOutputStream();
-         throw new ArchiveExportException("Failed to export archive " + getArchive().getName(), ex);
-      }
+
+         @Override
+         public void handle(Throwable t)
+         {
+            throw new ArchiveExportException("Failed to export Zip: " + getArchive().getName(), t);
+         }
+
+      });
    }
 
    /**
@@ -101,42 +109,42 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
     * @see org.jboss.shrinkwrap.impl.base.export.AbstractExporterDelegate#processAsset(Path, Asset)
     */
    @Override
-   protected void processAsset(Path path, Asset asset)
+   protected void processAsset(final Path path, final Asset asset)
    {
       final String pathName = ZipExporterUtil.toZipEntryPath(path);
 
       final ZipEntry entry = new ZipEntry(pathName);
 
-      final InputStream in = asset.getStream();
-      // Write the Asset under the same Path name in the Zip
-      try
-      {
-         // Make a Zip Entry
-         zipOutputStream.putNextEntry(entry);
+      // Get Asset InputStream
+      final InputStream assetStream = asset.getStream();
 
-         // Read the contents of the asset and write to the JAR
-         IOUtil.copy(in, zipOutputStream);
+      IOUtil.closeOnComplete(assetStream, new StreamTask<InputStream>()
+      {
 
-         // Close up the instream and the entry
-         zipOutputStream.closeEntry();
-      }
-      // Some error in writing this entry/asset
-      catch (final IOException ioe)
-      {
-         // Throw
-         throw new ArchiveExportException("Could not start new entry for " + pathName, ioe);
-      }
-      finally
-      {
-         // Try to close the instream.  Out stream is closed in finally block below.
-         try
+         @Override
+         public void execute(InputStream stream) throws Exception
          {
-            in.close();
+            // Write the Asset under the same Path name in the Zip
+            // Make a Zip Entry
+            zipOutputStream.putNextEntry(entry);
+
+            // Read the contents of the asset and write to the JAR
+            IOUtil.copy(stream, zipOutputStream);
+
+            // Close up the instream and the entry
+            zipOutputStream.closeEntry();
          }
-         catch (IOException ignored)
+
+      }, new StreamErrorHandler()
+      {
+
+         @Override
+         public void handle(Throwable t)
          {
+            throw new ArchiveExportException("Failed to write asset to Zip: " + pathName, t);
          }
-      }
+
+      });
    }
 
    /**
@@ -146,9 +154,6 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
    @Override
    protected InputStream getResult()
    {
-      // Make sure the output is closed
-      closeOutputStream();
-
       // Flush the output to a byte array
       final byte[] zipContent = output.toByteArray();
       if (log.isLoggable(Level.FINE))
@@ -161,28 +166,6 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
 
       // Return
       return inputStream;
-   }
-
-   //-------------------------------------------------------------------------------------||
-   // Internal Helper Methods ------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Close the ZipOutputStream
-    */
-   private void closeOutputStream()
-   {
-      try
-      {
-         if (zipOutputStream != null)
-         {
-            zipOutputStream.close();
-            zipOutputStream = null;
-         }
-      }
-      catch (final IOException ignored)
-      {
-      }
    }
 
 }

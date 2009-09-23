@@ -69,10 +69,8 @@ public abstract class AbstractExporterDelegate<T>
 
    /**
     * Primary method providing a template for exporting the contents of an archive
-    * 
-    * @return
     */
-   protected T export()
+   protected void export()
    {
       // Get archive
       Archive<?> archive = getArchive();
@@ -94,8 +92,6 @@ public abstract class AbstractExporterDelegate<T>
          // Process the asset 
          processAsset(path, asset);
       }
-
-      return getResult();
    }
 
    //-------------------------------------------------------------------------------------||

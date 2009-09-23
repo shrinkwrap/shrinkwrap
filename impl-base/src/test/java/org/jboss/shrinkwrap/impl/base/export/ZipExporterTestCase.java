@@ -28,6 +28,7 @@ import java.util.zip.ZipFile;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.export.ArchiveExportException;
 import org.jboss.shrinkwrap.api.export.ZipExporter;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -162,6 +163,33 @@ public class ZipExporterTestCase extends ExportTestBase
          Assert.fail("Should have thrown IllegalArgumentException");
       }
       catch (IllegalArgumentException expected)
+      {
+      }
+   }
+
+   @Test
+   public void testExportThrowsArchiveExcepitonOnAssetWriteFailure()
+   {
+      log.info("testExportThrowsArchiveExcepitonOnAssetWriteFailure");
+      try
+      {
+         Archive<?> archive = createArchiveWithAssets();
+
+         archive.add(PATH_ONE, new Asset()
+         {
+
+            @Override
+            public InputStream getStream()
+            {
+               throw new RuntimeException("Mock Exception from an Asset write");
+            }
+
+         });
+
+         ZipExporter.exportZip(archive);
+         Assert.fail("Should have thrown ArchiveExportException");
+      }
+      catch (ArchiveExportException expected)
       {
       }
    }
