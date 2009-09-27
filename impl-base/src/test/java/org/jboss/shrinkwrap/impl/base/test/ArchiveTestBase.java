@@ -146,7 +146,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       {
       }
    }
-   
+
    /**
     * Ensure adding an asset to a string path results in successful storage.
     * @throws Exception
@@ -160,9 +160,10 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       archive.add(location.get(), asset);
 
-      Assert.assertTrue("Asset should be placed on " + new BasicPath("/", "test.properties"), archive.contains(location));
+      Assert.assertTrue("Asset should be placed on " + new BasicPath("/", "test.properties"), archive
+            .contains(location));
    }
-   
+
    /**
     * Ensure adding an asset to a string path requires path.
     * @throws Exception
@@ -182,7 +183,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       {
       }
    }
-   
+
    /**
     * Ensure adding an asset to the path string requires an asset.
     * @throws Exception
@@ -364,7 +365,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       {
       }
    }
-   
+
    /**
     * Ensure an asset can be retrieved by a string path
     * @throws Exception
@@ -381,7 +382,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       Assert.assertTrue("Asset should be returned from path: " + location.get(), compareAssets(asset, fetchedAsset));
    }
-   
+
    /**
     * Ensure get asset by string requires a path
     * @throws Exception
@@ -578,6 +579,72 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<?> nestedArchive = archiveAsset.getArchive();
       Assert.assertEquals("Nested Archive should be same archive that was added", sourceArchive, nestedArchive);
 
+   }
+
+   /**
+    * Ensure an archive contains assets from nested archives.
+    * @throws Exception
+    */
+   @Test
+   public void testNestedArchiveContains() throws Exception
+   {
+      Archive<T> archive = getArchive();
+
+      Archive<T> sourceArchive = createNewArchive();
+
+      Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+
+      Path nestedAssetPath = new BasicPath("/", "test.properties");
+
+      sourceArchive.add(nestedAssetPath, asset);
+
+      Path baseLocation = new BasicPath("somewhere");
+
+      archive.add(baseLocation, sourceArchive);
+
+      Path archivePath = new BasicPath(baseLocation, sourceArchive.getName());
+
+      Path expectedPath = new BasicPath(archivePath, "test.properties");
+
+      Assert.assertTrue("Nested archive assets should be verified through a fully qualified path", archive
+            .contains(expectedPath));
+   }
+
+   /**
+    * Ensure assets from a nested archive are accessible from parent archives.
+    * @throws Exception
+    */
+   @Test
+   public void testNestedArchiveGet() throws Exception
+   {
+      Archive<T> archive = getArchive();
+
+      Archive<T> nestedArchive = createNewArchive();
+
+      Path baseLocation = new BasicPath("somewhere");
+
+      archive.add(baseLocation, nestedArchive);
+
+      Archive<T> nestedNestedArchive = createNewArchive();
+
+      nestedArchive.add(new BasicPath("/"), nestedNestedArchive);
+      
+      Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+
+      Path nestedAssetPath = new BasicPath("/", "test.properties");
+
+      nestedNestedArchive.add(nestedAssetPath, asset);
+      
+      Path nestedArchivePath = new BasicPath(baseLocation, nestedArchive.getName());
+      
+      Path nestedNestedArchivePath = new BasicPath(nestedArchivePath, nestedNestedArchive.getName());
+
+      Path expectedPath = new BasicPath(nestedNestedArchivePath, "test.properties");
+
+      Asset nestedAsset = archive.get(expectedPath);
+
+      Assert.assertNotNull("Nested archive asset should be available through partent archive at " + expectedPath.get(),
+            nestedAsset);
    }
 
    //-------------------------------------------------------------------------------------||

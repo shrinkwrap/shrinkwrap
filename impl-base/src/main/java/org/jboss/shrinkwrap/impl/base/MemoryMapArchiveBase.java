@@ -21,12 +21,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
+import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
  * MemoryMapArchiveBase
@@ -49,12 +52,12 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * Logger
     */
    private static final Logger log = Logger.getLogger(MemoryMapArchiveBase.class.getName());
-   
+
    /**
     * Newline character
     */
    private static final char NEWLINE = '\n';
-   
+
    /**
     * Colon character
     */
@@ -68,6 +71,11 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * Storage for the {@link Asset}s.
     */
    private final Map<Path, Asset> content = new ConcurrentHashMap<Path, Asset>();
+
+   /**
+    * Storage for the {@link ArchiveAsset}s.  Used to help get access to nested archive content.
+    */
+   private final Map<Path, ArchiveAsset> nestedArchives = new ConcurrentHashMap<Path, ArchiveAsset>();
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -102,7 +110,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
    // Required Implementations - Archive -------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   /* (non-Javadoc)
+   /* {@inheritDoc}
     * @see org.jboss.declarchive.api.Archive#add(org.jboss.declarchive.api.Path, org.jboss.declarchive.api.Asset[])
     */
    @Override
@@ -115,17 +123,49 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
       return covariantReturn();
    }
 
-   /* (non-Javadoc)
+   /* {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.ArchiveBase#add(org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Archive)
+    */
+   @Override
+   public T add(Path path, Archive<?> archive)
+   {
+      // Add archive asset
+      super.add(path, archive);
+
+      // Expected Archive Path
+      Path archivePath = new BasicPath(path, archive.getName());
+
+      // Get the Asset that was just added 
+      Asset asset = get(archivePath);
+
+      // Make sure it is an ArchiveAsset
+      if (asset instanceof ArchiveAsset)
+      {
+         ArchiveAsset archiveAsset = ArchiveAsset.class.cast(asset);
+         // Add asset to ArchiveAsset Map
+         nestedArchives.put(archivePath, archiveAsset);
+      }
+
+      return covariantReturn();
+   }
+
+   /* {@inheritDoc}
     * @see org.jboss.declarchive.api.Archive#contains(org.jboss.declarchive.api.Path)
     */
    @Override
    public boolean contains(Path path)
    {
       Validate.notNull(path, "No path was specified");
-      return content.containsKey(path);
+
+      boolean found = content.containsKey(path);
+      if (!found)
+      {
+         found = nestedContains(path);
+      }
+      return found;
    }
 
-   /* (non-Javadoc)
+   /* {@inheritDoc}
     * @see org.jboss.declarchive.api.Archive#delete(org.jboss.declarchive.api.Path)
     */
    @Override
@@ -135,17 +175,22 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
       return content.remove(path) != null;
    }
 
-   /* (non-Javadoc)
+   /* {@inheritDoc}
     * @see org.jboss.declarchive.api.Archive#get(org.jboss.declarchive.api.Path)
     */
    @Override
    public Asset get(Path path)
    {
       Validate.notNull(path, "No path was specified");
-      return content.get(path);
+      Asset asset = content.get(path);
+      if (asset == null && contains(path))
+      {
+         asset = getNestedAsset(path);
+      }
+      return asset;
    }
 
-   /* (non-Javadoc)
+   /* {@inheritDoc}
     * @see org.jboss.declarchive.api.Archive#getContent()
     */
    @Override
@@ -154,7 +199,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
       return Collections.unmodifiableMap(content);
    }
 
-   /* (non-Javadoc)
+   /* {@inheritDoc}
     * @see org.jboss.declarchive.api.Archive#toString(boolean)
     */
    @Override
@@ -165,10 +210,10 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
       {
          // Make a builder
          StringBuilder sb = new StringBuilder();
-         
+
          // Add the name
          sb.append(this.getName()).append(COLON).append(NEWLINE);
-         
+
          // Sort all paths
          final List<Path> paths = new ArrayList<Path>(content.keySet());
          Collections.sort(paths);
@@ -183,4 +228,96 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
       return this.toString();
    }
 
+   //-------------------------------------------------------------------------------------||
+   // Internal Helper Methods ------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Check to see if a path is found in a nested archive
+    */
+   private boolean nestedContains(Path path)
+   {
+      // Iterate through nested archives
+      for (Entry<Path, ArchiveAsset> nestedArchiveEntry : nestedArchives.entrySet())
+      {
+         Path archivePath = nestedArchiveEntry.getKey();
+         ArchiveAsset archiveAsset = nestedArchiveEntry.getValue();
+
+         // Check to see if the requested path starts with the nested archive path
+         if (startsWith(path, archivePath))
+         {
+            Archive<?> nestedArchive = archiveAsset.getArchive();
+
+            // Get the asset path from within the nested archive
+            Path nestedAssetPath = getNestedPath(path, archivePath);
+
+            // Recurse the call to the nested archive
+            return nestedArchive.contains(nestedAssetPath);
+         }
+      }
+      return false;
+   }
+
+   /** 
+    * Attempt to get the asset from a nested archive. 
+    * 
+    * @param path
+    * @return
+    */
+   private Asset getNestedAsset(Path path)
+   {
+      // Iterate through nested archives
+      for (Entry<Path, ArchiveAsset> nestedArchiveEntry : nestedArchives.entrySet())
+      {
+         Path archivePath = nestedArchiveEntry.getKey();
+         ArchiveAsset archiveAsset = nestedArchiveEntry.getValue();
+
+         // Check to see if the requested path starts with the nested archive path
+         if (startsWith(path, archivePath))
+         {
+            Archive<?> nestedArchive = archiveAsset.getArchive();
+
+            // Get the asset path from within the nested archive
+            Path nestedAssetPath = getNestedPath(path, archivePath);
+
+            // Recurse the call to the nested archive
+            return nestedArchive.get(nestedAssetPath);
+         }
+      }
+      return null;
+   }
+
+   /**
+    * Check to see if one path starts with another
+    * 
+    * @param fullPath
+    * @param startingPath
+    * @return
+    */
+   private boolean startsWith(Path fullPath, Path startingPath)
+   {
+      final String context = fullPath.get();
+      final String startingContext = startingPath.get();
+
+      return context.startsWith(startingContext);
+   }
+
+   /**
+    * Given a full path and a base path return a new path containing the full path with the 
+    * base path removed from the beginning.
+    * 
+    * @param fullPath
+    * @param basePath
+    * @return
+    */
+   private Path getNestedPath(Path fullPath, Path basePath)
+   {
+      final String context = fullPath.get();
+      final String baseContent = basePath.get();
+
+      // Remove the base path from the full path
+      String nestedArchiveContext = context.substring(baseContent.length());
+
+      return new BasicPath(nestedArchiveContext);
+   }
 }
