@@ -2,8 +2,7 @@
   <!--
   vi:ts=2:sw=2:expandtab:
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <!-- Parent -->
   <parent>
@@ -18,7 +17,7 @@
   <!-- Artifact Configuration -->
   <groupId>org.jboss.shrinkwrap</groupId>
   <artifactId>shrinkwrap-build</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>ShrinkWrap Build</name>
   <description>ShrinkWrap Build Configuration</description>
   <packaging>pom</packaging>
@@ -33,9 +32,9 @@
 
   <!-- SCM -->
   <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/common/shrinkwrap/trunk</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/common/shrinkwrap/trunk</developerConnection>
-    <url>http://anonsvn.jboss.org/repos/common/shrinkwrap/trunk</url>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-build-0.1.0</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-build-0.1.0</developerConnection>
+    <url>http://anonsvn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-build-0.1.0</url>
   </scm>
 
   <!-- Issues -->
