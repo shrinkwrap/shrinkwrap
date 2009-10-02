@@ -17,7 +17,7 @@
   <!-- Artifact Configuration -->
   <groupId>org.jboss.shrinkwrap</groupId>
   <artifactId>shrinkwrap-build</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1-SNAPSHOT</version>
   <name>ShrinkWrap Build</name>
   <description>ShrinkWrap Build Configuration</description>
   <packaging>pom</packaging>
@@ -32,9 +32,9 @@
 
   <!-- SCM -->
   <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-build-0.1.0</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-build-0.1.0</developerConnection>
-    <url>http://anonsvn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-build-0.1.0</url>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/common/shrinkwrap/trunk</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/common/shrinkwrap/trunk</developerConnection>
+    <url>http://anonsvn.jboss.org/repos/common/shrinkwrap/trunk</url>
   </scm>
 
   <!-- Issues -->
