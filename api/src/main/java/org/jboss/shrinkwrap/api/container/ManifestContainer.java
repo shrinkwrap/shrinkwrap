@@ -16,7 +16,11 @@
  */
 package org.jboss.shrinkwrap.api.container;
 
+import java.io.File;
+import java.net.URL;
+
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
 
 /**
@@ -53,6 +57,10 @@ public interface ManifestContainer<T extends Archive<T>>
     */
    T setManifest(String resourceName) throws IllegalArgumentException;
    
+   T setManifest(File resource) throws IllegalArgumentException;
+   T setManifest(URL resource) throws IllegalArgumentException;
+   T setManifest(Asset resource) throws IllegalArgumentException;
+   
    /**
     * Adds the resource with the specified name
     * to the container, returning the container itself.
@@ -68,6 +76,15 @@ public interface ManifestContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourceName is null
     */
    T addManifestResource(String resourceName) throws IllegalArgumentException;
+   
+   T addManifestResource(File resource) throws IllegalArgumentException;
+   T addManifestResource(URL resource) throws IllegalArgumentException;
+
+
+   T addManifestResource(String target, String resourceName) throws IllegalArgumentException;
+   T addManifestResource(String target, File resource) throws IllegalArgumentException;
+   T addManifestResource(String target, URL resource) throws IllegalArgumentException;
+   T addManifestResource(String target, Asset resource) throws IllegalArgumentException;
 
    /**
     * Adds the resource with the specified name
@@ -86,4 +103,7 @@ public interface ManifestContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourceName is null
     */
    T addManifestResource(Path target, String resourceName) throws IllegalArgumentException;
+   T addManifestResource(Path target, File resource) throws IllegalArgumentException;
+   T addManifestResource(Path target, URL resource) throws IllegalArgumentException;
+   T addManifestResource(Path target, Asset resource) throws IllegalArgumentException;
 }

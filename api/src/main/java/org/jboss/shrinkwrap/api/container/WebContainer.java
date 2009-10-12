@@ -16,7 +16,11 @@
  */
 package org.jboss.shrinkwrap.api.container;
 
+import java.io.File;
+import java.net.URL;
+
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
 
 /**
@@ -39,7 +43,7 @@ public interface WebContainer<T extends Archive<T>>
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Adds a resource to this Archive as web.xml.
+    * Adds a resource to this Archive as /WEB-INF/web.xml.
     * <br/><br/>
     * The {@link ClassLoader} used to obtain the resource is up to
     * the implementation. 
@@ -54,6 +58,33 @@ public interface WebContainer<T extends Archive<T>>
    T setWebXML(String resourceName)  throws IllegalArgumentException;
    
    /**
+    * Adds a resource to this Archive as /WEB-INF/web.xml.
+    * 
+    * @param resource {@link File} resource to add 
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T setWebXML(File resource)  throws IllegalArgumentException;
+   
+   /**
+    * Adds a resource to this Archive as /WEB-INF/web.xml.
+    *  
+    * @param resource {@link URL} resource to add 
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T setWebXML(URL resource)  throws IllegalArgumentException;
+   
+   /**
+    * Adds a resource to this Archive as /WEB-INF/web.xml. 
+    * 
+    * @param resource {@link Asset} resource to add 
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T setWebXML(Asset resource)  throws IllegalArgumentException;
+   
+   /**
     * Adds the resource with the specified name
     * to the container, returning the container itself.
     * <br/><br/>
@@ -63,12 +94,68 @@ public interface WebContainer<T extends Archive<T>>
     * For instance a resourceName of "test/example.xml" could be placed in 
     * "/WEB-INF/test/example.xml"
     * 
-    * @param resourceName
-    * @return
-    * @throws IllegalArgumentException
+    * @param resourceName Name of the {@link ClassLoader} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourceName is null
     */
    T addWebResource(String resourceName) throws IllegalArgumentException;
    
+   /**
+    * 
+    * @param resource {@link File} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addWebResource(File resource) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param resource {@link URL} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addWebResource(URL resource) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param target The target relative to Web path within the archive into which we'll place the resource
+    * @param resourceName Name of the {@link ClassLoader} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if target is null
+    * @throws IllegalArgumentException if resourceName is null
+    */
+   T addWebResource(String target, String resourceName) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param target The target relative to Web path within the archive into which we'll place the resource
+    * @param resource {@link File} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if target is null
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addWebResource(String target, File resource) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param target The target relative to Web path within the archive into which we'll place the resource
+    * @param resource {@link URL} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if target is null
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addWebResource(String target, URL resource) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param target The target relative to Web path within the archive into which we'll place the resource
+    * @param resource {@link Asset} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if target is null
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addWebResource(String target, Asset resource) throws IllegalArgumentException;
+
    /**
     * Adds the resource with the specified name
     * to the container, returning the container itself.
@@ -79,11 +166,41 @@ public interface WebContainer<T extends Archive<T>>
     * For instance a resourceName of "test/library.xml" and target of "/test/example.xml" could be placed in
     * "/lib/test/example.xml".
     * 
-    * @param target The target relative to Manifest path within the archive into which we'll place the resource
+    * @param target The target relative to Web path within the archive into which we'll place the resource
     * @param resourceName Name of the {@link ClassLoader} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if target is null
     * @throws IllegalArgumentException if resourceName is null
     */
    T addWebResource(Path target, String resourceName) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param target The target relative to Web path within the archive into which we'll place the resource
+    * @param resource {@link File} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if target is null
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addWebResource(Path target, File resource) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param target The target relative to Web path within the archive into which we'll place the resource
+    * @param resource {@link URL} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if target is null
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addWebResource(Path target, URL resource) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param target The target relative to Web path within the archive into which we'll place the resource
+    * @param resource {@link Asset} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if target is null
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addWebResource(Path target, Asset resource) throws IllegalArgumentException;
 }

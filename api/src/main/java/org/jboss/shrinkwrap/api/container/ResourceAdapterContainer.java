@@ -16,7 +16,11 @@
  */
 package org.jboss.shrinkwrap.api.container;
 
+import java.io.File;
+import java.net.URL;
+
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Asset;
 
 /**
  * ResourceAdapterContainer
@@ -45,5 +49,11 @@ public interface ResourceAdapterContainer<T extends Archive<T>>
     *             if resourceName is null
     */
    T setResourceAdapterXML(String resourceName) throws IllegalArgumentException;
+   
+   T setResourceAdapterXML(File resource) throws IllegalArgumentException;
+   
+   T setResourceAdapterXML(URL resource) throws IllegalArgumentException;
+   
+   T setResourceAdapterXML(Asset resource) throws IllegalArgumentException;
 
 }

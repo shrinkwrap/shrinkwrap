@@ -16,7 +16,11 @@
  */
 package org.jboss.shrinkwrap.api.container;
 
+import java.io.File;
+import java.net.URL;
+
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
 
 /**
@@ -54,6 +58,15 @@ public interface LibraryContainer<T extends Archive<T>>
     */
    T addLibrary(String resourceName) throws IllegalArgumentException;
    
+   T addLibrary(File resource) throws IllegalArgumentException;
+   T addLibrary(URL resource) throws IllegalArgumentException;
+
+   T addLibrary(String target, String resourceName) throws IllegalArgumentException;
+   T addLibrary(String target, File resource) throws IllegalArgumentException;
+   T addLibrary(String target, URL resource) throws IllegalArgumentException;
+   T addLibrary(String target, Asset resource) throws IllegalArgumentException;
+
+
    /**
     * Adds the resource with the specified name
     * as a library to the container under the target path, returning the container itself.
@@ -73,6 +86,10 @@ public interface LibraryContainer<T extends Archive<T>>
     */
    T addLibrary(Path target, String resourceName) throws IllegalArgumentException;
    
+   T addLibrary(Path target, File resource) throws IllegalArgumentException;
+   T addLibrary(Path target, URL resource) throws IllegalArgumentException;
+   T addLibrary(Path target, Asset resource) throws IllegalArgumentException;
+
    /**
     * Add another {@link Archive} to this {@link Archive} as a Library.
     * <br/><br/>

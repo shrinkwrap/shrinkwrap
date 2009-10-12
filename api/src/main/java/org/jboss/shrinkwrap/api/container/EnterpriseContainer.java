@@ -16,7 +16,11 @@
  */
 package org.jboss.shrinkwrap.api.container;
 
+import java.io.File;
+import java.net.URL;
+
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
 
 /**
@@ -51,6 +55,30 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourceName is null
     */
    T setApplicationXML(String resourceName) throws IllegalArgumentException;
+
+   /**
+    * 
+    * @param resource {@link File} resource to add 
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T setApplicationXML(File resource) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param resource {@link URL} resource to add 
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T setApplicationXML(URL resource) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param resource {@link Asset} resource to add 
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T setApplicationXML(Asset resource) throws IllegalArgumentException;
    
    /**
     * Adds a resource to this {@link Archive}s application context.
@@ -68,6 +96,63 @@ public interface EnterpriseContainer<T extends Archive<T>>
    T addApplicationResource(String resourceName) throws IllegalArgumentException;
    
    /**
+    * 
+    * @param resource {@link File} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addApplicationResource(File resource) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param resource {@link URL} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addApplicationResource(URL resource) throws IllegalArgumentException;
+   
+   
+   /**
+    * 
+    * @param target The target relative to application path within the archive into which we'll place the resource
+    * @param resourceName Name of the {@link ClassLoader} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if target is null
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addApplicationResource(String target, String resourceName) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param target The target relative to application path within the archive into which we'll place the resource
+    * @param resource {@link File} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if target is null
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addApplicationResource(String target, File resource) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param target The target relative to application path within the archive into which we'll place the resource
+    * @param resource {@link URL} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if target is null
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addApplicationResource(String target, URL resource) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param target The target relative to application path within the archive into which we'll place the resource
+    * @param resource {@link Asset} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if target is null
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addApplicationResource(String target, Asset resource) throws IllegalArgumentException;
+
+   /**
     * Adds a resource to this {@link Archive}s application context.
     * <br/><br/>
     * The {@link ClassLoader} used to obtain the resource is up to
@@ -77,13 +162,43 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * target of "example/myexample.xml" could be placed in 
     * "/META-INF/example/myexample.xml"
     *   
+    * @param target The target relative to application path within the archive into which we'll place the resource
     * @param resourceName Name of the {@link ClassLoader} resource to add
-    * @param newName New name of the resource in the container
     * @return This virtual archive
     * @throws IllegalArgumentException if target is null
     * @throws IllegalArgumentException if resourceName is null
     */
    T addApplicationResource(Path target, String resourceName) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param target The target relative to application path within the archive into which we'll place the resource
+    * @param resource {@link File} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if target is null
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addApplicationResource(Path target, File resource) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param target The target relative to application path within the archive into which we'll place the resource
+    * @param resource {@link URL} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if target is null
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addApplicationResource(Path target, URL resource) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param target The target relative to application path within the archive into which we'll place the resource
+    * @param resource {@link Asset} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if target is null
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addApplicationResource(Path target, Asset resource) throws IllegalArgumentException;
 
    /**
     * Adds a archive to this {@link Archive}s module context.
@@ -101,9 +216,25 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * <br/><br/>
     * The resource name is used as path.
     * 
-    * @param resourceName
+    * @param resourceName Name of the {@link ClassLoader} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     */
    T addModule(String resourceName) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param resource {@link File} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addModule(File resource) throws IllegalArgumentException;
+   
+   /**
+    * 
+    * @param resource {@link URL} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addModule(URL resource) throws IllegalArgumentException;
 }
