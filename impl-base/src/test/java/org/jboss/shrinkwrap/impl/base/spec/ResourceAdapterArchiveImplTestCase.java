@@ -20,16 +20,15 @@ import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
+import org.jboss.shrinkwrap.api.container.ResourceAdapterContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
-import org.jboss.shrinkwrap.impl.base.test.ContainerTestBase;
+import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
+import org.jboss.shrinkwrap.impl.base.test.DynamicResourceAdapterContainerTestBase;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
 /**
  * ResourceAdapterArchiveImplTestCase
@@ -37,15 +36,15 @@ import org.junit.Test;
  * Test to ensure that ResourceAdapterArchiveImpl follow to java rar spec.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ResourceAdapterArchiveImplTestCase extends ContainerTestBase<ResourceAdapterArchive>
+@ArchiveType(ResourceAdapterArchive.class)
+public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterContainerTestBase<ResourceAdapterArchive>
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   private static final String TEST_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
 
    private static final Path PATH_RESOURCE = new BasicPath("/");
 
@@ -99,7 +98,7 @@ public class ResourceAdapterArchiveImplTestCase extends ContainerTestBase<Resour
    }
 
    //-------------------------------------------------------------------------------------||
-   // Required Impls - ContainerTestBase -------------------------------------------------||
+   // Required Impls - DynamicContainerTestBase -------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    @Override
@@ -109,7 +108,7 @@ public class ResourceAdapterArchiveImplTestCase extends ContainerTestBase<Resour
    }
 
    @Override
-   protected Path getClassesPath()
+   protected Path getClassPath()
    {
       throw new UnsupportedOperationException("ResourceAdapterArchive do not support classes");
    }
@@ -149,57 +148,20 @@ public class ResourceAdapterArchiveImplTestCase extends ContainerTestBase<Resour
    {
       return getArchive();
    }
-
+   
    //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
+   // Required Impls - DynamicResourceAdapterContainerTestBase ---------------------------||
    //-------------------------------------------------------------------------------------||
 
-   @Test
-   public void testAddResourceAdapterXML() throws Exception
-   {
-      archive.setResourceAdapterXML(TEST_RESOURCE);
-
-      Path expectedPath = new BasicPath(PATH_MANIFEST, "ra.xml");
-
-      Assert.assertTrue("ra.xml should be located in /META-INF/ra.xml", archive.contains(expectedPath));
-   }
-
-   @Test
-   public void testAddResourceAdapterXMLRequireResource() throws Exception
-   {
-      try
-      {
-         archive.setResourceAdapterXML(null);
-         Assert.fail("Should have thrown IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expected)
-      {
-      }
-
-   }
-
-   @Ignore
    @Override
-   public void testAddClass() throws Exception
+   protected Path getResourceAdapterPath()
    {
+      return getResourcePath();
    }
-
-   @Ignore
+   
    @Override
-   public void testAddClasses() throws Exception
+   protected ResourceAdapterContainer<ResourceAdapterArchive> getResourceAdapterContainer()
    {
+      return getArchive();
    }
-
-   @Ignore
-   @Override
-   public void testAddPackage() throws Exception
-   {
-   }
-
-   @Ignore
-   @Override
-   public void testAddPackageNonRecursive() throws Exception
-   {
-   }
-
 }

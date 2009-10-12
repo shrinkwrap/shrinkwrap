@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
-import java.util.logging.Logger;
-
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -26,12 +24,10 @@ import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
-import org.jboss.shrinkwrap.impl.base.test.ContainerTestBase;
+import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
+import org.jboss.shrinkwrap.impl.base.test.DynamicContainerTestBase;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
 /**
  * JavaArchiveImplTestCase
@@ -42,16 +38,9 @@ import org.junit.Test;
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public class JavaArchiveImplTestCase extends ContainerTestBase<JavaArchive>
+@ArchiveType(JavaArchive.class)
+public class JavaArchiveImplTestCase extends DynamicContainerTestBase<JavaArchive>
 {
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   private static final Logger log = Logger.getLogger(JavaArchiveImplTestCase.class.getName());
-
-   private static final String TEST_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
-
    private static final Path PATH_MANIFEST = new BasicPath("META-INF");
 
    private static final Path PATH_CLASS = new BasicPath("/");
@@ -107,12 +96,7 @@ public class JavaArchiveImplTestCase extends ContainerTestBase<JavaArchive>
    // Required Impls - ContainerTestBase ---------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   @Override
-   protected ManifestContainer<JavaArchive> getManifestContainer()
-   {
-      return getArchive();
-   }
-
+   
    @Override
    protected ResourceContainer<JavaArchive> getResourceContainer()
    {
@@ -122,9 +106,15 @@ public class JavaArchiveImplTestCase extends ContainerTestBase<JavaArchive>
    @Override
    protected ClassContainer<JavaArchive> getClassContainer()
    {
-      return archive;
+      return getArchive();
    }
 
+   @Override
+   protected ManifestContainer<JavaArchive> getManifestContainer()
+   {
+      return getArchive();
+   }
+   
    @Override
    protected LibraryContainer<JavaArchive> getLibraryContainer()
    {
@@ -144,7 +134,7 @@ public class JavaArchiveImplTestCase extends ContainerTestBase<JavaArchive>
    }
 
    @Override
-   protected Path getClassesPath()
+   protected Path getClassPath()
    {
       return PATH_CLASS;
    }
@@ -154,38 +144,4 @@ public class JavaArchiveImplTestCase extends ContainerTestBase<JavaArchive>
    {
       throw new UnsupportedOperationException("JavaArchive does not support libraries");
    }
-
-   //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   @Test
-   public void shouldBeAbleToSetManifestFile() throws Exception
-   {
-      archive.setManifest(TEST_RESOURCE);
-
-      Path expectedPath = new BasicPath(PATH_MANIFEST, "MANIFEST.MF");
-
-      Assert.assertTrue("The MANIFEST.MF file should be located under /META-INF/MANIFEST.MF", archive
-            .contains(expectedPath));
-   }
-
-   @Ignore
-   @Override
-   public void testAddLibrary() throws Exception
-   {
-   }
-
-   @Ignore
-   @Override
-   public void testAddLibraryToPath() throws Exception
-   {
-   }
-
-   @Ignore
-   @Override
-   public void testAddArchiveAsLibrary() throws Exception
-   {
-   }
-
 }

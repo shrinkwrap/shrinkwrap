@@ -18,20 +18,17 @@ package org.jboss.shrinkwrap.impl.base.spec;
 
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
+import org.jboss.shrinkwrap.api.container.EnterpriseContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
-import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
-import org.jboss.shrinkwrap.impl.base.test.ContainerTestBase;
+import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
+import org.jboss.shrinkwrap.impl.base.test.DynamicEnterpriseContainerTestBase;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
 /**
  * EnterpriseArchiveImplTest
@@ -42,14 +39,12 @@ import org.junit.Test;
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public class EnterpriseArchiveImplTestCase extends ContainerTestBase<EnterpriseArchive>
+@ArchiveType(EnterpriseArchive.class)
+public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTestBase<EnterpriseArchive>
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   private static final String TEST_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
-
    private static final Path PATH_APPLICATION = new BasicPath("META-INF");
 
    private static final Path PATH_LIBRARY = new BasicPath("lib");
@@ -102,7 +97,7 @@ public class EnterpriseArchiveImplTestCase extends ContainerTestBase<EnterpriseA
    }
 
    //-------------------------------------------------------------------------------------||
-   // Required Impls - ContainerTestBase -------------------------------------------------||
+   // Required Impls - DynamicContainerTestBase ------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    @Override
@@ -112,7 +107,7 @@ public class EnterpriseArchiveImplTestCase extends ContainerTestBase<EnterpriseA
    }
 
    @Override
-   protected Path getClassesPath()
+   protected Path getClassPath()
    {
       throw new UnsupportedOperationException("EnterpriseArchives do not support classes");
    }
@@ -154,87 +149,20 @@ public class EnterpriseArchiveImplTestCase extends ContainerTestBase<EnterpriseA
    }
 
    //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
+   // Required Impls - DynamicEnterpriseContainerTestBase --------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   @Test
-   public void shouldBeAbleToAddApplicationXML() throws Exception
-   {
-      archive.setApplicationXML(TEST_RESOURCE);
-
-      Path expectedPath = new BasicPath(PATH_APPLICATION, "application.xml");
-
-      Assert
-            .assertTrue("applicaton.xml should be located in /META-INF/application.xml", archive.contains(expectedPath));
+   
+   protected Path getModulePath() {
+      return PATH_MODULE;
    }
 
-   @Test
-   public void shouldBeAbleToAddApplicationResource() throws Exception
-   {
-      archive.addApplicationResource(TEST_RESOURCE);
-
-      Path expectedPath = new BasicPath(PATH_APPLICATION, TEST_RESOURCE);
-
-      Assert.assertTrue("A application resource should be located in /META-INF/", archive.contains(expectedPath));
+   protected Path getApplicationPath() {
+      return PATH_APPLICATION;
    }
-
-   @Test
-   public void shouldBeAbleToAddApplicationResourceWithNewName() throws Exception
-   {
-      String newName = "test.txt";
-      archive.addApplicationResource(new BasicPath(newName), TEST_RESOURCE);
-
-      Path expectedPath = new BasicPath(PATH_APPLICATION, newName);
-
-      Assert.assertTrue("A application resource should be located in /META-INF/", archive.contains(expectedPath));
-   }
-
-   @Test
-   public void shouldBeAbleToAddModule() throws Exception
-   {
-      archive.addModule(TEST_RESOURCE);
-
-      Path expectedPath = new BasicPath(PATH_MODULE, AssetUtil.getNameForClassloaderResource(TEST_RESOURCE));
-
-      Assert.assertTrue("A application module should be located in /", archive.contains(expectedPath));
-   }
-
-   @Test
-   public void shouldBeAbleToAddArchiveModule() throws Exception
-   {
-      JavaArchive moduleArchive = new JavaArchiveImpl(new MemoryMapArchiveImpl("test.jar"));
-      moduleArchive.addResource(TEST_RESOURCE);
-      moduleArchive.addResource(new BasicPath("test.txt"), TEST_RESOURCE);
-
-      archive.addModule(moduleArchive);
-
-      Path expectedPath = new BasicPath(PATH_MODULE, moduleArchive.getName());
-
-      Assert.assertTrue("A application module should be located in /", archive.contains(expectedPath));
-   }
-
-   @Ignore
+   
    @Override
-   public void testAddClass() throws Exception
+   protected EnterpriseContainer<EnterpriseArchive> getEnterpriseContainer()
    {
+      return getArchive();
    }
-
-   @Ignore
-   @Override
-   public void testAddClasses() throws Exception
-   {
-   }
-
-   @Ignore
-   @Override
-   public void testAddPackage() throws Exception
-   {
-   }
-
-   @Ignore
-   @Override
-   public void testAddPackageNonRecursive() throws Exception
-   {
-   }
-
 }

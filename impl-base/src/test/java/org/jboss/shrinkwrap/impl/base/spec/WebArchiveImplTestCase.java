@@ -21,14 +21,14 @@ import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
+import org.jboss.shrinkwrap.api.container.WebContainer;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
-import org.jboss.shrinkwrap.impl.base.test.ContainerTestBase;
+import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
+import org.jboss.shrinkwrap.impl.base.test.DynamicWebContainerTestBase;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 
 /**
  * WebArchiveImplTestCase
@@ -39,7 +39,8 @@ import org.junit.Test;
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public class WebArchiveImplTestCase extends ContainerTestBase<WebArchive>
+@ArchiveType(WebArchive.class)
+public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchive>
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -98,7 +99,7 @@ public class WebArchiveImplTestCase extends ContainerTestBase<WebArchive>
    }
 
    //-------------------------------------------------------------------------------------||
-   // Required Impls - ContainerTestBase -------------------------------------------------||
+   // Required Impls - DynamicContainerTestBase ------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    @Override
@@ -138,7 +139,7 @@ public class WebArchiveImplTestCase extends ContainerTestBase<WebArchive>
    }
 
    @Override
-   protected Path getClassesPath()
+   protected Path getClassPath()
    {
       return PATH_CLASSES;
    }
@@ -150,51 +151,18 @@ public class WebArchiveImplTestCase extends ContainerTestBase<WebArchive>
    }
    
    //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
+   // Required Impls - DynamicWebContainerTestBase ---------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-
-   @Test
-   public void shouldBeAbleToSetWebXML() throws Exception
+   @Override
+   public WebContainer<WebArchive> getWebContainer()
    {
-      archive.setWebXML(TEST_RESOURCE);
-
-      Path expectedPath = new BasicPath(PATH_WEBINF, "web.xml");
-
-      Assert.assertTrue("web.xml should be located in /WEB-INF/web.xml", archive.contains(expectedPath));
+      return getArchive();
    }
-
-   @Test
-   public void shouldBeAbleToAddWebResource() throws Exception
+   
+   @Override
+   public Path getWebPath()
    {
-
-      archive.addWebResource(TEST_RESOURCE);
-
-      Path expectedPath = new BasicPath(PATH_WEBINF, TEST_RESOURCE);
-
-      Assert.assertTrue("A resource should be located in /WEB-INF/", archive.contains(expectedPath));
+      return PATH_WEBINF;
    }
-
-   @Test
-   public void shouldBeAbleToAddWebResourceWithNewName() throws Exception
-   {
-
-      String newName = "test.txt";
-      archive.addWebResource(new BasicPath(newName), TEST_RESOURCE);
-
-      Path expectedPath = new BasicPath(PATH_WEBINF, newName);
-
-      Assert.assertTrue("A resource should be located in /WEB-INF/", archive.contains(expectedPath));
-   }
-
-   @Test
-   public void shouldBeAbleToAddLibrary() throws Exception
-   {
-      archive.addLibrary(TEST_RESOURCE);
-
-      Path expectedPath = new BasicPath(PATH_LIBRARY, TEST_RESOURCE);
-
-      Assert.assertTrue("A library should be located in /WEB-INF/lib/", archive.contains(expectedPath));
-   }
-
 }
