@@ -21,7 +21,6 @@ import java.net.URL;
 import junit.framework.Assert;
 
 import org.jboss.shrinkwrap.api.Path;
-import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Test;
 

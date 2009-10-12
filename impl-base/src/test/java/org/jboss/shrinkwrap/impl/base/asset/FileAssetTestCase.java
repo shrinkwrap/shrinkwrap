@@ -22,7 +22,6 @@ import java.io.InputStream;
 import junit.framework.Assert;
 
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.impl.base.asset.FileAsset;
 import org.junit.Test;
 
 /**
