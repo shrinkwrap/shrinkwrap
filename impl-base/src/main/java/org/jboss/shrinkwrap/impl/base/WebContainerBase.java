@@ -16,13 +16,17 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
-import java.util.logging.Logger;
+import java.io.File;
+import java.net.URL;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.container.WebContainer;
+import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.impl.base.asset.FileAsset;
+import org.jboss.shrinkwrap.impl.base.asset.UrlAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
@@ -42,9 +46,11 @@ public abstract class WebContainerBase<T extends Archive<T>>
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-   
-   private static final Logger log = Logger.getLogger(WebContainerBase.class.getName());
 
+   //-------------------------------------------------------------------------------------||
+   // Instance Members -------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+   
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -73,9 +79,120 @@ public abstract class WebContainerBase<T extends Archive<T>>
    public T setWebXML(String resourceName) throws IllegalArgumentException
    {
       Validate.notNull(resourceName, "ResourceName should be specified");
-      return add(getWebPath(), "web.xml", new ClassLoaderAsset(resourceName));
+      return setWebXML(new ClassLoaderAsset(resourceName));
+   }
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.WebContainer#setWebXML(java.io.File)
+    */
+   @Override
+   public T setWebXML(File resource) throws IllegalArgumentException
+   {
+      Validate.notNull(resource, "Resource should be specified");
+      return setWebXML(new FileAsset(resource));
    }
    
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.WebContainer#setWebXML(java.net.URL)
+    */
+   @Override
+   public T setWebXML(URL resource) throws IllegalArgumentException 
+   {
+      Validate.notNull(resource, "Resource should be specified");
+      return setWebXML(new UrlAsset(resource));
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.WebContainer#setWebXML(org.jboss.shrinkwrap.api.Asset)
+    */
+   @Override
+   public T setWebXML(Asset resource) throws IllegalArgumentException
+   {
+      Validate.notNull(resource, "Resource should be specified");
+      return addWebResource("web.xml", resource);
+   }
+
+   /* (non-Javadoc)
+    * @see org.jboss.declarchive.api.container.WebContainer#addWebResource(java.lang.String)
+    */
+   @Override
+   public T addWebResource(String resourceName) throws IllegalArgumentException
+   {
+      Validate.notNull(resourceName, "ResourceName should be specified");
+
+      return addWebResource(AssetUtil.getNameForClassloaderResource(resourceName), new ClassLoaderAsset(resourceName));
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.WebContainer#addWebResource(java.io.File)
+    */
+   @Override
+   public T addWebResource(File resource) throws IllegalArgumentException
+   {
+      Validate.notNull(resource, "Resource should be specified");
+
+      return addWebResource(resource.getName(), new FileAsset(resource));
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.WebContainer#addWebResource(java.net.URL)
+    */
+   @Override
+   public T addWebResource(URL resource) throws IllegalArgumentException
+   {
+      Validate.notNull(resource, "Resource should be specified");
+
+      return addWebResource(AssetUtil.getFullPathForURLResource(resource), new UrlAsset(resource));
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.WebContainer#addWebResource(java.lang.String, java.lang.String)
+    */
+   @Override
+   public T addWebResource(String target, String resourceName) throws IllegalArgumentException
+   {
+      Validate.notNull(target, "Target should be specified");
+      Validate.notNull(resourceName, "ResourceName should be specified");
+
+      return addWebResource(new BasicPath(target), new ClassLoaderAsset(resourceName));
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.WebContainer#addWebResource(java.lang.String, java.io.File)
+    */
+   @Override
+   public T addWebResource(String target, File resource) throws IllegalArgumentException
+   {
+      Validate.notNull(target, "Target should be specified");
+      Validate.notNull(resource, "Resource should be specified");
+
+      return addWebResource(new BasicPath(target), new FileAsset(resource));
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.WebContainer#addWebResource(java.lang.String, java.net.URL)
+    */
+   @Override
+   public T addWebResource(String target, URL resource) throws IllegalArgumentException
+   {
+      Validate.notNull(target, "Target should be specified");
+      Validate.notNull(resource, "Resource should be specified");
+
+      return addWebResource(new BasicPath(target), new UrlAsset(resource));
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.WebContainer#addWebResource(java.lang.String, org.jboss.shrinkwrap.api.Asset)
+    */
+   @Override
+   public T addWebResource(String target, Asset resource) throws IllegalArgumentException
+   {
+      Validate.notNull(target, "Target should be specified");
+      Validate.notNull(resource, "Resource should be specified");
+
+      return addWebResource(new BasicPath(target), resource);
+   }
+
    /* (non-Javadoc)
     * @see org.jboss.declarchive.api.container.WebContainer#addWebResource(org.jboss.declarchive.api.Path, java.lang.String)
     */
@@ -85,22 +202,43 @@ public abstract class WebContainerBase<T extends Archive<T>>
       Validate.notNull(target, "Target should be specified");
       Validate.notNull(resourceName, "ResourceName should be specified");
       
-      Asset asset = new ClassLoaderAsset(resourceName);
-      Path location = new BasicPath(getWebPath(), target);
-      return add(location, asset);
+      return addWebResource(target, new ClassLoaderAsset(resourceName));
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.container.WebContainer#addWebResource(java.lang.String)
+    * @see org.jboss.shrinkwrap.api.container.WebContainer#addWebResource(org.jboss.shrinkwrap.api.Path, java.io.File)
     */
    @Override
-   public T addWebResource(String resourceName) throws IllegalArgumentException
+   public T addWebResource(Path target, File resource) throws IllegalArgumentException
    {
-      Validate.notNull(resourceName, "ResourceName should be specified");
-
-      Asset asset = new ClassLoaderAsset(resourceName);
-      Path location = new BasicPath(getWebPath(), resourceName); 
-      return add(location, asset);
+      Validate.notNull(target, "Target should be specified");
+      Validate.notNull(resource, "Resource should be specified");
+      
+      return addWebResource(target, new FileAsset(resource));
    }
-
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.WebContainer#addWebResource(org.jboss.shrinkwrap.api.Path, java.net.URL)
+    */
+   @Override
+   public T addWebResource(Path target, URL resource) throws IllegalArgumentException
+   {
+      Validate.notNull(target, "Target should be specified");
+      Validate.notNull(resource, "Resource should be specified");
+      
+      return addWebResource(target, new UrlAsset(resource));
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.WebContainer#addWebResource(org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Asset)
+    */
+   @Override
+   public T addWebResource(Path target, Asset resource) throws IllegalArgumentException
+   {
+      Validate.notNull(target, "Target should be specified");
+      Validate.notNull(resource, "Resource should be specified");
+      
+      Path location = new BasicPath(getWebPath(), target);
+      return add(location, resource);
+   }
 }

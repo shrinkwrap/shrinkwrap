@@ -16,11 +16,16 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
-import java.util.logging.Logger;
+import java.io.File;
+import java.net.URL;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.container.ResourceAdapterContainer;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.impl.base.asset.FileAsset;
+import org.jboss.shrinkwrap.impl.base.asset.UrlAsset;
+import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
  * ResourceAdapterContainerBase
@@ -29,6 +34,7 @@ import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
  * Used by specs that extends the ResourceAdapter.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  * @param <T>
  */
@@ -36,12 +42,6 @@ public abstract class ResourceAdapterContainerBase<T extends Archive<T>> extends
       implements
          ResourceAdapterContainer<T>
 {
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   private static final Logger log = Logger.getLogger(ResourceAdapterContainerBase.class.getName());
-
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -62,7 +62,29 @@ public abstract class ResourceAdapterContainerBase<T extends Archive<T>> extends
    public T setResourceAdapterXML(String resourceName) throws IllegalArgumentException
    {
       Validate.notNull(resourceName, "ResourceName must be specified");
-      return add(getManinfestPath(), "ra.xml", new ClassLoaderAsset(resourceName));
+      return setResourceAdapterXML(new ClassLoaderAsset(resourceName));
+
+   }
+   
+   @Override
+   public T setResourceAdapterXML(File resource) throws IllegalArgumentException
+   {
+      Validate.notNull(resource, "Resource must be specified");
+      return setResourceAdapterXML(new FileAsset(resource));
+   }
+   
+   @Override
+   public T setResourceAdapterXML(URL resource) throws IllegalArgumentException
+   {
+      Validate.notNull(resource, "Resource must be specified");
+      return setResourceAdapterXML(new UrlAsset(resource));
+   }
+   
+   @Override
+   public T setResourceAdapterXML(Asset resource) throws IllegalArgumentException
+   {
+      Validate.notNull(resource, "Resource must be specified");
+      return addResource(new BasicPath(getResourcePath(), "ra.xml"), resource);
    }
 
 }
