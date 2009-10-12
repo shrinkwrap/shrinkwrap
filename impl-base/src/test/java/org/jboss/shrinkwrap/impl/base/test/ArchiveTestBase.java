@@ -51,12 +51,12 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
    /**
     * Name of a properties file upon the test CP
     */
-   private static final String NAME_TEST_PROPERTIES = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
+   public static final String NAME_TEST_PROPERTIES = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
 
    /**
     * Name of another properties file upon the test CP
     */
-   private static final String NAME_TEST_PROPERTIES_2 = "org/jboss/shrinkwrap/impl/base/asset/Test2.properties";
+   public static final String NAME_TEST_PROPERTIES_2 = "org/jboss/shrinkwrap/impl/base/asset/Test2.properties";
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
