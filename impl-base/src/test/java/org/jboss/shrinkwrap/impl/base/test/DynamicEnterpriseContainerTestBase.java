@@ -212,7 +212,7 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
    public void testAddModuleResource() throws Exception {
       getEnterpriseContainer().addModule(NAME_TEST_PROPERTIES);
       
-      Path expectedPath = new BasicPath(getModulePath(), NAME_TEST_PROPERTIES);
+      Path expectedPath = new BasicPath(getModulePath(), "Test.properties");
       Assert.assertTrue(
             "Archive should contain " + expectedPath,
             getArchive().contains(expectedPath));
