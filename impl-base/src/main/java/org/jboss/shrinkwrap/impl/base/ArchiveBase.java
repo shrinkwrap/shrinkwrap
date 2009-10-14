@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.api.AssetNotFoundException;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -128,7 +127,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
     * @see org.jboss.shrinkwrap.api.Archive#get(java.lang.String)
     */
    @Override
-   public Asset get(final String path) throws AssetNotFoundException, IllegalArgumentException
+   public Asset get(final String path) throws IllegalArgumentException
    {
       // Precondition checks
       Validate.notNullOrEmpty(path, "No path was specified");

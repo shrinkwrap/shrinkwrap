@@ -76,23 +76,19 @@ public interface Archive<T extends Archive<T>>
     * Obtains the asset located at the specified path
     * 
     * @param path
-    * @return
-    * @throws AssetNotFoundException If the specified path does not 
-    *   point to any asset in the archive
+    * @return The asset, or null if nothing is found at the Path
     * @throws IllegalArgumentException If the path is not specified
     */
-   Asset get(Path path) throws AssetNotFoundException, IllegalArgumentException;
+   Asset get(Path path) throws IllegalArgumentException;
 
    /**
     * Obtains the asset located at the specified path
     * 
     * @param path
-    * @return
-    * @throws AssetNotFoundException If the specified path does not 
-    *   point to any resource in the archive
+    * @return The asset, or null if nothing is found at the Path
     * @throws IllegalArgumentException If the path is not specified
     */
-   Asset get(String path) throws AssetNotFoundException, IllegalArgumentException;
+   Asset get(String path) throws IllegalArgumentException;
 
    /**
     * Denotes whether this archive contains a resource at the specified

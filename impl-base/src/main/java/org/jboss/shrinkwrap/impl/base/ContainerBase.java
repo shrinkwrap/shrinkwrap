@@ -23,7 +23,6 @@ import java.util.Set;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.api.AssetNotFoundException;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -172,7 +171,7 @@ public abstract class ContainerBase<T extends Archive<T>> implements
     * @see org.jboss.declarchive.api.Archive#get(java.lang.String)
     */
    @Override
-   public Asset get(String path) throws AssetNotFoundException, IllegalArgumentException
+   public Asset get(String path) throws IllegalArgumentException
    {
       return archive.get(path);
    }
