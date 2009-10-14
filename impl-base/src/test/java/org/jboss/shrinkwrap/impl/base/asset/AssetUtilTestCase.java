@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.asset;
 
-import java.net.URL;
-
 import junit.framework.Assert;
 
 import org.jboss.shrinkwrap.api.Path;
@@ -68,16 +66,5 @@ public class AssetUtilTestCase
             "The class resource should have a / delimiter and a .class extension",
             new BasicPath("/org/jboss/shrinkwrap/impl/base/asset/AssetUtilTestCase.class"),
             foundClassResourcePath);
-   }
-   
-   @Test
-   public void shouldBeAbleToGetFullPathFromURL() throws Exception 
-   {
-      Path foundURLPath = AssetUtil.getFullPathForURLResource(new URL("file:///test/test.properties"));
-      
-      Assert.assertEquals(
-            "The url resource should have it's full path",
-            new BasicPath("/test/test.properties"),
-            foundURLPath);
    }
 }

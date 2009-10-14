@@ -103,14 +103,6 @@ public interface EnterpriseContainer<T extends Archive<T>>
     */
    T addApplicationResource(File resource) throws IllegalArgumentException;
    
-   /**
-    * 
-    * @param resource {@link URL} resource to add
-    * @return This virtual archive
-    * @throws IllegalArgumentException if resource is null
-    */
-   T addApplicationResource(URL resource) throws IllegalArgumentException;
-   
    
    /**
     * 
@@ -229,14 +221,6 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resource is null
     */
    T addModule(File resource) throws IllegalArgumentException;
-   
-   /**
-    * 
-    * @param resource {@link URL} resource to add
-    * @return This virtual archive
-    * @throws IllegalArgumentException if resource is null
-    */
-   T addModule(URL resource) throws IllegalArgumentException;
 
    /**
     * Adds a resource to this {@link Archive}s module context.

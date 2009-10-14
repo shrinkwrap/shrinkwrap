@@ -149,26 +149,6 @@ public abstract class ContainerTestBase<T extends Archive<T>> extends ArchiveTes
             .assertTrue("A resource should be located under " + expectedPath.get(), getArchive().contains(expectedPath));
    }
 
-   
-   /**
-    * Ensure resources can be added to containers as a URL
-    * @throws Exception
-    */
-   @Test
-   public void testAddResourceFromUrl() throws Exception
-   {
-      ResourceContainer<T> container = getResourceContainer();
-
-      URL url = getClass().getResource("/" + TEST_RESOURCE);
-
-      container.addResource(url);
-
-      Path expectedPath = new BasicPath(getResourcePath(), AssetUtil.getFullPathForURLResource(url));
-
-      Assert
-            .assertTrue("A resource should be located under " + expectedPath.get(), getArchive().contains(expectedPath));
-   }
-
    /**
     * Ensure resources can be added to containers as a URL in a specific path
     * 

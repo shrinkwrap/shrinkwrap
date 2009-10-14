@@ -129,17 +129,6 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>>
 
       return addApplicationResource(resource.getName(), new FileAsset(resource));
    }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addApplicationResource(java.net.URL)
-    */
-   @Override
-   public T addApplicationResource(URL resource) throws IllegalArgumentException
-   {
-      Validate.notNull(resource, "Resource must be specified");
-      
-      return addApplicationResource(AssetUtil.getFullPathForURLResource(resource), new UrlAsset(resource));
-   }
 
    /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addApplicationResource(java.lang.String, java.lang.String)
@@ -285,18 +274,6 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>>
       Validate.notNull(resource, "Resource must be specified");
       
       Path location = new BasicPath(resource.getName());
-      return addModule(location, resource);
-   }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addModule(java.net.URL)
-    */
-   @Override
-   public T addModule(URL resource) throws IllegalArgumentException
-   {
-      Validate.notNull(resource, "Resource must be specified");
-      
-      final Path location = AssetUtil.getFullPathForURLResource(resource);
       return addModule(location, resource);
    }
 

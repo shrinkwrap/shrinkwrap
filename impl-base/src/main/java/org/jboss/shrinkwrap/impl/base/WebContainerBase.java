@@ -135,17 +135,6 @@ public abstract class WebContainerBase<T extends Archive<T>>
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.WebContainer#addWebResource(java.net.URL)
-    */
-   @Override
-   public T addWebResource(URL resource) throws IllegalArgumentException
-   {
-      Validate.notNull(resource, "Resource should be specified");
-
-      return addWebResource(AssetUtil.getFullPathForURLResource(resource), new UrlAsset(resource));
-   }
-   
-   /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.container.WebContainer#addWebResource(java.lang.String, java.lang.String)
     */
    @Override

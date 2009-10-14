@@ -59,7 +59,6 @@ public interface LibraryContainer<T extends Archive<T>>
    T addLibrary(String resourceName) throws IllegalArgumentException;
    
    T addLibrary(File resource) throws IllegalArgumentException;
-   T addLibrary(URL resource) throws IllegalArgumentException;
 
    T addLibrary(String target, String resourceName) throws IllegalArgumentException;
    T addLibrary(String target, File resource) throws IllegalArgumentException;

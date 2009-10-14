@@ -78,7 +78,6 @@ public interface ManifestContainer<T extends Archive<T>>
    T addManifestResource(String resourceName) throws IllegalArgumentException;
    
    T addManifestResource(File resource) throws IllegalArgumentException;
-   T addManifestResource(URL resource) throws IllegalArgumentException;
 
 
    T addManifestResource(String target, String resourceName) throws IllegalArgumentException;

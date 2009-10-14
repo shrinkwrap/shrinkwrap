@@ -68,17 +68,6 @@ public interface ResourceContainer<T extends Archive<T>>
    T addResource(File resource) throws IllegalArgumentException;
 
    /**
-    * Adds the resource located at the specified {@link URL} to the {@link Archive}.  The
-    * location within the archive will be equal to the path portion of the 
-    * specified {@link URL}.
-    * 
-    * @param resource The resource to add
-    * @return This virtual archive
-    * @throws IllegalArgumentException If the resource is null 
-    */
-   T addResource(URL resource) throws IllegalArgumentException;
-
-   /**
     * Adds the resource with the specified name
     * to the container, returning the container itself.
     * <br/><br/> 

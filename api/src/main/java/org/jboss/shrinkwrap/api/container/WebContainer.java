@@ -110,14 +110,6 @@ public interface WebContainer<T extends Archive<T>>
    
    /**
     * 
-    * @param resource {@link URL} resource to add
-    * @return This virtual archive
-    * @throws IllegalArgumentException if resource is null
-    */
-   T addWebResource(URL resource) throws IllegalArgumentException;
-   
-   /**
-    * 
     * @param target The target relative to Web path within the archive into which we'll place the resource
     * @param resourceName Name of the {@link ClassLoader} resource to add
     * @return This virtual archive

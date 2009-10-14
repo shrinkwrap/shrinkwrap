@@ -277,16 +277,6 @@ public abstract class ContainerBase<T extends Archive<T>> implements
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.net.URL)
-    */
-   @Override
-   public T addManifestResource(URL resource) throws IllegalArgumentException
-   {
-      Validate.notNull(resource, "Resource should be specified");
-      return addManifestResource(AssetUtil.getFullPathForURLResource(resource), new UrlAsset(resource));
-   }
-   
-   /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.lang.String, java.lang.String)
     */
    @Override
@@ -413,16 +403,6 @@ public abstract class ContainerBase<T extends Archive<T>> implements
    {
       Validate.notNull(resource, "Resource should be specified");
       return addResource(resource.getName(), new FileAsset(resource));
-   }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.container.ResourceContainer#addResource(java.net.URL)
-    */
-   @Override
-   public final T addResource(URL resource) throws IllegalArgumentException
-   {
-      Validate.notNull(resource, "Resource should be specified");
-      return addResource(AssetUtil.getFullPathForURLResource(resource), new UrlAsset(resource));
    }
 
    /* (non-Javadoc)
@@ -647,16 +627,6 @@ public abstract class ContainerBase<T extends Archive<T>> implements
    {
       Validate.notNull(resource, "Resource must be specified");
       return addLibrary(resource.getName(), new FileAsset(resource));
-   }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.net.URL)
-    */
-   @Override
-   public T addLibrary(URL resource) throws IllegalArgumentException
-   {
-      Validate.notNull(resource, "Resource must be specified");
-      return addLibrary(AssetUtil.getFullPathForURLResource(resource), new UrlAsset(resource));
    }
    
    /* (non-Javadoc)

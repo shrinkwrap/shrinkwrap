@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.asset;
 
-import java.net.URL;
-
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
@@ -114,18 +112,5 @@ public final class AssetUtil
             DELIMITER_CLASS_NAME_PATH, DELIMITER_RESOURCE_PATH);
       String classFullPath = classResourceDelimiter + ".class";
       return new BasicPath(classFullPath);
-   }
-
-   /**
-    * Helper to extract a URLs full path.
-    * <br/><br/>
-    * ie: file:///test/test.properties = /test/test.properties
-    * 
-    * @param resource
-    * @return
-    */
-   public static Path getFullPathForURLResource(URL resource) 
-   {
-      return new BasicPath(resource.getPath());
    }
 }
