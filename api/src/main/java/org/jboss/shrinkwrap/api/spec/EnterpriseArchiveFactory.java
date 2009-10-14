@@ -14,19 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api;
+package org.jboss.shrinkwrap.api.spec;
 
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
 /**
- * JavaArchiveFactory
+ * EnterpriseArchiveFactory
  * 
- * Factory used to create {@link JavaArchive} instances. 
+ * Factory used to create {@link EnterpriseArchive} instances. 
  * 
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public abstract class JavaArchiveFactory extends ArchiveFactory<JavaArchive>
+public abstract class EnterpriseArchiveFactory extends ArchiveFactory<EnterpriseArchive>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -36,40 +35,41 @@ public abstract class JavaArchiveFactory extends ArchiveFactory<JavaArchive>
    /**
     * Implementation type as a FQN to avoid direct compile-time dependency
     */
-   private static final String IMPL_TYPE = "org.jboss.shrinkwrap.impl.base.JavaArchiveFactoryImpl";
+   private static final String IMPL_TYPE = "org.jboss.shrinkwrap.impl.base.spec.EnterpriseArchiveFactoryImpl";
 
    /**
-    * Instance of JavaArchiveFactory implementation
+    * Instance of EnterpriseArchiveFactory implementation
     */
-   private static JavaArchiveFactory instance;
+   private static EnterpriseArchiveFactory instance;
 
    //-------------------------------------------------------------------------------------||
    // Class Methods ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Creates a {@link JavaArchive} instance with the provided name.
+    * Creates a {@link EnterpriseArchive} instance with the provided name.
     * 
     * @param archiveName
-    * @return JavaArchive 
+    * @return EnterpriseArchive instance 
     * @throws IllegalArgumentException if the archiveName is not present
     */
-   public static JavaArchive create(String archiveName)
+   public static EnterpriseArchive create(String archiveName)
    {
       return getInstance().doCreate(archiveName);
    }
-   
+
    /**
-    * Return instance of the JavaArchiveFactory
+    * Return instance of the EnterpriseArchiveFactory
     * 
     * @return
     */
-   private synchronized static JavaArchiveFactory getInstance()
+   private synchronized static EnterpriseArchiveFactory getInstance()
    {
       if (instance == null)
       {
-         instance = createInstance(JavaArchiveFactory.class, IMPL_TYPE);
+         instance = createInstance(EnterpriseArchiveFactory.class, IMPL_TYPE);
       }
       return instance;
    }
+
 }

@@ -14,62 +14,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api;
+package org.jboss.shrinkwrap.api.spec;
 
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.api.Archive;
 
 /**
- * WebArchiveFactory
+ * ArchiveFactory
  * 
- * Factory used to create {@link WebArchive} instances. 
+ * Template Factory used to create {@link Archive} instances. 
  * 
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public abstract class WebArchiveFactory extends ArchiveFactory<WebArchive>
+abstract class ArchiveFactory<T extends Archive<T>>
 {
-
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Implementation type as a FQN to avoid direct compile-time dependency
-    */
-   private static final String IMPL_TYPE = "org.jboss.shrinkwrap.impl.base.WebArchiveFactoryImpl";
-
-   /**
-    * Instance of WebArchiveFactory implementation
-    */
-   private static WebArchiveFactory instance;
 
    //-------------------------------------------------------------------------------------||
    // Class Methods ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Creates a {@link WebArchive} instance with the provided name.
-    * 
-    * @param archiveName
-    * @return WebArchive instance 
-    * @throws IllegalArgumentException if the archiveName is not present
+    * Create an instance of an ArchiveFactory implementation
+    *  
+    * @return ArchiveFactory instance
     */
-   public static WebArchive create(String archiveName)
+   protected synchronized static <T extends Archive<T>, F extends ArchiveFactory<T>> F createInstance(
+         Class<F> factoryBaseType, String fqFactoryName)
    {
-      return getInstance().doCreate(archiveName);
+      try
+      {
+         // Create the instance
+         F instance = FactoryUtil.createInstance(fqFactoryName, factoryBaseType);
+
+         // Return the instance
+         return instance;
+      }
+      catch (Exception e)
+      {
+         throw new IllegalStateException("Make sure you have the impl classes on your runtime classpath", e);
+      }
    }
 
+   //-------------------------------------------------------------------------------------||
+   // Contracts --------------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
    /**
-    * Return instance of the WebArchiveFactory
+    * Template create method for concrete implementations  
     * 
-    * @return
+    * @param archiveName
+    * @return Archive instance
     */
-   private synchronized static WebArchiveFactory getInstance()
-   {
-      if (instance == null)
-      {
-         instance = createInstance(WebArchiveFactory.class, IMPL_TYPE);
-      }
-      return instance;
-   }
+   protected abstract T doCreate(String archiveName);
 }

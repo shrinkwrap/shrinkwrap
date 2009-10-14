@@ -14,39 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base;
+package org.jboss.shrinkwrap.impl.base.spec;
 
-import org.jboss.shrinkwrap.api.EnterpriseArchiveFactory;
-import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
-import org.jboss.shrinkwrap.impl.base.spec.EnterpriseArchiveImpl;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchiveFactory;
+import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
 import org.jboss.shrinkwrap.spi.MemoryMapArchive;
 
 /**
- * EnterpriseArchiveFactoryImpl
+ * WebArchiveFactoryImpl
  * 
- * EnterpriseArchiveFactory implementation used to create {@link EnterpriseArchive} instances. Thread-safe.
+ * WebArchiveFactory implementation used to create {@link WebArchive} instances. Thread-safe.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public class EnterpriseArchiveFactoryImpl extends EnterpriseArchiveFactory
+public class WebArchiveFactoryImpl extends WebArchiveFactory
 {
 
    /*
     * {@inheritDoc}
-    * @see org.jboss.declarchive.api.EnterpriseArchiveFactory#doCreate(java.lang.String)
+    * @see org.jboss.declarchive.api.WebArchiveFactory#doCreate(java.lang.String)
     */
    @Override
-   protected EnterpriseArchive doCreate(String archiveName)
+   protected WebArchive doCreate(String archiveName)
    {
       // Create storage delegate
       MemoryMapArchive memoryMapArchive = new MemoryMapArchiveImpl(archiveName);
 
-      // Create enterprise archive
-      EnterpriseArchive enterpriseArchive = new EnterpriseArchiveImpl(memoryMapArchive);
+      // Create web archive
+      WebArchive webArchive = new WebArchiveImpl(memoryMapArchive);
 
       // Return archive
-      return enterpriseArchive;
+      return webArchive;
    }
 
 }

@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base;
+package org.jboss.shrinkwrap.impl.base.spec;
 
-import org.jboss.shrinkwrap.api.JavaArchiveFactory;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.spec.JavaArchiveImpl;
+import org.jboss.shrinkwrap.api.spec.JavaArchiveFactory;
+import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
 import org.jboss.shrinkwrap.spi.MemoryMapArchive;
 
 /**

@@ -18,8 +18,8 @@ package org.jboss.shrinkwrap.impl.base.unit;
 
 import junit.framework.Assert;
 
-import org.jboss.shrinkwrap.api.EnterpriseArchiveFactory;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchiveFactory;
 import org.junit.Test;
 
 /**

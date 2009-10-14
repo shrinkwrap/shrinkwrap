@@ -14,39 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base;
+package org.jboss.shrinkwrap.impl.base.spec;
 
-import org.jboss.shrinkwrap.api.WebArchiveFactory;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.impl.base.spec.WebArchiveImpl;
+import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
+import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchiveFactory;
+import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
 import org.jboss.shrinkwrap.spi.MemoryMapArchive;
 
 /**
- * WebArchiveFactoryImpl
+ * ResourceAdapterArchiveFactoryImpl
  * 
- * WebArchiveFactory implementation used to create {@link WebArchive} instances. Thread-safe.
+ * ResourceAdapterArchiveFactory implementation used to create {@link ResourceAdapterArchive} instances. Thread-safe.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public class WebArchiveFactoryImpl extends WebArchiveFactory
+public class ResourceAdapterArchiveFactoryImpl extends ResourceAdapterArchiveFactory
 {
 
    /*
     * {@inheritDoc}
-    * @see org.jboss.declarchive.api.WebArchiveFactory#doCreate(java.lang.String)
+    * @see org.jboss.declarchive.api.ResourceAdapterArchiveFactory#doCreate(java.lang.String)
     */
    @Override
-   protected WebArchive doCreate(String archiveName)
+   protected ResourceAdapterArchive doCreate(String archiveName)
    {
       // Create storage delegate
       MemoryMapArchive memoryMapArchive = new MemoryMapArchiveImpl(archiveName);
 
-      // Create web archive
-      WebArchive webArchive = new WebArchiveImpl(memoryMapArchive);
+      // Create Resource Adapter Archive
+      ResourceAdapterArchive resourceAdapterArchive = new ResourceAdapterArchiveImpl(memoryMapArchive);
 
       // Return archive
-      return webArchive;
+      return resourceAdapterArchive;
    }
 
 }

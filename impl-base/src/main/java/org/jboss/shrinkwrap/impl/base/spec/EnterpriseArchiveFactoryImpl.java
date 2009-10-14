@@ -14,39 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base;
+package org.jboss.shrinkwrap.impl.base.spec;
 
-import org.jboss.shrinkwrap.api.ResourceAdapterArchiveFactory;
-import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
-import org.jboss.shrinkwrap.impl.base.spec.ResourceAdapterArchiveImpl;
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchiveFactory;
+import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
 import org.jboss.shrinkwrap.spi.MemoryMapArchive;
 
 /**
- * ResourceAdapterArchiveFactoryImpl
+ * EnterpriseArchiveFactoryImpl
  * 
- * ResourceAdapterArchiveFactory implementation used to create {@link ResourceAdapterArchive} instances. Thread-safe.
+ * EnterpriseArchiveFactory implementation used to create {@link EnterpriseArchive} instances. Thread-safe.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public class ResourceAdapterArchiveFactoryImpl extends ResourceAdapterArchiveFactory
+public class EnterpriseArchiveFactoryImpl extends EnterpriseArchiveFactory
 {
 
    /*
     * {@inheritDoc}
-    * @see org.jboss.declarchive.api.ResourceAdapterArchiveFactory#doCreate(java.lang.String)
+    * @see org.jboss.declarchive.api.EnterpriseArchiveFactory#doCreate(java.lang.String)
     */
    @Override
-   protected ResourceAdapterArchive doCreate(String archiveName)
+   protected EnterpriseArchive doCreate(String archiveName)
    {
       // Create storage delegate
       MemoryMapArchive memoryMapArchive = new MemoryMapArchiveImpl(archiveName);
 
-      // Create Resource Adapter Archive
-      ResourceAdapterArchive resourceAdapterArchive = new ResourceAdapterArchiveImpl(memoryMapArchive);
+      // Create enterprise archive
+      EnterpriseArchive enterpriseArchive = new EnterpriseArchiveImpl(memoryMapArchive);
 
       // Return archive
-      return resourceAdapterArchive;
+      return enterpriseArchive;
    }
 
 }

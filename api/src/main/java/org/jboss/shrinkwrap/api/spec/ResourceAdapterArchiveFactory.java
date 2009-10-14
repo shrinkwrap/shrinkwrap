@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api;
+package org.jboss.shrinkwrap.api.spec;
 
-import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
 
 /**
  * ResourceAdapterArchiveFactory
@@ -36,7 +35,7 @@ public abstract class ResourceAdapterArchiveFactory extends ArchiveFactory<Resou
    /**
     * Implementation type as a FQN to avoid direct compile-time dependency
     */
-   private static final String IMPL_TYPE = "org.jboss.shrinkwrap.impl.base.ResourceAdapterArchiveFactoryImpl";
+   private static final String IMPL_TYPE = "org.jboss.shrinkwrap.impl.base.spec.ResourceAdapterArchiveFactoryImpl";
 
    /**
     * Instance of ResourceAdapterArchiveFactory implementation

@@ -18,8 +18,8 @@ package org.jboss.shrinkwrap.impl.base.unit;
 
 import junit.framework.Assert;
 
-import org.jboss.shrinkwrap.api.ResourceAdapterArchiveFactory;
 import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
+import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchiveFactory;
 import org.junit.Test;
 
 /**
