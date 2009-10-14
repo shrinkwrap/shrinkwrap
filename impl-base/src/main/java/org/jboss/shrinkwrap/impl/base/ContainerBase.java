@@ -458,7 +458,7 @@ public abstract class ContainerBase<T extends Archive<T>> implements
       Validate.notNull(target, "Target should be specified");
       Validate.notNull(resource, "Resource should be specified");
       
-      return addResource(AssetUtil.getFullPathForURLResource(resource), new UrlAsset(resource));
+      return addResource(target, new UrlAsset(resource));
    }
    
    /* (non-Javadoc)

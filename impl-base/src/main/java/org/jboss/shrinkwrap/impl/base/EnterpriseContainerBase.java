@@ -271,10 +271,9 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>>
    public T addModule(String resourceName)
    {
       Validate.notNull(resourceName, "ResourceName must be specified");
-      
-      Asset asset = new ClassLoaderAsset(resourceName);
-      Path location = new BasicPath(getModulePath(), AssetUtil.getNameForClassloaderResource(resourceName));
-      return add(location, asset);
+      ;
+      Path location = new BasicPath(AssetUtil.getNameForClassloaderResource(resourceName));
+      return addModule(location, resourceName);
    }
    
    /* (non-Javadoc)
@@ -285,9 +284,8 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>>
    {
       Validate.notNull(resource, "Resource must be specified");
       
-      Asset asset = new FileAsset(resource);
-      Path location = new BasicPath(getModulePath(), resource.getName());
-      return add(location, asset);
+      Path location = new BasicPath(resource.getName());
+      return addModule(location, resource);
    }
    
    /* (non-Javadoc)
@@ -298,8 +296,76 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>>
    {
       Validate.notNull(resource, "Resource must be specified");
       
-      Asset asset = new UrlAsset(resource);
-      Path location = new BasicPath(getModulePath(), AssetUtil.getFullPathForURLResource(resource));
+      final Path location = AssetUtil.getFullPathForURLResource(resource);
+      return addModule(location, resource);
+   }
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addModule(org.jboss.shrinkwrap.api.Path, java.io.File)
+    */
+   @Override
+   public T addModule(final Path targetPath, final File resource) throws IllegalArgumentException
+   {
+      Validate.notNull(targetPath, "Target Path must be specified");
+      Validate.notNull(resource, "Resource must be specified");
+      
+      final Asset asset = new FileAsset(resource);
+      final Path location = new BasicPath(getModulePath(), targetPath);
       return add(location, asset);
+   }
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addModule(org.jboss.shrinkwrap.api.Path, java.lang.String)
+    */
+   @Override
+   public T addModule(final Path targetPath, final String resourceName) throws IllegalArgumentException
+   {
+      Validate.notNull(targetPath, "Target Path must be specified");
+      Validate.notNull(resourceName, "ResourceName must be specified");
+      
+      final Asset asset = new ClassLoaderAsset(resourceName);
+      final Path location = new BasicPath(getModulePath(), targetPath);
+      return add(location, asset);
+   }
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addModule(org.jboss.shrinkwrap.api.Path, java.net.URL)
+    */
+   @Override
+   public T addModule(final Path targetPath, final URL resource) throws IllegalArgumentException
+   {
+      Validate.notNull(targetPath, "Target Path must be specified");
+      Validate.notNull(resource, "Resource must be specified");
+      
+      Asset asset = new UrlAsset(resource);
+      Path location = new BasicPath(getModulePath(),targetPath);
+      return add(location, asset);
+   }
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addModule(java.lang.String, java.io.File)
+    */
+   @Override
+   public T addModule(final String targetPath, final File resource) throws IllegalArgumentException
+   {
+      return addModule(new BasicPath(targetPath), resource);
+   }
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addModule(java.lang.String, java.lang.String)
+    */
+   @Override
+   public T addModule(final String targetPath, final String resourceName) throws IllegalArgumentException
+   {
+      return addModule(new BasicPath(targetPath), resourceName);
+   }
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addModule(java.lang.String, java.net.URL)
+    */
+   @Override
+   public T addModule(final String targetPath, final URL resource) throws IllegalArgumentException
+   {
+      return addModule(new BasicPath(targetPath), resource);
    }
 }

@@ -237,4 +237,64 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resource is null
     */
    T addModule(URL resource) throws IllegalArgumentException;
+
+   /**
+    * Adds a resource to this {@link Archive}s module context.
+    * <br/><br/>
+    * The resource name is used as path.
+    * 
+    * @param targetPath The target path within the archive in which to add the resource
+    * @param resourceName Name of the {@link ClassLoader} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourceName is null
+    */
+   T addModule(String targetPath, String resourceName) throws IllegalArgumentException;
+
+   /**
+    * 
+    * @param targetPath The target path within the archive in which to add the resource
+    * @param resource {@link File} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addModule(String targetPath, File resource) throws IllegalArgumentException;
+
+   /**
+    * 
+    * @param targetPath The target path within the archive in which to add the resource
+    * @param resource {@link URL} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addModule(String targetPath, URL resource) throws IllegalArgumentException;
+
+   /**
+    * Adds a resource to this {@link Archive}s module context.
+    * <br/><br/>
+    * The resource name is used as path.
+    * 
+    * @param targetPath The target path within the archive in which to add the resource
+    * @param resourceName Name of the {@link ClassLoader} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourceName is null
+    */
+   T addModule(Path targetPath, String resourceName) throws IllegalArgumentException;
+
+   /**
+    * 
+    * @param targetPath The target path within the archive in which to add the resource
+    * @param resource {@link File} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addModule(Path targetPath, File resource) throws IllegalArgumentException;
+
+   /**
+    * 
+    * @param targetPath The target path within the archive in which to add the resource
+    * @param resource {@link URL} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
+   T addModule(Path targetPath, URL resource) throws IllegalArgumentException;
 }

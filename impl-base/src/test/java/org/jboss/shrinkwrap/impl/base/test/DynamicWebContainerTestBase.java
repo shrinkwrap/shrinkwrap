@@ -109,12 +109,10 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
    @Test
    @ArchiveType(WebContainer.class)
    public void testAddWebResourceURL() throws Exception {
-      getWebContainer().addWebResource(getURLForClassResource(NAME_TEST_PROPERTIES));
-      
-      Path testPath = new BasicPath(getWebPath(), "Test.properties");
-      Assert.assertTrue(
-            "Archive should contain " + testPath,
-            getArchive().contains(testPath));
+      Path targetPath = new BasicPath("Test.properties");
+      getWebContainer().addWebResource(targetPath, getURLForClassResource(NAME_TEST_PROPERTIES));
+      Path testPath = new BasicPath(getWebPath(), targetPath);
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
    }
 
    @Test
