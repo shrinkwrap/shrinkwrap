@@ -66,7 +66,7 @@ public class ClassAsset implements Asset
     * ClassloaderResource for loading the Class.
     */
    @Override
-   public InputStream getStream()
+   public InputStream openStream()
    {
       /*
        * https://jira.jboss.org/jira/browse/TMPARCH-19
@@ -77,7 +77,7 @@ public class ClassAsset implements Asset
       if(classLoader == null) {
          classLoader = Thread.currentThread().getContextClassLoader();
       }
-      return new ClassLoaderAsset(getResourceNameOfClass(clazz), classLoader).getStream();
+      return new ClassLoaderAsset(getResourceNameOfClass(clazz), classLoader).openStream();
    }
 
    /**

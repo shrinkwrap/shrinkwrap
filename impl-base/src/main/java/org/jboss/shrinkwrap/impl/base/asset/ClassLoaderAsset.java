@@ -72,7 +72,7 @@ public class ClassLoaderAsset implements Asset
     * 
     */
    @Override
-   public InputStream getStream()
+   public InputStream openStream()
    {
       return classLoader.getResourceAsStream(resourceName);
    }

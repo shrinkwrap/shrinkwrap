@@ -33,5 +33,5 @@ public interface Asset
     * 
     * @return A new open inputstream for each call.
     */
-   InputStream getStream();
+   InputStream openStream();
 }

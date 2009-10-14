@@ -113,7 +113,7 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
             log.fine("Writing asset " + path.get() + " to " + assetFile.getAbsolutePath());
          }
          // Get the asset streams
-         final InputStream assetInputStream = asset.getStream();
+         final InputStream assetInputStream = asset.openStream();
          final FileOutputStream assetFileOutputStream = new FileOutputStream(assetFile);
 
          // Write contents

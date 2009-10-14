@@ -40,7 +40,7 @@ public class UrlAssetTestCase
    {
       Asset asset = new UrlAsset(Thread.currentThread().getContextClassLoader().getResource(EXISTING_RESOURCE));
 
-      InputStream io = asset.getStream();
+      InputStream io = asset.openStream();
 
       Assert.assertNotNull(io);
       Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true", TestUtils

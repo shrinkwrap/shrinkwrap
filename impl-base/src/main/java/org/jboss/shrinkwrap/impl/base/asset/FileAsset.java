@@ -62,7 +62,7 @@ public class FileAsset implements Asset
     * @throws RuntimeException If the file is not found.
     */
    @Override
-   public InputStream getStream()
+   public InputStream openStream()
    {
       try
       {

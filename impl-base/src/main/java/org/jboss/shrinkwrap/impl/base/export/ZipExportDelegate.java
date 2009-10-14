@@ -116,7 +116,7 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
       final ZipEntry entry = new ZipEntry(pathName);
 
       // Get Asset InputStream
-      final InputStream assetStream = asset.getStream();
+      final InputStream assetStream = asset.openStream();
 
       IOUtil.closeOnComplete(assetStream, new StreamTask<InputStream>()
       {

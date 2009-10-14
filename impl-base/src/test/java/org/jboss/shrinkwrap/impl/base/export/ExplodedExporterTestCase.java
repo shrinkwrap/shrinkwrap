@@ -263,7 +263,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
          {
 
             @Override
-            public InputStream getStream()
+            public InputStream openStream()
             {
                throw new RuntimeException("Mock Esception getting Stream");
             }
@@ -309,7 +309,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
       File assetFile = new File(explodedDirectory, path.get());
       Assert.assertNotNull(assetFile);
       Assert.assertTrue(assetFile.exists());
-      byte[] expectedContents = IOUtil.asByteArray(asset.getStream());
+      byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
 
       InputStream inputStream = new FileInputStream(assetFile);
 

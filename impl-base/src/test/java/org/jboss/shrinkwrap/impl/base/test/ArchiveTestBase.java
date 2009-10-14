@@ -667,8 +667,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Validate.notNull(one, "Asset one must be specified");
       Validate.notNull(two, "Asset two must be specified");
 
-      byte[] oneData = IOUtil.asByteArray(one.getStream());
-      byte[] twoData = IOUtil.asByteArray(two.getStream());
+      byte[] oneData = IOUtil.asByteArray(one.openStream());
+      byte[] twoData = IOUtil.asByteArray(two.openStream());
 
       return Arrays.equals(oneData, twoData);
    }

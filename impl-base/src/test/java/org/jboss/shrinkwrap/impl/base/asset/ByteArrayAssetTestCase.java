@@ -80,7 +80,7 @@ public class ByteArrayAssetTestCase
       log.info("Contents after change: " + Arrays.toString(contents));
 
       // Get the contents back out of the asset
-      final InputStream stream = asset.getStream();
+      final InputStream stream = asset.openStream();
       final ByteArrayOutputStream out = new ByteArrayOutputStream(length);
       int read;
       while ((read = stream.read()) != -1)

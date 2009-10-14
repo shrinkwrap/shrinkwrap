@@ -67,7 +67,7 @@ public class ArchiveAsset implements Asset
     * @see org.jboss.shrinkwrap.api.Asset#getStream()
     */
    @Override
-   public InputStream getStream()
+   public InputStream openStream()
    {
       // Get the input stream from the ArchiveInputStreamFactory
       return ArchiveInputStreamFactory.getInputStream(getArchive());

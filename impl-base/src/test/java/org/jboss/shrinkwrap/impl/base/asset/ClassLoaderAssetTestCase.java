@@ -41,7 +41,7 @@ public class ClassLoaderAssetTestCase
    public void shouldBeAbleToReadResource() throws Exception
    {
       Asset asset = new ClassLoaderAsset(EXISTING_RESOURCE);
-      InputStream io = asset.getStream();
+      InputStream io = asset.openStream();
 
       Assert.assertNotNull(io);
       Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true", TestUtils

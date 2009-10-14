@@ -179,7 +179,7 @@ public class ZipExporterTestCase extends ExportTestBase
          {
 
             @Override
-            public InputStream getStream()
+            public InputStream openStream()
             {
                throw new RuntimeException("Mock Exception from an Asset write");
             }
@@ -227,7 +227,7 @@ public class ZipExporterTestCase extends ExportTestBase
       String entryPath = ZipExporterUtil.toZipEntryPath(path);
       ZipEntry entry = expectedZip.getEntry(entryPath);
       Assert.assertNotNull(entry);
-      byte[] expectedContents = IOUtil.asByteArray(asset.getStream());
+      byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
       byte[] actualContents = IOUtil.asByteArray(expectedZip.getInputStream(entry));
       Assert.assertArrayEquals(expectedContents, actualContents);
    }

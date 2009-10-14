@@ -38,7 +38,7 @@ public class ClassAssetTestCase
    {
       Class<?> clazz = ClassAssetTestCase.class;
       Asset asset = new ClassAsset(clazz);
-      InputStream io = asset.getStream();
+      InputStream io = asset.openStream();
 
       Assert.assertNotNull(io);
       Assert.assertEquals(
@@ -60,7 +60,7 @@ public class ClassAssetTestCase
    {
       Class<?> bootstrapClass = Class.class;
       Asset asset = new ClassAsset(bootstrapClass);
-      InputStream io = asset.getStream();
+      InputStream io = asset.openStream();
 
       Assert.assertNotNull(io);
       Assert.assertEquals(

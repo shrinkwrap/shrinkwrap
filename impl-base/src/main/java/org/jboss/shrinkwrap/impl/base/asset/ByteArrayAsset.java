@@ -101,10 +101,10 @@ public class ByteArrayAsset implements Asset
    //-------------------------------------------------------------------------------------||
 
    /**
-    * @see org.jboss.shrinkwrap.api.Asset#getStream()
+    * @see org.jboss.shrinkwrap.api.Asset#openStream()
     */
    @Override
-   public InputStream getStream()
+   public InputStream openStream()
    {
       return new ByteArrayInputStream(this.content);
    }

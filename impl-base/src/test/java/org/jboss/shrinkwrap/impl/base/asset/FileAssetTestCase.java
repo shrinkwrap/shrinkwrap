@@ -44,7 +44,7 @@ public class FileAssetTestCase
    public void shouldBeAbleToReadFile() throws Exception
    {
       Asset asset = new FileAsset(new File(EXISTING_FILE));
-      InputStream io = asset.getStream();
+      InputStream io = asset.openStream();
 
       Assert.assertNotNull(io);
       Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true", TestUtils

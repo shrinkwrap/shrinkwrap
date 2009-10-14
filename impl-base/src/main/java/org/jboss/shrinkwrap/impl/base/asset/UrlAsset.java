@@ -55,7 +55,7 @@ public class UrlAsset implements Asset
     * @return A open stream with the content of the URL
     */
    @Override
-   public InputStream getStream()
+   public InputStream openStream()
    {
       try
       {
