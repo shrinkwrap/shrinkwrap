@@ -27,6 +27,7 @@
   <!-- Aggregate Modules -->
   <modules>
     <module>api</module>
+    <module>assembly</module>
     <module>build</module>
     <module>impl-base</module>
     <module>spi</module>

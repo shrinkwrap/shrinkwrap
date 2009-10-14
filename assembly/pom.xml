@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!--
+  vi:ts=2:sw=2:expandtab:
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- Parent -->
+  <parent>
+    <groupId>org.jboss.shrinkwrap</groupId>
+    <artifactId>shrinkwrap-build</artifactId>
+    <version>0.1.0</version>
+    <relativePath>../build/pom.xml</relativePath>
+  </parent>
+
+  <!-- Model Version -->
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Artifact Configuration -->
+  <artifactId>shrinkwrap-assembly</artifactId>
+  <version>0.1.1-SNAPSHOT</version>
+  <name>ShrinkWrap Assembly</name>
+  <description>Assemblies of the ShrinkWrap Project</description>
+  <packaging>pom</packaging>
+
+  <!-- Properties -->
+  <properties>
+
+    <!-- Versioning -->
+    <version.org.jboss.shrinkwrap_shrinkwrap.impl.base>0.1.1-SNAPSHOT</version.org.jboss.shrinkwrap_shrinkwrap.impl.base>
+
+  </properties>
+
+    <!-- Build -->
+  <build>
+
+    <plugins>
+      <!-- Assembly Plugin -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>attached</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <descriptors>
+            <descriptor>impl.xml</descriptor>
+          </descriptors>
+        </configuration>
+        <inherited>false</inherited>
+      </plugin>
+
+      </plugins>
+    </build>
+
+  <!-- Dependencies -->
+  <dependencies>
+
+    <!-- 
+    org.jboss.shrinkwrap    
+     -->
+    <dependency>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-impl-base</artifactId>
+      <version>${version.org.jboss.shrinkwrap_shrinkwrap.impl.base}</version>
+    </dependency>
+
+  </dependencies>
+
+</project>
+
