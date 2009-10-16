@@ -17,7 +17,7 @@
 
   <!-- Artifact Configuration -->
   <artifactId>shrinkwrap-impl-base</artifactId>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>1.0.0-alpha-1</version>
   <name>ShrinkWrap Implementation Base</name>
   <description>Common Base for Implementations of the ShrinkWrap Project</description>
 
@@ -74,5 +74,11 @@
       </plugin>
     </plugins>
   </build>
+
+  <scm>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-impl-base-1.0.0-alpha-1</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-impl-base-1.0.0-alpha-1</developerConnection>
+    <url>http://anonsvn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-impl-base-1.0.0-alpha-1</url>
+  </scm>
 </project>
 
