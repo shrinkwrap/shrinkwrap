@@ -17,7 +17,7 @@
 
   <!-- Artifact Configuration -->
   <artifactId>shrinkwrap-spi</artifactId>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>1.0.0-alpha-1</version>
   <name>ShrinkWrap SPI</name>
   <description>Generic Service Provider Contract of the ShrinkWrap Project</description>
 
@@ -40,5 +40,11 @@
     </dependency>
 
   </dependencies>
+
+  <scm>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-spi-1.0.0-alpha-1</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-spi-1.0.0-alpha-1</developerConnection>
+    <url>http://anonsvn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-spi-1.0.0-alpha-1</url>
+  </scm>
 </project>
 
