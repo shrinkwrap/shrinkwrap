@@ -17,7 +17,7 @@
 
   <!-- Artifact Configuration -->
   <artifactId>shrinkwrap-api</artifactId>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>1.0.0-alpha-1</version>
   <name>ShrinkWrap API</name>
   <description>Client View of the ShrinkWrap Project</description>
 
@@ -33,5 +33,11 @@
   <dependencies>
 
   </dependencies>
+
+  <scm>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-api-1.0.0-alpha-1</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-api-1.0.0-alpha-1</developerConnection>
+    <url>http://anonsvn.jboss.org/repos/common/shrinkwrap/tags/shrinkwrap-api-1.0.0-alpha-1</url>
+  </scm>
 </project>
 
