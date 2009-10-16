@@ -26,7 +26,7 @@
   <properties>
 
     <!-- Versioning -->
-    <version.org.jboss.shrinkwrap_shrinkwrap.impl.base>0.1.1-SNAPSHOT</version.org.jboss.shrinkwrap_shrinkwrap.impl.base>
+    <version.org.jboss.shrinkwrap_shrinkwrap.impl.base>1.0.0-alpha-1</version.org.jboss.shrinkwrap_shrinkwrap.impl.base>
 
   </properties>
 
