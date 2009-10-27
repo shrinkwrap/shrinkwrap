@@ -49,6 +49,7 @@
         <configuration>
           <descriptors>
             <descriptor>impl.xml</descriptor>
+            <descriptor>all.xml</descriptor>
           </descriptors>
         </configuration>
         <inherited>false</inherited>
