@@ -27,7 +27,7 @@ import java.util.Map;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public interface Archive<T extends Archive<T>>
+public interface Archive<T extends Archive<T>> extends Specializer
 {
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||

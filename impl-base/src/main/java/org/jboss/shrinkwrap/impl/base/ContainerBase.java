@@ -45,7 +45,7 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  * @version $Revision: $
  * @param <T>
  */
-public abstract class ContainerBase<T extends Archive<T>> implements 
+public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBase implements 
    Archive<T>, ManifestContainer<T>, ResourceContainer<T>, ClassContainer<T>, LibraryContainer<T> 
 {
    //-------------------------------------------------------------------------------------||
@@ -203,6 +203,19 @@ public abstract class ContainerBase<T extends Archive<T>> implements
       return archive.toString(verbose);
    }
 
+   //-------------------------------------------------------------------------------------||
+   // Required Implementations - SpecializedBase -----------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.impl.base.SpecializedBase#getArchive()
+    */
+   @Override
+   protected Archive<?> getArchive()
+   {
+      return archive;
+   }
+   
    //-------------------------------------------------------------------------------------||
    // Required Implementations - ManifestContainer ---------------------------------------||
    //-------------------------------------------------------------------------------------||

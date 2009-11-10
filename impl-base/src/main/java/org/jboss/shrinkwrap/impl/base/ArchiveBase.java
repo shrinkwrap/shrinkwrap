@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.Specializer;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
@@ -210,6 +211,17 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       return covariantReturn();
    }
 
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.Specializer#as(java.lang.Class)
+    */
+   @Override
+   public <TYPE extends Specializer> TYPE as(Class<TYPE> clazz)
+   {
+      Validate.notNull(clazz, "Class must be specified");
+
+      return new ArchiveExtensionLoader<TYPE>(clazz).load(this);
+   }
+
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -243,5 +255,4 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
          throw cce;
       }
    }
-
 }
