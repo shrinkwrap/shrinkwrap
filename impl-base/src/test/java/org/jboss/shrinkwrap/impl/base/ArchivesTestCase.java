@@ -29,7 +29,7 @@ import org.junit.Test;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ArchivesTest
+public class ArchivesTestCase
 {
 
    @Test
