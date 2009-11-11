@@ -140,12 +140,12 @@ public interface Archive<T extends Archive<T>> extends Specializer
     * Merge the contents from an existing archive in a specific path 
     * without maintaining the archive name in the context path.
     * 
-    * @param path Path to add contents to
     * @param source Archive to add contents from
+    * @param path Path to add contents to
     * @return  
     * @throws IllegalArgumentException If the path or existing archive is not specified
     */
-   T merge(Path path, Archive<?> source) throws IllegalArgumentException;
+   T merge(Archive<?> source, Path path) throws IllegalArgumentException;
 
    /**
     * Returns a multiline "ls -l"-equse output of the contents of

@@ -178,7 +178,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
    @Override
    public T merge(final Archive<?> source) throws IllegalArgumentException
    {
-      return merge(new BasicPath(), source);
+      return merge(source, new BasicPath());
    }
 
    /**
@@ -186,11 +186,11 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Archive)
     */
    @Override
-   public T merge(final Path path, final Archive<?> source) throws IllegalArgumentException
+   public T merge(final Archive<?> source, final Path path) throws IllegalArgumentException
    {
       // Precondition checks
-      Validate.notNull(path, "No path was specified");
       Validate.notNull(source, "No source archive was specified");
+      Validate.notNull(path, "No path was specified");
 
       // Get existing contents from source archive
       final Map<Path, Asset> sourceContent = source.getContent();

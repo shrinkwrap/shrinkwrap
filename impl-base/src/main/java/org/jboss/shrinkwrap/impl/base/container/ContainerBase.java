@@ -127,9 +127,9 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
    }
    
    @Override
-   public T merge(Path path, Archive<?> source) throws IllegalArgumentException
+   public T merge(Archive<?> source, Path path) throws IllegalArgumentException
    {
-      archive.merge(path, source);
+      archive.merge(source, path);
       return covarientReturn();
    }
    

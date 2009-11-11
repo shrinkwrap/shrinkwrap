@@ -524,7 +524,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       Path baseLocation = new BasicPath("somewhere");
 
-      archive.merge(baseLocation, sourceArchive);
+      archive.merge(sourceArchive, baseLocation);
 
       Path expectedPath = new BasicPath(baseLocation, location);
       Path expectedPathTwo = new BasicPath(baseLocation, locationTwo);
@@ -546,7 +546,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> archive = getArchive();
       try
       {
-         archive.merge(null, createNewArchive());
+         archive.merge(createNewArchive(), null);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
