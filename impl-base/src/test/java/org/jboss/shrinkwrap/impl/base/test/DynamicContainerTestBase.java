@@ -573,5 +573,55 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             getArchive().contains(testPath));
    }
 
+   @Test
+   @ArchiveType(LibraryContainer.class)
+   public void testAddLibriesResource() throws Exception {
+      getLibraryContainer().addLibraries(NAME_TEST_PROPERTIES, NAME_TEST_PROPERTIES_2);
+      
+      Path testPath = new BasicPath(getLibraryPath(), NAME_TEST_PROPERTIES);
+      Path testPath2 = new BasicPath(getLibraryPath(), NAME_TEST_PROPERTIES_2);
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+      Assert.assertTrue(
+            "Archive should contain " + testPath2,
+            getArchive().contains(testPath2));
+   }
+
+   @Test
+   @ArchiveType(LibraryContainer.class)
+   public void testAddLibriesFile() throws Exception {
+      getLibraryContainer().addLibraries(
+            getFileForClassResource(NAME_TEST_PROPERTIES), 
+            getFileForClassResource(NAME_TEST_PROPERTIES_2));
+      
+      Path testPath = new BasicPath(getLibraryPath(), "Test.properties");
+      Path testPath2 = new BasicPath(getLibraryPath(), "Test2.properties");
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+      Assert.assertTrue(
+            "Archive should contain " + testPath2,
+            getArchive().contains(testPath2));
+   }
+
+   @Test
+   @ArchiveType(LibraryContainer.class)
+   public void testAddLibrariesArchive() throws Exception {
+      Archive<?> archive = createNewArchive();
+      Archive<?> archive2 = createNewArchive();
+
+      getLibraryContainer().addLibraries(archive, archive2);
+      
+      Path testPath = new BasicPath(getLibraryPath(), archive.getName());
+      Path testPath2 = new BasicPath(getLibraryPath(), archive.getName());
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+      Assert.assertTrue(
+            "Archive should contain " + testPath2,
+            getArchive().contains(testPath2));
+   }
+
 
 }

@@ -741,6 +741,48 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
       return add(location, resource);
    }
    
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibraries(java.lang.String[])
+    */
+   @Override
+   public T addLibraries(String... resourceNames) throws IllegalArgumentException
+   {
+      Validate.notNull(resourceNames, "ResourceNames must be specified");
+      for(String resourceName : resourceNames) 
+      {
+         addLibrary(resourceName);
+      }
+      return covarientReturn();
+   }
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibraries(java.io.File[])
+    */
+   @Override
+   public T addLibraries(File... resources) throws IllegalArgumentException
+   {
+      Validate.notNull(resources, "Resources must be specified");
+      for(File resource : resources) 
+      {
+         addLibrary(resource);
+      }
+      return covarientReturn();
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibraries(org.jboss.shrinkwrap.api.Archive<?>[])
+    */
+   @Override
+   public T addLibraries(Archive<?>... archives) throws IllegalArgumentException 
+   {
+      Validate.notNull(archives, "Archives must be specified");
+      for(Archive<?> archive : archives) 
+      {
+         addLibrary(archive);
+      }
+      return covarientReturn();
+   }
+   
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
