@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.export;
+package org.jboss.shrinkwrap.impl.base.exporter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,8 +28,9 @@ import java.util.zip.ZipFile;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
-import org.jboss.shrinkwrap.api.export.ArchiveExportException;
-import org.jboss.shrinkwrap.api.export.ZipExporter;
+import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.impl.base.exporter.ZipExporterUtil;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Assert;

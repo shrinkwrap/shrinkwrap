@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.export;
+package org.jboss.shrinkwrap.impl.base.exporter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,8 +25,8 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
-import org.jboss.shrinkwrap.api.export.ArchiveExportException;
-import org.jboss.shrinkwrap.api.export.ExplodedExporter;
+import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
+import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
@@ -78,7 +78,7 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.export.AbstractExporterDelegate#processAsset(Path, Asset)
+    * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#processAsset(Path, Asset)
     */
    @Override
    protected void processAsset(Path path, Asset asset)
@@ -128,7 +128,7 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.export.AbstractExporterDelegate#getResult()
+    * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#getResult()
     */
    @Override
    protected File getResult()

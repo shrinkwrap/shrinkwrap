@@ -19,7 +19,7 @@ package org.jboss.shrinkwrap.impl.base;
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.impl.base.export.ZipArchiveInputStreamFactory;
+import org.jboss.shrinkwrap.impl.base.exporter.ZipArchiveInputStreamFactory;
 
 /**
  * ArchiveInputStreamFactory

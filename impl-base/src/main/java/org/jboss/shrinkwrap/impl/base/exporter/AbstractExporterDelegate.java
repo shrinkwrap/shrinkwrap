@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.export;
+package org.jboss.shrinkwrap.impl.base.exporter;
 
 import java.util.Map;
 import java.util.Map.Entry;

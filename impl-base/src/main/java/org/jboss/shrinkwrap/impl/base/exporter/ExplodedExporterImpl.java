@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.export;
+package org.jboss.shrinkwrap.impl.base.exporter;
 
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.export.ExplodedExporter;
+import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
 import org.jboss.shrinkwrap.impl.base.SpecializedBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 
@@ -79,7 +79,7 @@ public class ExplodedExporterImpl extends SpecializedBase implements ExplodedExp
    //-------------------------------------------------------------------------------------||
 
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.export.ExplodedExporter#exportExploded(java.io.File)
+    * @see org.jboss.shrinkwrap.api.exporter.ExplodedExporter#exportExploded(java.io.File)
     */
    @Override
    public File exportExploded(File baseDirectory)
