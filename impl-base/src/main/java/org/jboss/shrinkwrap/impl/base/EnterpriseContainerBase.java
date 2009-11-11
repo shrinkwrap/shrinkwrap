@@ -260,7 +260,7 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>>
    public T addModule(String resourceName)
    {
       Validate.notNull(resourceName, "ResourceName must be specified");
-      ;
+      
       Path location = new BasicPath(AssetUtil.getNameForClassloaderResource(resourceName));
       return addModule(location, resourceName);
    }
@@ -325,6 +325,9 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>>
    @Override
    public T addModule(final String targetPath, final File resource) throws IllegalArgumentException
    {
+      Validate.notNull(targetPath, "Target Path must be specified");
+      Validate.notNull(resource, "Resource must be specified");
+      
       return addModule(new BasicPath(targetPath), resource);
    }
 
@@ -334,6 +337,9 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>>
    @Override
    public T addModule(final String targetPath, final String resourceName) throws IllegalArgumentException
    {
+      Validate.notNull(targetPath, "Target Path must be specified");
+      Validate.notNull(resourceName, "Resource must be specified");
+
       return addModule(new BasicPath(targetPath), resourceName);
    }
 
@@ -343,6 +349,9 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>>
    @Override
    public T addModule(final String targetPath, final URL resource) throws IllegalArgumentException
    {
+      Validate.notNull(targetPath, "Target Path must be specified");
+      Validate.notNull(resource, "Resource must be specified");
+      
       return addModule(new BasicPath(targetPath), resource);
    }
 }
