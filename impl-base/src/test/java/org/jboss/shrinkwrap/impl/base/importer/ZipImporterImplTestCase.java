@@ -76,8 +76,7 @@ public class ZipImporterImplTestCase
             new File(
                   Thread.currentThread().getContextClassLoader().getResource(EXISTING_ZIP_RESOURCE).toURI()));
       
-      Archive<?> archive = Archives.create("test.jar")
-                              .as(ZipImporter.class)
+      Archive<?> archive = Archives.create("test.jar", ZipImporter.class)
                                  .importZip(testZip)
                               .as(JavaArchive.class);
 
@@ -95,8 +94,7 @@ public class ZipImporterImplTestCase
       ZipInputStream stream = new ZipInputStream(
             Thread.currentThread().getContextClassLoader().getResourceAsStream(EXISTING_ZIP_RESOURCE));
       
-      Archive<?> archive = Archives.create("test.jar")
-                              .as(ZipImporter.class)
+      Archive<?> archive = Archives.create("test.jar", ZipImporter.class)
                                  .importZip(stream)
                               .as(JavaArchive.class);
 
@@ -118,8 +116,7 @@ public class ZipImporterImplTestCase
       ZipInputStream stream = new ZipInputStream(
             Thread.currentThread().getContextClassLoader().getResourceAsStream(EXISTING_ZIP_RESOURCE));
       
-      Archive<?> archive = Archives.create("test.jar")
-                              .as(ZipImporter.class)
+      Archive<?> archive = Archives.create("test.jar", ZipImporter.class)
                                  .importZip(stream)
                               .as(JavaArchive.class);
 
