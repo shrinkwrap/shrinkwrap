@@ -16,6 +16,8 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
+import java.util.UUID;
+
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -23,7 +25,7 @@ import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.api.container.WebContainer;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
+import org.jboss.shrinkwrap.impl.base.Archives;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicWebContainerTestBase;
@@ -95,7 +97,7 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
    @Override
    protected WebArchive createNewArchive()
    {
-      return new WebArchiveImpl(new MemoryMapArchiveImpl());
+      return Archives.create(UUID.randomUUID().toString() + ".jar", WebArchive.class);
    }
 
    //-------------------------------------------------------------------------------------||

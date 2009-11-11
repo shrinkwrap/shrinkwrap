@@ -16,13 +16,15 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
+import java.util.UUID;
+
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
+import org.jboss.shrinkwrap.impl.base.Archives;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicContainerTestBase;
@@ -89,7 +91,7 @@ public class JavaArchiveImplTestCase extends DynamicContainerTestBase<JavaArchiv
    @Override
    protected JavaArchive createNewArchive()
    {
-      return new JavaArchiveImpl(new MemoryMapArchiveImpl());
+      return Archives.create(UUID.randomUUID().toString() + ".jar", JavaArchive.class);
    }
 
    //-------------------------------------------------------------------------------------||

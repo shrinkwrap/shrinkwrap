@@ -16,6 +16,8 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
+import java.util.UUID;
+
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -23,7 +25,7 @@ import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceAdapterContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
-import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
+import org.jboss.shrinkwrap.impl.base.Archives;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicResourceAdapterContainerTestBase;
@@ -94,7 +96,7 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
    @Override
    protected ResourceAdapterArchive createNewArchive()
    {
-      return new ResourceAdapterArchiveImpl(new MemoryMapArchiveImpl());
+      return Archives.create(UUID.randomUUID().toString() + ".jar", ResourceAdapterArchive.class);
    }
 
    //-------------------------------------------------------------------------------------||
