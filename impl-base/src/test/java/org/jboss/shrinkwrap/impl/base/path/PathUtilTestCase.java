@@ -2,7 +2,6 @@ package org.jboss.shrinkwrap.impl.base.path;
 
 import java.util.logging.Logger;
 
-import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

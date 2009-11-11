@@ -29,7 +29,6 @@ import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.export.ArchiveExportException;
 import org.jboss.shrinkwrap.api.export.ExplodedExporter;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
-import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Assert;
