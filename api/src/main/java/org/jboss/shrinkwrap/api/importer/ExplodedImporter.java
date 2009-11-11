@@ -42,7 +42,7 @@ public interface ExplodedImporter extends Specializer
     * @throws IllegalArgumentException if file is null
     * @throws IllegalArgumentException if file is not a directory
     */
-   public ExplodedImporter importDirectory(File file);
+   ExplodedImporter importDirectory(File file);
    
    /**
     * Import a directory structure as a archive.
@@ -52,5 +52,5 @@ public interface ExplodedImporter extends Specializer
     * @throws IllegalArgumentException if file is null
     * @throws IllegalArgumentException if file is not a directory
     */
-   public ExplodedImporter importDirectory(String fileName);
+   ExplodedImporter importDirectory(String fileName);
 }
