@@ -60,10 +60,10 @@ public interface LibraryContainer<T extends Archive<T>>
    
    T addLibrary(File resource) throws IllegalArgumentException;
 
-   T addLibrary(String target, String resourceName) throws IllegalArgumentException;
-   T addLibrary(String target, File resource) throws IllegalArgumentException;
-   T addLibrary(String target, URL resource) throws IllegalArgumentException;
-   T addLibrary(String target, Asset resource) throws IllegalArgumentException;
+   T addLibrary(String resourceName, String target) throws IllegalArgumentException;
+   T addLibrary(File resource, String target) throws IllegalArgumentException;
+   T addLibrary(URL resource, String target) throws IllegalArgumentException;
+   T addLibrary(Asset resource, String target) throws IllegalArgumentException;
 
    /**
     * Adds the resource with the specified name
@@ -82,11 +82,11 @@ public interface LibraryContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if target is null
     * @throws IllegalArgumentException if resourceName is null
     */
-   T addLibrary(Path target, String resourceName) throws IllegalArgumentException;
+   T addLibrary(String resourceName, Path target) throws IllegalArgumentException;
    
-   T addLibrary(Path target, File resource) throws IllegalArgumentException;
-   T addLibrary(Path target, URL resource) throws IllegalArgumentException;
-   T addLibrary(Path target, Asset resource) throws IllegalArgumentException;
+   T addLibrary(File resource, Path target) throws IllegalArgumentException;
+   T addLibrary(URL resource, Path target) throws IllegalArgumentException;
+   T addLibrary(Asset resource, Path target) throws IllegalArgumentException;
 
    /**
     * Add another {@link Archive} to this {@link Archive} as a Library.

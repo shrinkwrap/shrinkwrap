@@ -115,7 +115,7 @@ public class ExplodedImporterImpl extends SpecializedBase implements
             doImport(root, file.listFiles());
          } else
          {
-            archive.add(calculatePath(root, file), new FileAsset(file));
+            archive.add(new FileAsset(file), calculatePath(root, file));
          }
       }
    }

@@ -87,37 +87,37 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
    //-------------------------------------------------------------------------------------||
 
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#add(org.jboss.declarchive.api.Path, org.jboss.declarchive.api.Archive)
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T add(Path path, Archive<?> archive)
+   public T add(Archive<?> archive, Path path)
    {
-      this.archive.add(path, archive);
+      this.archive.add(archive, path);
       return covarientReturn();
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#add(org.jboss.declarchive.api.Path, org.jboss.declarchive.api.Asset)
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T add(Path target, Asset asset) throws IllegalArgumentException
+   public T add(Asset asset, Path target) throws IllegalArgumentException
    {
-      archive.add(target, asset);
+      archive.add(asset, target);
       return covarientReturn();
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#add(org.jboss.declarchive.api.Path, java.lang.String, org.jboss.declarchive.api.Asset)
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path, java.lang.String)
     */
    @Override
-   public T add(Path path, String name, Asset asset)
+   public T add(Asset asset, Path path, String name)
    {
-      archive.add(path, name, asset);
+      archive.add(asset, path, name);
       return covarientReturn();
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#merge(org.jboss.declarchive.api.Archive)
+    * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive)
     */
    @Override
    public T merge(Archive<?> source) throws IllegalArgumentException
@@ -126,6 +126,9 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
       return covarientReturn();
    }
    
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path)
+    */
    @Override
    public T merge(Archive<?> source, Path path) throws IllegalArgumentException
    {
@@ -134,12 +137,12 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#add(java.lang.String, org.jboss.declarchive.api.Asset)
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Asset, java.lang.String)
     */
    @Override
-   public T add(String name, Asset asset)
+   public T add(Asset asset, String name)
    {
-      archive.add(name, asset);
+      archive.add(asset, name);
       return covarientReturn();
    }
    
@@ -268,7 +271,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
    public T setManifest(Asset resource) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource should be specified");
-      return addManifestResource("MANIFEST.FM", resource);
+      return addManifestResource(resource, "MANIFEST.FM");
    }
    
    /* (non-Javadoc)
@@ -278,7 +281,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
    public final T addManifestResource(String resourceName)
    {
       Validate.notNull(resourceName, "ResourceName should be specified");
-      return addManifestResource(resourceName, new ClassLoaderAsset(resourceName));
+      return addManifestResource(new ClassLoaderAsset(resourceName), resourceName);
    }
    
    /* (non-Javadoc)
@@ -288,104 +291,104 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
    public T addManifestResource(File resource) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource should be specified");
-      return addManifestResource(resource.getName(), new FileAsset(resource));
+      return addManifestResource(new FileAsset(resource), resource.getName());
    }
    
    /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.lang.String, java.lang.String)
     */
    @Override
-   public T addManifestResource(String target, String resourceName) throws IllegalArgumentException
+   public T addManifestResource(String resourceName, String target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resourceName, "ResourceName should be specified");
+      Validate.notNull(target, "Target should be specified");
       
-      return addManifestResource(target, new ClassLoaderAsset(resourceName));
+      return addManifestResource(new ClassLoaderAsset(resourceName), target);
    }
 
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.lang.String, java.io.File)
+    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.io.File, java.lang.String)
     */
    @Override
-   public T addManifestResource(String target, File resource) throws IllegalArgumentException
+   public T addManifestResource(File resource, String target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resource, "Resource should be specified");
+      Validate.notNull(target, "Target should be specified");
       
-      return addManifestResource(target, new FileAsset(resource));
+      return addManifestResource(new FileAsset(resource), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.lang.String, java.net.URL)
+    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.net.URL, java.lang.String)
     */
    @Override
-   public T addManifestResource(String target, URL resource) throws IllegalArgumentException
+   public T addManifestResource(URL resource, String target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resource, "Resource should be specified");
+      Validate.notNull(target, "Target should be specified");
       
-      return addManifestResource(target, new UrlAsset(resource));
+      return addManifestResource(new UrlAsset(resource), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.lang.String, org.jboss.shrinkwrap.api.Asset)
+    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(org.jboss.shrinkwrap.api.Asset, java.lang.String)
     */
    @Override
-   public T addManifestResource(String target, Asset resource) throws IllegalArgumentException
+   public T addManifestResource(Asset resource, String target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resource, "Resource should be specified");
+      Validate.notNull(target, "Target should be specified");
       
-      return addManifestResource(new BasicPath(target), resource);
+      return addManifestResource(resource, new BasicPath(target));
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.container.ManifestContainer#addManifestResource(org.jboss.declarchive.api.Path, java.lang.String)
+    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.lang.String, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addManifestResource(Path target, String resourceName) throws IllegalArgumentException
+   public T addManifestResource(String resourceName, Path target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resourceName, "ResourceName should be specified");
+      Validate.notNull(target, "Target should be specified");
       
-      return addManifestResource(target, new ClassLoaderAsset(resourceName));
+      return addManifestResource(new ClassLoaderAsset(resourceName), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(org.jboss.shrinkwrap.api.Path, java.io.File)
+    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.io.File, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addManifestResource(Path target, File resource) throws IllegalArgumentException
+   public T addManifestResource(File resource, Path target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resource, "Resource should be specified");
+      Validate.notNull(target, "Target should be specified");
       
-      return addManifestResource(target, new FileAsset(resource));
+      return addManifestResource(new FileAsset(resource), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(org.jboss.shrinkwrap.api.Path, java.net.URL)
+    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.net.URL, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addManifestResource(Path target, URL resource) throws IllegalArgumentException
+   public T addManifestResource(URL resource, Path target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resource, "Resource should be specified");
+      Validate.notNull(target, "Target should be specified");
       
-      return addManifestResource(target, new UrlAsset(resource));
+      return addManifestResource(new UrlAsset(resource), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Asset)
+    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addManifestResource(Path target, Asset resource) throws IllegalArgumentException
+   public T addManifestResource(Asset resource, Path target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resource, "Resource should be specified");
+      Validate.notNull(target, "Target should be specified");
       
       Path location = new BasicPath(getManinfestPath(), target);
-      return add(location, resource);
+      return add(resource, location);
    }
    
    //-------------------------------------------------------------------------------------||
@@ -407,7 +410,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
    public final T addResource(String resourceName) throws IllegalArgumentException
    {
       Validate.notNull(resourceName, "ResourceName should be specified");
-      return addResource(resourceName, new ClassLoaderAsset(resourceName));
+      return addResource(new ClassLoaderAsset(resourceName), resourceName);
    }   
 
    /* (non-Javadoc)
@@ -417,11 +420,11 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
    public final T addResource(File resource) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource should be specified");
-      return addResource(resource.getName(), new FileAsset(resource));
+      return addResource(new FileAsset(resource), resource.getName());
    }
 
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.container.ResourceContainer#addResource(java.lang.String, java.lang.String)
+    * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.lang.String, java.lang.String)
     */
    @Override
    public final T addResource(String target, String resourceName) throws IllegalArgumentException 
@@ -429,105 +432,105 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
       Validate.notNull(target, "Target should be specified");
       Validate.notNull(resourceName, "ResourceName should be specified");
       
-      return addResource(target, new ClassLoaderAsset(resourceName));
+      return addResource(new ClassLoaderAsset(resourceName), target);
    }
 
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.lang.String, java.io.File)
+    * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.io.File, java.lang.String)
     */
    @Override
-   public T addResource(String target, File resource) throws IllegalArgumentException
+   public T addResource(File resource, String target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resource, "Resource should be specified");
+      Validate.notNull(target, "Target should be specified");
       
-      return addResource(target, new FileAsset(resource));
+      return addResource(new FileAsset(resource), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.lang.String, java.net.URL)
+    * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.net.URL, java.lang.String)
     */
    @Override
-   public T addResource(String target, URL resource) throws IllegalArgumentException
+   public T addResource(URL resource, String target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resource, "Resource should be specified");
+      Validate.notNull(target, "Target should be specified");
       
-      return addResource(target, new UrlAsset(resource));
+      return addResource(new UrlAsset(resource), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.lang.String, org.jboss.shrinkwrap.api.Asset)
+    * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(org.jboss.shrinkwrap.api.Asset, java.lang.String)
     */
    @Override
-   public T addResource(String target, Asset resource) throws IllegalArgumentException
+   public T addResource(Asset resource, String target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resource, "Resource should be specified");
+      Validate.notNull(target, "Target should be specified");
       
-      return addResource(new BasicPath(target), resource);
+      return addResource(resource, new BasicPath(target));
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.container.ResourceContainer#addResource(org.jboss.declarchive.api.Path, java.lang.String)
+    * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.lang.String, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addResource(Path target, String resourceName) throws IllegalArgumentException
+   public T addResource(String resourceName, Path target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resourceName, "ResourceName should be specified");
+      Validate.notNull(target, "Target should be specified");
       
-      return addResource(target, new ClassLoaderAsset(resourceName));
+      return addResource(new ClassLoaderAsset(resourceName), target);
    }
 
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.container.ResourceContainer#addResource(org.jboss.declarchive.api.Path, java.lang.String, java.lang.ClassLoader)
+    * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.lang.String, org.jboss.shrinkwrap.api.Path, java.lang.ClassLoader)
     */
    @Override
-   public T addResource(Path target, String resourceName, ClassLoader classLoader) throws IllegalArgumentException
+   public T addResource(String resourceName, Path target, ClassLoader classLoader) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resourceName, "ResourceName should be specified");
+      Validate.notNull(target, "Target should be specified");
       Validate.notNull(classLoader, "ClassLoader should be specified");
       
-      return addResource(target, new ClassLoaderAsset(resourceName, classLoader));
+      return addResource(new ClassLoaderAsset(resourceName, classLoader), target);
    }
 
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(org.jboss.shrinkwrap.api.Path, java.io.File)
+    * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.io.File, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addResource(Path target, File resource) throws IllegalArgumentException
+   public T addResource(File resource, Path target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resource, "Resource should be specified");
+      Validate.notNull(target, "Target should be specified");
       
-      return addResource(target, new FileAsset(resource));
+      return addResource(new FileAsset(resource), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.container.ResourceContainer#addResource(org.jboss.declarchive.api.Path, java.net.URL)
+    * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.net.URL, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addResource(Path target, URL resource) throws IllegalArgumentException
+   public T addResource(URL resource, Path target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resource, "Resource should be specified");
+      Validate.notNull(target, "Target should be specified");
       
-      return addResource(target, new UrlAsset(resource));
+      return addResource(new UrlAsset(resource), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Asset)
+    * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addResource(Path target, Asset resource) throws IllegalArgumentException
+   public T addResource(Asset resource, Path target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resource, "Resource should be specified");
+      Validate.notNull(target, "Target should be specified");
       
       Path location = new BasicPath(getResourcePath(), target);
-      return add(location, resource);
+      return add(resource, location);
    }
    
    //-------------------------------------------------------------------------------------||
@@ -564,7 +567,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
       {
          Asset resource = new ClassAsset(clazz);
          Path location = new BasicPath(getClassesPath(), AssetUtil.getFullPathForClassResource(clazz));
-         add(location, resource);
+         add(resource, location);
       }
       return covarientReturn();
    };
@@ -597,7 +600,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
          {
             Asset asset = new ClassAsset(clazz);
             Path location = new BasicPath(getClassesPath(), AssetUtil.getFullPathForClassResource(clazz));
-            add(location, asset);
+            add(asset, location);
          }
       }
       return covarientReturn();
@@ -621,7 +624,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
    public T addLibrary(Archive<?> archive) throws IllegalArgumentException 
    {
       Validate.notNull(archive, "Archive must be specified");
-      return add(getLibraryPath(), archive);
+      return add(archive, getLibraryPath());
    };
 
    /* (non-Javadoc)
@@ -631,7 +634,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
    public T addLibrary(String resourceName) throws IllegalArgumentException
    {
       Validate.notNull(resourceName, "ResourceName must be specified");
-      return addLibrary(resourceName, new ClassLoaderAsset(resourceName));
+      return addLibrary(new ClassLoaderAsset(resourceName), resourceName);
    }
    
    /* (non-Javadoc)
@@ -641,104 +644,104 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
    public T addLibrary(File resource) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource must be specified");
-      return addLibrary(resource.getName(), new FileAsset(resource));
+      return addLibrary(new FileAsset(resource), resource.getName());
    }
    
    /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.lang.String, java.lang.String)
     */
    @Override
-   public T addLibrary(String target, String resourceName) throws IllegalArgumentException
+   public T addLibrary(String resourceName, String target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target must be specified");
       Validate.notNull(resourceName, "ResourceName must be specified");
+      Validate.notNull(target, "Target must be specified");
 
-      return addLibrary(target, new ClassLoaderAsset(resourceName));
+      return addLibrary(new ClassLoaderAsset(resourceName), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.lang.String, java.io.File)
+    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.io.File, java.lang.String)
     */
    @Override
-   public T addLibrary(String target, File resource) throws IllegalArgumentException
+   public T addLibrary(File resource, String target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target must be specified");
       Validate.notNull(resource, "Resource must be specified");
+      Validate.notNull(target, "Target must be specified");
 
-      return addLibrary(target, new FileAsset(resource));
+      return addLibrary(new FileAsset(resource), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.lang.String, java.net.URL)
+    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.net.URL, java.lang.String)
     */
    @Override
-   public T addLibrary(String target, URL resource) throws IllegalArgumentException
+   public T addLibrary(URL resource, String target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target must be specified");
       Validate.notNull(resource, "Resource must be specified");
+      Validate.notNull(target, "Target must be specified");
 
-      return addLibrary(target, new UrlAsset(resource));
+      return addLibrary(new UrlAsset(resource), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.lang.String, org.jboss.shrinkwrap.api.Asset)
+    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(org.jboss.shrinkwrap.api.Asset, java.lang.String)
     */
    @Override
-   public T addLibrary(String target, Asset resource) throws IllegalArgumentException
+   public T addLibrary(Asset resource, String target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target must be specified");
       Validate.notNull(resource, "Resource must be specified");
+      Validate.notNull(target, "Target must be specified");
 
-      return addLibrary(new BasicPath(target), resource);
+      return addLibrary(resource, new BasicPath(target));
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.container.LibraryContainer#addLibrary(org.jboss.declarchive.api.Path, java.lang.String)
+    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.lang.String, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addLibrary(Path target, String resourceName) throws IllegalArgumentException
+   public T addLibrary(String resourceName, Path target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target must be specified");
       Validate.notNull(resourceName, "ResourceName must be specified");
+      Validate.notNull(target, "Target must be specified");
       
-      return addLibrary(target, new ClassLoaderAsset(resourceName));
+      return addLibrary(new ClassLoaderAsset(resourceName), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(org.jboss.shrinkwrap.api.Path, java.io.File)
+    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.io.File, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addLibrary(Path target, File resource) throws IllegalArgumentException
+   public T addLibrary(File resource, Path target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target must be specified");
       Validate.notNull(resource, "Resource must be specified");
+      Validate.notNull(target, "Target must be specified");
       
-      return addLibrary(target, new FileAsset(resource));
+      return addLibrary(new FileAsset(resource), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(org.jboss.shrinkwrap.api.Path, java.net.URL)
+    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.net.URL, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addLibrary(Path target, URL resource) throws IllegalArgumentException
+   public T addLibrary(URL resource, Path target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target must be specified");
       Validate.notNull(resource, "Resource must be specified");
+      Validate.notNull(target, "Target must be specified");
       
-      return addLibrary(target, new UrlAsset(resource));
+      return addLibrary(new UrlAsset(resource), target);
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Asset)
+    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addLibrary(Path target, Asset resource) throws IllegalArgumentException
+   public T addLibrary(Asset resource, Path target) throws IllegalArgumentException
    {
-      Validate.notNull(target, "Target must be specified");
       Validate.notNull(resource, "Resource must be specified");
+      Validate.notNull(target, "Target must be specified");
 
       Path location = new BasicPath(getLibraryPath(), target);
-      return add(location, resource);
+      return add(resource, location);
    }
    
    /* (non-Javadoc)

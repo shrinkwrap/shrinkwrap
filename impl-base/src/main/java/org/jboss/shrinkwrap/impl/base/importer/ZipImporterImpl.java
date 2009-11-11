@@ -102,7 +102,7 @@ public class ZipImporterImpl extends SpecializedBase implements ZipImporter
             {
                output.write(content, 0, readBytes);
             }
-            archive.add(entryName, new ByteArrayAsset(output.toByteArray()));
+            archive.add(new ByteArrayAsset(output.toByteArray()), entryName);
             stream.closeEntry();
          }
       }
@@ -144,7 +144,7 @@ public class ZipImporterImpl extends SpecializedBase implements ZipImporter
          }
          String entryName = entry.getName();
          
-         archive.add(new BasicPath(entryName), new ZipFileEntryAsset(file, entry));
+         archive.add(new ZipFileEntryAsset(file, entry), new BasicPath(entryName));
       }
       return this;
    }

@@ -82,7 +82,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException If the target is null
     * @throws IllegalArgumentException If the resourceName is null
     */
-   T addResource(String target, String resourceName) throws IllegalArgumentException;
+   T addResource(String resourceName, String target) throws IllegalArgumentException;
    
    /**
     * 
@@ -92,7 +92,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException If the target is null
     * @throws IllegalArgumentException If the resource is null 
     */
-   T addResource(String target, File resource) throws IllegalArgumentException;
+   T addResource(File resource, String target) throws IllegalArgumentException;
    
    /**
     * 
@@ -102,7 +102,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException If the target is null
     * @throws IllegalArgumentException If the resource is null 
     */
-   T addResource(String target, URL resource) throws IllegalArgumentException;
+   T addResource(URL resource, String target) throws IllegalArgumentException;
 
    /**
     * 
@@ -112,7 +112,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException If the target is null
     * @throws IllegalArgumentException If the resource is null 
     */
-   T addResource(String target, Asset resource) throws IllegalArgumentException;
+   T addResource(Asset resource, String target) throws IllegalArgumentException;
 
    /**
     * Adds the resource with the specified name
@@ -129,7 +129,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException If the target is null
     * @throws IllegalArgumentException If the resourceName is null
     */
-   T addResource(Path target, String resourceName) throws IllegalArgumentException;
+   T addResource(String resourceName, Path target) throws IllegalArgumentException;
    
    /**
     * Adds the specified resource to the {@link Archive}, using the specified {@link ClassLoader}
@@ -143,7 +143,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException If the resourceName is null
     * @throws IllegalArgumentException If the classLoader is null
     */
-   T addResource(Path target, String resourceName, ClassLoader classLoader) throws IllegalArgumentException;
+   T addResource(String resourceName, Path target, ClassLoader classLoader) throws IllegalArgumentException;
 
 
    /**
@@ -154,7 +154,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException If the target is null
     * @throws IllegalArgumentException If the resource is null 
     */
-   T addResource(Path target, File resource) throws IllegalArgumentException;
+   T addResource(File resource, Path target) throws IllegalArgumentException;
 
    /**
     * Adds the resource located at the specified {@link URL} to
@@ -166,7 +166,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException If the target is null
     * @throws IllegalArgumentException If the resource is null 
     */
-   T addResource(Path target, URL resource) throws IllegalArgumentException;
+   T addResource(URL resource, Path target) throws IllegalArgumentException;
 
    /**
     * 
@@ -176,5 +176,5 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException If the target is null
     * @throws IllegalArgumentException If the resource is null 
     */
-   T addResource(Path target, Asset resource) throws IllegalArgumentException;
+   T addResource(Asset resource, Path target) throws IllegalArgumentException;
 }

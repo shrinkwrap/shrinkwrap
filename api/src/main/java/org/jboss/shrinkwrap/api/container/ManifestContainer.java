@@ -80,10 +80,10 @@ public interface ManifestContainer<T extends Archive<T>>
    T addManifestResource(File resource) throws IllegalArgumentException;
 
 
-   T addManifestResource(String target, String resourceName) throws IllegalArgumentException;
-   T addManifestResource(String target, File resource) throws IllegalArgumentException;
-   T addManifestResource(String target, URL resource) throws IllegalArgumentException;
-   T addManifestResource(String target, Asset resource) throws IllegalArgumentException;
+   T addManifestResource(String resourceName, String target) throws IllegalArgumentException;
+   T addManifestResource(File resource, String target) throws IllegalArgumentException;
+   T addManifestResource(URL resource, String target) throws IllegalArgumentException;
+   T addManifestResource(Asset resource, String target) throws IllegalArgumentException;
 
    /**
     * Adds the resource with the specified name
@@ -101,8 +101,8 @@ public interface ManifestContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if target is null
     * @throws IllegalArgumentException if resourceName is null
     */
-   T addManifestResource(Path target, String resourceName) throws IllegalArgumentException;
-   T addManifestResource(Path target, File resource) throws IllegalArgumentException;
-   T addManifestResource(Path target, URL resource) throws IllegalArgumentException;
-   T addManifestResource(Path target, Asset resource) throws IllegalArgumentException;
+   T addManifestResource(String resourceName, Path target) throws IllegalArgumentException;
+   T addManifestResource(File resource, Path target) throws IllegalArgumentException;
+   T addManifestResource(URL resource, Path target) throws IllegalArgumentException;
+   T addManifestResource(Asset resource, Path target) throws IllegalArgumentException;
 }

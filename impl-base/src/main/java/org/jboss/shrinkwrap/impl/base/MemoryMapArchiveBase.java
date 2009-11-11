@@ -110,27 +110,27 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
    // Required Implementations - Archive -------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   /* {@inheritDoc}
-    * @see org.jboss.declarchive.api.Archive#add(org.jboss.declarchive.api.Path, org.jboss.declarchive.api.Asset[])
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T add(Path path, Asset asset)
+   public T add(Asset asset, Path path)
    {
-      Validate.notNull(path, "No path was specified");
       Validate.notNull(asset, "No asset was specified");
+      Validate.notNull(path, "No path was specified");
 
       content.put(path, asset);
       return covariantReturn();
    }
 
-   /* {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.ArchiveBase#add(org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Archive)
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.impl.base.ArchiveBase#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T add(Path path, Archive<?> archive)
+   public T add(Archive<?> archive, Path path)
    {
       // Add archive asset
-      super.add(path, archive);
+      super.add(archive, path);
 
       // Expected Archive Path
       Path archivePath = new BasicPath(path, archive.getName());

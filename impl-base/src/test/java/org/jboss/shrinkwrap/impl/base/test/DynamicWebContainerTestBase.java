@@ -110,7 +110,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
    @ArchiveType(WebContainer.class)
    public void testAddWebResourceURL() throws Exception {
       Path targetPath = new BasicPath("Test.properties");
-      getWebContainer().addWebResource(targetPath, getURLForClassResource(NAME_TEST_PROPERTIES));
+      getWebContainer().addWebResource(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
       Path testPath = new BasicPath(getWebPath(), targetPath);
       Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
    }
@@ -118,7 +118,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
    @Test
    @ArchiveType(WebContainer.class)
    public void testAddWebResourceStringTargetResource() throws Exception {
-      getWebContainer().addWebResource("Test.txt", NAME_TEST_PROPERTIES);
+      getWebContainer().addWebResource(NAME_TEST_PROPERTIES, "Test.txt");
       
       Path testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -129,7 +129,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
    @Test
    @ArchiveType(WebContainer.class)
    public void testAddWebResourceStringTargetFile() throws Exception {
-      getWebContainer().addWebResource("Test.txt", getFileForClassResource(NAME_TEST_PROPERTIES));
+      getWebContainer().addWebResource(getFileForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -140,7 +140,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
    @Test
    @ArchiveType(WebContainer.class)
    public void testAddWebResourceStringTargetURL() throws Exception {
-      getWebContainer().addWebResource("Test.txt", getURLForClassResource(NAME_TEST_PROPERTIES));
+      getWebContainer().addWebResource(getURLForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -151,7 +151,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
    @Test
    @ArchiveType(WebContainer.class)
    public void testAddWebResourceStringTargetAsset() throws Exception {
-      getWebContainer().addWebResource("Test.txt", getAssetForClassResource(NAME_TEST_PROPERTIES));
+      getWebContainer().addWebResource(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -162,7 +162,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
    @Test
    @ArchiveType(WebContainer.class)
    public void testAddWebResourcePathTargetResource() throws Exception {
-      getWebContainer().addWebResource(new BasicPath("Test.txt"), NAME_TEST_PROPERTIES);
+      getWebContainer().addWebResource(NAME_TEST_PROPERTIES, new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -173,7 +173,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
    @Test
    @ArchiveType(WebContainer.class)
    public void testAddWebResourcePathTargetFile() throws Exception {
-      getWebContainer().addWebResource(new BasicPath("Test.txt"), getFileForClassResource(NAME_TEST_PROPERTIES));
+      getWebContainer().addWebResource(getFileForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -184,7 +184,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
    @Test
    @ArchiveType(WebContainer.class)
    public void testAddWebResourcePathTargetURL() throws Exception {
-      getWebContainer().addWebResource(new BasicPath("Test.txt"), getURLForClassResource(NAME_TEST_PROPERTIES));
+      getWebContainer().addWebResource(getURLForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -195,7 +195,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
    @Test
    @ArchiveType(WebContainer.class)
    public void testAddWebResourcePathTargetAsset() throws Exception {
-      getWebContainer().addWebResource(new BasicPath("Test.txt"), getAssetForClassResource(NAME_TEST_PROPERTIES));
+      getWebContainer().addWebResource(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(

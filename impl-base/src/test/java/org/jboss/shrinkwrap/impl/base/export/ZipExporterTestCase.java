@@ -175,7 +175,7 @@ public class ZipExporterTestCase extends ExportTestBase
       {
          Archive<?> archive = createArchiveWithAssets();
 
-         archive.add(PATH_ONE, new Asset()
+         archive.add(new Asset()
          {
 
             @Override
@@ -184,7 +184,7 @@ public class ZipExporterTestCase extends ExportTestBase
                throw new RuntimeException("Mock Exception from an Asset write");
             }
 
-         });
+         }, PATH_ONE);
 
          ZipExporter.exportZip(archive);
          Assert.fail("Should have thrown ArchiveExportException");

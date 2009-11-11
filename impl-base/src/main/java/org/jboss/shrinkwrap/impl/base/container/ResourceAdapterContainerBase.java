@@ -67,6 +67,9 @@ public abstract class ResourceAdapterContainerBase<T extends Archive<T>> extends
 
    }
    
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.ResourceAdapterContainer#setResourceAdapterXML(java.io.File)
+    */
    @Override
    public T setResourceAdapterXML(File resource) throws IllegalArgumentException
    {
@@ -74,6 +77,9 @@ public abstract class ResourceAdapterContainerBase<T extends Archive<T>> extends
       return setResourceAdapterXML(new FileAsset(resource));
    }
    
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.ResourceAdapterContainer#setResourceAdapterXML(java.net.URL)
+    */
    @Override
    public T setResourceAdapterXML(URL resource) throws IllegalArgumentException
    {
@@ -81,11 +87,14 @@ public abstract class ResourceAdapterContainerBase<T extends Archive<T>> extends
       return setResourceAdapterXML(new UrlAsset(resource));
    }
    
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.ResourceAdapterContainer#setResourceAdapterXML(org.jboss.shrinkwrap.api.Asset)
+    */
    @Override
    public T setResourceAdapterXML(Asset resource) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource must be specified");
-      return addResource(new BasicPath(getResourcePath(), "ra.xml"), resource);
+      return addResource(resource, new BasicPath(getResourcePath(), "ra.xml"));
    }
 
 }

@@ -104,7 +104,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       Path location = new BasicPath("/", "test.properties");
 
-      archive.add(location, asset);
+      archive.add(asset, location);
 
       Assert.assertTrue("Asset should be placed on " + location.get(), archive.contains(location));
    }
@@ -121,7 +121,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       try
       {
-         archive.add((Path) null, asset);
+         archive.add(asset, (Path) null);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
@@ -139,7 +139,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> archive = getArchive();
       try
       {
-         archive.add(new BasicPath("/", "Test.properties"), (Asset) null);
+         archive.add((Asset) null, new BasicPath("/", "Test.properties"));
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
@@ -158,7 +158,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       Path location = new BasicPath("/", "test.properties");
 
-      archive.add(location.get(), asset);
+      archive.add(asset, location.get());
 
       Assert.assertTrue("Asset should be placed on " + new BasicPath("/", "test.properties"), archive
             .contains(location));
@@ -176,7 +176,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       try
       {
-         archive.add((String) null, asset);
+         archive.add(asset, (String) null);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
@@ -194,7 +194,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> archive = getArchive();
       try
       {
-         archive.add("/Test.properties", (Asset) null);
+         archive.add((Asset) null, "/Test.properties");
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
@@ -214,7 +214,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       final Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       Path location = new BasicPath("/");
 
-      archive.add(location, name, asset);
+      archive.add(asset, location, name);
 
       Path expectedPath = new BasicPath("/", "test.properties");
 
@@ -233,7 +233,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       final Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       try
       {
-         archive.add(null, name, asset);
+         archive.add(asset, null, name);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
@@ -253,7 +253,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       final String resource = NAME_TEST_PROPERTIES;
       try
       {
-         archive.add(path, null, new ClassLoaderAsset(resource));
+         archive.add(new ClassLoaderAsset(resource), path, null);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
@@ -273,7 +273,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       final Path path = new BasicPath("/", "Test.properties");
       try
       {
-         archive.add(path, name, null);
+         archive.add(null, path, name);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
@@ -291,7 +291,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> archive = getArchive();
       String resource = NAME_TEST_PROPERTIES;
       Path location = new BasicPath("/", "test.properties");
-      archive.add(location, new ClassLoaderAsset(resource));
+      archive.add(new ClassLoaderAsset(resource), location);
       Assert.assertTrue(archive.contains(location)); // Sanity check
 
       Assert.assertTrue("Successfully deleting an Asset should return true", archive.delete(location));
@@ -341,7 +341,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> archive = getArchive();
       Path location = new BasicPath("/", "test.properties");
       Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
-      archive.add(location, asset);
+      archive.add(asset, location);
 
       Asset fetchedAsset = archive.get(location);
 
@@ -376,7 +376,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> archive = getArchive();
       Path location = new BasicPath("/", "test.properties");
       Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
-      archive.add(location, asset);
+      archive.add(asset, location);
 
       Asset fetchedAsset = archive.get(location.get());
 
@@ -414,7 +414,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       Asset assetTwo = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
-      archive.add(location, asset).add(locationTwo, assetTwo);
+      archive.add(asset, location).add(assetTwo, locationTwo);
 
       Map<Path, Asset> content = archive.getContent();
 
@@ -438,7 +438,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> archive = getArchive();
       try
       {
-         archive.add(null, new MemoryMapArchiveImpl());
+         archive.add(new MemoryMapArchiveImpl(), null);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
@@ -456,7 +456,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> archive = getArchive();
       try
       {
-         archive.add(new BasicPath("/"), (Archive<?>) null);
+         archive.add((Archive<?>) null, new BasicPath("/"));
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
@@ -496,7 +496,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       Asset assetTwo = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
-      sourceArchive.add(location, asset).add(locationTwo, assetTwo);
+      sourceArchive.add(asset, location).add(assetTwo, locationTwo);
 
       archive.merge(sourceArchive);
       Assert.assertTrue("Asset should have been added to path: " + location.get(), this.compareAssets(archive
@@ -520,7 +520,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       Asset assetTwo = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
-      sourceArchive.add(location, asset).add(locationTwo, assetTwo);
+      sourceArchive.add(asset, location).add(assetTwo, locationTwo);
 
       Path baseLocation = new BasicPath("somewhere");
 
@@ -566,7 +566,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       Path baseLocation = new BasicPath("somewhere");
 
-      archive.add(baseLocation, sourceArchive);
+      archive.add(sourceArchive, baseLocation);
 
       Path expectedPath = new BasicPath(baseLocation, sourceArchive.getName());
 
@@ -596,11 +596,11 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       Path nestedAssetPath = new BasicPath("/", "test.properties");
 
-      sourceArchive.add(nestedAssetPath, asset);
+      sourceArchive.add(asset, nestedAssetPath);
 
       Path baseLocation = new BasicPath("somewhere");
 
-      archive.add(baseLocation, sourceArchive);
+      archive.add(sourceArchive, baseLocation);
 
       Path archivePath = new BasicPath(baseLocation, sourceArchive.getName());
 
@@ -623,17 +623,17 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       Path baseLocation = new BasicPath("somewhere");
 
-      archive.add(baseLocation, nestedArchive);
+      archive.add(nestedArchive, baseLocation);
 
       Archive<T> nestedNestedArchive = createNewArchive();
 
-      nestedArchive.add(new BasicPath("/"), nestedNestedArchive);
+      nestedArchive.add(nestedNestedArchive, new BasicPath("/"));
       
       Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
 
       Path nestedAssetPath = new BasicPath("/", "test.properties");
 
-      nestedNestedArchive.add(nestedAssetPath, asset);
+      nestedNestedArchive.add(asset, nestedAssetPath);
       
       Path nestedArchivePath = new BasicPath(baseLocation, nestedArchive.getName());
       

@@ -112,7 +112,7 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
    @ArchiveType(EnterpriseContainer.class)
    public void testAddApplicationURL() throws Exception {
       final Path targetPath = new BasicPath("Test.properties");;
-      getEnterpriseContainer().addApplicationResource(targetPath, getURLForClassResource(NAME_TEST_PROPERTIES));
+      getEnterpriseContainer().addApplicationResource(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
       Path expectedPath = new BasicPath(getApplicationPath(), targetPath);
       Assert.assertTrue("Archive should contain " + expectedPath, getArchive().contains(expectedPath));
    }
@@ -120,7 +120,7 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
    @Test
    @ArchiveType(EnterpriseContainer.class)
    public void testAddApplicationStringTargetResource() throws Exception {
-      getEnterpriseContainer().addApplicationResource("Test.txt", NAME_TEST_PROPERTIES);
+      getEnterpriseContainer().addApplicationResource(NAME_TEST_PROPERTIES, "Test.txt");
       
       Path expectedPath = new BasicPath(getApplicationPath(), "Test.txt");
       Assert.assertTrue(
@@ -131,7 +131,7 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
    @Test
    @ArchiveType(EnterpriseContainer.class)
    public void testAddApplicationStringTargetFile() throws Exception {
-      getEnterpriseContainer().addApplicationResource("Test.txt", getFileForClassResource(NAME_TEST_PROPERTIES));
+      getEnterpriseContainer().addApplicationResource(getFileForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path expectedPath = new BasicPath(getApplicationPath(), "Test.txt");
       Assert.assertTrue(
@@ -142,7 +142,7 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
    @Test
    @ArchiveType(EnterpriseContainer.class)
    public void testAddApplicationStringTargetURL() throws Exception {
-      getEnterpriseContainer().addApplicationResource("Test.txt", getURLForClassResource(NAME_TEST_PROPERTIES));
+      getEnterpriseContainer().addApplicationResource(getURLForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path expectedPath = new BasicPath(getApplicationPath(), "Test.txt");
       Assert.assertTrue(
@@ -153,7 +153,7 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
    @Test
    @ArchiveType(EnterpriseContainer.class)
    public void testAddApplicationStringTargetAsset() throws Exception {
-      getEnterpriseContainer().addApplicationResource("Test.txt", getAssetForClassResource(NAME_TEST_PROPERTIES));
+      getEnterpriseContainer().addApplicationResource(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path expectedPath = new BasicPath(getApplicationPath(), "Test.txt");
       Assert.assertTrue(
@@ -164,7 +164,7 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
    @Test
    @ArchiveType(EnterpriseContainer.class)
    public void testAddApplicationPathTargetResource() throws Exception {
-      getEnterpriseContainer().addApplicationResource(new BasicPath("Test.txt"), NAME_TEST_PROPERTIES);
+      getEnterpriseContainer().addApplicationResource(NAME_TEST_PROPERTIES, new BasicPath("Test.txt"));
       
       Path expectedPath = new BasicPath(getApplicationPath(), "Test.txt");
       Assert.assertTrue(
@@ -175,7 +175,7 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
    @Test
    @ArchiveType(EnterpriseContainer.class)
    public void testAddApplicationPathTargetFile() throws Exception {
-      getEnterpriseContainer().addApplicationResource(new BasicPath("Test.txt"), getFileForClassResource(NAME_TEST_PROPERTIES));
+      getEnterpriseContainer().addApplicationResource(getFileForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path expectedPath = new BasicPath(getApplicationPath(), "Test.txt");
       Assert.assertTrue(
@@ -186,7 +186,7 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
    @Test
    @ArchiveType(EnterpriseContainer.class)
    public void testAddApplicationPathTargetURL() throws Exception {
-      getEnterpriseContainer().addApplicationResource(new BasicPath("Test.txt"), getURLForClassResource(NAME_TEST_PROPERTIES));
+      getEnterpriseContainer().addApplicationResource(getURLForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path expectedPath = new BasicPath(getApplicationPath(), "Test.txt");
       Assert.assertTrue(
@@ -197,7 +197,7 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
    @Test
    @ArchiveType(EnterpriseContainer.class)
    public void testAddApplicationPathTargetAsset() throws Exception {
-      getEnterpriseContainer().addApplicationResource(new BasicPath("Test.txt"), getAssetForClassResource(NAME_TEST_PROPERTIES));
+      getEnterpriseContainer().addApplicationResource(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path expectedPath = new BasicPath(getApplicationPath(), "Test.txt");
       Assert.assertTrue(
@@ -231,11 +231,75 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
    @ArchiveType(EnterpriseContainer.class)
    public void testAddModuleURL() throws Exception {
       final Path targetPath = new BasicPath("Test.properties");
-      getEnterpriseContainer().addModule(targetPath, getURLForClassResource(NAME_TEST_PROPERTIES));
+      getEnterpriseContainer().addModule(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
       Path expectedPath = new BasicPath(getModulePath(), targetPath);
       Assert.assertTrue("Archive should contain " + expectedPath, getArchive().contains(expectedPath));
    }
    
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddModuleStringTargetResource() throws Exception {
+      getEnterpriseContainer().addModule(NAME_TEST_PROPERTIES, "Test.properties");
+      Path expectedPath = new BasicPath(getModulePath(), "Test.properties");
+      Assert.assertTrue("Archive should contain " + expectedPath, getArchive().contains(expectedPath));
+   }
+
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddModuleStringTargetFile() throws Exception {
+      getEnterpriseContainer().addModule(getFileForClassResource(NAME_TEST_PROPERTIES), "Test.properties");
+      Path expectedPath = new BasicPath(getModulePath(), "Test.properties");
+      Assert.assertTrue("Archive should contain " + expectedPath, getArchive().contains(expectedPath));
+   }
+
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddModuleStringTargetURL() throws Exception {
+      getEnterpriseContainer().addModule(getURLForClassResource(NAME_TEST_PROPERTIES), "Test.properties");
+      Path expectedPath = new BasicPath(getModulePath(), "Test.properties");
+      Assert.assertTrue("Archive should contain " + expectedPath, getArchive().contains(expectedPath));
+   }
+   
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddModuleStringTargetAsset() throws Exception {
+      getEnterpriseContainer().addModule(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.properties");
+      Path expectedPath = new BasicPath(getModulePath(), "Test.properties");
+      Assert.assertTrue("Archive should contain " + expectedPath, getArchive().contains(expectedPath));
+   }
+
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddModulePathTargetResource() throws Exception {
+      getEnterpriseContainer().addModule(NAME_TEST_PROPERTIES, new BasicPath("Test.properties"));
+      Path expectedPath = new BasicPath(getModulePath(), "Test.properties");
+      Assert.assertTrue("Archive should contain " + expectedPath, getArchive().contains(expectedPath));
+   }
+
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddModulePathTargetFile() throws Exception {
+      getEnterpriseContainer().addModule(getFileForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.properties"));
+      Path expectedPath = new BasicPath(getModulePath(), "Test.properties");
+      Assert.assertTrue("Archive should contain " + expectedPath, getArchive().contains(expectedPath));
+   }
+
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddModulePathTargetURL() throws Exception {
+      getEnterpriseContainer().addModule(getURLForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.properties"));
+      Path expectedPath = new BasicPath(getModulePath(), "Test.properties");
+      Assert.assertTrue("Archive should contain " + expectedPath, getArchive().contains(expectedPath));
+   }
+
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddModulePathTargetAsset() throws Exception {
+      getEnterpriseContainer().addModule(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.properties"));
+      Path expectedPath = new BasicPath(getModulePath(), "Test.properties");
+      Assert.assertTrue("Archive should contain " + expectedPath, getArchive().contains(expectedPath));
+   }
+
    @Test
    @ArchiveType(EnterpriseContainer.class)
    public void testAddModuleArchive() throws Exception {

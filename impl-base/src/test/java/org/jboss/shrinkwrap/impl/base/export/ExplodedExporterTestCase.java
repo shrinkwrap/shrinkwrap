@@ -258,7 +258,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
       try
       {
          Archive<?> archive = createArchiveWithAssets();
-         archive.add(new BasicPath("badAsset"), new Asset()
+         archive.add(new Asset()
          {
 
             @Override
@@ -267,7 +267,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
                throw new RuntimeException("Mock Esception getting Stream");
             }
 
-         });
+         }, new BasicPath("badAsset"));
          final File directory = createTempDirectory("testExportExplodedThrowsExceptionOnAssetWrite");
 
          ExplodedExporter.exportExploded(archive, directory);

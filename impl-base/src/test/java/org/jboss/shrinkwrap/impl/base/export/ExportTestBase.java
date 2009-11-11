@@ -167,7 +167,7 @@ public abstract class ExportTestBase
       addContent(nestedArchive);
 
       // Add nested archive
-      archive.add(new BasicPath(), nestedArchive);
+      archive.add(nestedArchive, new BasicPath());
 
       // Add an archive nested in a directory
       MemoryMapArchive nestedArchiveTwo = new MemoryMapArchiveImpl(NAME_NESTED_ARCHIVE_2);
@@ -176,7 +176,7 @@ public abstract class ExportTestBase
       addContent(nestedArchiveTwo);
 
       // Add the archive under a nested path
-      archive.add(NESTED_PATH, nestedArchiveTwo);
+      archive.add(nestedArchiveTwo, NESTED_PATH);
 
       // Return archive
       return archive;
@@ -189,8 +189,8 @@ public abstract class ExportTestBase
     */
    protected void addContent(Archive<?> archive)
    {
-      archive.add(PATH_ONE, ASSET_ONE);
-      archive.add(PATH_TWO, ASSET_TWO);
+      archive.add(ASSET_ONE, PATH_ONE);
+      archive.add(ASSET_TWO, PATH_TWO);
    }
 
 }

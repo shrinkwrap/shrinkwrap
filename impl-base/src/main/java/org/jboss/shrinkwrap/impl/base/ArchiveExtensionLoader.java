@@ -153,7 +153,7 @@ public class ArchiveExtensionLoader<T>
    
    private Constructor<T> findConstructor(Class<T> implClass) 
    {
-      Constructor<T>[] constructors = (Constructor<T>[])implClass.getConstructors(); 
+      Constructor<T>[] constructors = (Constructor<T>[])implClass.getConstructors();
       for(Constructor<T> constructor : constructors) {
          Class<?>[] parameters = constructor.getParameterTypes();
          if(parameters.length != 1) 

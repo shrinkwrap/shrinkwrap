@@ -100,7 +100,7 @@ public class ZipImporterImplTestCase
 
       Assert.assertNotNull("Should not return a null archive", archive);
 
-      archive.add(new BasicPath("test.properties"), new ClassLoaderAsset(EXISTING_RESOURCE));
+      archive.add(new ClassLoaderAsset(EXISTING_RESOURCE), new BasicPath("test.properties"));
       
       File tempFile = new File("target/test.zip");
       tempFile.deleteOnExit();

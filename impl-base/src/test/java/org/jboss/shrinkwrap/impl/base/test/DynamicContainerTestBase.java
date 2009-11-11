@@ -141,7 +141,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @ArchiveType(ManifestContainer.class)
    public void testAddManifestURL() throws Exception {
       Path targetPath = new BasicPath("Test.properties");
-      getManifestContainer().addManifestResource(targetPath, getURLForClassResource(NAME_TEST_PROPERTIES));
+      getManifestContainer().addManifestResource(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
       Path testPath = new BasicPath(getManifestPath(), targetPath);
       Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
    }
@@ -149,7 +149,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testAddManifestStringTargetResource() throws Exception {
-      getManifestContainer().addManifestResource("Test.txt", NAME_TEST_PROPERTIES);
+      getManifestContainer().addManifestResource(NAME_TEST_PROPERTIES, "Test.txt");
       
       Path testPath = new BasicPath(getManifestPath(), "Test.txt");
       Assert.assertTrue(
@@ -160,7 +160,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testAddManifestStringTargetFile() throws Exception {
-      getManifestContainer().addManifestResource("Test.txt", getFileForClassResource(NAME_TEST_PROPERTIES));
+      getManifestContainer().addManifestResource(getFileForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path testPath = new BasicPath(getManifestPath(), "Test.txt");
       Assert.assertTrue(
@@ -171,7 +171,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testAddManifestStringTargetURL() throws Exception {
-      getManifestContainer().addManifestResource("Test.txt", getURLForClassResource(NAME_TEST_PROPERTIES));
+      getManifestContainer().addManifestResource(getURLForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path testPath = new BasicPath(getManifestPath(), "Test.txt");
       Assert.assertTrue(
@@ -182,7 +182,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testAddManifestStringTargetAsset() throws Exception {
-      getManifestContainer().addManifestResource("Test.txt", getAssetForClassResource(NAME_TEST_PROPERTIES));
+      getManifestContainer().addManifestResource(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path testPath = new BasicPath(getManifestPath(), "Test.txt");
       Assert.assertTrue(
@@ -193,7 +193,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testAddManifestPathTargetResource() throws Exception {
-      getManifestContainer().addManifestResource(new BasicPath("Test.txt"), NAME_TEST_PROPERTIES);
+      getManifestContainer().addManifestResource(NAME_TEST_PROPERTIES, new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getManifestPath(), "Test.txt");
       Assert.assertTrue(
@@ -204,7 +204,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testAddManifestPathTargetFile() throws Exception {
-      getManifestContainer().addManifestResource(new BasicPath("Test.txt"), getFileForClassResource(NAME_TEST_PROPERTIES));
+      getManifestContainer().addManifestResource(getFileForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getManifestPath(), "Test.txt");
       Assert.assertTrue(
@@ -215,7 +215,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testAddManifestPathTargetURL() throws Exception {
-      getManifestContainer().addManifestResource(new BasicPath("Test.txt"), getURLForClassResource(NAME_TEST_PROPERTIES));
+      getManifestContainer().addManifestResource(getURLForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getManifestPath(), "Test.txt");
       Assert.assertTrue(
@@ -226,7 +226,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testAddManifestPathTargetAsset() throws Exception {
-      getManifestContainer().addManifestResource(new BasicPath("Test.txt"), getAssetForClassResource(NAME_TEST_PROPERTIES));
+      getManifestContainer().addManifestResource(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getManifestPath(), "Test.txt");
       Assert.assertTrue(
@@ -264,7 +264,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @ArchiveType(ResourceContainer.class)
    public void testAddResourceURL() throws Exception {
       Path targetPath = new BasicPath("Test.properties");
-      getResourceContainer().addResource(targetPath, getURLForClassResource(NAME_TEST_PROPERTIES));
+      getResourceContainer().addResource(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
       Path testPath = new BasicPath(getResourcePath(), targetPath);
       Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
    }
@@ -283,7 +283,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ResourceContainer.class)
    public void testAddResourceStringTargetFile() throws Exception {
-      getResourceContainer().addResource("Test.txt", getFileForClassResource(NAME_TEST_PROPERTIES));
+      getResourceContainer().addResource(getFileForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path testPath = new BasicPath(getResourcePath(), "Test.txt");
       Assert.assertTrue(
@@ -295,7 +295,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @ArchiveType(ResourceContainer.class)
    public void testAddResourceStringTargetURL() throws Exception {
       
-      getResourceContainer().addResource("Test.txt", getURLForClassResource(NAME_TEST_PROPERTIES));
+      getResourceContainer().addResource(getURLForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path testPath = new BasicPath(getResourcePath(), "Test.txt");
       Assert.assertTrue(
@@ -306,7 +306,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ResourceContainer.class)
    public void testAddResourceStringTargetAsset() throws Exception {
-      getResourceContainer().addResource("Test.txt", getAssetForClassResource(NAME_TEST_PROPERTIES));
+      getResourceContainer().addResource(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path testPath = new BasicPath(getResourcePath(), "Test.txt");
       Assert.assertTrue(
@@ -317,7 +317,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ResourceContainer.class)
    public void testAddResourcePathTargetResource() throws Exception {
-      getResourceContainer().addResource(new BasicPath("Test.txt"), NAME_TEST_PROPERTIES);
+      getResourceContainer().addResource(NAME_TEST_PROPERTIES, new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getResourcePath(), "Test.txt");
       Assert.assertTrue(
@@ -328,7 +328,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ResourceContainer.class)
    public void testAddResourcePathTargetFile() throws Exception {
-      getResourceContainer().addResource(new BasicPath("Test.txt"), getFileForClassResource(NAME_TEST_PROPERTIES));
+      getResourceContainer().addResource(getFileForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getResourcePath(), "Test.txt");
       Assert.assertTrue(
@@ -339,7 +339,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ResourceContainer.class)
    public void testAddResourcePathTargetURL() throws Exception {
-      getResourceContainer().addResource(new BasicPath("Test.txt"), getURLForClassResource(NAME_TEST_PROPERTIES));
+      getResourceContainer().addResource(getURLForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getResourcePath(), "Test.txt");
       Assert.assertTrue(
@@ -350,7 +350,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ResourceContainer.class)
    public void testAddResourcePathTargetAsset() throws Exception {
-      getResourceContainer().addResource(new BasicPath("Test.txt"), getAssetForClassResource(NAME_TEST_PROPERTIES));
+      getResourceContainer().addResource(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getResourcePath(), "Test.txt");
       Assert.assertTrue(
@@ -468,7 +468,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @ArchiveType(LibraryContainer.class)
    public void testAddLibraryURL() throws Exception {
       final Path targetPath = new BasicPath("Test.properties");
-      getLibraryContainer().addLibrary(targetPath, getURLForClassResource(NAME_TEST_PROPERTIES));
+      getLibraryContainer().addLibrary(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
       Path testPath = new BasicPath(getLibraryPath(), targetPath);
       Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
    }
@@ -476,7 +476,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(LibraryContainer.class)
    public void testAddLibraryStringTargetResource() throws Exception {
-      getLibraryContainer().addLibrary("Test.txt", NAME_TEST_PROPERTIES);
+      getLibraryContainer().addLibrary(NAME_TEST_PROPERTIES, "Test.txt");
       
       Path testPath = new BasicPath(getLibraryPath(), "Test.txt");
       Assert.assertTrue(
@@ -487,7 +487,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(LibraryContainer.class)
    public void testAddLibraryStringTargetFile() throws Exception {
-      getLibraryContainer().addLibrary("Test.txt", getFileForClassResource(NAME_TEST_PROPERTIES));
+      getLibraryContainer().addLibrary(getFileForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path testPath = new BasicPath(getLibraryPath(), "Test.txt");
       Assert.assertTrue(
@@ -498,7 +498,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(LibraryContainer.class)
    public void testAddLibraryStringTargetURL() throws Exception {
-      getLibraryContainer().addLibrary("Test.txt", getURLForClassResource(NAME_TEST_PROPERTIES));
+      getLibraryContainer().addLibrary(getURLForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path testPath = new BasicPath(getLibraryPath(), "Test.txt");
       Assert.assertTrue(
@@ -509,7 +509,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(LibraryContainer.class)
    public void testAddLibraryStringTargetAsset() throws Exception {
-      getLibraryContainer().addLibrary("Test.txt", getAssetForClassResource(NAME_TEST_PROPERTIES));
+      getLibraryContainer().addLibrary(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       Path testPath = new BasicPath(getLibraryPath(), "Test.txt");
       Assert.assertTrue(
@@ -520,7 +520,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(LibraryContainer.class)
    public void testAddLibraryPathTargetResource() throws Exception {
-      getLibraryContainer().addLibrary(new BasicPath("Test.txt"), NAME_TEST_PROPERTIES);
+      getLibraryContainer().addLibrary(NAME_TEST_PROPERTIES, new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getLibraryPath(), "Test.txt");
       Assert.assertTrue(
@@ -531,7 +531,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(LibraryContainer.class)
    public void testAddLibraryPathTargetFile() throws Exception {
-      getLibraryContainer().addLibrary(new BasicPath("Test.txt"), getFileForClassResource(NAME_TEST_PROPERTIES));
+      getLibraryContainer().addLibrary(getFileForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getLibraryPath(), "Test.txt");
       Assert.assertTrue(
@@ -542,7 +542,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(LibraryContainer.class)
    public void testAddLibraryPathTargetURL() throws Exception {
-      getLibraryContainer().addLibrary(new BasicPath("Test.txt"), getURLForClassResource(NAME_TEST_PROPERTIES));
+      getLibraryContainer().addLibrary(getURLForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getLibraryPath(), "Test.txt");
       Assert.assertTrue(
@@ -553,7 +553,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(LibraryContainer.class)
    public void testAddLibraryPathTargetAsset() throws Exception {
-      getLibraryContainer().addLibrary(new BasicPath("Test.txt"), getAssetForClassResource(NAME_TEST_PROPERTIES));
+      getLibraryContainer().addLibrary(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getLibraryPath(), "Test.txt");
       Assert.assertTrue(

@@ -47,7 +47,7 @@ public interface Archive<T extends Archive<T>> extends Specializer
     * @return
     * @throws IllegalArgumentException If no target or assets were specified
     */
-   T add(Path target, Asset asset) throws IllegalArgumentException;
+   T add(Asset asset, Path target) throws IllegalArgumentException;
 
    /**
     * Adds the specified asset under the specified target (directory)
@@ -60,7 +60,7 @@ public interface Archive<T extends Archive<T>> extends Specializer
     * @return
     * @throws IllegalArgumentException If the target, name, or asset was not specified
     */
-   T add(Path target, String name, Asset asset) throws IllegalArgumentException;
+   T add(Asset asset, Path target, String name) throws IllegalArgumentException;
 
    /**
     * Adds the specified resource under the context denoted by the specified target
@@ -70,7 +70,7 @@ public interface Archive<T extends Archive<T>> extends Specializer
     * @return
     * @throws IllegalArgumentException If either the target or asset is not specified 
     */
-   T add(String target, Asset asset) throws IllegalArgumentException;
+   T add(Asset asset, String target) throws IllegalArgumentException;
 
    /**
     * Obtains the asset located at the specified path
@@ -124,7 +124,7 @@ public interface Archive<T extends Archive<T>> extends Specializer
     * @return
     * @throws IllegalArgumentException If the path or archive are not specified 
     */
-   T add(Path path, Archive<?> archive) throws IllegalArgumentException;
+   T add(Archive<?> archive, Path path) throws IllegalArgumentException;
 
    /**
     * Merge the contents from an existing archive without 

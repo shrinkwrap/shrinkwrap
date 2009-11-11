@@ -91,7 +91,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
     * @see org.jboss.shrinkwrap.api.Archive#add(java.lang.String, org.jboss.shrinkwrap.api.Asset)
     */
    @Override
-   public T add(final String target, final Asset asset) throws IllegalArgumentException
+   public T add(final Asset asset, final String target) throws IllegalArgumentException
    {
       // Precondition checks
       Validate.notNullOrEmpty(target, "target must be specified");
@@ -101,7 +101,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       final Path path = new BasicPath(target);
 
       // Delegate
-      return this.add(path, asset);
+      return this.add(asset, path);
    }
 
    /**
@@ -109,7 +109,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Path, java.lang.String, org.jboss.shrinkwrap.api.Asset)
     */
    @Override
-   public T add(final Path path, final String name, final Asset asset)
+   public T add(final Asset asset, final Path path, final String name)
    {
       // Precondition checks
       Validate.notNull(path, "No path was specified");
@@ -120,7 +120,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       final Path resolvedPath = new BasicPath(path, name);
 
       // Delegate
-      return this.add(resolvedPath, asset);
+      return this.add(asset, resolvedPath);
    }
 
    /**
@@ -145,7 +145,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Archive)
     */
    @Override
-   public T add(final Path path, final Archive<?> archive)
+   public T add(final Archive<?> archive, final Path path)
    {
       // Precondition checks
       Validate.notNull(path, "No path was specified");
@@ -159,7 +159,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       ArchiveAsset archiveAsset = new ArchiveAsset(archive);
 
       // Delegate
-      return add(contentPath, archiveAsset);
+      return add(archiveAsset, contentPath);
    }
 
    /**
@@ -206,7 +206,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
             assetPath = new BasicPath(path, assetPath);
          }
          // Delegate
-         add(assetPath, asset);
+         add(asset, assetPath);
       }
       return covariantReturn();
    }
