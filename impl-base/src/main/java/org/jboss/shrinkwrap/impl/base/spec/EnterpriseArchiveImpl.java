@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
-import org.jboss.shrinkwrap.impl.base.EnterpriseContainerBase;
+import org.jboss.shrinkwrap.impl.base.container.EnterpriseContainerBase;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
