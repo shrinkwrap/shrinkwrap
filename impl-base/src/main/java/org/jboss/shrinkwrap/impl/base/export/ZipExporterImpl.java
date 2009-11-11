@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.export.ZipExporter;
+import org.jboss.shrinkwrap.impl.base.SpecializedBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
@@ -29,9 +30,10 @@ import org.jboss.shrinkwrap.impl.base.Validate;
  * Implementation of ZipExporter used to export an Archive as a Zip format. 
  * 
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ZipExporterImpl extends ZipExporter
+public class ZipExporterImpl extends SpecializedBase implements ZipExporter
 {
 
    //-------------------------------------------------------------------------------------||
@@ -43,6 +45,34 @@ public class ZipExporterImpl extends ZipExporter
     */
    private static final Logger log = Logger.getLogger(ZipExporterImpl.class.getName());
 
+   /**
+    * Archive to import into. 
+    */
+   private Archive<?> archive; 
+   
+   //-------------------------------------------------------------------------------------||
+   // Constructor ------------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   public ZipExporterImpl(Archive<?> archive) 
+   {
+      Validate.notNull(archive, "Archive must be specified");
+      this.archive = archive;
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Required Implementations -----------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.impl.base.SpecializedBase#getArchive()
+    */
+   @Override
+   protected Archive<?> getArchive()
+   {
+      return archive;
+   }
+
    //-------------------------------------------------------------------------------------||
    // Required Implementations - ZipExporter ---------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -52,10 +82,8 @@ public class ZipExporterImpl extends ZipExporter
     * @see org.jboss.shrinkwrap.api.export.ZipExporter#doExportZip(org.jboss.shrinkwrap.api.Archive)
     */
    @Override
-   protected InputStream doExportZip(Archive<?> archive)
+   public InputStream exportZip()
    {
-      Validate.notNull(archive, "No archive provided");
-
       // Create export delegate
       ZipExportDelegate exportDelegate = new ZipExportDelegate(archive);
 

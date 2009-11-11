@@ -18,7 +18,7 @@ package org.jboss.shrinkwrap.api.export;
 
 import java.io.InputStream;
 
-import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Specializer;
 
 /**
  * ZipExporter
@@ -26,27 +26,13 @@ import org.jboss.shrinkwrap.api.Archive;
  * Exporter used to export an Archive as a Zip format. 
  * 
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public abstract class ZipExporter
+public interface ZipExporter extends Specializer
 {
-
    //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Implementation type as a FQN to avoid direct compile-time dependency
-    */
-   private static final String IMPL_TYPE = "org.jboss.shrinkwrap.impl.base.export.ZipExporterImpl";
-
-   /**
-    * Instance of ZipExporter implementation
-    */
-   private static ZipExporter instance;
-
-   //-------------------------------------------------------------------------------------||
-   // Class Methods ----------------------------------------------------------------------||
+   // Contracts --------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
@@ -57,44 +43,5 @@ public abstract class ZipExporter
     * @throws IllegalArgumentException if the archive is not valid
     * @throws ArchiveExportException if the export process fails
     */
-   public static InputStream exportZip(Archive<?> archive)
-   {
-      return getInstance().doExportZip(archive);
-   }
-
-   /**
-    * Get an instance of the ZipExporter implementation 
-    * @return
-    */
-   private synchronized static ZipExporter getInstance()
-   {
-      if (instance == null)
-      {
-         instance = createInstance();
-      }
-      return instance;
-   }
-
-   /**
-    * Create an instance of the ZipExporter implementation
-    * 
-    * @return
-    */
-   private static ZipExporter createInstance()
-   {
-      return FactoryUtil.createInstance(IMPL_TYPE, ZipExporter.class);
-   }
-
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Template export method for concrete implementations  
-    * 
-    * @param archive
-    * @return InputStream for exported Zip
-    */
-   protected abstract InputStream doExportZip(Archive<?> archive);
-
+   InputStream exportZip();
 }

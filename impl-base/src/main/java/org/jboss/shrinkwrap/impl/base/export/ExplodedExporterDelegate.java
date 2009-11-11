@@ -36,6 +36,7 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
  * Delegate used to export an archive into an exploded directory structure.   
  * 
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
 public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
@@ -148,8 +149,7 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
    {
       // Get the nested archive
       Archive<?> nestedArchive = nestedArchiveAsset.getArchive();
-
-      ExplodedExporter.exportExploded(nestedArchive, parentDirectory);
+      nestedArchive.as(ExplodedExporter.class).exportExploded(parentDirectory);
    }
 
    /**
@@ -160,7 +160,6 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
     */
    private File initializeOutputDirectory(File baseDirectory)
    {
-
       // Get archive
       Archive<?> archive = getArchive();
 

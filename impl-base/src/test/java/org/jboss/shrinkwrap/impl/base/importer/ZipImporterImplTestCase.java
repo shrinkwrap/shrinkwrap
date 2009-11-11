@@ -104,7 +104,7 @@ public class ZipImporterImplTestCase
       
       File tempFile = new File("target/test.zip");
       tempFile.deleteOnExit();
-      InputStream zipStream = ZipExporter.exportZip(archive);
+      InputStream zipStream = archive.as(ZipExporter.class).exportZip();
       IOUtil.copyWithClose(zipStream, new FileOutputStream(tempFile));
       
       assertContent(archive, tempFile.toURI());

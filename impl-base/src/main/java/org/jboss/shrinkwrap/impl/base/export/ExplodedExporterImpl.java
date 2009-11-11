@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.export.ExplodedExporter;
+import org.jboss.shrinkwrap.impl.base.SpecializedBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
@@ -30,9 +31,10 @@ import org.jboss.shrinkwrap.impl.base.Validate;
  * Implementation of ExplodedExporter used to export an Archive as an exploded directory structure. 
  * 
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ExplodedExporterImpl extends ExplodedExporter
+public class ExplodedExporterImpl extends SpecializedBase implements ExplodedExporter
 {
 
    //-------------------------------------------------------------------------------------||
@@ -44,17 +46,43 @@ public class ExplodedExporterImpl extends ExplodedExporter
     */
    private static final Logger log = Logger.getLogger(ExplodedExporterImpl.class.getName());
 
+   /**
+    * Archive to import into. 
+    */
+   private Archive<?> archive; 
+   
+   //-------------------------------------------------------------------------------------||
+   // Constructor ------------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   public ExplodedExporterImpl(Archive<?> archive) 
+   {
+      Validate.notNull(archive, "Archive must be specified");
+      this.archive = archive;
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Required Implementations -----------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.impl.base.SpecializedBase#getArchive()
+    */
+   @Override
+   protected Archive<?> getArchive()
+   {
+      return archive;
+   }
+   
    //-------------------------------------------------------------------------------------||
    // Required Implementations - ExplodedExporter ----------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   
-   /**
-    * {@inheritDoc} 
-    * @see ExplodedExporter#doExportExploded(Archive, File)
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.export.ExplodedExporter#exportExploded(java.io.File)
     */
    @Override
-   protected File doExportExploded(Archive<?> archive, File baseDirectory)
+   public File exportExploded(File baseDirectory)
    {
       Validate.notNull(archive, "No archive provided");
       Validate.notNull(baseDirectory, "No baseDirectory provided");

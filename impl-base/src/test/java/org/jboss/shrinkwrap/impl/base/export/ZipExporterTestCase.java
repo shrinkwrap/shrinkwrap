@@ -41,6 +41,7 @@ import org.junit.Test;
  * TestCase to ensure that the {@link ZipExporter} correctly exports archives to Zip format.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
 public class ZipExporterTestCase extends ExportTestBase
@@ -74,7 +75,7 @@ public class ZipExporterTestCase extends ExportTestBase
       Archive<?> archive = createArchiveWithAssets();
 
       // Export as Zip InputStream
-      InputStream zipStream = ZipExporter.exportZip(archive);
+      InputStream zipStream = archive.as(ZipExporter.class).exportZip();
 
       // Write zip content to temporary file 
       ZipFile expectedZip = getExportedZipFile(NAME_ARCHIVE, zipStream, tempDirectory);
@@ -101,7 +102,7 @@ public class ZipExporterTestCase extends ExportTestBase
       Archive<?> archive = createArchiveWithNestedArchives();
 
       // Export as Zip InputStream
-      InputStream zipStream = ZipExporter.exportZip(archive);
+      InputStream zipStream = archive.as(ZipExporter.class).exportZip();
 
       // Write out and retrieve Zip 
       ZipFile expectedZip = getExportedZipFile(NAME_ARCHIVE, zipStream, tempDirectory);
@@ -148,50 +149,24 @@ public class ZipExporterTestCase extends ExportTestBase
 
    }
 
-   /**
-    * Ensure an archive is required to export.
-    * 
-    * @throws Exception
-    */
-   @Test
-   public void testExportZipRequiresArchive() throws Exception
-   {
-      log.info("testExportZipRequiresArchive");
-      try
-      {
-         ZipExporter.exportZip(null);
-         Assert.fail("Should have thrown IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expected)
-      {
-      }
-   }
-
-   @Test
+   @Test(expected = ArchiveExportException.class)
    public void testExportThrowsArchiveExcepitonOnAssetWriteFailure()
    {
       log.info("testExportThrowsArchiveExcepitonOnAssetWriteFailure");
-      try
-      {
-         Archive<?> archive = createArchiveWithAssets();
+      Archive<?> archive = createArchiveWithAssets();
 
-         archive.add(new Asset()
+      archive.add(new Asset()
+      {
+
+         @Override
+         public InputStream openStream()
          {
+            throw new RuntimeException("Mock Exception from an Asset write");
+         }
 
-            @Override
-            public InputStream openStream()
-            {
-               throw new RuntimeException("Mock Exception from an Asset write");
-            }
+      }, PATH_ONE);
 
-         }, PATH_ONE);
-
-         ZipExporter.exportZip(archive);
-         Assert.fail("Should have thrown ArchiveExportException");
-      }
-      catch (ArchiveExportException expected)
-      {
-      }
+      archive.as(ZipExporter.class).exportZip();
    }
 
    //-------------------------------------------------------------------------------------||

@@ -28,6 +28,7 @@ import org.jboss.shrinkwrap.impl.base.ArchiveInputStreamFactory;
  * Factory used create an InputStream from an Archive by exporting the archive as a  Zip.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
 public class ZipArchiveInputStreamFactory extends ArchiveInputStreamFactory
@@ -44,7 +45,7 @@ public class ZipArchiveInputStreamFactory extends ArchiveInputStreamFactory
    protected InputStream doGetInputStream(Archive<?> archive)
    {
       // Get InputStream from the ZipExporter
-      final InputStream inputStream = ZipExporter.exportZip(archive);
+      final InputStream inputStream = archive.as(ZipExporter.class).exportZip();
       // Return input stream
       return inputStream;
    }

@@ -18,7 +18,7 @@ package org.jboss.shrinkwrap.api.export;
 
 import java.io.File;
 
-import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Specializer;
 
 /**
  * ExplodedExporter
@@ -26,27 +26,14 @@ import org.jboss.shrinkwrap.api.Archive;
  * Exporter used to export an Archive as an exploded directory structure. 
  * 
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public abstract class ExplodedExporter
+public interface ExplodedExporter extends Specializer
 {
 
    //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Implementation type as a FQN to avoid direct compile-time dependency
-    */
-   private static final String IMPL_TYPE = "org.jboss.shrinkwrap.impl.base.export.ExplodedExporterImpl";
-
-   /**
-    * Instance of ExplodedExporter implementation
-    */
-   private static ExplodedExporter instance;
-
-   //-------------------------------------------------------------------------------------||
-   // Class Methods ----------------------------------------------------------------------||
+   // Contracts --------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
@@ -58,46 +45,5 @@ public abstract class ExplodedExporter
     * @throws IllegalArgumentException if the archive or parent directory not valid
     * @throws ArchiveExportException if the export process fails
     */
-   public static File exportExploded(Archive<?> archive, File parentDirectory)
-   {
-      return getInstance().doExportExploded(archive, parentDirectory);
-   }
-
-   /**
-    * Get an instance of the ExplodedExporter implementation
-    *  
-    * @return
-    */
-   private synchronized static ExplodedExporter getInstance()
-   {
-      if (instance == null)
-      {
-         instance = createInstance();
-      }
-      return instance;
-   }
-
-   /** 
-    * Create an instance of the ExplodedEporter implementation 
-    * 
-    * @return
-    */
-   private static ExplodedExporter createInstance()
-   {
-      return FactoryUtil.createInstance(IMPL_TYPE, ExplodedExporter.class);
-   }
-
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Template export method for concrete implementations  
-    * 
-    * @param archive
-    * @param parentDirectory
-    * @return File for exploded archive contents
-    */
-   protected abstract File doExportExploded(Archive<?> archive, File parentDirectory);
-
+   File exportExploded(File parentDirectory);
 }
