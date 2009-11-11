@@ -18,8 +18,7 @@ package org.jboss.shrinkwrap.impl.base;
 
 import junit.framework.Assert;
 
-import org.jboss.shrinkwrap.api.Specializer;
-import org.jboss.shrinkwrap.spi.MemoryMapArchive;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 
 
@@ -36,18 +35,14 @@ public class ArchivesTestCase
    public void shouldBeAbleToCreateANewArchive() throws Exception {
       String archiveName = "test.war";
       
-      Specializer archive = Archives.create(archiveName);
+      JavaArchive archive = Archives.create(archiveName, JavaArchive.class);
       
       Assert.assertNotNull(
             "A archive should have been created", archive);
       
-      Assert.assertTrue(
-            "A MemoryMapArchive should have been created", 
-            archive instanceof MemoryMapArchive);
-      
       Assert.assertEquals(
             "Should have the same name as given imput", 
             archiveName, 
-            ((MemoryMapArchive)archive).getName());
+            archive.getName());
    }
 }

@@ -36,8 +36,8 @@ public class Archives
     * @param archiveName The name of the archive
     * @return A {@link Specializer} archive base  
     */
-   public static Specializer create(String archiveName) {
-      return new MemoryMapArchiveImpl(archiveName);
+   public static <T extends Specializer> T create(String archiveName, Class<T> type) {
+      return new MemoryMapArchiveImpl(archiveName).as(type);
    }
    
    //-------------------------------------------------------------------------------------||
