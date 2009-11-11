@@ -29,11 +29,26 @@ public class ArchiveExportException extends RuntimeException
 
    private static final long serialVersionUID = 1L;
 
+   /**
+    * @param message
+    * @param cause
+    */
    public ArchiveExportException(String message, Throwable cause)
    {
       super(message, cause);
    }
 
+   /**
+    * @param message
+    */
+   public ArchiveExportException(String message)
+   {
+      super(message);
+   }
+
+   /**
+    * @param cause
+    */
    public ArchiveExportException(Throwable cause)
    {
       super(cause);

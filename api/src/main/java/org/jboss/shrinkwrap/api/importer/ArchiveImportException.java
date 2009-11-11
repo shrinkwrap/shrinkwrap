@@ -28,12 +28,27 @@ public class ArchiveImportException extends RuntimeException
 {
 
    private static final long serialVersionUID = 1L;
-   
+
+   /**
+    * @param message
+    * @param cause
+    */
    public ArchiveImportException(String message, Throwable cause)
    {
       super(message, cause);
    }
 
+   /**
+    * @param message
+    */
+   public ArchiveImportException(String message)
+   {
+      super(message);
+   }
+
+   /**
+    * @param cause
+    */
    public ArchiveImportException(Throwable cause)
    {
       super(cause);
