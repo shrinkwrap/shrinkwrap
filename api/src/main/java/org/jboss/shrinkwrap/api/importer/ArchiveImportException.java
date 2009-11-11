@@ -17,34 +17,24 @@
 package org.jboss.shrinkwrap.api.importer;
 
 /**
- * ArchiveImporterException
+ * ArchiveImportException
  * 
- * Exception thrown if error importing a Archive.
+ * Exception thrown on error while mporting a Archive.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ArchiveImporterException extends RuntimeException
+public class ArchiveImportException extends RuntimeException
 {
 
    private static final long serialVersionUID = 1L;
-
-   public ArchiveImporterException()
-   {
-      super();
-   }
-
-   public ArchiveImporterException(String message, Throwable cause)
+   
+   public ArchiveImportException(String message, Throwable cause)
    {
       super(message, cause);
    }
 
-   public ArchiveImporterException(String message)
-   {
-      super(message);
-   }
-
-   public ArchiveImporterException(Throwable cause)
+   public ArchiveImportException(Throwable cause)
    {
       super(cause);
    }

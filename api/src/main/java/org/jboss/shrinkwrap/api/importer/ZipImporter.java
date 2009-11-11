@@ -38,16 +38,16 @@ public interface ZipImporter extends Specializer
     * 
     * @param stream the stream to import
     * @return Archive of the imported Zip
-    * @throws ArchiveImporterException if IOException during import
+    * @throws ArchiveImportException if IOException during import
     */
-   ZipImporter importZip(ZipInputStream stream) throws ArchiveImporterException;
+   ZipImporter importZip(ZipInputStream stream) throws ArchiveImportException;
    
    /**
     * Imports provided {@link ZipInputStream} as a {@link Archive}.
     * 
     * @param file the file to import
     * @return Archive of the imported Zip
-    * @throws ArchiveImporterException if IOException during import
+    * @throws ArchiveImportException if IOException during import
     */
-   ZipImporter importZip(ZipFile file) throws ArchiveImporterException;
+   ZipImporter importZip(ZipFile file) throws ArchiveImportException;
 }

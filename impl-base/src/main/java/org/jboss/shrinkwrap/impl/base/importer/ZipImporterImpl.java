@@ -24,7 +24,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.importer.ArchiveImporterException;
+import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.impl.base.SpecializedBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
@@ -108,7 +108,7 @@ public class ZipImporterImpl extends SpecializedBase implements ZipImporter
       }
       catch (IOException e) 
       {
-         throw new ArchiveImporterException("Could not import stream", e);
+         throw new ArchiveImportException("Could not import stream", e);
       }
       finally 
       {
