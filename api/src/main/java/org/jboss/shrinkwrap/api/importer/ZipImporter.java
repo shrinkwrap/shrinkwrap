@@ -40,7 +40,7 @@ public interface ZipImporter extends Specializer
     * @return Archive of the imported Zip
     * @throws ArchiveImporterException if IOException during import
     */
-   public ZipImporter importZip(ZipInputStream stream) throws ArchiveImporterException;
+   ZipImporter importZip(ZipInputStream stream) throws ArchiveImporterException;
    
    /**
     * Imports provided {@link ZipInputStream} as a {@link Archive}.
@@ -49,5 +49,5 @@ public interface ZipImporter extends Specializer
     * @return Archive of the imported Zip
     * @throws ArchiveImporterException if IOException during import
     */
-   public ZipImporter importZip(ZipFile file) throws ArchiveImporterException;
+   ZipImporter importZip(ZipFile file) throws ArchiveImporterException;
 }
