@@ -17,9 +17,9 @@
 package org.jboss.shrinkwrap.impl.base.importer;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.Archives;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Assert;
 import org.junit.Test;
