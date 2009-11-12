@@ -16,7 +16,6 @@
  */
 package org.jboss.shrinkwrap.api;
 
-import java.lang.reflect.Constructor;
 
 /**
  * Generic unified factory for archive creation.
@@ -24,7 +23,7 @@ import java.lang.reflect.Constructor;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class Archives
+public final class Archives
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -48,43 +47,11 @@ public class Archives
       {
          throw new IllegalArgumentException("Type must be specified");
       }
-      try 
-      {
-         return createArchive(archiveName).as(type);
-      } 
-      catch (Exception e) 
-      {
-         throw new RuntimeException("Could not create new archive, missing impl package from classpath?", e);
-      }
-   }
-
-   //-------------------------------------------------------------------------------------||
-   // Class Members - Internal Helpers ---------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-   
-   /**
-    * Load and create a new archive instance. 
-    */
-   private static Archive<?> createArchive(String archiveName) throws Exception 
-   {
-      return (Archive<?>) findConstructor(
-            loadClass(ARCHIVE_IMPL)).newInstance(archiveName);
-   }
-   
-   /**
-    * Load the specified class using Thread Current Class Loader in a privileged block. 
-    */
-   private static Class<?> loadClass(String archiveImplClassName) throws Exception 
-   {
-      return SecurityActions.getThreadContextClassLoader().loadClass(archiveImplClassName);
-   }
-   
-   /**
-    * Find the archive implementations String based constructor.
-    */
-   private static Constructor<?> findConstructor(Class<?> archiveImplClazz) throws Exception 
-   {
-      return archiveImplClazz.getConstructor(String.class);
+      Archive<?> archive = (Archive<?>)ReflectionUtil.createInstance(
+                                 ARCHIVE_IMPL,
+                                 new Class<?>[]{String.class},
+                                 new Object[]{archiveName}); 
+      return archive.as(type);
    }
 
    //-------------------------------------------------------------------------------------||
