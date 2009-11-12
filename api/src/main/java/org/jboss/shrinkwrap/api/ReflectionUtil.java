@@ -61,7 +61,7 @@ final class ReflectionUtil
       {
          Class<?> implClass = loadClass(className); 
          Constructor<?> constructor = findConstructor(implClass, argumentTypes);
-         return (Path)constructor.newInstance(arguments);
+         return constructor.newInstance(arguments);
       }
       catch (Exception e) 
       {
