@@ -47,10 +47,11 @@ public final class Archives
       {
          throw new IllegalArgumentException("Type must be specified");
       }
-      Archive<?> archive = (Archive<?>)ReflectionUtil.createInstance(
+      Archive<?> archive = (Archive<?>)SecurityActions.newInstance(
                                  ARCHIVE_IMPL,
                                  new Class<?>[]{String.class},
-                                 new Object[]{archiveName}); 
+                                 new Object[]{archiveName},
+                                 Archive.class); 
       return archive.as(type);
    }
 

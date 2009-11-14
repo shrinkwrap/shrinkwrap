@@ -99,7 +99,7 @@ public final class Paths
 
    private static Path createInstance(Class<?>[] argumentTypes, Object[] arguments) 
    {
-      return (Path) ReflectionUtil.createInstance(PATH_IMPL, argumentTypes, arguments);
+      return SecurityActions.newInstance(PATH_IMPL, argumentTypes, arguments, Path.class);
    }
 
    //-------------------------------------------------------------------------------------||
