@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!--
+  vi:ts=2:sw=2:expandtab:
+-->
+<assembly xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+  <id>dist</id>
+  <formats>
+    <format>zip</format>
+    <format>tar.gz</format>
+    <format>tar.bz2</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <!-- All module dependencies -->
+  <moduleSets>
+    <moduleSet>
+      <sources>
+        <fileSets>
+          <fileSet>
+            <includes>
+              <include>src/main/**</include>
+            </includes>
+          </fileSet>
+        </fileSets>
+        <includeModuleDirectory>false</includeModuleDirectory>
+      </sources>
+      <binaries>
+        <outputDirectory>lib</outputDirectory>
+        <unpack>false</unpack>
+        <outputFileNameMapping>${module.artifactId}-${module.version}${dashClassifier?}.${module.extension}</outputFileNameMapping>
+        <includeDependencies>false</includeDependencies>
+      </binaries>
+    </moduleSet>
+
+  </moduleSets>
+
+  <!-- Pure file dependencies -->
+  <fileSets>
+  
+    <!-- Javadocs -->
+    <fileSet>
+      <includes>
+        <include>**</include>
+      </includes>
+      <outputDirectory>apidocs</outputDirectory>
+      <directory>api/target/site/apidocs</directory>
+    </fileSet>
+    
+    <!-- README -->
+    <fileSet>
+      <includes>
+        <include>README.txt</include>
+      </includes>
+    </fileSet>
+      
+
+  </fileSets>
+
+
+</assembly>

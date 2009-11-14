@@ -15,6 +15,43 @@
   <!-- Model Information -->
   <modelVersion>4.0.0</modelVersion>
 
+  <!-- Plugin Configuration -->
+  <build>
+    <plugins>
+      <!-- Deploy -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <!-- Don't include this aggregator in the deployment -->
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      
+            <!-- Assembly Plugin -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <descriptors>
+            <descriptor>dist.xml</descriptor>
+          </descriptors>
+        </configuration>
+        <inherited>false</inherited>
+      </plugin>
+      
+      
+    </plugins>
+  </build>
+
   <!-- Artifact Information  -->
   <groupId>org.jboss.shrinkwrap</groupId>
   <artifactId>shrinkwrap-parent</artifactId>
@@ -27,7 +64,6 @@
   <!-- Aggregate Modules -->
   <modules>
     <module>api</module>
-    <module>assembly</module>
     <module>build</module>
     <module>impl-base</module>
     <module>spi</module>

@@ -122,10 +122,11 @@
         <configuration>
           <rules>
             <requireMavenVersion>
-              <version>[2.0.9,2.2.1)</version>
+              <version>[2.2.0,)</version>
               <!--
-                Cannot support 2.0.8 due to
-                http://jira.codehaus.org/browse/MNG-3606
+                Must be more that 2.2 to support
+                Assembly "includeModuleDirectory":
+                http://maven.apache.org/plugins/maven-assembly-plugin/assembly.html
               -->
             </requireMavenVersion>
             <requireJavaVersion>
@@ -138,7 +139,6 @@
           </rules>
         </configuration>
       </plugin>
-
     </plugins>
 
   </build>
