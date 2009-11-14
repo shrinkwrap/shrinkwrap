@@ -8,7 +8,7 @@
   <parent>
     <groupId>org.jboss.shrinkwrap</groupId>
     <artifactId>shrinkwrap-build</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <relativePath>../build/pom.xml</relativePath>
   </parent>
 
@@ -17,17 +17,12 @@
 
   <!-- Artifact Configuration -->
   <artifactId>shrinkwrap-impl-base</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
   <name>ShrinkWrap Implementation Base</name>
   <description>Common Base for Implementations of the ShrinkWrap Project</description>
 
 
   <!-- Properties -->
   <properties>
-
-    <!-- Versioning -->
-    <version.org.jboss.shrinkwrap_shrinkwrap.api>1.0.0-SNAPSHOT</version.org.jboss.shrinkwrap_shrinkwrap.api>
-    <version.org.jboss.shrinkwrap_shrinkwrap.spi>1.0.0-alpha-1</version.org.jboss.shrinkwrap_shrinkwrap.spi>
 
   </properties>
 
@@ -40,12 +35,12 @@
     <dependency>
       <groupId>org.jboss.shrinkwrap</groupId>
       <artifactId>shrinkwrap-api</artifactId>
-      <version>${version.org.jboss.shrinkwrap_shrinkwrap.api}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jboss.shrinkwrap</groupId>
       <artifactId>shrinkwrap-spi</artifactId>
-      <version>${version.org.jboss.shrinkwrap_shrinkwrap.spi}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <!-- 

@@ -8,7 +8,7 @@
   <parent>
     <groupId>org.jboss.shrinkwrap</groupId>
     <artifactId>shrinkwrap-build</artifactId>
-    <version>0.1.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <relativePath>../build/pom.xml</relativePath>
   </parent>
 
@@ -17,16 +17,12 @@
 
   <!-- Artifact Configuration -->
   <artifactId>shrinkwrap-assembly</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
   <name>ShrinkWrap Assembly</name>
   <description>Assemblies of the ShrinkWrap Project</description>
   <packaging>pom</packaging>
 
   <!-- Properties -->
   <properties>
-
-    <!-- Versioning -->
-    <version.org.jboss.shrinkwrap_shrinkwrap.impl.base>1.0.0-alpha-1</version.org.jboss.shrinkwrap_shrinkwrap.impl.base>
 
   </properties>
 
@@ -67,7 +63,7 @@
     <dependency>
       <groupId>org.jboss.shrinkwrap</groupId>
       <artifactId>shrinkwrap-impl-base</artifactId>
-      <version>${version.org.jboss.shrinkwrap_shrinkwrap.impl.base}</version>
+      <version>${project.version}</version>
     </dependency>
 
   </dependencies>
