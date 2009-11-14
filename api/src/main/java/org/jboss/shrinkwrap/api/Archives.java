@@ -47,7 +47,7 @@ public final class Archives
       {
          throw new IllegalArgumentException("Type must be specified");
       }
-      Archive<?> archive = (Archive<?>)SecurityActions.newInstance(
+      Archive<?> archive = SecurityActions.newInstance(
                                  ARCHIVE_IMPL,
                                  new Class<?>[]{String.class},
                                  new Object[]{archiveName},
