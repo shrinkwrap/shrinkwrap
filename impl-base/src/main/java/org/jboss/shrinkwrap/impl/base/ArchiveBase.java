@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.Specializer;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
@@ -61,6 +62,11 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
     */
    private final String name;
 
+   /**
+    * Defines how the Specializer extensions are loaded. 
+    */
+   private ExtensionLoader extensionLoader = new ServiceExtensionLoader();
+   
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -71,15 +77,18 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
     * Creates a new Archive with the specified name
     * 
     * @param name Name of the archive
+    * @param extensionLoader The extensionLoader to be used
     * @throws IllegalArgumentException If the name was not specified
     */
-   protected ArchiveBase(final String name) throws IllegalArgumentException
+   protected ArchiveBase(final String name, final ExtensionLoader extensionLoader) throws IllegalArgumentException
    {
       // Precondition checks
       Validate.notNullOrEmpty(name, "name must be specified");
+      Validate.notNull(extensionLoader, "extensionLoader must be specified");
 
       // Set
       this.name = name;
+      this.extensionLoader = extensionLoader;
    }
 
    //-------------------------------------------------------------------------------------||
@@ -219,7 +228,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
    {
       Validate.notNull(clazz, "Class must be specified");
 
-      return new ArchiveExtensionLoader<TYPE>(clazz).load(this);
+      return extensionLoader.load(clazz, this);
    }
 
    //-------------------------------------------------------------------------------------||

@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.impl.base;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.spi.MemoryMapArchive;
 
 /**
@@ -40,11 +41,11 @@ public class MemoryMapArchiveImpl extends MemoryMapArchiveBase<MemoryMapArchive>
     * This constructor will generate a 
     * unique {@link Archive#getName()} per instance.
     *  
-    * @param actualType The {@link Archive} type.
+    * @param extensionLoader The extensionLoader to be used
     */
-   public MemoryMapArchiveImpl()
+   public MemoryMapArchiveImpl(ExtensionLoader extensionLoader)
    {
-      super();
+      super(extensionLoader);
    }
 
    /**
@@ -53,10 +54,11 @@ public class MemoryMapArchiveImpl extends MemoryMapArchiveBase<MemoryMapArchive>
     * This constructor will generate an {@link Archive} with the provided name.
     *  
     * @param archiveName
+    * @param extensionLoader The extensionLoader to be used
     */
-   public MemoryMapArchiveImpl(String archiveName)
+   public MemoryMapArchiveImpl(String archiveName, ExtensionLoader extensionLoader)
    {
-      super(archiveName);
+      super(archiveName, extensionLoader);
    }
 
    /*

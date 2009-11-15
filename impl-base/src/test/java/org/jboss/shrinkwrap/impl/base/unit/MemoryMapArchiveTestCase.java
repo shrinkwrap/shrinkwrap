@@ -19,6 +19,7 @@ package org.jboss.shrinkwrap.impl.base.unit;
 import junit.framework.Assert;
 
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
+import org.jboss.shrinkwrap.impl.base.ServiceExtensionLoader;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveTestBase;
 import org.jboss.shrinkwrap.spi.MemoryMapArchive;
 import org.junit.Before;
@@ -52,7 +53,7 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive>
    @Override
    protected MemoryMapArchive createNewArchive()
    {
-      return new MemoryMapArchiveImpl();
+      return new MemoryMapArchiveImpl(new ServiceExtensionLoader());
    }
    
    /**
@@ -73,7 +74,7 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive>
    public void testConstructorWithName() throws Exception
    {
       String name = "test.jar";
-      MemoryMapArchive tmp = new MemoryMapArchiveImpl(name);
+      MemoryMapArchive tmp = new MemoryMapArchiveImpl(name, new ServiceExtensionLoader());
       Assert.assertEquals("Should return the same name as construtor arg", name, tmp.getName());
    }
 
@@ -81,16 +82,19 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive>
     * Test to ensure the MemoryMapArchive requires a name
     * @throws Exception
     */
-   @Test
+   @Test(expected = IllegalArgumentException.class)
    public void testConstructorRequiresName() throws Exception
    {
-      try
-      {
-         new MemoryMapArchiveImpl(null);
-         Assert.fail("Should throw an IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expectedException)
-      {
-      }
+      new MemoryMapArchiveImpl(null);
+   }
+
+   /**
+    * Test to ensure the MemoryMapArchive requires a name
+    * @throws Exception
+    */
+   @Test(expected = IllegalArgumentException.class)
+   public void testConstructorRequiresExtensionLoader() throws Exception
+   {
+      new MemoryMapArchiveImpl("test.jar", null);
    }
 }

@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -87,11 +88,11 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * This constructor will generate a 
     * unique {@link Archive#getName()} per instance.
     *  
-    * @param actualType The {@link Archive} type.
+    * @param extensionLoader The extensionLoader to be used
     */
-   public MemoryMapArchiveBase()
+   public MemoryMapArchiveBase(ExtensionLoader extensionLoader)
    {
-      this("Archive-" + UUID.randomUUID().toString() + ".jar");
+      this("Archive-" + UUID.randomUUID().toString() + ".jar", extensionLoader);
    }
 
    /**
@@ -100,10 +101,11 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * This constructor will generate an {@link Archive} with the provided name.
     *  
     * @param archiveName
+    * @param extensionLoader The extensionLoader to be used
     */
-   public MemoryMapArchiveBase(final String archiveName)
+   public MemoryMapArchiveBase(final String archiveName, ExtensionLoader extensionLoader)
    {
-      super(archiveName);
+      super(archiveName, extensionLoader);
    }
 
    //-------------------------------------------------------------------------------------||

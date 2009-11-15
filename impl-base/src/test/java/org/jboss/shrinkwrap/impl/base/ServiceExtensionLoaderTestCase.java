@@ -19,23 +19,27 @@ package org.jboss.shrinkwrap.impl.base;
 import junit.framework.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Specializer;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 
 
 /**
- * ArchiveExtensionLoaderTest to ensure extension loading correctness
+ * ServiceExtensionLoaderTestCase
+ * 
+ * Test to ensure the behaviour of ServiceExtensionLoader
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ArchiveExtensionLoaderTest
+public class ServiceExtensionLoaderTestCase
 {
 
    @Test
    public void shouldBeAbleToLoadExtension() throws Exception {
-      Extension extension = new ArchiveExtensionLoader<Extension>(Extension.class)
-               .load(new MemoryMapArchiveImpl());
+      Extension extension = new ServiceExtensionLoader()
+               .load(Extension.class, Archives.create("test.jar", JavaArchive.class));
 
       Assert.assertNotNull(extension);
       
@@ -44,27 +48,39 @@ public class ArchiveExtensionLoaderTest
 
    @Test
    public void shouldBeAbleToOverrideExtension() throws Exception {
-      Extension extension = new ArchiveExtensionLoader<Extension>(Extension.class)
-               .addExtesionOverride(Extension.class, ExtensionImpl2.class)
-               .load(new MemoryMapArchiveImpl());
+      Extension extension = new ServiceExtensionLoader()
+         .addOverride(Extension.class, ExtensionImpl2.class)
+         .load(Extension.class, Archives.create("test.jar", JavaArchive.class));
 
       Assert.assertNotNull(extension);
    
       Assert.assertTrue(extension.getClass() == ExtensionImpl2.class);
    }
    
+   @Test
+   public void shouldBePlacedInCacheAfterLoad() throws Exception {
+      ServiceExtensionLoader loader = new ServiceExtensionLoader();
+      loader.load(Extension.class, Archives.create("test.jar", JavaArchive.class));
+      
+      Assert.assertTrue(
+            "Should be placed in cache",
+            loader.isCached(Extension.class)
+      );      
+   }
+   
    @Test(expected = RuntimeException.class)
    public void shouldThrowExceptionOnMissingExtension() throws Exception {
-      new ArchiveExtensionLoader<ArchiveExtensionLoaderTest>(ArchiveExtensionLoaderTest.class)
-         .load(new MemoryMapArchiveImpl());
+      new ServiceExtensionLoader()
+         .load(MissingExtension.class, Archives.create("test.jar", JavaArchive.class));
    }
 
    @Test(expected = RuntimeException.class)
    public void shouldThrowExceptionOnWrongImplType() throws Exception {
-      new ArchiveExtensionLoader<WrongImplExtension>(WrongImplExtension.class)
-         .load(new MemoryMapArchiveImpl());
+      new ServiceExtensionLoader()
+         .load(WrongImplExtension.class, Archives.create("test.jar", JavaArchive.class));
    }
 
+   
    public static interface WrongImplExtension extends Specializer {
       
    }
@@ -101,5 +117,9 @@ public class ArchiveExtensionLoaderTest
       {
          return archive;
       }
+   }
+   
+   public static interface MissingExtension extends Specializer {
+      
    }
 }

@@ -24,11 +24,11 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
-import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Assert;
@@ -138,7 +138,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
    {
       log.info("testExportExplodedRequiresBaseDirectroy");
 
-      new MemoryMapArchiveImpl().as(ExplodedExporter.class).exportExploded(null);
+      Archives.create("test.jar", ExplodedExporter.class).exportExploded(null);
    }
 
    /**
@@ -152,7 +152,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
       log.info("testExportExplodedRequiresExisitingDirectroy");
 
       final File directory = this.getNonexistantDirectory();
-      new MemoryMapArchiveImpl().as(ExplodedExporter.class).exportExploded(directory);
+      Archives.create("test.jar", ExplodedExporter.class).exportExploded(directory);
    }
 
    /**
@@ -164,7 +164,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
       log.info("testExportExplodedRequiresValidDirectory");
       final File nonDirectory = new File(this.getTarget(), "tempFile.txt");
       nonDirectory.createNewFile();
-      new MemoryMapArchiveImpl().as(ExplodedExporter.class).exportExploded(nonDirectory);
+      Archives.create("test.jar", ExplodedExporter.class).exportExploded(nonDirectory);
    }
 
    /**
@@ -178,7 +178,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
       // Will cause the creation of Archive directory to fail
       final File existingFile = new File(directory, NAME_ARCHIVE);
       existingFile.createNewFile();
-      new MemoryMapArchiveImpl(NAME_ARCHIVE).as(ExplodedExporter.class).exportExploded(directory);
+      Archives.create(NAME_ARCHIVE, ExplodedExporter.class).exportExploded(directory);
    }
 
    /**
