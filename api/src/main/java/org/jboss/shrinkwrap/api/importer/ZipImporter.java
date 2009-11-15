@@ -43,7 +43,7 @@ public interface ZipImporter extends Specializer
    ZipImporter importZip(ZipInputStream stream) throws ArchiveImportException;
    
    /**
-    * Imports provided {@link ZipInputStream} as a {@link Archive}.
+    * Imports provided {@link ZipFile} as a {@link Archive}.
     * 
     * @param file the file to import
     * @return Archive of the imported Zip
