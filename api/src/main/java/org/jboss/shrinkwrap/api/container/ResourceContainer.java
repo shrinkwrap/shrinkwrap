@@ -43,85 +43,86 @@ public interface ResourceContainer<T extends Archive<T>>
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Adds the resource with the specified name
-    * to the container, returning the container itself.
-    * <br/><br/>
-    * The {@link ClassLoader} used to obtain the resource is up to
-    * the implementation.  The resource will be placed into 
-    * the Container under the same context from which it was retrieved.
+    * Adds the resource as a resource to the container, returning the container itself.
     * <br/>
-    * For instance a resourceName of "META-INF/resource.xml" will be placed
-    * at the same location within the Container.
+    * The resource will be placed into the Container Resource path under the same context 
+    * from which it was retrieved.
+    * <br/><br/>
+    * The {@link ClassLoader} used to obtain the resource is up to the implementation.  
     * 
-    * @param resourceName Name of the {@link ClassLoader} resource to add
+    * @param resourceName resource to add
     * @return This virtual archive
-    * @throws IllegalArgumentException If the name is null
+    * @throws IllegalArgumentException If the resourceName is null
+    * @see #addResource(Asset, Path)
     */
    T addResource(String resourceName) throws IllegalArgumentException;
    
    /**
+    * Adds the {@link File} as a resource to the container, returning the container itself.
+    * <br/>
+    * The {@link File} will be placed into the Container Library path under {@link File#getName()}. 
     * 
-    * @param resource The resource to add
+    * @param resource {@link File} resource to add
     * @return This virtual archive
-    * @throws IllegalArgumentException If the resource is null 
+    * @throws IllegalArgumentException If the resource is null
+    * @see #addResource(Asset, Path)
     */
    T addResource(File resource) throws IllegalArgumentException;
 
    /**
-    * Adds the resource with the specified name
-    * to the container, returning the container itself.
-    * <br/><br/> 
-    * The {@link ClassLoader} used to obtain the resource is up to
-    * the implementation.  The resource will be placed into 
-    * the Container under the same context specified by
-    * "target"
+    * Adds the resource as a resource to the container, returning the container itself.
+    * <br/><br/>
+    * The {@link ClassLoader} used to obtain the resource is up to the implementation.  
     * 
-    * @param target The target within the archive into which we'll place the resource
-    * @param resourceName Name of the {@link ClassLoader} resource to add
+    * @param resourceName resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s resource path.
     * @return This virtual archive
-    * @throws IllegalArgumentException If the target is null
-    * @throws IllegalArgumentException If the resourceName is null
+    * @throws IllegalArgumentException if resourceName is null
+    * @throws IllegalArgumentException if target is null
+    * @see #addResource(Asset, Path)
     */
    T addResource(String resourceName, String target) throws IllegalArgumentException;
    
    /**
+    * Adds the {@link File} as a resource to the container, returning the container itself.
     * 
-    * @param target The target within the archive into which we'll place the resource
-    * @param resource The resource to add
+    * @param resource {@link File} resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s resource path.
     * @return This virtual archive
-    * @throws IllegalArgumentException If the target is null
-    * @throws IllegalArgumentException If the resource is null 
+    * @throws IllegalArgumentException if resource is null
+    * @throws IllegalArgumentException if target is null
+    * @see #addResource(Asset, Path)
     */
    T addResource(File resource, String target) throws IllegalArgumentException;
    
    /**
+    * Adds the {@link URL} as a resource to the container, returning the container itself.
     * 
-    * @param target The target within the archive into which we'll place the resource
-    * @param resource The resource to add
+    * @param resource {@link URL} resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s resource path.
     * @return This virtual archive
-    * @throws IllegalArgumentException If the target is null
-    * @throws IllegalArgumentException If the resource is null 
+    * @throws IllegalArgumentException if resource is null
+    * @throws IllegalArgumentException if target is null
+    * @see #addResource(Asset, Path)
     */
    T addResource(URL resource, String target) throws IllegalArgumentException;
 
    /**
+    * Adds the {@link Asset} as a resource to the container, returning the container itself.
     * 
-    * @param target The target within the archive into which we'll place the resource
-    * @param resource The resource to add
+    * @param resource {@link Asset} resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s resource path.
     * @return This virtual archive
-    * @throws IllegalArgumentException If the target is null
-    * @throws IllegalArgumentException If the resource is null 
+    * @throws IllegalArgumentException if resource is null
+    * @throws IllegalArgumentException if target is null
+    * @see #addResource(Asset, Path)
     */
    T addResource(Asset resource, String target) throws IllegalArgumentException;
 
    /**
-    * Adds the resource with the specified name
-    * to the container, returning the container itself.
+    * Adds the resource with the specified name to the container, returning the container itself.
     * <br/><br/>
-    * The {@link ClassLoader} used to obtain the resource is up to
-    * the implementation.  The resource will be placed into 
-    * the Container under the same context specified by
-    * "target"
+    * The {@link ClassLoader} used to obtain the resource is up to the implementation.  
     * 
     * @param target The target within the archive into which we'll place the resource
     * @param resourceName Name of the {@link ClassLoader} resource to add
@@ -132,49 +133,51 @@ public interface ResourceContainer<T extends Archive<T>>
    T addResource(String resourceName, Path target) throws IllegalArgumentException;
    
    /**
-    * Adds the specified resource to the {@link Archive}, using the specified {@link ClassLoader}
-    * to load the resource
+    * Adds the resource as a resource to the container, returning the container itself.
+    * <br/><br/>
+    * The {@link ClassLoader} used to obtain the resource is up to the implementation.  
     * 
-    * @param target The target within the archive into which we'll place the resource
-    * @param resourceName The name of the resource to load
-    * @param classLoader The ClassLoader from where the resource should be loaded
+    * @param resourceName resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s resource path.
     * @return This virtual archive
-    * @throws IllegalArgumentException If the target is null
-    * @throws IllegalArgumentException If the resourceName is null
-    * @throws IllegalArgumentException If the classLoader is null
+    * @throws IllegalArgumentException if resourceName is null
+    * @throws IllegalArgumentException if target is null
+    * @see #addResource(Asset, Path)
     */
    T addResource(String resourceName, Path target, ClassLoader classLoader) throws IllegalArgumentException;
 
-
    /**
+    * Adds the {@link File} as a resource to the container, returning the container itself.
     * 
-    * @param target The target within the archive into which we'll place the resource
-    * @param resource The resource to add
+    * @param resource {@link File} resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s resource path.
     * @return This virtual archive
-    * @throws IllegalArgumentException If the target is null
-    * @throws IllegalArgumentException If the resource is null 
+    * @throws IllegalArgumentException if resource is null
+    * @throws IllegalArgumentException if target is null
+    * @see #addResource(Asset, Path)
     */
    T addResource(File resource, Path target) throws IllegalArgumentException;
 
    /**
-    * Adds the resource located at the specified {@link URL} to
-    * the archive at the specified path.
+    * Adds the {@link URL} as a resource to the container, returning the container itself.
     * 
-    * @param target The target within the archive into which we'll place the resource
-    * @param resource The resource to add
+    * @param resource {@link URL} resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s resource path.
     * @return This virtual archive
-    * @throws IllegalArgumentException If the target is null
-    * @throws IllegalArgumentException If the resource is null 
+    * @throws IllegalArgumentException if resource is null
+    * @throws IllegalArgumentException if target is null
+    * @see #addResource(Asset, Path)
     */
    T addResource(URL resource, Path target) throws IllegalArgumentException;
 
    /**
+    * Adds the {@link Asset} as a resource to the container, returning the container itself.
     * 
-    * @param target The target within the archive into which we'll place the resource
-    * @param resource The resource to add
+    * @param resource {@link Asset} resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s resource path.
     * @return This virtual archive
-    * @throws IllegalArgumentException If the target is null
-    * @throws IllegalArgumentException If the resource is null 
+    * @throws IllegalArgumentException if resource is null
+    * @throws IllegalArgumentException if target is null
     */
    T addResource(Asset resource, Path target) throws IllegalArgumentException;
 }

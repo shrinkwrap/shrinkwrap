@@ -30,30 +30,51 @@ import org.jboss.shrinkwrap.api.Asset;
  * <br/>
  * 
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
+ * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  * @param <T>
  */
 public interface ResourceAdapterContainer<T extends Archive<T>>
 {
    /**
-    * Adds a resource to this Archive as ra.xml. <br/>
+    * Adds the resource as ra.xml to the container, returning the container itself.
     * <br/>
-    * The mechanism to obtain the resource is up to the
-    * implementation. <br/>
-    * For instance a resourceName of "test/ra.xml" could be placed in
-    * "/META-INF/ra.xml"
+    * The {@link ClassLoader} used to obtain the resource is up to the implementation.  
     * 
-    * @param resourceName Name of the resource to add
+    * @param resourceName resource to add
     * @return This virtual archive
-    * @throws IllegalArgumentException
-    *             if resourceName is null
+    * @throws IllegalArgumentException if resourceName is null
+    * @see #setResourceAdapterXML(Asset)
     */
    T setResourceAdapterXML(String resourceName) throws IllegalArgumentException;
    
+   /**
+    * Adds the {@link File} as ra.xml to the container, returning the container itself.
+    * 
+    * @param resource {@link File} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    * @see #setResourceAdapterXML(Asset)
+    */
    T setResourceAdapterXML(File resource) throws IllegalArgumentException;
    
+   /**
+    * Adds the {@link URL} as ra.xml to the container, returning the container itself.
+    * 
+    * @param resource {@link URL} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    * @see #setResourceAdapterXML(Asset)
+    */
    T setResourceAdapterXML(URL resource) throws IllegalArgumentException;
    
+   /**
+    * Adds the {@link Asset} as ra.xml to the container, returning the container itself.
+    * 
+    * @param resource {@link Asset} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    */
    T setResourceAdapterXML(Asset resource) throws IllegalArgumentException;
 
 }

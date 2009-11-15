@@ -42,65 +42,180 @@ public interface LibraryContainer<T extends Archive<T>>
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Adds the resource with the specified name
-    * as a library to the container, returning the container itself.
-    * <br/><br/>
-    * The {@link ClassLoader} used to obtain the resource is up to
-    * the implementation.  The resource will be placed into 
-    * the Container Library path under the same context from which it was retrieved.
+    * Adds the resource as a library to the container, returning the container itself.
     * <br/>
-    * For instance a resourceName of "test/library.jar" could be placed
-    * "/lib/test/library.jar".
+    * The resource will be placed into the Container Library path under the same context 
+    * from which it was retrieved.
+    * <br/><br/>
+    * The {@link ClassLoader} used to obtain the resource is up to the implementation.  
     * 
-    * @param resourceName Name of the {@link ClassLoader} resource to add
+    * @param resourceName resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
+    * @see #addLibrary(Asset, Path)
     */
    T addLibrary(String resourceName) throws IllegalArgumentException;
    
+   /**
+    * Adds the {@link File} as a library to the container, returning the container itself.
+    * <br/>
+    * The {@link File} will be placed into the Container Library path under {@link File#getName()}. 
+    * 
+    * @param resource {@link File} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourceName is null
+    * @see #addLibrary(Asset, Path)
+    */
    T addLibrary(File resource) throws IllegalArgumentException;
 
+   /**
+    * Adds the resource as a library to the container, returning the container itself.
+    * <br/><br/>
+    * The {@link ClassLoader} used to obtain the resource is up to the implementation.  
+    * 
+    * @param resourceName resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s library path.
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourceName is null
+    * @throws IllegalArgumentException if target is null
+    * @see #addLibrary(Asset, Path)
+    */
    T addLibrary(String resourceName, String target) throws IllegalArgumentException;
+   
+   /**
+    * Adds the {@link File} as a library to the container, returning the container itself.
+    * 
+    * @param resource {@link File} resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s library path.
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    * @throws IllegalArgumentException if target is null
+    * @see #addLibrary(Asset, Path)
+    */
    T addLibrary(File resource, String target) throws IllegalArgumentException;
+   
+   /**
+    * Adds the {@link URL} as a library to the container, returning the container itself.
+    * 
+    * @param resource {@link URL} resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s library path.
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    * @throws IllegalArgumentException if target is null
+    * @see #addLibrary(Asset, Path)
+    */
    T addLibrary(URL resource, String target) throws IllegalArgumentException;
+   
+   /**
+    * Adds the {@link Asset} as a library to the container, returning the container itself.
+    * 
+    * @param resource {@link Asset} resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s library path.
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    * @throws IllegalArgumentException if target is null
+    * @see #addLibrary(Asset, Path)
+    */
    T addLibrary(Asset resource, String target) throws IllegalArgumentException;
 
    /**
-    * Adds the resource with the specified name
-    * as a library to the container under the target path, returning the container itself.
+    * Adds the resource as a library to the container, returning the container itself.
     * <br/><br/>
     * The {@link ClassLoader} used to obtain the resource is up to
-    * the implementation.  The resource will be placed into 
-    * the Containers Library path under the relative target path.
-    * <br/>
-    * For instance a resourceName of "test/library.jar" and target as "/test/example.jar" could be placed in
-    * "/lib/test/example.jar".
+    * the implementation.  
     * 
-    * @param target New name of the resource in the container
-    * @param resourceName Name of the {@link ClassLoader} resource to add
+    * @param resource resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s library path.
     * @return This virtual archive
-    * @throws IllegalArgumentException if target is null
     * @throws IllegalArgumentException if resourceName is null
+    * @throws IllegalArgumentException if target is null
+    * @see #addLibrary(Asset, Path)
     */
    T addLibrary(String resourceName, Path target) throws IllegalArgumentException;
    
+   /**
+    * Adds the {@link File} as a library to the container, returning the container itself.
+    * 
+    * @param resource {@link File} resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s library path.
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    * @throws IllegalArgumentException if target is null
+    * @see #addLibrary(Asset, Path)
+    */
    T addLibrary(File resource, Path target) throws IllegalArgumentException;
+
+   /**
+    * Adds the {@link URL} as a library to the container, returning the container itself.
+    * 
+    * @param resource {@link URL} resource to add
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s library path.
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    * @throws IllegalArgumentException if target is null
+    * @see #addLibrary(Asset, Path)
+    */
    T addLibrary(URL resource, Path target) throws IllegalArgumentException;
+
+   /**
+    * Adds the {@link Asset} as a library to the container, returning the container itself.
+    * 
+    * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s library path.
+    * @param resource {@link Asset} resource to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resource is null
+    * @throws IllegalArgumentException if target is null
+    */
    T addLibrary(Asset resource, Path target) throws IllegalArgumentException;
 
    /**
-    * Add another {@link Archive} to this {@link Archive} as a Library.
-    * <br/><br/>
-    * For instance a Archive with name 'example.jar' could be placed in
-    * "/lib/example.jar".
-    * 
-    * @param archive The {@link Archive} to be added to the Library path
+    * Add another {@link Archive} to this {@link Archive} as a library to the container, returning the container itself.
+    * <br/>
+    * The {@link Archive} will be placed into the Container Library path under {@link Archive#getName()}.
+    *  
+    * @param archive {@link Archive} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if {@link Archive} is null
+    * @see #addLibrary(Asset, Path)
     */
    T addLibrary(Archive<?> archive) throws IllegalArgumentException;
    
+   /**
+    * Add multiple resources to this {@link Archive} as libraries to the container, returning the container itself.
+    * <br/>
+    * The resources will be placed into the Container Library path under the same context 
+    * from which they were retrieved.
+    * <br/><br/>
+    * The {@link ClassLoader} used to obtain the resource is up to the implementation.  
+    *  
+    * @param resourceNames resources to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourceNames are null or empty
+    * @see #addLibrary(String)
+    */
    T addLibraries(String... resourceNames) throws IllegalArgumentException;
+  
+   /**
+    * Add multiple {@link File} to this {@link Archive} as libraries to the container, returning the container itself.
+    * <br/>
+    * The {@link File}s will be placed into the Container Library path under {@link File#getName()}.
+    *  
+    * @param resourceNames {@link File} resources to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if {@link File} resources are null or empty
+    * @see #addLibrary(File)
+    */
    T addLibraries(File... resources) throws IllegalArgumentException;
+
+   /**
+    * Add multiple {@link Archive}s to this {@link Archive} as libraries to the container, returning the container itself.
+    * <br/>
+    * The {@link Archive}s will be placed into the Container Library path under {@link Archive#getName()}.
+    *  
+    * @param archive {@link Archive} resources to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if {@link Archive} resources are null
+    * @see #addLibrary(Archive)
+    */
    T addLibraries(Archive<?>... archives) throws IllegalArgumentException;
 }
