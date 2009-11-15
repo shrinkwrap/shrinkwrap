@@ -14,12 +14,21 @@
 
   <!-- Model Information -->
   <modelVersion>4.0.0</modelVersion>
+  
+    <!-- Artifact Information  -->
+  <groupId>org.jboss.shrinkwrap</groupId>
+  <artifactId>shrinkwrap-parent</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>ShrinkWrap Aggregator</name>
+  <url>http://www.jboss.org</url>
+  <description>ShrinkWrap Aggregator</description>
 
   <!-- Plugin Configuration -->
   <build>
     <plugins>
-  
-    <!-- Deploy -->
+
+      <!-- Deploy -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
@@ -28,7 +37,7 @@
           <skip>true</skip>
         </configuration>
       </plugin>
-      
+
       <!-- Assembly Plugin -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -42,25 +51,17 @@
           </execution>
         </executions>
         <configuration>
+          <finalName>shrinkwrap-${version}</finalName>
           <descriptors>
             <descriptor>dist.xml</descriptor>
           </descriptors>
         </configuration>
         <inherited>false</inherited>
       </plugin>
-      
-      
+
+
     </plugins>
   </build>
-
-  <!-- Artifact Information  -->
-  <groupId>org.jboss.shrinkwrap</groupId>
-  <artifactId>shrinkwrap-parent</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>ShrinkWrap Aggregator</name>
-  <url>http://www.jboss.org</url>
-  <description>ShrinkWrap Aggregator</description>
 
   <!-- Aggregate Modules -->
   <modules>
