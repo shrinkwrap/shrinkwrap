@@ -25,7 +25,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.Path;
-import org.jboss.shrinkwrap.api.Specializer;
+import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
@@ -224,7 +224,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
     * @see org.jboss.shrinkwrap.api.Specializer#as(java.lang.Class)
     */
    @Override
-   public <TYPE extends Specializer> TYPE as(Class<TYPE> clazz)
+   public <TYPE extends Assignable> TYPE as(Class<TYPE> clazz)
    {
       Validate.notNull(clazz, "Class must be specified");
 

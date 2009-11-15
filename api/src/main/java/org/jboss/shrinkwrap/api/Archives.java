@@ -38,9 +38,9 @@ public final class Archives
     * Create a archive as a specific type.
     * 
     * @param archiveName The name of the archive
-    * @return A {@link Specializer} archive base  
+    * @return A {@link Assignable} archive base  
     */
-   public static <T extends Specializer> T create(String archiveName, Class<T> type) 
+   public static <T extends Assignable> T create(String archiveName, Class<T> type) 
    {
       if(archiveName == null) 
       {
@@ -68,7 +68,7 @@ public final class Archives
     * @param extensionClass The Extension interface
     * @param extensionImplClass The Extension implementation class
     */
-   public static <T extends Specializer> void addExtensionOverride(
+   public static <T extends Assignable> void addExtensionOverride(
          Class<T> extensionClass, 
          Class<? extends T> extensionImplClass)
    {

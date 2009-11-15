@@ -27,7 +27,7 @@ import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.Paths;
-import org.jboss.shrinkwrap.api.Specializer;
+import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.container.ContainerBase;
 import org.jboss.shrinkwrap.impl.base.spec.JavaArchiveImpl;
@@ -78,7 +78,7 @@ public class ArchivesTestCase
       Archives.setExtensionLoader(new ExtensionLoader()
       {
          @Override
-         public <T extends Specializer> T load(Class<T> extensionClass,
+         public <T extends Assignable> T load(Class<T> extensionClass,
                Archive<?> baseArchive)
          {
             extensionLoaderCalled = true;
@@ -86,7 +86,7 @@ public class ArchivesTestCase
          }
          
          @Override
-         public <T extends Specializer> ExtensionLoader addOverride(
+         public <T extends Assignable> ExtensionLoader addOverride(
                Class<T> extensionClass, Class<? extends T> extensionImplClass)
          {
             return null;
@@ -112,14 +112,14 @@ public class ArchivesTestCase
       Archives.setExtensionLoader(new ExtensionLoader()
       {
          @Override
-         public <T extends Specializer> T load(Class<T> extensionClass,
+         public <T extends Assignable> T load(Class<T> extensionClass,
                Archive<?> baseArchive)
          {
             return null;
          }
          
          @Override
-         public <T extends Specializer> ExtensionLoader addOverride(
+         public <T extends Assignable> ExtensionLoader addOverride(
                Class<T> extensionClass, Class<? extends T> extensionImplClass)
          {
             return null;

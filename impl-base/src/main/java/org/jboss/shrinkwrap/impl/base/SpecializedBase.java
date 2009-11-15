@@ -17,20 +17,20 @@
 package org.jboss.shrinkwrap.impl.base;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Specializer;
+import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * A generic implementation of {@link Specializer} that delegates down to the Archive
+ * A generic implementation of {@link Assignable} that delegates down to the Archive
  * extensions inner archive. Used by Archive extensions to simplify handling the generic extension
  * mechanism. 
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public abstract class SpecializedBase implements Specializer
+public abstract class SpecializedBase implements Assignable
 {
    /**
-    * Used by the Generic {@link Specializer} implementation to 
+    * Used by the Generic {@link Assignable} implementation to 
     * get the extension wrapped inner {@link Archive}.
     * 
     * @return The wrapped {@link Archive}  
@@ -41,7 +41,7 @@ public abstract class SpecializedBase implements Specializer
     * @see org.jboss.shrinkwrap.api.Specializer#as(java.lang.Class)
     */
    @Override
-   public <TYPE extends Specializer> TYPE as(Class<TYPE> clazz)
+   public <TYPE extends Assignable> TYPE as(Class<TYPE> clazz)
    {
       return getArchive().as(clazz);
    }

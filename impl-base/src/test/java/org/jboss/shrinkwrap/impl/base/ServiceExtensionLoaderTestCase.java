@@ -20,7 +20,7 @@ import junit.framework.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
-import org.jboss.shrinkwrap.api.Specializer;
+import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 
@@ -81,11 +81,11 @@ public class ServiceExtensionLoaderTestCase
    }
 
    
-   public static interface WrongImplExtension extends Specializer {
+   public static interface WrongImplExtension extends Assignable {
       
    }
    
-   public static interface Extension extends Specializer {
+   public static interface Extension extends Assignable {
       
    }
 
@@ -119,7 +119,7 @@ public class ServiceExtensionLoaderTestCase
       }
    }
    
-   public static interface MissingExtension extends Specializer {
+   public static interface MissingExtension extends Assignable {
       
    }
 }

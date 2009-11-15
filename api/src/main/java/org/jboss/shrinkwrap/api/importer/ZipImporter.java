@@ -20,7 +20,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Specializer;
+import org.jboss.shrinkwrap.api.Assignable;
 
 /**
  * ZipImporter
@@ -28,7 +28,7 @@ import org.jboss.shrinkwrap.api.Specializer;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface ZipImporter extends Specializer
+public interface ZipImporter extends Assignable
 {
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||

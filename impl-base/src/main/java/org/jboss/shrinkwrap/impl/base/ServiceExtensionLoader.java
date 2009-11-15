@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
-import org.jboss.shrinkwrap.api.Specializer;
+import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
 /**
@@ -63,7 +63,7 @@ public class ServiceExtensionLoader implements ExtensionLoader
     * @see org.jboss.shrinkwrap.api.ExtensionLoader#load(java.lang.Class, org.jboss.shrinkwrap.api.Archive)
     */
    @Override
-   public <T extends Specializer> T load(Class<T> extensionClass, Archive<?> baseArchive)
+   public <T extends Assignable> T load(Class<T> extensionClass, Archive<?> baseArchive)
    {
       if(isCached(extensionClass))
       {
@@ -85,7 +85,7 @@ public class ServiceExtensionLoader implements ExtensionLoader
       return cache.containsKey(extensionClass);
    }
    
-   private <T extends Specializer> T createFromCache(Class<T> extensionClass, Archive<?> archive) 
+   private <T extends Assignable> T createFromCache(Class<T> extensionClass, Archive<?> archive) 
    {
       Class<T> extensionImplClass = getFromCache(extensionClass);
       return createExtension(extensionImplClass, archive);
@@ -97,7 +97,7 @@ public class ServiceExtensionLoader implements ExtensionLoader
    }
 
    @SuppressWarnings("unchecked")
-   <T extends Specializer> Class<T> getFromCache(Class<T> extensionClass) 
+   <T extends Assignable> Class<T> getFromCache(Class<T> extensionClass) 
    {
       return (Class<T>)cache.get(extensionClass);
    }
@@ -109,7 +109,7 @@ public class ServiceExtensionLoader implements ExtensionLoader
    /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.ExtensionLoader#addOverride(java.lang.Class, java.lang.Class)
     */
-   public <T extends Specializer> ServiceExtensionLoader addOverride(Class<T> extensionClass, Class<? extends T> extensionImplClass)
+   public <T extends Assignable> ServiceExtensionLoader addOverride(Class<T> extensionClass, Class<? extends T> extensionImplClass)
    {
       addToCache(extensionClass, extensionImplClass);
       return this;
@@ -131,7 +131,7 @@ public class ServiceExtensionLoader implements ExtensionLoader
    // Internal Helper Methods - Loading --------------------------------------------------||
    //-------------------------------------------------------------------------------------||
    
-   private <T extends Specializer> T createFromLoadExtension(Class<T> extensionClass, Archive<?> archive) 
+   private <T extends Assignable> T createFromLoadExtension(Class<T> extensionClass, Archive<?> archive) 
    {
       Class<T> extensionImplClass = loadExtension(extensionClass);
       if(!extensionClass.isAssignableFrom(extensionImplClass)) 
@@ -143,14 +143,14 @@ public class ServiceExtensionLoader implements ExtensionLoader
       return createExtension(extensionImplClass, archive);
    }
 
-   private <T extends Specializer> Class<T> loadExtension(Class<T> extensionClass) 
+   private <T extends Assignable> Class<T> loadExtension(Class<T> extensionClass) 
    {
       URL extensionImplUrl = findExtensionImpl(extensionClass);
       String extensionImplClassName = loadExtensionName(extensionImplUrl);
       return loadExtensionClass(extensionImplClassName);
    }
    
-   private <T extends Specializer> URL findExtensionImpl(Class<T> extensionClass) 
+   private <T extends Assignable> URL findExtensionImpl(Class<T> extensionClass) 
    {
       try 
       {
@@ -194,7 +194,7 @@ public class ServiceExtensionLoader implements ExtensionLoader
    }
 
    @SuppressWarnings("unchecked")
-   private <T extends Specializer> Class<T> loadExtensionClass(String extensionClassName)  
+   private <T extends Assignable> Class<T> loadExtensionClass(String extensionClassName)  
    {
       try 
       {
@@ -205,7 +205,7 @@ public class ServiceExtensionLoader implements ExtensionLoader
       }
    }
 
-   private <T extends Specializer> T createExtension(Class<T> extensionImplClass, Archive<?> archive) 
+   private <T extends Assignable> T createExtension(Class<T> extensionImplClass, Archive<?> archive) 
    {
       try
       {
@@ -230,7 +230,7 @@ public class ServiceExtensionLoader implements ExtensionLoader
    }
 
    @SuppressWarnings("unchecked")
-   private <T extends Specializer> Constructor<T> findConstructor(Class<T> extensionImplClass) 
+   private <T extends Assignable> Constructor<T> findConstructor(Class<T> extensionImplClass) 
    {
       Constructor<?>[] constructors = SecurityActions.getConstructors(extensionImplClass);
       for(Constructor<?> constructor : constructors)

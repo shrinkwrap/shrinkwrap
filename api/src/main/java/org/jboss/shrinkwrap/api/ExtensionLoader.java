@@ -35,7 +35,7 @@ public interface ExtensionLoader
     * @param baseArchive The base archive to use
     * @return a 
     */
-   public <T extends Specializer> T load(Class<T> extensionClass, Archive<?> baseArchive);
+   public <T extends Assignable> T load(Class<T> extensionClass, Archive<?> baseArchive);
    
    /**
     * Add a Override to the normal Extension loading. 
@@ -48,7 +48,7 @@ public interface ExtensionLoader
     * @param extensionImplClass The Extension implementation class
     * @return this ExtensionLoader
     */
-   public <T extends Specializer> ExtensionLoader addOverride(
+   public <T extends Assignable> ExtensionLoader addOverride(
          Class<T> extensionClass, 
          Class<? extends T> extensionImplClass); 
 }

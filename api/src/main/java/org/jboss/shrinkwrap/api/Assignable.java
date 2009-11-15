@@ -17,12 +17,13 @@
 package org.jboss.shrinkwrap.api;
 
 /**
- * General interface for wrapping archive as different extension types. 
+ * General interface for representing entities such
+ * as {@link Archive}s and descriptors as different extension types. 
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface Specializer
+public interface Assignable
 {
    /**
     * Wraps a Archive in a different 'view'. 
@@ -31,5 +32,5 @@ public interface Specializer
     * @param clazz Extension interface to load
     * @return The Archive wrapped as TYPE
     */
-   <TYPE extends Specializer> TYPE as(Class<TYPE> clazz);
+   <TYPE extends Assignable> TYPE as(Class<TYPE> clazz);
 }

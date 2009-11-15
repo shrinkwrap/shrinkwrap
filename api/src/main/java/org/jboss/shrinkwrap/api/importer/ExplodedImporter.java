@@ -19,7 +19,7 @@ package org.jboss.shrinkwrap.api.importer;
 import java.io.File;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Specializer;
+import org.jboss.shrinkwrap.api.Assignable;
 
 /**
  * ExplodedImporter
@@ -29,7 +29,7 @@ import org.jboss.shrinkwrap.api.Specializer;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface ExplodedImporter extends Specializer
+public interface ExplodedImporter extends Assignable
 {
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
