@@ -38,7 +38,7 @@ public class UrlAssetTestCase
    @Test
    public void shouldBeAbleToReadURL() throws Exception
    {
-      Asset asset = new UrlAsset(Thread.currentThread().getContextClassLoader().getResource(EXISTING_RESOURCE));
+      Asset asset = new UrlAsset(SecurityActions.getThreadContextClassLoader().getResource(EXISTING_RESOURCE));
 
       InputStream io = asset.openStream();
 

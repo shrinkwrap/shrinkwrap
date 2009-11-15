@@ -74,7 +74,7 @@ public class ZipImporterImplTestCase
    {
       ZipFile testZip = new ZipFile(
             new File(
-                  Thread.currentThread().getContextClassLoader().getResource(EXISTING_ZIP_RESOURCE).toURI()));
+                  SecurityActions.getThreadContextClassLoader().getResource(EXISTING_ZIP_RESOURCE).toURI()));
       
       Archive<?> archive = Archives.create("test.jar", ZipImporter.class)
                                  .importZip(testZip)
@@ -84,7 +84,7 @@ public class ZipImporterImplTestCase
       
       assertContent(
             archive, 
-            Thread.currentThread().getContextClassLoader().getResource(EXISTING_ZIP_RESOURCE).toURI());
+            SecurityActions.getThreadContextClassLoader().getResource(EXISTING_ZIP_RESOURCE).toURI());
    }
    
 
@@ -92,7 +92,7 @@ public class ZipImporterImplTestCase
    public void shouldBeAbleToImportAddAndExport() throws Exception
    {
       ZipInputStream stream = new ZipInputStream(
-            Thread.currentThread().getContextClassLoader().getResourceAsStream(EXISTING_ZIP_RESOURCE));
+            SecurityActions.getThreadContextClassLoader().getResourceAsStream(EXISTING_ZIP_RESOURCE));
       
       Archive<?> archive = Archives.create("test.jar", ZipImporter.class)
                                  .importZip(stream)
@@ -114,7 +114,7 @@ public class ZipImporterImplTestCase
    public void shouldBeAbleToImportZipInputStream() throws Exception
    {
       ZipInputStream stream = new ZipInputStream(
-            Thread.currentThread().getContextClassLoader().getResourceAsStream(EXISTING_ZIP_RESOURCE));
+            SecurityActions.getThreadContextClassLoader().getResourceAsStream(EXISTING_ZIP_RESOURCE));
       
       Archive<?> archive = Archives.create("test.jar", ZipImporter.class)
                                  .importZip(stream)
@@ -124,7 +124,7 @@ public class ZipImporterImplTestCase
       
       assertContent(
             archive, 
-            Thread.currentThread().getContextClassLoader().getResource(EXISTING_ZIP_RESOURCE).toURI());
+            SecurityActions.getThreadContextClassLoader().getResource(EXISTING_ZIP_RESOURCE).toURI());
    }
    
    /**

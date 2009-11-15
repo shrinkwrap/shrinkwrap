@@ -42,7 +42,7 @@ public class ExplodedImporterTestCase
       
       Archive<?> archive = Archives.create("test.jar", ExplodedImporter.class)
                               .importDirectory(
-                                    Thread.currentThread().getContextClassLoader()
+                                    SecurityActions.getThreadContextClassLoader()
                                        .getResource(EXISTING_DIRECTORY_RESOURCE).toURI().getPath()
                               )
                               .as(JavaArchive.class);
@@ -65,7 +65,7 @@ public class ExplodedImporterTestCase
     
       Archives.create("test.jar", ExplodedImporter.class)
                   .importDirectory(
-                        Thread.currentThread().getContextClassLoader()
+                        SecurityActions.getThreadContextClassLoader()
                            .getResource(EXISTING_FILE_RESOURCE).toURI().getPath()
                   );
    }

@@ -56,7 +56,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    protected abstract LibraryContainer<T> getLibraryContainer();
    
    protected URL getURLForClassResource(String name) {
-      return Thread.currentThread().getContextClassLoader().getResource(name);
+      return SecurityActions.getThreadContextClassLoader().getResource(name);
    }
    
    protected File getFileForClassResource(String name) throws Exception {

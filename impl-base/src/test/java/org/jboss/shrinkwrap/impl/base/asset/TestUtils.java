@@ -85,7 +85,7 @@ class TestUtils
    static int findLengthOfClass(Class<?> clazz) throws Exception 
    {
       String classResourceName = getResourceNameForClass(clazz);
-      InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(classResourceName);
+      InputStream in = SecurityActions.getThreadContextClassLoader().getResourceAsStream(classResourceName);
       return findLengthOfStream(in);
    }
    
