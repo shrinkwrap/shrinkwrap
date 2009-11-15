@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
-import junit.framework.TestCase;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
@@ -180,7 +178,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
       // Will cause the creation of Archive directory to fail
       final File existingFile = new File(directory, NAME_ARCHIVE);
       final boolean created = existingFile.createNewFile();
-      TestCase.assertEquals("Could not create test file",true, created);
+      Assert.assertEquals("Could not create test file",true, created);
       Archives.create(NAME_ARCHIVE, ExplodedExporter.class).exportExploded(directory);
    }
 
