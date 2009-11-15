@@ -20,13 +20,15 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
+import junit.framework.TestCase;
+
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
-import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Assert;
 
@@ -117,10 +119,12 @@ public abstract class ExportTestBase
       log.info("Temp Directory: " + tempDirectory.getCanonicalPath());
       if (tempDirectory.exists())
       {
-         IOUtil.deleteDirectory(tempDirectory);
+         TestIOUtil.deleteDirectory(tempDirectory);
       }
       Assert.assertTrue("Temp directory should be clear before start", !tempDirectory.exists());
-      tempDirectory.mkdirs();
+      final boolean created = tempDirectory.mkdirs();
+      TestCase.assertEquals("Could not create temp directory for tests: " + tempDirectory.getAbsolutePath(), true,
+            created);
       return tempDirectory;
    }
 

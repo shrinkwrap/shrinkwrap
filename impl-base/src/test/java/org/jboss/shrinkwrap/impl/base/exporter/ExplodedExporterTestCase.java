@@ -23,12 +23,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
+import junit.framework.TestCase;
+
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
+import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Assert;
@@ -163,7 +166,6 @@ public class ExplodedExporterTestCase extends ExportTestBase
    {
       log.info("testExportExplodedRequiresValidDirectory");
       final File nonDirectory = new File(this.getTarget(), "tempFile.txt");
-      nonDirectory.createNewFile();
       Archives.create("test.jar", ExplodedExporter.class).exportExploded(nonDirectory);
    }
 
@@ -177,7 +179,8 @@ public class ExplodedExporterTestCase extends ExportTestBase
       final File directory = createTempDirectory("testExportExplodedOutpuDirCreationFails");
       // Will cause the creation of Archive directory to fail
       final File existingFile = new File(directory, NAME_ARCHIVE);
-      existingFile.createNewFile();
+      final boolean created = existingFile.createNewFile();
+      TestCase.assertEquals("Could not create test file",true, created);
       Archives.create(NAME_ARCHIVE, ExplodedExporter.class).exportExploded(directory);
    }
 
@@ -216,7 +219,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
       final File directory = new File(this.getTarget(), "someNonExistentDirectory");
       if (directory.exists())
       {
-         IOUtil.deleteDirectory(directory);
+         TestIOUtil.deleteDirectory(directory);
       }
       Assert.assertTrue("Precondition Failure: Directory should not exist: " + directory, !directory.exists());
       return directory;
