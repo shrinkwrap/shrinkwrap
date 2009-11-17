@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding="iso-8859-1"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"  [ ]>
+
+<chapter id="examples">
+   <title>Examples</title>
+   
+   <section id="examples.createjavaarchive">
+      <title>Create a JavaArchive</title>
+      <para>
+         <programlisting role="JAVA"><![CDATA[JavaArchive jar = Archives.create("test.jar", JavaArchive.class);]]></programlisting>
+      </para>
+   </section>
+
+   <section id="examples.createwebarchive">
+      <title>Create a JavaArchive</title>
+      <para>
+         <programlisting role="JAVA"><![CDATA[WebArchive jar = Archives.create("test.war", WebArchive.class);]]></programlisting>
+      </para>
+   </section>
+
+   <section id="examples.importzip">
+      <title>Import existing zip file</title>
+      <para>
+         <programlisting role="JAVA"><![CDATA[JavaArchive jar = Archives.create("test.jar", ZipImporter.class)
+            .importZip("my.zip")
+         .as(JavaArchive.class);]]></programlisting>
+      </para>
+   </section>
+
+   <section id="examples.exportzip">
+      <title>Export to zip</title>
+      <para>
+         <programlisting role="JAVA"><![CDATA[InputStream zipStream = Archives.create("test.jar", JavaArchive.class)
+            .addClass(MyClass.class)
+         .as(ZipExporter.class)
+            .exportZip();]]></programlisting>
+      </para>
+   </section>
+</chapter>

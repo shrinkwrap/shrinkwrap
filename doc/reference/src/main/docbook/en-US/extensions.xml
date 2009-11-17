@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding="iso-8859-1"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"  [ ]>
+
+<chapter id="extensions">
+   <title>Extending the core</title>
+   
+   <section id="extensions.assignable">
+      <title>Assignable</title>
+      <para></para>
+   </section>
+
+   <section id="extensions.howto">
+      <title>Howto write your own</title>
+      <section id="extensions.howto.interface">
+         <title>The interface</title>
+         <para></para>
+      </section>
+      <section id="extensions.howto.impl">
+         <title>The Implementation</title>
+         <para></para>
+      </section>
+      <section id="extensions.howto.wire">
+         <title>The Wiring</title>
+         <para></para>
+      </section>
+      <section id="extensions.howto.test">
+         <title>The Test</title>
+         <para></para>
+      </section>
+   </section>
+</chapter>

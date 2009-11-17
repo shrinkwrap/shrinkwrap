@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding="iso-8859-1"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"  [ ]>
+
+<chapter id="api">
+   <title>API</title>
+   
+   <section id="api.archive">
+      <title>Archive</title>
+      <para></para>
+   </section>
+
+   <section id="api.archives">
+      <title>Archives</title>
+      <para></para>
+   </section>
+
+   <section id="api.path">
+      <title>Path</title>
+      <para></para>
+   </section>
+
+   <section id="api.paths">
+      <title>Paths</title>
+      <para></para>
+   </section>
+
+   <section id="api.asset">
+      <title>Asset</title>
+      <para></para>
+   </section>
+
+   <section id="api.container">
+      <title>Containers</title>
+      <para></para>
+      <section id="api.container.class">
+         <title>ClassContainer</title>
+         <para></para>
+      </section>
+      <section id="api.container.manifest">
+         <title>ManifestContainer</title>
+         <para></para>
+      </section>
+      <section id="api.container.library">
+         <title>LibraryContainer</title>
+         <para></para>
+      </section>
+      <section id="api.container.resource">
+         <title>ResourceContainer</title>
+         <para></para>
+      </section>
+      <section id="api.container.web">
+         <title>WebContainer</title>
+         <para></para>
+      </section>
+      <section id="api.container.enterprise">
+         <title>EnterpriseContainer</title>
+         <para></para>
+      </section>
+      <section id="api.container.resourceadapter">
+         <title>ResoruceAdapterContainer</title>
+         <para></para>
+      </section>
+   </section>
+   
+   <section id="api.spec">
+      <title>Archive Specifications</title>
+      <section id="api.spec.jar">
+         <title>JavaArchive</title>
+         <para></para>
+      </section>
+      <section id="api.spec.war">
+         <title>WebArchive</title>
+         <para></para>
+      </section>
+      <section id="api.spec.ear">
+         <title>EnterpriseArchive</title>
+         <para></para>
+      </section>
+      <section id="api.spec.rar">
+         <title>ResourceAdaptorArchive</title>
+         <para></para>
+      </section>
+   </section>
+</chapter>

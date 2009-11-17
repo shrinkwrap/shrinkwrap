@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding="iso-8859-1"?>
+<!DOCTYPE bookinfo PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"  [ ]>
+
+<bookinfo>
+	<title>ShrinkWrap</title>
+	<subtitle>Reference Guide</subtitle>
+
+   <preface>
+      <title>Skip the build!</title>
+      <para>
+         Packaging specifications such as Java Archives (JAR) and Enterprise Archives (EAR) are standard mechanisms for 
+         declaring a collection of Classes and resources into one unit.  Often these are intended to be run directly or 
+         deployed into a web or application server.  Archives carry with them implicit metadata regarding their structure, 
+         from which concerns like ClassLoading scope and manifest parameters may be inferred.
+      </para>
+      <para>
+         However useful, archives typically require the addition of a build step within the development lifecycle, 
+         either via a script or extra tool.  The ShrinkWrap project provides a simple API to declaratively assemble 
+         archives in code, optionally allowing for export into ZIP or Exploded File formats.  This makes is very fast 
+         to prototype "virtual" archives from resources scattered about the classpath, the filesystem or remote URLs.
+      </para>
+   </preface>
+
+   <xi:include href="author_info.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+   	
+</bookinfo>
