@@ -169,6 +169,12 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
       {
          throw new ArchiveExportException("Unable to create archive output directory - " + outputDirectory);
       }
+      if(outputDirectory.isFile()) 
+      {
+         throw new IllegalArgumentException(
+               "Unable to export exploded directory to " + outputDirectory.getAbsolutePath() + 
+               ", it points to a existing file");
+      }
 
       return outputDirectory;
    }
