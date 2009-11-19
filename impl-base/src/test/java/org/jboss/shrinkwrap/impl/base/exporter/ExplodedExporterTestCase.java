@@ -205,6 +205,35 @@ public class ExplodedExporterTestCase extends ExportTestBase
       archive.as(ExplodedExporter.class).exportExploded(directory);
    }
 
+   /**
+    * https://jira.jboss.org/jira/browse/SHRINKWRAP-84
+    * <br/>
+    * Should be able to use a existing directory as parent directory for ExplodedExports
+    */
+   @Test
+   public void testShouldBeAbleToUseExistingDirectoryAsParent() throws Exception 
+   {
+      Archive<?> archive = createArchiveWithAssets();
+      
+      File existingParentFolder = new File("target/");
+      existingParentFolder.mkdirs();
+      Assert.assertTrue(
+            "Internal error, the directory need to exist for test case to work", 
+            existingParentFolder.exists());
+
+      File archiveFolder = new File(existingParentFolder, archive.getName());
+      archiveFolder.mkdirs();
+      Assert.assertTrue(
+            "Internal error, the directory need to exist for test case to work", 
+            existingParentFolder.exists());
+
+      archive.as(ExplodedExporter.class).exportExploded(existingParentFolder);
+      
+      Assert.assertTrue(
+            "A subfolder with archive name should have been created", 
+            new File(existingParentFolder, archive.getName()).exists());
+   }
+   
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -242,5 +271,4 @@ public class ExplodedExporterTestCase extends ExportTestBase
       byte[] actualContents = IOUtil.asByteArray(inputStream);
       Assert.assertArrayEquals(expectedContents, actualContents);
    }
-
 }
