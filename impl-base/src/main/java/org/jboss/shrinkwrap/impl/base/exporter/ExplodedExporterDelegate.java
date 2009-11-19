@@ -165,7 +165,7 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
 
       // Create output directory
       final File outputDirectory = new File(baseDirectory, archive.getName());
-      if (!outputDirectory.mkdir())
+      if (!outputDirectory.mkdir() && !outputDirectory.exists())
       {
          throw new ArchiveExportException("Unable to create archive output directory - " + outputDirectory);
       }

@@ -175,11 +175,9 @@ public class ExplodedExporterTestCase extends ExportTestBase
    {
       log.info("testExportExplodedOutpuDirCreationFails");
       final File directory = createTempDirectory("testExportExplodedOutpuDirCreationFails");
-      // Will cause the creation of Archive directory to fail
-      final File existingFile = new File(directory, NAME_ARCHIVE);
-      final boolean created = existingFile.createNewFile();
-      Assert.assertEquals("Could not create test file",true, created);
-      Archives.create(NAME_ARCHIVE, ExplodedExporter.class).exportExploded(directory);
+      directory.deleteOnExit();
+      
+      Archives.create("test/" + NAME_ARCHIVE, ExplodedExporter.class).exportExploded(directory);
    }
 
    /**
