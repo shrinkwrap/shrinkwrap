@@ -16,9 +16,11 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
@@ -231,6 +233,26 @@ public class ExplodedExporterTestCase extends ExportTestBase
             "A subfolder with archive name should have been created", 
             new File(existingParentFolder, archive.getName()).exists());
    }
+   
+   /**
+    * Ensure an ArchiveExportException is thrown when output directory is a file
+    */
+   @Test(expected = IllegalArgumentException.class)
+   public void testExportExplodedOutpuDirIsAFile() throws Exception
+   {
+      log.info("testExportExplodedOutpuDirIsAFile");
+      final File directory = createTempDirectory("testExportExplodedOutpuDirIsAFile");
+      // Will cause the creation of Archive directory to fail
+      final File existingFile = new File(directory, NAME_ARCHIVE);
+      final boolean created = existingFile.createNewFile();
+      
+      IOUtil.copyWithClose(new ByteArrayInputStream("test-test".getBytes()), new FileOutputStream(existingFile));
+      
+      Assert.assertEquals("Could not create test file",true, created);
+      
+      createArchiveWithAssets().as(ExplodedExporter.class).exportExploded(directory);
+   }
+
    
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||
