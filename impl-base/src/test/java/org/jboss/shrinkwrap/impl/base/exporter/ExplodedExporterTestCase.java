@@ -235,7 +235,8 @@ public class ExplodedExporterTestCase extends ExportTestBase
    }
    
    /**
-    * Ensure an ArchiveExportException is thrown when output directory is a file
+    * https://jira.jboss.org/jira/browse/SHRINKWRAP-86
+    * Ensure an IllegalArgumentException is thrown when output directory is a file
     */
    @Test(expected = IllegalArgumentException.class)
    public void testExportExplodedOutpuDirIsAFile() throws Exception
