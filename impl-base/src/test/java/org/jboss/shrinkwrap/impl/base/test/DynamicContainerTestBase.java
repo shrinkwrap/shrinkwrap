@@ -401,6 +401,48 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    }
 
    /**
+    * Ensure classes can be added to containers by name and ClassLoader
+    * 
+    * @throws Exception
+    */
+   @Test
+   @ArchiveType(ClassContainer.class)
+   public void testAddClassesByFqnAndClassLoader() throws Exception
+   {
+      // Attempt to load using the TCCL
+      this.ensureCanAddClassByNameAndClassLoader(Thread.currentThread().getContextClassLoader());
+   }
+
+   /**
+    * Ensure classes can be added to containers by name and TCCL
+    * 
+    * @throws Exception
+    */
+   @Test
+   @ArchiveType(ClassContainer.class)
+   public void testAddClassesByFqnAndTccl() throws Exception
+   {
+      // Using a null CL should signal to default to TCCL
+      this.ensureCanAddClassByNameAndClassLoader(null);
+   }
+
+   /**
+    * Ensures that a Class may be added to the ClassContainer by FQN
+    * and the specified ClassLoader
+    * @param cl
+    */
+   private void ensureCanAddClassByNameAndClassLoader(final ClassLoader cl)
+   {
+      final Class<?> classToAdd = DummyClassUsedForClassResourceTest.class;
+
+      getClassContainer().addClass(classToAdd.getName(), cl);
+
+      Path expectedPath = new BasicPath(getClassPath(), AssetUtil.getFullPathForClassResource(classToAdd));
+
+      Assert.assertTrue("A class should be located at " + expectedPath.get(), getArchive().contains(expectedPath));
+   }
+
+   /**
     * Ensure a package can be added to a container
     * 
     * @throws Exception

@@ -18,6 +18,8 @@ package org.jboss.shrinkwrap.impl.base.container;
 
 import java.io.File;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,6 +56,22 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
+   
+   /**
+    * Secure action to obtain the Thread Context ClassLoader
+    * 
+    * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+    * @version $Revision: $
+    */
+   private enum GetTcclAction implements PrivilegedAction<ClassLoader>{
+      INSTANCE;
+
+      @Override
+      public ClassLoader run()
+      {
+         return Thread.currentThread().getContextClassLoader();
+      }
+   }
    
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -556,6 +574,41 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
       return addClasses(clazz);
    }
    
+   /**
+    * @see org.jboss.shrinkwrap.api.container.ClassContainer#addClass(java.lang.String, java.lang.ClassLoader)
+    */
+   @Override
+   public T addClass(final String fullyQualifiedClassName, final ClassLoader cl) throws IllegalArgumentException
+   {
+      // Precondition checks
+      if (fullyQualifiedClassName == null || fullyQualifiedClassName.length() == 0)
+      {
+         throw new IllegalArgumentException("Fully-qualified class name must be specified");
+      }
+
+      // Default to TCCL if not specified
+      ClassLoader loadingCl = cl;
+      if (loadingCl == null)
+      {
+         loadingCl = AccessController.doPrivileged(GetTcclAction.INSTANCE);
+      }
+
+      // Obtain the Class
+      final Class<?> clazz;
+      try
+      {
+         clazz = Class.forName(fullyQualifiedClassName, false, loadingCl);
+      }
+      catch (final ClassNotFoundException e)
+      {
+         throw new IllegalArgumentException("Could not load class of name " + fullyQualifiedClassName + " with "
+               + loadingCl, e);
+      }
+
+      // Delegate and return
+      return this.addClass(clazz);
+   }
+
    /* (non-Javadoc)
     * @see org.jboss.declarchive.api.container.ClassContainer#addClasses(java.lang.Class<?>[])
     */

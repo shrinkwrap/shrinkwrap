@@ -40,16 +40,29 @@ public interface ClassContainer<T extends Archive<T>>
     * Adds the specified Class to the {@link Archive}.
     * 
     * @param class The class to add to the Archive
-    * @return This virtual archive
+    * @return This archive
     * @throws IllegalArgumentException If no class were specified
     */
    T addClass(Class<?> clazz) throws IllegalArgumentException;
 
    /**
+    * Adds the Class with the specified fully-qualified name,
+    * loaded by the specified ClassLoader, to the {@link Archive}.
+    * 
+    * @param fullyQualifiedClassName The name of the Class to add
+    * @param cl The ClassLoader used to load the Class, or null to denote the 
+    *       Thread Context ClassLoader
+    * @return This archive
+    * @throws IllegalArgumentException If no class name was specified, or if the Class 
+    *   could not be loaded by the target ClassLoader
+    */
+   T addClass(String fullyQualifiedClassName, ClassLoader cl) throws IllegalArgumentException;
+
+   /**
     * Adds the specified Classes to the {@link Archive}.
     * 
     * @param classes The classes to add to the Archive
-    * @return This virtual archive
+    * @return This archive
     * @throws IllegalArgumentException If no classes were specified
     */
    T addClasses(Class<?>... classes) throws IllegalArgumentException;
@@ -62,7 +75,7 @@ public interface ClassContainer<T extends Archive<T>>
     * @throws IllegalArgumentException If no package were specified
     */
    T addPackage(Package pack) throws IllegalArgumentException;
-   
+
    /**
     * Adds all classes in the specified {@link Package}s to the {@link Archive}.
     * 
