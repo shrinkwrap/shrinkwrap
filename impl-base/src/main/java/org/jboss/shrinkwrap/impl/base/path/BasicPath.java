@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.spi.PathProvider;
 
 /**
  * BasicPath
@@ -31,7 +32,7 @@ import org.jboss.shrinkwrap.api.Path;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class BasicPath implements Path, Comparable<Path>
+public class BasicPath implements PathProvider, Comparable<Path>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -78,7 +79,7 @@ public class BasicPath implements Path, Comparable<Path>
       if (log.isLoggable(Level.FINER))
       {
          log.finer("Resolved \"" + context + "\" to absolute form: " + resolvedContext);
-      }
+      }      
       this.context = resolvedContext;
    }
 
@@ -147,6 +148,28 @@ public class BasicPath implements Path, Comparable<Path>
 
       // Just delegate to underlying Strings
       return path.get().compareTo(this.get());
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.spi.PathProvider#parent()
+    */
+   @Override
+   public Path parent()
+   {
+      // Get the last index of "/"
+      final String resolvedContext = PathUtil.optionallyRemoveFollowingSlash(this.context);
+      final int lastIndex = resolvedContext.lastIndexOf(PathUtil.SLASH);
+      // If it either doesn't occur or is the root
+      if (lastIndex == -1 || (lastIndex == 0 && resolvedContext.length() == 1))
+      {
+         // No parent present, return null
+         return null;
+      }
+      // Get the parent context
+      final String sub = resolvedContext.substring(0, lastIndex);
+      // Return
+      return new BasicPath(sub);
    }
 
    //-------------------------------------------------------------------------------------||

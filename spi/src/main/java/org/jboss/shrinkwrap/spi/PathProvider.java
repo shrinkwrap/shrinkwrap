@@ -14,21 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api;
+package org.jboss.shrinkwrap.spi;
+
+import org.jboss.shrinkwrap.api.Path;
 
 /**
- * Represents a target context within an {@link Archive} under
- * which an {@link Asset} may be found.
- *
+ * Service Provider Interface of implementations of a
+ * {@link Path}; exposes support that need not be visible to \
+ * end users.
+ * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public interface Path extends Comparable<Path>
+public interface PathProvider extends Path
 {
+
    /**
-    * Obtains the context which this Path represents
-    * 
+    * Obtains the parent of this Path, if exists, else null.
+    * For instance if the Path is "/my/path", the parent 
+    * will be "/my".  Each call will result in a new object reference,
+    * though subsequent calls upon the same Path will be equal by value.
     * @return
     */
-   String get();
+   Path parent();
+
 }

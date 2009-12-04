@@ -18,7 +18,10 @@ package org.jboss.shrinkwrap.impl.base.path;
 
 import java.util.logging.Logger;
 
+import junit.framework.TestCase;
+
 import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.spi.PathProvider;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -248,5 +251,36 @@ public class BasicPathTestCase
       // Ensure expected
       Assert.assertTrue("Paths with different contexts should not be equal by value", !path1.equals(path2));
       log.info(path1 + " not equal by value to " + path2);
+   }
+
+   /**
+    * Ensures the contract of {@link PathProvider#parent()}
+    * is intact
+    */
+   @Test
+   public void testParent()
+   {
+      // Log
+      log.info("testParent");
+
+      // Create new paths
+      final String rootString = "/";
+      final String subpathString = "subpath";
+      final String contextString = "context";
+      final String context2String = "context/";
+      final BasicPath root= new BasicPath(rootString);
+      final BasicPath subpath = new BasicPath(subpathString);
+      final BasicPath context = new BasicPath(subpath, contextString);
+      final BasicPath contextWithFollowingSlash = new BasicPath(subpath, context2String);
+
+      // Test
+      TestCase.assertEquals("The parent of the context path should be equal to the initial subpath", subpath, context
+            .parent());
+      TestCase.assertEquals(
+            "The parent of the context path with a following slash should be equal to the initial subpath", subpath,
+            contextWithFollowingSlash.parent());
+      TestCase.assertEquals("The parent of the subpath should be the root", root, subpath.parent());
+      TestCase.assertNull("The parent of the root should be null", root.parent());
+
    }
 }

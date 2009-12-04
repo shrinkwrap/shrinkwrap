@@ -28,7 +28,7 @@ package org.jboss.shrinkwrap.impl.base.path;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-final class PathUtil
+public final class PathUtil
 {
 
    //-------------------------------------------------------------------------------------||
@@ -143,7 +143,7 @@ final class PathUtil
     * @param path
     * @return
     */
-   static String optionallyRemovePrecedingSlash(final String path)
+   public static String optionallyRemovePrecedingSlash(final String path)
    {
       // Precondition check
       assertSpecified(path);
@@ -160,13 +160,36 @@ final class PathUtil
    }
 
    /**
+    * Removes, if present, the absolute slash following
+    * the specified path, and returns the adjusted result. 
+    * 
+    * @param path
+    * @return
+    */
+   static String optionallyRemoveFollowingSlash(final String path)
+   {
+      // Precondition check
+      assertSpecified(path);
+
+      // Is there's a last character of slash
+      if (isLastCharSlash(path))
+      {
+         // Return everything but last char
+         return path.substring(0, path.length() - 1);
+      }
+
+      // Return as-is
+      return path;
+   }
+
+   /**
     * Adds, if not already present, the absolute slash following
     * the specified path, and returns the adjusted result.  
     * 
     * @param path
     * @return
     */
-   static String optionallyAppendSlash(final String path)
+   public static String optionallyAppendSlash(final String path)
    {
       // Precondition check
       assertSpecified(path);
