@@ -33,8 +33,8 @@ import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.io.StreamErrorHandler;
 import org.jboss.shrinkwrap.impl.base.io.StreamTask;
+import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
-import org.jboss.shrinkwrap.spi.PathProvider;
 
 public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
 {
@@ -60,7 +60,7 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
     * ZipOutputStream used to write the zip entries
     */
    private ZipOutputStream zipOutputStream;
-   
+
    /**
     * A Set of Paths we've exported so far (so that we don't write
     * any entries twice)
@@ -126,23 +126,14 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
       {
          throw new IllegalArgumentException("Path must be specified");
       }
-      
+
       /*
        * SHRINKWRAP-94
        * Add entries for all parents of this Path
        * by recursing first and adding parents that
        * haven't already been written.
        */
-      final Path parent;
-      try
-      {
-         parent = ((PathProvider) path).parent();
-      }
-      catch (final ClassCastException cce)
-      {
-         throw new RuntimeException("Path implementation provided does not implement the SPI "
-               + PathProvider.class.getName(), cce);
-      }
+      final Path parent = getParent(path);
       if (parent != null && !this.pathsExported.contains(parent))
       {
          // Process the parent without any asset (it's a directory)
@@ -154,7 +145,7 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
       // Get Asset InputStream if the asset is specified (else it's a directory so use null)
       final InputStream assetStream = !isDirectory ? asset.openStream() : null;
       final String pathName = PathUtil.optionallyRemovePrecedingSlash(path.get());
-      
+
       // Make a task for this stream and close when done
       IOUtil.closeOnComplete(assetStream, new StreamTask<InputStream>()
       {
@@ -168,13 +159,13 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
             {
                resolvedPath = PathUtil.optionallyAppendSlash(resolvedPath);
             }
-            
+
             // Make a ZipEntry
             final ZipEntry entry = new ZipEntry(resolvedPath);
 
             // Write the Asset under the same Path name in the Zip
             zipOutputStream.putNextEntry(entry);
-            
+
             // Mark that we've written this Path 
             pathsExported.add(path);
 
@@ -219,6 +210,39 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
 
       // Return
       return inputStream;
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Internal Helper Methods ------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Obtains the parent of this Path, if exists, else null.
+    * For instance if the Path is "/my/path", the parent 
+    * will be "/my".  Each call will result in a new object reference,
+    * though subsequent calls upon the same Path will be equal by value.
+    * @return
+    * 
+    * @param path The path whose parent context we should return
+    */
+   static Path getParent(final Path path)
+   {
+      // Precondition checks
+      assert path != null : "Path must be specified";
+
+      // Get the last index of "/"
+      final String resolvedContext = PathUtil.optionallyRemoveFollowingSlash(path.get());
+      final int lastIndex = resolvedContext.lastIndexOf(PathUtil.SLASH);
+      // If it either doesn't occur or is the root
+      if (lastIndex == -1 || (lastIndex == 0 && resolvedContext.length() == 1))
+      {
+         // No parent present, return null
+         return null;
+      }
+      // Get the parent context
+      final String sub = resolvedContext.substring(0, lastIndex);
+      // Return
+      return new BasicPath(sub);
    }
 
 }

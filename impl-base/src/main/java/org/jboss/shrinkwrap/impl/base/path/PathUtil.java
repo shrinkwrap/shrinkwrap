@@ -38,12 +38,12 @@ public final class PathUtil
    /**
     * Slash character
     */
-   static final char SLASH = '/';
+   public static final char SLASH = '/';
 
    /**
     * Empty String
     */
-   static final String EMPTY = "";
+   public static final String EMPTY = "";
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -67,7 +67,7 @@ public final class PathUtil
     * "base" and context of "context" will
     * result in form "/base/context".
     */
-   static String composeAbsoluteContext(final String base, final String context)
+   public static String composeAbsoluteContext(final String base, final String context)
    {
       // Precondition checks
       assertSpecified(base);
@@ -92,7 +92,7 @@ public final class PathUtil
     * 
     * @param path
     */
-   static String adjustToRelativeDirectoryContext(final String path)
+   public static String adjustToRelativeDirectoryContext(final String path)
    {
       // Return nulls
       if (path == null)
@@ -119,7 +119,7 @@ public final class PathUtil
     * 
     * @param path
     */
-   static String adjustToAbsoluteDirectoryContext(String path)
+   public static String adjustToAbsoluteDirectoryContext(String path)
    {
       // Return nulls
       if (path == null)
@@ -166,7 +166,7 @@ public final class PathUtil
     * @param path
     * @return
     */
-   static String optionallyRemoveFollowingSlash(final String path)
+   public static String optionallyRemoveFollowingSlash(final String path)
    {
       // Precondition check
       assertSpecified(path);
@@ -214,7 +214,7 @@ public final class PathUtil
     * @param path
     * @return
     */
-   static String optionallyPrependSlash(final String path)
+   public static String optionallyPrependSlash(final String path)
    {
       // Adjust null
       String resolved = path;

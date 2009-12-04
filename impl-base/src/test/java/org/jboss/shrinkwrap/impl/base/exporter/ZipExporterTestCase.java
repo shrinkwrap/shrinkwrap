@@ -25,6 +25,8 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import junit.framework.TestCase;
+
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
@@ -84,12 +86,11 @@ public class ZipExporterTestCase extends ExportTestBase
       // Validate entries were written out
       assertAssetInZip(expectedZip, PATH_ONE, ASSET_ONE);
       assertAssetInZip(expectedZip, PATH_TWO, ASSET_TWO);
-      
+
       // Validate all paths were written
       // SHRINKWRAP-94
       getEntryFromZip(expectedZip, NESTED_PATH);
    }
-
 
    /**
     * Test to make sue an archive can be exported to Zip and nested archives are also in exported as nested Zip.
@@ -209,7 +210,7 @@ public class ZipExporterTestCase extends ExportTestBase
       byte[] actualContents = IOUtil.asByteArray(expectedZip.getInputStream(entry));
       Assert.assertArrayEquals(expectedContents, actualContents);
    }
-   
+
    /**
     * Obtains the entry from the specified ZIP file at the specified Path, ensuring
     * it exists along the way
@@ -238,6 +239,37 @@ public class ZipExporterTestCase extends ExportTestBase
    {
       OutputStream fileOutputStream = new FileOutputStream(outFile);
       IOUtil.copyWithClose(inputStream, fileOutputStream);
+   }
+
+   /**
+    * Ensures the contract of {@link PathProvider#parent()}
+    * is intact
+    */
+   @Test
+   public void testParent()
+   {
+      // Log
+      log.info("testParent");
+
+      // Create new paths
+      final String rootString = "/";
+      final String subpathString = "subpath";
+      final String contextString = "context";
+      final String context2String = "context/";
+      final BasicPath root = new BasicPath(rootString);
+      final BasicPath subpath = new BasicPath(subpathString);
+      final BasicPath context = new BasicPath(subpath, contextString);
+      final BasicPath contextWithFollowingSlash = new BasicPath(subpath, context2String);
+
+      // Test
+      TestCase.assertEquals("The parent of the context path should be equal to the initial subpath", subpath,
+            ZipExportDelegate.getParent(context));
+      TestCase.assertEquals(
+            "The parent of the context path with a following slash should be equal to the initial subpath", subpath,
+            ZipExportDelegate.getParent(contextWithFollowingSlash));
+      TestCase.assertEquals("The parent of the subpath should be the root", root, ZipExportDelegate.getParent(subpath));
+      TestCase.assertNull("The parent of the root should be null", ZipExportDelegate.getParent(root));
+
    }
 
 }
