@@ -23,6 +23,7 @@ import junit.framework.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -474,6 +475,37 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
       Path expectedPath = new BasicPath(getClassPath(), AssetUtil
             .getFullPathForClassResource(DummyClassUsedForClassResourceTest.class));
+
+      Assert.assertTrue(
+            "A class should be located at " + expectedPath.get(), 
+            getArchive().contains(expectedPath));
+   }
+   
+   /**
+    * Ensure packages can be added with filters
+    * 
+    * @throws Exception
+    */
+   @Test
+   @ArchiveType(ClassContainer.class)
+   public void testAddPakcageRecursiveFiltered() throws Exception 
+   {
+      getClassContainer().addPackages(true, new Filter<Class<?>>()
+      {
+         @Override
+         public boolean include(Class<?> clazz)
+         {
+            return clazz == DynamicContainerTestBase.class;
+         }
+      }, DynamicContainerTestBase.class.getPackage());
+      
+      Path expectedPath = new BasicPath(
+            getClassPath(), AssetUtil.getFullPathForClassResource(DynamicContainerTestBase.class));
+
+      Assert.assertEquals(
+            "Should only be one class added",
+            1,
+            getArchive().getContent().size());
 
       Assert.assertTrue(
             "A class should be located at " + expectedPath.get(), 

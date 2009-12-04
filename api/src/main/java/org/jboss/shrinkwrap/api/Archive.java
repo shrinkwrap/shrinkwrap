@@ -135,6 +135,18 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If the existing archive is not specified
     */
    T merge(Archive<?> source) throws IllegalArgumentException;
+   
+   /**
+    * Merge the contents from an existing archive without 
+    * maintaining the archive name in the context path.
+    * 
+    * The filter control which {@link Path}s to include form the source {@link Archive}.
+    * 
+    * @param source Archive to add contents from
+    * @return  
+    * @throws IllegalArgumentException If the existing archive is not specified
+    */
+   T merge(Archive<?> source, Filter<Path> filter) throws IllegalArgumentException;
 
    /**
     * Merge the contents from an existing archive in a specific path 
@@ -146,6 +158,19 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If the path or existing archive is not specified
     */
    T merge(Archive<?> source, Path path) throws IllegalArgumentException;
+
+   /**
+    * Merge the contents from an existing archive in a specific path 
+    * without maintaining the archive name in the context path. 
+    * The filter control which {@link Path}s to include form the source {@link Archive}. 
+    * 
+    * @param source Archive to add contents from
+    * @param path Path to add contents to
+    * @param filter Filter to use for including {@link Asset}s in the merge.
+    * @return  
+    * @throws IllegalArgumentException If the path or existing archive is not specified
+    */
+   T merge(Archive<?> source, Path path, Filter<Path> filter) throws IllegalArgumentException;
 
    /**
     * Returns a multiline "ls -l"-equse output of the contents of

@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.api.container;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Filter;
 
 /**
  * ClassContainer
@@ -69,20 +70,35 @@ public interface ClassContainer<T extends Archive<T>>
 
    /**
     * Adds all classes in the specified {@link Package} to the {@link Archive}.
+    * <br/>
+    * SubPackages are excluded.
     * 
     * @param pack The {@link Package} to add
     * @return This virtual archive
     * @throws IllegalArgumentException If no package were specified
+    * @see #addPackages(boolean, Package...)
     */
    T addPackage(Package pack) throws IllegalArgumentException;
 
    /**
-    * Adds all classes in the specified {@link Package}s to the {@link Archive}.
+    * Adds all classes in the specified {@link Package}s to the {@link Archive}. 
     * 
     * @param recursive Should the sub packages be added
     * @param packages All the packages to add
     * @return This virtual archive
     * @throws IllegalArgumentException If no packages were specified
+    * @see #addPackages(boolean, Filter, Package...)
     */
    T addPackages(boolean recursive, Package... packages) throws IllegalArgumentException;
+   
+   /**
+    * Adds all classes accepted by the filter in the specified {@link Package}s to the {@link Archive}.
+    * 
+    * @param recursive Should the sub packages be added
+    * @param filter filter out specific classes
+    * @param packages All the packages to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException If no packages were specified
+    */
+   T addPackages(boolean recursive, Filter<Class<?>> filter, Package... packages) throws IllegalArgumentException;
 }

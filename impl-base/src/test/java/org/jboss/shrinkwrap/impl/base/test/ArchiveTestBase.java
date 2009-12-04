@@ -17,7 +17,6 @@
 package org.jboss.shrinkwrap.impl.base.test;
 
 import java.util.Arrays;
-
 import java.util.Map;
 
 import junit.framework.Assert;
@@ -25,6 +24,7 @@ import junit.framework.Assert;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.Validate;
@@ -539,6 +539,66 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
    }
 
    /**
+    * Ensure that the filter is used when merging.
+    * @throws Exception
+    */
+   @Test
+   public void testMergeToPathWithFilter() throws Exception 
+   {
+      Archive<?> archive = getArchive();
+      Archive<T> sourceArchive = createNewArchive();
+      Path location = new BasicPath("/", "test.properties");
+      Path locationTwo = new BasicPath("/", "test2.properties");
+
+      Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+      Asset assetTwo = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
+      sourceArchive.add(asset, location).add(assetTwo, locationTwo);
+
+      Path baseLocation = new BasicPath("somewhere");
+
+      archive.merge(sourceArchive, baseLocation, Filters.include(".*test2.*"));
+      
+      Assert.assertEquals(
+            "Should only have merged 1",
+            1, 
+            archive.getContent().size());
+      
+      Path expectedPath = new BasicPath(baseLocation, locationTwo);
+
+      Assert.assertTrue(
+            "Asset should have been added to path: " + expectedPath.get(), 
+            this.compareAssets(archive.get(expectedPath), asset));
+   }
+
+   /**
+    * Ensure that the filter is used when merging.
+    * @throws Exception
+    */
+   @Test
+   public void testMergeWithFilter() throws Exception 
+   {
+      Archive<?> archive = getArchive();
+      Archive<T> sourceArchive = createNewArchive();
+      Path location = new BasicPath("/", "test.properties");
+      Path locationTwo = new BasicPath("/", "test2.properties");
+
+      Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+      Asset assetTwo = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
+      sourceArchive.add(asset, location).add(assetTwo, locationTwo);
+
+      archive.merge(sourceArchive, Filters.include(".*test2.*"));
+      
+      Assert.assertEquals(
+            "Should only have merged 1",
+            1, 
+            archive.getContent().size());
+      
+      Assert.assertTrue(
+            "Asset should have been added to path: " + locationTwo.get(), 
+            this.compareAssets(archive.get(locationTwo), asset));
+   }
+
+   /**
     * Ensure merging content from another archive requires a path
     * @throws Exception
     */
@@ -548,7 +608,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> archive = getArchive();
       try
       {
-         archive.merge(createNewArchive(), null);
+         archive.merge(createNewArchive(), (Path)null);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)

@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
+import org.jboss.shrinkwrap.api.Filter;
+import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
@@ -190,6 +192,15 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       return merge(source, new BasicPath());
    }
 
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Filter)
+    */
+   @Override
+   public T merge(Archive<?> source, Filter<Path> filter) throws IllegalArgumentException
+   {
+      return merge(source, new BasicPath(), filter);
+   }   
+   
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Archive)
@@ -197,9 +208,22 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
    @Override
    public T merge(final Archive<?> source, final Path path) throws IllegalArgumentException
    {
+      Validate.notNull(source, "No source archive was specified");
+      Validate.notNull(path, "No path was specified");
+      
+      return merge(source, path, Filters.includeAll());
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Filter)
+    */
+   @Override
+   public T merge(Archive<?> source, Path path, Filter<Path> filter) throws IllegalArgumentException
+   {
       // Precondition checks
       Validate.notNull(source, "No source archive was specified");
       Validate.notNull(path, "No path was specified");
+      Validate.notNull(filter, "No filter was specified");
 
       // Get existing contents from source archive
       final Map<Path, Asset> sourceContent = source.getContent();
@@ -209,10 +233,10 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       for (final Entry<Path, Asset> contentEntry : sourceContent.entrySet())
       {
          final Asset asset = contentEntry.getValue();
-         Path assetPath = contentEntry.getKey();
-         if (path != null)
+         Path assetPath = new BasicPath(path, contentEntry.getKey());
+         if( !filter.include(assetPath)) 
          {
-            assetPath = new BasicPath(path, assetPath);
+            continue;
          }
          // Delegate
          add(asset, assetPath);

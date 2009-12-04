@@ -25,6 +25,8 @@ import java.util.Set;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.Filter;
+import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -145,12 +147,29 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
    }
    
    /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Filter)
+    */
+   @Override
+   public T merge(Archive<?> source, Filter<Path> filter) throws IllegalArgumentException
+   {
+      archive.merge(source, filter);
+      return covarientReturn();
+   }
+   
+   /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path)
     */
    @Override
    public T merge(Archive<?> source, Path path) throws IllegalArgumentException
    {
       archive.merge(source, path);
+      return covarientReturn();
+   }
+   
+   @Override
+   public T merge(Archive<?> source, Path path, Filter<Path> filter) throws IllegalArgumentException
+   {
+      archive.merge(source, path, filter);
       return covarientReturn();
    }
    
@@ -643,6 +662,17 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
    public T addPackages(boolean recursive, Package... packages) throws IllegalArgumentException
    {
       Validate.notNull(packages, "Packages must be specified");
+      return addPackages(recursive, Filters.includeAllClasses(), packages);
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.ClassContainer#addPackages(boolean, org.jboss.shrinkwrap.api.Filter, java.lang.Package[])
+    */
+   @Override
+   public T addPackages(boolean recursive, Filter<Class<?>> filter, Package... packages) throws IllegalArgumentException
+   {
+      Validate.notNull(filter, "Filter must be specified");
+      Validate.notNull(packages, "Packages must be specified");
       
       for(Package pack : packages) 
       {
@@ -651,6 +681,10 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
          Set<Class<?>> classes = scanner.getClasses(); 
          for(Class<?> clazz : classes) 
          {
+            if(!filter.include(clazz)) 
+            {
+               continue;
+            }
             Asset asset = new ClassAsset(clazz);
             Path location = new BasicPath(getClassesPath(), AssetUtil.getFullPathForClassResource(clazz));
             add(asset, location);
