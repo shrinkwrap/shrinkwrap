@@ -402,20 +402,24 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    }
 
    /**
-    * Ensure classes can be added to containers by name and ClassLoader
+    * Ensure classes can be added to containers by name
     * 
     * @throws Exception
     */
    @Test
    @ArchiveType(ClassContainer.class)
-   public void testAddClassesByFqnAndClassLoader() throws Exception
+   public void testAddClassesByFqn() throws Exception
    {
-      // Attempt to load using the TCCL
-      this.ensureCanAddClassByNameAndClassLoader(Thread.currentThread().getContextClassLoader());
+      final Class<?> classToAdd = DummyClassUsedForClassResourceTest.class;
+
+      getClassContainer().addClass(classToAdd.getName());
+
+      Path expectedPath = new BasicPath(getClassPath(), AssetUtil.getFullPathForClassResource(classToAdd));
+      Assert.assertTrue("A class should be located at " + expectedPath.get(), getArchive().contains(expectedPath));
    }
 
    /**
-    * Ensure classes can be added to containers by name and TCCL
+    * Ensure classes can be added to containers by name using a classloader
     * 
     * @throws Exception
     */
@@ -423,23 +427,11 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @ArchiveType(ClassContainer.class)
    public void testAddClassesByFqnAndTccl() throws Exception
    {
-      // Using a null CL should signal to default to TCCL
-      this.ensureCanAddClassByNameAndClassLoader(null);
-   }
-
-   /**
-    * Ensures that a Class may be added to the ClassContainer by FQN
-    * and the specified ClassLoader
-    * @param cl
-    */
-   private void ensureCanAddClassByNameAndClassLoader(final ClassLoader cl)
-   {
       final Class<?> classToAdd = DummyClassUsedForClassResourceTest.class;
 
-      getClassContainer().addClass(classToAdd.getName(), cl);
+      getClassContainer().addClass(classToAdd.getName(), classToAdd.getClassLoader());
 
       Path expectedPath = new BasicPath(getClassPath(), AssetUtil.getFullPathForClassResource(classToAdd));
-
       Assert.assertTrue("A class should be located at " + expectedPath.get(), getArchive().contains(expectedPath));
    }
 

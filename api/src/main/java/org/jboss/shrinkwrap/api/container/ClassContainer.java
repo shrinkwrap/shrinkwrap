@@ -47,15 +47,26 @@ public interface ClassContainer<T extends Archive<T>>
    T addClass(Class<?> clazz) throws IllegalArgumentException;
 
    /**
-    * Adds the Class with the specified fully-qualified name,
-    * loaded by the specified ClassLoader, to the {@link Archive}.
+    * Adds the {@link Class} with the specified fully-qualified name,
+    * loaded by the Thread Context {@link ClassLoader}, to the {@link Archive}.
     * 
-    * @param fullyQualifiedClassName The name of the Class to add
-    * @param cl The ClassLoader used to load the Class, or null to denote the 
-    *       Thread Context ClassLoader
+    * @param fullyQualifiedClassName The name of the {@link Class} to add
     * @return This archive
-    * @throws IllegalArgumentException If no class name was specified, or if the Class 
-    *   could not be loaded by the target ClassLoader
+    * @throws IllegalArgumentException If no class name was specified
+    * @throws IllegalArgumentException If the {@link Class} could not be loaded
+    */
+   T addClass(String fullyQualifiedClassName) throws IllegalArgumentException;
+
+   /**
+    * Adds the {@link Class} with the specified fully-qualified name,
+    * loaded by the specified {@link ClassLoader}, to the {@link Archive}.
+    * 
+    * @param fullyQualifiedClassName The name of the {@link Class} to add
+    * @param cl The {@link ClassLoader} used to load the Class
+    * @return This archive
+    * @throws IllegalArgumentException If no class name was specified
+    * @throws IllegalArgumentException If no {@link ClassLoader} was specified
+    * @throws IllegalArgumentException If the {@link Class} could not be loaded by the target {@link ClassLoader}
     */
    T addClass(String fullyQualifiedClassName, ClassLoader cl) throws IllegalArgumentException;
 

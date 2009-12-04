@@ -593,35 +593,42 @@ public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBas
       return addClasses(clazz);
    }
    
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.ClassContainer#addClass(java.lang.String)
+    */
    /**
+    * @see #addClass(String, ClassLoader)
+    */
+   @Override
+   public T addClass(String fullyQualifiedClassName) throws IllegalArgumentException
+   {
+      Validate.notNullOrEmpty(fullyQualifiedClassName, "Fully-qualified class name must be specified");
+
+      return addClass(
+            fullyQualifiedClassName, 
+            AccessController.doPrivileged(GetTcclAction.INSTANCE));
+   }
+   
+   /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.container.ClassContainer#addClass(java.lang.String, java.lang.ClassLoader)
     */
    @Override
    public T addClass(final String fullyQualifiedClassName, final ClassLoader cl) throws IllegalArgumentException
    {
       // Precondition checks
-      if (fullyQualifiedClassName == null || fullyQualifiedClassName.length() == 0)
-      {
-         throw new IllegalArgumentException("Fully-qualified class name must be specified");
-      }
-
-      // Default to TCCL if not specified
-      ClassLoader loadingCl = cl;
-      if (loadingCl == null)
-      {
-         loadingCl = AccessController.doPrivileged(GetTcclAction.INSTANCE);
-      }
-
+      Validate.notNullOrEmpty(fullyQualifiedClassName, "Fully-qualified class name must be specified");
+      Validate.notNull(cl, "ClassLoader must be specified");
+      
       // Obtain the Class
       final Class<?> clazz;
       try
       {
-         clazz = Class.forName(fullyQualifiedClassName, false, loadingCl);
+         clazz = Class.forName(fullyQualifiedClassName, false, cl);
       }
       catch (final ClassNotFoundException e)
       {
          throw new IllegalArgumentException("Could not load class of name " + fullyQualifiedClassName + " with "
-               + loadingCl, e);
+               + cl, e);
       }
 
       // Delegate and return
