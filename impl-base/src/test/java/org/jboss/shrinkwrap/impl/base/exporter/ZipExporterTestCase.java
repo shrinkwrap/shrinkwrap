@@ -30,9 +30,9 @@ import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
-import org.jboss.shrinkwrap.impl.base.exporter.ZipExporterUtil;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
+import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -84,8 +84,12 @@ public class ZipExporterTestCase extends ExportTestBase
       // Validate entries were written out
       assertAssetInZip(expectedZip, PATH_ONE, ASSET_ONE);
       assertAssetInZip(expectedZip, PATH_TWO, ASSET_TWO);
-
+      
+      // Validate all paths were written
+      // SHRINKWRAP-94
+      getEntryFromZip(expectedZip, NESTED_PATH);
    }
+
 
    /**
     * Test to make sue an archive can be exported to Zip and nested archives are also in exported as nested Zip.
@@ -116,7 +120,7 @@ public class ZipExporterTestCase extends ExportTestBase
       Path nestedArchivePath = new BasicPath(NAME_NESTED_ARCHIVE);
 
       // Get Zip entry path
-      String nestedArchiveZipEntryPath = ZipExporterUtil.toZipEntryPath(nestedArchivePath);
+      String nestedArchiveZipEntryPath = PathUtil.optionallyRemovePrecedingSlash(nestedArchivePath.get());
 
       // Get nested archive entry from exported zip
       ZipEntry nestedArchiveEntry = expectedZip.getEntry(nestedArchiveZipEntryPath);
@@ -134,7 +138,7 @@ public class ZipExporterTestCase extends ExportTestBase
       Path nestedArchiveTwoPath = new BasicPath(NESTED_PATH, NAME_NESTED_ARCHIVE_2);
 
       // Get Zip entry path
-      String nestedArchiveTwoZipEntryPath = ZipExporterUtil.toZipEntryPath(nestedArchiveTwoPath);
+      String nestedArchiveTwoZipEntryPath = PathUtil.optionallyRemovePrecedingSlash(nestedArchiveTwoPath.get());
 
       // Get second nested archive entry from exported zip
       ZipEntry nestedArchiveTwoEntry = expectedZip.getEntry(nestedArchiveTwoZipEntryPath);
@@ -151,7 +155,7 @@ public class ZipExporterTestCase extends ExportTestBase
    }
 
    @Test(expected = ArchiveExportException.class)
-   public void testExportThrowsArchiveExcepitonOnAssetWriteFailure()
+   public void testExportThrowsArchiveExceptionOnAssetWriteFailure()
    {
       log.info("testExportThrowsArchiveExcepitonOnAssetWriteFailure");
       Archive<?> archive = createArchiveWithAssets();
@@ -200,12 +204,28 @@ public class ZipExporterTestCase extends ExportTestBase
    private void assertAssetInZip(ZipFile expectedZip, Path path, Asset asset) throws IllegalArgumentException,
          IOException
    {
-      String entryPath = ZipExporterUtil.toZipEntryPath(path);
-      ZipEntry entry = expectedZip.getEntry(entryPath);
-      Assert.assertNotNull(entry);
+      final ZipEntry entry = this.getEntryFromZip(expectedZip, path);
       byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
       byte[] actualContents = IOUtil.asByteArray(expectedZip.getInputStream(entry));
       Assert.assertArrayEquals(expectedContents, actualContents);
+   }
+   
+   /**
+    * Obtains the entry from the specified ZIP file at the specified Path, ensuring
+    * it exists along the way
+    * @param expectedZip
+    * @param path
+    * @return
+    * @throws IllegalArgumentException
+    * @throws IOException
+    */
+   private ZipEntry getEntryFromZip(final ZipFile expectedZip, final Path path) throws IllegalArgumentException,
+         IOException
+   {
+      String entryPath = PathUtil.optionallyRemovePrecedingSlash(path.get());
+      ZipEntry entry = expectedZip.getEntry(entryPath);
+      Assert.assertNotNull("Expected path not found in ZIP: " + path, entry);
+      return entry;
    }
 
    /**

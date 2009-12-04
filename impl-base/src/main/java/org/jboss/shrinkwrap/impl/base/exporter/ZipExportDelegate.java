@@ -19,6 +19,8 @@ package org.jboss.shrinkwrap.impl.base.exporter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -31,6 +33,8 @@ import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.io.StreamErrorHandler;
 import org.jboss.shrinkwrap.impl.base.io.StreamTask;
+import org.jboss.shrinkwrap.impl.base.path.PathUtil;
+import org.jboss.shrinkwrap.spi.PathProvider;
 
 public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
 {
@@ -56,6 +60,12 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
     * ZipOutputStream used to write the zip entries
     */
    private ZipOutputStream zipOutputStream;
+   
+   /**
+    * A Set of Paths we've exported so far (so that we don't write
+    * any entries twice)
+    */
+   private Set<Path> pathsExported = new HashSet<Path>();
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -111,25 +121,69 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
    @Override
    protected void processAsset(final Path path, final Asset asset)
    {
-      final String pathName = ZipExporterUtil.toZipEntryPath(path);
+      // Precondition checks
+      if (path == null)
+      {
+         throw new IllegalArgumentException("Path must be specified");
+      }
+      
+      /*
+       * SHRINKWRAP-94
+       * Add entries for all parents of this Path
+       * by recursing first and adding parents that
+       * haven't already been written.
+       */
+      final Path parent;
+      try
+      {
+         parent = ((PathProvider) path).parent();
+      }
+      catch (final ClassCastException cce)
+      {
+         throw new RuntimeException("Path implementation provided does not implement the SPI "
+               + PathProvider.class.getName(), cce);
+      }
+      if (parent != null && !this.pathsExported.contains(parent))
+      {
+         // Process the parent without any asset (it's a directory)
+         this.processAsset(parent, null);
+      }
+      // Mark if we're writing a directory
+      final boolean isDirectory = asset == null;
 
-      final ZipEntry entry = new ZipEntry(pathName);
-
-      // Get Asset InputStream
-      final InputStream assetStream = asset.openStream();
-
+      // Get Asset InputStream if the asset is specified (else it's a directory so use null)
+      final InputStream assetStream = !isDirectory ? asset.openStream() : null;
+      final String pathName = PathUtil.optionallyRemovePrecedingSlash(path.get());
+      
+      // Make a task for this stream and close when done
       IOUtil.closeOnComplete(assetStream, new StreamTask<InputStream>()
       {
 
          @Override
          public void execute(InputStream stream) throws Exception
          {
-            // Write the Asset under the same Path name in the Zip
-            // Make a Zip Entry
-            zipOutputStream.putNextEntry(entry);
+            // If we're writing a directory, ensure we trail a slash for the ZipEntry
+            String resolvedPath = pathName;
+            if (isDirectory)
+            {
+               resolvedPath = PathUtil.optionallyAppendSlash(resolvedPath);
+            }
+            
+            // Make a ZipEntry
+            final ZipEntry entry = new ZipEntry(resolvedPath);
 
-            // Read the contents of the asset and write to the JAR
-            IOUtil.copy(stream, zipOutputStream);
+            // Write the Asset under the same Path name in the Zip
+            zipOutputStream.putNextEntry(entry);
+            
+            // Mark that we've written this Path 
+            pathsExported.add(path);
+
+            // Read the contents of the asset and write to the JAR, 
+            // if we're not just a directory
+            if (!isDirectory)
+            {
+               IOUtil.copy(stream, zipOutputStream);
+            }
 
             // Close up the instream and the entry
             zipOutputStream.closeEntry();
