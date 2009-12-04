@@ -54,7 +54,7 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
    /**
     * OutputStream to hold the output contents
     */
-   private final ByteArrayOutputStream output = new ByteArrayOutputStream();
+   private final ByteArrayOutputStream output = new ByteArrayOutputStream(8192);
 
    /**
     * ZipOutputStream used to write the zip entries
@@ -91,7 +91,6 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
    protected void export()
    {
       zipOutputStream = new ZipOutputStream(output);
-
       // Enclose every IO Operation so we can close up cleanly
       IOUtil.closeOnComplete(zipOutputStream, new StreamTask<ZipOutputStream>()
       {

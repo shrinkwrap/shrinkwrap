@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.asset;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -59,7 +60,7 @@ public class UrlAsset implements Asset
    {
       try
       {
-         return url.openStream();
+         return new BufferedInputStream(url.openStream(), 8192);
       }
       catch (Exception e)
       {

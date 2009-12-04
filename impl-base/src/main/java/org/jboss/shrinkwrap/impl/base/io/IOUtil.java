@@ -82,13 +82,12 @@ public final class IOUtil
       Validate.notNull(in, "stream must be specified");
 
       // Get content as an array of bytes
-      final ByteArrayOutputStream out = new ByteArrayOutputStream();
-      final int len = 1024;
+      final ByteArrayOutputStream out = new ByteArrayOutputStream(8192);
+      final int len = 4096;
       final byte[] buffer = new byte[len];
       int read = 0;
       try
       {
-
          while (((read = in.read(buffer)) != -1))
          {
             out.write(buffer, 0, read);
@@ -126,7 +125,7 @@ public final class IOUtil
     */
    public static void copy(InputStream input, OutputStream output)
    {
-      final byte[] buffer = new byte[1024];
+      final byte[] buffer = new byte[4096];
       int read = 0;
       try
       {
@@ -134,6 +133,8 @@ public final class IOUtil
          {
             output.write(buffer, 0, read);
          }
+
+         output.flush();
       }
       catch (final IOException ioe)
       {

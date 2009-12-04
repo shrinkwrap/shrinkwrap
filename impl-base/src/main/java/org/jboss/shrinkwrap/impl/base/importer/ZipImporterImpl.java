@@ -95,8 +95,8 @@ public class ZipImporterImpl extends SpecializedBase implements ZipImporter
             }
             String entryName = entry.getName();
 
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            byte[] content = new byte[1024];
+            ByteArrayOutputStream output = new ByteArrayOutputStream(8192);
+            byte[] content = new byte[4096];
             int readBytes;
             while( (readBytes = stream.read(content, 0, content.length)) != -1)
             {

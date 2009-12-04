@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.asset;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -66,7 +67,7 @@ public class FileAsset implements Asset
    {
       try
       {
-         return new FileInputStream(file);
+         return new BufferedInputStream(new FileInputStream(file), 8192);
       }
       catch (FileNotFoundException e)
       {

@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -116,9 +117,10 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
          // Get the asset streams
          final InputStream assetInputStream = asset.openStream();
          final FileOutputStream assetFileOutputStream = new FileOutputStream(assetFile);
+         final BufferedOutputStream assetBufferedOutputStream = new BufferedOutputStream(assetFileOutputStream, 8192);
 
          // Write contents
-         IOUtil.copyWithClose(assetInputStream, assetFileOutputStream);
+         IOUtil.copyWithClose(assetInputStream, assetBufferedOutputStream);
       }
       catch (Throwable t)
       {
