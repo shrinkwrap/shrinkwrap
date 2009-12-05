@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.impl.base;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -28,6 +29,7 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
+import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -199,6 +201,25 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
    public Map<Path, Asset> getContent()
    {
       return Collections.unmodifiableMap(content);
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.Archive#getContent(org.jboss.shrinkwrap.api.Filter)
+    */
+   @Override
+   public Map<Path, Asset> getContent(Filter<Path> filter)
+   {
+      Validate.notNull(filter, "Filter must be specified");
+      
+      Map<Path, Asset> filteredContent = new HashMap<Path, Asset>();
+      for(Map.Entry<Path, Asset> contentEntry : content.entrySet())
+      {
+         if(filter.include(contentEntry.getKey()))
+         {
+            filteredContent.put(contentEntry.getKey(), contentEntry.getValue());
+         }
+      }
+      return filteredContent;
    }
 
    /* {@inheritDoc}

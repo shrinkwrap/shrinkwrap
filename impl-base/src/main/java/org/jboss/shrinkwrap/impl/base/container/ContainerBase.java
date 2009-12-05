@@ -229,6 +229,15 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    }
    
    /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.Archive#getContent(org.jboss.shrinkwrap.api.Filter)
+    */
+   @Override
+   public Map<Path, Asset> getContent(Filter<Path> filter)
+   {
+      return archive.getContent(filter);
+   }
+   
+   /* (non-Javadoc)
     * @see org.jboss.declarchive.api.Archive#getName()
     */
    @Override

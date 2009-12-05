@@ -115,6 +115,13 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @return
     */
    Map<Path, Asset> getContent();
+   
+   /**
+    * Obtains all assets matching given filter in this archive, along with its respective Path.
+    * The returned Map will be an immutable view.
+    * @return
+    */
+   Map<Path, Asset> getContent(Filter<Path> filter);
 
    /**
     * Add an archive under a specific context and maintain the archive name as context path.

@@ -431,6 +431,39 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
    }
 
    /**
+    * Ensure get content returns the correct map of content based on the given filter
+    * @throws Exception
+    */
+   @Test
+   public void testToGetContentFiltered() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      Path location = new BasicPath("/", "test.properties");
+      Path locationTwo = new BasicPath("/", "test2.properties");
+
+      Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+      Asset assetTwo = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
+      archive.add(asset, location).add(assetTwo, locationTwo);
+
+      Map<Path, Asset> content = archive.getContent(Filters.include(".*test2.*"));
+
+      final Asset asset1 = content.get(location);
+      final Asset asset2 = content.get(locationTwo);
+      
+      Assert.assertEquals(
+            "Only 1 Asset should have been included",
+            1, 
+            content.size());
+      Assert.assertNull(
+            "Should not be included in content", 
+            asset1);
+      
+      Assert.assertNotNull(
+            "Should be included in content", 
+            asset2);
+   }
+   
+   /**
     * Ensure adding an archive to a path requires a path
     * @throws Exception
     */
