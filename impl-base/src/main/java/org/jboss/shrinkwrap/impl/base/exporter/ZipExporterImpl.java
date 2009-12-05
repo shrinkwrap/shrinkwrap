@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
-import org.jboss.shrinkwrap.impl.base.SpecializedBase;
+import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
@@ -33,7 +33,7 @@ import org.jboss.shrinkwrap.impl.base.Validate;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ZipExporterImpl extends SpecializedBase implements ZipExporter
+public class ZipExporterImpl extends AssignableBase implements ZipExporter
 {
 
    //-------------------------------------------------------------------------------------||

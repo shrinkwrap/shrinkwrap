@@ -89,7 +89,7 @@ public class ServiceExtensionLoaderTestCase
       
    }
 
-   public static class ExtensionImpl extends SpecializedBase implements Extension {
+   public static class ExtensionImpl extends AssignableBase implements Extension {
 
       private Archive<?> archive;
       public ExtensionImpl(Archive<?> archive)
@@ -104,7 +104,7 @@ public class ServiceExtensionLoaderTestCase
       }
    }
 
-   public static class ExtensionImpl2 extends SpecializedBase implements Extension {
+   public static class ExtensionImpl2 extends AssignableBase implements Extension {
 
       private Archive<?> archive;
       public ExtensionImpl2(Archive<?> archive)

@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
-import org.jboss.shrinkwrap.impl.base.SpecializedBase;
+import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
@@ -34,7 +34,7 @@ import org.jboss.shrinkwrap.impl.base.Validate;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ExplodedExporterImpl extends SpecializedBase implements ExplodedExporter
+public class ExplodedExporterImpl extends AssignableBase implements ExplodedExporter
 {
 
    //-------------------------------------------------------------------------------------||

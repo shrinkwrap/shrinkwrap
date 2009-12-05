@@ -26,7 +26,7 @@ import java.util.zip.ZipInputStream;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
-import org.jboss.shrinkwrap.impl.base.SpecializedBase;
+import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ZipFileEntryAsset;
@@ -38,7 +38,7 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ZipImporterImpl extends SpecializedBase implements ZipImporter  
+public class ZipImporterImpl extends AssignableBase implements ZipImporter  
 {
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||

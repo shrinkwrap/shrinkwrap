@@ -21,7 +21,7 @@ import java.io.File;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
-import org.jboss.shrinkwrap.impl.base.SpecializedBase;
+import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.FileAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -34,7 +34,7 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ExplodedImporterImpl extends SpecializedBase implements
+public class ExplodedImporterImpl extends AssignableBase implements
       ExplodedImporter
 {
    // -------------------------------------------------------------------------------------||

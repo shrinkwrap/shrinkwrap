@@ -27,7 +27,7 @@ import org.jboss.shrinkwrap.api.Assignable;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public abstract class SpecializedBase implements Assignable
+public abstract class AssignableBase implements Assignable
 {
    /**
     * Used by the Generic {@link Assignable} implementation to 

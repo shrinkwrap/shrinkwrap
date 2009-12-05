@@ -32,7 +32,7 @@ import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
-import org.jboss.shrinkwrap.impl.base.SpecializedBase;
+import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.URLPackageScanner;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
@@ -52,7 +52,7 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  * @version $Revision: $
  * @param <T>
  */
-public abstract class ContainerBase<T extends Archive<T>> extends SpecializedBase implements 
+public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase implements 
    Archive<T>, ManifestContainer<T>, ResourceContainer<T>, ClassContainer<T>, LibraryContainer<T> 
 {
    //-------------------------------------------------------------------------------------||
