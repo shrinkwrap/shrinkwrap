@@ -90,6 +90,11 @@ public class ZipExporterTestCase extends ExportTestBase
       // Validate all paths were written
       // SHRINKWRAP-94
       getEntryFromZip(expectedZip, NESTED_PATH);
+      
+      // Ensure we don't write the root PAth
+      // SHRINKWRAP-96
+      ZipEntry rootEntry = expectedZip.getEntry("/");
+      Assert.assertNull("ZIP should not have explicit root path written (SHRINKWRAP-96)", rootEntry);
    }
 
    /**

@@ -135,8 +135,15 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
       final Path parent = getParent(path);
       if (parent != null && !this.pathsExported.contains(parent))
       {
-         // Process the parent without any asset (it's a directory)
-         this.processAsset(parent, null);
+         // If this is not the root
+         // SHRINKWRAP-96
+         final Path grandParent = getParent(parent);
+         final boolean isRoot = grandParent == null;
+         if (!isRoot)
+         {
+            // Process the parent without any asset (it's a directory)
+            this.processAsset(parent, null);
+         }
       }
       // Mark if we're writing a directory
       final boolean isDirectory = asset == null;
