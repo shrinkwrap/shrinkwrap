@@ -19,18 +19,19 @@ package org.jboss.shrinkwrap.impl.base.path;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.Paths;
 
 /**
- * BasicPathTestCase
+ * PathsTestCase
  *
- * Tests to ensure that the {@link BasicPath}
+ * Tests to ensure that the {@link Paths}
  * implementation creates Paths as expected 
  * from various specified contexts 
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class BasicPathTestCase extends PathsTestBase
+public class PathsTestCase extends PathsTestBase
 {
 
    //-------------------------------------------------------------------------------------||
@@ -40,7 +41,7 @@ public class BasicPathTestCase extends PathsTestBase
    /**
     * Logger
     */
-   private static final Logger log = Logger.getLogger(BasicPathTestCase.class.getName());
+   private static final Logger log = Logger.getLogger(PathsTestCase.class.getName());
 
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
@@ -53,7 +54,7 @@ public class BasicPathTestCase extends PathsTestBase
    @Override
    Path createPath(final String context)
    {
-      return new BasicPath(context);
+      return Paths.create(context);
    }
 
    /**
@@ -63,7 +64,7 @@ public class BasicPathTestCase extends PathsTestBase
    @Override
    Path createPath(Path base, Path context)
    {
-      return new BasicPath(base, context);
+      return Paths.create(base, context);
    }
 
    /**
@@ -73,7 +74,7 @@ public class BasicPathTestCase extends PathsTestBase
    @Override
    Path createPath(Path base, String context)
    {
-      return new BasicPath(base, context);
+      return Paths.create(base, context);
    }
 
    /**
@@ -83,7 +84,6 @@ public class BasicPathTestCase extends PathsTestBase
    @Override
    Path createPath(String base, String context)
    {
-      return new BasicPath(base, context);
+      return Paths.create(base, context);
    }
-
 }
