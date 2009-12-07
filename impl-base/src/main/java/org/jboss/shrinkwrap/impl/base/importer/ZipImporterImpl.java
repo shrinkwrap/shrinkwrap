@@ -19,6 +19,8 @@ package org.jboss.shrinkwrap.impl.base.importer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -29,6 +31,7 @@ import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.ByteArrayAsset;
+import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ZipFileEntryAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
@@ -40,6 +43,15 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  */
 public class ZipImporterImpl extends AssignableBase implements ZipImporter  
 {
+   //-------------------------------------------------------------------------------------||
+   // Class Members ----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+   
+   /**
+    * Logger
+    */
+   private static final Logger log = Logger.getLogger(ZipImporter.class.getName());
+   
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -72,7 +84,8 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
       return archive;
    }
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.importer.ZipImporter#importZip(java.util.zip.ZipInputStream)
     */
    // TODO: create a ZipEntryAsset that can stream directly from the stream somehow?
@@ -85,15 +98,15 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
          ZipEntry entry;
          while( (entry = stream.getNextEntry()) != null) 
          {
-            /*
-             *  TODO: we skip directories since the whole path is auto created and we have to directory concept. 
-             *  we lose the empty directories, ok?
-             */
+            // Get the name
+            final String entryName = entry.getName();
+            
+            // Handle directories separately
             if(entry.isDirectory()) 
             {
+               archive.add(DirectoryAsset.INSTANCE, entryName);
                continue; 
             }
-            String entryName = entry.getName();
 
             ByteArrayOutputStream output = new ByteArrayOutputStream(8192);
             byte[] content = new byte[4096];
@@ -116,8 +129,12 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
          {
             stream.close();
          } 
-         catch (Exception ingore) 
+         catch (final Exception ignore) 
          {
+            if (log.isLoggable(Level.FINER))
+            {
+               log.finer("Caught and ignoring exception while closing instream during import" + ignore);
+            }
          }
       }
       return this;
@@ -135,14 +152,16 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
       while(entries.hasMoreElements())
       {
          ZipEntry entry = entries.nextElement();
-         /*
-          *  TODO: we skip directories since the whole path is auto created and we have to directory concept. 
-          *  we lose the empty directories, ok?
-          */
-         if(entry.isDirectory()) {
-            continue;
+
+         // Get the entry (path) name
+         final String entryName = entry.getName();
+         
+         // Handle directories separately
+         if(entry.isDirectory())
+         {
+            archive.add(DirectoryAsset.INSTANCE, entryName);
+            continue; 
          }
-         String entryName = entry.getName();
          
          archive.add(new ZipFileEntryAsset(file, entry), new BasicPath(entryName));
       }

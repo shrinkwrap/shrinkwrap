@@ -17,6 +17,8 @@
  */
 package org.jboss.shrinkwrap.impl.base.path;
 
+import org.jboss.shrinkwrap.api.Path;
+
 /**
  * PathUtil
  * 
@@ -232,6 +234,35 @@ public final class PathUtil
 
       // Return as-is
       return resolved;
+   }
+   
+   /**
+    * Obtains the parent of this Path, if exists, else null.
+    * For instance if the Path is "/my/path", the parent 
+    * will be "/my".  Each call will result in a new object reference,
+    * though subsequent calls upon the same Path will be equal by value.
+    * @return
+    * 
+    * @param path The path whose parent context we should return
+    */
+   public static Path getParent(final Path path)
+   {
+      // Precondition checks
+      assert path != null : "Path must be specified";
+
+      // Get the last index of "/"
+      final String resolvedContext = PathUtil.optionallyRemoveFollowingSlash(path.get());
+      final int lastIndex = resolvedContext.lastIndexOf(PathUtil.SLASH);
+      // If it either doesn't occur or is the root
+      if (lastIndex == -1 || (lastIndex == 0 && resolvedContext.length() == 1))
+      {
+         // No parent present, return null
+         return null;
+      }
+      // Get the parent context
+      final String sub = resolvedContext.substring(0, lastIndex);
+      // Return
+      return new BasicPath(PathUtil.optionallyAppendSlash(sub));
    }
 
    //-------------------------------------------------------------------------------------||

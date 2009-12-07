@@ -24,16 +24,17 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
+import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.io.StreamErrorHandler;
 import org.jboss.shrinkwrap.impl.base.io.StreamTask;
-import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 
 public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
@@ -126,18 +127,23 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
          throw new IllegalArgumentException("Path must be specified");
       }
 
+      if(isParentOfAnyPathsExported(path))
+      {
+         return;
+      }
+      
       /*
        * SHRINKWRAP-94
        * Add entries for all parents of this Path
        * by recursing first and adding parents that
        * haven't already been written.
        */
-      final Path parent = getParent(path);
+      final Path parent = PathUtil.getParent(path);
       if (parent != null && !this.pathsExported.contains(parent))
       {
          // If this is not the root
          // SHRINKWRAP-96
-         final Path grandParent = getParent(parent);
+         final Path grandParent = PathUtil.getParent(parent);
          final boolean isRoot = grandParent == null;
          if (!isRoot)
          {
@@ -146,56 +152,67 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
          }
       }
       // Mark if we're writing a directory
-      final boolean isDirectory = asset == null;
+      final boolean isDirectory = ((asset == null) || (asset instanceof DirectoryAsset));
 
       // Get Asset InputStream if the asset is specified (else it's a directory so use null)
       final InputStream assetStream = !isDirectory ? asset.openStream() : null;
       final String pathName = PathUtil.optionallyRemovePrecedingSlash(path.get());
 
-      // Make a task for this stream and close when done
-      IOUtil.closeOnComplete(assetStream, new StreamTask<InputStream>()
+      // If we haven't already written this path
+      if (!this.pathsExported.contains(path))
       {
-
-         @Override
-         public void execute(InputStream stream) throws Exception
+         // Make a task for this stream and close when done
+         IOUtil.closeOnComplete(assetStream, new StreamTask<InputStream>()
          {
-            // If we're writing a directory, ensure we trail a slash for the ZipEntry
-            String resolvedPath = pathName;
-            if (isDirectory)
+
+            @Override
+            public void execute(InputStream stream) throws Exception
             {
-               resolvedPath = PathUtil.optionallyAppendSlash(resolvedPath);
+               // If we're writing a directory, ensure we trail a slash for the ZipEntry
+               String resolvedPath = pathName;
+               if (isDirectory)
+               {
+                  resolvedPath = PathUtil.optionallyAppendSlash(resolvedPath);
+               }
+
+               // Make a ZipEntry
+               final ZipEntry entry = new ZipEntry(resolvedPath);
+
+               // Write the Asset under the same Path name in the Zip
+               try{
+                  zipOutputStream.putNextEntry(entry);
+               }
+               catch(final ZipException ze)
+               {
+                  log.log(Level.SEVERE,pathsExported.toString());
+                  throw new RuntimeException(ze);
+               }
+
+               // Mark that we've written this Path 
+               pathsExported.add(path);
+
+               // Read the contents of the asset and write to the JAR, 
+               // if we're not just a directory
+               if (!isDirectory)
+               {
+                  IOUtil.copy(stream, zipOutputStream);
+               }
+
+               // Close up the instream and the entry
+               zipOutputStream.closeEntry();
             }
 
-            // Make a ZipEntry
-            final ZipEntry entry = new ZipEntry(resolvedPath);
+         }, new StreamErrorHandler()
+         {
 
-            // Write the Asset under the same Path name in the Zip
-            zipOutputStream.putNextEntry(entry);
-
-            // Mark that we've written this Path 
-            pathsExported.add(path);
-
-            // Read the contents of the asset and write to the JAR, 
-            // if we're not just a directory
-            if (!isDirectory)
+            @Override
+            public void handle(Throwable t)
             {
-               IOUtil.copy(stream, zipOutputStream);
+               throw new ArchiveExportException("Failed to write asset to Zip: " + pathName, t);
             }
 
-            // Close up the instream and the entry
-            zipOutputStream.closeEntry();
-         }
-
-      }, new StreamErrorHandler()
-      {
-
-         @Override
-         public void handle(Throwable t)
-         {
-            throw new ArchiveExportException("Failed to write asset to Zip: " + pathName, t);
-         }
-
-      });
+         });
+      }
    }
 
    /* (non-Javadoc)
@@ -217,38 +234,46 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
       // Return
       return inputStream;
    }
-
-   //-------------------------------------------------------------------------------------||
-   // Internal Helper Methods ------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
+   
    /**
-    * Obtains the parent of this Path, if exists, else null.
-    * For instance if the Path is "/my/path", the parent 
-    * will be "/my".  Each call will result in a new object reference,
-    * though subsequent calls upon the same Path will be equal by value.
+    * Returns whether or not this Path is a parent of any Paths exported 
+    * @param path
     * @return
-    * 
-    * @param path The path whose parent context we should return
     */
-   static Path getParent(final Path path)
+   //TODO The performance here will degrade geometrically with size of the archive
+   private boolean isParentOfAnyPathsExported(final Path path)
    {
-      // Precondition checks
-      assert path != null : "Path must be specified";
-
-      // Get the last index of "/"
-      final String resolvedContext = PathUtil.optionallyRemoveFollowingSlash(path.get());
-      final int lastIndex = resolvedContext.lastIndexOf(PathUtil.SLASH);
-      // If it either doesn't occur or is the root
-      if (lastIndex == -1 || (lastIndex == 0 && resolvedContext.length() == 1))
+      // For all Paths already exported
+      for(final Path exportedPath :this.pathsExported)
       {
-         // No parent present, return null
-         return null;
+         if( this.isParentOfSpecifiedHierarchy(path, exportedPath)){
+            return true;
+         }
       }
-      // Get the parent context
-      final String sub = resolvedContext.substring(0, lastIndex);
-      // Return
-      return new BasicPath(sub);
+      
+      return false;
    }
-
+   
+   /**
+    * 
+    * @param path
+    * @param compare
+    * @return
+    */
+   private boolean isParentOfSpecifiedHierarchy(final Path path,final Path compare){
+      // If we've reached the root, we're not a parent of any paths already exported
+      final Path parent = PathUtil.getParent(compare);
+      if(parent==null)
+      {
+         return false;
+      }
+      // If equal to me, yes
+      if(path.equals(compare))
+      {
+         return true;
+      }
+      
+      // Check my parent
+      return this.isParentOfSpecifiedHierarchy(path, parent);
+   }
 }

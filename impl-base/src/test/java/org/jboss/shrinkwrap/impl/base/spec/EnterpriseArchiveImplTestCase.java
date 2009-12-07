@@ -21,6 +21,7 @@ import java.util.UUID;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
+import org.jboss.shrinkwrap.api.container.DirectoryContainer;
 import org.jboss.shrinkwrap.api.container.EnterpriseContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
@@ -116,6 +117,16 @@ public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTes
 
    @Override
    protected LibraryContainer<EnterpriseArchive> getLibraryContainer()
+   {
+      return archive;
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.test.DynamicContainerTestBase#getDirectoryContainer()
+    */
+   @Override
+   protected DirectoryContainer<EnterpriseArchive> getDirectoryContainer()
    {
       return archive;
    }

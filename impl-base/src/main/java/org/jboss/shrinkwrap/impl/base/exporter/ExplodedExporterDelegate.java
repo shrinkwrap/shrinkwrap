@@ -29,6 +29,7 @@ import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
+import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
 /**
@@ -107,24 +108,43 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
          processArchiveAsset(assetParent, nesteArchiveAsset);
          return;
       }
-
-      try
+      
+      // Handle directory assets separately
+      final boolean isDirectory = asset instanceof DirectoryAsset;
+      if (isDirectory)
       {
-         if (log.isLoggable(Level.FINE))
+         // If doesn't already exist
+         if (!assetFile.exists())
          {
-            log.fine("Writing asset " + path.get() + " to " + assetFile.getAbsolutePath());
+            // Attempt a create
+            if (!assetFile.mkdirs())
+            {
+               // Some error in writing
+               throw new ArchiveExportException("Failed to write directory: " + assetFile.getAbsolutePath());
+            }
          }
-         // Get the asset streams
-         final InputStream assetInputStream = asset.openStream();
-         final FileOutputStream assetFileOutputStream = new FileOutputStream(assetFile);
-         final BufferedOutputStream assetBufferedOutputStream = new BufferedOutputStream(assetFileOutputStream, 8192);
-
-         // Write contents
-         IOUtil.copyWithClose(assetInputStream, assetBufferedOutputStream);
       }
-      catch (Throwable t)
+      // Only handle non-directory assets, otherwise the path is handled above
+      else
       {
-         throw new ArchiveExportException("Failed to write asset " + path + " to " + assetFile);
+         try
+         {
+            if (log.isLoggable(Level.FINE))
+            {
+               log.fine("Writing asset " + path.get() + " to " + assetFile.getAbsolutePath());
+            }
+            // Get the asset streams
+            final InputStream assetInputStream = asset.openStream();
+            final FileOutputStream assetFileOutputStream = new FileOutputStream(assetFile);
+            final BufferedOutputStream assetBufferedOutputStream = new BufferedOutputStream(assetFileOutputStream, 8192);
+
+            // Write contents
+            IOUtil.copyWithClose(assetInputStream, assetBufferedOutputStream);
+         }
+         catch (Throwable t)
+         {
+            throw new ArchiveExportException("Failed to write asset " + path + " to " + assetFile);
+         }
       }
    }
 

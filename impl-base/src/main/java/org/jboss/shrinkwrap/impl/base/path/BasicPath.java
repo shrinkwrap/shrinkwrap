@@ -144,11 +144,30 @@ public class BasicPath implements Path, Comparable<Path>
       {
          return 1;
       }
+      /*
+       * Check for parent relationship
+       */
+      final Path parentOfSpecified = PathUtil.getParent(path);
+      final Path parentOfThis = PathUtil.getParent(this);
+      // If we're the parent of the specified, we're less
+      if (this.equals(parentOfSpecified))
+      {
+         return -1;
+      }
+      // If the specified if the parent of us, we're more
+      if (path.equals(parentOfThis))
+      {
+         return 1;
+      }
 
-      // Just delegate to underlying Strings
-      return path.get().compareTo(this.get());
+      // Just delegate to underlying contexts
+      final int comparedContexts = path.get().compareTo(this.get());
+
+      // Return the inverted value of the contents (in this ordering, less is more)
+      final int adjusted = 0 - comparedContexts;
+      return adjusted;
    }
-
+   
    //-------------------------------------------------------------------------------------||
    // Overridden Implementations ---------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -180,13 +199,22 @@ public class BasicPath implements Path, Comparable<Path>
       if (getClass() != obj.getClass())
          return false;
       final BasicPath other = (BasicPath) obj;
+      
       if (context == null)
       {
          if (other.context != null)
             return false;
       }
-      else if (!context.equals(other.context))
+      
+      // Ensure we treat following slashes equally
+      final String adjustedContext = PathUtil.optionallyRemoveFollowingSlash(context);
+      final String adjustedOther = PathUtil.optionallyRemoveFollowingSlash(other.context);
+      if (!adjustedContext.equals(adjustedOther))
+      {
          return false;
+      }
+       
+      // No match
       return true;
    }
 

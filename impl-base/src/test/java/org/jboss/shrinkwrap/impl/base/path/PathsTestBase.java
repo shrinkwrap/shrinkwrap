@@ -260,11 +260,15 @@ public abstract class PathsTestBase
 
       // Create new paths
       final String context = "context";
+      final String contextWithFollowingSlash = context + PathUtil.SLASH;
       final Path path1 = this.createPath(context);
       final Path path2 = this.createPath(context);
+      final Path pathWithFollowingSlash = this.createPath(contextWithFollowingSlash);
 
       // Ensure expected
       Assert.assertEquals("Paths with same context should be equal by value", path1, path2);
+      Assert.assertEquals("Paths with same context (regardless of following slash) should be equal by value", path1,
+            pathWithFollowingSlash);
       log.info(path1 + " equal by value to " + path2);
    }
 

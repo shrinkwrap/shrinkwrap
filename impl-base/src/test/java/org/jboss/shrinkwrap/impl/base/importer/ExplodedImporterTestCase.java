@@ -16,6 +16,8 @@
  */
 package org.jboss.shrinkwrap.impl.base.importer;
 
+import java.util.logging.Logger;
+
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
@@ -46,7 +48,7 @@ public class ExplodedImporterTestCase
                                        .getResource(EXISTING_DIRECTORY_RESOURCE).toURI().getPath()
                               )
                               .as(JavaArchive.class);
-      
+      Logger.getLogger(ExplodedImporterTestCase.class.getName()).info(archive.toString(true));
       Assert.assertTrue(
             "Root files should be imported",
             archive.contains(new BasicPath("/Test.properties")));      
@@ -57,7 +59,15 @@ public class ExplodedImporterTestCase
 
       Assert.assertTrue(
             "Nested files should be imported",
-            archive.contains(new BasicPath("/org/jboss/Test.properties")));  
+            archive.contains(new BasicPath("/org/jboss/Test.properties")));
+      
+      Assert.assertTrue(
+            "Empty directories should be imported",
+            archive.contains(new BasicPath("/empty_dir")));
+      
+      Assert.assertTrue(
+            "Nested empty directories should be imported",
+            archive.contains(new BasicPath("/parent/empty_dir"))); 
    }
    
    @Test(expected = IllegalArgumentException.class)

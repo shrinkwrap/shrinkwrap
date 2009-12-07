@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.api.spec;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.container.DirectoryContainer;
 import org.jboss.shrinkwrap.api.container.EnterpriseContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
@@ -32,12 +33,14 @@ import org.jboss.shrinkwrap.api.container.ResourceContainer;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface EnterpriseArchive extends 
-      Archive<EnterpriseArchive>, 
-      ResourceContainer<EnterpriseArchive>, 
-      ManifestContainer<EnterpriseArchive>, 
-      LibraryContainer<EnterpriseArchive>,
-      EnterpriseContainer<EnterpriseArchive>
+public interface EnterpriseArchive
+      extends
+         Archive<EnterpriseArchive>,
+         ResourceContainer<EnterpriseArchive>,
+         ManifestContainer<EnterpriseArchive>,
+         LibraryContainer<EnterpriseArchive>,
+         EnterpriseContainer<EnterpriseArchive>,
+         DirectoryContainer<EnterpriseArchive>
 {
 
 }

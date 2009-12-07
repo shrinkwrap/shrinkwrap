@@ -16,8 +16,10 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,15 +83,20 @@ public abstract class AbstractExporterDelegate<T>
 
       // Obtain all contents
       final Map<Path, Asset> content = archive.getContent();
-
+      
+      // Process in reverse order such that we can check for parent relationships, 
+      // and not write directories twice
+      final List<Path> paths = new ArrayList<Path>(content.keySet());
+      Collections.reverse(paths);
+      
       // For every Path in the Archive
-      for (final Entry<Path, Asset> contentEntry : content.entrySet())
+      for (final Path entry : paths)
       {
          // Get Asset information
-         final Path path = contentEntry.getKey();
-         final Asset asset = contentEntry.getValue();
+         final Path path = entry;
+         final Asset asset = content.get(entry);
 
-         // Process the asset 
+         // Process the asset
          processAsset(path, asset);
       }
    }

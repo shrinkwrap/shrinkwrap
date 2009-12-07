@@ -65,6 +65,16 @@ public class ZipImporterImplTestCase
    
    private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
    
+   /**
+    * Name of the expected empty directory
+    */
+   private static final String EXPECTED_EMPTY_DIR ="empty_dir/";
+   
+   /**
+    * Name of the expected nested directory
+    */
+   private static final String EXPECTED_NESTED_EMPTY_DIR ="parent/empty_dir/";
+   
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -79,6 +89,9 @@ public class ZipImporterImplTestCase
       Archive<?> archive = Archives.create("test.jar", ZipImporter.class)
                                  .importZip(testZip)
                               .as(JavaArchive.class);
+      
+      final InputStream stream = archive.as(ZipExporter.class).exportZip();
+      IOUtil.copy(stream, new FileOutputStream(new File("/home/alr/Desktop/test.zip")));
 
       Assert.assertNotNull("Should not return a null archive", archive);
       
@@ -148,14 +161,28 @@ public class ZipImporterImplTestCase
             "Test zip should contain data", 
             entries.isEmpty());
       Assert.assertEquals(
-            "Should have imported all files",
-            findNumberOfFiles(entries), 
+            "Should have imported all files and directories",
+            entries.size(),
             importedArchive.getContent().size());
+      
+      
+      boolean containsEmptyDir = false;
+      boolean containsEmptyNestedDir = false;
       
       for(ZipEntry originalEntry : entries) 
       {
+         
          if(originalEntry.isDirectory()) 
          {
+            // Check for expected empty dirs
+            if (originalEntry.getName().equals(EXPECTED_EMPTY_DIR))
+            {
+               containsEmptyDir = true;
+            }
+            if (originalEntry.getName().equals(EXPECTED_NESTED_EMPTY_DIR))
+            {
+               containsEmptyNestedDir = true;
+            }
             continue;
          }
 
@@ -177,24 +204,9 @@ public class ZipImporterImplTestCase
                "The content of " + originalEntry.getName() + " should be equal to the imported content",
                Arrays.equals(importedContent, originalContent));
       }
-   }
-
-   /**
-    * Find the number of files in original zip, exclude directories.
-    * 
-    * @param enties
-    * @return
-    */
-   private int findNumberOfFiles(List<? extends ZipEntry> enties) 
-   {
-      int count = 0;
-      for(ZipEntry entry : enties) 
-      {
-         if(!entry.isDirectory()) 
-         {
-            count++;
-         }
-      }
-      return count;
+      
+      // Ensure empty directories have come in cleanly
+      Assert.assertTrue("Empty directory not imported", containsEmptyDir);
+      Assert.assertTrue("Empty nested directory not imported", containsEmptyNestedDir);
    }
 }

@@ -24,9 +24,11 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.Paths;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Assert;
 
@@ -100,6 +102,16 @@ public abstract class ExportTestBase
    * Another path used for testing
    */
    protected static final Path PATH_TWO = new BasicPath(NESTED_PATH, "Test2.properties");
+   
+   /**
+    * Path to a nested empty directory
+    */
+   protected static final Path PATH_EMPTY_NESTED_DIR = Paths.create("/empty");
+   
+   /**
+    * Path to an empty directory, a child of the nested
+    */
+   protected static final Path PATH_EMPTY_TOPLEVEL_DIR = Paths.create("/empty/directory");
 
    //-------------------------------------------------------------------------------------||
    // Functional Methods -----------------------------------------------------------------||
@@ -179,6 +191,10 @@ public abstract class ExportTestBase
 
       // Add the archive under a nested path
       archive.add(nestedArchiveTwo, NESTED_PATH);
+      
+      // Add empty directories
+      archive.add(DirectoryAsset.INSTANCE, PATH_EMPTY_NESTED_DIR);
+      archive.add(DirectoryAsset.INSTANCE, PATH_EMPTY_TOPLEVEL_DIR);
 
       // Return archive
       return archive;

@@ -20,6 +20,8 @@ import java.io.File;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,7 +30,9 @@ import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.Paths;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
+import org.jboss.shrinkwrap.api.container.DirectoryContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
@@ -38,6 +42,7 @@ import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.asset.FileAsset;
 import org.jboss.shrinkwrap.impl.base.asset.UrlAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -53,7 +58,7 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  * @param <T>
  */
 public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase implements 
-   Archive<T>, ManifestContainer<T>, ResourceContainer<T>, ClassContainer<T>, LibraryContainer<T> 
+   Archive<T>, ManifestContainer<T>, ResourceContainer<T>, ClassContainer<T>, LibraryContainer<T>, DirectoryContainer<T>
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -887,6 +892,79 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
          addLibrary(archive);
       }
       return covarientReturn();
+   }
+   
+   //-------------------------------------------------------------------------------------||
+   // Required Implementations - DirectoryContainer --------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.container.DirectoryContainer#addDirectory(org.jboss.shrinkwrap.api.Path)
+    */
+   @Override
+   public T addDirectory(final Path path) throws IllegalArgumentException
+   {
+      // Precondition check
+      Validate.notNull(path, "path must be specified");
+      
+      // Delegate and return
+      return this.addDirectories(path);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.container.DirectoryContainer#addDirectory(java.lang.String)
+    */
+   @Override
+   public T addDirectory(final String path) throws IllegalArgumentException
+   {
+      // Precondition check
+      Validate.notNullOrEmpty(path, "path must be specified");
+      
+      // Delegate and return
+      return this.addDirectory(Paths.create(path));
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.container.DirectoryContainer#addDirectories(org.jboss.shrinkwrap.api.Path[])
+    */
+   @Override
+   public T addDirectories(final Path... paths) throws IllegalArgumentException
+   {
+      // Precondition check
+      Validate.notNull(paths, "paths must be specified");
+      
+      // Add
+      for (final Path path : paths)
+      {
+         this.add(DirectoryAsset.INSTANCE, path);
+      }
+      
+      // Return
+      return covarientReturn();
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.container.DirectoryContainer#addDirectories(java.lang.String[])
+    */
+   @Override
+   public T addDirectories(final String... paths) throws IllegalArgumentException
+   {
+      // Precondition check
+      Validate.notNull(paths, "paths must be specified");
+      
+      // Represent as array of Paths
+      final Collection<Path> pathsCollection = new ArrayList<Path>(paths.length);
+      for (final String path : paths)
+      {
+         pathsCollection.add(Paths.create(path));
+      }
+      
+      // Delegate and return
+      return this.addDirectories(pathsCollection.toArray(new Path[]{}));
    }
    
    //-------------------------------------------------------------------------------------||

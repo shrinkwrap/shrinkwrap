@@ -18,14 +18,18 @@ package org.jboss.shrinkwrap.impl.base.test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.logging.Logger;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.Paths;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
+import org.jboss.shrinkwrap.api.container.DirectoryContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
@@ -47,6 +51,19 @@ import org.junit.runner.RunWith;
 public abstract class DynamicContainerTestBase<T extends Archive<T>> extends ArchiveTestBase<T>
 {
    
+   //-------------------------------------------------------------------------------------||
+   // Class Members ----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Logger
+    */
+   private static final Logger log = Logger.getLogger(DynamicContainerTestBase.class.getName());
+
+   //-------------------------------------------------------------------------------------||
+   // Contracts ----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+   
    protected abstract Path getResourcePath();
    protected abstract ResourceContainer<T> getResourceContainer();
    protected abstract Path getClassPath();
@@ -55,6 +72,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    protected abstract ManifestContainer<T> getManifestContainer();
    protected abstract Path getLibraryPath();
    protected abstract LibraryContainer<T> getLibraryContainer();
+   protected abstract DirectoryContainer<T> getDirectoryContainer();
    
    protected URL getURLForClassResource(String name) {
       return SecurityActions.getThreadContextClassLoader().getResource(name);
@@ -689,5 +707,37 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             getArchive().contains(testPath2));
    }
 
+   /**
+    * Tests that empty directories may be added to the archive
+    * @throws Exception
+    */
+   @Test
+   @ArchiveType(DirectoryContainer.class)
+   public void testAddEmptyDirectories() throws Exception
+   {
+
+      // Get the container
+      final DirectoryContainer<T> container = getDirectoryContainer();
+
+      // Get Paths to add
+      final Path path1 = Paths.create("path/to/dir");
+      final Path path2 = Paths.create("path/to/dir2");
+      final Path path3 = Paths.create("path/to");
+
+      // Add
+      container.addDirectories(path1, path2, path3);
+
+      // Obtain as archive view
+      final Archive<T> archive = this.getArchive();
+
+      // Test
+      final String message = "Should be able to add directory: ";
+      TestCase.assertTrue(message + path1, archive.contains(path1));
+      TestCase.assertTrue(message + path2, archive.contains(path2));
+      TestCase.assertTrue(message + path3, archive.contains(path3));
+
+      // Log out
+      log.info("testAddEmptyDirectories:\n" + archive.toString(true));
+   }
 
 }

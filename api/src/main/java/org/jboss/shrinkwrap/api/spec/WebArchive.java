@@ -16,9 +16,9 @@
  */
 package org.jboss.shrinkwrap.api.spec;
 
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
+import org.jboss.shrinkwrap.api.container.DirectoryContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
@@ -34,12 +34,14 @@ import org.jboss.shrinkwrap.api.container.WebContainer;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface WebArchive extends 
-      Archive<WebArchive>, 
-      ManifestContainer<WebArchive>,
-      ClassContainer<WebArchive>,
-      LibraryContainer<WebArchive>,
-      ResourceContainer<WebArchive>,
-      WebContainer<WebArchive>
+public interface WebArchive
+      extends
+         Archive<WebArchive>,
+         ManifestContainer<WebArchive>,
+         ClassContainer<WebArchive>,
+         LibraryContainer<WebArchive>,
+         ResourceContainer<WebArchive>,
+         WebContainer<WebArchive>,
+         DirectoryContainer<WebArchive>
 {
 }

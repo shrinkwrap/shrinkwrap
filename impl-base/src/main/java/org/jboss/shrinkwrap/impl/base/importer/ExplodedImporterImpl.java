@@ -17,12 +17,14 @@
 package org.jboss.shrinkwrap.impl.base.importer;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
+import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.asset.FileAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
@@ -37,6 +39,15 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 public class ExplodedImporterImpl extends AssignableBase implements
       ExplodedImporter
 {
+   // -------------------------------------------------------------------------------------||
+   // Class Members -----------------------------------------------------------------------||
+   // -------------------------------------------------------------------------------------||
+   
+   /**
+    * Logger
+    */
+   private static final Logger log = Logger.getLogger(ExplodedImporterImpl.class.getName());
+   
    // -------------------------------------------------------------------------------------||
    // Instance Members --------------------------------------------------------------------||
    // -------------------------------------------------------------------------------------||
@@ -110,12 +121,15 @@ public class ExplodedImporterImpl extends AssignableBase implements
    {
       for (File file : files)
       {
+         log.info(file.getAbsolutePath());
+         final Path path  = calculatePath(root, file);
          if (file.isDirectory())
          {
+            archive.add(DirectoryAsset.INSTANCE,path);
             doImport(root, file.listFiles());
          } else
          {
-            archive.add(new FileAsset(file), calculatePath(root, file));
+            archive.add(new FileAsset(file), path);
          }
       }
    }

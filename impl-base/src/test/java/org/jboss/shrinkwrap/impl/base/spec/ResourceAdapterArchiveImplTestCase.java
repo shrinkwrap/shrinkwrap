@@ -21,6 +21,7 @@ import java.util.UUID;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
+import org.jboss.shrinkwrap.api.container.DirectoryContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceAdapterContainer;
@@ -117,6 +118,16 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
 
    @Override
    protected LibraryContainer<ResourceAdapterArchive> getLibraryContainer()
+   {
+      return archive;
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.test.DynamicContainerTestBase#getDirectoryContainer()
+    */
+   @Override
+   protected DirectoryContainer<ResourceAdapterArchive> getDirectoryContainer()
    {
       return archive;
    }

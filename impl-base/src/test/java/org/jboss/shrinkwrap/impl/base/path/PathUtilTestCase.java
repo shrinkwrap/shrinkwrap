@@ -2,6 +2,10 @@ package org.jboss.shrinkwrap.impl.base.path;
 
 import java.util.logging.Logger;
 
+import junit.framework.TestCase;
+
+import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.Paths;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -171,6 +175,36 @@ public class PathUtilTestCase
       final String expected = PathUtil.SLASH + base + PathUtil.SLASH + context;
       final String result = PathUtil.composeAbsoluteContext(base, context);
       Assert.assertEquals("Composing an absolute context from base and context did not succeed", expected, result);
+   }
+   
+   /**
+    * Ensures the contract of {@link PathProvider#parent()}
+    * is intact
+    */
+   @Test
+   public void testParent()
+   {
+      // Log
+      log.info("testParent");
+
+      // Create new paths
+      final String rootString = "/";
+      final String subpathString = "subpath/";
+      final String contextString = "context";
+      final String contextWithFollowingSlashString = "context/";
+      final Path root = Paths.create(rootString);
+      final Path subpath = Paths.create(subpathString);
+      final Path context = Paths.create(subpath, contextString);
+      final Path contextWithFollowingSlash = new BasicPath(subpath, contextWithFollowingSlashString);
+
+      // Test
+      TestCase.assertEquals("The parent of the context path should be equal to the initial subpath", subpath,
+            PathUtil.getParent(context));
+      TestCase.assertEquals(
+            "The parent of the context path with a following slash should be equal to the initial subpath", subpath,
+            PathUtil.getParent(contextWithFollowingSlash));
+      TestCase.assertEquals("The parent of the subpath should be the root", root, PathUtil.getParent(subpath));
+      TestCase.assertNull("The parent of the root should be null", PathUtil.getParent(root));
    }
 
 }
