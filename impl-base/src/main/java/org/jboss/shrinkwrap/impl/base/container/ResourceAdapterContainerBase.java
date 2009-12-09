@@ -26,7 +26,6 @@ import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.asset.FileAsset;
 import org.jboss.shrinkwrap.impl.base.asset.UrlAsset;
-import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
  * ResourceAdapterContainerBase
@@ -94,7 +93,7 @@ public abstract class ResourceAdapterContainerBase<T extends Archive<T>> extends
    public T setResourceAdapterXML(Asset resource) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource must be specified");
-      return addResource(resource, new BasicPath(getResourcePath(), "ra.xml"));
+      return addManifestResource(resource, "ra.xml");
    }
 
 }

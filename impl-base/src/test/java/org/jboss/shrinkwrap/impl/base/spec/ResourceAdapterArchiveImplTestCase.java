@@ -169,7 +169,7 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
    @Override
    protected Path getResourceAdapterPath()
    {
-      return getResourcePath();
+      return getManifestPath();
    }
    
    @Override
