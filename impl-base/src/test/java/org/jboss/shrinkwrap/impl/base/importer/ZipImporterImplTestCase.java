@@ -90,9 +90,6 @@ public class ZipImporterImplTestCase
                                  .importZip(testZip)
                               .as(JavaArchive.class);
       
-      final InputStream stream = archive.as(ZipExporter.class).exportZip();
-      IOUtil.copy(stream, new FileOutputStream(new File("/home/alr/Desktop/test.zip")));
-
       Assert.assertNotNull("Should not return a null archive", archive);
       
       assertContent(
