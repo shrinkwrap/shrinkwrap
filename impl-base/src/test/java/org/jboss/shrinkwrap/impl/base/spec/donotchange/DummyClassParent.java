@@ -16,15 +16,22 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec.donotchange;
 
-
 /**
- * DummyClassUsedForClassResourceTest
+ * Parent of a class used in testing the addition of classes
+ * to archives
  * 
- * This class is just here for the ClassContainer.addPackage/addClass tests.
- *
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class DummyClassUsedForClassResourceTest
+public class DummyClassParent
 {
+
+   //-------------------------------------------------------------------------------------||
+   // Inner Classes ----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   public static class ParentInnerClass
+   {
+
+   }
 }

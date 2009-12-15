@@ -36,7 +36,8 @@ import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
-import org.jboss.shrinkwrap.impl.base.spec.donotchange.DummyClassUsedForClassResourceTest;
+import org.jboss.shrinkwrap.impl.base.spec.donotchange.DummyClassA;
+import org.jboss.shrinkwrap.impl.base.spec.donotchange.DummyClassParent;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -390,14 +391,9 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @ArchiveType(ClassContainer.class)
    public void testAddClass() throws Exception
    {
-      getClassContainer().addClass(DummyClassUsedForClassResourceTest.class);
+      getClassContainer().addClass(DummyClassA.class);
 
-      Path expectedPath = new BasicPath(getClassPath(), AssetUtil
-            .getFullPathForClassResource(DummyClassUsedForClassResourceTest.class));
-
-      Assert.assertTrue(
-            "A class should be located at " + expectedPath.get(), 
-            getArchive().contains(expectedPath));
+      this.ensureClassesAdded();
    }
 
    /**
@@ -409,14 +405,33 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @ArchiveType(ClassContainer.class)
    public void testAddClasses() throws Exception
    {
-      getClassContainer().addClasses(DummyClassUsedForClassResourceTest.class);
+      getClassContainer().addClasses(DummyClassA.class);
 
+      this.ensureClassesAdded();
+   }
+   
+   /**
+    * Ensures that the "addClass*" tests result in all expected classes added 
+    */
+   private void ensureClassesAdded()
+   {
       Path expectedPath = new BasicPath(getClassPath(), AssetUtil
-            .getFullPathForClassResource(DummyClassUsedForClassResourceTest.class));
+            .getFullPathForClassResource(DummyClassA.class));
 
       Assert.assertTrue(
             "A class should be located at " + expectedPath.get(), 
             getArchive().contains(expectedPath));
+      
+      // SHRINKWRAP-106
+      // Ensure inner classes are added
+      final Path expectedPathInnerClass = new BasicPath(getClassPath(), AssetUtil
+            .getFullPathForClassResource(DummyClassA.InnerClass.class));
+      final Path expectedPathInnerClassParent = new BasicPath(getClassPath(), AssetUtil
+            .getFullPathForClassResource(DummyClassParent.ParentInnerClass.class));
+      Assert.assertTrue("Adding a class should also add its inner classes", getArchive().contains(
+            expectedPathInnerClass));
+      Assert.assertFalse("Adding a class should not add the public inner classes of its parent", getArchive().contains(
+            expectedPathInnerClassParent));
    }
 
    /**
@@ -428,7 +443,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @ArchiveType(ClassContainer.class)
    public void testAddClassesByFqn() throws Exception
    {
-      final Class<?> classToAdd = DummyClassUsedForClassResourceTest.class;
+      final Class<?> classToAdd = DummyClassA.class;
 
       getClassContainer().addClass(classToAdd.getName());
 
@@ -445,7 +460,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @ArchiveType(ClassContainer.class)
    public void testAddClassesByFqnAndTccl() throws Exception
    {
-      final Class<?> classToAdd = DummyClassUsedForClassResourceTest.class;
+      final Class<?> classToAdd = DummyClassA.class;
 
       getClassContainer().addClass(classToAdd.getName(), classToAdd.getClassLoader());
 
@@ -462,10 +477,10 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @ArchiveType(ClassContainer.class)
    public void testAddPackage() throws Exception
    {
-      getClassContainer().addPackage(DummyClassUsedForClassResourceTest.class.getPackage());
+      getClassContainer().addPackage(DummyClassA.class.getPackage());
 
       Path expectedPath = new BasicPath(getClassPath(), AssetUtil
-            .getFullPathForClassResource(DummyClassUsedForClassResourceTest.class));
+            .getFullPathForClassResource(DummyClassA.class));
 
       Assert.assertTrue(
             "A class should be located at " + expectedPath.get(), 
@@ -481,10 +496,10 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @ArchiveType(ClassContainer.class)
    public void testAddPackageNonRecursive() throws Exception
    {
-      getClassContainer().addPackages(false, DummyClassUsedForClassResourceTest.class.getPackage());
+      getClassContainer().addPackages(false, DummyClassA.class.getPackage());
 
       Path expectedPath = new BasicPath(getClassPath(), AssetUtil
-            .getFullPathForClassResource(DummyClassUsedForClassResourceTest.class));
+            .getFullPathForClassResource(DummyClassA.class));
 
       Assert.assertTrue(
             "A class should be located at " + expectedPath.get(), 

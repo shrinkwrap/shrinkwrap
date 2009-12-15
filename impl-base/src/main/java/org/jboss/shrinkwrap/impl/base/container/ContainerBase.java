@@ -80,6 +80,11 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       }
    }
    
+   /**
+    * Filter pattern for inner classes
+    */
+   private static final String PATTERN_INNER_CLASS = "$.*";
+   
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -661,7 +666,15 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
          Asset resource = new ClassAsset(clazz);
          Path location = new BasicPath(getClassesPath(), AssetUtil.getFullPathForClassResource(clazz));
          add(resource, location);
+         
+         // Get all inner classes and add them
+         final Class<?>[] innerClasses = clazz.getDeclaredClasses();
+         for (Class<?> innerClass : innerClasses)
+         {
+            this.addClass(innerClass);
+         }
       }
+      
       return covarientReturn();
    };
    
@@ -702,7 +715,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
          Set<Class<?>> classes = scanner.getClasses(); 
          for(Class<?> clazz : classes) 
          {
-            if(!filter.include(clazz)) 
+            if(!filter.include(clazz))
             {
                continue;
             }

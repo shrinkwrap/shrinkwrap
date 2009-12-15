@@ -43,6 +43,11 @@ public final class AssetUtil
     */
    public static final String DELIMITER_RESOURCE_PATH = "/";
    
+   /**
+    * Extension applied to .class files
+    */
+   private static final String EXTENSION_CLASS = ".class";
+   
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -110,7 +115,7 @@ public final class AssetUtil
    {
       String classResourceDelimiter = clazz.getName().replaceAll(
             DELIMITER_CLASS_NAME_PATH, DELIMITER_RESOURCE_PATH);
-      String classFullPath = classResourceDelimiter + ".class";
+      String classFullPath = classResourceDelimiter + EXTENSION_CLASS;
       return new BasicPath(classFullPath);
    }
 }
