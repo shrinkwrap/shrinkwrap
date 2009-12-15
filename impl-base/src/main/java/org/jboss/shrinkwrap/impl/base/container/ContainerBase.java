@@ -669,7 +669,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
          
          // Get all inner classes and add them
          final Class<?>[] innerClasses = clazz.getDeclaredClasses();
-         for (Class<?> innerClass : innerClasses)
+         for (final Class<?> innerClass : innerClasses)
          {
             this.addClass(innerClass);
          }
