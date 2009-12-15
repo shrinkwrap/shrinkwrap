@@ -38,7 +38,8 @@ public interface ClassContainer<T extends Archive<T>>
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Adds the specified Class to the {@link Archive}.
+    * Adds the {@link Class}, and all member (inner) {@link Class}es
+    * to the {@link Archive}.
     * 
     * @param class The class to add to the Archive
     * @return This archive
@@ -47,7 +48,8 @@ public interface ClassContainer<T extends Archive<T>>
    T addClass(Class<?> clazz) throws IllegalArgumentException;
 
    /**
-    * Adds the {@link Class} with the specified fully-qualified name,
+    * Adds the {@link Class}, and all member (inner) {@link Class}es,
+    * with the specified fully-qualified name,
     * loaded by the Thread Context {@link ClassLoader}, to the {@link Archive}.
     * 
     * @param fullyQualifiedClassName The name of the {@link Class} to add
@@ -58,7 +60,8 @@ public interface ClassContainer<T extends Archive<T>>
    T addClass(String fullyQualifiedClassName) throws IllegalArgumentException;
 
    /**
-    * Adds the {@link Class} with the specified fully-qualified name,
+    * Adds the {@link Class}, and all member (inner) @link{Class}es,
+    *  with the specified fully-qualified name,
     * loaded by the specified {@link ClassLoader}, to the {@link Archive}.
     * 
     * @param fullyQualifiedClassName The name of the {@link Class} to add
@@ -71,7 +74,8 @@ public interface ClassContainer<T extends Archive<T>>
    T addClass(String fullyQualifiedClassName, ClassLoader cl) throws IllegalArgumentException;
 
    /**
-    * Adds the specified Classes to the {@link Archive}.
+    * Adds the {@link Class}es, and all member (inner) {@link Class}es
+    * to the {@link Archive}.
     * 
     * @param classes The classes to add to the Archive
     * @return This archive
