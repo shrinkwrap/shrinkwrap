@@ -36,6 +36,7 @@ import org.jboss.shrinkwrap.api.container.DirectoryContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
+import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.URLPackageScanner;
 import org.jboss.shrinkwrap.impl.base.Validate;
@@ -256,13 +257,34 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return archive.getName();
    }
    
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.declarchive.api.Archive#toString(boolean)
     */
    @Override
-   public String toString(boolean verbose)
+   public String toString()
+   {
+      return archive.toString();
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.declarchive.api.Archive#toString(boolean)
+    */
+   @Override
+   public String toString(final boolean verbose)
    {
       return archive.toString(verbose);
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#toString(org.jboss.shrinkwrap.api.formatter.Formatter)
+    */
+   @Override
+   public String toString(final Formatter formatter) throws IllegalArgumentException
+   {
+      return archive.toString(formatter);
    }
 
    //-------------------------------------------------------------------------------------||

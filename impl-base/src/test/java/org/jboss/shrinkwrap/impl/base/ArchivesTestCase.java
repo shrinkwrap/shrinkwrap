@@ -24,10 +24,11 @@ import junit.framework.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
+import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.Paths;
-import org.jboss.shrinkwrap.api.Assignable;
+import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.container.ContainerBase;
 import org.jboss.shrinkwrap.impl.base.spec.JavaArchiveImpl;
@@ -171,6 +172,12 @@ public class ArchivesTestCase
       protected Path getResourcePath()
       {
          return Paths.root();
+      }
+
+      @Override
+      public String toString(final Formatter formatter) throws IllegalArgumentException
+      {
+         return formatter.format(this);
       }
    }
 }

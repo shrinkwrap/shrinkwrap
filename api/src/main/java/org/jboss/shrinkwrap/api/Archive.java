@@ -18,6 +18,11 @@ package org.jboss.shrinkwrap.api;
 
 import java.util.Map;
 
+import org.jboss.shrinkwrap.api.formatter.Formatter;
+import org.jboss.shrinkwrap.api.formatter.Formatters;
+import org.jboss.shrinkwrap.api.formatter.SimpleFormatter;
+import org.jboss.shrinkwrap.api.formatter.VerboseFormatter;
+
 /**
  * Archive
  * 
@@ -115,7 +120,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @return
     */
    Map<Path, Asset> getContent();
-   
+
    /**
     * Obtains all assets matching given filter in this archive, along with its respective Path.
     * The returned Map will be an immutable view.
@@ -142,7 +147,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If the existing archive is not specified
     */
    T merge(Archive<?> source) throws IllegalArgumentException;
-   
+
    /**
     * Merge the contents from an existing archive without 
     * maintaining the archive name in the context path.
@@ -178,14 +183,32 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If the path or existing archive is not specified
     */
    T merge(Archive<?> source, Path path, Filter<Path> filter) throws IllegalArgumentException;
+   
+   /**
+    * Acts as a shorthand for {@link Archive#toString(Formatter)}
+    * where the {@link SimpleFormatter} is leveraged.
+    * 
+    * @return
+    */
+   String toString();
 
    /**
-    * Returns a multiline "ls -l"-equse output of the contents of
-    * this deployment and (recursively) its children if the verbosity 
-    * flag is set to "true".  Otherwise the no-arg version is invoked
+    * If "true" is specified, acts as a shorthand for {@link Archive#toString(Formatter)}
+    * where the {@link VerboseFormatter} is leveraged.  Otherwise the {@link SimpleFormatter}
+    * will be used (equivalent to {@link Archive#toString()}).
     * 
     * @return
     */
    String toString(boolean verbose);
+
+   /**
+    * Returns a view of this {@link Archive} as returned from the 
+    * specified {@link Formatter}.  Common options may be to use 
+    * the predefined formatters located in {@link Formatters}
+    * @param formatter
+    * @return
+    * @throws IllegalArgumentException If the formatter is not specified
+    */
+   String toString(Formatter formatter) throws IllegalArgumentException;
 
 }

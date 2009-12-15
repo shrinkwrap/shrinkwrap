@@ -16,10 +16,8 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.Map.Entry;
@@ -220,35 +218,6 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
          }
       }
       return filteredContent;
-   }
-
-   /* {@inheritDoc}
-    * @see org.jboss.declarchive.api.Archive#toString(boolean)
-    */
-   @Override
-   public String toString(boolean verbose)
-   {
-      // If we want verbose output
-      if (verbose)
-      {
-         // Make a builder
-         StringBuilder sb = new StringBuilder();
-
-         // Add the name
-         sb.append(this.getName()).append(COLON).append(NEWLINE);
-
-         // Sort all paths
-         final List<Path> paths = new ArrayList<Path>(content.keySet());
-         Collections.sort(paths);
-
-         for (final Path path : paths)
-         {
-            sb.append(path.get()).append(NEWLINE);
-         }
-         return sb.toString();
-      }
-      // Fall back on toString
-      return this.toString();
    }
 
    //-------------------------------------------------------------------------------------||

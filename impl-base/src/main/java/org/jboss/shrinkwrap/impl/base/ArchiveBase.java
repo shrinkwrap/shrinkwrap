@@ -23,11 +23,13 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Path;
-import org.jboss.shrinkwrap.api.Assignable;
+import org.jboss.shrinkwrap.api.formatter.Formatter;
+import org.jboss.shrinkwrap.api.formatter.Formatters;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
@@ -254,6 +256,45 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
 
       return extensionLoader.load(clazz, this);
    }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return this.toString(Formatters.SIMPLE);
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#toString(boolean)
+    */
+   @Override
+   public String toString(final boolean verbose)
+   {
+      return verbose ? this.toString(Formatters.VERBOSE) : this.toString();
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#toString(org.jboss.shrinkwrap.api.formatter.Formatter)
+    */
+   @Override
+   public String toString(final Formatter formatter) throws IllegalArgumentException
+   {
+      // Precondition check
+      if(formatter==null)
+      {
+         throw new IllegalArgumentException("Formatter must be specified");
+      }
+      
+      // Delegate
+      return formatter.format(this);
+   }
+   
+   
 
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
