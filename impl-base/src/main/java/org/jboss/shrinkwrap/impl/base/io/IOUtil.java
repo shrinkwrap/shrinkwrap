@@ -40,7 +40,7 @@ public final class IOUtil
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-   
+
    /**
     * Logger
     */
@@ -186,18 +186,6 @@ public final class IOUtil
             }
          }
       }
-   }
-
-   /**
-    * Helper method to run a specified task and automatically handle the closing of the stream.
-    * 
-    * @param <S>
-    * @param task
-    * @param errorHandler
-    */
-   public static <S extends Closeable> void closeOnComplete(StreamTask<S> task, StreamErrorHandler errorHandler)
-   {
-
    }
 
    /**
