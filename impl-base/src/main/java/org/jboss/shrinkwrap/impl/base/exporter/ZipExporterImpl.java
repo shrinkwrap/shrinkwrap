@@ -16,21 +16,28 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
+import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
+import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
 /**
- * ZipExporterImpl
- * 
  * Implementation of ZipExporter used to export an Archive as a Zip format. 
  * 
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
 public class ZipExporterImpl extends AssignableBase implements ZipExporter
@@ -48,13 +55,13 @@ public class ZipExporterImpl extends AssignableBase implements ZipExporter
    /**
     * Archive to import into. 
     */
-   private Archive<?> archive; 
-   
+   private Archive<?> archive;
+
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   public ZipExporterImpl(Archive<?> archive) 
+   public ZipExporterImpl(final Archive<?> archive)
    {
       Validate.notNull(archive, "Archive must be specified");
       this.archive = archive;
@@ -77,7 +84,8 @@ public class ZipExporterImpl extends AssignableBase implements ZipExporter
    // Required Implementations - ZipExporter ---------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip()
     */
    @Override
@@ -89,10 +97,65 @@ public class ZipExporterImpl extends AssignableBase implements ZipExporter
       // Execute export
       exportDelegate.export();
       // Get results
-      InputStream inputStream = exportDelegate.getResult(); 
+      InputStream inputStream = exportDelegate.getResult();
 
       // Return input stream
       return inputStream;
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip(java.io.File, boolean)
+    */
+   @Override
+   public void exportZip(final File target, final boolean overwrite) throws ArchiveExportException,
+         FileExistsException, IllegalArgumentException
+   {
+      // Precondition checks
+      if (target == null)
+      {
+         throw new IllegalArgumentException("Target file must be specified");
+      }
+      // If target exists and we're not allowed to overwrite it
+      if (target.exists() && !overwrite)
+      {
+         throw new FileExistsException("Target exists and we haven't been flagged to overwrite it: "
+               + target.getAbsolutePath());
+      }
+
+      // Get Streams
+      final InputStream in = this.exportZip();
+      final OutputStream out;
+      try
+      {
+         out = new FileOutputStream(target);
+      }
+      catch (final FileNotFoundException e)
+      {
+         throw new ArchiveExportException("File could not be created: " + target);
+      }
+
+      // Write out
+      try
+      {
+         IOUtil.copyWithClose(in, out);
+      }
+      catch (final IOException e)
+      {
+         throw new ArchiveExportException("Error encountered in exporting archive to " + target.getAbsolutePath(), e);
+      }
+
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip(java.io.File)
+    */
+   @Override
+   public void exportZip(final File target) throws ArchiveExportException, FileExistsException,
+         IllegalArgumentException
+   {
+      this.exportZip(target, false);
    }
 
 }

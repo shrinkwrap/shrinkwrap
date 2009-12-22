@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.impl.base.exporter;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
@@ -120,7 +121,7 @@ public abstract class ExportTestBase
    /** 
     * Returns a temp directory for a test.  Needs the test
     */
-   protected File createTempDirectory(String testName) throws Exception
+   protected File createTempDirectory(String testName) throws IOException
    {
       // Qualify the temp directory by test case
       File tempDirectoryParent = new File(this.getTarget(), this.getClass().getSimpleName());

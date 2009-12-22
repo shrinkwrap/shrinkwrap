@@ -16,17 +16,18 @@
  */
 package org.jboss.shrinkwrap.api.exporter;
 
+import java.io.File;
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * ZipExporter
+ * Exporter used to represent an Archive as a ZIP format. 
  * 
- * Exporter used to export an Archive as a Zip format. 
- * 
+ * @see http://www.pkware.com/documents/casestudies/APPNOTE.TXT
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
 public interface ZipExporter extends Assignable
@@ -39,9 +40,36 @@ public interface ZipExporter extends Assignable
     * Exports provided archive as a Zip archive.
     * 
     * @param archive
-    * @return InputStram for exported Zip
-    * @throws IllegalArgumentException if the archive is not valid
+    * @return {@link InputStream} for exported Zip
     * @throws ArchiveExportException if the export process fails
     */
-   InputStream exportZip();
+   InputStream exportZip() throws ArchiveExportException;
+
+   /**
+    * Exports provided archive as a ZIP archive, written to the 
+    * specified {@link File} target.  If the target exists this call will
+    * fail with {@link IllegalArgumentException}
+    * 
+    * @param archive
+    * @return {@link InputStream} for exported Zip
+    * @throws IllegalArgumentException If the target is not specified
+    * @throws FileExistsException If the target already exists 
+    * @throws ArchiveExportException if the export process fails
+    */
+   void exportZip(File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException;
+
+   /**
+    * Exports provided archive as a ZIP archive, written to the 
+    * specified {@link File} target.  If the target both exists and the "overwrite"
+    * flag is true, this call will allow the existing file to be overwritten, else
+    * the invocation will fail with {@link IllegalArgumentException}
+    * 
+    * @param archive
+    * @return {@link InputStream} for exported Zip
+    * @throws IllegalArgumentException If the target is not specified 
+    * @throws FileExistsException If the target both already exists and the overwrite flag is false
+    * @throws ArchiveExportException if the export process fails
+    */
+   void exportZip(File target, boolean overwrite) throws ArchiveExportException, FileExistsException,
+         IllegalArgumentException;
 }

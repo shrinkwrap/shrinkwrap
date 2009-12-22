@@ -25,10 +25,13 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import junit.framework.TestCase;
+
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Path;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
+import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -37,12 +40,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * ZipExporterTestCase
- * 
  * TestCase to ensure that the {@link ZipExporter} correctly exports archives to Zip format.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
 public class ZipExporterTestCase extends ExportTestBase
@@ -81,18 +83,64 @@ public class ZipExporterTestCase extends ExportTestBase
       // Write zip content to temporary file 
       ZipFile expectedZip = getExportedZipFile(NAME_ARCHIVE, zipStream, tempDirectory);
 
-      // Validate entries were written out
-      assertAssetInZip(expectedZip, PATH_ONE, ASSET_ONE);
-      assertAssetInZip(expectedZip, PATH_TWO, ASSET_TWO);
+      // Validate
+      ensureZipFileInExpectedForm(expectedZip);
+   }
 
-      // Validate all paths were written
-      // SHRINKWRAP-94
-      getEntryFromZip(expectedZip, NESTED_PATH);
-      
-      // Ensure we don't write the root PAth
-      // SHRINKWRAP-96
-      ZipEntry rootEntry = expectedZip.getEntry("/");
-      Assert.assertNull("ZIP should not have explicit root path written (SHRINKWRAP-96)", rootEntry);
+   /**
+    * Test to make sure an archive can be exported to Zip (file) and all 
+    * contents are correctly located in the Zip.
+    * @throws Exception
+    */
+   @Test
+   public void testExportZipToFile() throws IOException
+   {
+      log.info("testExportZipToFile");
+
+      // Get a temp directory for the test
+      File tempDirectory = createTempDirectory("testExportZipToFile");
+
+      // Get an archive instance
+      Archive<?> archive = createArchiveWithAssets();
+
+      // Export as File
+      final File exported = new File(tempDirectory, archive.getName());
+      archive.as(ZipExporter.class).exportZip(exported, true);
+
+      // Get as ZipFile
+      final ZipFile expectedZip = new ZipFile(exported);
+
+      // Validate
+      ensureZipFileInExpectedForm(expectedZip);
+   }
+
+   /**
+    * Test to make sure an archive can be exported to Zip (file) and all 
+    * contents are correctly located in the Zip.
+    * @throws Exception
+    */
+   @Test(expected = FileExistsException.class)
+   public void testExportZipToExistingFileFails() throws IOException
+   {
+      log.info("testExportZipToExistingFileFails");
+
+      // Get a temp directory for the test
+      File tempDirectory = createTempDirectory("testExportZipToExistingFileFails");
+
+      // Get an archive instance
+      Archive<?> archive = createArchiveWithAssets();
+
+      // Export as File
+      final File alreadyExists = new File(tempDirectory, archive.getName());
+      final OutputStream alreadyExistsOutputStream = new FileOutputStream(alreadyExists);
+      alreadyExistsOutputStream.write(new byte[]
+      {});
+      alreadyExistsOutputStream.close();
+      TestCase.assertTrue("The test setup is incorrect; an empty file should exist before writing the archive",
+            alreadyExists.exists());
+
+      // Try to write to a file that already exists (should fail)
+      archive.as(ZipExporter.class).exportZip(alreadyExists);
    }
 
    /**
@@ -242,6 +290,28 @@ public class ZipExporterTestCase extends ExportTestBase
    {
       OutputStream fileOutputStream = new FileOutputStream(outFile);
       IOUtil.copyWithClose(inputStream, fileOutputStream);
+   }
+
+   /**
+    * Ensures that the specified {@link ZipFile} contains entries
+    * in the expected form
+    * @param expectedZip
+    * @throws IOException
+    */
+   private void ensureZipFileInExpectedForm(final ZipFile expectedZip) throws IOException
+   {
+      // Validate entries were written out
+      assertAssetInZip(expectedZip, PATH_ONE, ASSET_ONE);
+      assertAssetInZip(expectedZip, PATH_TWO, ASSET_TWO);
+
+      // Validate all paths were written
+      // SHRINKWRAP-94
+      getEntryFromZip(expectedZip, NESTED_PATH);
+
+      // Ensure we don't write the root PAth
+      // SHRINKWRAP-96
+      ZipEntry rootEntry = expectedZip.getEntry("/");
+      Assert.assertNull("ZIP should not have explicit root path written (SHRINKWRAP-96)", rootEntry);
    }
 
 }

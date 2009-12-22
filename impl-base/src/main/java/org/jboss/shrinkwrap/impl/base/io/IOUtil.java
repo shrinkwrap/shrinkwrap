@@ -27,8 +27,6 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
- * IOUtil
- * 
  * Generic input/output utilities
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
@@ -112,7 +110,10 @@ public final class IOUtil
          }
          catch (final IOException ignore)
          {
-
+            if (log.isLoggable(Level.FINER))
+            {
+               log.finer("Could not close stream due to: " + ignore.getMessage() + "; ignoring");
+            }
          }
          // We don't need to close the outstream, it's a byte array out
       }
@@ -125,28 +126,24 @@ public final class IOUtil
    }
 
    /**
-    * Copies the contents from an InputStream to an OutputStream
+    * Copies the contents from an InputStream to an OutputStream.  It is the
+    * responsibility of the caller to close the streams passed in when done, 
+    * though the {@link OutputStream} will be fully flushed.
     * 
     * @param input
     * @param output
+    * @throws IOException If a problem occurred during any I/O operations
     */
-   public static void copy(InputStream input, OutputStream output)
+   public static void copy(InputStream input, OutputStream output) throws IOException
    {
       final byte[] buffer = new byte[4096];
       int read = 0;
-      try
+      while ((read = input.read(buffer)) != -1)
       {
-         while ((read = input.read(buffer)) != -1)
-         {
-            output.write(buffer, 0, read);
-         }
+         output.write(buffer, 0, read);
+      }
 
-         output.flush();
-      }
-      catch (final IOException ioe)
-      {
-         throw new RuntimeException("Error copying contents from " + input + " to " + output, ioe);
-      }
+      output.flush();
    }
 
    /**
@@ -154,8 +151,10 @@ public final class IOUtil
     * 
     * @param input
     * @param output
+    * @throws IOException If a problem occurred during any I/O operations during the copy, but
+    * on closing the streams these will be ignored and logged at {@link Level#FINER}
     */
-   public static void copyWithClose(InputStream input, OutputStream output)
+   public static void copyWithClose(InputStream input, OutputStream output) throws IOException
    {
       try
       {
@@ -219,15 +218,19 @@ public final class IOUtil
       }
       finally
       {
-         try
+         if (stream != null)
          {
-            if (stream != null)
+            try
             {
                stream.close();
             }
-         }
-         catch (Exception ex)
-         {
+            catch (final IOException ignore)
+            {
+               if (log.isLoggable(Level.FINER))
+               {
+                  log.finer("Could not close stream due to: " + ignore.getMessage() + "; ignoring");
+               }
+            }
          }
       }
    }
