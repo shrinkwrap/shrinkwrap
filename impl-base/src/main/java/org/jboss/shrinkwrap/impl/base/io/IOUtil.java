@@ -21,6 +21,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.impl.base.Validate;
 
@@ -38,6 +40,11 @@ public final class IOUtil
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
+   
+   /**
+    * Logger
+    */
+   private static final Logger log = Logger.getLogger(IOUtil.class.getName());
 
    /**
     * Default Error Handler
@@ -159,11 +166,24 @@ public final class IOUtil
          try
          {
             input.close();
+         }
+         catch (final IOException ignore)
+         {
+            if (log.isLoggable(Level.FINER))
+            {
+               log.finer("Could not close stream due to: " + ignore.getMessage() + "; ignoring");
+            }
+         }
+         try
+         {
             output.close();
          }
          catch (final IOException ignore)
          {
-
+            if (log.isLoggable(Level.FINER))
+            {
+               log.finer("Could not close stream due to: " + ignore.getMessage() + "; ignoring");
+            }
          }
       }
    }
