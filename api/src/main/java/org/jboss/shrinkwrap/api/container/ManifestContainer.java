@@ -211,4 +211,22 @@ public interface ManifestContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if target is null
     */
    T addManifestResource(Asset resource, Path target) throws IllegalArgumentException;
+   
+   /**
+    * Adds a META-INF/services/ServiceInterfaceName {@link Asset} representing this service.
+    * 
+    * Warning: this method does not add the specified classes to the archive. 
+    * 
+    * @param serviceInterface The Service Interface class
+    * @param serviceImpls The Service Interface Implementations
+    * @return This virtual archive
+    * @throws IllegalArgumentException if serviceInterface is null
+    * @throws IllegalArgumentException if serviceImpls is null or contain null values
+    */
+   /*
+    * TODO: The interface should have been like this:
+    * <X> T addServiceProvider(Class<X> serviceInterface, Class<? extends X>... serviceImpls) throws IllegalArgumentException;
+    * But due to how java generic works, this will cause a unsafe warning for the user. 
+    */
+   T addServiceProvider(Class<?> serviceInterface, Class<?>... serviceImpls) throws IllegalArgumentException;
 }

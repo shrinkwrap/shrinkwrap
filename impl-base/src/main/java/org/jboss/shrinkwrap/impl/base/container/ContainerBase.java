@@ -45,6 +45,7 @@ import org.jboss.shrinkwrap.impl.base.asset.ClassAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.asset.FileAsset;
+import org.jboss.shrinkwrap.impl.base.asset.ServiceProviderAsset;
 import org.jboss.shrinkwrap.impl.base.asset.UrlAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
@@ -80,11 +81,6 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
          return Thread.currentThread().getContextClassLoader();
       }
    }
-   
-   /**
-    * Filter pattern for inner classes
-    */
-   private static final String PATTERN_INNER_CLASS = "$.*";
    
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -467,6 +463,17 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       
       Path location = new BasicPath(getManinfestPath(), target);
       return add(resource, location);
+   }
+   
+   @Override
+   public T addServiceProvider(Class<?> serviceInterface, Class<?>... serviceImpls) throws IllegalArgumentException 
+   {
+      Validate.notNull(serviceInterface, "ServiceInterface must be specified");
+      Validate.notNullAndNoNullValues(serviceImpls, "ServiceImpls must be specified and can not contain null values");
+      
+      Asset asset = new ServiceProviderAsset(serviceImpls);
+      Path path = new BasicPath("services", serviceInterface.getName());
+      return addManifestResource(asset, path);
    }
    
    //-------------------------------------------------------------------------------------||

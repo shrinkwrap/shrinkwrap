@@ -38,6 +38,8 @@ import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.spec.donotchange.DummyClassA;
 import org.jboss.shrinkwrap.impl.base.spec.donotchange.DummyClassParent;
+import org.jboss.shrinkwrap.impl.base.test.dummy.DummayInterfaceForTest;
+import org.jboss.shrinkwrap.impl.base.test.dummy.DummyClassForTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -249,6 +251,17 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       getManifestContainer().addManifestResource(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       Path testPath = new BasicPath(getManifestPath(), "Test.txt");
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+   }
+   
+   @Test
+   @ArchiveType(ManifestContainer.class)
+   public void testAddServiceProvider() throws Exception {
+      getManifestContainer().addServiceProvider(DummayInterfaceForTest.class, DummyClassForTest.class);
+      
+      Path testPath = new BasicPath(getManifestPath(), "services/" + DummayInterfaceForTest.class.getName());
       Assert.assertTrue(
             "Archive should contain " + testPath,
             getArchive().contains(testPath));

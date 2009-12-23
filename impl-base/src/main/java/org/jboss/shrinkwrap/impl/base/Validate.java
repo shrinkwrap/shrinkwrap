@@ -60,4 +60,19 @@ public final class Validate
          throw new IllegalArgumentException(message);
       }
    }
+   
+   /**
+    * Checks that the specified array is not null or contain any null values.
+    * 
+    * @param objects The object to check
+    * @param message The exception message
+    */
+   public static void notNullAndNoNullValues(final Object[] objects, final String message) 
+   {
+      notNull(objects, message);
+      for(Object object : objects)
+      {
+         notNull(object, message);
+      }
+   }
 }
