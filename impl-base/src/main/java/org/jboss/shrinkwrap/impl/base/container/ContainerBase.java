@@ -690,20 +690,25 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    {
       Validate.notNull(classes, "Classes must be specified");
       
-      for(Class<?> clazz : classes) 
+      for(final Class<?> clazz : classes) 
       {
          Asset resource = new ClassAsset(clazz);
          Path location = new BasicPath(getClassesPath(), AssetUtil.getFullPathForClassResource(clazz));
          add(resource, location);
          
          // Get all inner classes and add them
-         final Class<?>[] innerClasses = clazz.getDeclaredClasses();
-         for (final Class<?> innerClass : innerClasses)
-         {
-            this.addClass(innerClass);
-         }
+         addPackages(
+               false,
+               new Filter<Class<?>>()
+               {
+                  public boolean include(Class<?> object)
+                  {
+                     return object.getName().startsWith(clazz.getName() + "$");
+                  };
+               },
+               clazz.getPackage()
+         );
       }
-      
       return covarientReturn();
    };
    
