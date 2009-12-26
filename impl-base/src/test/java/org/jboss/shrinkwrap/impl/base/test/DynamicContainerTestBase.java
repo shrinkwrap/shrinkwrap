@@ -38,7 +38,7 @@ import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.spec.donotchange.DummyClassA;
 import org.jboss.shrinkwrap.impl.base.spec.donotchange.DummyClassParent;
-import org.jboss.shrinkwrap.impl.base.test.dummy.DummayInterfaceForTest;
+import org.jboss.shrinkwrap.impl.base.test.dummy.DummyInterfaceForTest;
 import org.jboss.shrinkwrap.impl.base.test.dummy.DummyClassForTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -259,9 +259,9 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testAddServiceProvider() throws Exception {
-      getManifestContainer().addServiceProvider(DummayInterfaceForTest.class, DummyClassForTest.class);
+      getManifestContainer().addServiceProvider(DummyInterfaceForTest.class, DummyClassForTest.class);
       
-      Path testPath = new BasicPath(getManifestPath(), "services/" + DummayInterfaceForTest.class.getName());
+      Path testPath = new BasicPath(getManifestPath(), "services/" + DummyInterfaceForTest.class.getName());
       Assert.assertTrue(
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
@@ -437,14 +437,38 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       
       // SHRINKWRAP-106
       // Ensure inner classes are added
-      final Path expectedPathInnerClass = new BasicPath(getClassPath(), AssetUtil
-            .getFullPathForClassResource(DummyClassA.InnerClass.class));
-      final Path expectedPathInnerClassParent = new BasicPath(getClassPath(), AssetUtil
-            .getFullPathForClassResource(DummyClassParent.ParentInnerClass.class));
-      Assert.assertTrue("Adding a class should also add its inner classes", getArchive().contains(
-            expectedPathInnerClass));
-      Assert.assertFalse("Adding a class should not add the public inner classes of its parent", getArchive().contains(
-            expectedPathInnerClassParent));
+      final Path expectedPathInnerClass = new BasicPath(
+            getClassPath(), AssetUtil.getFullPathForClassResource(DummyClassA.InnerClass.class));
+      final Path expectedPathInnerClassParent = new BasicPath(
+            getClassPath(), AssetUtil.getFullPathForClassResource(DummyClassParent.ParentInnerClass.class));
+      
+      Assert.assertTrue(
+            "Adding a class should also add its inner classes", 
+            getArchive().contains(expectedPathInnerClass));
+      Assert.assertFalse(
+            "Adding a class should not add the public inner classes of its parent", 
+            getArchive().contains(expectedPathInnerClassParent));
+      
+      // Ensure anonymous/private inner classes are added
+      final Path expectedPathPrivateInnerClass = new BasicPath(
+            getClassPath(), 
+            AssetUtil.getFullPathForClassResource(
+                  DummyClassA.InnerClass.class)
+                     .get().replaceAll("InnerClass", "Test"));
+
+      final Path expectedPathAnonymousInnerClass = new BasicPath(
+            getClassPath(), 
+            AssetUtil.getFullPathForClassResource(
+                  DummyClassA.InnerClass.class)
+                     .get().replaceAll("InnerClass", "1"));
+
+      Assert.assertTrue(
+            "Adding a class should also add its private inner classes", 
+            getArchive().contains(expectedPathPrivateInnerClass));
+      Assert.assertTrue(
+            "Adding a class should also add the anonymous inner classes", 
+            getArchive().contains(expectedPathAnonymousInnerClass));
+
    }
 
    /**

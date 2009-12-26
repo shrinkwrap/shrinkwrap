@@ -17,14 +17,14 @@
 package org.jboss.shrinkwrap.impl.base.test.dummy;
 
 /**
- * DummayInterfaceForTest
+ * DummyInterfaceForTest
  * 
  * Empty class to test class adding
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface DummayInterfaceForTest
+public interface DummyInterfaceForTest
 {
 
 }

@@ -25,7 +25,7 @@ package org.jboss.shrinkwrap.impl.base.test.dummy;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class DummyClassForTest implements DummayInterfaceForTest
+public class DummyClassForTest implements DummyInterfaceForTest
 {
 
 }

@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec.donotchange;
 
+
 /**
  * This class is just here for the ClassContainer.addPackage/addClass tests.
  *
@@ -24,9 +25,23 @@ package org.jboss.shrinkwrap.impl.base.spec.donotchange;
  */
 public class DummyClassA extends DummyClassParent
 {
+   //-------------------------------------------------------------------------------------||
+   // Anonymous Inner Classes ------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+   @SuppressWarnings("unused")
+   private Test test = new Test() {};
+
+
+   //-------------------------------------------------------------------------------------||
+   // Inner Classes ----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+   
    public class InnerClass
    {
 
    }
 
+   private class Test {
+      
+   }
 }
