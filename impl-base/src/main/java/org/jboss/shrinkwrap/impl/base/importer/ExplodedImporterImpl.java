@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.impl.base.importer;
 
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -121,7 +122,10 @@ public class ExplodedImporterImpl extends AssignableBase implements
    {
       for (File file : files)
       {
-         log.info(file.getAbsolutePath());
+         if (log.isLoggable(Level.FINER))
+         {
+            log.finer("Importing: " + file.getAbsolutePath());
+         }
          final Path path  = calculatePath(root, file);
          if (file.isDirectory())
          {
