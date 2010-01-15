@@ -27,7 +27,7 @@ import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
@@ -111,7 +111,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       Validate.notNull(asset, "asset must be specified");
 
       // Make a Path from the target
-      final Path path = new BasicPath(target);
+      final ArchivePath path = new BasicPath(target);
 
       // Delegate
       return this.add(asset, path);
@@ -119,10 +119,10 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Path, java.lang.String, org.jboss.shrinkwrap.api.Asset)
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.ArchivePath, java.lang.String, org.jboss.shrinkwrap.api.Asset)
     */
    @Override
-   public T add(final Asset asset, final Path path, final String name)
+   public T add(final Asset asset, final ArchivePath path, final String name)
    {
       // Precondition checks
       Validate.notNull(path, "No path was specified");
@@ -130,7 +130,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       Validate.notNull(asset, "No asset was was specified");
 
       // Make a relative path
-      final Path resolvedPath = new BasicPath(path, name);
+      final ArchivePath resolvedPath = new BasicPath(path, name);
 
       // Delegate
       return this.add(asset, resolvedPath);
@@ -147,7 +147,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       Validate.notNullOrEmpty(path, "No path was specified");
 
       // Make a Path
-      final Path realPath = new BasicPath(path);
+      final ArchivePath realPath = new BasicPath(path);
 
       // Delegate
       return get(realPath);
@@ -155,10 +155,10 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Archive)
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.Archive)
     */
    @Override
-   public T add(final Archive<?> archive, final Path path)
+   public T add(final Archive<?> archive, final ArchivePath path)
    {
       // Precondition checks
       Validate.notNull(path, "No path was specified");
@@ -166,7 +166,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
 
       // Make a Path
       final String archiveName = archive.getName();
-      final Path contentPath = new BasicPath(path, archiveName);
+      final ArchivePath contentPath = new BasicPath(path, archiveName);
 
       // Create ArchiveAsset 
       ArchiveAsset archiveAsset = new ArchiveAsset(archive);
@@ -198,17 +198,17 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Filter)
     */
    @Override
-   public T merge(Archive<?> source, Filter<Path> filter) throws IllegalArgumentException
+   public T merge(Archive<?> source, Filter<ArchivePath> filter) throws IllegalArgumentException
    {
       return merge(source, new BasicPath(), filter);
    }   
    
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Archive)
+    * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.Archive)
     */
    @Override
-   public T merge(final Archive<?> source, final Path path) throws IllegalArgumentException
+   public T merge(final Archive<?> source, final ArchivePath path) throws IllegalArgumentException
    {
       Validate.notNull(source, "No source archive was specified");
       Validate.notNull(path, "No path was specified");
@@ -220,7 +220,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Filter)
     */
    @Override
-   public T merge(Archive<?> source, Path path, Filter<Path> filter) throws IllegalArgumentException
+   public T merge(Archive<?> source, ArchivePath path, Filter<ArchivePath> filter) throws IllegalArgumentException
    {
       // Precondition checks
       Validate.notNull(source, "No source archive was specified");
@@ -228,14 +228,14 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       Validate.notNull(filter, "No filter was specified");
 
       // Get existing contents from source archive
-      final Map<Path, Asset> sourceContent = source.getContent();
+      final Map<ArchivePath, Asset> sourceContent = source.getContent();
       Validate.notNull(sourceContent, "Source archive content can not be null.");
 
       // Add each asset from the source archive
-      for (final Entry<Path, Asset> contentEntry : sourceContent.entrySet())
+      for (final Entry<ArchivePath, Asset> contentEntry : sourceContent.entrySet())
       {
          final Asset asset = contentEntry.getValue();
-         Path assetPath = new BasicPath(path, contentEntry.getKey());
+         ArchivePath assetPath = new BasicPath(path, contentEntry.getKey());
          if( !filter.include(assetPath)) 
          {
             continue;

@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 
 /**
  * AbstractExporterDelegate
@@ -82,18 +82,18 @@ public abstract class AbstractExporterDelegate<T>
       }
 
       // Obtain all contents
-      final Map<Path, Asset> content = archive.getContent();
+      final Map<ArchivePath, Asset> content = archive.getContent();
       
       // Process in reverse order such that we can check for parent relationships, 
       // and not write directories twice
-      final List<Path> paths = new ArrayList<Path>(content.keySet());
+      final List<ArchivePath> paths = new ArrayList<ArchivePath>(content.keySet());
       Collections.reverse(paths);
       
       // For every Path in the Archive
-      for (final Path entry : paths)
+      for (final ArchivePath entry : paths)
       {
          // Get Asset information
-         final Path path = entry;
+         final ArchivePath path = entry;
          final Asset asset = content.get(entry);
 
          // Process the asset
@@ -111,7 +111,7 @@ public abstract class AbstractExporterDelegate<T>
     * @param path
     * @param asset
     */
-   protected abstract void processAsset(Path path, Asset asset);
+   protected abstract void processAsset(ArchivePath path, Asset asset);
 
    /**
     * Return the results of the export.  Should process any tasks required to finalize the export.  

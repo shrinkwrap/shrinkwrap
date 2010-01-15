@@ -17,7 +17,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.path;
 
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 
 /**
  * PathUtil
@@ -245,7 +245,7 @@ public final class PathUtil
     * 
     * @param path The path whose parent context we should return
     */
-   public static Path getParent(final Path path)
+   public static ArchivePath getParent(final ArchivePath path)
    {
       // Precondition checks
       assert path != null : "Path must be specified";

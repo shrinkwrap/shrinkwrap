@@ -18,13 +18,13 @@ package org.jboss.shrinkwrap.impl.base.path;
 
 import java.util.logging.Logger;
 
-import org.jboss.shrinkwrap.api.Path;
-import org.jboss.shrinkwrap.api.Paths;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 
 /**
  * PathsTestCase
  *
- * Tests to ensure that the {@link Paths}
+ * Tests to ensure that the {@link ArchivePaths}
  * implementation creates Paths as expected 
  * from various specified contexts 
  *
@@ -52,29 +52,29 @@ public class PathsTestCase extends PathsTestBase
     * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(java.lang.String)
     */
    @Override
-   Path createPath(final String context)
+   ArchivePath createPath(final String context)
    {
-      return Paths.create(context);
+      return ArchivePaths.create(context);
    }
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Path)
+    * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
-   Path createPath(Path base, Path context)
+   ArchivePath createPath(ArchivePath base, ArchivePath context)
    {
-      return Paths.create(base, context);
+      return ArchivePaths.create(base, context);
    }
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(org.jboss.shrinkwrap.api.Path, java.lang.String)
+    * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(org.jboss.shrinkwrap.api.ArchivePath, java.lang.String)
     */
    @Override
-   Path createPath(Path base, String context)
+   ArchivePath createPath(ArchivePath base, String context)
    {
-      return Paths.create(base, context);
+      return ArchivePaths.create(base, context);
    }
 
    /**
@@ -82,8 +82,8 @@ public class PathsTestCase extends PathsTestBase
     * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(java.lang.String, java.lang.String)
     */
    @Override
-   Path createPath(String base, String context)
+   ArchivePath createPath(String base, String context)
    {
-      return Paths.create(base, context);
+      return ArchivePaths.create(base, context);
    }
 }

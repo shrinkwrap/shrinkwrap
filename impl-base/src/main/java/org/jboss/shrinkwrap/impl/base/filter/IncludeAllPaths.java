@@ -17,17 +17,17 @@
 package org.jboss.shrinkwrap.impl.base.filter;
 
 import org.jboss.shrinkwrap.api.Filter;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 
 /**
  * IncludeAllPaths
  * 
- * Filter that include all {@link Path}s.
+ * Filter that include all {@link ArchivePath}s.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class IncludeAllPaths implements Filter<Path>
+public class IncludeAllPaths implements Filter<ArchivePath>
 {
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
@@ -37,7 +37,7 @@ public class IncludeAllPaths implements Filter<Path>
     * @see org.jboss.shrinkwrap.api.Filter#include(java.lang.Object)
     */
    @Override
-   public boolean include(Path object)
+   public boolean include(ArchivePath object)
    {
       return true;
    }

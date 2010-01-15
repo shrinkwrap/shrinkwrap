@@ -29,7 +29,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
@@ -66,7 +66,7 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
     * A Set of Paths we've exported so far (so that we don't write
     * any entries twice)
     */
-   private Set<Path> pathsExported = new HashSet<Path>();
+   private Set<ArchivePath> pathsExported = new HashSet<ArchivePath>();
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -116,10 +116,10 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#processAsset(Path, Asset)
+    * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#processAsset(ArchivePath, Asset)
     */
    @Override
-   protected void processAsset(final Path path, final Asset asset)
+   protected void processAsset(final ArchivePath path, final Asset asset)
    {
       // Precondition checks
       if (path == null)
@@ -138,12 +138,12 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
        * by recursing first and adding parents that
        * haven't already been written.
        */
-      final Path parent = PathUtil.getParent(path);
+      final ArchivePath parent = PathUtil.getParent(path);
       if (parent != null && !this.pathsExported.contains(parent))
       {
          // If this is not the root
          // SHRINKWRAP-96
-         final Path grandParent = PathUtil.getParent(parent);
+         final ArchivePath grandParent = PathUtil.getParent(parent);
          final boolean isRoot = grandParent == null;
          if (!isRoot)
          {
@@ -241,10 +241,10 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
     * @return
     */
    //TODO The performance here will degrade geometrically with size of the archive
-   private boolean isParentOfAnyPathsExported(final Path path)
+   private boolean isParentOfAnyPathsExported(final ArchivePath path)
    {
       // For all Paths already exported
-      for(final Path exportedPath :this.pathsExported)
+      for(final ArchivePath exportedPath :this.pathsExported)
       {
          if( this.isParentOfSpecifiedHierarchy(path, exportedPath)){
             return true;
@@ -260,9 +260,9 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
     * @param compare
     * @return
     */
-   private boolean isParentOfSpecifiedHierarchy(final Path path,final Path compare){
+   private boolean isParentOfSpecifiedHierarchy(final ArchivePath path,final ArchivePath compare){
       // If we've reached the root, we're not a parent of any paths already exported
-      final Path parent = PathUtil.getParent(compare);
+      final ArchivePath parent = PathUtil.getParent(compare);
       if(parent==null)
       {
          return false;

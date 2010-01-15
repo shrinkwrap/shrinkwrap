@@ -19,7 +19,7 @@ package org.jboss.shrinkwrap.impl.base.path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 
 /**
  * BasicPath
@@ -31,7 +31,7 @@ import org.jboss.shrinkwrap.api.Path;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class BasicPath implements Path, Comparable<Path>
+public class BasicPath implements ArchivePath, Comparable<ArchivePath>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -89,7 +89,7 @@ public class BasicPath implements Path, Comparable<Path>
     * @param basePath
     * @param context
     */
-   public BasicPath(final Path basePath, final Path context)
+   public BasicPath(final ArchivePath basePath, final ArchivePath context)
    {
       this(basePath, context.get());
    }
@@ -101,7 +101,7 @@ public class BasicPath implements Path, Comparable<Path>
     * @param basePath
     * @param context
     */
-   public BasicPath(final Path basePath, final String context)
+   public BasicPath(final ArchivePath basePath, final String context)
    {
       this(basePath.get(), context);
    }
@@ -124,7 +124,7 @@ public class BasicPath implements Path, Comparable<Path>
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Path#get()
+    * @see org.jboss.shrinkwrap.api.ArchivePath#get()
     */
    @Override
    public String get()
@@ -137,7 +137,7 @@ public class BasicPath implements Path, Comparable<Path>
     * @see java.lang.Comparable#compareTo(java.lang.Object)
     */
    @Override
-   public int compareTo(final Path path)
+   public int compareTo(final ArchivePath path)
    {
       // If a null argument, we're greater
       if (path == null)
@@ -147,8 +147,8 @@ public class BasicPath implements Path, Comparable<Path>
       /*
        * Check for parent relationship
        */
-      final Path parentOfSpecified = PathUtil.getParent(path);
-      final Path parentOfThis = PathUtil.getParent(this);
+      final ArchivePath parentOfSpecified = PathUtil.getParent(path);
+      final ArchivePath parentOfThis = PathUtil.getParent(this);
       // If we're the parent of the specified, we're less
       if (this.equals(parentOfSpecified))
       {

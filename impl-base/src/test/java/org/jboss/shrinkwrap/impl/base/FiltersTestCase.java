@@ -22,8 +22,8 @@ import java.util.List;
 
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
-import org.jboss.shrinkwrap.api.Path;
-import org.jboss.shrinkwrap.api.Paths;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -40,9 +40,9 @@ public class FiltersTestCase
    @Test
    public void shouldIncludeAll() throws Exception 
    {
-      List<Path> paths = Arrays.asList(
-            Paths.create("/META-INF/"), Paths.create("/WEB-INF/"));
-      List<Path> filteredPaths = executeFilter(Path.class, paths, Filters.includeAll());
+      List<ArchivePath> paths = Arrays.asList(
+            ArchivePaths.create("/META-INF/"), ArchivePaths.create("/WEB-INF/"));
+      List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.includeAll());
       
       Assert.assertArrayEquals(
             "Should include all paths", 
@@ -53,9 +53,9 @@ public class FiltersTestCase
    @Test
    public void shouldIncludePathRegExp() throws Exception 
    {
-      List<Path> paths = Arrays.asList(
-            Paths.create("/META-INF/"), Paths.create("/WEB-INF/"));
-      List<Path> filteredPaths = executeFilter(Path.class, paths, Filters.include(".*META-INF.*"));
+      List<ArchivePath> paths = Arrays.asList(
+            ArchivePaths.create("/META-INF/"), ArchivePaths.create("/WEB-INF/"));
+      List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.include(".*META-INF.*"));
       
       Assert.assertEquals(
             "Should only contain one", 
@@ -64,16 +64,16 @@ public class FiltersTestCase
 
       Assert.assertEquals(
             "Should only contain metainf", 
-            Paths.create("/META-INF/"),
+            ArchivePaths.create("/META-INF/"),
             filteredPaths.get(0));
    }
 
    @Test
    public void shouldExcludePathRegExp() throws Exception 
    {
-      List<Path> paths = Arrays.asList(
-            Paths.create("/META-INF/"), Paths.create("/WEB-INF/"));
-      List<Path> filteredPaths = executeFilter(Path.class, paths, Filters.exclude(".*META-INF.*"));
+      List<ArchivePath> paths = Arrays.asList(
+            ArchivePaths.create("/META-INF/"), ArchivePaths.create("/WEB-INF/"));
+      List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.exclude(".*META-INF.*"));
       
       Assert.assertEquals(
             "Should only contain one", 
@@ -82,7 +82,7 @@ public class FiltersTestCase
 
       Assert.assertEquals(
             "Should only contain webinf", 
-            Paths.create("/WEB-INF/"),
+            ArchivePaths.create("/WEB-INF/"),
             filteredPaths.get(0));
    }
 

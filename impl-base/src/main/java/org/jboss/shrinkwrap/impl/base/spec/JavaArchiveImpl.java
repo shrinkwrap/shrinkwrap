@@ -19,7 +19,7 @@ package org.jboss.shrinkwrap.impl.base.spec;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.container.ContainerBase;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -47,17 +47,17 @@ public class JavaArchiveImpl
    /**
     * Path to the manifests inside of the Archive.
     */
-   private static final Path PATH_MANIFEST = new BasicPath("META-INF");
+   private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
 
    /**
     * Path to the resources inside of the Archive.
     */
-   private static final Path PATH_RESOURCE = new BasicPath("/");
+   private static final ArchivePath PATH_RESOURCE = new BasicPath("/");
 
    /**
     * Path to the classes inside of the Archive.
     */
-   private static final Path PATH_CLASSES = new BasicPath("/");
+   private static final ArchivePath PATH_CLASSES = new BasicPath("/");
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -85,7 +85,7 @@ public class JavaArchiveImpl
     * @see org.jboss.declarchive.impl.base.ContainerBase#getManinfestPath()
     */
    @Override
-   protected Path getManinfestPath()
+   protected ArchivePath getManinfestPath()
    {
       return PATH_MANIFEST;
    }
@@ -94,7 +94,7 @@ public class JavaArchiveImpl
     * @see org.jboss.declarchive.impl.base.ContainerBase#getClassesPath()
     */
    @Override
-   protected Path getClassesPath()
+   protected ArchivePath getClassesPath()
    {
       return PATH_CLASSES;
    }
@@ -103,7 +103,7 @@ public class JavaArchiveImpl
     * @see org.jboss.declarchive.impl.base.ContainerBase#getResourcePath()
     */
    @Override
-   protected Path getResourcePath()
+   protected ArchivePath getResourcePath()
    {
       return PATH_RESOURCE;
    }
@@ -114,7 +114,7 @@ public class JavaArchiveImpl
     * @throws UnsupportedOperationException Libraries are not supported by JavaArchive
     */
    @Override
-   public Path getLibraryPath()
+   public ArchivePath getLibraryPath()
    {
       throw new UnsupportedOperationException("JavaArchive spec does not support Libraries");
    }

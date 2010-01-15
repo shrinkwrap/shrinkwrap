@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 
 /**
  * {@link Formatter} implementation to provide an "ls -l"-esque
@@ -54,11 +54,11 @@ public enum VerboseFormatter implements Formatter {
       sb.append(archive.getName()).append(FormattingConstants.COLON).append(FormattingConstants.NEWLINE);
 
       // Sort all paths
-      final List<Path> paths = new ArrayList<Path>(archive.getContent().keySet());
+      final List<ArchivePath> paths = new ArrayList<ArchivePath>(archive.getContent().keySet());
       Collections.sort(paths);
       final int numPaths = paths.size();
       int count = 0;
-      for (final Path path : paths)
+      for (final ArchivePath path : paths)
       {
          count++;
          sb.append(path.get());

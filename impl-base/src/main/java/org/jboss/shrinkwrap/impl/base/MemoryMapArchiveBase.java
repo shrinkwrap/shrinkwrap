@@ -28,7 +28,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.Filter;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
@@ -71,12 +71,12 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
    /**
     * Storage for the {@link Asset}s.
     */
-   private final Map<Path, Asset> content = new ConcurrentHashMap<Path, Asset>();
+   private final Map<ArchivePath, Asset> content = new ConcurrentHashMap<ArchivePath, Asset>();
 
    /**
     * Storage for the {@link ArchiveAsset}s.  Used to help get access to nested archive content.
     */
-   private final Map<Path, ArchiveAsset> nestedArchives = new ConcurrentHashMap<Path, ArchiveAsset>();
+   private final Map<ArchivePath, ArchiveAsset> nestedArchives = new ConcurrentHashMap<ArchivePath, ArchiveAsset>();
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -116,7 +116,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T add(Asset asset, Path path)
+   public T add(Asset asset, ArchivePath path)
    {
       Validate.notNull(asset, "No asset was specified");
       Validate.notNull(path, "No path was specified");
@@ -129,13 +129,13 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * @see org.jboss.shrinkwrap.impl.base.ArchiveBase#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T add(Archive<?> archive, Path path)
+   public T add(Archive<?> archive, ArchivePath path)
    {
       // Add archive asset
       super.add(archive, path);
 
       // Expected Archive Path
-      Path archivePath = new BasicPath(path, archive.getName());
+      ArchivePath archivePath = new BasicPath(path, archive.getName());
 
       // Get the Asset that was just added 
       Asset asset = get(archivePath);
@@ -155,7 +155,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * @see org.jboss.declarchive.api.Archive#contains(org.jboss.declarchive.api.Path)
     */
    @Override
-   public boolean contains(Path path)
+   public boolean contains(ArchivePath path)
    {
       Validate.notNull(path, "No path was specified");
 
@@ -171,7 +171,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * @see org.jboss.declarchive.api.Archive#delete(org.jboss.declarchive.api.Path)
     */
    @Override
-   public boolean delete(Path path)
+   public boolean delete(ArchivePath path)
    {
       Validate.notNull(path, "No path was specified");
       return content.remove(path) != null;
@@ -181,7 +181,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * @see org.jboss.declarchive.api.Archive#get(org.jboss.declarchive.api.Path)
     */
    @Override
-   public Asset get(Path path)
+   public Asset get(ArchivePath path)
    {
       Validate.notNull(path, "No path was specified");
       Asset asset = content.get(path);
@@ -196,7 +196,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * @see org.jboss.declarchive.api.Archive#getContent()
     */
    @Override
-   public Map<Path, Asset> getContent()
+   public Map<ArchivePath, Asset> getContent()
    {
       return Collections.unmodifiableMap(content);
    }
@@ -205,12 +205,12 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * @see org.jboss.shrinkwrap.api.Archive#getContent(org.jboss.shrinkwrap.api.Filter)
     */
    @Override
-   public Map<Path, Asset> getContent(Filter<Path> filter)
+   public Map<ArchivePath, Asset> getContent(Filter<ArchivePath> filter)
    {
       Validate.notNull(filter, "Filter must be specified");
       
-      Map<Path, Asset> filteredContent = new HashMap<Path, Asset>();
-      for(Map.Entry<Path, Asset> contentEntry : content.entrySet())
+      Map<ArchivePath, Asset> filteredContent = new HashMap<ArchivePath, Asset>();
+      for(Map.Entry<ArchivePath, Asset> contentEntry : content.entrySet())
       {
          if(filter.include(contentEntry.getKey()))
          {
@@ -227,12 +227,12 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
    /**
     * Check to see if a path is found in a nested archive
     */
-   private boolean nestedContains(Path path)
+   private boolean nestedContains(ArchivePath path)
    {
       // Iterate through nested archives
-      for (Entry<Path, ArchiveAsset> nestedArchiveEntry : nestedArchives.entrySet())
+      for (Entry<ArchivePath, ArchiveAsset> nestedArchiveEntry : nestedArchives.entrySet())
       {
-         Path archivePath = nestedArchiveEntry.getKey();
+         ArchivePath archivePath = nestedArchiveEntry.getKey();
          ArchiveAsset archiveAsset = nestedArchiveEntry.getValue();
 
          // Check to see if the requested path starts with the nested archive path
@@ -241,7 +241,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
             Archive<?> nestedArchive = archiveAsset.getArchive();
 
             // Get the asset path from within the nested archive
-            Path nestedAssetPath = getNestedPath(path, archivePath);
+            ArchivePath nestedAssetPath = getNestedPath(path, archivePath);
 
             // Recurse the call to the nested archive
             return nestedArchive.contains(nestedAssetPath);
@@ -256,12 +256,12 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * @param path
     * @return
     */
-   private Asset getNestedAsset(Path path)
+   private Asset getNestedAsset(ArchivePath path)
    {
       // Iterate through nested archives
-      for (Entry<Path, ArchiveAsset> nestedArchiveEntry : nestedArchives.entrySet())
+      for (Entry<ArchivePath, ArchiveAsset> nestedArchiveEntry : nestedArchives.entrySet())
       {
-         Path archivePath = nestedArchiveEntry.getKey();
+         ArchivePath archivePath = nestedArchiveEntry.getKey();
          ArchiveAsset archiveAsset = nestedArchiveEntry.getValue();
 
          // Check to see if the requested path starts with the nested archive path
@@ -270,7 +270,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
             Archive<?> nestedArchive = archiveAsset.getArchive();
 
             // Get the asset path from within the nested archive
-            Path nestedAssetPath = getNestedPath(path, archivePath);
+            ArchivePath nestedAssetPath = getNestedPath(path, archivePath);
 
             // Recurse the call to the nested archive
             return nestedArchive.get(nestedAssetPath);
@@ -286,7 +286,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * @param startingPath
     * @return
     */
-   private boolean startsWith(Path fullPath, Path startingPath)
+   private boolean startsWith(ArchivePath fullPath, ArchivePath startingPath)
    {
       final String context = fullPath.get();
       final String startingContext = startingPath.get();
@@ -302,7 +302,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * @param basePath
     * @return
     */
-   private Path getNestedPath(Path fullPath, Path basePath)
+   private ArchivePath getNestedPath(ArchivePath fullPath, ArchivePath basePath)
    {
       final String context = fullPath.get();
       final String baseContent = basePath.get();

@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.api.Path;
-import org.jboss.shrinkwrap.api.Paths;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
@@ -72,7 +72,7 @@ public abstract class ExportTestBase
    /**
     * Path of for nested content
     */
-   protected static final Path NESTED_PATH = new BasicPath("nested");
+   protected static final ArchivePath NESTED_PATH = new BasicPath("nested");
 
    /**
     * Name of a nested archive
@@ -92,7 +92,7 @@ public abstract class ExportTestBase
    /** 
     * Path used for testing
     */
-   protected static final Path PATH_ONE = new BasicPath("Test.properties");
+   protected static final ArchivePath PATH_ONE = new BasicPath("Test.properties");
 
    /** 
     * Another asset used for testing
@@ -102,17 +102,17 @@ public abstract class ExportTestBase
    /** 
    * Another path used for testing
    */
-   protected static final Path PATH_TWO = new BasicPath(NESTED_PATH, "Test2.properties");
+   protected static final ArchivePath PATH_TWO = new BasicPath(NESTED_PATH, "Test2.properties");
    
    /**
     * Path to a nested empty directory
     */
-   protected static final Path PATH_EMPTY_NESTED_DIR = Paths.create("/empty");
+   protected static final ArchivePath PATH_EMPTY_NESTED_DIR = ArchivePaths.create("/empty");
    
    /**
     * Path to an empty directory, a child of the nested
     */
-   protected static final Path PATH_EMPTY_TOPLEVEL_DIR = Paths.create("/empty/directory");
+   protected static final ArchivePath PATH_EMPTY_TOPLEVEL_DIR = ArchivePaths.create("/empty/directory");
 
    //-------------------------------------------------------------------------------------||
    // Functional Methods -----------------------------------------------------------------||

@@ -16,7 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.asset;
 
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
@@ -71,7 +71,7 @@ public final class AssetUtil
     * @param resourceName The name of the resource
     * @return A Path representation of the give resource
     */
-   public static Path getPathForClassloaderResource(String resourceName) 
+   public static ArchivePath getPathForClassloaderResource(String resourceName) 
    {
       String extractedPath = null;
       if (resourceName.lastIndexOf('/') != -1)
@@ -111,7 +111,7 @@ public final class AssetUtil
     * @param clazz
     * @return
     */
-   public static Path getFullPathForClassResource(Class<?> clazz) 
+   public static ArchivePath getFullPathForClassResource(Class<?> clazz) 
    {
       String classResourceDelimiter = clazz.getName().replaceAll(
             DELIMITER_CLASS_NAME_PATH, DELIMITER_RESOURCE_PATH);

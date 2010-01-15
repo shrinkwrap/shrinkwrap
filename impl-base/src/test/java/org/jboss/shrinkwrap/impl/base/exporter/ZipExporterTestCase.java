@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -169,7 +169,7 @@ public class ZipExporterTestCase extends ExportTestBase
       assertAssetInZip(expectedZip, PATH_TWO, ASSET_TWO);
 
       // Validate nested archive entries were written out
-      Path nestedArchivePath = new BasicPath(NAME_NESTED_ARCHIVE);
+      ArchivePath nestedArchivePath = new BasicPath(NAME_NESTED_ARCHIVE);
 
       // Get Zip entry path
       String nestedArchiveZipEntryPath = PathUtil.optionallyRemovePrecedingSlash(nestedArchivePath.get());
@@ -187,7 +187,7 @@ public class ZipExporterTestCase extends ExportTestBase
       assertAssetInZip(nestedZip, PATH_TWO, ASSET_TWO);
 
       // Validate nested archive entries were written out
-      Path nestedArchiveTwoPath = new BasicPath(NESTED_PATH, NAME_NESTED_ARCHIVE_2);
+      ArchivePath nestedArchiveTwoPath = new BasicPath(NESTED_PATH, NAME_NESTED_ARCHIVE_2);
 
       // Get Zip entry path
       String nestedArchiveTwoZipEntryPath = PathUtil.optionallyRemovePrecedingSlash(nestedArchiveTwoPath.get());
@@ -253,7 +253,7 @@ public class ZipExporterTestCase extends ExportTestBase
     * @throws IOException 
     * @throws IllegalArgumentException 
     */
-   private void assertAssetInZip(ZipFile expectedZip, Path path, Asset asset) throws IllegalArgumentException,
+   private void assertAssetInZip(ZipFile expectedZip, ArchivePath path, Asset asset) throws IllegalArgumentException,
          IOException
    {
       final ZipEntry entry = this.getEntryFromZip(expectedZip, path);
@@ -271,7 +271,7 @@ public class ZipExporterTestCase extends ExportTestBase
     * @throws IllegalArgumentException
     * @throws IOException
     */
-   private ZipEntry getEntryFromZip(final ZipFile expectedZip, final Path path) throws IllegalArgumentException,
+   private ZipEntry getEntryFromZip(final ZipFile expectedZip, final ArchivePath path) throws IllegalArgumentException,
          IOException
    {
       String entryPath = PathUtil.optionallyRemovePrecedingSlash(path.get());

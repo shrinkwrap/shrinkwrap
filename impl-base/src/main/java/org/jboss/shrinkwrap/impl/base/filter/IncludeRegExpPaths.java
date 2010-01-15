@@ -17,18 +17,18 @@
 package org.jboss.shrinkwrap.impl.base.filter;
 
 import org.jboss.shrinkwrap.api.Filter;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
  * IncludeRegExpPath
  * 
- * Filter to include all {@link Path}s that match a given Regular Expression.
+ * Filter to include all {@link ArchivePath}s that match a given Regular Expression.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class IncludeRegExpPaths implements Filter<Path>
+public class IncludeRegExpPaths implements Filter<ArchivePath>
 {
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -54,7 +54,7 @@ public class IncludeRegExpPaths implements Filter<Path>
     * @see org.jboss.shrinkwrap.api.Filter#include(java.lang.Object)
     */
    @Override
-   public boolean include(Path path)
+   public boolean include(ArchivePath path)
    {
       if(path.get().matches(expression)) 
       {

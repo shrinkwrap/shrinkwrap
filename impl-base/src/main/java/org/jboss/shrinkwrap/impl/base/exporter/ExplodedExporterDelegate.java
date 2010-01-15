@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
@@ -80,10 +80,10 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#processAsset(Path, Asset)
+    * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#processAsset(ArchivePath, Asset)
     */
    @Override
-   protected void processAsset(Path path, Asset asset)
+   protected void processAsset(ArchivePath path, Asset asset)
    {
       // Get path to file
       final String assetFilePath = path.get();

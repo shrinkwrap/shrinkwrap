@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
@@ -120,12 +120,12 @@ public class ExplodedExporterTestCase extends ExportTestBase
       Assert.assertEquals(expectedDirectory, explodedDirectory);
 
       // Validate nested archive entries were written out
-      Path nestedArchivePath = new BasicPath(NAME_NESTED_ARCHIVE);
+      ArchivePath nestedArchivePath = new BasicPath(NAME_NESTED_ARCHIVE);
 
       assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePath, PATH_ONE), ASSET_ONE);
       assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePath, PATH_TWO), ASSET_TWO);
 
-      Path nestedArchivePathTwo = new BasicPath(NESTED_PATH, NAME_NESTED_ARCHIVE_2);
+      ArchivePath nestedArchivePathTwo = new BasicPath(NESTED_PATH, NAME_NESTED_ARCHIVE_2);
 
       assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePathTwo, PATH_ONE), ASSET_ONE);
       assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePathTwo, PATH_TWO), ASSET_TWO);
@@ -280,7 +280,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
     * @throws IOException 
     * @throws IllegalArgumentException 
     */
-   private void assertAssetInExploded(File explodedDirectory, Path path, Asset asset) throws FileNotFoundException
+   private void assertAssetInExploded(File explodedDirectory, ArchivePath path, Asset asset) throws FileNotFoundException
    {
       File assetFile = new File(explodedDirectory, path.get());
       Assert.assertNotNull(assetFile);

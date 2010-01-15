@@ -17,7 +17,7 @@
 package org.jboss.shrinkwrap.api.container;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 
 /**
  * Defines the contract for a component capable of storing 
@@ -57,7 +57,7 @@ public interface DirectoryContainer<T extends Archive<T>>
     * @return This archive
     * @throws IllegalArgumentException If no path was specified
     */
-   T addDirectory(Path path) throws IllegalArgumentException;
+   T addDirectory(ArchivePath path) throws IllegalArgumentException;
 
    /**
     * Adds the specified directory to the {@link Archive}.
@@ -66,6 +66,6 @@ public interface DirectoryContainer<T extends Archive<T>>
     * @return This archive
     * @throws IllegalArgumentException If no paths were specified
     */
-   T addDirectories(Path... paths) throws IllegalArgumentException;
+   T addDirectories(ArchivePath... paths) throws IllegalArgumentException;
 
 }

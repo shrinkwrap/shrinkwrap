@@ -20,12 +20,12 @@ import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 
 /**
  * {@link Asset} implementation used to denote no backing
  * resource, but simply a directory structure.  When placed 
- * into an {@link Archive} under some {@link Path}, only the 
+ * into an {@link Archive} under some {@link ArchivePath}, only the 
  * path context will be respected.  Modeled as a singleton
  * as this implementation has no real state or identity (all
  * directory assets are equal).  Calls to {@link DirectoryAsset#openStream()}

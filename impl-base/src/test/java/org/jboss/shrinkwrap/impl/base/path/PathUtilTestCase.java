@@ -4,8 +4,8 @@ import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
-import org.jboss.shrinkwrap.api.Path;
-import org.jboss.shrinkwrap.api.Paths;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -192,10 +192,10 @@ public class PathUtilTestCase
       final String subpathString = "subpath/";
       final String contextString = "context";
       final String contextWithFollowingSlashString = "context/";
-      final Path root = Paths.create(rootString);
-      final Path subpath = Paths.create(subpathString);
-      final Path context = Paths.create(subpath, contextString);
-      final Path contextWithFollowingSlash = new BasicPath(subpath, contextWithFollowingSlashString);
+      final ArchivePath root = ArchivePaths.create(rootString);
+      final ArchivePath subpath = ArchivePaths.create(subpathString);
+      final ArchivePath context = ArchivePaths.create(subpath, contextString);
+      final ArchivePath contextWithFollowingSlash = new BasicPath(subpath, contextWithFollowingSlashString);
 
       // Test
       TestCase.assertEquals("The parent of the context path should be equal to the initial subpath", subpath,

@@ -19,7 +19,7 @@ package org.jboss.shrinkwrap.impl.base.spec;
 import java.util.UUID;
 
 import org.jboss.shrinkwrap.api.Archives;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.DirectoryContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -44,11 +44,11 @@ import org.junit.Before;
 @ArchiveType(JavaArchive.class)
 public class JavaArchiveImplTestCase extends DynamicContainerTestBase<JavaArchive>
 {
-   private static final Path PATH_MANIFEST = new BasicPath("META-INF");
+   private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
 
-   private static final Path PATH_CLASS = new BasicPath("/");
+   private static final ArchivePath PATH_CLASS = new BasicPath("/");
 
-   private static final Path PATH_RESOURCE = new BasicPath();
+   private static final ArchivePath PATH_RESOURCE = new BasicPath();
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -134,25 +134,25 @@ public class JavaArchiveImplTestCase extends DynamicContainerTestBase<JavaArchiv
    }
 
    @Override
-   protected Path getManifestPath()
+   protected ArchivePath getManifestPath()
    {
       return PATH_MANIFEST;
    }
 
    @Override
-   protected Path getResourcePath()
+   protected ArchivePath getResourcePath()
    {
       return PATH_RESOURCE;
    }
 
    @Override
-   protected Path getClassPath()
+   protected ArchivePath getClassPath()
    {
       return PATH_CLASS;
    }
 
    @Override
-   protected Path getLibraryPath()
+   protected ArchivePath getLibraryPath()
    {
       throw new UnsupportedOperationException("JavaArchive does not support libraries");
    }

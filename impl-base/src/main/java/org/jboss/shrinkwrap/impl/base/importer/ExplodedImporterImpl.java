@@ -21,7 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
@@ -126,7 +126,7 @@ public class ExplodedImporterImpl extends AssignableBase implements
          {
             log.finer("Importing: " + file.getAbsolutePath());
          }
-         final Path path  = calculatePath(root, file);
+         final ArchivePath path  = calculatePath(root, file);
          if (file.isDirectory())
          {
             archive.add(DirectoryAsset.INSTANCE,path);
@@ -147,7 +147,7 @@ public class ExplodedImporterImpl extends AssignableBase implements
     *           The Child file
     * @return a Path fort he child relative to root
     */
-   private Path calculatePath(File root, File child)
+   private ArchivePath calculatePath(File root, File child)
    {
       String rootPath = unifyPath(root.getPath());
       String childPath = unifyPath(child.getPath());

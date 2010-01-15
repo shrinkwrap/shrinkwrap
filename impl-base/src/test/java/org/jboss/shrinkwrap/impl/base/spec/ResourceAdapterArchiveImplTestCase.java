@@ -19,7 +19,7 @@ package org.jboss.shrinkwrap.impl.base.spec;
 import java.util.UUID;
 
 import org.jboss.shrinkwrap.api.Archives;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.DirectoryContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -49,11 +49,11 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   private static final Path PATH_RESOURCE = new BasicPath("/");
+   private static final ArchivePath PATH_RESOURCE = new BasicPath("/");
 
-   private static final Path PATH_MANIFEST = new BasicPath("META-INF");
+   private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
 
-   private static final Path PATH_LIBRARY = new BasicPath("/");
+   private static final ArchivePath PATH_LIBRARY = new BasicPath("/");
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -111,7 +111,7 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
    }
 
    @Override
-   protected Path getClassPath()
+   protected ArchivePath getClassPath()
    {
       throw new UnsupportedOperationException("ResourceAdapterArchive do not support classes");
    }
@@ -133,19 +133,19 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
    }
 
    @Override
-   protected Path getManifestPath()
+   protected ArchivePath getManifestPath()
    {
       return PATH_MANIFEST;
    }
 
    @Override
-   protected Path getResourcePath()
+   protected ArchivePath getResourcePath()
    {
       return PATH_RESOURCE;
    }
 
    @Override
-   protected Path getLibraryPath()
+   protected ArchivePath getLibraryPath()
    {
       return PATH_LIBRARY;
    }
@@ -167,7 +167,7 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
    //-------------------------------------------------------------------------------------||
 
    @Override
-   protected Path getResourceAdapterPath()
+   protected ArchivePath getResourceAdapterPath()
    {
       return getManifestPath();
    }

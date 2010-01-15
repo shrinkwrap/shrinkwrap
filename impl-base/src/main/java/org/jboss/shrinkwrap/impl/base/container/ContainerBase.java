@@ -29,8 +29,8 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
-import org.jboss.shrinkwrap.api.Path;
-import org.jboss.shrinkwrap.api.Paths;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.DirectoryContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -117,7 +117,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T add(Archive<?> archive, Path path)
+   public T add(Archive<?> archive, ArchivePath path)
    {
       this.archive.add(archive, path);
       return covarientReturn();
@@ -127,7 +127,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T add(Asset asset, Path target) throws IllegalArgumentException
+   public T add(Asset asset, ArchivePath target) throws IllegalArgumentException
    {
       archive.add(asset, target);
       return covarientReturn();
@@ -137,7 +137,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path, java.lang.String)
     */
    @Override
-   public T add(Asset asset, Path path, String name)
+   public T add(Asset asset, ArchivePath path, String name)
    {
       archive.add(asset, path, name);
       return covarientReturn();
@@ -157,7 +157,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Filter)
     */
    @Override
-   public T merge(Archive<?> source, Filter<Path> filter) throws IllegalArgumentException
+   public T merge(Archive<?> source, Filter<ArchivePath> filter) throws IllegalArgumentException
    {
       archive.merge(source, filter);
       return covarientReturn();
@@ -167,14 +167,14 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T merge(Archive<?> source, Path path) throws IllegalArgumentException
+   public T merge(Archive<?> source, ArchivePath path) throws IllegalArgumentException
    {
       archive.merge(source, path);
       return covarientReturn();
    }
    
    @Override
-   public T merge(Archive<?> source, Path path, Filter<Path> filter) throws IllegalArgumentException
+   public T merge(Archive<?> source, ArchivePath path, Filter<ArchivePath> filter) throws IllegalArgumentException
    {
       archive.merge(source, path, filter);
       return covarientReturn();
@@ -194,7 +194,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.declarchive.api.Archive#contains(org.jboss.declarchive.api.Path)
     */
    @Override
-   public boolean contains(Path path)
+   public boolean contains(ArchivePath path)
    {
       return archive.contains(path);
    }
@@ -203,7 +203,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.declarchive.api.Archive#delete(org.jboss.declarchive.api.Path)
     */
    @Override
-   public boolean delete(Path path)
+   public boolean delete(ArchivePath path)
    {
       return archive.delete(path);
    }
@@ -212,7 +212,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.declarchive.api.Archive#get(org.jboss.declarchive.api.Path)
     */
    @Override
-   public Asset get(Path path)
+   public Asset get(ArchivePath path)
    {
       return archive.get(path);
    }
@@ -230,7 +230,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.declarchive.api.Archive#getContent()
     */
    @Override
-   public Map<Path, Asset> getContent()
+   public Map<ArchivePath, Asset> getContent()
    {
       return archive.getContent();
    }
@@ -239,7 +239,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.Archive#getContent(org.jboss.shrinkwrap.api.Filter)
     */
    @Override
-   public Map<Path, Asset> getContent(Filter<Path> filter)
+   public Map<ArchivePath, Asset> getContent(Filter<ArchivePath> filter)
    {
       return archive.getContent(filter);
    }
@@ -306,7 +306,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * 
     * @return Base Path for the ManifestContainer resources
     */
-   protected abstract Path getManinfestPath();
+   protected abstract ArchivePath getManinfestPath();
    
    /* (non-Javadoc)
     * @see org.jboss.declarchive.api.container.ManifestContainer#setManifest(java.lang.String)
@@ -420,7 +420,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.lang.String, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addManifestResource(String resourceName, Path target) throws IllegalArgumentException
+   public T addManifestResource(String resourceName, ArchivePath target) throws IllegalArgumentException
    {
       Validate.notNull(resourceName, "ResourceName should be specified");
       Validate.notNull(target, "Target should be specified");
@@ -432,7 +432,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.io.File, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addManifestResource(File resource, Path target) throws IllegalArgumentException
+   public T addManifestResource(File resource, ArchivePath target) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource should be specified");
       Validate.notNull(target, "Target should be specified");
@@ -444,7 +444,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.net.URL, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addManifestResource(URL resource, Path target) throws IllegalArgumentException
+   public T addManifestResource(URL resource, ArchivePath target) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource should be specified");
       Validate.notNull(target, "Target should be specified");
@@ -456,12 +456,12 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addManifestResource(Asset resource, Path target) throws IllegalArgumentException
+   public T addManifestResource(Asset resource, ArchivePath target) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource should be specified");
       Validate.notNull(target, "Target should be specified");
       
-      Path location = new BasicPath(getManinfestPath(), target);
+      ArchivePath location = new BasicPath(getManinfestPath(), target);
       return add(resource, location);
    }
    
@@ -472,7 +472,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNullAndNoNullValues(serviceImpls, "ServiceImpls must be specified and can not contain null values");
       
       Asset asset = new ServiceProviderAsset(serviceImpls);
-      Path path = new BasicPath("services", serviceInterface.getName());
+      ArchivePath path = new BasicPath("services", serviceInterface.getName());
       return addManifestResource(asset, path);
    }
    
@@ -486,7 +486,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * 
     * @return Base Path for the ResourceContainer resources
     */
-   protected abstract Path getResourcePath();
+   protected abstract ArchivePath getResourcePath();
    
    /* (non-Javadoc)
     * @see org.jboss.declarchive.api.container.ResourceContainer#addResource(java.lang.String)
@@ -560,7 +560,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.lang.String, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addResource(String resourceName, Path target) throws IllegalArgumentException
+   public T addResource(String resourceName, ArchivePath target) throws IllegalArgumentException
    {
       Validate.notNull(resourceName, "ResourceName should be specified");
       Validate.notNull(target, "Target should be specified");
@@ -572,7 +572,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.lang.String, org.jboss.shrinkwrap.api.Path, java.lang.ClassLoader)
     */
    @Override
-   public T addResource(String resourceName, Path target, ClassLoader classLoader) throws IllegalArgumentException
+   public T addResource(String resourceName, ArchivePath target, ClassLoader classLoader) throws IllegalArgumentException
    {
       Validate.notNull(resourceName, "ResourceName should be specified");
       Validate.notNull(target, "Target should be specified");
@@ -585,7 +585,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.io.File, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addResource(File resource, Path target) throws IllegalArgumentException
+   public T addResource(File resource, ArchivePath target) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource should be specified");
       Validate.notNull(target, "Target should be specified");
@@ -597,7 +597,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.net.URL, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addResource(URL resource, Path target) throws IllegalArgumentException
+   public T addResource(URL resource, ArchivePath target) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource should be specified");
       Validate.notNull(target, "Target should be specified");
@@ -609,12 +609,12 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addResource(Asset resource, Path target) throws IllegalArgumentException
+   public T addResource(Asset resource, ArchivePath target) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource should be specified");
       Validate.notNull(target, "Target should be specified");
       
-      Path location = new BasicPath(getResourcePath(), target);
+      ArchivePath location = new BasicPath(getResourcePath(), target);
       return add(resource, location);
    }
    
@@ -628,7 +628,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * 
     * @return Base Path for the ClassContainer resources
     */
-   protected abstract Path getClassesPath();
+   protected abstract ArchivePath getClassesPath();
 
    /* (non-Javadoc)
     * @see org.jboss.declarchive.api.container.ClassContainer#addClass(java.lang.Class)
@@ -693,7 +693,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       for(final Class<?> clazz : classes) 
       {
          Asset resource = new ClassAsset(clazz);
-         Path location = new BasicPath(getClassesPath(), AssetUtil.getFullPathForClassResource(clazz));
+         ArchivePath location = new BasicPath(getClassesPath(), AssetUtil.getFullPathForClassResource(clazz));
          add(resource, location);
          
          // Get all inner classes and add them
@@ -754,7 +754,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
                continue;
             }
             Asset asset = new ClassAsset(clazz);
-            Path location = new BasicPath(getClassesPath(), AssetUtil.getFullPathForClassResource(clazz));
+            ArchivePath location = new BasicPath(getClassesPath(), AssetUtil.getFullPathForClassResource(clazz));
             add(asset, location);
          }
       }
@@ -771,7 +771,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * 
     * @return Base Path for the LibraryContainer resources
     */
-   protected abstract Path getLibraryPath();
+   protected abstract ArchivePath getLibraryPath();
    
    /* (non-Javadoc)
     * @see org.jboss.declarchive.api.container.LibraryContainer#addLibrary(org.jboss.declarchive.api.Archive)
@@ -854,7 +854,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.lang.String, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addLibrary(String resourceName, Path target) throws IllegalArgumentException
+   public T addLibrary(String resourceName, ArchivePath target) throws IllegalArgumentException
    {
       Validate.notNull(resourceName, "ResourceName must be specified");
       Validate.notNull(target, "Target must be specified");
@@ -866,7 +866,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.io.File, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addLibrary(File resource, Path target) throws IllegalArgumentException
+   public T addLibrary(File resource, ArchivePath target) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource must be specified");
       Validate.notNull(target, "Target must be specified");
@@ -878,7 +878,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.net.URL, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addLibrary(URL resource, Path target) throws IllegalArgumentException
+   public T addLibrary(URL resource, ArchivePath target) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource must be specified");
       Validate.notNull(target, "Target must be specified");
@@ -890,12 +890,12 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path)
     */
    @Override
-   public T addLibrary(Asset resource, Path target) throws IllegalArgumentException
+   public T addLibrary(Asset resource, ArchivePath target) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource must be specified");
       Validate.notNull(target, "Target must be specified");
 
-      Path location = new BasicPath(getLibraryPath(), target);
+      ArchivePath location = new BasicPath(getLibraryPath(), target);
       return add(resource, location);
    }
    
@@ -947,10 +947,10 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.container.DirectoryContainer#addDirectory(org.jboss.shrinkwrap.api.Path)
+    * @see org.jboss.shrinkwrap.api.container.DirectoryContainer#addDirectory(org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
-   public T addDirectory(final Path path) throws IllegalArgumentException
+   public T addDirectory(final ArchivePath path) throws IllegalArgumentException
    {
       // Precondition check
       Validate.notNull(path, "path must be specified");
@@ -970,21 +970,21 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNullOrEmpty(path, "path must be specified");
       
       // Delegate and return
-      return this.addDirectory(Paths.create(path));
+      return this.addDirectory(ArchivePaths.create(path));
    }
    
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.container.DirectoryContainer#addDirectories(org.jboss.shrinkwrap.api.Path[])
+    * @see org.jboss.shrinkwrap.api.container.DirectoryContainer#addDirectories(org.jboss.shrinkwrap.api.ArchivePath[])
     */
    @Override
-   public T addDirectories(final Path... paths) throws IllegalArgumentException
+   public T addDirectories(final ArchivePath... paths) throws IllegalArgumentException
    {
       // Precondition check
       Validate.notNull(paths, "paths must be specified");
       
       // Add
-      for (final Path path : paths)
+      for (final ArchivePath path : paths)
       {
          this.add(DirectoryAsset.INSTANCE, path);
       }
@@ -1004,14 +1004,14 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(paths, "paths must be specified");
       
       // Represent as array of Paths
-      final Collection<Path> pathsCollection = new ArrayList<Path>(paths.length);
+      final Collection<ArchivePath> pathsCollection = new ArrayList<ArchivePath>(paths.length);
       for (final String path : paths)
       {
-         pathsCollection.add(Paths.create(path));
+         pathsCollection.add(ArchivePaths.create(path));
       }
       
       // Delegate and return
-      return this.addDirectories(pathsCollection.toArray(new Path[]{}));
+      return this.addDirectories(pathsCollection.toArray(new ArchivePath[]{}));
    }
    
    //-------------------------------------------------------------------------------------||

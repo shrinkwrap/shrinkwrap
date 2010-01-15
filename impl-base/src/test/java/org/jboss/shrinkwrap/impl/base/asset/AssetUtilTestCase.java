@@ -18,7 +18,7 @@ package org.jboss.shrinkwrap.impl.base.asset;
 
 import junit.framework.Assert;
 
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Test;
 
@@ -38,7 +38,7 @@ public class AssetUtilTestCase
    @Test
    public void shouldBeAbleToGetPathForClassloaderResource() throws Exception 
    {
-      Path foundResourcePath = AssetUtil.getPathForClassloaderResource(EXISTING_RESOURCE);
+      ArchivePath foundResourcePath = AssetUtil.getPathForClassloaderResource(EXISTING_RESOURCE);
       
       Assert.assertEquals(
             "The classloader resource path should not contain the file name",
@@ -60,7 +60,7 @@ public class AssetUtilTestCase
    @Test
    public void shouldBeAbleToGetFullPathForClassResoruce() throws Exception 
    {
-      Path foundClassResourcePath = AssetUtil.getFullPathForClassResource(this.getClass());
+      ArchivePath foundClassResourcePath = AssetUtil.getFullPathForClassResource(this.getClass());
       
       Assert.assertEquals(
             "The class resource should have a / delimiter and a .class extension",

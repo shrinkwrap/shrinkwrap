@@ -16,90 +16,97 @@
  */
 package org.jboss.shrinkwrap.api;
 
-
 /**
- * A Factory for Path creation.
+ * A Factory for {@link ArchivePath} creation.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public final class Paths
+public final class ArchivePaths
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    private static final String PATH_IMPL = "org.jboss.shrinkwrap.impl.base.path.BasicPath";
-   
+
    /**
-    * Creates a new Path representing the root path (/).
+    * Creates a new {@link ArchivePath} representing the root path (/).
     * 
-    * @return a new root Path  
+    * @return a new root path  
     */
-   public static Path root() 
+   public static ArchivePath root()
    {
       return create(null);
    }
-   
+
    /**
-    * Creates a new Path with the specified context
+    * Creates a new {@link ArchivePath} with the specified context
     * 
     * @param context The context which this path represents.  Null or 
     * blank represents the root.  Relative paths will be adjusted
     * to absolute form.
-    * @return a new Path 
+    * @return a new path 
     */
-   public static Path create(String context) 
+   public static ArchivePath create(String context)
    {
-      return createInstance(new Class<?>[] {String.class}, new Object[]{context});
-   }
-   
-   /**
-    * Creates a new Path using the specified base 
-    * and specified relative context.
-    * 
-    * @param basePath A absolute path
-    * @param context A relative path to basePath
-    * @return a new Path
-    */
-   public static Path create(String basePath, String context) 
-   {
-      return createInstance(new Class<?>[] {String.class, String.class}, new Object[]{basePath, context});
+      return createInstance(new Class<?>[]
+      {String.class}, new Object[]
+      {context});
    }
 
    /**
-    * Creates a new Path using the specified base 
+    * Creates a new {@link ArchivePath} using the specified base 
     * and specified relative context.
     * 
     * @param basePath A absolute path
     * @param context A relative path to basePath
-    * @return a new Path
+    * @return a new path
     */
-   public static Path create(Path basePath, String context) 
+   public static ArchivePath create(String basePath, String context)
    {
-      return createInstance(new Class<?>[] {Path.class, String.class}, new Object[]{basePath, context});
+      return createInstance(new Class<?>[]
+      {String.class, String.class}, new Object[]
+      {basePath, context});
    }
 
    /**
-    * Creates a new Path using the specified base 
+    * Creates a new {@link ArchivePath} using the specified base 
     * and specified relative context.
     * 
     * @param basePath A absolute path
     * @param context A relative path to basePath
-    * @return a new Path
+    * @return a new path
     */
-   public static Path create(Path basePath, Path context) 
+   public static ArchivePath create(ArchivePath basePath, String context)
    {
-      return createInstance(new Class<?>[] {Path.class, Path.class}, new Object[]{basePath, context});
+      return createInstance(new Class<?>[]
+      {ArchivePath.class, String.class}, new Object[]
+      {basePath, context});
    }
-   
+
+   /**
+    * Creates a new {@link ArchivePath} using the specified base 
+    * and specified relative context.
+    * 
+    * @param basePath A absolute path
+    * @param context A relative path to basePath
+    * @return a new path
+    */
+   public static ArchivePath create(ArchivePath basePath, ArchivePath context)
+   {
+      return createInstance(new Class<?>[]
+      {ArchivePath.class, ArchivePath.class}, new Object[]
+      {basePath, context});
+   }
+
    //-------------------------------------------------------------------------------------||
    // Class Members - Internal Helpers ---------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   private static Path createInstance(Class<?>[] argumentTypes, Object[] arguments) 
+   private static ArchivePath createInstance(Class<?>[] argumentTypes, Object[] arguments)
    {
-      return SecurityActions.newInstance(PATH_IMPL, argumentTypes, arguments, Path.class);
+      return SecurityActions.newInstance(PATH_IMPL, argumentTypes, arguments, ArchivePath.class);
    }
 
    //-------------------------------------------------------------------------------------||
@@ -109,6 +116,8 @@ public final class Paths
    /**
     * No instantiation
     */
-   private Paths() {}
-   
+   private ArchivePaths()
+   {
+   }
+
 }

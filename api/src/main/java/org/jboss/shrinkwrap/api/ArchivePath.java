@@ -23,10 +23,10 @@ package org.jboss.shrinkwrap.api;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public interface Path extends Comparable<Path>
+public interface ArchivePath extends Comparable<ArchivePath>
 {
    /**
-    * Obtains the context which this Path represents
+    * Obtains the context which this {@link ArchivePath} represents
     * 
     * @return
     */

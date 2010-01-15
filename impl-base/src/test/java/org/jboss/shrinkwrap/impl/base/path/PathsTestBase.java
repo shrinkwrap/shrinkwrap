@@ -18,12 +18,12 @@ package org.jboss.shrinkwrap.impl.base.path;
 
 import java.util.logging.Logger;
 
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Base support for tests of {@link Path} implementations
+ * Base support for tests of {@link ArchivePath} implementations
  * and factories
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
@@ -45,43 +45,43 @@ public abstract class PathsTestBase
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Creates and returns a new {@link Path}
+    * Creates and returns a new {@link ArchivePath}
     * with the specified context
     * 
     * @param context Context to assign the Path
     * @throws IllegalArgumentException If the context is not specified
     */
-   abstract Path createPath(final String context);
+   abstract ArchivePath createPath(final String context);
 
    /**
-    * Creates and returns a new {@link Path}
+    * Creates and returns a new {@link ArchivePath}
     * with the specified context and base
     * 
     * @param base Parent context
     * @param context Context to assign the Path
     * @throws IllegalArgumentException If the context or base is not specified
     */
-   abstract Path createPath(final Path base, final Path context);
+   abstract ArchivePath createPath(final ArchivePath base, final ArchivePath context);
 
    /**
-    * Creates and returns a new {@link Path}
+    * Creates and returns a new {@link ArchivePath}
     * with the specified context and base
     * 
     * @param base Parent context
     * @param context Context to assign the Path
     * @throws IllegalArgumentException If the context or base is not specified
     */
-   abstract Path createPath(final Path base, final String context);
+   abstract ArchivePath createPath(final ArchivePath base, final String context);
 
    /**
-    * Creates and returns a new {@link Path}
+    * Creates and returns a new {@link ArchivePath}
     * with the specified context and base
     * 
     * @param base Parent context
     * @param context Context to assign the Path
     * @throws IllegalArgumentException If the context or base is not specified
     */
-   abstract Path createPath(final String base, final String context);
+   abstract ArchivePath createPath(final String base, final String context);
 
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
@@ -98,7 +98,7 @@ public abstract class PathsTestBase
       log.info("testNullDefaultsToRoot");
 
       // Create a path with null context
-      final Path path = this.createPath(null);
+      final ArchivePath path = this.createPath(null);
 
       // Ensure expected
       final String resolved = path.get();
@@ -118,7 +118,7 @@ public abstract class PathsTestBase
 
       // Create a relative path
       final String relative = "relative";
-      final Path path = this.createPath(relative);
+      final ArchivePath path = this.createPath(relative);
 
       // Ensure expected
       final String resolved = path.get();
@@ -139,7 +139,7 @@ public abstract class PathsTestBase
 
       // Create an absolute dir path
       final String absoluteDir = "/absoluteDir/";
-      final Path path = this.createPath(absoluteDir);
+      final ArchivePath path = this.createPath(absoluteDir);
 
       // Ensure expected
       final String resolved = path.get();
@@ -160,12 +160,12 @@ public abstract class PathsTestBase
 
       // Create a base path
       final String base = "base";
-      final Path basePath = this.createPath(base);
+      final ArchivePath basePath = this.createPath(base);
 
       // Create a new path using a relative context to the base
       final String context = "context";
-      final Path contextPath = this.createPath(context);
-      final Path path = this.createPath(basePath, contextPath);
+      final ArchivePath contextPath = this.createPath(context);
+      final ArchivePath path = this.createPath(basePath, contextPath);
 
       // Ensure expected
       final String resolved = path.get();
@@ -186,11 +186,11 @@ public abstract class PathsTestBase
 
       // Create a base path
       final String base = "base";
-      final Path basePath = this.createPath(base);
+      final ArchivePath basePath = this.createPath(base);
 
       // Create a new path using a relative context to the base
       final String context = "context";
-      final Path path = this.createPath(basePath, context);
+      final ArchivePath path = this.createPath(basePath, context);
 
       // Ensure expected
       final String resolved = path.get();
@@ -215,7 +215,7 @@ public abstract class PathsTestBase
 
       // Create a new path using a relative context to the base
       final String context = "context";
-      final Path path = this.createPath(base, context);
+      final ArchivePath path = this.createPath(base, context);
 
       // Ensure expected
       final String resolved = path.get();
@@ -236,8 +236,8 @@ public abstract class PathsTestBase
 
       // Create new paths
       final String context = "context";
-      final Path path1 = this.createPath(context);
-      final Path path2 = this.createPath(context);
+      final ArchivePath path1 = this.createPath(context);
+      final ArchivePath path2 = this.createPath(context);
 
       // Obtain hash 
       final int hash1 = path1.hashCode();
@@ -261,9 +261,9 @@ public abstract class PathsTestBase
       // Create new paths
       final String context = "context";
       final String contextWithFollowingSlash = context + PathUtil.SLASH;
-      final Path path1 = this.createPath(context);
-      final Path path2 = this.createPath(context);
-      final Path pathWithFollowingSlash = this.createPath(contextWithFollowingSlash);
+      final ArchivePath path1 = this.createPath(context);
+      final ArchivePath path2 = this.createPath(context);
+      final ArchivePath pathWithFollowingSlash = this.createPath(contextWithFollowingSlash);
 
       // Ensure expected
       Assert.assertEquals("Paths with same context should be equal by value", path1, path2);
@@ -285,8 +285,8 @@ public abstract class PathsTestBase
       // Create new paths
       final String context1 = "context1";
       final String context2 = "context2";
-      final Path path1 = this.createPath(context1);
-      final Path path2 = this.createPath(context2);
+      final ArchivePath path1 = this.createPath(context1);
+      final ArchivePath path2 = this.createPath(context2);
 
       // Ensure expected
       Assert.assertTrue("Paths with different contexts should not be equal by value", !path1.equals(path2));

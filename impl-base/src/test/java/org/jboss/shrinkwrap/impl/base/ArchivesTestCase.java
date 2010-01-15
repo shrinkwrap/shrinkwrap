@@ -26,8 +26,8 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
-import org.jboss.shrinkwrap.api.Path;
-import org.jboss.shrinkwrap.api.Paths;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.container.ContainerBase;
@@ -151,27 +151,27 @@ public class ArchivesTestCase
       }
 
       @Override
-      protected Path getClassesPath()
+      protected ArchivePath getClassesPath()
       {
-         return Paths.root();
+         return ArchivePaths.root();
       }
 
       @Override
-      protected Path getLibraryPath()
+      protected ArchivePath getLibraryPath()
       {
-         return Paths.root();
+         return ArchivePaths.root();
       }
 
       @Override
-      protected Path getManinfestPath()
+      protected ArchivePath getManinfestPath()
       {
-         return Paths.root();
+         return ArchivePaths.root();
       }
 
       @Override
-      protected Path getResourcePath()
+      protected ArchivePath getResourcePath()
       {
-         return Paths.root();
+         return ArchivePaths.root();
       }
 
       @Override

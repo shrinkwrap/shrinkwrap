@@ -19,7 +19,7 @@ package org.jboss.shrinkwrap.impl.base.spec;
 import java.util.UUID;
 
 import org.jboss.shrinkwrap.api.Archives;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.DirectoryContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -49,15 +49,15 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   private static final Path PATH_WEBINF = new BasicPath("WEB-INF");
+   private static final ArchivePath PATH_WEBINF = new BasicPath("WEB-INF");
 
-   private static final Path PATH_LIBRARY = new BasicPath(PATH_WEBINF, "lib");
+   private static final ArchivePath PATH_LIBRARY = new BasicPath(PATH_WEBINF, "lib");
 
-   private static final Path PATH_CLASSES = new BasicPath(PATH_WEBINF, "classes");
+   private static final ArchivePath PATH_CLASSES = new BasicPath(PATH_WEBINF, "classes");
 
-   private static final Path PATH_MANIFEST = new BasicPath("META-INF");
+   private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
 
-   private static final Path PATH_RESOURCE = new BasicPath();
+   private static final ArchivePath PATH_RESOURCE = new BasicPath();
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -140,25 +140,25 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
    }
 
    @Override
-   protected Path getManifestPath()
+   protected ArchivePath getManifestPath()
    {
       return PATH_MANIFEST;
    }
 
    @Override
-   protected Path getResourcePath()
+   protected ArchivePath getResourcePath()
    {
       return PATH_RESOURCE;
    }
 
    @Override
-   protected Path getClassPath()
+   protected ArchivePath getClassPath()
    {
       return PATH_CLASSES;
    }
 
    @Override
-   protected Path getLibraryPath()
+   protected ArchivePath getLibraryPath()
    {
       return PATH_LIBRARY;
    }
@@ -174,7 +174,7 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
    }
    
    @Override
-   public Path getWebPath()
+   public ArchivePath getWebPath()
    {
       return PATH_WEBINF;
    }

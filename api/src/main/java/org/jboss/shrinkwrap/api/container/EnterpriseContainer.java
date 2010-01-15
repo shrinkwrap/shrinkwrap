@@ -21,7 +21,7 @@ import java.net.URL;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 
 /**
  * EnterpriseContainer
@@ -104,7 +104,7 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @param resourceName Name of the {@link ClassLoader} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
-    * @see #addApplicationResource(Asset, Path)
+    * @see #addApplicationResource(Asset, ArchivePath)
     */
    T addApplicationResource(String resourceName) throws IllegalArgumentException;
    
@@ -117,7 +117,7 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @param resource {@link File} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
-    * @see #addApplicationResource(Asset, Path)
+    * @see #addApplicationResource(Asset, ArchivePath)
     */
    T addApplicationResource(File resource) throws IllegalArgumentException;
    
@@ -137,7 +137,7 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addApplicationResource(Asset, Path)
+    * @see #addApplicationResource(Asset, ArchivePath)
     */
    T addApplicationResource(String resourceName, String target) throws IllegalArgumentException;
    
@@ -153,7 +153,7 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addApplicationResource(Asset, Path)
+    * @see #addApplicationResource(Asset, ArchivePath)
     */
    T addApplicationResource(File resource, String target) throws IllegalArgumentException;
    
@@ -170,7 +170,7 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addApplicationResource(Asset, Path)
+    * @see #addApplicationResource(Asset, ArchivePath)
     */
    T addApplicationResource(URL resource, String target) throws IllegalArgumentException;
    
@@ -182,7 +182,7 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addApplicationResource(Asset, Path)
+    * @see #addApplicationResource(Asset, ArchivePath)
     */
    T addApplicationResource(Asset resource, String target) throws IllegalArgumentException;
 
@@ -201,9 +201,9 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null
-    * @see #addApplicationResource(Asset, Path)
+    * @see #addApplicationResource(Asset, ArchivePath)
     */
-   T addApplicationResource(String resourceName, Path target) throws IllegalArgumentException;
+   T addApplicationResource(String resourceName, ArchivePath target) throws IllegalArgumentException;
    
    /**
     * Adds a {@link File} to this {@link Archive}s application context.
@@ -217,9 +217,9 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addApplicationResource(Asset, Path)
+    * @see #addApplicationResource(Asset, ArchivePath)
     */
-   T addApplicationResource(File resource, Path target) throws IllegalArgumentException;
+   T addApplicationResource(File resource, ArchivePath target) throws IllegalArgumentException;
    
    /**
     * Adds a {@link URL} to this {@link Archive}s application context.
@@ -233,9 +233,9 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addApplicationResource(Asset, Path)
+    * @see #addApplicationResource(Asset, ArchivePath)
     */
-   T addApplicationResource(URL resource, Path target) throws IllegalArgumentException;
+   T addApplicationResource(URL resource, ArchivePath target) throws IllegalArgumentException;
    
    /**
     * Adds a {@link Asset} to this {@link Archive}s application context.
@@ -246,7 +246,7 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
     */
-   T addApplicationResource(Asset resource, Path target) throws IllegalArgumentException;
+   T addApplicationResource(Asset resource, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Adds a archive to this {@link Archive}s module context.
@@ -267,7 +267,7 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @param resourceName Name of the {@link ClassLoader} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
-    * @see #addModule(Asset, Path)
+    * @see #addModule(Asset, ArchivePath)
     */
    T addModule(String resourceName) throws IllegalArgumentException;
    
@@ -279,7 +279,7 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @param resource {@link File} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
-    * @see #addModule(Asset, Path)
+    * @see #addModule(Asset, ArchivePath)
     */
    T addModule(File resource) throws IllegalArgumentException;
 
@@ -291,7 +291,7 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if targetPath is null
-    * @see #addModule(Asset, Path)
+    * @see #addModule(Asset, ArchivePath)
     */
    T addModule(String resourceName, String targetPath) throws IllegalArgumentException;
 
@@ -303,7 +303,7 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if targetPath is null
-    * @see #addModule(Asset, Path)
+    * @see #addModule(Asset, ArchivePath)
     */
    T addModule(File resource, String targetPath) throws IllegalArgumentException;
 
@@ -315,7 +315,7 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if targetPath is null
-    * @see #addModule(Asset, Path)
+    * @see #addModule(Asset, ArchivePath)
     */
    T addModule(URL resource, String targetPath) throws IllegalArgumentException;
    
@@ -327,7 +327,7 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if targetPath is null
-    * @see #addModule(Asset, Path)
+    * @see #addModule(Asset, ArchivePath)
     */
    T addModule(Asset resource, String targetPath) throws IllegalArgumentException;
 
@@ -339,9 +339,9 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if targetPath is null
-    * @see #addModule(Asset, Path)
+    * @see #addModule(Asset, ArchivePath)
     */
-   T addModule(String resourceName, Path targetPath) throws IllegalArgumentException;
+   T addModule(String resourceName, ArchivePath targetPath) throws IllegalArgumentException;
 
    /**
     * Adds a {@link File} to this {@link Archive}s module context.
@@ -351,9 +351,9 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if targetPath is null
-    * @see #addModule(Asset, Path)
+    * @see #addModule(Asset, ArchivePath)
     */
-   T addModule(File resource, Path targetPath) throws IllegalArgumentException;
+   T addModule(File resource, ArchivePath targetPath) throws IllegalArgumentException;
 
    /**
     * Adds a {@link URL} to this {@link Archive}s module context.
@@ -363,9 +363,9 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if targetPath is null
-    * @see #addModule(Asset, Path)
+    * @see #addModule(Asset, ArchivePath)
     */
-   T addModule(URL resource, Path targetPath) throws IllegalArgumentException;
+   T addModule(URL resource, ArchivePath targetPath) throws IllegalArgumentException;
    
    /**
     * Adds a {@link Asset} to this {@link Archive}s module context.
@@ -376,5 +376,5 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if targetPath is null
     * @throws IllegalArgumentException if resource is null
     */
-   T addModule(Asset resource, Path targetPath) throws IllegalArgumentException;
+   T addModule(Asset resource, ArchivePath targetPath) throws IllegalArgumentException;
 }

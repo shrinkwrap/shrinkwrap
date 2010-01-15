@@ -19,7 +19,7 @@ package org.jboss.shrinkwrap.impl.base.spec;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Path;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.container.WebContainerBase;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -43,27 +43,27 @@ public class WebArchiveImpl
    /**
     * Path to the web inside of the Archive.
     */
-   private static final Path PATH_WEB = new BasicPath("WEB-INF");
+   private static final ArchivePath PATH_WEB = new BasicPath("WEB-INF");
 
    /**
     * Path to the manifests inside of the Archive.
     */
-   private static final Path PATH_MANIFEST = new BasicPath("META-INF");
+   private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
 
    /**
     * Path to the resources inside of the Archive.
     */
-   private static final Path PATH_RESOURCE = new BasicPath("/");
+   private static final ArchivePath PATH_RESOURCE = new BasicPath("/");
 
    /**
     * Path to the libraries inside of the Archive.
     */
-   private static final Path PATH_LIBRARY = new BasicPath(PATH_WEB, "lib");
+   private static final ArchivePath PATH_LIBRARY = new BasicPath(PATH_WEB, "lib");
 
    /**
     * Path to the classes inside of the Archive.
     */
-   private static final Path PATH_CLASSES = new BasicPath(PATH_WEB, "classes");
+   private static final ArchivePath PATH_CLASSES = new BasicPath(PATH_WEB, "classes");
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -91,7 +91,7 @@ public class WebArchiveImpl
     * @see org.jboss.declarchive.impl.base.ContainerBase#getManinfestPath()
     */
    @Override
-   protected Path getManinfestPath()
+   protected ArchivePath getManinfestPath()
    {
       return PATH_MANIFEST;
    }
@@ -100,7 +100,7 @@ public class WebArchiveImpl
     * @see org.jboss.declarchive.impl.base.ContainerBase#getClassesPath()
     */
    @Override
-   protected Path getClassesPath()
+   protected ArchivePath getClassesPath()
    {
       return PATH_CLASSES;
    }
@@ -109,7 +109,7 @@ public class WebArchiveImpl
     * @see org.jboss.declarchive.impl.base.ContainerBase#getResourcePath()
     */
    @Override
-   protected Path getResourcePath()
+   protected ArchivePath getResourcePath()
    {
       return PATH_RESOURCE;
    }
@@ -118,7 +118,7 @@ public class WebArchiveImpl
     * @see org.jboss.declarchive.impl.base.ContainerBase#getLibraryPath()
     */
    @Override
-   protected Path getLibraryPath()
+   protected ArchivePath getLibraryPath()
    {
       return PATH_LIBRARY;
    }
@@ -127,7 +127,7 @@ public class WebArchiveImpl
     * @see org.jboss.declarchive.impl.base.WebContainerBase#getWebPath()
     */
    @Override
-   protected Path getWebPath()
+   protected ArchivePath getWebPath()
    {
       return PATH_WEB;
    }

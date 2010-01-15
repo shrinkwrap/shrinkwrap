@@ -52,7 +52,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @return
     * @throws IllegalArgumentException If no target or assets were specified
     */
-   T add(Asset asset, Path target) throws IllegalArgumentException;
+   T add(Asset asset, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Adds the specified asset under the specified target (directory)
@@ -65,7 +65,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @return
     * @throws IllegalArgumentException If the target, name, or asset was not specified
     */
-   T add(Asset asset, Path target, String name) throws IllegalArgumentException;
+   T add(Asset asset, ArchivePath target, String name) throws IllegalArgumentException;
 
    /**
     * Adds the specified resource under the context denoted by the specified target
@@ -84,7 +84,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @return The asset, or null if nothing is found at the Path
     * @throws IllegalArgumentException If the path is not specified
     */
-   Asset get(Path path) throws IllegalArgumentException;
+   Asset get(ArchivePath path) throws IllegalArgumentException;
 
    /**
     * Obtains the asset located at the specified path
@@ -103,7 +103,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @return
     * @throws IllegalArgumentException If the path is not specified
     */
-   boolean contains(Path path) throws IllegalArgumentException;
+   boolean contains(ArchivePath path) throws IllegalArgumentException;
 
    /**
     * Removes the asset in the archive at the specified Path.  If the path
@@ -112,21 +112,21 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @param path
     * @return Whether or not a deletion was made
     */
-   boolean delete(Path path) throws IllegalArgumentException;
+   boolean delete(ArchivePath path) throws IllegalArgumentException;
 
    /**
     * Obtains all assets in this archive, along with its respective Path.
     * The returned Map will be an immutable view.
     * @return
     */
-   Map<Path, Asset> getContent();
+   Map<ArchivePath, Asset> getContent();
 
    /**
     * Obtains all assets matching given filter in this archive, along with its respective Path.
     * The returned Map will be an immutable view.
     * @return
     */
-   Map<Path, Asset> getContent(Filter<Path> filter);
+   Map<ArchivePath, Asset> getContent(Filter<ArchivePath> filter);
 
    /**
     * Add an archive under a specific context and maintain the archive name as context path.
@@ -136,7 +136,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @return
     * @throws IllegalArgumentException If the path or archive are not specified 
     */
-   T add(Archive<?> archive, Path path) throws IllegalArgumentException;
+   T add(Archive<?> archive, ArchivePath path) throws IllegalArgumentException;
 
    /**
     * Merge the contents from an existing archive without 
@@ -152,13 +152,13 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * Merge the contents from an existing archive without 
     * maintaining the archive name in the context path.
     * 
-    * The filter control which {@link Path}s to include form the source {@link Archive}.
+    * The filter control which {@link ArchivePath}s to include form the source {@link Archive}.
     * 
     * @param source Archive to add contents from
     * @return  
     * @throws IllegalArgumentException If the existing archive is not specified
     */
-   T merge(Archive<?> source, Filter<Path> filter) throws IllegalArgumentException;
+   T merge(Archive<?> source, Filter<ArchivePath> filter) throws IllegalArgumentException;
 
    /**
     * Merge the contents from an existing archive in a specific path 
@@ -169,12 +169,12 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @return  
     * @throws IllegalArgumentException If the path or existing archive is not specified
     */
-   T merge(Archive<?> source, Path path) throws IllegalArgumentException;
+   T merge(Archive<?> source, ArchivePath path) throws IllegalArgumentException;
 
    /**
     * Merge the contents from an existing archive in a specific path 
     * without maintaining the archive name in the context path. 
-    * The filter control which {@link Path}s to include form the source {@link Archive}. 
+    * The filter control which {@link ArchivePath}s to include form the source {@link Archive}. 
     * 
     * @param source Archive to add contents from
     * @param path Path to add contents to
@@ -182,7 +182,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @return  
     * @throws IllegalArgumentException If the path or existing archive is not specified
     */
-   T merge(Archive<?> source, Path path, Filter<Path> filter) throws IllegalArgumentException;
+   T merge(Archive<?> source, ArchivePath path, Filter<ArchivePath> filter) throws IllegalArgumentException;
    
    /**
     * Acts as a shorthand for {@link Archive#toString(Formatter)}

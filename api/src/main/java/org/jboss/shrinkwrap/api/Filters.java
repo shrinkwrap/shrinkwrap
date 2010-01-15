@@ -54,14 +54,14 @@ public final class Filters
    }
 
    /**
-    * {@link Filter} that includes all {@link Path}s.
+    * {@link Filter} that includes all {@link ArchivePath}s.
     * 
     * Only meant to be used internally.
     * 
     * @return A {@link Filter} that always return true
     */
    @SuppressWarnings("unchecked")
-   public static Filter<Path> includeAll() 
+   public static Filter<ArchivePath> includeAll() 
    {
       return SecurityActions.newInstance(
             INCLUDE_ALL_PATHS, 
@@ -71,13 +71,13 @@ public final class Filters
    }
    
    /**
-    * {@link Filer} that include all {@link Path}s that match the given Regular Expression {@link Pattern}.
+    * {@link Filer} that include all {@link ArchivePath}s that match the given Regular Expression {@link Pattern}.
     * 
     * @param regexp The expression to include
     * @return A Regular Expression based include {@link Filter}
     */
    @SuppressWarnings("unchecked")
-   public static Filter<Path> include(String regexp) 
+   public static Filter<ArchivePath> include(String regexp) 
    {
       return SecurityActions.newInstance(
             INCLUDE_REGEXP_PATHS, 
@@ -87,13 +87,13 @@ public final class Filters
    }
 
    /**
-    * {@link Filter} that exclude all {@link Path}s that match a given Regular Expression {@link Pattern}.
+    * {@link Filter} that exclude all {@link ArchivePath}s that match a given Regular Expression {@link Pattern}.
     * 
     * @param regexp The expression to exclude
     * @return A Regular Expression based exclude {@link Filter}
     */
    @SuppressWarnings("unchecked")
-   public static Filter<Path> exclude(String regexp) 
+   public static Filter<ArchivePath> exclude(String regexp) 
    {
       return SecurityActions.newInstance(
             EXCLUDE_REGEXP_PATHS, 
