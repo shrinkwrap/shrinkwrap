@@ -22,7 +22,7 @@ import java.io.InputStream;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * Exporter used to represent an Archive as a ZIP format. 
+ * Exporter used to represent an {@link Assignable} in ZIP format. 
  * 
  * @see http://www.pkware.com/documents/casestudies/APPNOTE.TXT
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
@@ -37,13 +37,11 @@ public interface ZipExporter extends Assignable
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Exports provided archive as a Zip archive.
+    * Exports this reference as a Zip archive.
     * 
-    * @param archive
     * @return {@link InputStream} for exported Zip
-    * @throws ArchiveExportException if the export process fails
     */
-   InputStream exportZip() throws ArchiveExportException;
+   ZipExportHandle exportZip();
 
    /**
     * Exports provided archive as a ZIP archive, written to the 

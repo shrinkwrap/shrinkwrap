@@ -16,11 +16,16 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PipedOutputStream;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -28,16 +33,17 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
+import org.jboss.shrinkwrap.api.exporter.ZipExportHandle;
 import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.io.StreamErrorHandler;
 import org.jboss.shrinkwrap.impl.base.io.StreamTask;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 
-public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
+public class ZipExportDelegate extends AbstractExporterDelegate<ZipExportHandle>
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -48,19 +54,28 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
     */
    private static final Logger log = Logger.getLogger(ZipExportDelegate.class.getName());
 
+   /**
+    * Services used to submit new jobs (encoding occurs in a separate Thread)
+    */
+   private static final ExecutorService service;
+   static
+   {
+      service = Executors.newCachedThreadPool();
+   }
+
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * OutputStream to hold the output contents
-    */
-   private final ByteArrayOutputStream output = new ByteArrayOutputStream(8192);
-
-   /**
     * ZipOutputStream used to write the zip entries
     */
    private ZipOutputStream zipOutputStream;
+
+   /**
+    * Handle to be returned to the caller
+    */
+   private ZipExportHandle handle;
 
    /**
     * A Set of Paths we've exported so far (so that we don't write
@@ -88,30 +103,61 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#export()
     */
-   @Override
    protected void export()
    {
+
+      // Define the task to operate in another Thread so we can pipe the output to an InStream
+      final Callable<Void> exportTask = new Callable<Void>()
+      {
+
+         @Override
+         public Void call() throws Exception
+         {
+            try
+            {
+               ZipExportDelegate.super.export();
+            }
+            finally
+            {
+               try
+               {
+                  zipOutputStream.close();
+               }
+               catch (final IOException ioe)
+               {
+                  // Ignore
+                  log.warning("Got exception on closing the ZIP out stream: " + ioe.getMessage());
+               }
+            }
+
+            return null;
+         }
+      };
+
+      // Stream to return to the caller
+      final IsReadReportingInputStream input = new IsReadReportingInputStream();
+
+      /**
+       * OutputStream which will be associated with the returned InStream, and the 
+       * chained IO point for the Zip OutStrea,
+       */
+      final OutputStream output;
+      try
+      {
+         output = new PipedOutputStream(input);
+      }
+      catch (final IOException e)
+      {
+         throw new RuntimeException("Error in setting up output stream", e);
+      }
+
+      // Set up the stream to which we'll write entries, backed by the piped stream
       zipOutputStream = new ZipOutputStream(output);
-      // Enclose every IO Operation so we can close up cleanly
-      IOUtil.closeOnComplete(zipOutputStream, new StreamTask<ZipOutputStream>()
-      {
 
-         @Override
-         public void execute(ZipOutputStream stream) throws Exception
-         {
-            ZipExportDelegate.super.export();
-         }
-
-      }, new StreamErrorHandler()
-      {
-
-         @Override
-         public void handle(Throwable t)
-         {
-            throw new ArchiveExportException("Failed to export Zip: " + getArchive().getName(), t);
-         }
-
-      });
+      // Get a handle and return it to the caller
+      final Future<Void> job = service.submit(exportTask);
+      final ZipExportHandle handle = new ZipExportHandleImpl(input, job);
+      this.handle = handle;
    }
 
    /**
@@ -127,11 +173,11 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
          throw new IllegalArgumentException("Path must be specified");
       }
 
-      if(isParentOfAnyPathsExported(path))
+      if (isParentOfAnyPathsExported(path))
       {
          return;
       }
-      
+
       /*
        * SHRINKWRAP-94
        * Add entries for all parents of this Path
@@ -179,12 +225,13 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
                final ZipEntry entry = new ZipEntry(resolvedPath);
 
                // Write the Asset under the same Path name in the Zip
-               try{
+               try
+               {
                   zipOutputStream.putNextEntry(entry);
                }
-               catch(final ZipException ze)
+               catch (final ZipException ze)
                {
-                  log.log(Level.SEVERE,pathsExported.toString());
+                  log.log(Level.SEVERE, pathsExported.toString());
                   throw new RuntimeException(ze);
                }
 
@@ -219,22 +266,11 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
     * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#getResult()
     */
    @Override
-   protected InputStream getResult()
+   protected ZipExportHandle getResult()
    {
-      // Flush the output to a byte array
-      final byte[] zipContent = output.toByteArray();
-      if (log.isLoggable(Level.FINE))
-      {
-         log.fine("Created Zip of size: " + zipContent.length + " bytes");
-      }
-
-      // Make an instream
-      final InputStream inputStream = new ByteArrayInputStream(zipContent);
-
-      // Return
-      return inputStream;
+      return handle;
    }
-   
+
    /**
     * Returns whether or not this Path is a parent of any Paths exported 
     * @param path
@@ -244,35 +280,37 @@ public class ZipExportDelegate extends AbstractExporterDelegate<InputStream>
    private boolean isParentOfAnyPathsExported(final ArchivePath path)
    {
       // For all Paths already exported
-      for(final ArchivePath exportedPath :this.pathsExported)
+      for (final ArchivePath exportedPath : this.pathsExported)
       {
-         if( this.isParentOfSpecifiedHierarchy(path, exportedPath)){
+         if (this.isParentOfSpecifiedHierarchy(path, exportedPath))
+         {
             return true;
          }
       }
-      
+
       return false;
    }
-   
+
    /**
     * 
     * @param path
     * @param compare
     * @return
     */
-   private boolean isParentOfSpecifiedHierarchy(final ArchivePath path,final ArchivePath compare){
+   private boolean isParentOfSpecifiedHierarchy(final ArchivePath path, final ArchivePath compare)
+   {
       // If we've reached the root, we're not a parent of any paths already exported
       final ArchivePath parent = PathUtil.getParent(compare);
-      if(parent==null)
+      if (parent == null)
       {
          return false;
       }
       // If equal to me, yes
-      if(path.equals(compare))
+      if (path.equals(compare))
       {
          return true;
       }
-      
+
       // Check my parent
       return this.isParentOfSpecifiedHierarchy(path, parent);
    }

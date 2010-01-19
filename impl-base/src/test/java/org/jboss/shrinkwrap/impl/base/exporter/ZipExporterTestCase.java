@@ -34,6 +34,7 @@ import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
+import org.jboss.shrinkwrap.api.exporter.ZipExportHandle;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.asset.ByteArrayAsset;
@@ -82,13 +83,36 @@ public class ZipExporterTestCase extends ExportTestBase
       Archive<?> archive = createArchiveWithAssets();
 
       // Export as Zip InputStream
-      InputStream zipStream = archive.as(ZipExporter.class).exportZip();
+      final ZipExportHandle handle = archive.as(ZipExporter.class).exportZip();
+      final InputStream zipStream = handle.getContent();
 
       // Write zip content to temporary file 
       ZipFile expectedZip = getExportedZipFile(NAME_ARCHIVE, zipStream, tempDirectory);
 
+      // Ensure all's OK
+      handle.checkComplete();
+
       // Validate
       ensureZipFileInExpectedForm(expectedZip);
+   }
+
+   /**
+    * Test to make sue an archive can be exported to Zip and all contents are correctly located in the Zip.
+    * @throws Exception
+    */
+   @Test(expected = IllegalStateException.class)
+   public void checkCompleteBeforeReadingContents() throws Exception
+   {
+      log.info("checkCompleteBeforeReadingContents");
+
+      // Get an archive instance
+      Archive<?> archive = createArchiveWithAssets();
+
+      // Export as Zip InputStream
+      final ZipExportHandle handle = archive.as(ZipExporter.class).exportZip();
+      // We cannot check complete until we fully read the instream from the handle
+      handle.checkComplete();
+
    }
 
    /**
@@ -203,7 +227,7 @@ public class ZipExporterTestCase extends ExportTestBase
       Archive<?> archive = createArchiveWithNestedArchives();
 
       // Export as Zip InputStream
-      InputStream zipStream = archive.as(ZipExporter.class).exportZip();
+      InputStream zipStream = archive.as(ZipExporter.class).exportZip().getContent();
 
       // Write out and retrieve Zip 
       ZipFile expectedZip = getExportedZipFile(NAME_ARCHIVE, zipStream, tempDirectory);
@@ -251,7 +275,7 @@ public class ZipExporterTestCase extends ExportTestBase
    }
 
    @Test(expected = ArchiveExportException.class)
-   public void testExportThrowsArchiveExceptionOnAssetWriteFailure()
+   public void testExportThrowsArchiveExceptionOnAssetWriteFailure() throws IOException
    {
       log.info("testExportThrowsArchiveExcepitonOnAssetWriteFailure");
       Archive<?> archive = createArchiveWithAssets();
@@ -266,7 +290,23 @@ public class ZipExporterTestCase extends ExportTestBase
 
       }, PATH_ONE);
 
-      archive.as(ZipExporter.class).exportZip();
+      // Export
+      final ZipExportHandle handle = archive.as(ZipExporter.class).exportZip();
+
+      // Read in the full content (to in turn empty the underlying buffer and ensure we complete)
+      final InputStream in = handle.getContent();
+      final OutputStream sink = new OutputStream()
+      {
+
+         @Override
+         public void write(int b) throws IOException
+         {
+         }
+      };
+      IOUtil.copyWithClose(in, sink);
+      // Get access to the underlying exception
+      handle.checkComplete();
+
    }
 
    //-------------------------------------------------------------------------------------||

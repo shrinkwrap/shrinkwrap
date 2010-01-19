@@ -49,7 +49,7 @@ public abstract class ArchiveInputStreamFactory
     * 
     * @throws IllegalArgumentException if the Archive is null 
     */
-   public static InputStream getInputStream(Archive<?> archive)
+   public static InputStream getInputStream(final Archive<?> archive)
    {
       Validate.notNull(archive, "archive was not provided");
 

@@ -36,7 +36,7 @@ public class ZipArchiveInputStreamFactory extends ArchiveInputStreamFactory
    //-------------------------------------------------------------------------------------||
    // Required Implementations - ArchiveInputStreamFactory  ------------------------------||
    //-------------------------------------------------------------------------------------||
-   
+
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.impl.base.ArchiveInputStreamFactory#doGetInputStream(Archive)
@@ -45,7 +45,7 @@ public class ZipArchiveInputStreamFactory extends ArchiveInputStreamFactory
    protected InputStream doGetInputStream(Archive<?> archive)
    {
       // Get InputStream from the ZipExporter
-      final InputStream inputStream = archive.as(ZipExporter.class).exportZip();
+      final InputStream inputStream = archive.as(ZipExporter.class).exportZip().getContent();
       // Return input stream
       return inputStream;
    }
