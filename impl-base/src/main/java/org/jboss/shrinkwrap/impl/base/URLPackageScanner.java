@@ -56,18 +56,26 @@ public class URLPackageScanner
    
    private final Set<Class<?>> classes = new HashSet<Class<?>>();
 
-   public URLPackageScanner(Package pkg, boolean addRecursively, ClassLoader classLoader)
+   /**
+    * Factory method to create an instance of URLPackageScanner.
+    * @param pkg Package that will be scanned
+    * @param addRecursively flag to add child packages
+    * @param classLoader class loader that will have classes added 
+    * @return new instance of URLPackageScanner
+    */
+   public static URLPackageScanner newInstance(Package pkg, boolean addRecursively, ClassLoader classLoader)
    {
-      this(pkg.getName(), addRecursively, classLoader);
-   }
-
-   public URLPackageScanner(String packageName, boolean addRecursively, ClassLoader classLoader)
-   {
-      Validate.notNull(packageName, "PackageName must be specified");
+      Validate.notNull(pkg, "Pkg must be specified");
+      Validate.notNull(pkg.getName(), "Pkg must have a name");
       Validate.notNull(addRecursively, "AddRecursively must be specified");
       Validate.notNull(classLoader, "ClassLoader must be specified");
-      
-      this.packageName = packageName;
+
+      return new URLPackageScanner(pkg, addRecursively, classLoader);
+   }
+
+   private URLPackageScanner(Package pkg, boolean addRecursively, ClassLoader classLoader)
+   {
+      this.packageName = pkg.getName();
       this.packageNamePath = packageName.replace(".", "/");
       this.addRecursively = addRecursively;
       this.classLoader = classLoader;

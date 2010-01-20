@@ -744,7 +744,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       
       for(Package pack : packages) 
       {
-         URLPackageScanner scanner = new URLPackageScanner(
+         URLPackageScanner scanner = URLPackageScanner.newInstance(
                pack, recursive, SecurityActions.getThreadContextClassLoader());
          Set<Class<?>> classes = scanner.getClasses(); 
          for(Class<?> clazz : classes) 
