@@ -24,7 +24,6 @@ package org.jboss.shrinkwrap.impl.base.exporter;
 import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.ZipExportHandle;
@@ -68,9 +67,7 @@ class ZipExportHandleImpl implements ZipExportHandle
       assert content != null : "Contents must be specified";
       assert job != null : "job must be specified";
 
-      // Set    
-      final Logger log = Logger.getAnonymousLogger();
-      log.info("Content: " + content + "; JOB: " + job);
+      // Set
       this.content = content;
       this.job = job;
    }
