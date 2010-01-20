@@ -19,8 +19,9 @@ package org.jboss.shrinkwrap.api;
 import java.io.InputStream;
 
 /**
- * Represents a Class, file, or any other collection
- * of bytes stored under some context within an {@link Archive} 
+ * Represents content 
+ * stored under some context (a {@link ArchivePath})
+ * within an {@link Archive} 
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
@@ -30,8 +31,12 @@ public interface Asset
    /**
     * Get a input stream for the resource content.
     * The caller is responsible for closing the stream. 
+    * If this returns null, this denotes that the {@link Asset}
+    * is to be viewed as a logical path (placeholder/directory) 
+    * only with no backing content.
     * 
-    * @return A new open inputstream for each call.
+    * @return A new open {@link InputStream} for each call, or null if this
+    * type simply represents a logical path within an {@link Archive}
     */
    InputStream openStream();
 }
