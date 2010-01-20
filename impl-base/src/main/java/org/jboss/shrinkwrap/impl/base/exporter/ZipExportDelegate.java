@@ -125,8 +125,10 @@ public class ZipExportDelegate extends AbstractExporterDelegate<ZipExportHandle>
                }
                catch (final IOException ioe)
                {
-                  // Ignore
-                  log.warning("Got exception on closing the ZIP out stream: " + ioe.getMessage());
+                  // Ignore, but warn of danger
+                  log.log(Level.WARNING,
+                        "[SHRINKWRAP-120] Possible deadlock scenario: Got exception on closing the ZIP out stream: "
+                              + ioe.getMessage(), ioe);
                }
             }
 
