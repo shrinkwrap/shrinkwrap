@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.api.exporter;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.jboss.shrinkwrap.api.Assignable;
 
@@ -55,6 +56,17 @@ public interface ZipExporter extends Assignable
     * @throws ArchiveExportException if the export process fails
     */
    void exportZip(File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException;
+
+   /**
+    * Exports provided archive as a ZIP archive, written to the 
+    * specified {@link OutputStream} target.  The specified
+    * target will be closed upon completion.
+    * 
+    * @param target
+    * @throws ArchiveExportException
+    * @throws IllegalArgumentException If the target is not specified
+    */
+   void exportZip(OutputStream target) throws ArchiveExportException, IllegalArgumentException;
 
    /**
     * Exports provided archive as a ZIP archive, written to the 

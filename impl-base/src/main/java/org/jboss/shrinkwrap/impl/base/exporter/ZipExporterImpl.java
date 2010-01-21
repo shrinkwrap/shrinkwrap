@@ -105,6 +105,36 @@ public class ZipExporterImpl extends AssignableBase implements ZipExporter
    }
 
    /**
+    * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip(java.io.OutputStream)
+    */
+   @Override
+   public void exportZip(final OutputStream target) throws ArchiveExportException, IllegalArgumentException
+   {
+      // Precondition checks
+      if (target == null)
+      {
+         throw new IllegalArgumentException("Target must be specified");
+      }
+
+      // Get Streams
+      final ZipExportTask handle = this.exportZip();
+      final InputStream in = handle.getContent();
+
+      // Write out
+      try
+      {
+         IOUtil.copyWithClose(in, target);
+      }
+      catch (final IOException e)
+      {
+         throw new ArchiveExportException("Error encountered in exporting archive to " + target, e);
+      }
+
+      // Ensure done and no exceptions (this also will throw ArchiveExportException)
+      handle.checkComplete();
+   }
+
+   /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip(java.io.File, boolean)
     */
@@ -124,9 +154,7 @@ public class ZipExporterImpl extends AssignableBase implements ZipExporter
                + target.getAbsolutePath());
       }
 
-      // Get Streams
-      final ZipExportTask handle = this.exportZip();
-      final InputStream in = handle.getContent();
+      // Get Stream
       final OutputStream out;
       try
       {
@@ -138,17 +166,7 @@ public class ZipExporterImpl extends AssignableBase implements ZipExporter
       }
 
       // Write out
-      try
-      {
-         IOUtil.copyWithClose(in, out);
-      }
-      catch (final IOException e)
-      {
-         throw new ArchiveExportException("Error encountered in exporting archive to " + target.getAbsolutePath(), e);
-      }
-
-      // Ensure done and no exceptions (this also will throw ArchiveExportException)
-      handle.checkComplete();
+      this.exportZip(out);
    }
 
    /**

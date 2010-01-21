@@ -198,6 +198,34 @@ public class ZipExporterTestCase extends ExportTestBase
    }
 
    /**
+    * Test to make sure an archive can be exported to Zip (OutStream) and all 
+    * contents are correctly located in the Zip.
+    * @throws Exception
+    */
+   @Test
+   public void testExportZipToOutStream() throws IOException
+   {
+      log.info("testExportZipToOutStream");
+
+      // Get a temp directory for the test
+      final File tempDirectory = createTempDirectory("testExportZipToOutStream");
+
+      // Get an archive instance
+      Archive<?> archive = createArchiveWithAssets();
+
+      // Export as OutStream and flush to a file manually
+      final File serializedArchive = new File(tempDirectory, archive.getName());
+      final OutputStream out = new FileOutputStream(serializedArchive);
+      archive.as(ZipExporter.class).exportZip(out);
+
+      // Get as ZipFile
+      final ZipFile expectedZip = new ZipFile(serializedArchive);
+
+      // Validate
+      ensureZipFileInExpectedForm(expectedZip);
+   }
+
+   /**
     * Test to make sure an archive can be exported to Zip (file) and all 
     * contents are correctly located in the Zip.
     * @throws Exception
