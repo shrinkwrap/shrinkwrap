@@ -97,6 +97,21 @@ public class ZipExporterTestCase extends ExportTestBase
    }
 
    /**
+    * Test to ensure that the {@link JdkZipExporterDelegate} does not accept 
+    * an empty archive as input
+    * 
+    * SHRINKWRAP-93
+    * 
+    * @throws Exception
+    */
+   @Test(expected = IllegalArgumentException.class)
+   public void exportEmptyArchiveAsZip() throws Exception
+   {
+      // Attempt to export an empty archive, should fail
+      Archives.create(NAME_ARCHIVE, JavaArchive.class).as(ZipExporter.class).exportZip();
+   }
+
+   /**
     * Test to make sue an archive can be exported to Zip and all contents are correctly located in the Zip.
     * @throws Exception
     */

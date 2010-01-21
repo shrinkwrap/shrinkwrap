@@ -93,7 +93,7 @@ public class ZipExporterImpl extends AssignableBase implements ZipExporter
    public ZipExportHandle exportZip()
    {
       // Create export delegate
-      ZipExportDelegate exportDelegate = new ZipExportDelegate(archive);
+      AbstractExporterDelegate<ZipExportHandle> exportDelegate = new JdkZipExporterDelegate(archive);
 
       // Execute export
       exportDelegate.export();

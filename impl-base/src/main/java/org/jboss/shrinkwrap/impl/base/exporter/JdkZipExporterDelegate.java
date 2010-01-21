@@ -43,7 +43,15 @@ import org.jboss.shrinkwrap.impl.base.io.StreamErrorHandler;
 import org.jboss.shrinkwrap.impl.base.io.StreamTask;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 
-public class ZipExportDelegate extends AbstractExporterDelegate<ZipExportHandle>
+/**
+ * JDK-based implementation of a ZIP exporter.  Cannot handle archives
+ * with no content (as there'd be no {@link ZipEntry}s to write to the
+ * {@link ZipOutputStream}
+ * 
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @version $Revision: $
+ */
+public class JdkZipExporterDelegate extends AbstractExporterDelegate<ZipExportHandle>
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -52,7 +60,7 @@ public class ZipExportDelegate extends AbstractExporterDelegate<ZipExportHandle>
    /**
     * Logger
     */
-   private static final Logger log = Logger.getLogger(ZipExportDelegate.class.getName());
+   private static final Logger log = Logger.getLogger(JdkZipExporterDelegate.class.getName());
 
    /**
     * Services used to submit new jobs (encoding occurs in a separate Thread)
@@ -89,10 +97,22 @@ public class ZipExportDelegate extends AbstractExporterDelegate<ZipExportHandle>
 
    /**
     * Creates a new exporter delegate for exporting archives as Zip
+    * 
+    * @throws IllegalArgumentException If the archive has no {@link Asset}s; JDK ZIP
+    * handling cannot support writing out to a {@link ZipOutputStream} with no
+    * {@link ZipEntry}s.
     */
-   public ZipExportDelegate(Archive<?> archive)
+   public JdkZipExporterDelegate(final Archive<?> archive) throws IllegalArgumentException
    {
       super(archive);
+
+      // Precondition check
+      if (archive.getContent().isEmpty())
+      {
+         throw new IllegalArgumentException(
+               "[SHRINKWRAP-93] Cannot use this JDK-based implementation to export as ZIP an archive with no content: "
+                     + archive.toString());
+      }
    }
 
    //-------------------------------------------------------------------------------------||
@@ -115,7 +135,7 @@ public class ZipExportDelegate extends AbstractExporterDelegate<ZipExportHandle>
          {
             try
             {
-               ZipExportDelegate.super.export();
+               JdkZipExporterDelegate.super.export();
             }
             catch (final Exception e)
             {
