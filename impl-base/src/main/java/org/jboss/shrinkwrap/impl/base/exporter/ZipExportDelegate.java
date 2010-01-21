@@ -117,6 +117,13 @@ public class ZipExportDelegate extends AbstractExporterDelegate<ZipExportHandle>
             {
                ZipExportDelegate.super.export();
             }
+            catch (final Exception e)
+            {
+               // Log this and rethrow; otherwise if we go into deadlock we won't ever 
+               // be able to get the underlying cause from the Future 
+               log.log(Level.WARNING, "Exception encountered during export of archive", e);
+               throw e;
+            }
             finally
             {
                try
@@ -174,6 +181,10 @@ public class ZipExportDelegate extends AbstractExporterDelegate<ZipExportHandle>
       {
          throw new IllegalArgumentException("Path must be specified");
       }
+      if (asset == null)
+      {
+         throw new IllegalArgumentException("asset must be specified");
+      }
 
       if (isParentOfAnyPathsExported(path))
       {
@@ -195,18 +206,19 @@ public class ZipExportDelegate extends AbstractExporterDelegate<ZipExportHandle>
          final boolean isRoot = grandParent == null;
          if (!isRoot)
          {
-            // Process the parent without any asset (it's a directory)
-            this.processAsset(parent, null);
+            // Process the parent as directory
+            this.processAsset(parent, DirectoryAsset.INSTANCE);
          }
       }
-      // Mark if we're writing a directory
-      final boolean isDirectory = ((asset == null) || (asset instanceof DirectoryAsset));
 
       // Get Asset InputStream if the asset is specified (else it's a directory so use null)
-      final InputStream assetStream = !isDirectory ? asset.openStream() : null;
-      final String pathName = PathUtil.optionallyRemovePrecedingSlash(path.get());
+      final InputStream assetStream = asset.openStream();
+
+      // Mark if we're writing a directory
+      final boolean isDirectory = assetStream == null;
 
       // If we haven't already written this path
+      final String pathName = PathUtil.optionallyRemovePrecedingSlash(path.get());
       if (!this.pathsExported.contains(path))
       {
          // Make a task for this stream and close when done

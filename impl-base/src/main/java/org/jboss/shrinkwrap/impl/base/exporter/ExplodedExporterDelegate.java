@@ -24,12 +24,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
-import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
 /**
@@ -108,43 +107,52 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
          processArchiveAsset(assetParent, nesteArchiveAsset);
          return;
       }
-      
+
       // Handle directory assets separately
-      final boolean isDirectory = asset instanceof DirectoryAsset;
-      if (isDirectory)
+      try
       {
-         // If doesn't already exist
-         if (!assetFile.exists())
+         final boolean isDirectory = (asset.openStream() == null);
+         if (isDirectory)
          {
-            // Attempt a create
-            if (!assetFile.mkdirs())
+            // If doesn't already exist
+            if (!assetFile.exists())
             {
-               // Some error in writing
-               throw new ArchiveExportException("Failed to write directory: " + assetFile.getAbsolutePath());
+               // Attempt a create
+               if (!assetFile.mkdirs())
+               {
+                  // Some error in writing
+                  throw new ArchiveExportException("Failed to write directory: " + assetFile.getAbsolutePath());
+               }
+            }
+         }
+         // Only handle non-directory assets, otherwise the path is handled above
+         else
+         {
+            try
+            {
+               if (log.isLoggable(Level.FINE))
+               {
+                  log.fine("Writing asset " + path.get() + " to " + assetFile.getAbsolutePath());
+               }
+               // Get the asset streams
+               final InputStream assetInputStream = asset.openStream();
+               final FileOutputStream assetFileOutputStream = new FileOutputStream(assetFile);
+               final BufferedOutputStream assetBufferedOutputStream = new BufferedOutputStream(assetFileOutputStream,
+                     8192);
+
+               // Write contents
+               IOUtil.copyWithClose(assetInputStream, assetBufferedOutputStream);
+            }
+            catch (final Exception e)
+            {
+               // Provide a more detailed exception than the outer block
+               throw new ArchiveExportException("Failed to write asset " + path + " to " + assetFile, e);
             }
          }
       }
-      // Only handle non-directory assets, otherwise the path is handled above
-      else
+      catch (final Exception e)
       {
-         try
-         {
-            if (log.isLoggable(Level.FINE))
-            {
-               log.fine("Writing asset " + path.get() + " to " + assetFile.getAbsolutePath());
-            }
-            // Get the asset streams
-            final InputStream assetInputStream = asset.openStream();
-            final FileOutputStream assetFileOutputStream = new FileOutputStream(assetFile);
-            final BufferedOutputStream assetBufferedOutputStream = new BufferedOutputStream(assetFileOutputStream, 8192);
-
-            // Write contents
-            IOUtil.copyWithClose(assetInputStream, assetBufferedOutputStream);
-         }
-         catch (Throwable t)
-         {
-            throw new ArchiveExportException("Failed to write asset " + path + " to " + assetFile);
-         }
+         throw new ArchiveExportException("Unexpected error encountered in export of " + asset, e);
       }
    }
 
@@ -191,11 +199,10 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
       {
          throw new ArchiveExportException("Unable to create archive output directory - " + outputDirectory);
       }
-      if(outputDirectory.isFile()) 
+      if (outputDirectory.isFile())
       {
-         throw new IllegalArgumentException(
-               "Unable to export exploded directory to " + outputDirectory.getAbsolutePath() + 
-               ", it points to a existing file");
+         throw new IllegalArgumentException("Unable to export exploded directory to "
+               + outputDirectory.getAbsolutePath() + ", it points to a existing file");
       }
 
       return outputDirectory;

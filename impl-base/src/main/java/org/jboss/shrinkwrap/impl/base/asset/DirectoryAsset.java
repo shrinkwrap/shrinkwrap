@@ -19,8 +19,8 @@ package org.jboss.shrinkwrap.impl.base.asset;
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.Asset;
 
 /**
  * {@link Asset} implementation used to denote no backing

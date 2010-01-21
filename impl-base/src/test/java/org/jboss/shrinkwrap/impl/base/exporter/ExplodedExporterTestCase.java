@@ -26,9 +26,9 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
@@ -196,7 +196,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
          @Override
          public InputStream openStream()
          {
-            throw new RuntimeException("Mock Esception getting Stream");
+            throw new RuntimeException("Mock Exception getting Stream");
          }
 
       }, new BasicPath("badAsset"));
