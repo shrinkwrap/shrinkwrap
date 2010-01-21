@@ -26,14 +26,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
-import org.jboss.shrinkwrap.api.exporter.ZipExportHandle;
+import org.jboss.shrinkwrap.api.exporter.ZipExportTask;
 
 /**
- * Implementation of a {@link ZipExportHandle}
+ * Implementation of a {@link ZipExportTask}
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-class ZipExportHandleImpl implements ZipExportHandle
+class ZipExportHandleImpl implements ZipExportTask
 {
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -49,7 +49,7 @@ class ZipExportHandleImpl implements ZipExportHandle
     * this because if the user blocks on {@link Future#get()} than this could
     * deadlock the process (the writer Thread would be waiting for the reader Thread
     * to pull off the buffer).  So just provide a mechanism for the caller to see 
-    * if we're done, and if there was an exception raised via {@link ZipExportHandle#isDone()}
+    * if we're done, and if there was an exception raised via {@link ZipExportTask#isDone()}
     */
    private final Future<Void> job;
 
@@ -77,7 +77,7 @@ class ZipExportHandleImpl implements ZipExportHandle
    //-------------------------------------------------------------------------------------||
 
    /**
-    * @see org.jboss.shrinkwrap.api.exporter.ZipExportHandle#getContent()
+    * @see org.jboss.shrinkwrap.api.exporter.ZipExportTask#getContent()
     */
    @Override
    public InputStream getContent()
@@ -86,7 +86,7 @@ class ZipExportHandleImpl implements ZipExportHandle
    }
 
    /**
-    * @see org.jboss.shrinkwrap.api.exporter.ZipExportHandle#checkComplete()
+    * @see org.jboss.shrinkwrap.api.exporter.ZipExportTask#checkComplete()
     */
    @Override
    public void checkComplete() throws ArchiveExportException, IllegalStateException

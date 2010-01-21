@@ -36,7 +36,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
-import org.jboss.shrinkwrap.api.exporter.ZipExportHandle;
+import org.jboss.shrinkwrap.api.exporter.ZipExportTask;
 import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.io.StreamErrorHandler;
@@ -51,7 +51,7 @@ import org.jboss.shrinkwrap.impl.base.path.PathUtil;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class JdkZipExporterDelegate extends AbstractExporterDelegate<ZipExportHandle>
+public class JdkZipExporterDelegate extends AbstractExporterDelegate<ZipExportTask>
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -83,7 +83,7 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<ZipExportHa
    /**
     * Handle to be returned to the caller
     */
-   private ZipExportHandle handle;
+   private ZipExportTask handle;
 
    /**
     * A Set of Paths we've exported so far (so that we don't write
@@ -185,7 +185,7 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<ZipExportHa
 
       // Get a handle and return it to the caller
       final Future<Void> job = service.submit(exportTask);
-      final ZipExportHandle handle = new ZipExportHandleImpl(input, job);
+      final ZipExportTask handle = new ZipExportHandleImpl(input, job);
       this.handle = handle;
    }
 
@@ -300,7 +300,7 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<ZipExportHa
     * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#getResult()
     */
    @Override
-   protected ZipExportHandle getResult()
+   protected ZipExportTask getResult()
    {
       return handle;
    }

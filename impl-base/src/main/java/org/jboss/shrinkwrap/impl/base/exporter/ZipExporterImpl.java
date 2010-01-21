@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
-import org.jboss.shrinkwrap.api.exporter.ZipExportHandle;
+import org.jboss.shrinkwrap.api.exporter.ZipExportTask;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
@@ -90,15 +90,15 @@ public class ZipExporterImpl extends AssignableBase implements ZipExporter
     * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip()
     */
    @Override
-   public ZipExportHandle exportZip()
+   public ZipExportTask exportZip()
    {
       // Create export delegate
-      AbstractExporterDelegate<ZipExportHandle> exportDelegate = new JdkZipExporterDelegate(archive);
+      AbstractExporterDelegate<ZipExportTask> exportDelegate = new JdkZipExporterDelegate(archive);
 
       // Execute export
       exportDelegate.export();
       // Get results
-      ZipExportHandle handle = exportDelegate.getResult();
+      ZipExportTask handle = exportDelegate.getResult();
 
       // Return 
       return handle;
@@ -125,7 +125,7 @@ public class ZipExporterImpl extends AssignableBase implements ZipExporter
       }
 
       // Get Streams
-      final ZipExportHandle handle = this.exportZip();
+      final ZipExportTask handle = this.exportZip();
       final InputStream in = handle.getContent();
       final OutputStream out;
       try

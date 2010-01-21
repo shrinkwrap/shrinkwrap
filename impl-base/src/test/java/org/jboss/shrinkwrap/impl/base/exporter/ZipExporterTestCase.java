@@ -34,7 +34,7 @@ import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
-import org.jboss.shrinkwrap.api.exporter.ZipExportHandle;
+import org.jboss.shrinkwrap.api.exporter.ZipExportTask;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.asset.ByteArrayAsset;
@@ -83,14 +83,14 @@ public class ZipExporterTestCase extends ExportTestBase
       Archive<?> archive = createArchiveWithAssets();
 
       // Export as Zip InputStream
-      final ZipExportHandle handle = archive.as(ZipExporter.class).exportZip();
-      final InputStream zipStream = handle.getContent();
+      final ZipExportTask task = archive.as(ZipExporter.class).exportZip();
+      final InputStream zipStream = task.getContent();
 
       // Write zip content to temporary file 
       ZipFile expectedZip = getExportedZipFile(NAME_ARCHIVE, zipStream, tempDirectory);
 
       // Ensure all's OK
-      handle.checkComplete();
+      task.checkComplete();
 
       // Validate
       ensureZipFileInExpectedForm(expectedZip);
@@ -124,7 +124,7 @@ public class ZipExporterTestCase extends ExportTestBase
       Archive<?> archive = createArchiveWithAssets();
 
       // Export as Zip InputStream
-      final ZipExportHandle handle = archive.as(ZipExporter.class).exportZip();
+      final ZipExportTask handle = archive.as(ZipExporter.class).exportZip();
       // We cannot check complete until we fully read the instream from the handle
       handle.checkComplete();
 
@@ -306,7 +306,7 @@ public class ZipExporterTestCase extends ExportTestBase
       }, PATH_ONE);
 
       // Export
-      final ZipExportHandle handle = archive.as(ZipExporter.class).exportZip();
+      final ZipExportTask handle = archive.as(ZipExporter.class).exportZip();
 
       // Read in the full content (to in turn empty the underlying buffer and ensure we complete)
       final InputStream in = handle.getContent();

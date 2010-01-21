@@ -31,7 +31,7 @@ import java.io.InputStream;
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public interface ZipExportHandle
+public interface ZipExportTask
 {
    /**
     * Obtains an {@link InputStream} from which the encoded
@@ -44,12 +44,12 @@ public interface ZipExportHandle
    /**
     * Blocking operation which will wait until the encoding process's internal
     * streams have been closed and verified for integrity.  Do not call this method
-    * until all bytes have been read from {@link ZipExportHandle#getContent()}; otherwise 
+    * until all bytes have been read from {@link ZipExportTask#getContent()}; otherwise 
     * this may introduce a deadlock.  Any problems with the encoding process will be reported
     * by throwing {@link ArchiveExportException}.
     * @return
     * @throws ArchiveExportException If an error occurred during export
-    * @throws IllegalStateException If invoked before {@link ZipExportHandle#getContent()} has been
+    * @throws IllegalStateException If invoked before {@link ZipExportTask#getContent()} has been
     * fully-read
     */
    void checkComplete() throws ArchiveExportException, IllegalStateException;
