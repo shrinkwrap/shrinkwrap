@@ -162,7 +162,7 @@ public class ZipExporterStressTest extends ExportTestBase
 
       static MegaByteAsset newInstance()
       {
-         /**s
+         /**
           * Bytes must be random/distributed so that compressing these in ZIP
           * isn't too efficient
           */
