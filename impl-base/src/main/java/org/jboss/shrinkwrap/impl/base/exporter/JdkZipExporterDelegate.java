@@ -23,6 +23,7 @@ import java.io.PipedOutputStream;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -36,7 +37,6 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
-import org.jboss.shrinkwrap.api.exporter.ZipExportTask;
 import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.io.StreamErrorHandler;
@@ -51,7 +51,7 @@ import org.jboss.shrinkwrap.impl.base.path.PathUtil;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class JdkZipExporterDelegate extends AbstractExporterDelegate<ZipExportTask>
+public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream>
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -81,15 +81,20 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<ZipExportTa
    private ZipOutputStream zipOutputStream;
 
    /**
-    * Handle to be returned to the caller
+    * {@link InputStream} to be returned to the caller
     */
-   private ZipExportTask handle;
+   private InputStream inputStream;
 
    /**
     * A Set of Paths we've exported so far (so that we don't write
     * any entries twice)
     */
    private Set<ArchivePath> pathsExported = new HashSet<ArchivePath>();
+
+   /**
+    * Synchronization point where the encoding process will wait until all streams have been set up
+    */
+   private final CountDownLatch latch = new CountDownLatch(1);
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -163,8 +168,17 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<ZipExportTa
          }
       };
 
+      // Get a handle and return it to the caller
+      final Future<Void> job = service.submit(exportTask);
+
+      /*
+       * At this point the job will start, but hit the latch until we set up the streams
+       * and tell it to proceed.
+       */
+
       // Stream to return to the caller
-      final IsReadReportingInputStream input = new IsReadReportingInputStream();
+      final FutureCompletionInputStream input = new FutureCompletionInputStream(job);
+      inputStream = input;
 
       /**
        * OutputStream which will be associated with the returned InStream, and the 
@@ -183,10 +197,11 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<ZipExportTa
       // Set up the stream to which we'll write entries, backed by the piped stream
       zipOutputStream = new ZipOutputStream(output);
 
-      // Get a handle and return it to the caller
-      final Future<Void> job = service.submit(exportTask);
-      final ZipExportTask handle = new ZipExportHandleImpl(input, job);
-      this.handle = handle;
+      /*
+       * The job is now waiting on us to signal that we've set up the streams; 
+       * let it continue
+       */
+      latch.countDown();
    }
 
    /**
@@ -258,6 +273,12 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<ZipExportTa
                // Make a ZipEntry
                final ZipEntry entry = new ZipEntry(resolvedPath);
 
+               /*
+                * Wait until all streams have been set up for encoding, or
+                * do nothing if everything's set up already
+                */
+               latch.await();
+
                // Write the Asset under the same Path name in the Zip
                try
                {
@@ -300,9 +321,9 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<ZipExportTa
     * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#getResult()
     */
    @Override
-   protected ZipExportTask getResult()
+   protected InputStream getResult()
    {
-      return handle;
+      return inputStream;
    }
 
    /**

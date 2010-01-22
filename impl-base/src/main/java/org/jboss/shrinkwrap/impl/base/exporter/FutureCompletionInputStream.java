@@ -18,19 +18,32 @@ package org.jboss.shrinkwrap.impl.base.exporter;
 
 import java.io.IOException;
 import java.io.PipedInputStream;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 
 /**
- * {@link PipedInputStream} which may report whether or not
- * it has been fully read.
+ * {@link PipedInputStream} which, when fully-read, will 
+ * block upon a {@link Future} and report any exceptional
+ * circumstances to the owning Thread.
  *
+ * @param <T> Response type of the {@link Future}
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-class IsReadReportingInputStream extends PipedInputStream
+class FutureCompletionInputStream extends PipedInputStream
 {
 
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
+
+   /**
+    * Logger
+    */
+   private static final Logger log = Logger.getLogger(FutureCompletionInputStream.class.getName());
 
    /**
     * Number of bytes read signaling the end has been reached
@@ -42,9 +55,9 @@ class IsReadReportingInputStream extends PipedInputStream
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Flag showing whether or not we've been fully-read
+    * The job upon which we'll block and obtain any exceptions from when we're done reading
     */
-   private boolean isRead;
+   private final Future<?> job;
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -53,9 +66,10 @@ class IsReadReportingInputStream extends PipedInputStream
    /**
     * Creates a new Stream
     */
-   public IsReadReportingInputStream()
+   public FutureCompletionInputStream(final Future<?> job)
    {
       super();
+      this.job = job;
    }
 
    /**
@@ -66,7 +80,7 @@ class IsReadReportingInputStream extends PipedInputStream
    public synchronized int read() throws IOException
    {
       final int bytesRead = super.read();
-      this.markReadOnStreamEnd(bytesRead);
+      this.awaitOnFutureOnDone(bytesRead);
       return bytesRead;
    }
 
@@ -78,7 +92,7 @@ class IsReadReportingInputStream extends PipedInputStream
    public synchronized int read(byte[] b, int off, int len) throws IOException
    {
       final int bytesRead = super.read(b, off, len);
-      this.markReadOnStreamEnd(bytesRead);
+      this.awaitOnFutureOnDone(bytesRead);
       return bytesRead;
    }
 
@@ -87,30 +101,39 @@ class IsReadReportingInputStream extends PipedInputStream
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Marks this stream as read
-    * if the number of bytes specified is equal to {@link IsReadReportingInputStream#EOF} 
+    * If we've read the full stream, awaits on {@link FutureCompletionInputStream#job}, 
+    * reporting any exceptions
+    * wrapped in an {@link ArchiveExportException}.
+    * 
+    * @param bytesRead
+    * @throws ArchiveExportException
     */
-   private void markReadOnStreamEnd(final int bytesRead)
+   private void awaitOnFutureOnDone(final int bytesRead) throws ArchiveExportException
    {
       if (bytesRead == EOF)
       {
          try
          {
-            isRead = true;
+            // Block until the streams have been closed in the underlying job
+            job.get();
          }
-         catch (final Exception e)
+         catch (final InterruptedException e)
          {
-            throw new RuntimeException("Encountered exception in callback", e);
+            Thread.interrupted();
+            log.log(Level.WARNING, "We've been interrupted while waiting for the export process to complete", e);
+         }
+         // Some error
+         catch (final ExecutionException ee)
+         {
+            // Unwrap and rethrow
+            final Throwable cause = ee.getCause();
+            if (cause == null)
+            {
+               throw new IllegalStateException("Cause of execution failure not specified: ", ee);
+            }
+            // Wrap as our exception type and rethrow
+            throw new ArchiveExportException(cause);
          }
       }
-   }
-
-   /**
-    * Returns whether or not this stream has been fully read
-    * @return
-    */
-   boolean isRead()
-   {
-      return isRead;
    }
 }

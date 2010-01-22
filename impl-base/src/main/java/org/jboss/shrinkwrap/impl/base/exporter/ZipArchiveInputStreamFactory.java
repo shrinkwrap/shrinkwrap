@@ -45,7 +45,7 @@ public class ZipArchiveInputStreamFactory extends ArchiveInputStreamFactory
    protected InputStream doGetInputStream(Archive<?> archive)
    {
       // Get InputStream from the ZipExporter
-      final InputStream inputStream = archive.as(ZipExporter.class).exportZip().getContent();
+      final InputStream inputStream = archive.as(ZipExporter.class).exportZip();
       // Return input stream
       return inputStream;
    }

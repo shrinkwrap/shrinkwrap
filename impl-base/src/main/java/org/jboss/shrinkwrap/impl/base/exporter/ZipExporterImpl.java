@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
-import org.jboss.shrinkwrap.api.exporter.ZipExportTask;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
@@ -90,18 +89,18 @@ public class ZipExporterImpl extends AssignableBase implements ZipExporter
     * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip()
     */
    @Override
-   public ZipExportTask exportZip()
+   public InputStream exportZip()
    {
       // Create export delegate
-      AbstractExporterDelegate<ZipExportTask> exportDelegate = new JdkZipExporterDelegate(archive);
+      AbstractExporterDelegate<InputStream> exportDelegate = new JdkZipExporterDelegate(archive);
 
       // Execute export
       exportDelegate.export();
       // Get results
-      ZipExportTask handle = exportDelegate.getResult();
+      InputStream stream = exportDelegate.getResult();
 
       // Return 
-      return handle;
+      return stream;
    }
 
    /**
@@ -116,9 +115,8 @@ public class ZipExporterImpl extends AssignableBase implements ZipExporter
          throw new IllegalArgumentException("Target must be specified");
       }
 
-      // Get Streams
-      final ZipExportTask handle = this.exportZip();
-      final InputStream in = handle.getContent();
+      // Get Stream
+      final InputStream in = this.exportZip();
 
       // Write out
       try
@@ -129,9 +127,6 @@ public class ZipExporterImpl extends AssignableBase implements ZipExporter
       {
          throw new ArchiveExportException("Error encountered in exporting archive to " + target, e);
       }
-
-      // Ensure done and no exceptions (this also will throw ArchiveExportException)
-      handle.checkComplete();
    }
 
    /**

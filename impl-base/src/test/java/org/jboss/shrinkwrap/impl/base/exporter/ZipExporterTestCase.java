@@ -34,7 +34,6 @@ import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
-import org.jboss.shrinkwrap.api.exporter.ZipExportTask;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.asset.ByteArrayAsset;
@@ -83,14 +82,10 @@ public class ZipExporterTestCase extends ExportTestBase
       Archive<?> archive = createArchiveWithAssets();
 
       // Export as Zip InputStream
-      final ZipExportTask task = archive.as(ZipExporter.class).exportZip();
-      final InputStream zipStream = task.getContent();
+      final InputStream zipStream = archive.as(ZipExporter.class).exportZip();
 
       // Write zip content to temporary file 
       ZipFile expectedZip = getExportedZipFile(NAME_ARCHIVE, zipStream, tempDirectory);
-
-      // Ensure all's OK
-      task.checkComplete();
 
       // Validate
       ensureZipFileInExpectedForm(expectedZip);
@@ -112,25 +107,6 @@ public class ZipExporterTestCase extends ExportTestBase
    }
 
    /**
-    * Test to make sue an archive can be exported to Zip and all contents are correctly located in the Zip.
-    * @throws Exception
-    */
-   @Test(expected = IllegalStateException.class)
-   public void checkCompleteBeforeReadingContents() throws Exception
-   {
-      log.info("checkCompleteBeforeReadingContents");
-
-      // Get an archive instance
-      Archive<?> archive = createArchiveWithAssets();
-
-      // Export as Zip InputStream
-      final ZipExportTask handle = archive.as(ZipExporter.class).exportZip();
-      // We cannot check complete until we fully read the instream from the handle
-      handle.checkComplete();
-
-   }
-
-   /**
     * Ensures that we can export archives of large sizes without
     * leading to {@link OutOfMemoryError}
     */
@@ -142,7 +118,7 @@ public class ZipExporterTestCase extends ExportTestBase
       log.info("This test may take awhile as it's intended to fill memory");
 
       // Get an archive instance
-      JavaArchive archive = Archives.create("hugeArchive.jar", JavaArchive.class);
+      final JavaArchive archive = Archives.create("hugeArchive.jar", JavaArchive.class);
 
       // Approximate the free memory to start
       final Runtime runtime = Runtime.getRuntime();
@@ -152,7 +128,7 @@ public class ZipExporterTestCase extends ExportTestBase
       // Loop through and add a MB Asset
       final String pathPrefix = "path";
 
-      // Fill up the archive until we'e got only 30% of memory left
+      // Fill up the archive until we've got only 30% of memory left
       while (currentFreeMemBytes > (startFreeMemBytes * .3))
       {
          archive.add(MegaByteAsset.newInstance(), pathPrefix + counter++);
@@ -270,7 +246,7 @@ public class ZipExporterTestCase extends ExportTestBase
       Archive<?> archive = createArchiveWithNestedArchives();
 
       // Export as Zip InputStream
-      InputStream zipStream = archive.as(ZipExporter.class).exportZip().getContent();
+      InputStream zipStream = archive.as(ZipExporter.class).exportZip();
 
       // Write out and retrieve Zip 
       ZipFile expectedZip = getExportedZipFile(NAME_ARCHIVE, zipStream, tempDirectory);
@@ -320,7 +296,7 @@ public class ZipExporterTestCase extends ExportTestBase
    @Test(expected = ArchiveExportException.class)
    public void testExportThrowsArchiveExceptionOnAssetWriteFailure() throws IOException
    {
-      log.info("testExportThrowsArchiveExcepitonOnAssetWriteFailure");
+      log.info("testExportThrowsArchiveExceptionOnAssetWriteFailure");
       Archive<?> archive = createArchiveWithAssets();
 
       archive.add(new Asset()
@@ -334,21 +310,17 @@ public class ZipExporterTestCase extends ExportTestBase
       }, PATH_ONE);
 
       // Export
-      final ZipExportTask handle = archive.as(ZipExporter.class).exportZip();
+      final InputStream in = archive.as(ZipExporter.class).exportZip();
 
       // Read in the full content (to in turn empty the underlying buffer and ensure we complete)
-      final InputStream in = handle.getContent();
       final OutputStream sink = new OutputStream()
       {
-
          @Override
          public void write(int b) throws IOException
          {
          }
       };
       IOUtil.copyWithClose(in, sink);
-      // Get access to the underlying exception
-      handle.checkComplete();
 
    }
 

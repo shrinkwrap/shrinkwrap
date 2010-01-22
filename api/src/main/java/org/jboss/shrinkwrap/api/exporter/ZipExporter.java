@@ -42,7 +42,7 @@ public interface ZipExporter extends Assignable
     * 
     * @return {@link InputStream} for exported Zip
     */
-   ZipExportTask exportZip();
+   InputStream exportZip();
 
    /**
     * Exports provided archive as a ZIP archive, written to the 
