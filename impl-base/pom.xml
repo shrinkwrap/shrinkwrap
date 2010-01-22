@@ -2,7 +2,8 @@
   <!--
   vi:ts=2:sw=2:expandtab:
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <!-- Parent -->
   <parent>
@@ -68,7 +69,7 @@
           </execution>
         </executions>
       </plugin>
-    
+
       <!-- Resources Plugin -->
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
@@ -78,8 +79,45 @@
           <includeEmptyDirs>true</includeEmptyDirs>
         </configuration>
       </plugin>
-      
+
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>stress</id>
+      <build>
+        <plugins>
+
+          <!--
+            Stress Tests run in a separate profile so we don't bog down
+            the main build
+          -->
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>stress-test</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>test</goal>
+                </goals>
+                <configuration>
+                  <includes>
+                    <include>**/*StressTest.java</include>
+                  </includes>
+                  <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                  <trimStackTrace>false</trimStackTrace>
+                  <printSummary>true</printSummary>
+                  <forkMode>always</forkMode>
+                </configuration>
+              </execution>
+            </executions>
+
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
 
