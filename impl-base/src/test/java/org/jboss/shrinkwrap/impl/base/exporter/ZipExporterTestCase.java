@@ -21,6 +21,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Random;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -61,6 +63,11 @@ public class ZipExporterTestCase extends ExportTestBase
     * Logger
     */
    private static final Logger log = Logger.getLogger(ZipExporterTestCase.class.getName());
+
+   /**
+    * 2^20
+    */
+   private static BigDecimal MEGA = new BigDecimal(1024 * 1024);
 
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
@@ -109,6 +116,8 @@ public class ZipExporterTestCase extends ExportTestBase
    /**
     * Ensures that we can export archives of large sizes without
     * leading to {@link OutOfMemoryError}
+    * 
+    * SHRINKWRAP-116
     */
    @Test
    public void exportHugeArchive() throws IOException
@@ -123,27 +132,38 @@ public class ZipExporterTestCase extends ExportTestBase
       // Approximate the free memory to start
       final Runtime runtime = Runtime.getRuntime();
       final long startFreeMemBytes = totalFreeMemory(runtime);
-      long currentFreeMemBytes = startFreeMemBytes;
+      long beforeExportFreeMemBytes = startFreeMemBytes;
       int counter = 0;
       // Loop through and add a MB Asset
       final String pathPrefix = "path";
 
       // Fill up the archive until we've got only 30% of memory left
-      while (currentFreeMemBytes > (startFreeMemBytes * .3))
+      while (beforeExportFreeMemBytes > (startFreeMemBytes * .3))
       {
          archive.add(MegaByteAsset.newInstance(), pathPrefix + counter++);
          System.gc(); // Signal to the VM to try to clean up a bit, not the most reliable, but makes this OK on my machine
-         currentFreeMemBytes = totalFreeMemory(runtime);
-         log.info("Current Free Memory (MB): " + currentFreeMemBytes / 1024 / 1024);
+         beforeExportFreeMemBytes = totalFreeMemory(runtime);
+         log.info("Current Free Memory (MB): " + this.megaBytesFromBytes(beforeExportFreeMemBytes));
       }
       log.info("Wrote: " + archive.toString());
-      log.info("Started w/ free memory: " + startFreeMemBytes / 1024 / 1024 + "MB");
-      log.info("Current free memory: " + currentFreeMemBytes / 1024 / 1024 + "MB");
+      log.info("Started w/ free memory (MB): " + this.megaBytesFromBytes(startFreeMemBytes));
+      log.info("Free memory before export (MB): " + this.megaBytesFromBytes(beforeExportFreeMemBytes));
 
       // Export; at this point we have less than 50% available memory so 
       // we can't carry the whole archive in RAM twice; this
       // should ensure the ZIP impl uses an internal buffer
-      archive.as(ZipExporter.class).exportZip();
+      final InputStream in = archive.as(ZipExporter.class).exportZip();
+      final CountingOutputStream out = new CountingOutputStream();
+
+      // Copy, counting the final size of the exported ZIP
+      IOUtil.copyWithClose(in, out);
+
+      // Ensure we've just exported a ZIP larger than our available memory (proving we've buffered the encoding process)
+      TestCase.assertTrue("Test setup failed; we should be writing out more bytes than we have free memory",
+            out.bytesWritten > beforeExportFreeMemBytes);
+      log.info("Final ZIP export was: " + this.megaBytesFromBytes(out.bytesWritten) + " MB");
+      final long afterExportFreeMemBytes = totalFreeMemory(runtime);
+      log.info("Free memory after export (MB): " + this.megaBytesFromBytes(afterExportFreeMemBytes));
    }
 
    /**
@@ -413,6 +433,16 @@ public class ZipExporterTestCase extends ExportTestBase
    }
 
    /**
+    * Returns the number of MB the specified number of bytes represents
+    * @param bytes
+    * @return
+    */
+   private BigDecimal megaBytesFromBytes(final long bytes)
+   {
+      return new BigDecimal(bytes).divide(MEGA).setScale(2, RoundingMode.HALF_UP);
+   }
+
+   /**
     * Obtains an estimate of the total amount of free memory available to the JVM
     * @param runtime
     * @return
@@ -450,6 +480,23 @@ public class ZipExporterTestCase extends ExportTestBase
          final byte[] content = new byte[MEGA];
          random.nextBytes(content);
          return new MegaByteAsset(content);
+      }
+   }
+
+   /**
+    * {@link OutputStream} which does nothing but count the bytes written
+    * 
+    * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+    * @version $Revision: $
+    */
+   private static class CountingOutputStream extends OutputStream
+   {
+      long bytesWritten = 0;
+
+      @Override
+      public void write(int b) throws IOException
+      {
+         bytesWritten++;
       }
    }
 
