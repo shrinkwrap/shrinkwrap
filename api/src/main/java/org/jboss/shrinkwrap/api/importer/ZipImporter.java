@@ -33,21 +33,21 @@ public interface ZipImporter extends Assignable
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-    /**
-    * Imports provided {@link ZipInputStream} as a {@link Archive}.
-    * 
-    * @param stream the stream to import
-    * @return Archive of the imported Zip
-    * @throws ArchiveImportException if IOException during import
-    */
+   /**
+   * Imports provided {@link ZipInputStream} as a {@link Archive}.
+   * 
+   * @param stream the stream to import
+   * @return Archive of the imported Zip
+   * @throws ArchiveImportException If an error occured during the import process
+   */
    ZipImporter importZip(ZipInputStream stream) throws ArchiveImportException;
-   
+
    /**
     * Imports provided {@link ZipFile} as a {@link Archive}.
     * 
     * @param file the file to import
     * @return Archive of the imported Zip
-    * @throws ArchiveImportException if IOException during import
+    * @throws ArchiveImportException If an error occured during the import process
     */
    ZipImporter importZip(ZipFile file) throws ArchiveImportException;
 }

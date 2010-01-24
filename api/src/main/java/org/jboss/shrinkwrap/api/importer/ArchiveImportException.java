@@ -17,9 +17,7 @@
 package org.jboss.shrinkwrap.api.importer;
 
 /**
- * ArchiveImportException
- * 
- * Exception thrown on error while mporting a Archive.
+ * Denotes an unexpected error was encountered while importing a Archive.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
@@ -36,14 +34,6 @@ public class ArchiveImportException extends RuntimeException
    public ArchiveImportException(String message, Throwable cause)
    {
       super(message, cause);
-   }
-
-   /**
-    * @param message
-    */
-   public ArchiveImportException(String message)
-   {
-      super(message);
    }
 
    /**
