@@ -18,10 +18,12 @@ package org.jboss.shrinkwrap.impl.base.importer;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -33,6 +35,7 @@ import junit.framework.Assert;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
@@ -136,6 +139,46 @@ public class ZipImporterImplTestCase
             archive, 
             SecurityActions.getThreadContextClassLoader().getResource(EXISTING_ZIP_RESOURCE).toURI());
    }
+
+   /**
+    * Ensures that an import of {@link InputStream} results in {@link ArchiveImportException}
+    * if an unexpected error occurred.
+    * @throws Exception
+    */
+   @Test(expected = ArchiveImportException.class)
+   public void shouldThrowExceptionOnErrorInImportFromStream() throws Exception
+   {
+      ZipInputStream stream = new ZipInputStream(new InputStream()
+      {
+         @Override
+         public int read() throws IOException
+         {
+            throw new IOException("Mock exception");
+         }
+      });
+      Archives.create("test.jar", ZipImporter.class).importZip(stream).as(JavaArchive.class);
+   }
+
+   /**
+    * Ensures that an import of {@link ZipFile} results in {@link ArchiveImportException}
+    * if an unexpected error occurred.
+    * @throws Exception
+    */
+   @Test(expected = ArchiveImportException.class)
+   public void shouldThrowExceptionOnErrorInImportFromFile() throws Exception
+   {
+      ZipFile testZip = new ZipFile(new File(SecurityActions.getThreadContextClassLoader().getResource(
+            EXISTING_ZIP_RESOURCE).toURI()))
+      {
+         @Override
+         public Enumeration<? extends ZipEntry> entries()
+         {
+            throw new IllegalStateException("mock  exception");
+         }
+      };
+      Archives.create("test.jar", ZipImporter.class).importZip(testZip).as(JavaArchive.class);
+   }
+
    
    /**
     * Compare the content of the original file and what was imported.

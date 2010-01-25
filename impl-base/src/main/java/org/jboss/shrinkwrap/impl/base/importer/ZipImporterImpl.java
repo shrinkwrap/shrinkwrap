@@ -147,24 +147,28 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
    public ZipImporter importZip(ZipFile file)
    {
       Validate.notNull(file, "File must be specified");
-      
-      Enumeration<? extends ZipEntry> entries = file.entries();
-      while(entries.hasMoreElements())
-      {
-         ZipEntry entry = entries.nextElement();
 
-         // Get the entry (path) name
-         final String entryName = entry.getName();
-         
-         // Handle directories separately
-         if(entry.isDirectory())
-         {
-            archive.add(DirectoryAsset.INSTANCE, entryName);
-            continue; 
-         }
-         
-         archive.add(new ZipFileEntryAsset(file, entry), new BasicPath(entryName));
-      }
-      return this;
+       try {
+           Enumeration<? extends ZipEntry> entries = file.entries();
+           while(entries.hasMoreElements())
+           {
+              ZipEntry entry = entries.nextElement();
+
+              // Get the entry (path) name
+              final String entryName = entry.getName();
+
+              // Handle directories separately
+              if(entry.isDirectory())
+              {
+                 archive.add(DirectoryAsset.INSTANCE, entryName);
+                 continue;
+              }
+
+              archive.add(new ZipFileEntryAsset(file, entry), new BasicPath(entryName));
+           }
+       } catch (Exception e) {
+           throw new ArchiveImportException("Could not import file", e);
+       }
+       return this;
    }
 }

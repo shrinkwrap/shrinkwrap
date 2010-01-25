@@ -23,7 +23,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * ZipImporter
+ * {@link Assignable} type capable of importing ZIP content.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
@@ -38,7 +38,8 @@ public interface ZipImporter extends Assignable
    * 
    * @param stream the stream to import
    * @return Archive of the imported Zip
-   * @throws ArchiveImportException If an error occured during the import process
+   * @throws ArchiveImportException If an error occurred during the import process
+   * @throws IllegalArgumentException If no stream is specified
    */
    ZipImporter importZip(ZipInputStream stream) throws ArchiveImportException;
 
@@ -47,7 +48,8 @@ public interface ZipImporter extends Assignable
     * 
     * @param file the file to import
     * @return Archive of the imported Zip
-    * @throws ArchiveImportException If an error occured during the import process
+    * @throws ArchiveImportException If an error occurred during the import process
+    * @throws IllegalArgumentException If no file is specified
     */
    ZipImporter importZip(ZipFile file) throws ArchiveImportException;
 }
