@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jboss.shrinkwrap.glassfish;
+package org.jboss.shrinkwrap.glassfish;
 
 import java.util.logging.Logger;
 
@@ -34,6 +34,9 @@ import org.glassfish.api.embedded.Server;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.glassfish.api.ShrinkwrapReadableArchive;
+import org.jboss.shrinkwrap.glassfish.ejb.EchoBean;
+import org.jboss.shrinkwrap.glassfish.ejb.EchoLocalBusiness;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

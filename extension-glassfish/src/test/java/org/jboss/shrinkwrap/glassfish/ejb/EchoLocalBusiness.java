@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -14,18 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jboss.shrinkwrap.glassfish;
-
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.jboss.shrinkwrap.api.Assignable;
+package org.jboss.shrinkwrap.glassfish.ejb;
 
 /**
- * ShrinkWrap extension to support GlassFishs ReadableArchive.
- *
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * Local business interface of a simple test EJB
+ * 
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public interface ShrinkwrapReadableArchive extends ReadableArchive, Assignable
+public interface EchoLocalBusiness
 {
-
+   /**
+    * Returns the reference value
+    * @param value
+    * @return
+    */
+   String echo(String value);
 }
