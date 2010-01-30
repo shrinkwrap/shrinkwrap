@@ -155,7 +155,7 @@ public class JettyDeploymentIntegrationUnitTestCase
     * Doesn't really test anything now; shows end-user view only
     */
    @Test
-   public void jetty() throws Exception
+   public void requestWebapp() throws Exception
    {
 
       // Get an HTTP Client
