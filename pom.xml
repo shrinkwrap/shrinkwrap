@@ -69,8 +69,8 @@
     <module>build</module>
     <module>impl-base</module>
     <module>spi</module>
-
     <module>extension-glassfish</module>
+    <module>extension-jetty</module>
   </modules>
 
 </project>
