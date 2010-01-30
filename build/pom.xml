@@ -28,8 +28,23 @@
 
     <!-- Versioning -->
     <version.junit_junit>4.6</version.junit_junit>
+    <version.glassfish_api>3.0</version.glassfish_api>
 
   </properties>
+
+	<!-- Maven 2 Repositories -->
+	<repositories>
+		<repository>
+        	<id>java.dev.net.glassfish</id>
+        	<url>http://download.java.net/maven/glassfish</url>
+        	<releases>
+				<enabled>true</enabled>
+			</releases>
+        	<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
   <!-- SCM -->
   <scm>
@@ -146,6 +161,13 @@
   <!-- Dependency Management -->
   <dependencyManagement>
     <dependencies>
+
+		<dependency>
+			<groupId>org.glassfish.common</groupId>
+			<artifactId>glassfish-api</artifactId>
+			<version>${version.glassfish_api}</version>
+			<scope>provided</scope>
+		</dependency>
 
       <dependency>
         <groupId>junit</groupId>
