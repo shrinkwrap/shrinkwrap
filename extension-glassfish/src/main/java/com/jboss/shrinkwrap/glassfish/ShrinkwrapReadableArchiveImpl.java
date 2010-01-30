@@ -41,25 +41,27 @@ import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
 /**
- * ShrinkWrap extension to support GlassFishs ReadableArchive.
+ * ShrinkWrap extension to support GlassFishs {@link ReadableArchive}
+ * backed by an {@link Archive}
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
 public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements ShrinkwrapReadableArchive
 {
-   private Archive<?> archive;
-   
+   private final Archive<?> archive;
+
    /**
     * @param archive
     */
-   public ShrinkwrapReadableArchiveImpl(Archive<?> archive)
+   public ShrinkwrapReadableArchiveImpl(final Archive<?> archive)
    {
       Validate.notNull(archive, "Archive must be specified");
       this.archive = archive;
    }
-   
-   /* (non-Javadoc)
+
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.impl.base.AssignableBase#getArchive()
     */
    @Override
@@ -90,7 +92,8 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
       return true;
    }
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.glassfish.api.deployment.archive.ReadableArchive#exists(java.lang.String)
     */
    @Override
@@ -99,7 +102,8 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
       return archive.contains(ArchivePaths.create(path));
    }
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.glassfish.api.deployment.archive.ReadableArchive#getEntry(java.lang.String)
     */
    @Override
@@ -108,7 +112,8 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
       return archive.get(ArchivePaths.create(path)).openStream();
    }
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.glassfish.api.deployment.archive.ReadableArchive#getEntrySize(java.lang.String)
     */
    // TODO: ShrinkWrap have not know the size of a Asset. Hacking figure it out runtime. 
@@ -122,8 +127,8 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
       {
          IOUtil.copyWithClose(asset.openStream(), output);
          return output.toByteArray().length;
-      } 
-      catch (IOException e) 
+      }
+      catch (IOException e)
       {
          throw new RuntimeException(e);
       }
@@ -150,7 +155,8 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    {
    }
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.glassfish.api.deployment.archive.ReadableArchive#getSubArchive(java.lang.String)
     */
    // TODO: We should support non ShrinkWrap nested Archives as well. ie: external jar files.
@@ -158,9 +164,9 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    public ReadableArchive getSubArchive(String path) throws IOException
    {
       Asset archiveAsset = archive.get(ArchivePaths.create(path));
-      if(archiveAsset instanceof ArchiveAsset)
+      if (archiveAsset instanceof ArchiveAsset)
       {
-         return ((ArchiveAsset)archiveAsset).getArchive().as(ShrinkwrapReadableArchive.class);
+         return ((ArchiveAsset) archiveAsset).getArchive().as(ShrinkwrapReadableArchive.class);
       }
       throw new IOException(path + " not a Archive");
    }
@@ -199,8 +205,8 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    public Enumeration<String> entries()
    {
       List<String> entries = new ArrayList<String>();
-      
-      for(Entry<ArchivePath, Asset> entry : archive.getContent().entrySet()) 
+
+      for (Entry<ArchivePath, Asset> entry : archive.getContent().entrySet())
       {
          entries.add(entry.getKey().get());
       }
@@ -214,10 +220,10 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    public Enumeration<String> entries(String path)
    {
       List<String> entries = new ArrayList<String>();
-      
-      for(Entry<ArchivePath, Asset> entry : archive.getContent().entrySet()) 
+
+      for (Entry<ArchivePath, Asset> entry : archive.getContent().entrySet())
       {
-         if(entry.getKey().get().startsWith(path))
+         if (entry.getKey().get().startsWith(path))
          {
             entries.add(entry.getKey().get());
          }
@@ -243,10 +249,10 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    public Collection<String> getDirectories() throws IOException
    {
       List<String> entries = new ArrayList<String>();
-      
-      for(Entry<ArchivePath, Asset> entry : archive.getContent().entrySet()) 
+
+      for (Entry<ArchivePath, Asset> entry : archive.getContent().entrySet())
       {
-         if(entry.getValue() == DirectoryAsset.INSTANCE)
+         if (entry.getValue() == DirectoryAsset.INSTANCE)
          {
             entries.add(entry.getKey().get());
          }
@@ -261,7 +267,7 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    public Manifest getManifest() throws IOException
    {
       ArchivePath manifestPath = ArchivePaths.create("META-INF/MANIFEST.MF");
-      if(archive.contains(manifestPath)) 
+      if (archive.contains(manifestPath))
       {
          return new Manifest(archive.get(manifestPath).openStream());
       }

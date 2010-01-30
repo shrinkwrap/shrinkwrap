@@ -24,6 +24,9 @@
 
   <!-- Properties -->
   <properties>
+  
+    <!-- Versioning -->
+    <version.glassfish>3.0.1-b02</version.glassfish>
 
   </properties>
 
@@ -44,11 +47,6 @@
       <version>${project.version}</version>
     </dependency>
 
-	<dependency>
-		<groupId>org.glassfish.common</groupId>
-		<artifactId>glassfish-api</artifactId>
-	</dependency>
-
     <!-- 
     External Projects
      -->
@@ -57,35 +55,43 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+    
+    <!-- org.glassfish --> 
+    <dependency>
+      <groupId>org.glassfish.common</groupId>
+      <artifactId>glassfish-api</artifactId>
+      <version>${version.glassfish}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.extras</groupId>
+      <artifactId>glassfish-embedded-all</artifactId>
+      <version>${version.glassfish}</version>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
 
   <!-- Build Configuration -->
   <build>
+  
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- Resources Plugin -->
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.3</version> <!-- Required for empty dirs config to be used -->
-        <configuration>
-          <!-- For the importer tests, we must copy empty directories -->
-          <includeEmptyDirs>true</includeEmptyDirs>
-        </configuration>
-      </plugin>
 
     </plugins>
+    
   </build>
+  
+  <!-- Maven 2 Repositories -->
+  <repositories>
+    <repository>
+      <id>java.dev.net.glassfish</id>
+      <url>http://download.java.net/maven/glassfish</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 </project>
 

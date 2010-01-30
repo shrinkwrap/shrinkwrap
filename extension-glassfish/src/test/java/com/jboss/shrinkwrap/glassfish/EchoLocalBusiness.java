@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -16,24 +16,13 @@
  */
 package com.jboss.shrinkwrap.glassfish;
 
-import junit.framework.Assert;
-
-import org.jboss.shrinkwrap.api.Archives;
-import org.junit.Test;
-
-
 /**
- * ShrinkwrapReadableArchiveTestCase
- *
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * 
+ * 
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ShrinkwrapReadableArchiveTestCase
+public interface EchoLocalBusiness
 {
-   @Test
-   public void shouldBeAbleToLoadExtension() throws Exception 
-   {
-      ShrinkwrapReadableArchive archive = Archives.create("test", ShrinkwrapReadableArchive.class);
-      Assert.assertNotNull(archive);
-   }
+   String echo(String value);
 }
