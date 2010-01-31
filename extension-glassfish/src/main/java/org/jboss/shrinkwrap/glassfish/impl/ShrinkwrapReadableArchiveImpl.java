@@ -16,7 +16,6 @@
  */
 package org.jboss.shrinkwrap.glassfish.impl;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -39,7 +38,6 @@ import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
-import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
 /**
  * ShrinkWrap extension to support GlassFishs {@link ReadableArchive}
@@ -117,22 +115,11 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
     * {@inheritDoc}
     * @see org.glassfish.api.deployment.archive.ReadableArchive#getEntrySize(java.lang.String)
     */
-   // TODO: ShrinkWrap have not know the size of a Asset. Hacking figure it out runtime. 
-   // Needed by GlassFish for buff sizes.
    @Override
    public long getEntrySize(String path)
    {
-      Asset asset = archive.get(ArchivePaths.create(path));
-      ByteArrayOutputStream output = new ByteArrayOutputStream();
-      try
-      {
-         IOUtil.copyWithClose(asset.openStream(), output);
-         return output.toByteArray().length;
-      }
-      catch (IOException e)
-      {
-         throw new RuntimeException(e);
-      }
+      // Per API, signal that we don't know by using 0. 
+      return 0;
    }
 
    /**

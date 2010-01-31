@@ -26,13 +26,13 @@ import junit.framework.TestCase;
 
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.embedded.ContainerBuilder;
-import org.glassfish.api.embedded.EmbeddedContainer;
 import org.glassfish.api.embedded.EmbeddedDeployer;
 import org.glassfish.api.embedded.EmbeddedFileSystem;
 import org.glassfish.api.embedded.LifecycleException;
 import org.glassfish.api.embedded.Server;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.glassfish.api.ShrinkwrapReadableArchive;
 import org.jboss.shrinkwrap.glassfish.ejb.EchoBean;
@@ -79,24 +79,37 @@ public class GlassFishDeploymentUnitTestCase
    private static Context namingContext;
 
    /**
-    * Name of the deployment
+    * Name of the deployments
     */
-   private static final String NAME_DEPLOYMENT = "slsb.jar";
+   private static final String NAME_DEPLOYMENT_EAR = "slsb.ear";
+
+   private static final String NAME_DEPLOYMENT_JAR = "slsb.jar";
 
    /**
-    * Name in JNDI under which the test EJB will be registered 
+    * Names in JNDI under which the test EJB will be registered for the JAR/EAR
     */
-   private static final String NAME_JNDI = "java:global/" + NAME_DEPLOYMENT + "/" + EchoBean.class.getSimpleName()
+   private static final String NAME_JNDI_JAR = "java:global/" + NAME_DEPLOYMENT_JAR + "/"
+         + EchoBean.class.getSimpleName() + "!" + EchoLocalBusiness.class.getName();
+
+   private static final String NAME_JNDI_EAR = "java:global/" + NAME_DEPLOYMENT_EAR + "/"
+         + NAME_DEPLOYMENT_JAR.substring(0, NAME_DEPLOYMENT_JAR.indexOf('.')) + "/" + EchoBean.class.getSimpleName()
          + "!" + EchoLocalBusiness.class.getName();
 
    /**
-    * EJB Archive to be deployed
+    * EJB Archives to be deployed
     */
-   private static final ShrinkwrapReadableArchive archive;
+   private static final ShrinkwrapReadableArchive enterpriseArchive;
+
+   private static final ShrinkwrapReadableArchive javaArchive;
    static
    {
-      archive = Archives.create(NAME_DEPLOYMENT, JavaArchive.class).addClasses(EchoLocalBusiness.class, EchoBean.class)
-            .as(ShrinkwrapReadableArchive.class);
+
+      // Create the packaging
+      javaArchive = Archives.create(NAME_DEPLOYMENT_JAR, JavaArchive.class).addClasses(EchoLocalBusiness.class,
+            EchoBean.class).as(ShrinkwrapReadableArchive.class);
+      enterpriseArchive = Archives.create(NAME_DEPLOYMENT_EAR, EnterpriseArchive.class).addModule(
+            javaArchive.as(JavaArchive.class)).as(ShrinkwrapReadableArchive.class);
+
    }
 
    //-------------------------------------------------------------------------------------||
@@ -119,8 +132,7 @@ public class GlassFishDeploymentUnitTestCase
       server = builder.build();
 
       // Add an EJB Container
-      final ContainerBuilder<EmbeddedContainer> containerBuilder = server.createConfig(ContainerBuilder.Type.ejb);
-      server.addContainer(containerBuilder);
+      server.addContainer(ContainerBuilder.Type.all);
 
       // Set the deployer
       deployer = server.getDeployer();
@@ -144,9 +156,12 @@ public class GlassFishDeploymentUnitTestCase
    public void deploy()
    {
 
-      final DeployCommandParameters params = new DeployCommandParameters();
-      params.name = NAME_DEPLOYMENT;
-      deployer.deploy(archive, params);
+      final DeployCommandParameters paramsEar = new DeployCommandParameters();
+      paramsEar.name = NAME_DEPLOYMENT_EAR;
+      final DeployCommandParameters paramsJar = new DeployCommandParameters();
+      paramsJar.name = NAME_DEPLOYMENT_JAR;
+      deployer.deploy(enterpriseArchive, paramsEar);
+      deployer.deploy(javaArchive, paramsJar);
    }
 
    /**
@@ -156,7 +171,8 @@ public class GlassFishDeploymentUnitTestCase
    @After
    public void undeploy()
    {
-      deployer.undeploy(NAME_DEPLOYMENT, null);
+      deployer.undeploy(NAME_DEPLOYMENT_EAR, null);
+      deployer.undeploy(NAME_DEPLOYMENT_JAR, null);
    }
 
    //-------------------------------------------------------------------------------------||
@@ -164,14 +180,41 @@ public class GlassFishDeploymentUnitTestCase
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Ensures the EJB can be looked up in JNDI and invoked upon, proving
-    * the deployment was a success
+    * Ensures the EJB from a JAR deployment can be looked up in JNDI and 
+    * invoked upon, proving the deployment was a success
     */
    @Test
-   public void testSlsb() throws NamingException
+   public void testSlsbFromJarDeployment() throws NamingException
    {
+      this.testSlsb(NAME_JNDI_JAR);
+   }
+
+   /**
+    * Ensures the EJB from a EAR deployment can be looked up in JNDI and 
+    * invoked upon, proving the deployment was a success
+    * 
+    * SHRINKWRAP-126
+    */
+   @Test
+   public void testSlsbFromEarDeployment() throws NamingException
+   {
+      this.testSlsb(NAME_JNDI_EAR);
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Internal Helper Methods ------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Ensures the EJB from a JAR deployment can be looked up in JNDI and 
+    * invoked upon, proving the deployment was a success
+    */
+   private void testSlsb(final String jndiName) throws NamingException
+   {
+      assert jndiName != null : "JNDI Name must be specified";
+
       // Get the proxy
-      final EchoLocalBusiness bean = (EchoLocalBusiness) namingContext.lookup(NAME_JNDI);
+      final EchoLocalBusiness bean = (EchoLocalBusiness) namingContext.lookup(jndiName);
 
       // Define the expected return value
       final String expected = "ShrinkWrap>GlassFish (booyeah)";
