@@ -17,7 +17,6 @@
 package org.jboss.shrinkwrap.api.spec;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.container.DirectoryContainer;
 import org.jboss.shrinkwrap.api.container.EnterpriseContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
@@ -39,8 +38,7 @@ public interface EnterpriseArchive
          ResourceContainer<EnterpriseArchive>,
          ManifestContainer<EnterpriseArchive>,
          LibraryContainer<EnterpriseArchive>,
-         EnterpriseContainer<EnterpriseArchive>,
-         DirectoryContainer<EnterpriseArchive>
+         EnterpriseContainer<EnterpriseArchive>
 {
 
 }

@@ -17,7 +17,6 @@
 package org.jboss.shrinkwrap.api.spec;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.container.DirectoryContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceAdapterContainer;
@@ -38,7 +37,6 @@ public interface ResourceAdapterArchive
          ManifestContainer<ResourceAdapterArchive>,
          LibraryContainer<ResourceAdapterArchive>,
          ResourceContainer<ResourceAdapterArchive>,
-         ResourceAdapterContainer<ResourceAdapterArchive>,
-         DirectoryContainer<ResourceAdapterArchive>
+         ResourceAdapterContainer<ResourceAdapterArchive>
 {
 }

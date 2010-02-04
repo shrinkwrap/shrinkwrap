@@ -18,10 +18,9 @@ package org.jboss.shrinkwrap.impl.base.spec;
 
 import java.util.UUID;
 
-import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
-import org.jboss.shrinkwrap.api.container.DirectoryContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
@@ -125,16 +124,6 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
 
    @Override
    protected LibraryContainer<WebArchive> getLibraryContainer()
-   {
-      return archive;
-   }
-   
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.test.DynamicContainerTestBase#getDirectoryContainer()
-    */
-   @Override
-   protected DirectoryContainer<WebArchive> getDirectoryContainer()
    {
       return archive;
    }

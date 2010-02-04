@@ -20,8 +20,10 @@ import java.util.Arrays;
 import java.util.Map;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Filters;
@@ -281,6 +283,30 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       catch (IllegalArgumentException expectedException)
       {
       }
+   }
+
+   /**
+    * Tests that empty directories may be added to the archive
+    * @throws Exception
+    */
+   @Test
+   public void testAddEmptyDirectories() throws Exception
+   {
+      Archive<T> archive = getArchive();
+
+      // Get Paths to add
+      final ArchivePath path1 = ArchivePaths.create("path/to/dir");
+      final ArchivePath path2 = ArchivePaths.create("path/to/dir2");
+      final ArchivePath path3 = ArchivePaths.create("path/to");
+
+      // Add
+      archive.addDirectories(path1, path2, path3);
+
+      // Test
+      final String message = "Should be able to add directory: ";
+      TestCase.assertTrue(message + path1, archive.contains(path1));
+      TestCase.assertTrue(message + path2, archive.contains(path2));
+      TestCase.assertTrue(message + path3, archive.contains(path3));
    }
 
    /**

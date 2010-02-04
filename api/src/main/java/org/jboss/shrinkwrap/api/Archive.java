@@ -76,6 +76,42 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If either the target or asset is not specified 
     */
    T add(Asset asset, String target) throws IllegalArgumentException;
+   
+   /**
+    * Adds the specified directory.
+    * 
+    * @param path The path to add
+    * @return This archive
+    * @throws IllegalArgumentException If no path was specified
+    */
+   T addDirectory(String path) throws IllegalArgumentException;
+
+   /**
+    * Adds the specified directory.
+    * 
+    * @param paths The paths to add
+    * @return This archive
+    * @throws IllegalArgumentException If no paths were specified
+    */
+   T addDirectories(String... paths) throws IllegalArgumentException;
+
+   /**
+    * Adds the specified directory.
+    * 
+    * @param path The path to add
+    * @return This archive
+    * @throws IllegalArgumentException If no path was specified
+    */
+   T addDirectory(ArchivePath path) throws IllegalArgumentException;
+
+   /**
+    * Adds the specified directory.
+    * 
+    * @param paths The paths to add
+    * @return This archive
+    * @throws IllegalArgumentException If no paths were specified
+    */
+   T addDirectories(ArchivePath... paths) throws IllegalArgumentException;
 
    /**
     * Obtains the asset located at the specified path
