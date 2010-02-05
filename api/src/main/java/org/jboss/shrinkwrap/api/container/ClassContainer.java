@@ -31,7 +31,7 @@ import org.jboss.shrinkwrap.api.Filter;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface ClassContainer<T extends Archive<T>>
+public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<T>
 {
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
