@@ -31,7 +31,7 @@ import org.jboss.shrinkwrap.api.ArchivePath;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public enum VerboseFormatter implements Formatter {
+enum VerboseFormatter implements Formatter {
    INSTANCE;
 
    //-------------------------------------------------------------------------------------||

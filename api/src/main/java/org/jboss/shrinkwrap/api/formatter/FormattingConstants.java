@@ -38,4 +38,9 @@ interface FormattingConstants
     * Space character
     */
    char SPACE = ' ';
+
+   /**
+    * Slash character.
+    */
+   char SLASH = '/';
 }

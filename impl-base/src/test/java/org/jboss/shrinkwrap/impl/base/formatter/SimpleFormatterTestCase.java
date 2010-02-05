@@ -17,10 +17,10 @@
 package org.jboss.shrinkwrap.impl.base.formatter;
 
 import org.jboss.shrinkwrap.api.formatter.Formatter;
-import org.jboss.shrinkwrap.api.formatter.SimpleFormatter;
+import org.jboss.shrinkwrap.api.formatter.Formatters;
 
 /**
- * Ensures that the {@link SimpleFormatter} is functioning
+ * Ensures that the {@link Formatters.SIMPLE} is functioning
  * as expected
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
@@ -49,7 +49,7 @@ public class SimpleFormatterTestCase extends FormatterTestBase
    @Override
    Formatter getFormatter()
    {
-      return SimpleFormatter.INSTANCE;
+      return Formatters.SIMPLE;
    }
 
    /**

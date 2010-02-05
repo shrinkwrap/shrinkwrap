@@ -17,10 +17,10 @@
 package org.jboss.shrinkwrap.impl.base.formatter;
 
 import org.jboss.shrinkwrap.api.formatter.Formatter;
-import org.jboss.shrinkwrap.api.formatter.VerboseFormatter;
+import org.jboss.shrinkwrap.api.formatter.Formatters;
 
 /**
- * Ensures that the {@link VerboseFormatter} is functioning
+ * Ensures that the {@link Formatters.VERBOSE} is functioning
  * as expected
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
@@ -47,7 +47,7 @@ public class VerboseFormatterTestCase extends FormatterTestBase
    @Override
    Formatter getFormatter()
    {
-      return VerboseFormatter.INSTANCE;
+      return Formatters.VERBOSE;
    }
 
    /**

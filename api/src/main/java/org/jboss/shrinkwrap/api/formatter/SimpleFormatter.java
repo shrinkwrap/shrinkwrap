@@ -25,7 +25,7 @@ import org.jboss.shrinkwrap.api.Archive;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public enum SimpleFormatter implements Formatter {
+enum SimpleFormatter implements Formatter {
    INSTANCE;
 
    //-------------------------------------------------------------------------------------||

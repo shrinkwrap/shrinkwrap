@@ -232,12 +232,12 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
        * by recursing first and adding parents that
        * haven't already been written.
        */
-      final ArchivePath parent = PathUtil.getParent(path);
+      final ArchivePath parent = path.getParent();
       if (parent != null && !this.pathsExported.contains(parent))
       {
          // If this is not the root
          // SHRINKWRAP-96
-         final ArchivePath grandParent = PathUtil.getParent(parent);
+         final ArchivePath grandParent = parent.getParent();
          final boolean isRoot = grandParent == null;
          if (!isRoot)
          {
@@ -355,7 +355,7 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
    private boolean isParentOfSpecifiedHierarchy(final ArchivePath path, final ArchivePath compare)
    {
       // If we've reached the root, we're not a parent of any paths already exported
-      final ArchivePath parent = PathUtil.getParent(compare);
+      final ArchivePath parent = compare.getParent();
       if (parent == null)
       {
          return false;

@@ -235,17 +235,17 @@ public final class PathUtil
       // Return as-is
       return resolved;
    }
-   
+
    /**
     * Obtains the parent of this Path, if exists, else null.
-    * For instance if the Path is "/my/path", the parent 
+    * For instance if the Path is "/my/path", the parent
     * will be "/my".  Each call will result in a new object reference,
     * though subsequent calls upon the same Path will be equal by value.
     * @return
-    * 
+    *
     * @param path The path whose parent context we should return
     */
-   public static ArchivePath getParent(final ArchivePath path)
+   static ArchivePath getParent(final ArchivePath path)
    {
       // Precondition checks
       assert path != null : "Path must be specified";

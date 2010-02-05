@@ -134,6 +134,16 @@ public class BasicPath implements ArchivePath, Comparable<ArchivePath>
 
    /**
     * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.ArchivePath#getParent()
+    */
+   @Override
+   public ArchivePath getParent()
+   {
+      return PathUtil.getParent(this);
+   }
+
+   /**
+    * {@inheritDoc}
     * @see java.lang.Comparable#compareTo(java.lang.Object)
     */
    @Override

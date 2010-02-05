@@ -31,7 +31,24 @@ public enum Formatters implements Formatter {
    //-------------------------------------------------------------------------------------||
    // Types ------------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-   VERBOSE(VerboseFormatter.INSTANCE), SIMPLE(SimpleFormatter.INSTANCE);
+   /**
+    * {@link Formatter} implementation to provide an "ls -l"-esque
+    * output for an {@link Archive}, listing all internal contents
+    * in sorted order.
+    */
+   VERBOSE(VerboseFormatter.INSTANCE),
+
+   /**
+    * {@link Formatter} implementation to provide a simple, one-line
+    * description of an {@link Archive}, including its name.
+    */
+   SIMPLE(SimpleFormatter.INSTANCE),
+
+   /**
+    * {@link Formatter} implementation to provide a full description
+    * of the contents of the archive, similar to jar -tf archive.
+    */
+   FULL(FullFormatter.INSTANCE);
 
    //-------------------------------------------------------------------------------------||
    // Internal Members -------------------------------------------------------------------||

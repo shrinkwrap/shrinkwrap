@@ -20,8 +20,6 @@ import java.util.Map;
 
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
-import org.jboss.shrinkwrap.api.formatter.SimpleFormatter;
-import org.jboss.shrinkwrap.api.formatter.VerboseFormatter;
 
 /**
  * Archive
@@ -222,7 +220,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
    
    /**
     * Acts as a shorthand for {@link Archive#toString(Formatter)}
-    * where the {@link SimpleFormatter} is leveraged.
+    * where the {@link Formatters#SIMPLE} is leveraged.
     * 
     * @return
     */
@@ -230,7 +228,8 @@ public interface Archive<T extends Archive<T>> extends Assignable
 
    /**
     * If "true" is specified, acts as a shorthand for {@link Archive#toString(Formatter)}
-    * where the {@link VerboseFormatter} is leveraged.  Otherwise the {@link SimpleFormatter}
+    * where the {@link Formatters#VERBOSE} is leveraged.  Otherwise the
+    * {@link Formatters#SIMPLE}
     * will be used (equivalent to {@link Archive#toString()}).
     * 
     * @return
