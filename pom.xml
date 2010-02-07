@@ -71,6 +71,7 @@
     <module>spi</module>
     <module>extension-glassfish</module>
     <module>extension-jetty</module>
+    <module>extension-openejb</module>
   </modules>
 
 </project>
