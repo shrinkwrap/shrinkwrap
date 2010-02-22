@@ -31,6 +31,15 @@ enum VerboseFormatter implements Formatter {
    INSTANCE;
 
    //-------------------------------------------------------------------------------------||
+   // Class Members ----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+   
+   /**
+    * Root character "/"
+    */
+   private static final String ROOT = "/";
+   
+   //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
@@ -48,7 +57,7 @@ enum VerboseFormatter implements Formatter {
          .append(FormattingConstants.NEWLINE);
 
       // format recursively, except the parent 
-      Node rootNode = archive.get("/");
+      Node rootNode = archive.get(ROOT);
       for (Node child : rootNode.getChildren()) 
       {
          format(sb, child);

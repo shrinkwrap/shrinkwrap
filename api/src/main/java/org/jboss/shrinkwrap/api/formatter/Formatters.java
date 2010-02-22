@@ -42,13 +42,7 @@ public enum Formatters implements Formatter {
     * {@link Formatter} implementation to provide a simple, one-line
     * description of an {@link Archive}, including its name.
     */
-   SIMPLE(SimpleFormatter.INSTANCE),
-
-   /**
-    * {@link Formatter} implementation to provide a full description
-    * of the contents of the archive, similar to jar -tf archive.
-    */
-   FULL(FullFormatter.INSTANCE);
+   SIMPLE(SimpleFormatter.INSTANCE);
 
    //-------------------------------------------------------------------------------------||
    // Internal Members -------------------------------------------------------------------||
