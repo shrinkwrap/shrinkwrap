@@ -28,6 +28,7 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
@@ -247,7 +248,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.declarchive.api.Archive#get(org.jboss.declarchive.api.Path)
     */
    @Override
-   public Asset get(ArchivePath path)
+   public Node get(ArchivePath path)
    {
       return archive.get(path);
    }
@@ -256,7 +257,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.declarchive.api.Archive#get(java.lang.String)
     */
    @Override
-   public Asset get(String path) throws IllegalArgumentException
+   public Node get(String path) throws IllegalArgumentException
    {
       return archive.get(path);
    }
@@ -265,7 +266,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.declarchive.api.Archive#getContent()
     */
    @Override
-   public Map<ArchivePath, Asset> getContent()
+   public Map<ArchivePath, Node> getContent()
    {
       return archive.getContent();
    }
@@ -274,7 +275,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.Archive#getContent(org.jboss.shrinkwrap.api.Filter)
     */
    @Override
-   public Map<ArchivePath, Asset> getContent(Filter<ArchivePath> filter)
+   public Map<ArchivePath, Node> getContent(Filter<ArchivePath> filter)
    {
       return archive.getContent(filter);
    }

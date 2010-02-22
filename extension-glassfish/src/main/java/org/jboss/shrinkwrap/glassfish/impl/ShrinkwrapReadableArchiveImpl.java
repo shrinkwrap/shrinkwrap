@@ -32,12 +32,11 @@ import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.glassfish.api.ShrinkwrapReadableArchive;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
-import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 
 /**
  * ShrinkWrap extension to support GlassFishs {@link ReadableArchive}
@@ -108,7 +107,7 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    @Override
    public InputStream getEntry(String path) throws IOException
    {
-      return archive.get(ArchivePaths.create(path)).openStream();
+      return archive.get(ArchivePaths.create(path)).getAsset().openStream();
    }
 
    /**
@@ -151,10 +150,10 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    @Override
    public ReadableArchive getSubArchive(String path) throws IOException
    {
-      Asset archiveAsset = archive.get(ArchivePaths.create(path));
-      if (archiveAsset instanceof ArchiveAsset)
+      Node archiveNode = archive.get(ArchivePaths.create(path));
+      if (archiveNode.getAsset() instanceof ArchiveAsset)
       {
-         return ((ArchiveAsset) archiveAsset).getArchive().as(ShrinkwrapReadableArchive.class);
+         return ((ArchiveAsset) archiveNode.getAsset()).getArchive().as(ShrinkwrapReadableArchive.class);
       }
       throw new IOException(path + " not a Archive");
    }
@@ -194,9 +193,12 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    {
       List<String> entries = new ArrayList<String>();
 
-      for (Entry<ArchivePath, Asset> entry : archive.getContent().entrySet())
+      for (Entry<ArchivePath, Node> entry : archive.getContent().entrySet())
       {
-         entries.add(entry.getKey().get());
+         if (entry.getValue().getAsset() != null) 
+         {
+            entries.add(entry.getKey().get());
+         }
       }
       return Collections.enumeration(entries);
    }
@@ -209,11 +211,14 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    {
       List<String> entries = new ArrayList<String>();
 
-      for (Entry<ArchivePath, Asset> entry : archive.getContent().entrySet())
+      for (Entry<ArchivePath, Node> entry : archive.getContent().entrySet())
       {
          if (entry.getKey().get().startsWith(path))
          {
-            entries.add(entry.getKey().get());
+            if (entry.getValue().getAsset() != null) 
+            {
+               entries.add(entry.getKey().get());
+            }
          }
       }
       return Collections.enumeration(entries);
@@ -238,9 +243,9 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    {
       List<String> entries = new ArrayList<String>();
 
-      for (Entry<ArchivePath, Asset> entry : archive.getContent().entrySet())
+      for (Entry<ArchivePath, Node> entry : archive.getContent().entrySet())
       {
-         if (entry.getValue() == DirectoryAsset.INSTANCE)
+         if (entry.getValue().getAsset() == null)
          {
             entries.add(entry.getKey().get());
          }
@@ -257,7 +262,7 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
       ArchivePath manifestPath = ArchivePaths.create("META-INF/MANIFEST.MF");
       if (archive.contains(manifestPath))
       {
-         return new Manifest(archive.get(manifestPath).openStream());
+         return new Manifest(archive.get(manifestPath).getAsset().openStream());
       }
       return null;
    }
@@ -293,6 +298,6 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    @Override
    public boolean isDirectory(String path)
    {
-      return archive.get(ArchivePaths.create(path)) == DirectoryAsset.INSTANCE;
+      return archive.get(ArchivePaths.create(path)).getAsset() == null;
    }
 }

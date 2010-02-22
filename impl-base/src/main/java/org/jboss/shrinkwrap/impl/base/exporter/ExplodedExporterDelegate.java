@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
@@ -79,10 +79,10 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#processAsset(ArchivePath, Asset)
+    * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#processNode(ArchivePath, Node)
     */
    @Override
-   protected void processAsset(ArchivePath path, Asset asset)
+   protected void processNode(ArchivePath path, Node node)
    {
       // Get path to file
       final String assetFilePath = path.get();
@@ -101,9 +101,9 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
       }
 
       // Handle Archive assets separately 
-      if (asset instanceof ArchiveAsset)
+      if (node != null && node.getAsset() instanceof ArchiveAsset)
       {
-         ArchiveAsset nesteArchiveAsset = ArchiveAsset.class.cast(asset);
+         ArchiveAsset nesteArchiveAsset = ArchiveAsset.class.cast(node.getAsset());
          processArchiveAsset(assetParent, nesteArchiveAsset);
          return;
       }
@@ -111,7 +111,7 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
       // Handle directory assets separately
       try
       {
-         final boolean isDirectory = (asset.openStream() == null);
+         final boolean isDirectory = (node.getAsset() == null);
          if (isDirectory)
          {
             // If doesn't already exist
@@ -135,7 +135,7 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
                   log.fine("Writing asset " + path.get() + " to " + assetFile.getAbsolutePath());
                }
                // Get the asset streams
-               final InputStream assetInputStream = asset.openStream();
+               final InputStream assetInputStream = node.getAsset().openStream();
                final FileOutputStream assetFileOutputStream = new FileOutputStream(assetFile);
                final BufferedOutputStream assetBufferedOutputStream = new BufferedOutputStream(assetFileOutputStream,
                      8192);
@@ -152,7 +152,7 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
       }
       catch (final Exception e)
       {
-         throw new ArchiveExportException("Unexpected error encountered in export of " + asset, e);
+         throw new ArchiveExportException("Unexpected error encountered in export of " + node, e);
       }
    }
 

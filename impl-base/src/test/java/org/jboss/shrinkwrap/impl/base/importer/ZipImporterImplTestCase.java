@@ -232,7 +232,7 @@ public class ZipImporterImplTestCase
          
          byte[] originalContent = IOUtil.asByteArray(testZip.getInputStream(originalEntry));
          byte[] importedContent = IOUtil.asByteArray(
-               importedArchive.get(new BasicPath(originalEntry.getName())).openStream());
+               importedArchive.get(new BasicPath(originalEntry.getName())).getAsset().openStream());
 
          log.fine(
                Arrays.equals(importedContent, originalContent) + "\t" +

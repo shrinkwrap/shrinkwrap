@@ -22,14 +22,13 @@ import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Archives;
-import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.Archives;
+import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
-import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Assert;
 
@@ -194,8 +193,8 @@ public abstract class ExportTestBase
       archive.add(nestedArchiveTwo, NESTED_PATH);
       
       // Add empty directories
-      archive.add(DirectoryAsset.INSTANCE, PATH_EMPTY_NESTED_DIR);
-      archive.add(DirectoryAsset.INSTANCE, PATH_EMPTY_TOPLEVEL_DIR);
+      archive.addDirectory(PATH_EMPTY_NESTED_DIR);
+      archive.addDirectory(PATH_EMPTY_TOPLEVEL_DIR);
 
       // Return archive
       return archive;

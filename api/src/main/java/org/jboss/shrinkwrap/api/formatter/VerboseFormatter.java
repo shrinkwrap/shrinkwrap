@@ -16,12 +16,8 @@
  */
 package org.jboss.shrinkwrap.api.formatter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.Node;
 
 /**
  * {@link Formatter} implementation to provide an "ls -l"-esque
@@ -47,29 +43,37 @@ enum VerboseFormatter implements Formatter {
          throw new IllegalArgumentException("archive must be specified");
       }
 
-      // Make a builder
-      final StringBuilder sb = new StringBuilder();
+      // Start the output with the name of the archive
+      StringBuilder sb = new StringBuilder(archive.getName()).append(FormattingConstants.COLON)
+         .append(FormattingConstants.NEWLINE);
 
-      // Add the name
-      sb.append(archive.getName()).append(FormattingConstants.COLON).append(FormattingConstants.NEWLINE);
-
-      // Sort all paths
-      final List<ArchivePath> paths = new ArrayList<ArchivePath>(archive.getContent().keySet());
-      Collections.sort(paths);
-      final int numPaths = paths.size();
-      int count = 0;
-      for (final ArchivePath path : paths)
+      // format recursively, except the parent 
+      Node rootNode = archive.get("/");
+      for (Node child : rootNode.getChildren()) 
       {
-         count++;
-         sb.append(path.get());
-         if (count != numPaths)
-         {
-            sb.append(FormattingConstants.NEWLINE);
-         }
+         format(sb, child);
       }
-
-      // Return
+      
+      // remove the last NEWLINE
+      sb.deleteCharAt(sb.length() - 1);
+      
       return sb.toString();
+   }
+   
+   private void format(StringBuilder sb, Node node) 
+   {
+      sb.append(node.getPath().get());
+      if (node.getAsset() == null) 
+      {
+         sb.append(FormattingConstants.SLASH);
+      }
+      
+      sb.append(FormattingConstants.NEWLINE);
+      
+      for (Node child : node.getChildren()) 
+      {
+         format(sb, child);
+      }
    }
 
 }

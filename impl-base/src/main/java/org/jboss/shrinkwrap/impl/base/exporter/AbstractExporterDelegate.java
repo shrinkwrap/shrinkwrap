@@ -16,16 +16,14 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.Node;
 
 /**
  * AbstractExporterDelegate
@@ -81,23 +79,28 @@ public abstract class AbstractExporterDelegate<T>
          log.fine("Exporting archive - " + archive.getName());
       }
 
-      // Obtain all contents
-      final Map<ArchivePath, Asset> content = archive.getContent();
+      // Obtain all content
+      final Node rootNode = archive.get(ArchivePaths.create("/"));
       
-      // Process in reverse order such that we can check for parent relationships, 
-      // and not write directories twice
-      final List<ArchivePath> paths = new ArrayList<ArchivePath>(content.keySet());
-      Collections.reverse(paths);
-      
-      // For every Path in the Archive
-      for (final ArchivePath entry : paths)
+      // recursively process the node childs
+      for (Node child : rootNode.getChildren()) 
       {
-         // Get Asset information
-         final ArchivePath path = entry;
-         final Asset asset = content.get(entry);
-
-         // Process the asset
-         processAsset(path, asset);
+         processNode(child);
+      }
+   }
+   
+   /**
+    * Recursive call to process all the node hierarchy
+    * @param node
+    */
+   protected void processNode(final Node node) 
+   {
+      processNode(node.getPath(), node);
+      
+      Set<Node> children = node.getChildren();
+      for (Node child : children) 
+      {
+         processNode(child);
       }
    }
 
@@ -106,12 +109,12 @@ public abstract class AbstractExporterDelegate<T>
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Template method for processing a single asset.
+    * Template method for processing a single node.
     * 
     * @param path
-    * @param asset
+    * @param node
     */
-   protected abstract void processAsset(ArchivePath path, Asset asset);
+   protected abstract void processNode(ArchivePath path, Node node);
 
    /**
     * Return the results of the export.  Should process any tasks required to finalize the export.  

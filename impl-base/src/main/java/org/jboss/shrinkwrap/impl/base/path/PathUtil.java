@@ -262,7 +262,7 @@ public final class PathUtil
       // Get the parent context
       final String sub = resolvedContext.substring(0, lastIndex);
       // Return
-      return new BasicPath(PathUtil.optionallyAppendSlash(sub));
+      return new BasicPath(sub);
    }
 
    //-------------------------------------------------------------------------------------||

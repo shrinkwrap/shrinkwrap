@@ -557,7 +557,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       Assert.assertEquals(
             "Should only be one class added",
             1,
-            getArchive().getContent().size());
+            numAssets(getArchive()));
 
       Assert.assertTrue(
             "A class should be located at " + expectedPath.get(), 

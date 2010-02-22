@@ -22,15 +22,17 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.Filter;
-import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.IllegalArchivePathException;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
+import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 
 /**
  * MemoryMapArchiveBase
@@ -46,32 +48,13 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 {
 
    //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(MemoryMapArchiveBase.class.getName());
-
-   /**
-    * Newline character
-    */
-   private static final char NEWLINE = '\n';
-
-   /**
-    * Colon character
-    */
-   private static final char COLON = ':';
-
-   //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Storage for the {@link Asset}s.
+    * Storage for the {@link Node}s.
     */
-   private final Map<ArchivePath, Asset> content = new ConcurrentHashMap<ArchivePath, Asset>();
+   private final Map<ArchivePath, NodeImpl> content = new ConcurrentHashMap<ArchivePath, NodeImpl>();
 
    /**
     * Storage for the {@link ArchiveAsset}s.  Used to help get access to nested archive content.
@@ -106,27 +89,52 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
    public MemoryMapArchiveBase(final String archiveName, ExtensionLoader extensionLoader)
    {
       super(archiveName, extensionLoader);
+      
+      // Add the root node to the content
+      ArchivePath rootPath = new BasicPath("/");
+      content.put(rootPath, new NodeImpl(rootPath));
    }
 
    //-------------------------------------------------------------------------------------||
    // Required Implementations - Archive -------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
    public T add(Asset asset, ArchivePath path)
    {
       Validate.notNull(asset, "No asset was specified");
       Validate.notNull(path, "No path was specified");
+      
+      // Retrieve the parent
+      NodeImpl parentNode = obtainParent(path.getParent());
+      
+      // Check if a the path already contains a node so we remove it from the parent's children
+      NodeImpl existingNode = content.get(path);
+      if (parentNode != null && existingNode != null) 
+      {
+         parentNode.removeChild(existingNode);
+      }
+      
+      // Add the node to the content of the archive
+      NodeImpl node = new NodeImpl(path, asset);
+      content.put(path, node);
 
-      content.put(path, asset);
+      // Add the new node to the parent as a child
+      if (parentNode != null) 
+      {
+         parentNode.addChild(node);
+      }
+      
       return covariantReturn();
    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.impl.base.ArchiveBase#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.ArchiveBase#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
    public T add(Archive<?> archive, ArchivePath path)
@@ -138,21 +146,52 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
       ArchivePath archivePath = new BasicPath(path, archive.getName());
 
       // Get the Asset that was just added 
-      Asset asset = get(archivePath);
+      Node node = get(archivePath);
 
       // Make sure it is an ArchiveAsset
-      if (asset instanceof ArchiveAsset)
+      if (node.getAsset() != null && node.getAsset() instanceof ArchiveAsset)
       {
-         ArchiveAsset archiveAsset = ArchiveAsset.class.cast(asset);
+         ArchiveAsset archiveAsset = ArchiveAsset.class.cast(node.getAsset());
          // Add asset to ArchiveAsset Map
          nestedArchives.put(archivePath, archiveAsset);
       }
 
       return covariantReturn();
    }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#addDirectory(org.jboss.shrinkwrap.api.ArchivePath)
+    */
+   @Override
+   public T addDirectory(final ArchivePath path) throws IllegalArgumentException
+   {
+      // Precondition check
+      Validate.notNull(path, "path must be specified");
+      
+      // Adjust the path to remove any trailing slash
+      ArchivePath adjustedPath = new BasicPath(PathUtil.optionallyRemoveFollowingSlash(path.get()));
+      
+      // Check if it exists. If it doesn't, create it and add it. The same with all the
+      // non-existing parents
+      if (!contains(adjustedPath)) 
+      {
+         NodeImpl node = new NodeImpl(adjustedPath);
+         content.put(adjustedPath, node);
+         
+         // retrieve the parent and add the node as a child
+         NodeImpl parentNode = obtainParent(adjustedPath.getParent());
+         if (parentNode != null) {
+            parentNode.addChild(node);
+         }
+      }
+      
+      return covariantReturn();
+   }
 
-   /* {@inheritDoc}
-    * @see org.jboss.declarchive.api.Archive#contains(org.jboss.declarchive.api.Path)
+   /** 
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#contains(org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
    public boolean contains(ArchivePath path)
@@ -167,54 +206,83 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
       return found;
    }
 
-   /* {@inheritDoc}
-    * @see org.jboss.declarchive.api.Archive#delete(org.jboss.declarchive.api.Path)
+   /** 
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#delete(org.jboss.declarchive.api.ArchivePath)
     */
    @Override
    public boolean delete(ArchivePath path)
    {
       Validate.notNull(path, "No path was specified");
+      
+      NodeImpl node = content.get(path);
+      if (node == null) 
+      {
+         return false;
+      }
+      
+      NodeImpl parentNode = content.get(path.getParent());
+      if (parentNode != null) 
+      {
+         parentNode.removeChild(node);
+      }
+      
       return content.remove(path) != null;
    }
 
-   /* {@inheritDoc}
-    * @see org.jboss.declarchive.api.Archive#get(org.jboss.declarchive.api.Path)
+   /** 
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#get(org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
-   public Asset get(ArchivePath path)
+   public Node get(ArchivePath path)
    {
       Validate.notNull(path, "No path was specified");
-      Asset asset = content.get(path);
-      if (asset == null && contains(path))
+      Node node = content.get(path);
+      if (node == null && contains(path))
       {
-         asset = getNestedAsset(path);
+         node = getNestedNode(path);
       }
-      return asset;
+      return node;
    }
 
-   /* {@inheritDoc}
-    * @see org.jboss.declarchive.api.Archive#getContent()
+   /** 
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#getContent()
     */
    @Override
-   public Map<ArchivePath, Asset> getContent()
+   public Map<ArchivePath, Node> getContent()
    {
-      return Collections.unmodifiableMap(content);
+      Map<ArchivePath, Node> ret = new HashMap<ArchivePath, Node>();
+      for (Map.Entry<ArchivePath, NodeImpl> item : content.entrySet()) 
+      {
+         if (!item.getKey().equals(new BasicPath("/"))) 
+         {
+            ret.put(item.getKey(), item.getValue());
+         }
+      }
+      
+      return Collections.unmodifiableMap(ret);
    }
    
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#getContent(org.jboss.shrinkwrap.api.Filter)
     */
    @Override
-   public Map<ArchivePath, Asset> getContent(Filter<ArchivePath> filter)
+   public Map<ArchivePath, Node> getContent(Filter<ArchivePath> filter)
    {
       Validate.notNull(filter, "Filter must be specified");
       
-      Map<ArchivePath, Asset> filteredContent = new HashMap<ArchivePath, Asset>();
-      for(Map.Entry<ArchivePath, Asset> contentEntry : content.entrySet())
+      Map<ArchivePath, Node> filteredContent = new HashMap<ArchivePath, Node>();
+      for(Map.Entry<ArchivePath, NodeImpl> contentEntry : content.entrySet())
       {
          if(filter.include(contentEntry.getKey()))
          {
-            filteredContent.put(contentEntry.getKey(), contentEntry.getValue());
+            if (!contentEntry.getKey().equals(new BasicPath("/"))) 
+            {
+               filteredContent.put(contentEntry.getKey(), contentEntry.getValue());
+            }
          }
       }
       return filteredContent;
@@ -256,7 +324,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * @param path
     * @return
     */
-   private Asset getNestedAsset(ArchivePath path)
+   private Node getNestedNode(ArchivePath path)
    {
       // Iterate through nested archives
       for (Entry<ArchivePath, ArchiveAsset> nestedArchiveEntry : nestedArchives.entrySet())
@@ -311,5 +379,51 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
       String nestedArchiveContext = context.substring(baseContent.length());
 
       return new BasicPath(nestedArchiveContext);
+   }
+   
+   /**
+    * Used to retrieve a {@link Node} from the content of the {@link Archive}. If the 
+    * {@link Node} doesn´t exists in the specified location, it is created and added 
+    * to the {@link Archive}. The same happens to all its non-existing parents. However, 
+    * if the {@link Node} is an asset, an IllegalArchivePathException is thrown.
+    *  
+    * @param path The {@link ArchivePath} from which we are obtaining the {@link Node}
+    * @return The {@link Node} in the specified path
+    * @throws IllegalArchivePathException if the node is an {@link Asset}
+    */
+   private NodeImpl obtainParent(ArchivePath path) 
+   {
+      if (path == null) {
+         return null;
+      }
+      
+      NodeImpl node = content.get(path);
+      
+      // If the node exists, just return it
+      if (node != null) 
+      {
+         // if the node is an asset, throw an exception
+         if (node.getAsset() != null) 
+         {
+            throw new IllegalArchivePathException("Could not create node under " 
+                  + path.getParent() + ". It points to an asset.");
+         }
+         
+         return node;
+      }
+      
+      // If the node doesn't exists, create it. Also create all possible non-existing 
+      // parents
+      node = new NodeImpl(path);
+      NodeImpl parentNode = obtainParent(path.getParent());
+      
+      if (parentNode != null) {
+         parentNode.addChild(node);
+      }
+      
+      // Add the node to the contents of the archive
+      content.put(path, node);
+      
+      return node;
    }
 }

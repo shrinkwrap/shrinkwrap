@@ -17,11 +17,8 @@
 
 package org.jboss.shrinkwrap.api.formatter;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.Node;
 
 /**
  * {@link Formatter} implementation to provide the full path (including parents) of
@@ -34,33 +31,47 @@ enum FullFormatter implements Formatter
    @Override
    public String format(final Archive<?> archive) throws IllegalArgumentException
    {
+      // Precondition checks
+      if (archive == null)
+      {
+         throw new IllegalArgumentException("archive must be specified");
+      }
+      
       // Start the output with the name of the archive
       StringBuilder sb = new StringBuilder(archive.getName()).append(FormattingConstants.COLON)
          .append(FormattingConstants.NEWLINE);
-      SortedSet<String> archiveContents = new TreeSet<String>();
 
-      // I know it's ugly, but we have to do two iterations per entry so we get everything
-      for (ArchivePath path : archive.getContent().keySet())
+      // Format recursively, except the parent 
+      Node rootNode = archive.get("/");
+      for (Node child : rootNode.getChildren()) 
       {
-         archiveContents.add(path.get());
-         ArchivePath parentPath = path.getParent();
-
-         while (parentPath != null)
-         {
-            archiveContents.add(parentPath.get());
-            parentPath = parentPath.getParent();
-         }
+         format(sb, child);
       }
 
-      // spit out the correct format now
-      for (String pathEntry : archiveContents)
-      {
-         sb.append(pathEntry).append(FormattingConstants.NEWLINE);
-      }
-      int firstLeadingSlash = sb.indexOf(String.valueOf(FormattingConstants.SLASH));
-      sb.delete(firstLeadingSlash, firstLeadingSlash + 2);
+      // remove the last NEWLINE
       sb.deleteCharAt(sb.length() - 1);
       
       return sb.toString();
+   }
+   
+   /**
+    * Helper method to format recursively
+    * @param sb
+    * @param node
+    */
+   private void format(StringBuilder sb, Node node) 
+   {
+      sb.append(node.getPath().get());
+      if (node.getAsset() == null) 
+      {
+         sb.append(FormattingConstants.SLASH);
+      }
+      
+      sb.append(FormattingConstants.NEWLINE);
+      
+      for (Node child : node.getChildren()) 
+      {
+         format(sb, child);
+      }
    }
 }

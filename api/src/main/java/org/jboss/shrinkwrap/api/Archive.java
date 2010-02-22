@@ -49,6 +49,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @param asset
     * @return
     * @throws IllegalArgumentException If no target or assets were specified
+    * @throws IllegalArchivePathException If the target is invalid.
     */
    T add(Asset asset, ArchivePath target) throws IllegalArgumentException;
 
@@ -62,6 +63,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @param asset
     * @return
     * @throws IllegalArgumentException If the target, name, or asset was not specified
+    * @throws IllegalArchivePathException If the target is invalid.
     */
    T add(Asset asset, ArchivePath target, String name) throws IllegalArgumentException;
 
@@ -72,6 +74,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @param asset
     * @return
     * @throws IllegalArgumentException If either the target or asset is not specified 
+    * @throws IllegalArchivePathException If the target is invalid.
     */
    T add(Asset asset, String target) throws IllegalArgumentException;
    
@@ -81,6 +84,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @param path The path to add
     * @return This archive
     * @throws IllegalArgumentException If no path was specified
+    * @throws IllegalArchivePathException If the path is invalid.
     */
    T addDirectory(String path) throws IllegalArgumentException;
 
@@ -90,6 +94,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @param paths The paths to add
     * @return This archive
     * @throws IllegalArgumentException If no paths were specified
+    * @throws IllegalArchivePathException If at least one path is invalid.
     */
    T addDirectories(String... paths) throws IllegalArgumentException;
 
@@ -99,6 +104,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @param path The path to add
     * @return This archive
     * @throws IllegalArgumentException If no path was specified
+    * @throws IllegalArchivePathException If the path is invalid.
     */
    T addDirectory(ArchivePath path) throws IllegalArgumentException;
 
@@ -108,26 +114,27 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @param paths The paths to add
     * @return This archive
     * @throws IllegalArgumentException If no paths were specified
+    * @throws IllegalArchivePathException If at least one path is invalid.
     */
    T addDirectories(ArchivePath... paths) throws IllegalArgumentException;
 
    /**
-    * Obtains the asset located at the specified path
+    * Obtains the {@link Node} located at the specified path
     * 
     * @param path
-    * @return The asset, or null if nothing is found at the Path
+    * @return The {@link Node}, or null if nothing is found at the specified path
     * @throws IllegalArgumentException If the path is not specified
     */
-   Asset get(ArchivePath path) throws IllegalArgumentException;
+   Node get(ArchivePath path) throws IllegalArgumentException;
 
    /**
-    * Obtains the asset located at the specified path
+    * Obtains the {@link Node} located at the specified path
     * 
     * @param path
-    * @return The asset, or null if nothing is found at the Path
+    * @return The {@link Node}, or null if nothing is found at the Path
     * @throws IllegalArgumentException If the path is not specified
     */
-   Asset get(String path) throws IllegalArgumentException;
+   Node get(String path) throws IllegalArgumentException;
 
    /**
     * Denotes whether this archive contains a resource at the specified
@@ -153,14 +160,14 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * The returned Map will be an immutable view.
     * @return
     */
-   Map<ArchivePath, Asset> getContent();
+   Map<ArchivePath, Node> getContent();
 
    /**
     * Obtains all assets matching given filter in this archive, along with its respective Path.
     * The returned Map will be an immutable view.
     * @return
     */
-   Map<ArchivePath, Asset> getContent(Filter<ArchivePath> filter);
+   Map<ArchivePath, Node> getContent(Filter<ArchivePath> filter);
 
    /**
     * Add an archive under a specific context and maintain the archive name as context path.

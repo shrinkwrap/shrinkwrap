@@ -36,8 +36,8 @@ import java.util.zip.ZipOutputStream;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
-import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.io.StreamErrorHandler;
 import org.jboss.shrinkwrap.impl.base.io.StreamTask;
@@ -84,10 +84,9 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
     * {@link InputStream} to be returned to the caller
     */
    private InputStream inputStream;
-
+   
    /**
-    * A Set of Paths we've exported so far (so that we don't write
-    * any entries twice)
+    * Used to see if we have exported at least one node
     */
    private Set<ArchivePath> pathsExported = new HashSet<ArchivePath>();
 
@@ -144,13 +143,22 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
             }
             catch (final Exception e)
             {
+               
                // Log this and rethrow; otherwise if we go into deadlock we won't ever 
                // be able to get the underlying cause from the Future 
                log.log(Level.WARNING, "Exception encountered during export of archive", e);
+               
+               // SHRINKWRAP-133 - if the Zip is empty, it won't close and a deadlock is triggered
+               if (pathsExported.isEmpty()) 
+               {
+                  zipOutputStream.putNextEntry(new ZipEntry("dummy.txt"));
+               }
+               
                throw e;
             }
             finally
             {
+               
                try
                {
                   zipOutputStream.close();
@@ -160,7 +168,7 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
                   // Ignore, but warn of danger
                   log.log(Level.WARNING,
                         "[SHRINKWRAP-120] Possible deadlock scenario: Got exception on closing the ZIP out stream: "
-                              + ioe.getMessage(), ioe);
+                        + ioe.getMessage(), ioe);
                }
             }
 
@@ -206,115 +214,89 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#processAsset(ArchivePath, Asset)
+    * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#processNode(ArchivePath, Node)
     */
    @Override
-   protected void processAsset(final ArchivePath path, final Asset asset)
+   protected void processNode(final ArchivePath path, final Node node)
    {
       // Precondition checks
       if (path == null)
       {
          throw new IllegalArgumentException("Path must be specified");
       }
-      if (asset == null)
+      if (node == null)
       {
          throw new IllegalArgumentException("asset must be specified");
       }
-
-      if (isParentOfAnyPathsExported(path))
-      {
-         return;
-      }
-
-      /*
-       * SHRINKWRAP-94
-       * Add entries for all parents of this Path
-       * by recursing first and adding parents that
-       * haven't already been written.
-       */
-      final ArchivePath parent = path.getParent();
-      if (parent != null && !this.pathsExported.contains(parent))
-      {
-         // If this is not the root
-         // SHRINKWRAP-96
-         final ArchivePath grandParent = parent.getParent();
-         final boolean isRoot = grandParent == null;
-         if (!isRoot)
-         {
-            // Process the parent as directory
-            this.processAsset(parent, DirectoryAsset.INSTANCE);
-         }
-      }
-
-      // Get Asset InputStream if the asset is specified (else it's a directory so use null)
-      final InputStream assetStream = asset.openStream();
-
+      
       // Mark if we're writing a directory
-      final boolean isDirectory = assetStream == null;
-
-      // If we haven't already written this path
-      final String pathName = PathUtil.optionallyRemovePrecedingSlash(path.get());
-      if (!this.pathsExported.contains(path))
+      final boolean isDirectory = node.getAsset() == null;
+      
+      InputStream stream = null;
+      if (!isDirectory) 
       {
-         // Make a task for this stream and close when done
-         IOUtil.closeOnComplete(assetStream, new StreamTask<InputStream>()
-         {
-
-            @Override
-            public void execute(InputStream stream) throws Exception
-            {
-               // If we're writing a directory, ensure we trail a slash for the ZipEntry
-               String resolvedPath = pathName;
-               if (isDirectory)
-               {
-                  resolvedPath = PathUtil.optionallyAppendSlash(resolvedPath);
-               }
-
-               // Make a ZipEntry
-               final ZipEntry entry = new ZipEntry(resolvedPath);
-
-               /*
-                * Wait until all streams have been set up for encoding, or
-                * do nothing if everything's set up already
-                */
-               latch.await();
-
-               // Write the Asset under the same Path name in the Zip
-               try
-               {
-                  zipOutputStream.putNextEntry(entry);
-               }
-               catch (final ZipException ze)
-               {
-                  log.log(Level.SEVERE, pathsExported.toString());
-                  throw new RuntimeException(ze);
-               }
-
-               // Mark that we've written this Path 
-               pathsExported.add(path);
-
-               // Read the contents of the asset and write to the JAR, 
-               // if we're not just a directory
-               if (!isDirectory)
-               {
-                  IOUtil.copy(stream, zipOutputStream);
-               }
-
-               // Close up the instream and the entry
-               zipOutputStream.closeEntry();
-            }
-
-         }, new StreamErrorHandler()
-         {
-
-            @Override
-            public void handle(Throwable t)
-            {
-               throw new ArchiveExportException("Failed to write asset to Zip: " + pathName, t);
-            }
-
-         });
+         stream = node.getAsset().openStream();
       }
+
+      final String pathName = PathUtil.optionallyRemovePrecedingSlash(path.get());
+      
+      // Make a task for this stream and close when done
+      IOUtil.closeOnComplete(stream, new StreamTask<InputStream>()
+      {
+
+         @Override
+         public void execute(InputStream stream) throws Exception
+         {
+            String resolvedPath = pathName;
+            if (isDirectory)
+            {
+               resolvedPath = PathUtil.optionallyAppendSlash(resolvedPath);
+            }
+
+            // Make a ZipEntry
+            final ZipEntry entry = new ZipEntry(resolvedPath);
+
+            /*
+             * Wait until all streams have been set up for encoding, or
+             * do nothing if everything's set up already
+             */
+            latch.await();
+
+            // Write the Asset under the same Path name in the Zip
+            try
+            {
+               zipOutputStream.putNextEntry(entry);
+            }
+            catch (final ZipException ze)
+            {
+               log.log(Level.SEVERE, pathsExported.toString());
+               throw new RuntimeException(ze);
+            }
+
+            // Mark that we've written this Path 
+            pathsExported.add(path);
+
+            // Read the contents of the asset and write to the JAR, 
+            // if we're not just a directory
+            if (!isDirectory)
+            {
+               IOUtil.copy(stream, zipOutputStream);
+            }
+
+            // Close up the instream and the entry
+            zipOutputStream.closeEntry();
+         }
+
+      }, new StreamErrorHandler()
+      {
+
+         @Override
+         public void handle(Throwable t)
+         {
+            throw new ArchiveExportException("Failed to write asset to Zip: " + path.get(), t);
+         }
+
+      });
    }
 
    /* (non-Javadoc)
@@ -326,47 +308,5 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
       return inputStream;
    }
 
-   /**
-    * Returns whether or not this Path is a parent of any Paths exported 
-    * @param path
-    * @return
-    */
-   //TODO The performance here will degrade geometrically with size of the archive
-   private boolean isParentOfAnyPathsExported(final ArchivePath path)
-   {
-      // For all Paths already exported
-      for (final ArchivePath exportedPath : this.pathsExported)
-      {
-         if (this.isParentOfSpecifiedHierarchy(path, exportedPath))
-         {
-            return true;
-         }
-      }
 
-      return false;
-   }
-
-   /**
-    * 
-    * @param path
-    * @param compare
-    * @return
-    */
-   private boolean isParentOfSpecifiedHierarchy(final ArchivePath path, final ArchivePath compare)
-   {
-      // If we've reached the root, we're not a parent of any paths already exported
-      final ArchivePath parent = compare.getParent();
-      if (parent == null)
-      {
-         return false;
-      }
-      // If equal to me, yes
-      if (path.equals(compare))
-      {
-         return true;
-      }
-
-      // Check my parent
-      return this.isParentOfSpecifiedHierarchy(path, parent);
-   }
 }

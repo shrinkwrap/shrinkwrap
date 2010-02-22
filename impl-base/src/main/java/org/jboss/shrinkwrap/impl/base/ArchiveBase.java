@@ -24,17 +24,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
-import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
-import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
@@ -145,7 +145,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
     * @see org.jboss.shrinkwrap.api.Archive#get(java.lang.String)
     */
    @Override
-   public Asset get(final String path) throws IllegalArgumentException
+   public Node get(final String path) throws IllegalArgumentException
    {
       // Precondition checks
       Validate.notNullOrEmpty(path, "No path was specified");
@@ -178,20 +178,6 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       // Delegate
       return add(archiveAsset, contentPath);
    }
-   
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#addDirectory(org.jboss.shrinkwrap.api.ArchivePath)
-    */
-   @Override
-   public T addDirectory(final ArchivePath path) throws IllegalArgumentException
-   {
-      // Precondition check
-      Validate.notNull(path, "path must be specified");
-      
-      // Delegate and return
-      return this.addDirectories(path);
-   }
 
    /**
     * {@inheritDoc}
@@ -220,7 +206,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       // Add
       for (final ArchivePath path : paths)
       {
-         this.add(DirectoryAsset.INSTANCE, path);
+         this.addDirectory(path);
       }
       
       // Return
@@ -267,7 +253,8 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       return merge(source, new BasicPath());
    }
 
-   /* (non-Javadoc)
+   /** 
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Filter)
     */
    @Override
@@ -289,7 +276,8 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       return merge(source, path, Filters.includeAll());
    }
    
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Filter)
     */
    @Override
@@ -301,25 +289,33 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       Validate.notNull(filter, "No filter was specified");
 
       // Get existing contents from source archive
-      final Map<ArchivePath, Asset> sourceContent = source.getContent();
+      final Map<ArchivePath, Node> sourceContent = source.getContent();
       Validate.notNull(sourceContent, "Source archive content can not be null.");
 
       // Add each asset from the source archive
-      for (final Entry<ArchivePath, Asset> contentEntry : sourceContent.entrySet())
+      for (final Entry<ArchivePath, Node> contentEntry : sourceContent.entrySet())
       {
-         final Asset asset = contentEntry.getValue();
-         ArchivePath assetPath = new BasicPath(path, contentEntry.getKey());
-         if( !filter.include(assetPath)) 
+         final Node node = contentEntry.getValue();
+         ArchivePath nodePath = new BasicPath(path, contentEntry.getKey());
+         if( !filter.include(nodePath)) 
          {
             continue;
          }
          // Delegate
-         add(asset, assetPath);
+         if (node.getAsset() == null) 
+         {
+            addDirectory(nodePath);
+         } 
+         else 
+         {
+            add(node.getAsset(), nodePath);
+         }
       }
       return covariantReturn();
    }
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Specializer#as(java.lang.Class)
     */
    @Override

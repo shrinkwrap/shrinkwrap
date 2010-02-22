@@ -103,6 +103,19 @@ public class ZipExporterTestCase extends ExportTestBase
       // Attempt to export an empty archive, should fail
       Archives.create(NAME_ARCHIVE, JavaArchive.class).as(ZipExporter.class).exportZip();
    }
+   
+   /**
+    * Test to ensure that the {@link JdkZipExporterDelegate} accepts an archive
+    * with only directories, no assets.
+    * 
+    * @throws Exception
+    */
+   @Test
+   public void testExportArchiveWithOnlyDirectories() 
+   {
+      // Attempt to export an archive with some directories, should pass
+      Archives.create(NAME_ARCHIVE, JavaArchive.class).addDirectories("/test/game").as(ZipExporter.class).exportZip();
+   }
 
    /**
     * Test to make sure an archive can be exported to Zip (file) and all 

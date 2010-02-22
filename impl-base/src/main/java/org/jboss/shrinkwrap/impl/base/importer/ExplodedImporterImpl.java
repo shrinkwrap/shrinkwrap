@@ -25,7 +25,6 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
-import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.asset.FileAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
@@ -129,7 +128,7 @@ public class ExplodedImporterImpl extends AssignableBase implements
          final ArchivePath path  = calculatePath(root, file);
          if (file.isDirectory())
          {
-            archive.add(DirectoryAsset.INSTANCE,path);
+            archive.addDirectory(path);
             doImport(root, file.listFiles());
          } else
          {

@@ -31,7 +31,6 @@ import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.ByteArrayAsset;
-import org.jboss.shrinkwrap.impl.base.asset.DirectoryAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ZipFileEntryAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
@@ -104,7 +103,7 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
             // Handle directories separately
             if(entry.isDirectory()) 
             {
-               archive.add(DirectoryAsset.INSTANCE, entryName);
+               archive.addDirectory(entryName);
                continue; 
             }
 
@@ -160,7 +159,7 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
               // Handle directories separately
               if(entry.isDirectory())
               {
-                 archive.add(DirectoryAsset.INSTANCE, entryName);
+                 archive.addDirectory(entryName);
                  continue;
               }
 
