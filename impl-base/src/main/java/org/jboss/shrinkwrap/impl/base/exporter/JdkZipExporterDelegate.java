@@ -149,6 +149,7 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
                log.log(Level.WARNING, "Exception encountered during export of archive", e);
                
                // SHRINKWRAP-133 - if the Zip is empty, it won't close and a deadlock is triggered
+               //TODO Find a better solution :)
                if (pathsExported.isEmpty()) 
                {
                   zipOutputStream.putNextEntry(new ZipEntry("dummy.txt"));
