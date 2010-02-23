@@ -152,6 +152,12 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
                //TODO Find a better solution :)
                if (pathsExported.isEmpty()) 
                {
+                  // Ensure the streams are set up before we do any work on them;
+                  // it's possible that we encountered an exception before 
+                  // everything has been initialized by the main Thread
+                  // SHRINKWRAP-137
+                  latch.await();
+                  
                   zipOutputStream.putNextEntry(new ZipEntry("dummy.txt"));
                }
                
