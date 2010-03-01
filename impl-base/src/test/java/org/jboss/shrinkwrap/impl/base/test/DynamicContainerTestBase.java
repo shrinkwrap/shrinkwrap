@@ -53,6 +53,8 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
+   
+   public static String MANIFEST_FILE = "MANIFEST.MF";
 
    //-------------------------------------------------------------------------------------||
    // Contracts ----------------------------------------------------------------------||
@@ -83,45 +85,65 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    // Test Implementations - ManifestContainer -------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
+   /** 
+    * https://jira.jboss.org/jira/browse/SHRINKWRAP-142
+    * 
+    * @throws Exception
+    */
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testSetManifestResource() throws Exception {
       getManifestContainer().setManifest(NAME_TEST_PROPERTIES);
       
-      ArchivePath testPath = new BasicPath(getManifestPath(), "MANIFEST.FM");
+      ArchivePath testPath = new BasicPath(getManifestPath(), MANIFEST_FILE);
       Assert.assertTrue(
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
    }
    
+   /** 
+    * https://jira.jboss.org/jira/browse/SHRINKWRAP-142
+    * 
+    * @throws Exception
+    */
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testSetManifestFile() throws Exception {
       getManifestContainer().setManifest(getFileForClassResource(NAME_TEST_PROPERTIES));
       
-      ArchivePath testPath = new BasicPath(getManifestPath(), "MANIFEST.FM");
+      ArchivePath testPath = new BasicPath(getManifestPath(), MANIFEST_FILE);
       Assert.assertTrue(
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
    }
 
+   /**
+    * https://jira.jboss.org/jira/browse/SHRINKWRAP-142
+    * 
+    * @throws Exception
+    */
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testSetManifestURL() throws Exception {
       getManifestContainer().setManifest(getURLForClassResource(NAME_TEST_PROPERTIES));
       
-      ArchivePath testPath = new BasicPath(getManifestPath(), "MANIFEST.FM");
+      ArchivePath testPath = new BasicPath(getManifestPath(), MANIFEST_FILE);
       Assert.assertTrue(
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
    }
 
+   /**
+    * https://jira.jboss.org/jira/browse/SHRINKWRAP-142
+    * 
+    * @throws Exception
+    */
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testSetManifestAsset() throws Exception {
       getManifestContainer().setManifest(getAssetForClassResource(NAME_TEST_PROPERTIES));
       
-      ArchivePath testPath = new BasicPath(getManifestPath(), "MANIFEST.FM");
+      ArchivePath testPath = new BasicPath(getManifestPath(), MANIFEST_FILE);
       Assert.assertTrue(
             "Archive should contain " + testPath,
             getArchive().contains(testPath));

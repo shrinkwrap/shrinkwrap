@@ -381,7 +381,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public T setManifest(Asset resource) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource should be specified");
-      return addManifestResource(resource, "MANIFEST.FM");
+      return addManifestResource(resource, "MANIFEST.MF");
    }
    
    /* (non-Javadoc)
