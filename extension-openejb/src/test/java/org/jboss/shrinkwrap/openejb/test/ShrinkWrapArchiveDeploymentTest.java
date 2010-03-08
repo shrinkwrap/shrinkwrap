@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.openejb.test;
 
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -30,8 +31,6 @@ import org.apache.openejb.assembler.classic.SecurityServiceInfo;
 import org.apache.openejb.assembler.classic.TransactionServiceInfo;
 import org.apache.openejb.client.LocalInitialContextFactory;
 import org.apache.openejb.config.ConfigurationFactory;
-import org.apache.openejb.util.LogCategory;
-import org.apache.openejb.util.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -39,6 +38,8 @@ import org.jboss.shrinkwrap.openejb.config.ShrinkWrapConfigurationFactory;
 import org.jboss.shrinkwrap.openejb.ejb.EchoBean;
 import org.jboss.shrinkwrap.openejb.ejb.EchoLocalBusiness;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -58,8 +59,76 @@ public class ShrinkWrapArchiveDeploymentTest
    /**
     * Logger
     */
-   private static final Logger logger = Logger.getInstance(LogCategory.OPENEJB_STARTUP_CONFIG,
-         ShrinkWrapArchiveDeploymentTest.class);
+   private static final Logger log = Logger.getLogger(ShrinkWrapArchiveDeploymentTest.class.getName());
+
+   /**
+    * OpenEJB server view
+    */
+   private static Assembler server;
+
+   /**
+    * OpenEJB Configuration
+    */
+   private static ShrinkWrapConfigurationFactory config;
+
+   /**
+    * JNDI Context
+    */
+   private static Context namingContext;
+
+   //-------------------------------------------------------------------------------------||
+   // Instance Members -------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * OpenEJB Deployment
+    */
+   private AppInfo deployment;
+
+   //-------------------------------------------------------------------------------------||
+   // Lifecycle --------------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Starts the OpenEJB Server
+    */
+   @BeforeClass
+   public static void startServer() throws Exception
+   {
+      // These two objects pretty much encompass all the EJB Container
+      final ShrinkWrapConfigurationFactory configuration = new ShrinkWrapConfigurationFactory();
+      config = configuration;
+      final Assembler assembler = new Assembler();
+      assembler.createTransactionManager(configuration.configureService(TransactionServiceInfo.class));
+      assembler.createSecurityService(configuration.configureService(SecurityServiceInfo.class));
+      server = assembler;
+
+      // Get a JNDI Context
+      final Properties properties = new Properties();
+      properties.put(Context.INITIAL_CONTEXT_FACTORY, LocalInitialContextFactory.class.getName());
+      final Context ctx = new InitialContext(properties);
+      namingContext = ctx;
+   }
+
+   /**
+    * Deploys the test archive
+    * @throws Exception
+    */
+   @Before
+   public void deploy() throws Exception
+   {
+
+      // Create archive to hold our test EJB
+      final String name = "echo.jar";
+      final JavaArchive archive = Archives.create(name, JavaArchive.class).addClasses(EchoBean.class,
+            EchoLocalBusiness.class);
+      log.info("Created archive: " + archive.toString(true));
+
+      // Deploy as an archive
+      final AppInfo appInfo = config.configureApplication(archive);
+      server.createApplication(appInfo);
+      deployment = appInfo;
+   }
 
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
@@ -73,40 +142,20 @@ public class ShrinkWrapArchiveDeploymentTest
    public void shrinkWrapDeployment() throws Exception
    {
 
-      // Create archive to hold our test EJB
-      final String name = "echo.jar";
-      final JavaArchive archive = Archives.create(name, JavaArchive.class).addClasses(EchoBean.class,
-            EchoLocalBusiness.class);
-      logger.info("Created archive: " + archive.toString(true));
-
-      // These two objects pretty much encompass all the EJB Container
-      final ShrinkWrapConfigurationFactory config = new ShrinkWrapConfigurationFactory();
-      final Assembler assembler = new Assembler();
-      assembler.createTransactionManager(config.configureService(TransactionServiceInfo.class));
-      assembler.createSecurityService(config.configureService(SecurityServiceInfo.class));
-
-      // Deploy as an archive
-      final AppInfo appInfo = config.configureApplication(archive);
-      assembler.createApplication(appInfo);
-
-      // Get a JNDI Context
-      final Properties properties = new Properties();
-      properties.put(Context.INITIAL_CONTEXT_FACTORY, LocalInitialContextFactory.class.getName());
-      final Context ctx = new InitialContext(properties);
-
       // Lookup
-      final EchoLocalBusiness bean = (EchoLocalBusiness) ctx.lookup(EchoBean.class.getSimpleName() + "Local");
+      log.info("here");
+      final EchoLocalBusiness bean = (EchoLocalBusiness) namingContext.lookup(EchoBean.class.getSimpleName() + "Local");
 
       // Invoke and test
       final String request = "Word up";
       final String response = bean.echo(request);
-      logger.info("Sent: \"" + request + "\"; got: \"" + response + "\"");
+      log.info("Sent: \"" + request + "\"; got: \"" + response + "\"");
       TestCase.assertEquals("Response from EJB invocation not expected", request, response);
       TestCase.assertTrue("Response from local EJB invocation is equal by value but not by reference",
             request == response);
 
       // Undeploy the archive
-      assembler.destroyApplication(appInfo.jarPath);
+      server.destroyApplication(deployment.jarPath);
 
       // Try and execute the bean after it's been undeployed -- should fail
       try
@@ -121,7 +170,7 @@ public class ShrinkWrapArchiveDeploymentTest
 
       try
       {
-         ctx.lookup(EchoBean.class.getSimpleName());
+         namingContext.lookup(EchoBean.class.getSimpleName());
          Assert.fail("JNDI References should have been cleaned up");
       }
       catch (NamingException e)
