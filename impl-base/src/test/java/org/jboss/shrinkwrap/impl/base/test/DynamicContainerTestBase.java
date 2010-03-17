@@ -314,10 +314,13 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
    }
 
+   /*
+    * https://jira.jboss.org/jira/browse/SHRINKWRAP-145 - Should be Resource, Target
+    */
    @Test
    @ArchiveType(ResourceContainer.class)
    public void testAddResourceStringTargetResource() throws Exception {
-      getResourceContainer().addResource("Test.txt", NAME_TEST_PROPERTIES);
+      getResourceContainer().addResource(NAME_TEST_PROPERTIES, "Test.txt");
       
       ArchivePath testPath = new BasicPath(getResourcePath(), "Test.txt");
       Assert.assertTrue(

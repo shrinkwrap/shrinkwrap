@@ -28,6 +28,7 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
+import org.jboss.shrinkwrap.api.Listener;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -287,6 +288,16 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public String getName()
    {
       return archive.getName();
+   }
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.Archive#addListener(org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.Listener)
+    */
+   @Override
+   public T addListener(Filter<ArchivePath> filter, Listener listener)
+   {
+      archive.addListener(filter, listener);
+      return covarientReturn();
    }
    
    /**
@@ -548,10 +559,10 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.container.ResourceContainer#addResource(java.lang.String, java.lang.String)
     */
    @Override
-   public final T addResource(String target, String resourceName) throws IllegalArgumentException 
+   public final T addResource(String resourceName, String target) throws IllegalArgumentException 
    {
-      Validate.notNull(target, "Target should be specified");
       Validate.notNull(resourceName, "ResourceName should be specified");
+      Validate.notNull(target, "Target should be specified");
       
       return addResource(new ClassLoaderAsset(resourceName), target);
    }
