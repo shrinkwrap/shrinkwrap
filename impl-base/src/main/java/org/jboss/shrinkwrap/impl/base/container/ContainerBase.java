@@ -28,7 +28,6 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
-import org.jboss.shrinkwrap.api.Listener;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -290,16 +289,6 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return archive.getName();
    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.Archive#addListener(org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.Listener)
-    */
-   @Override
-   public T addListener(Filter<ArchivePath> filter, Listener listener)
-   {
-      archive.addListener(filter, listener);
-      return covarientReturn();
-   }
-   
    /**
     * {@inheritDoc}
     * @see org.jboss.declarchive.api.Archive#toString(boolean)
