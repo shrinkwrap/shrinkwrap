@@ -94,7 +94,6 @@
             <include>**/*TestSuite.java</include>
           </includes>
           <forkMode>always</forkMode>
-          <reportFormat>xml</reportFormat>
         </configuration>
       </plugin>
 
