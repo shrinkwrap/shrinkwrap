@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!--
+  vi:ts=2:sw=2:expandtab:
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- Parent -->
+  <parent>
+    <groupId>org.jboss.shrinkwrap</groupId>
+    <artifactId>shrinkwrap-build</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../build/pom.xml</relativePath>
+  </parent>
+
+  <!-- Model Version -->
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Artifact Configuration -->
+  <artifactId>shrinkwrap-extension-vfs3</artifactId>
+  <name>ShrinkWrap Extension JBoss VFS3</name>
+  <description>ShrinkWrap Extension for the JBoss Virtual Filesystem 3</description>
+
+
+  <!-- Properties -->
+  <properties>
+  
+    <!-- Versioning -->
+    <version.org.jboss_jboss.vfs>3.0.0.CR5</version.org.jboss_jboss.vfs>
+    <version.jboss.logging>2.2.0.CR1</version.jboss.logging>
+    <version.org.jboss.logmanager>1.2.0.CR1</version.org.jboss.logmanager>
+
+  </properties>
+
+  <!-- Dependencies -->
+  <dependencies>
+
+    <!-- 
+    org.jboss.shrinkwrap    
+     -->
+    <dependency>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-impl-base</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- 
+    External Projects
+     -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- org.jboss:jboss-vfs --> 
+    <dependency>
+      <groupId>org.jboss</groupId>
+      <artifactId>jboss-vfs</artifactId>
+      <version>${version.org.jboss_jboss.vfs}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging-spi</artifactId>
+      <version>${version.jboss.logging}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging-jdk</artifactId>
+      <version>${version.jboss.logging}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logmanager</groupId>
+      <artifactId>jboss-logmanager</artifactId>
+      <version>${version.org.jboss.logmanager}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging-logmanager</artifactId>
+      <version>${version.jboss.logging}</version>
+      <scope>test</scope>
+    </dependency>
+    
+
+  </dependencies>
+
+  <!-- Build Configuration -->
+  <build>
+  
+    <plugins>
+
+    </plugins>
+    
+  </build>
+  
+</project>
+
