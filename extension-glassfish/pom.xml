@@ -61,6 +61,7 @@
       <groupId>org.glassfish.common</groupId>
       <artifactId>glassfish-api</artifactId>
       <version>${version.glassfish}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.glassfish.extras</groupId>
