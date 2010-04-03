@@ -96,7 +96,7 @@ public class ContainerTestRunner extends BlockJUnit4ClassRunner
       Class<?>[] supportedInterfaces = testCaseArchiveType.getInterfaces();
       for(Class<?> supportedInterface : supportedInterfaces) 
       {
-         if(supportedInterface == archiveType) 
+         if(archiveType.isAssignableFrom(supportedInterface)) 
          {
             return true;
          }
