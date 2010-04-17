@@ -84,6 +84,23 @@ public final class AssetUtil
    }
 
    /**
+    * Helper to convert from java package name to class loader package name
+    * <br/><br/>
+    * ie: javax.test + my.txt = javax/test/ + my.txt
+    * 
+    * @param resourcePackage The base package
+    * @param resourceName The resource inside the package.
+    * @return {@link ClassLoader} resource location
+    */
+   public static String getClassLoaderResourceName(Package resourcePackage, String resourceName)
+   {
+      String resourcePackaeName = resourcePackage.getName().replaceAll(
+            DELIMITER_CLASS_NAME_PATH, DELIMITER_RESOURCE_PATH);
+      
+      return resourcePackaeName + DELIMITER_RESOURCE_PATH + resourceName;
+   }
+   
+   /**
     * Helper to extract a ClassloaderResources name.
     * <br/><br/>
     * ie: /user/test/file.properties = file.properties
