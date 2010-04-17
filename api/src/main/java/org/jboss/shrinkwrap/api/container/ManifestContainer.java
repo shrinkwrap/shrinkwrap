@@ -211,7 +211,63 @@ public interface ManifestContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if target is null
     */
    T addManifestResource(Asset resource, ArchivePath target) throws IllegalArgumentException;
+
+   /**
+    * Adds the resources inside the package as multiple resources to the container, returning the container itself.
+    * <br/><br/>
+    * The {@link ClassLoader} used to obtain the resource is up to the implementation.  
+    * 
+    * @param resourcePackage The package of the resources
+    * @param resourceNames The names of the resources inside resoucePackage
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourcePackage is null
+    * @throws IllegalArgumentException if no resourceNames are specified or containing null 
+    */
+   T addManifestResources(Package resourcePackage, String... resourceNames) throws IllegalArgumentException;
    
+   /**
+    * Adds the resource as a resource to the container, returning the container itself.
+    * <br/><br/>
+    * The {@link ClassLoader} used to obtain the resource is up to the implementation.  
+    * 
+    * @param resourcePackage The package of the resource
+    * @param resourceName The name of the resource inside resoucePackage
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourcePackage is null
+    * @throws IllegalArgumentException if resourceName is null 
+    */
+   T addManifestResource(Package resourcePackage, String resourceName) throws IllegalArgumentException;
+   
+   /**
+    * Adds the resource as a resource to a specific path inside the container, returning the container itself.
+    * <br/><br/>
+    * The {@link ClassLoader} used to obtain the resource is up to the implementation.  
+    * 
+    * @param resourcePackage The package of the resource
+    * @param resourceName The name of the resource inside resoucePackage
+    * @param target The target location inside the container
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourcePackage is null
+    * @throws IllegalArgumentException if resourceName is null
+    * @throws IllegalArgumentException if target is null 
+    */
+   T addManifestResource(Package resourcePackage, String resourceName, String target) throws IllegalArgumentException;
+
+   /**
+    * Adds the resource as a resource to a specific path inside the container, returning the container itself.
+    * <br/><br/>
+    * The {@link ClassLoader} used to obtain the resource is up to the implementation.  
+    * 
+    * @param resourcePackage The package of the resource
+    * @param resourceName The name of the resource inside resoucePackage
+    * @param target The target location inside the container
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourcePackage is null
+    * @throws IllegalArgumentException if resourceName is null
+    * @throws IllegalArgumentException if target is null 
+    */
+   T addManifestResource(Package resourcePackage, String resourceName, ArchivePath target) throws IllegalArgumentException;
+
    /**
     * Adds a META-INF/services/ServiceInterfaceName {@link Asset} representing this service.
     * 

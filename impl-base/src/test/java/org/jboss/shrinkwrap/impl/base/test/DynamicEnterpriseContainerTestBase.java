@@ -20,7 +20,9 @@ import junit.framework.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.container.EnterpriseContainer;
+import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Test;
 
@@ -205,6 +207,59 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
             getArchive().contains(expectedPath));
    }
 
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddAplicationResourcePackage() throws Exception {
+      getEnterpriseContainer().addApplicationResource(AssetUtil.class.getPackage(), "Test.properties");
+      
+      ArchivePath testPath = new BasicPath(getApplicationPath(), NAME_TEST_PROPERTIES);
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+   }
+   
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddApplicationResourcePackages() throws Exception {
+      getEnterpriseContainer().addApplicationResources(AssetUtil.class.getPackage(), "Test.properties", "Test2.properties");
+      
+      ArchivePath testPath = new BasicPath(getApplicationPath(), NAME_TEST_PROPERTIES);
+      ArchivePath testPath2 = new BasicPath(getApplicationPath(), NAME_TEST_PROPERTIES_2);
+      
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+      Assert.assertTrue(
+            "Archive should contain " + testPath2,
+            getArchive().contains(testPath2));
+   }
+
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddApplicationResourcePackageStringTarget() throws Exception {
+      
+      getEnterpriseContainer().addApplicationResource(AssetUtil.class.getPackage(), "Test.properties", "Test.txt");
+      
+      ArchivePath testPath = new BasicPath(getApplicationPath(), "Test.txt");
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+   }
+   
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddApplicationResourcePackagePathTarget() throws Exception {
+      
+      ArchivePath targetPath = ArchivePaths.create("Test.txt");
+      
+      getEnterpriseContainer().addApplicationResource(AssetUtil.class.getPackage(), "Test.properties", targetPath);
+      
+      ArchivePath testPath = new BasicPath(getApplicationPath(), targetPath);
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+   }
+   
    @Test
    @ArchiveType(EnterpriseContainer.class)
    public void testAddModuleResource() throws Exception {

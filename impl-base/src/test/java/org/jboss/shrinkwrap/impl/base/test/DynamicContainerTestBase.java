@@ -23,6 +23,7 @@ import junit.framework.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
@@ -279,6 +280,57 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             getArchive().contains(testPath));
    }
 
+   @Test
+   @ArchiveType(ManifestContainer.class)
+   public void testAddManifestPackage() throws Exception {
+      getManifestContainer().addManifestResource(AssetUtil.class.getPackage(), "Test.properties");
+      
+      ArchivePath testPath = new BasicPath(getManifestPath(), NAME_TEST_PROPERTIES);
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+   }
+   
+   @Test
+   @ArchiveType(ManifestContainer.class)
+   public void testAddManifestPackages() throws Exception {
+      getManifestContainer().addManifestResources(AssetUtil.class.getPackage(), "Test.properties", "Test2.properties");
+      
+      ArchivePath testPath = new BasicPath(getManifestPath(), NAME_TEST_PROPERTIES);
+      ArchivePath testPath2 = new BasicPath(getManifestPath(), NAME_TEST_PROPERTIES_2);
+      
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+      Assert.assertTrue(
+            "Archive should contain " + testPath2,
+            getArchive().contains(testPath2));
+   }
+
+   @Test
+   @ArchiveType(ManifestContainer.class)
+   public void testAddManifestPackageStringTarget() throws Exception {
+      getManifestContainer().addManifestResource(AssetUtil.class.getPackage(), "Test.properties", "Test.txt");
+      
+      ArchivePath testPath = new BasicPath(getManifestPath(), "Test.txt");
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+   }
+   
+   @Test
+   @ArchiveType(ManifestContainer.class)
+   public void testAddManifestPackagePathTarget() throws Exception {
+      ArchivePath targetPath = ArchivePaths.create("Test.txt");
+      
+      getManifestContainer().addManifestResource(AssetUtil.class.getPackage(), "Test.properties", targetPath);
+      
+      ArchivePath testPath = new BasicPath(getManifestPath(), targetPath);
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+   }
+
    //-------------------------------------------------------------------------------------||
    // Test Implementations - ResourceContainer -------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -401,6 +453,59 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       getResourceContainer().addResource(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       ArchivePath testPath = new BasicPath(getResourcePath(), "Test.txt");
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+   }
+   
+   @Test
+   @ArchiveType(ResourceContainer.class)
+   public void testAddResourcePackage() throws Exception {
+      getResourceContainer().addResource(AssetUtil.class.getPackage(), "Test.properties");
+      
+      ArchivePath testPath = new BasicPath(getResourcePath(), NAME_TEST_PROPERTIES);
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+   }
+   
+   @Test
+   @ArchiveType(ResourceContainer.class)
+   public void testAddResourcePackages() throws Exception {
+      getResourceContainer().addResources(AssetUtil.class.getPackage(), "Test.properties", "Test2.properties");
+      
+      ArchivePath testPath = new BasicPath(getResourcePath(), NAME_TEST_PROPERTIES);
+      ArchivePath testPath2 = new BasicPath(getResourcePath(), NAME_TEST_PROPERTIES_2);
+      
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+      Assert.assertTrue(
+            "Archive should contain " + testPath2,
+            getArchive().contains(testPath2));
+   }
+
+   @Test
+   @ArchiveType(ResourceContainer.class)
+   public void testAddResourcePackageStringTarget() throws Exception {
+      
+      getResourceContainer().addResource(AssetUtil.class.getPackage(), "Test.properties", "Test.txt");
+      
+      ArchivePath testPath = new BasicPath(getResourcePath(), "Test.txt");
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+   }
+   
+   @Test
+   @ArchiveType(ResourceContainer.class)
+   public void testAddResourcePackagePathTarget() throws Exception {
+      
+      ArchivePath targetPath = ArchivePaths.create("Test.txt");
+      
+      getResourceContainer().addResource(AssetUtil.class.getPackage(), "Test.properties", targetPath);
+      
+      ArchivePath testPath = new BasicPath(getResourcePath(), targetPath);
       Assert.assertTrue(
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
@@ -565,7 +670,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     */
    @Test
    @ArchiveType(ClassContainer.class)
-   public void testAddPakcageRecursiveFiltered() throws Exception 
+   public void testAddPackageRecursiveFiltered() throws Exception 
    {
       getClassContainer().addPackages(true, new Filter<Class<?>>()
       {
