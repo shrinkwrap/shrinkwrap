@@ -28,14 +28,15 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Assignable;
-import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Node;
+import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
+import org.jboss.shrinkwrap.spi.Configurable;
 
 /**
  * ArchiveBase
@@ -49,7 +50,7 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
+public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, Configurable
 {
 
    //-------------------------------------------------------------------------------------||
@@ -71,10 +72,10 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
    private final String name;
 
    /**
-    * Defines how the Specializer extensions are loaded. 
+    * Configuration for this archive 
     */
-   private ExtensionLoader extensionLoader = new ServiceExtensionLoader();
-   
+   private final Configuration configuration;
+
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -85,18 +86,19 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
     * Creates a new Archive with the specified name
     * 
     * @param name Name of the archive
-    * @param extensionLoader The extensionLoader to be used
+    * @param configuration The configuration for this archive
     * @throws IllegalArgumentException If the name was not specified
     */
-   protected ArchiveBase(final String name, final ExtensionLoader extensionLoader) throws IllegalArgumentException
+   protected ArchiveBase(final String name, final Configuration configuration)
+         throws IllegalArgumentException
    {
       // Precondition checks
       Validate.notNullOrEmpty(name, "name must be specified");
-      Validate.notNull(extensionLoader, "extensionLoader must be specified");
+      Validate.notNull(configuration, "configuration must be specified");
 
       // Set
       this.name = name;
-      this.extensionLoader = extensionLoader;
+      this.configuration = configuration;
    }
 
    //-------------------------------------------------------------------------------------||
@@ -188,11 +190,11 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
    {
       // Precondition check
       Validate.notNullOrEmpty(path, "path must be specified");
-      
+
       // Delegate and return
       return this.addDirectory(ArchivePaths.create(path));
    }
-   
+
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#addDirectories(org.jboss.shrinkwrap.api.ArchivePath[])
@@ -202,13 +204,13 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
    {
       // Precondition check
       Validate.notNull(paths, "paths must be specified");
-      
+
       // Add
       for (final ArchivePath path : paths)
       {
          this.addDirectory(path);
       }
-      
+
       // Return
       return covariantReturn();
    }
@@ -222,16 +224,17 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
    {
       // Precondition check
       Validate.notNull(paths, "paths must be specified");
-      
+
       // Represent as array of Paths
       final Collection<ArchivePath> pathsCollection = new ArrayList<ArchivePath>(paths.length);
       for (final String path : paths)
       {
          pathsCollection.add(ArchivePaths.create(path));
       }
-      
+
       // Delegate and return
-      return this.addDirectories(pathsCollection.toArray(new ArchivePath[]{}));
+      return this.addDirectories(pathsCollection.toArray(new ArchivePath[]
+      {}));
    }
 
    /**
@@ -261,8 +264,8 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
    public T merge(Archive<?> source, Filter<ArchivePath> filter) throws IllegalArgumentException
    {
       return merge(source, new BasicPath(), filter);
-   }   
-   
+   }
+
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.Archive)
@@ -272,10 +275,10 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
    {
       Validate.notNull(source, "No source archive was specified");
       Validate.notNull(path, "No path was specified");
-      
+
       return merge(source, path, Filters.includeAll());
    }
-   
+
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path, org.jboss.shrinkwrap.api.Filter)
@@ -297,16 +300,16 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
       {
          final Node node = contentEntry.getValue();
          ArchivePath nodePath = new BasicPath(path, contentEntry.getKey());
-         if( !filter.include(nodePath)) 
+         if (!filter.include(nodePath))
          {
             continue;
          }
          // Delegate
-         if (node.getAsset() == null) 
+         if (node.getAsset() == null)
          {
             addDirectory(nodePath);
-         } 
-         else 
+         }
+         else
          {
             add(node.getAsset(), nodePath);
          }
@@ -316,16 +319,16 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Specializer#as(java.lang.Class)
+    * @see org.jboss.shrinkwrap.api.Assignable#as(java.lang.Class)
     */
    @Override
-   public <TYPE extends Assignable> TYPE as(Class<TYPE> clazz)
+   public <TYPE extends Assignable> TYPE as(final Class<TYPE> clazz)
    {
       Validate.notNull(clazz, "Class must be specified");
 
-      return extensionLoader.load(clazz, this);
+      return this.configuration.getExtensionLoader().load(clazz, this);
    }
-   
+
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#toString()
@@ -335,7 +338,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
    {
       return this.toString(Formatters.SIMPLE);
    }
-   
+
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#toString(boolean)
@@ -354,16 +357,24 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>
    public String toString(final Formatter formatter) throws IllegalArgumentException
    {
       // Precondition check
-      if(formatter==null)
+      if (formatter == null)
       {
          throw new IllegalArgumentException("Formatter must be specified");
       }
-      
+
       // Delegate
       return formatter.format(this);
    }
-   
-   
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.spi.Configurable#getConfiguration()
+    */
+   @Override
+   public Configuration getConfiguration()
+   {
+      return configuration;
+   }
 
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||

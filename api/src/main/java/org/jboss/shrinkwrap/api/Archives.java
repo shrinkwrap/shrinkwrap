@@ -21,44 +21,28 @@ package org.jboss.shrinkwrap.api;
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
+ * @deprecated Use {@link ShrinkWrap}
+ * @see {@link ShrinkWrap}
  */
+@Deprecated
 public final class Archives
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   private static final String ARCHIVE_IMPL = "org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl";
-   
-   private static final String EXTENSION_LOADER_IMPL = "org.jboss.shrinkwrap.impl.base.ServiceExtensionLoader";
-   
-   private static ExtensionLoader extensionLoader = null;
-   
    /**
     * Create a archive as a specific type.
     * 
     * @param archiveName The name of the archive
     * @return A {@link Assignable} archive base  
+    * @deprecated 
+    * @see {@link ShrinkWrap#create(String, Class)}
     */
-   public static <T extends Assignable> T create(String archiveName, Class<T> type) 
+   public static <T extends Assignable> T create(String archiveName, Class<T> type)
    {
-      if(archiveName == null) 
-      {
-         throw new IllegalArgumentException("ArchiveName must be specified");
-      }
-      if(type == null) 
-      {
-         throw new IllegalArgumentException("Type must be specified");
-      }
-      
-      initializeExtensionLoader();
-      
-      Archive<?> archive = SecurityActions.newInstance(
-                                 ARCHIVE_IMPL,
-                                 new Class<?>[]{String.class, ExtensionLoader.class},
-                                 new Object[]{archiveName, extensionLoader},
-                                 Archive.class); 
-      return archive.as(type);
+      // Delegate to ShrinkWrap
+      return ShrinkWrap.create(archiveName, type);
    }
 
    /**
@@ -67,54 +51,15 @@ public final class Archives
     * @param <T>
     * @param extensionClass The Extension interface
     * @param extensionImplClass The Extension implementation class
+    * @see {@link Configuration#getExtensionLoader()}
     */
-   public static <T extends Assignable> void addExtensionOverride(
-         Class<T> extensionClass, 
+   public static <T extends Assignable> void addExtensionOverride(Class<T> extensionClass,
          Class<? extends T> extensionImplClass)
    {
-      initializeExtensionLoader();
+      final ExtensionLoader extensionLoader = ShrinkWrap.getDefaultDomain().getConfiguration().getExtensionLoader();
       extensionLoader.addOverride(extensionClass, extensionImplClass);
    }
 
-   /**
-    * 
-    * @param loader The ExtensionLoader to use
-    * @throws IllegalArgumentException if loader is null
-    * @throws IllegalStateException if loader is already set
-    */
-   public synchronized static void setExtensionLoader(ExtensionLoader loader)
-   {
-      if(loader == null) 
-      {
-         throw new IllegalArgumentException("Loader must be specified");
-      }
-      if(extensionLoader != null) 
-      {
-         throw new IllegalStateException(
-               "Loader already specified, call setExtensionLoader " +
-         		"before calling create or addExtensionOverride");
-      }
-      extensionLoader = loader;
-   }
-   
-   private synchronized static void initializeExtensionLoader() 
-   {
-      if(extensionLoader == null) {
-         extensionLoader = SecurityActions.newInstance(
-                              EXTENSION_LOADER_IMPL,
-                              new Class<?>[]{}, 
-                              new Object[]{}, 
-                              ExtensionLoader.class);
-      }
-   }
-   
-   /**
-    * Used by ArchivesTestCase to reset the static state of the Factory. 
-    */
-   static void resetState() {
-      extensionLoader = null;
-   }
-   
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -122,5 +67,7 @@ public final class Archives
    /**
     * No instantiation
     */
-   private Archives() {}
+   private Archives()
+   {
+   }
 }

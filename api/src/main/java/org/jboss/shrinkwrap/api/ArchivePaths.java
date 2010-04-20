@@ -37,7 +37,7 @@ public final class ArchivePaths
     */
    public static ArchivePath root()
    {
-      return create(null);
+      return RootPathWrapper.INSTANCE.getRoot();
    }
 
    /**
@@ -107,6 +107,21 @@ public final class ArchivePaths
    private static ArchivePath createInstance(Class<?>[] argumentTypes, Object[] arguments)
    {
       return SecurityActions.newInstance(PATH_IMPL, argumentTypes, arguments, ArchivePath.class);
+   }
+   
+   /**
+    * Singleton wrapper to obtain a root {@link ArchivePath}
+    *
+    * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+    * @version $Revision: $
+    */
+   private enum RootPathWrapper{
+      INSTANCE;
+      private ArchivePath root = create(null);
+      
+      private ArchivePath getRoot(){
+         return root;
+      }
    }
 
    //-------------------------------------------------------------------------------------||

@@ -90,8 +90,9 @@ public class JavaArchiveImpl
       return PATH_MANIFEST;
    }
    
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerBase#getClassesPath()
+   /*
+    * (non-Javadoc)
+    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getClassesPath()
     */
    @Override
    protected ArchivePath getClassesPath()

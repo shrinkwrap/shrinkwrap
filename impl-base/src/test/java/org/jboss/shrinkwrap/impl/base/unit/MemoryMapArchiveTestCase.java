@@ -18,8 +18,8 @@ package org.jboss.shrinkwrap.impl.base.unit;
 
 import junit.framework.Assert;
 
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
-import org.jboss.shrinkwrap.impl.base.ServiceExtensionLoader;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveTestBase;
 import org.jboss.shrinkwrap.spi.MemoryMapArchive;
 import org.junit.Before;
@@ -44,7 +44,7 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive>
     * @throws Exception
     */
    @Before
-   public void createArchive() throws Exception  
+   public void createArchive() throws Exception
    {
       archive = createNewArchive();
       archive.toString(false);
@@ -53,9 +53,9 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive>
    @Override
    protected MemoryMapArchive createNewArchive()
    {
-      return new MemoryMapArchiveImpl(new ServiceExtensionLoader());
+      return new MemoryMapArchiveImpl(ShrinkWrap.getDefaultDomain().getConfiguration());
    }
-   
+
    /**
     * Return the created instance to the super class 
     * so it can perform the common test cases.
@@ -74,7 +74,7 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive>
    public void testConstructorWithName() throws Exception
    {
       String name = "test.jar";
-      MemoryMapArchive tmp = new MemoryMapArchiveImpl(name, new ServiceExtensionLoader());
+      MemoryMapArchive tmp = new MemoryMapArchiveImpl(name, ShrinkWrap.getDefaultDomain().getConfiguration());
       Assert.assertEquals("Should return the same name as construtor arg", name, tmp.getName());
    }
 

@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +41,7 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.io.StreamErrorHandler;
 import org.jboss.shrinkwrap.impl.base.io.StreamTask;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
+import org.jboss.shrinkwrap.spi.Configurable;
 
 /**
  * JDK-based implementation of a ZIP exporter.  Cannot handle archives
@@ -62,15 +62,6 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
     */
    private static final Logger log = Logger.getLogger(JdkZipExporterDelegate.class.getName());
 
-   /**
-    * Services used to submit new jobs (encoding occurs in a separate Thread)
-    */
-   private static final ExecutorService service;
-   static
-   {
-      service = Executors.newCachedThreadPool();
-   }
-
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -84,7 +75,7 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
     * {@link InputStream} to be returned to the caller
     */
    private InputStream inputStream;
-   
+
    /**
     * Used to see if we have exported at least one node
     */
@@ -143,29 +134,29 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
             }
             catch (final Exception e)
             {
-               
+
                // Log this and rethrow; otherwise if we go into deadlock we won't ever 
                // be able to get the underlying cause from the Future 
                log.log(Level.WARNING, "Exception encountered during export of archive", e);
-               
+
                // SHRINKWRAP-133 - if the Zip is empty, it won't close and a deadlock is triggered
                //TODO Find a better solution :)
-               if (pathsExported.isEmpty()) 
+               if (pathsExported.isEmpty())
                {
                   // Ensure the streams are set up before we do any work on them;
                   // it's possible that we encountered an exception before 
                   // everything has been initialized by the main Thread
                   // SHRINKWRAP-137
                   latch.await();
-                  
+
                   zipOutputStream.putNextEntry(new ZipEntry("dummy.txt"));
                }
-               
+
                throw e;
             }
             finally
             {
-               
+
                try
                {
                   zipOutputStream.close();
@@ -175,7 +166,7 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
                   // Ignore, but warn of danger
                   log.log(Level.WARNING,
                         "[SHRINKWRAP-120] Possible deadlock scenario: Got exception on closing the ZIP out stream: "
-                        + ioe.getMessage(), ioe);
+                              + ioe.getMessage(), ioe);
                }
             }
 
@@ -184,6 +175,7 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
       };
 
       // Get a handle and return it to the caller
+      final ExecutorService service = this.getArchive().as(Configurable.class).getConfiguration().getExecutorService();
       final Future<Void> job = service.submit(exportTask);
 
       /*
@@ -235,18 +227,18 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
       {
          throw new IllegalArgumentException("asset must be specified");
       }
-      
+
       // Mark if we're writing a directory
       final boolean isDirectory = node.getAsset() == null;
-      
+
       InputStream stream = null;
-      if (!isDirectory) 
+      if (!isDirectory)
       {
          stream = node.getAsset().openStream();
       }
 
       final String pathName = PathUtil.optionallyRemovePrecedingSlash(path.get());
-      
+
       // Make a task for this stream and close when done
       IOUtil.closeOnComplete(stream, new StreamTask<InputStream>()
       {
@@ -314,6 +306,5 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
    {
       return inputStream;
    }
-
 
 }

@@ -17,7 +17,7 @@
 package org.jboss.shrinkwrap.impl.base;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ExtensionLoader;
+import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.spi.MemoryMapArchive;
 
 /**
@@ -41,11 +41,12 @@ public class MemoryMapArchiveImpl extends MemoryMapArchiveBase<MemoryMapArchive>
     * This constructor will generate a 
     * unique {@link Archive#getName()} per instance.
     *  
-    * @param extensionLoader The extensionLoader to be used
+    * @param configuration The configuration for this archive
+    * @throws IllegalArgumentException If the configuration is not specified
     */
-   public MemoryMapArchiveImpl(ExtensionLoader extensionLoader)
+   public MemoryMapArchiveImpl(final Configuration configuration) throws IllegalArgumentException
    {
-      super(extensionLoader);
+      super(configuration);
    }
 
    /**
@@ -54,16 +55,18 @@ public class MemoryMapArchiveImpl extends MemoryMapArchiveBase<MemoryMapArchive>
     * This constructor will generate an {@link Archive} with the provided name.
     *  
     * @param archiveName
-    * @param extensionLoader The extensionLoader to be used
+    * @param configuration The configuration for this archive
+    * @throws IllegalArgumentException If the name or configuration is not specified
     */
-   public MemoryMapArchiveImpl(String archiveName, ExtensionLoader extensionLoader)
+   public MemoryMapArchiveImpl(final String archiveName, final Configuration configuration)
+         throws IllegalArgumentException
    {
-      super(archiveName, extensionLoader);
+      super(archiveName, configuration);
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.MemoryMapArchiveBase#getActualClass()
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.ArchiveBase#getActualClass()
     */
    @Override
    protected Class<MemoryMapArchive> getActualClass()
