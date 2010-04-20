@@ -42,6 +42,7 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.io.StreamErrorHandler;
 import org.jboss.shrinkwrap.impl.base.io.StreamTask;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
+import org.jboss.shrinkwrap.spi.Configurable;
 
 /**
  * JDK-based implementation of a ZIP exporter.  Cannot handle archives
@@ -174,12 +175,27 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
          }
       };
 
+      // Get an ExecutorService to which we may submit jobs.  This is either supplied by the user
+      // in a custom domain, or if one has not been specified, we'll make one and shut it down right
+      // here.  ExecutorServices supplied by the user are under the user's lifecycle, therefore it's
+      // user responsibility to shut it down appropriately.
+      boolean executorServiceIsOurs = false;
+      ExecutorService service = this.getArchive().as(Configurable.class).getConfiguration().getExecutorService();
+      if (service == null)
+      {
+         service = Executors.newSingleThreadExecutor();
+         executorServiceIsOurs = true;
+      }
+
       // Get a handle and return it to the caller
-      final ExecutorService service = Executors.newSingleThreadExecutor();
       final Future<Void> job = service.submit(exportTask);
 
-      // Tell the service to shut down after the job has completed, and accept no new jobs
-      service.shutdown();
+      // If we've created the ES
+      if (executorServiceIsOurs)
+      {
+         // Tell the service to shut down after the job has completed, and accept no new jobs
+         service.shutdown();
+      }
 
       /*
        * At this point the job will start, but hit the latch until we set up the streams

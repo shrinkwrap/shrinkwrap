@@ -67,15 +67,12 @@ public class ConfigurationBuilderTestCase
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Ensures that the {@link ExecutorService} is defaulted
-    * as contracted to {@link Executors#newCachedThreadPool()}
+    * Ensures that a null {@link ExecutorService} is not defaulted
+    * to any value, and may remain null
     */
    @Test
    public void defaultsExecutorService()
    {
-      // Define the expected type as contracted
-      final Class<?> expectedType = Executors.newCachedThreadPool().getClass();
-
       // Build and default
       builder.build();
 
@@ -83,9 +80,7 @@ public class ConfigurationBuilderTestCase
       final ExecutorService service = builder.getExecutorService();
 
       // Test
-      Assert.assertNotNull("The builder should default an " + ExecutorService.class.getSimpleName(), service);
-      Assert.assertEquals("The default " + ExecutorService.class.getSimpleName() + " was not of contracted type",
-            expectedType, service.getClass());
+      Assert.assertNull("The builder should not default an " + ExecutorService.class.getSimpleName(), service);
    }
 
    /**

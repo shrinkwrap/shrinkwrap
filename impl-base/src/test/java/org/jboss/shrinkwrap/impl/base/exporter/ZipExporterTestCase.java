@@ -21,6 +21,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -31,6 +40,9 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.ConfigurationBuilder;
+import org.jboss.shrinkwrap.api.Domain;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -90,6 +102,43 @@ public class ZipExporterTestCase extends ExportTestBase
    }
 
    /**
+    * Ensures that the ZIP export write task uses the {@link ExecutorService}
+    * that we've configured, and leaves it running (does not shut it down)
+    * @throws Exception
+    */
+   @Test
+   public void exportUsesOurExecutorService() throws Exception
+   {
+      // Make a custom ES
+      final CountingExecutorService service = new CountingExecutorService();
+
+      // Create a custom configuration
+      final Domain domain = ShrinkWrap.createDomain(new ConfigurationBuilder().executorService(service).build());
+
+      // Make an archive using the new configuration
+      final Archive<?> archive = domain.getArchiveFactory().create("test.jar", JavaArchive.class).addClass(
+            ZipExporterTestCase.class);
+
+      // Fully export by reading all content (export is on-demand)
+      final InputStream zip = archive.as(ZipExporter.class).exportZip();
+      while (zip.read() != -1)
+      {
+
+      }
+
+      // Ensure the ES was used (one job was submitted to it)
+      TestCase.assertEquals("Custom " + ExecutorService.class.getSimpleName() + " was not used by ZIP export", 1,
+            service.counter);
+
+      // Ensure the ES was not shut down by the export process
+      TestCase.assertFalse("ZIP Export should not shut down a user-supplied " + ExecutorService.class.getName(),
+            service.isShutdown());
+
+      // Shut down the ES (clean up)
+      service.shutdown();
+   }
+
+   /**
     * Test to ensure that the {@link JdkZipExporterDelegate} does not accept 
     * an empty archive as input
     * 
@@ -103,7 +152,7 @@ public class ZipExporterTestCase extends ExportTestBase
       // Attempt to export an empty archive, should fail
       Archives.create(NAME_ARCHIVE, JavaArchive.class).as(ZipExporter.class).exportZip();
    }
-   
+
    /**
     * Test to ensure that the {@link JdkZipExporterDelegate} accepts an archive
     * with only directories, no assets.
@@ -111,7 +160,7 @@ public class ZipExporterTestCase extends ExportTestBase
     * @throws Exception
     */
    @Test
-   public void testExportArchiveWithOnlyDirectories() 
+   public void testExportArchiveWithOnlyDirectories()
    {
       // Attempt to export an archive with some directories, should pass
       Archives.create(NAME_ARCHIVE, JavaArchive.class).addDirectories("/test/game").as(ZipExporter.class).exportZip();
@@ -381,5 +430,111 @@ public class ZipExporterTestCase extends ExportTestBase
       // SHRINKWRAP-96
       ZipEntry rootEntry = expectedZip.getEntry("/");
       Assert.assertNull("ZIP should not have explicit root path written (SHRINKWRAP-96)", rootEntry);
+   }
+
+   /**
+    * Test implementation of an {@link ExecutorService} which 
+    * counts all jobs submitted.
+    * 
+    * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+    * @version $Revision: $
+    */
+   private static class CountingExecutorService implements ExecutorService
+   {
+
+      private final ExecutorService delegate;
+
+      int counter = 0;
+
+      public CountingExecutorService()
+      {
+         delegate = Executors.newSingleThreadExecutor();
+      }
+
+      @Override
+      public boolean awaitTermination(final long timeout, final TimeUnit unit) throws InterruptedException
+      {
+         return delegate.awaitTermination(timeout, unit);
+      }
+
+      @Override
+      public <T> List<Future<T>> invokeAll(final Collection<? extends Callable<T>> tasks) throws InterruptedException
+      {
+         return delegate.invokeAll(tasks);
+      }
+
+      @Override
+      public <T> List<Future<T>> invokeAll(final Collection<? extends Callable<T>> tasks, final long timeout,
+            final TimeUnit unit) throws InterruptedException
+      {
+         return delegate.invokeAll(tasks, timeout, unit);
+      }
+
+      @Override
+      public <T> T invokeAny(final Collection<? extends Callable<T>> tasks) throws InterruptedException,
+            ExecutionException
+      {
+         return delegate.invokeAny(tasks);
+      }
+
+      @Override
+      public <T> T invokeAny(final Collection<? extends Callable<T>> tasks, final long timeout, final TimeUnit unit)
+            throws InterruptedException, ExecutionException, TimeoutException
+      {
+         return delegate.invokeAny(tasks, timeout, unit);
+      }
+
+      @Override
+      public boolean isShutdown()
+      {
+         return delegate.isShutdown();
+      }
+
+      @Override
+      public boolean isTerminated()
+      {
+         return delegate.isTerminated();
+      }
+
+      @Override
+      public void shutdown()
+      {
+         delegate.shutdown();
+      }
+
+      @Override
+      public List<Runnable> shutdownNow()
+      {
+         return delegate.shutdownNow();
+      }
+
+      @Override
+      public <T> Future<T> submit(final Callable<T> task)
+      {
+         counter++;
+         return delegate.submit(task);
+      }
+
+      @Override
+      public Future<?> submit(final Runnable task)
+      {
+         counter++;
+         return delegate.submit(task);
+      }
+
+      @Override
+      public <T> Future<T> submit(final Runnable task, final T result)
+      {
+         counter++;
+         return delegate.submit(task, result);
+      }
+
+      @Override
+      public void execute(final Runnable command)
+      {
+         counter++;
+         delegate.execute(command);
+      }
+
    }
 }

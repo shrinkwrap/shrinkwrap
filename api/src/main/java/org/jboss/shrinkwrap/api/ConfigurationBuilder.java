@@ -17,7 +17,6 @@
 package org.jboss.shrinkwrap.api;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +25,7 @@ import java.util.logging.Logger;
  * Provides defaults for each property if not specified (null) according to the following:
  * 
  * <ul>
- *   <li><code>executorService</code> - A new {@link Executors#newCachedThreadPool()}</li>
+ *   <li><code>executorService</code> - Stay null, none is required and ShrinkWrap will create its own and destroy it when done as needed</li>
  *   <li><code>extensionLoader</code> - A new instance of the service extension loader from shrinkwrap-impl</li>
  * </ul>
  * 
@@ -51,15 +50,6 @@ public class ConfigurationBuilder
     * Implementation class name of the default {@link ExtensionLoader} to be used
     */
    private static final String EXTENSION_LOADER_IMPL = "org.jboss.shrinkwrap.impl.base.ServiceExtensionLoader";
-
-   /**
-    * Obtains the default {@link ExecutorService} to be used if none is specified
-    * @return
-    */
-   private static ExecutorService createDefaultExecutorService()
-   {
-      return Executors.newCachedThreadPool();
-   }
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -166,18 +156,6 @@ public class ConfigurationBuilder
                   + loader);
          }
          this.extensionLoader(loader);
-      }
-
-      // If no executor service is present, create one
-      if (getExecutorService() == null)
-      {
-         final ExecutorService service = createDefaultExecutorService();
-         if (log.isLoggable(Level.FINER))
-         {
-            log.finer("User has not defined an explicit " + ExecutorService.class.getSimpleName() + "; defaulting to "
-                  + service);
-         }
-         this.executorService(service);
       }
    }
 
