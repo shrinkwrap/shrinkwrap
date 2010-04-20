@@ -164,7 +164,7 @@ public final class ShrinkWrap
       /**
        * The wrapped default domain
        */
-      private Domain domain = ShrinkWrap.createDomain();
+      private transient Domain domain = ShrinkWrap.createDomain();
 
       /**
        * Obtains the default domain for the system
