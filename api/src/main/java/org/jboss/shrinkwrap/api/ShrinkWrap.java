@@ -123,7 +123,8 @@ public final class ShrinkWrap
    /**
     * Creates a new archive of the specified type.  The archive
     * will be be backed by the default {@link Configuration}.
-    * Invoking this method is semantically equivalent to calling
+    * Invoking this method is functionally equivalent to calling
+    * {@link ArchiveFactory#create(String, Class)} upon
     * {@link Domain#getArchiveFactory()} upon the domain returned
     * by {@link ShrinkWrap#getDefaultDomain()}.
     * 
