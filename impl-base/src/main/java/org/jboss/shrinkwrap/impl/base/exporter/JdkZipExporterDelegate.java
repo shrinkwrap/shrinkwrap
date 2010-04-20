@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,7 +42,6 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.io.StreamErrorHandler;
 import org.jboss.shrinkwrap.impl.base.io.StreamTask;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
-import org.jboss.shrinkwrap.spi.Configurable;
 
 /**
  * JDK-based implementation of a ZIP exporter.  Cannot handle archives
@@ -175,8 +175,11 @@ public class JdkZipExporterDelegate extends AbstractExporterDelegate<InputStream
       };
 
       // Get a handle and return it to the caller
-      final ExecutorService service = this.getArchive().as(Configurable.class).getConfiguration().getExecutorService();
+      final ExecutorService service = Executors.newSingleThreadExecutor();
       final Future<Void> job = service.submit(exportTask);
+
+      // Tell the service to shut down after the job has completed, and accept no new jobs
+      service.shutdown();
 
       /*
        * At this point the job will start, but hit the latch until we set up the streams
