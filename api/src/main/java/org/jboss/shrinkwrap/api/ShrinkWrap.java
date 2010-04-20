@@ -26,8 +26,8 @@ package org.jboss.shrinkwrap.api;
  * {@link Archive}s under these defaults by way of 
  * {@link ShrinkWrap#create(String, Class)}.  Additionally, this class is
  * the hook to create new {@link Domain}s via 
- * {@link ShrinkWrap#createDomain()}.  From here the user may further customize
- * the new domain's {@link Configuration}.
+ * {@link ShrinkWrap#createDomain()}, {@link ShrinkWrap#createDomain(ConfigurationBuilder)} or 
+ * {@link ShrinkWrap#createDomain(Configuration)}.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
