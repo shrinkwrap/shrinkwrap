@@ -21,7 +21,6 @@ import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Map;
-import java.util.Set;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
@@ -858,11 +857,21 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
          // Get all inner classes and add them
          addPackages(
                false,
-               new Filter<Class<?>>()
+               new Filter<ArchivePath>()
                {
-                  public boolean include(Class<?> object)
+                  /**
+                   * path  = /package/MyClass$Test.class <br/>
+                   * clazz = /package/MyClass.class <br/>
+                   * 
+                   *  
+                   * @param path The added classes 
+                   * @return 
+                   */
+                  public boolean include(ArchivePath path)
                   {
-                     return object.getName().startsWith(clazz.getName() + "$");
+                     ArchivePath classArchivePath = AssetUtil.getFullPathForClassResource(clazz);
+                     String expression = classArchivePath.get().replace(".class", "\\$.*");
+                     return path.get().matches(expression);
                   };
                },
                clazz.getPackage()
@@ -889,33 +898,48 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public T addPackages(boolean recursive, Package... packages) throws IllegalArgumentException
    {
       Validate.notNull(packages, "Packages must be specified");
-      return addPackages(recursive, Filters.includeAllClasses(), packages);
+      return addPackages(recursive, Filters.includeAll(), packages);
    }
    
    /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.container.ClassContainer#addPackages(boolean, org.jboss.shrinkwrap.api.Filter, java.lang.Package[])
     */
    @Override
-   public T addPackages(boolean recursive, Filter<Class<?>> filter, Package... packages) throws IllegalArgumentException
+   public T addPackages(final boolean recursive, final Filter<ArchivePath> filter, final Package... packages) throws IllegalArgumentException
    {
       Validate.notNull(filter, "Filter must be specified");
       Validate.notNull(packages, "Packages must be specified");
       
+      final ClassLoader classLoader = SecurityActions.getThreadContextClassLoader();
+      
       for(Package pack : packages) 
       {
-         URLPackageScanner scanner = URLPackageScanner.newInstance(
-               pack, recursive, SecurityActions.getThreadContextClassLoader());
-         Set<Class<?>> classes = scanner.getClasses(); 
-         for(Class<?> clazz : classes) 
-         {
-            if(!filter.include(clazz))
-            {
-               continue;
-            }
-            Asset asset = new ClassAsset(clazz);
-            ArchivePath location = new BasicPath(getClassesPath(), AssetUtil.getFullPathForClassResource(clazz));
-            add(asset, location);
-         }
+         URLPackageScanner.newInstance(
+               pack, recursive, classLoader, 
+               new URLPackageScanner.Callback()
+               {
+                  @Override
+                  public void classFound(String className)
+                  {
+                     ArchivePath classNamePath = AssetUtil.getFullPathForClassResource(className);
+                     if(!filter.include(classNamePath))
+                     {
+                        return;
+                     }
+                     Class<?> clazz;
+                     try
+                     {
+                        clazz = classLoader.loadClass(className);
+                     } 
+                     catch (ClassNotFoundException e)
+                     {
+                        throw new IllegalStateException("Could not load found class " + className);
+                     }
+                     Asset asset = new ClassAsset(clazz);
+                     ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
+                     add(asset, location);
+                  }
+               }).scanPackage();
       }
       return covarientReturn();
    }

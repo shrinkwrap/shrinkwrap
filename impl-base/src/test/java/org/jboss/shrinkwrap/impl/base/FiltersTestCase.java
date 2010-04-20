@@ -86,36 +86,10 @@ public class FiltersTestCase
             filteredPaths.get(0));
    }
 
-   @Test
-   public void shouldIncludeAllClasses() throws Exception 
-   {
-      List<Class<?>> classes = new ArrayList<Class<?>>();
-      classes.add(FiltersTestCase.class);
-      
-      List<Class<?>> filteredClasses = executeFilter(classes, Filters.includeAllClasses());
-      
-      Assert.assertArrayEquals(
-            "Should include all classes", 
-            classes.toArray(), 
-            filteredClasses.toArray());
-   }
-
    private <T> List<T> executeFilter(Class<T> clazz, List<T> items, Filter<T> filter) 
    {
       List<T> result = new ArrayList<T>();
       for(T item : items)
-      {
-         if(filter.include(item)) {
-            result.add(item);
-         }
-      }
-      return result;
-   }
-
-   private List<Class<?>> executeFilter(List<Class<?>> items, Filter<Class<?>> filter) 
-   {
-      List<Class<?>> result = new ArrayList<Class<?>>();
-      for(Class<?> item : items)
       {
          if(filter.include(item)) {
             result.add(item);

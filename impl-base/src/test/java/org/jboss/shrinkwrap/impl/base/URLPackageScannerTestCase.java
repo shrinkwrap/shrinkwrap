@@ -32,7 +32,16 @@ public class URLPackageScannerTestCase
    @Test(expected = IllegalArgumentException.class)
    public void shouldThrowExceptionNullPackage()
    {
-      URLPackageScanner.newInstance((Package)null, true,
-         URLPackageScannerTestCase.class.getClassLoader());
+      URLPackageScanner.newInstance(
+            (Package)null, 
+            true,
+            URLPackageScannerTestCase.class.getClassLoader(), 
+            new URLPackageScanner.Callback()
+            {
+               @Override
+               public void classFound(String className)
+               {
+               }
+            });
    }
 }

@@ -25,7 +25,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.api.Filter;
+import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
@@ -672,14 +672,10 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @ArchiveType(ClassContainer.class)
    public void testAddPackageRecursiveFiltered() throws Exception 
    {
-      getClassContainer().addPackages(true, new Filter<Class<?>>()
-      {
-         @Override
-         public boolean include(Class<?> clazz)
-         {
-            return clazz == DynamicContainerTestBase.class;
-         }
-      }, DynamicContainerTestBase.class.getPackage());
+      getClassContainer().addPackages(
+            true, 
+            Filters.include(DynamicContainerTestBase.class),
+            DynamicContainerTestBase.class.getPackage());
       
       ArchivePath expectedPath = new BasicPath(
             getClassPath(), AssetUtil.getFullPathForClassResource(DynamicContainerTestBase.class));

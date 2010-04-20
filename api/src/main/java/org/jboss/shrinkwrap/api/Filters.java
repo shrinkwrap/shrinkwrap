@@ -28,31 +28,12 @@ public final class Filters
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   private static final String INCLUDE_ALL_CLASSES = "org.jboss.shrinkwrap.impl.base.filter.IncludeAllClasses";
-
    private static final String INCLUDE_ALL_PATHS = "org.jboss.shrinkwrap.impl.base.filter.IncludeAllPaths";
    
    private static final String INCLUDE_REGEXP_PATHS = "org.jboss.shrinkwrap.impl.base.filter.IncludeRegExpPaths";
    
    private static final String EXCLUDE_REGEXP_PATHS = "org.jboss.shrinkwrap.impl.base.filter.ExcludeRegExpPaths";
    
-   /**
-    * {@link Filter} that include all {@link Class}s.
-    * 
-    * Only meant to be used internally.
-    * 
-    * @return A {@link Filter} that always return true
-    */
-   @SuppressWarnings("unchecked")
-   public static Filter<Class<?>> includeAllClasses() 
-   {
-      return SecurityActions.newInstance(
-            INCLUDE_ALL_CLASSES, 
-            new Class<?>[]{}, 
-            new Object[]{}, 
-            Filter.class);
-   }
-
    /**
     * {@link Filter} that includes all {@link ArchivePath}s.
     * 
@@ -101,7 +82,25 @@ public final class Filters
             new Object[]{regexp}, 
             Filter.class);
    }
-
+   
+   /**
+    * {@link Filter} that includes a specific {@link Class}.
+    * 
+    * @param clazz To be included
+    * @return 
+    */
+   @SuppressWarnings("unchecked")
+   public static Filter<ArchivePath> include(Class<?> clazz)
+   {
+      String classExpression = ".*" + clazz.getName().replaceAll("\\.", "\\.") + "\\.class";
+      
+      return SecurityActions.newInstance(
+            INCLUDE_REGEXP_PATHS, 
+            new Class<?>[]{String.class}, 
+            new Object[]{ classExpression }, 
+            Filter.class);
+   }
+   
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||

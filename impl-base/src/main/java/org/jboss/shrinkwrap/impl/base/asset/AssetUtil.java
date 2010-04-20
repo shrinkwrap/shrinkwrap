@@ -135,4 +135,21 @@ public final class AssetUtil
       String classFullPath = classResourceDelimiter + EXTENSION_CLASS;
       return new BasicPath(classFullPath);
    }
+
+   /**
+    * Helper to extract a ClassResources full path.
+    * <br/><br/>
+    * 
+    * ie: package.MyClass = package/MyClass.class
+    * 
+    * @param className
+    * @return
+    */
+   public static ArchivePath getFullPathForClassResource(String className) 
+   {
+      String classResourceDelimiter = className.replaceAll(
+            DELIMITER_CLASS_NAME_PATH, DELIMITER_RESOURCE_PATH);
+      String classFullPath = classResourceDelimiter + EXTENSION_CLASS;
+      return new BasicPath(classFullPath);
+   }
 }

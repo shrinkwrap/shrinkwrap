@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.api.container;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Filter;
 
 /**
@@ -107,7 +108,11 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
    T addPackages(boolean recursive, Package... packages) throws IllegalArgumentException;
    
    /**
-    * Adds all classes accepted by the filter in the specified {@link Package}s to the {@link Archive}.
+    * Adds all classes accepted by the filter in the specified {@link Package}s to the {@link Archive}. <br/>
+    * 
+    * The {@link ArchivePath} returned to the filter is the {@link ArchivePath} of the class, not the final location. <br/>
+    * package.MyClass = /package/MyClass.class <br/>
+    * <b>not:</b> package.MyClass = /WEB-INF/classes/package/MyClass.class <br/>
     * 
     * @param recursive Should the sub packages be added
     * @param filter filter out specific classes
@@ -115,5 +120,5 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
     * @return This virtual archive
     * @throws IllegalArgumentException If no packages were specified
     */
-   T addPackages(boolean recursive, Filter<Class<?>> filter, Package... packages) throws IllegalArgumentException;
+   T addPackages(boolean recursive, Filter<ArchivePath> filter, Package... packages) throws IllegalArgumentException;
 }

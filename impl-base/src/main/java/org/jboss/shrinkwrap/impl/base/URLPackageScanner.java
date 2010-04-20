@@ -54,7 +54,8 @@ public class URLPackageScanner
 
    private final ClassLoader classLoader;
    
-   private final Set<Class<?>> classes = new HashSet<Class<?>>();
+   //private final Set<String> classes = new HashSet<String>();
+   private Callback callback;
 
    /**
     * Factory method to create an instance of URLPackageScanner.
@@ -63,25 +64,27 @@ public class URLPackageScanner
     * @param classLoader class loader that will have classes added 
     * @return new instance of URLPackageScanner
     */
-   public static URLPackageScanner newInstance(Package pkg, boolean addRecursively, ClassLoader classLoader)
+   public static URLPackageScanner newInstance(Package pkg, boolean addRecursively, ClassLoader classLoader, Callback callback)
    {
       Validate.notNull(pkg, "Pkg must be specified");
       Validate.notNull(pkg.getName(), "Pkg must have a name");
       Validate.notNull(addRecursively, "AddRecursively must be specified");
       Validate.notNull(classLoader, "ClassLoader must be specified");
+      Validate.notNull(callback, "Callback must be specified");
 
-      return new URLPackageScanner(pkg, addRecursively, classLoader);
+      return new URLPackageScanner(pkg, addRecursively, classLoader, callback);
    }
 
-   private URLPackageScanner(Package pkg, boolean addRecursively, ClassLoader classLoader)
+   private URLPackageScanner(Package pkg, boolean addRecursively, ClassLoader classLoader, Callback callback)
    {
       this.packageName = pkg.getName();
       this.packageNamePath = packageName.replace(".", "/");
       this.addRecursively = addRecursively;
       this.classLoader = classLoader;
+      this.callback = callback;
    }
 
-   private void scanPackage()
+   public void scanPackage()
    {
       try
       {
@@ -128,7 +131,7 @@ public class URLPackageScanner
                   && (addRecursively || !name.substring(packageNamePath.length() + 1).contains("/")))
             {
                String className = name.replace("/", ".").replace(".class", "");
-               classes.add(classLoader.loadClass(className));
+               foundClass(className);
             }
          }
       }
@@ -161,7 +164,7 @@ public class URLPackageScanner
       {
          if (!child.isDirectory() && child.getName().endsWith(".class"))
          {
-            classes.add(classLoader.loadClass(packageName + "." + child.getName().substring(0, child.getName().lastIndexOf(".class"))));
+            foundClass(packageName + "." + child.getName().substring(0, child.getName().lastIndexOf(".class")));
          }
          else if (child.isDirectory() && addRecursively)
          {
@@ -170,14 +173,31 @@ public class URLPackageScanner
       }
    }
 
-   public List<URL> loadResources(String name) throws IOException
+   private void foundClass(String className) 
+   {
+      callback.classFound(className);
+   }
+   
+   
+   private List<URL> loadResources(String name) throws IOException
    {
       return Collections.list(classLoader.getResources(name));
    }
 
-   public Set<Class<?>> getClasses()
+   
+   /**
+    * Callback interface for found classes.
+    *
+    * @author <a href="mailto:aknutsen@redhat.com">Aslak Knutsen</a>
+    * @version $Revision: $
+    */
+   public interface Callback 
    {
-      scanPackage();
-      return classes;
+      /**
+       * Called for each found class.
+       * 
+       * @param className The name of the found class
+       */
+      void classFound(String className);
    }
 }
