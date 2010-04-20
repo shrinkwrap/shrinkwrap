@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  *   <li><code>extensionLoader</code> - A new instance of the service extension loader from shrinkwrap-impl</li>
  * </ul>
  * 
- * Not thread-safe.  When done altering proeprties here, a new configuration may be
+ * Not thread-safe.  When done altering properties here, a new configuration may be
  * constructed by calling upon {@link ConfigurationBuilder#build()}.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
