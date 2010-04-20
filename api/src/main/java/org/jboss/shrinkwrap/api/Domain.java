@@ -19,9 +19,11 @@ package org.jboss.shrinkwrap.api;
 /**
  * Encapsulates a shared {@link Configuration} to be used 
  * by all {@link Archive}s created by this {@link Domain}'s
- * {@link ArchiveFactory}.  New domains are created via 
- * {@link ShrinkWrap#createDomain()} (for a default, shared configuration)
- * or {@link ShrinkWrap#createDomain(ConfigurationBuilder)} (to supply an explicit
+ * {@link ArchiveFactory}.  New domains are created via
+ * {@link ShrinkWrap#createDomain()} (for a default configuration isolated
+ * from the {@link ShrinkWrap#getDefaultDomain()}), or 
+ * {@link ShrinkWrap#createDomain(Configuration)}
+ * and {@link ShrinkWrap#createDomain(ConfigurationBuilder)} (to supply an explicit
  * configuration property set). 
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>

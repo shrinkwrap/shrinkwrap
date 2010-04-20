@@ -26,6 +26,9 @@ import java.util.concurrent.ExecutorService;
  * is required it must be created under a new domain.  The default
  * configuration is defined by {@link ConfigurationBuilder}, and new
  * configurations are created via {@link ConfigurationBuilder#build()}. 
+ * Note that while the {@link Configuration} is immutable, its properties
+ * may have internal state that may be changed.  For true isolation, use separate
+ * {@link Domain}s when creating {@link Archive}s.
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
