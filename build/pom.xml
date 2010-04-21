@@ -181,6 +181,24 @@
           <findbugsXmlOutputDirectory>target/site</findbugsXmlOutputDirectory>
         </configuration>
       </plugin>
+    
+      <!-- SHRINKWRAP-157 Workaround -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>project-team</report>
+              <report>mailing-list</report>
+              <report>cim</report>
+              <report>issue-tracking</report>
+              <report>license</report>
+              <report>scm</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
 
     </plugins>
   </reporting>
