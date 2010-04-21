@@ -19,8 +19,8 @@ package org.jboss.shrinkwrap.impl.base;
 import junit.framework.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Assignable;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 
@@ -39,7 +39,7 @@ public class ServiceExtensionLoaderTestCase
    @Test
    public void shouldBeAbleToLoadExtension() throws Exception {
       Extension extension = new ServiceExtensionLoader()
-               .load(Extension.class, Archives.create("test.jar", JavaArchive.class));
+               .load(Extension.class, ShrinkWrap.create("test.jar", JavaArchive.class));
 
       Assert.assertNotNull(extension);
       
@@ -50,7 +50,7 @@ public class ServiceExtensionLoaderTestCase
    public void shouldBeAbleToOverrideExtension() throws Exception {
       Extension extension = new ServiceExtensionLoader()
          .addOverride(Extension.class, ExtensionImpl2.class)
-         .load(Extension.class, Archives.create("test.jar", JavaArchive.class));
+         .load(Extension.class, ShrinkWrap.create("test.jar", JavaArchive.class));
 
       Assert.assertNotNull(extension);
    
@@ -60,7 +60,7 @@ public class ServiceExtensionLoaderTestCase
    @Test
    public void shouldBePlacedInCacheAfterLoad() throws Exception {
       ServiceExtensionLoader loader = new ServiceExtensionLoader();
-      loader.load(Extension.class, Archives.create("test.jar", JavaArchive.class));
+      loader.load(Extension.class, ShrinkWrap.create("test.jar", JavaArchive.class));
       
       Assert.assertTrue(
             "Should be placed in cache",
@@ -71,13 +71,13 @@ public class ServiceExtensionLoaderTestCase
    @Test(expected = RuntimeException.class)
    public void shouldThrowExceptionOnMissingExtension() throws Exception {
       new ServiceExtensionLoader()
-         .load(MissingExtension.class, Archives.create("test.jar", JavaArchive.class));
+         .load(MissingExtension.class, ShrinkWrap.create("test.jar", JavaArchive.class));
    }
 
    @Test(expected = RuntimeException.class)
    public void shouldThrowExceptionOnWrongImplType() throws Exception {
       new ServiceExtensionLoader()
-         .load(WrongImplExtension.class, Archives.create("test.jar", JavaArchive.class));
+         .load(WrongImplExtension.class, ShrinkWrap.create("test.jar", JavaArchive.class));
    }
 
    

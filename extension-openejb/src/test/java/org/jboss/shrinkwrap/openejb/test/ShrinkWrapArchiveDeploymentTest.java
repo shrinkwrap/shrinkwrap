@@ -32,7 +32,7 @@ import org.apache.openejb.assembler.classic.TransactionServiceInfo;
 import org.apache.openejb.client.LocalInitialContextFactory;
 import org.apache.openejb.config.ConfigurationFactory;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Archives;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.openejb.config.ShrinkWrapConfigurationFactory;
 import org.jboss.shrinkwrap.openejb.ejb.EchoBean;
@@ -120,7 +120,7 @@ public class ShrinkWrapArchiveDeploymentTest
 
       // Create archive to hold our test EJB
       final String name = "echo.jar";
-      final JavaArchive archive = Archives.create(name, JavaArchive.class).addClasses(EchoBean.class,
+      final JavaArchive archive = ShrinkWrap.create(name, JavaArchive.class).addClasses(EchoBean.class,
             EchoLocalBusiness.class);
       log.info("Created archive: " + archive.toString(true));
 

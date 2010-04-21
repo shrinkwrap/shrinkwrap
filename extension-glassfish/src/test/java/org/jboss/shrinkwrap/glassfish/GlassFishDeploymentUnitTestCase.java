@@ -31,7 +31,7 @@ import org.glassfish.api.embedded.EmbeddedFileSystem;
 import org.glassfish.api.embedded.LifecycleException;
 import org.glassfish.api.embedded.Server;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Archives;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.glassfish.api.ShrinkwrapReadableArchive;
@@ -105,9 +105,9 @@ public class GlassFishDeploymentUnitTestCase
    {
 
       // Create the packaging
-      javaArchive = Archives.create(NAME_DEPLOYMENT_JAR, JavaArchive.class).addClasses(EchoLocalBusiness.class,
+      javaArchive = ShrinkWrap.create(NAME_DEPLOYMENT_JAR, JavaArchive.class).addClasses(EchoLocalBusiness.class,
             EchoBean.class).as(ShrinkwrapReadableArchive.class);
-      enterpriseArchive = Archives.create(NAME_DEPLOYMENT_EAR, EnterpriseArchive.class).addModule(
+      enterpriseArchive = ShrinkWrap.create(NAME_DEPLOYMENT_EAR, EnterpriseArchive.class).addModule(
             javaArchive.as(JavaArchive.class)).as(ShrinkwrapReadableArchive.class);
 
    }

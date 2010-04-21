@@ -19,7 +19,7 @@ package org.jboss.shrinkwrap.impl.base.spec;
 import java.util.UUID;
 
 import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.Archives;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.EnterpriseContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -95,7 +95,7 @@ public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTes
    @Override
    protected EnterpriseArchive createNewArchive()
    {
-      return Archives.create(UUID.randomUUID().toString() + ".jar", EnterpriseArchive.class);
+      return ShrinkWrap.create(UUID.randomUUID().toString() + ".jar", EnterpriseArchive.class);
    }
 
    //-------------------------------------------------------------------------------------||

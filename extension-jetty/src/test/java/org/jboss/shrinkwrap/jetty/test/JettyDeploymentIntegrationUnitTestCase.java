@@ -37,7 +37,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.Archives;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.jetty.api.ShrinkWrapWebAppContext;
 import org.jboss.shrinkwrap.jetty.servlet.JspForwardingServlet;
@@ -124,7 +124,7 @@ public class JettyDeploymentIntegrationUnitTestCase
       // Create the new server
       server = new Server(HTTP_BIND_PORT);
 
-      final WebArchive archive = Archives.create(NAME_WAR, WebArchive.class);
+      final WebArchive archive = ShrinkWrap.create(NAME_WAR, WebArchive.class);
       final ArchivePath targetPathWebXml = ArchivePaths.create("web.xml");
       archive.addWebResource(PATH_ACTUAL_WEB_XML, targetPathWebXml).addResource(PATH_JSP).addClass(servletClass);
       log.info(archive.toString(true));

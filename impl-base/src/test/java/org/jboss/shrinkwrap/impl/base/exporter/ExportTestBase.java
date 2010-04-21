@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
@@ -159,7 +159,7 @@ public abstract class ExportTestBase
    protected Archive<?> createArchiveWithAssets()
    {
       // Create an archive
-      Archive<?> archive = Archives.create(NAME_ARCHIVE, JavaArchive.class);
+      Archive<?> archive = ShrinkWrap.create(NAME_ARCHIVE, JavaArchive.class);
       // Add some content
       addContent(archive);
       // Return archive
@@ -175,7 +175,7 @@ public abstract class ExportTestBase
       Archive<?> archive = createArchiveWithAssets();
 
       // Create a nested archive
-      Archive<?> nestedArchive = Archives.create(NAME_NESTED_ARCHIVE, JavaArchive.class);
+      Archive<?> nestedArchive = ShrinkWrap.create(NAME_NESTED_ARCHIVE, JavaArchive.class);
 
       // Add some content
       addContent(nestedArchive);
@@ -184,7 +184,7 @@ public abstract class ExportTestBase
       archive.add(nestedArchive, new BasicPath());
 
       // Add an archive nested in a directory
-      Archive<?> nestedArchiveTwo = Archives.create(NAME_NESTED_ARCHIVE_2, JavaArchive.class);
+      Archive<?> nestedArchiveTwo = ShrinkWrap.create(NAME_NESTED_ARCHIVE_2, JavaArchive.class);
 
       // Add some content
       addContent(nestedArchiveTwo);

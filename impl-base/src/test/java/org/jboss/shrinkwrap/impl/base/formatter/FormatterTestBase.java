@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import junit.framework.TestCase;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Archives;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveTestBase;
@@ -70,7 +70,7 @@ public abstract class FormatterTestBase
    @Before
    public void createArchive()
    {
-      archive = Archives.create(NAME_ARCHIVE, JavaArchive.class).addClasses(FormatterTestBase.class,
+      archive = ShrinkWrap.create(NAME_ARCHIVE, JavaArchive.class).addClasses(FormatterTestBase.class,
             ArchiveTestBase.class);
    }
 

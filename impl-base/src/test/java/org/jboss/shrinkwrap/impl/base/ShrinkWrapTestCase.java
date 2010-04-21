@@ -23,13 +23,17 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.ConfigurationBuilder;
 import org.jboss.shrinkwrap.api.Domain;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.impl.base.container.ContainerBase;
 import org.junit.Test;
 
 /**
@@ -169,6 +173,23 @@ public class ShrinkWrapTestCase
 
    }
 
+   /**
+    * Ensures that we may add extension overrides via the {@link ExtensionLoader}
+    * through some new {@link Domain}
+    * @throws Exception
+    */
+   @Test
+   public void shouldBeAbleToAddOverride() throws Exception
+   {
+      final Domain domain = ShrinkWrap.createDomain();
+      domain.getConfiguration().getExtensionLoader().addOverride(JavaArchive.class, MockJavaArchiveImpl.class);
+      final JavaArchive archive = domain.getArchiveFactory().create("test.jar", JavaArchive.class);
+
+      Assert.assertEquals("Should have overridden normal JavaArchive impl", MockJavaArchiveImpl.class, archive
+            .getClass());
+
+   }
+
    //-------------------------------------------------------------------------------------||
    // Internal Helper Members ------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -192,6 +213,51 @@ public class ShrinkWrapTestCase
             final Class<? extends T> extensionImplClass)
       {
          return null;
+      }
+   }
+
+   /**
+    * Mock Archive wrapper implementation 
+    * 
+    * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+    * @version $Revision: $
+    */
+   public static class MockJavaArchiveImpl extends ContainerBase<JavaArchive> implements JavaArchive
+   {
+
+      public MockJavaArchiveImpl(Archive<?> archive)
+      {
+         super(JavaArchive.class, archive);
+      }
+
+      @Override
+      protected ArchivePath getClassesPath()
+      {
+         return ArchivePaths.root();
+      }
+
+      @Override
+      protected ArchivePath getLibraryPath()
+      {
+         return ArchivePaths.root();
+      }
+
+      @Override
+      protected ArchivePath getManinfestPath()
+      {
+         return ArchivePaths.root();
+      }
+
+      @Override
+      protected ArchivePath getResourcePath()
+      {
+         return ArchivePaths.root();
+      }
+
+      @Override
+      public String toString(final Formatter formatter) throws IllegalArgumentException
+      {
+         return formatter.format(this);
       }
    }
 

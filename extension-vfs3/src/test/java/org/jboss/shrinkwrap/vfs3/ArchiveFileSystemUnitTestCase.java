@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Archives;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.vfs.TempDir;
 import org.jboss.vfs.TempFileProvider;
@@ -115,7 +115,7 @@ public class ArchiveFileSystemUnitTestCase
    @Test
    public void testArchiveFileSystem() throws Exception
    {
-      final JavaArchive archive = Archives.create(NAME_ARCHIVE, JavaArchive.class);
+      final JavaArchive archive = ShrinkWrap.create(NAME_ARCHIVE, JavaArchive.class);
 
       // Back VFS by a temp directory
       final TempDir tempDir = tempFileProvider.createTempDir(archive.getName());

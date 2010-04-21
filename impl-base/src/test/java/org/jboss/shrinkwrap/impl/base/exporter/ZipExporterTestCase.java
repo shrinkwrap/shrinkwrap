@@ -38,7 +38,6 @@ import junit.framework.TestCase;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.ConfigurationBuilder;
 import org.jboss.shrinkwrap.api.Domain;
@@ -150,7 +149,7 @@ public class ZipExporterTestCase extends ExportTestBase
    public void exportEmptyArchiveAsZip() throws Exception
    {
       // Attempt to export an empty archive, should fail
-      Archives.create(NAME_ARCHIVE, JavaArchive.class).as(ZipExporter.class).exportZip();
+      ShrinkWrap.create(NAME_ARCHIVE, JavaArchive.class).as(ZipExporter.class).exportZip();
    }
 
    /**
@@ -163,7 +162,7 @@ public class ZipExporterTestCase extends ExportTestBase
    public void testExportArchiveWithOnlyDirectories()
    {
       // Attempt to export an archive with some directories, should pass
-      Archives.create(NAME_ARCHIVE, JavaArchive.class).addDirectories("/test/game").as(ZipExporter.class).exportZip();
+      ShrinkWrap.create(NAME_ARCHIVE, JavaArchive.class).addDirectories("/test/game").as(ZipExporter.class).exportZip();
    }
 
    /**

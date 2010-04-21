@@ -27,8 +27,8 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.Archives;
 import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
@@ -141,7 +141,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
    {
       log.info("testExportExplodedRequiresBaseDirectroy");
 
-      Archives.create("test.jar", ExplodedExporter.class).exportExploded(null);
+      ShrinkWrap.create("test.jar", ExplodedExporter.class).exportExploded(null);
    }
 
    /**
@@ -155,7 +155,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
       log.info("testExportExplodedRequiresExisitingDirectroy");
 
       final File directory = this.getNonexistantDirectory();
-      Archives.create("test.jar", ExplodedExporter.class).exportExploded(directory);
+      ShrinkWrap.create("test.jar", ExplodedExporter.class).exportExploded(directory);
    }
 
    /**
@@ -166,7 +166,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
    {
       log.info("testExportExplodedRequiresValidDirectory");
       final File nonDirectory = new File(this.getTarget(), "tempFile.txt");
-      Archives.create("test.jar", ExplodedExporter.class).exportExploded(nonDirectory);
+      ShrinkWrap.create("test.jar", ExplodedExporter.class).exportExploded(nonDirectory);
    }
 
    /**
@@ -179,7 +179,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
       final File directory = createTempDirectory("testExportExplodedOutpuDirCreationFails");
       directory.deleteOnExit();
       
-      Archives.create("test/" + NAME_ARCHIVE, ExplodedExporter.class).exportExploded(directory);
+      ShrinkWrap.create("test/" + NAME_ARCHIVE, ExplodedExporter.class).exportExploded(directory);
    }
 
    /**

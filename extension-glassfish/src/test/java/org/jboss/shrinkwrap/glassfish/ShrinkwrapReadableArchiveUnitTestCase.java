@@ -18,7 +18,7 @@ package org.jboss.shrinkwrap.glassfish;
 
 import junit.framework.Assert;
 
-import org.jboss.shrinkwrap.api.Archives;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.glassfish.api.ShrinkwrapReadableArchive;
 import org.junit.Test;
 
@@ -34,7 +34,7 @@ public class ShrinkwrapReadableArchiveUnitTestCase
    @Test
    public void shouldBeAbleToLoadExtension() throws Exception 
    {
-      ShrinkwrapReadableArchive archive = Archives.create("test", ShrinkwrapReadableArchive.class);
+      ShrinkwrapReadableArchive archive = ShrinkWrap.create("test", ShrinkwrapReadableArchive.class);
       Assert.assertNotNull(archive);
    }
 }
