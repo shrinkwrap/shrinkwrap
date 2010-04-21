@@ -80,19 +80,5 @@
     </plugins>
     
   </build>
-  
-  <!-- Maven 2 Repositories -->
-  <repositories>
-    <repository>
-      <id>java.dev.net.glassfish</id>
-      <url>http://download.java.net/maven/glassfish</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 </project>
 
