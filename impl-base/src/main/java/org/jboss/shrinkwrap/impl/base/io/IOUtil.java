@@ -16,10 +16,12 @@
  */
 package org.jboss.shrinkwrap.impl.base.io;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,6 +59,11 @@ public final class IOUtil
       }
 
    };
+   
+   /**
+    * Name of UTF-8 Charset
+    */
+   private static final String CHARSET_UTF8 = "UTF-8";
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -123,6 +130,51 @@ public final class IOUtil
 
       // Return
       return content;
+   }
+
+   /**
+    * Obtains the contents of the specified stream
+    * as a String in UTF-8 charset.
+    * 
+    * @param in
+    * @throws IllegalArgumentException If the stream was not specified
+    */
+   public static String asUTF8String(InputStream in)
+   {
+      // Precondition check
+      Validate.notNull(in, "Stream must be specified");
+
+      StringBuilder buffer = new StringBuilder();
+      String line;
+
+      try
+      {
+         BufferedReader reader = new BufferedReader(new InputStreamReader(in, CHARSET_UTF8));
+         while ((line = reader.readLine()) != null)
+         {
+            buffer.append(line).append(Character.LINE_SEPARATOR);
+         }
+      }
+      catch (IOException ioe)
+      {
+         throw new RuntimeException("Error in obtaining string from " + in, ioe);
+      }
+      finally
+      {
+         try
+         {
+            in.close();
+         }
+         catch (IOException ignore)
+         {
+            if (log.isLoggable(Level.FINER))
+            {
+               log.finer("Could not close stream due to: " + ignore.getMessage() + "; ignoring");
+            }
+         }
+      }
+
+      return buffer.toString();
    }
 
    /**
