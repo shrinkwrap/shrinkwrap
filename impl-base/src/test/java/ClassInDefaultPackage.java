@@ -14,31 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base;
-
-import org.junit.Test;
 
 /**
- * URLPackageScannerTestCase for SHRINKWRAP-90.
- *
- * Asserts parameter validation for more user friendly errors on invalid
- * parameters.
- *
- * @author <a href="mailto:lightguard.jp@gmail.com">Jason Porter</a>
- * @version $Revision$
+ * A testing class in the default package for SHRINKWRAP-143
+ * 
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @version $Revision: $
  */
-public class URLPackageScannerTestCase
+public class ClassInDefaultPackage
 {
-   @Test(expected = IllegalArgumentException.class)
-   public void shouldThrowExceptionNullPackage()
+   //-------------------------------------------------------------------------------------||
+   // Inner Classes ----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   public static class InnerClassInDefaultPackage
    {
-      URLPackageScanner.newInstance(true, URLPackageScannerTestCase.class.getClassLoader(),
-            new URLPackageScanner.Callback()
-            {
-               @Override
-               public void classFound(String className)
-               {
-               }
-            }, (Package) null);
+
    }
+
 }

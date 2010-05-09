@@ -46,6 +46,11 @@ public class URLPackageScanner
 
    private static final Logger log = Logger.getLogger(URLPackageScanner.class.getName());
 
+   /**
+    * Name of the empty package
+    */
+   private static final String NAME_EMPTY_PACKAGE = "";
+
    private final String packageName;
 
    private final String packageNamePath;
@@ -53,31 +58,51 @@ public class URLPackageScanner
    private final boolean addRecursively;
 
    private final ClassLoader classLoader;
-   
+
    //private final Set<String> classes = new HashSet<String>();
    private Callback callback;
 
    /**
     * Factory method to create an instance of URLPackageScanner.
+    * @param addRecursively flag to add child packages
+    * @param classLoader class loader that will have classes added
+    * @param pkg Package that will be scanned 
+    * @return new instance of URLPackageScanner
+    */
+   public static URLPackageScanner newInstance(boolean addRecursively, final ClassLoader classLoader,
+         final Callback callback, final Package pkg)
+   {
+      Validate
+            .notNull(pkg,
+                  "package must be specified; use alternate factory method if you wish to create a scanner for the default package ");
+      final String packageName = pkg.getName();
+      Validate.notNull(packageName, "Package name must be specified");
+      Validate.notNull(addRecursively, "AddRecursively must be specified");
+      Validate.notNull(classLoader, "ClassLoader must be specified");
+      Validate.notNull(callback, "Callback must be specified");
+
+      return new URLPackageScanner(packageName, addRecursively, classLoader, callback);
+   }
+
+   /**
+    * Factory method to create an instance of URLPackageScanner in the default package
     * @param pkg Package that will be scanned
     * @param addRecursively flag to add child packages
     * @param classLoader class loader that will have classes added 
     * @return new instance of URLPackageScanner
     */
-   public static URLPackageScanner newInstance(Package pkg, boolean addRecursively, ClassLoader classLoader, Callback callback)
+   public static URLPackageScanner newInstance(boolean addRecursively, ClassLoader classLoader, Callback callback)
    {
-      Validate.notNull(pkg, "Pkg must be specified");
-      Validate.notNull(pkg.getName(), "Pkg must have a name");
       Validate.notNull(addRecursively, "AddRecursively must be specified");
       Validate.notNull(classLoader, "ClassLoader must be specified");
       Validate.notNull(callback, "Callback must be specified");
 
-      return new URLPackageScanner(pkg, addRecursively, classLoader, callback);
+      return new URLPackageScanner(NAME_EMPTY_PACKAGE, addRecursively, classLoader, callback);
    }
 
-   private URLPackageScanner(Package pkg, boolean addRecursively, ClassLoader classLoader, Callback callback)
+   private URLPackageScanner(String packageName, boolean addRecursively, ClassLoader classLoader, Callback callback)
    {
-      this.packageName = pkg.getName();
+      this.packageName = packageName;
       this.packageNamePath = packageName.replace(".", "/");
       this.addRecursively = addRecursively;
       this.classLoader = classLoader;
@@ -164,7 +189,8 @@ public class URLPackageScanner
       {
          if (!child.isDirectory() && child.getName().endsWith(".class"))
          {
-            foundClass(packageName + "." + child.getName().substring(0, child.getName().lastIndexOf(".class")));
+            final String packagePrefix = packageName.length() > 0 ? packageName + "." : packageName;
+            foundClass(packagePrefix + child.getName().substring(0, child.getName().lastIndexOf(".class")));
          }
          else if (child.isDirectory() && addRecursively)
          {
@@ -173,25 +199,23 @@ public class URLPackageScanner
       }
    }
 
-   private void foundClass(String className) 
+   private void foundClass(String className)
    {
       callback.classFound(className);
    }
-   
-   
+
    private List<URL> loadResources(String name) throws IOException
    {
       return Collections.list(classLoader.getResources(name));
    }
 
-   
    /**
     * Callback interface for found classes.
     *
     * @author <a href="mailto:aknutsen@redhat.com">Aslak Knutsen</a>
     * @version $Revision: $
     */
-   public interface Callback 
+   public interface Callback
    {
       /**
        * Called for each found class.

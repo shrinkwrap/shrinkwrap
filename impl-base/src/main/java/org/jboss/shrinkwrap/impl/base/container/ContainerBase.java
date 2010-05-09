@@ -914,32 +914,33 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       
       for(Package pack : packages) 
       {
-         URLPackageScanner.newInstance(
-               pack, recursive, classLoader, 
-               new URLPackageScanner.Callback()
+         final URLPackageScanner.Callback callback = new URLPackageScanner.Callback()
+         {
+            @Override
+            public void classFound(String className)
+            {
+               ArchivePath classNamePath = AssetUtil.getFullPathForClassResource(className);
+               if (!filter.include(classNamePath))
                {
-                  @Override
-                  public void classFound(String className)
-                  {
-                     ArchivePath classNamePath = AssetUtil.getFullPathForClassResource(className);
-                     if(!filter.include(classNamePath))
-                     {
-                        return;
-                     }
-                     Class<?> clazz;
-                     try
-                     {
-                        clazz = classLoader.loadClass(className);
-                     } 
-                     catch (ClassNotFoundException e)
-                     {
-                        throw new IllegalStateException("Could not load found class " + className);
-                     }
-                     Asset asset = new ClassAsset(clazz);
-                     ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
-                     add(asset, location);
-                  }
-               }).scanPackage();
+                  return;
+               }
+               Class<?> clazz;
+               try
+               {
+                  clazz = classLoader.loadClass(className);
+               }
+               catch (ClassNotFoundException e)
+               {
+                  throw new RuntimeException("Could not load found class " + className, e);
+               }
+               Asset asset = new ClassAsset(clazz);
+               ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
+               add(asset, location);
+            }
+         };
+         final URLPackageScanner scanner = pack == null ? URLPackageScanner.newInstance(recursive, classLoader,
+               callback) : URLPackageScanner.newInstance(recursive, classLoader, callback, pack);
+         scanner.scanPackage();
       }
       return covarientReturn();
    }
