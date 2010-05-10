@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+
+  Deployment descriptor for the ShrinkWrapDeployer and its dependencies 
+
+ -->
+
+<deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="urn:jboss:bean-deployer:2.0 bean-deployer_2_0.xsd"
+  xmlns="urn:jboss:bean-deployer:2.0">
+  
+  <!-- ShrinkWrapDeployer -->
+  <bean name="ShrinkWrapDeployer" class="org.jboss.shrinkwrap.vdf.impl.ShrinkWrapDeployerImpl">
+    <constructor>
+      <parameter class="org.jboss.deployers.client.spi.main.MainDeployer">
+        <inject />
+      </parameter>
+      <parameter class="org.jboss.vfs.TempFileProvider">
+        <inject />
+      </parameter>
+    </constructor>
+  </bean>
+  
+  <!-- Deployment configuration for a VFS TempFileProvider 
+
+  <threads xmlns="urn:jboss:threads:2.0"> 
+    <thread-factory name="org.jboss.reloaded.TempFileThreadFactory"/>
+    <scheduled-thread-pool-executor name="org.jboss.reloaded.TempFileExecutorService">
+        <max-threads count="1" per-cpu="1"/>
+        <thread-factory name="org.jboss.reloaded.TempFileThreadFactory"/>
+    </scheduled-thread-pool-executor>
+  </threads>
+  
+  Currently fails with:
+  
+  org.jboss.joinpoint.spi.JoinpointException: Constructor not found 
+  org.jboss.threads.QueuelessExecutor[int, java.util.concurrent.ThreadFactory] in 
+  [ReflectConstructorInfoImpl@11afd9cc{[ReflectClassInfoImpl@3003e926{name=java.util.concurrent.ThreadFactory}, 
+  ReflectClassInfoImpl@50bfd66a{name=org.jboss.threads.DirectExecutor}, 
+  ReflectClassInfoImpl@6295f290{name=java.util.concurrent.Executor}, long]}]
+  
+  FIXME:  Example on http://community.jboss.org/wiki/ThreadPoolConfiguration might need to be updated
+  Ask DML
+  
+  -->
+  
+  <!--
+    Define the Executor, but this should really be done in threads.xsd
+    format above
+    TODO Remove this when the above works
+  -->
+  <bean name="org.jboss.shrinkwrap.TempFileExecutorService" class="org.jboss.threads.JBossScheduledThreadPoolExecutor">
+    <constructor>
+      <parameter>1</parameter>
+    </constructor>
+  </bean> 
+
+  <bean name="org.jboss.shrinkwrap.TempFileProvider" class="org.jboss.vfs.TempFileProvider">
+    <constructor factoryClass="org.jboss.vfs.TempFileProvider"
+      factoryMethod="create">
+      <parameter>shrinkwrap-</parameter>
+      <parameter>
+        <inject bean="org.jboss.shrinkwrap.TempFileExecutorService" />
+      </parameter>
+    </constructor>
+  </bean>
+ 
+ </deployment>

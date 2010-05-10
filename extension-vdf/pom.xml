@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!--
+  vi:ts=2:sw=2:expandtab:
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- Parent -->
+  <parent>
+    <groupId>org.jboss.shrinkwrap</groupId>
+    <artifactId>shrinkwrap-build</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../build/pom.xml</relativePath>
+  </parent>
+
+  <!-- Model Version -->
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Artifact Configuration -->
+  <artifactId>shrinkwrap-extension-vdf</artifactId>
+  <name>ShrinkWrap Extension JBoss Virtual Deployment Framework</name>
+  <description>ShrinkWrap Extension for the JBoss Virtual Deployment Framework</description>
+
+
+  <!-- Properties -->
+  <properties>
+  
+    <!-- Versioning -->
+    <version.org.jboss_jboss.vfs>3.0.0.CR5</version.org.jboss_jboss.vfs>
+    
+    <version.org.jboss.deployers_jboss.deployers.vfs>2.2.0.Alpha4</version.org.jboss.deployers_jboss.deployers.vfs>
+    <version.jboss.logging>2.2.0.CR1</version.jboss.logging>
+    <version.org.jboss.logmanager>1.2.0.CR1</version.org.jboss.logmanager>
+    <version.org.jboss.threads>2.0.0.CR4</version.org.jboss.threads>
+    <version.org.jboss.reloaded.vdf.bootstrap.minimal>0.1.2</version.org.jboss.reloaded.vdf.bootstrap.minimal>
+
+  </properties>
+
+  <!-- Dependencies -->
+  <dependencies>
+
+    <!-- 
+    org.jboss.shrinkwrap    
+     -->
+    <dependency>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-impl-base</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-extension-vfs3</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- 
+    External Projects
+     -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jboss</groupId>
+      <artifactId>jboss-vfs</artifactId>
+      <version>${version.org.jboss_jboss.vfs}</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jboss.deployers</groupId>
+      <artifactId>jboss-deployers-vfs</artifactId>
+      <version>${version.org.jboss.deployers_jboss.deployers.vfs}</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging-spi</artifactId>
+      <version>${version.jboss.logging}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging-jdk</artifactId>
+      <version>${version.jboss.logging}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logmanager</groupId>
+      <artifactId>jboss-logmanager</artifactId>
+      <version>${version.org.jboss.logmanager}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging-logmanager</artifactId>
+      <version>${version.jboss.logging}</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jboss.threads</groupId>
+      <artifactId>jboss-threads</artifactId>
+      <version>${version.org.jboss.threads}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.threads</groupId>
+      <artifactId>jboss-threads-metadata</artifactId>
+      <version>${version.org.jboss.threads}</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jboss.reloaded</groupId>
+      <artifactId>jboss-reloaded-vdf-bootstrap-minimal</artifactId>
+      <version>${version.org.jboss.reloaded.vdf.bootstrap.minimal}</version>
+      <scope>test</scope>
+    </dependency>
+    
+
+  </dependencies>
+
+  <!-- Build Configuration -->
+  <build>
+  
+    <plugins>
+
+    </plugins>
+    
+  </build>
+  
+</project>
+
