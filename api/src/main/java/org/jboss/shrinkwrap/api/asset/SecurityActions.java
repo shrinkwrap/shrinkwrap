@@ -29,7 +29,7 @@ import java.security.PrivilegedAction;
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
-public class SecurityActions
+final class SecurityActions
 {
    /**
     * Obtains the Thread Context ClassLoader
