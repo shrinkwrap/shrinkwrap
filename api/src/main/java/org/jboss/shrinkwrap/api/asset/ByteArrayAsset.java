@@ -24,9 +24,7 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Asset;
 
 /**
- * ByteArrayAsset
- *
- * Implementation of a {@link Asset} backed by a byte array
+ * Implementation of an {@link Asset} backed by a byte array
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $

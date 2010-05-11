@@ -25,9 +25,7 @@ import java.io.InputStream;
 import org.jboss.shrinkwrap.api.Asset;
 
 /**
- * FileAsset
- * 
- * Implementation of a {@link Asset} backed by a {@link File}
+ * Implementation of an {@link Asset} backed by a {@link File}
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  */

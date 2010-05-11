@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Asset;
 
 /**
- * Implementation of a {@link Asset} backed by a String
+ * Implementation of an {@link Asset} backed by a String
  *
  * @author <a href="mailto:dan.j.allen@gmail.com">Dan Allen</a>
  * @version $Revision: $

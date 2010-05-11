@@ -23,9 +23,7 @@ import java.net.URL;
 import org.jboss.shrinkwrap.api.Asset;
 
 /**
- * UrlAsset
- *
- * Implementation of a {@link Asset} backed by a {@link URL}.  
+ * Implementation of an {@link Asset} backed by a {@link URL}.
  * The URL may be of any backing protocol supported by the runtime
  * (ie. has a handler registered).
  * 
