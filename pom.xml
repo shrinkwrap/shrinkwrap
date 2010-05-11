@@ -51,7 +51,7 @@
           </execution>
         </executions>
         <configuration>
-          <finalName>shrinkwrap-${version}</finalName>
+          <finalName>shrinkwrap-${project.version}</finalName>
           <descriptors>
             <descriptor>dist.xml</descriptor>
           </descriptors>
