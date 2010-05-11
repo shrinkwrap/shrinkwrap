@@ -1,4 +1,4 @@
-package org.jboss.shrinkwrap.impl.base.asset;
+package org.jboss.shrinkwrap.api.asset;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

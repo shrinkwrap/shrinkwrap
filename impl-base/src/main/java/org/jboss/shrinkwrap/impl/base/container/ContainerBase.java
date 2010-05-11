@@ -29,6 +29,8 @@ import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Node;
+import org.jboss.shrinkwrap.api.asset.FileAsset;
+import org.jboss.shrinkwrap.api.asset.UrlAsset;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
@@ -40,9 +42,7 @@ import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
-import org.jboss.shrinkwrap.impl.base.asset.FileAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ServiceProviderAsset;
-import org.jboss.shrinkwrap.impl.base.asset.UrlAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**

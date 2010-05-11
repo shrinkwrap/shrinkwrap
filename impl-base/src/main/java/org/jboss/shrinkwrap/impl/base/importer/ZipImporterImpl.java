@@ -26,11 +26,11 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
-import org.jboss.shrinkwrap.impl.base.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ZipFileEntryAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 

@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.asset;
+package org.jboss.shrinkwrap.api.asset;
 
 import java.io.File;
 import java.io.InputStream;
@@ -34,7 +34,7 @@ import org.junit.Test;
  */
 public class FileAssetTestCase
 {
-   private static final String BASE_PATH = "src/test/resources/org/jboss/shrinkwrap/impl/base/asset/";
+   private static final String BASE_PATH = "src/test/resources/org/jboss/shrinkwrap/api/asset/";
 
    private static final String EXISTING_FILE = BASE_PATH + "Test.properties";
 
@@ -47,7 +47,7 @@ public class FileAssetTestCase
       InputStream io = asset.openStream();
 
       Assert.assertNotNull(io);
-      Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true", TestUtils
+      Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true", ApiTestUtils
             .convertToString(io));
    }
 

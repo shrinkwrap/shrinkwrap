@@ -1,4 +1,4 @@
-package org.jboss.shrinkwrap.impl.base.asset;
+package org.jboss.shrinkwrap.api.asset;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
  * Implementation of a {@link Asset} backed by a String
@@ -47,7 +46,10 @@ public class StringAsset implements Asset
    public StringAsset(final String content)
    {
       // Precondition check
-      Validate.notNull(content, "content must be specified");
+      if (content == null)
+      {
+         throw new IllegalArgumentException("content must be specified");
+      }
       // don't need to copy since String is immutable
       this.content = content;
       if (log.isLoggable(Level.FINER))

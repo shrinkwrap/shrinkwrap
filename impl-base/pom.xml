@@ -44,6 +44,17 @@
       <version>${project.version}</version>
     </dependency>
 
+    <!--
+    shrinkwrap-api test jar
+    -->
+    <dependency>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-api</artifactId>
+      <version>${project.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+
     <!-- 
     External Projects
      -->

@@ -21,11 +21,11 @@ import java.net.URL;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.asset.FileAsset;
+import org.jboss.shrinkwrap.api.asset.UrlAsset;
 import org.jboss.shrinkwrap.api.container.ResourceAdapterContainer;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
-import org.jboss.shrinkwrap.impl.base.asset.FileAsset;
-import org.jboss.shrinkwrap.impl.base.asset.UrlAsset;
 
 /**
  * ResourceAdapterContainerBase

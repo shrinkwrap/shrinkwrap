@@ -14,18 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.asset;
+package org.jboss.shrinkwrap.api.asset;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
  * UrlAsset
- * 
+ *
  * Implementation of a {@link Asset} backed by a {@link URL}.  
  * The URL may be of any backing protocol supported by the runtime
  * (ie. has a handler registered).
@@ -39,20 +38,23 @@ public class UrlAsset implements Asset
 
    /**
     * Create a new resource with a <code>URL</code> source.
-    * 
+    *
     * @param url A valid URL
     * @throws IllegalArgumentException <Code>URL</code> can not be null
     */
    public UrlAsset(URL url)
    {
       // Precondition check
-      Validate.notNull(url, "URL must be specified");
+      if (url == null)
+      {
+         throw new IllegalArgumentException("URL must be specified");
+      }
       this.url = url;
    }
 
    /**
     * Open the <code>URL</code> stream.
-    * 
+    *
     * @return A open stream with the content of the URL
     */
    @Override

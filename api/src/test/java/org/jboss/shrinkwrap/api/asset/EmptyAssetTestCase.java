@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.asset;
+package org.jboss.shrinkwrap.api.asset;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -22,16 +22,16 @@ import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
+import org.jboss.shrinkwrap.api.Asset;
 import org.junit.Test;
 
 /**
- * Test Cases for the {@link StringAsset}
+ * Test Cases for the {@link EmptyAsset}
  *
- * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:dan.j.allen@gmail.com">Dan Allen</a>
  * @version $Revision: $
  */
-public class StringAssetTestCase
+public class EmptyAssetTestCase
 {
 
    //-------------------------------------------------------------------------------------||
@@ -41,14 +41,18 @@ public class StringAssetTestCase
    /**
     * Logger
     */
-   private static final Logger log = Logger.getLogger(StringAssetTestCase.class.getName());
+   private static final Logger log = Logger.getLogger(EmptyAssetTestCase.class.getName());
+
+   //-------------------------------------------------------------------------------------||
+   // Instance Members -------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
 
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Ensures that the contents of the asset match that which was passed in.
+    * Ensures that the contents of the asset is empty.
     */
    @Test
    public void testRoundtrip() throws Exception
@@ -56,23 +60,18 @@ public class StringAssetTestCase
       // Log
       log.info("testRoundtrip");
 
-      // Make contents
-      String contents = StringAsset.class.getSimpleName();
-
       // Make Asset
-      final StringAsset asset = new StringAsset(contents);
+      final Asset asset = EmptyAsset.INSTANCE;
 
       // Get the contents back out of the asset
       final InputStream stream = asset.openStream();
-      final ByteArrayOutputStream out = new ByteArrayOutputStream(contents.length());
+      final ByteArrayOutputStream out = new ByteArrayOutputStream(0);
       int read;
       while ((read = stream.read()) != -1)
       {
          out.write(read);
       }
-      String roundtrip = new String(out.toByteArray());
-      log.info("Roundtrip contents: " + roundtrip);
 
-      Assert.assertEquals("Roundtrip did not equal passed in contents", contents, roundtrip);
+      Assert.assertEquals("Roundtrip did not produce empty contents", 0, out.toByteArray().length);
    }
 }

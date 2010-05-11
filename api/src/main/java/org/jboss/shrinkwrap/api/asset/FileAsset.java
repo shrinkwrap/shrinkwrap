@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.asset;
+package org.jboss.shrinkwrap.api.asset;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -23,13 +23,12 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
  * FileAsset
  * 
  * Implementation of a {@link Asset} backed by a {@link File}
- * 
+ *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  */
 public class FileAsset implements Asset
@@ -37,8 +36,8 @@ public class FileAsset implements Asset
    private File file;
 
    /**
-    * Load the specified File. 
-    * 
+    * Load the specified File.
+    *
     * @param file The file to load
     * @throws IllegalArgumentException File can not be null
     * @throws IllegalArgumentException File must exist
@@ -46,7 +45,10 @@ public class FileAsset implements Asset
    public FileAsset(File file)
    {
       // Precondition check
-      Validate.notNull(file, "File must be specified");
+       if (file == null)
+      {
+         throw new IllegalArgumentException("File must be specified");
+      }
       if (!file.exists())
       {
          throw new IllegalArgumentException("File must exist: " + file.getAbsolutePath());
@@ -57,9 +59,9 @@ public class FileAsset implements Asset
    /**
     * Opens a new FileInputStream for the given File.
     * 
-    * Can throw a Runtime exception if the file has been deleted inbetween 
-    * the FileResource was created and the stream is opened. 
-    * 
+    * Can throw a Runtime exception if the file has been deleted inbetween
+    * the FileResource was created and the stream is opened.
+    *
     * @throws RuntimeException If the file is not found.
     */
    @Override

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.asset;
+package org.jboss.shrinkwrap.api.asset;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -22,12 +22,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Asset;
-import org.jboss.shrinkwrap.impl.base.Validate;
-import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
 /**
  * ByteArrayAsset
- * 
+ *
  * Implementation of a {@link Asset} backed by a byte array
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
@@ -61,14 +59,17 @@ public class ByteArrayAsset implements Asset
    /**
     * Creates a new {@link Asset} instance backed by the specified
     * byte array
-    * 
+    *
     * @param content
     * @throws IllegalArgumentException If the contents were not specified
     */
    public ByteArrayAsset(final byte[] content) throws IllegalArgumentException
    {
       // Precondition check
-      Validate.notNull(content, "content must be specified");
+      if (content == null)
+      {
+         throw new IllegalArgumentException("content must be specified");
+      }
 
       // Defensive copy on set, SHRINKWRAP-38
       final int length = content.length;
@@ -86,14 +87,14 @@ public class ByteArrayAsset implements Asset
    /**
     * Creates a new {@link Asset} instance backed by the bytes
     * contained in the the specified {@link InputStream}
-    * 
+    *
     * @param stream
     * @throws IllegalArgumentException If the stream is not specified
     */
    public ByteArrayAsset(final InputStream stream)
    {
       // Delegate
-      this(IOUtil.asByteArray(stream));
+      this(ByteArrayIOUtil.asByteArray(stream));
    }
 
    //-------------------------------------------------------------------------------------||

@@ -22,10 +22,10 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.asset.FileAsset;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
-import org.jboss.shrinkwrap.impl.base.asset.FileAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**

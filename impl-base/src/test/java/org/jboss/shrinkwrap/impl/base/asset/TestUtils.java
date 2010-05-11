@@ -16,7 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.asset;
 
-import java.io.ByteArrayOutputStream;
+import org.jboss.shrinkwrap.api.asset.ApiTestUtilsDelegator;
 import java.io.InputStream;
 
 /**
@@ -44,15 +44,7 @@ class TestUtils
     */
    static String convertToString(InputStream in) throws Exception
    {
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      int b;
-      while ((b = in.read()) != -1)
-      {
-         out.write(b);
-      }
-      out.close();
-      in.close();
-      return new String(out.toByteArray(), "UTF-8");
+      return ApiTestUtilsDelegator.convertToString(in);
    }
    
    /**
