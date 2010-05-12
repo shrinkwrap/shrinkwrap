@@ -136,6 +136,8 @@ public class ArchiveFileSystemUnitTestCase
    /**
     * Ensures that {@link VirtualFile#isDirectory()} returns false for files 
     * that do not exist
+    * 
+    * SHRINKWRAP-169
     */
    @Test
    public void nonExistentFilesAreNotDirectory() throws Exception
