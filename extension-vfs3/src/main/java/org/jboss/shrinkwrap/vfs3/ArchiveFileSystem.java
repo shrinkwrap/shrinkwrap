@@ -209,8 +209,17 @@ public class ArchiveFileSystem implements FileSystem
    /** {@inheritDoc} */
    public boolean isDirectory(VirtualFile mountPoint, VirtualFile target)
    {
-      final Node node = getNode(mountPoint, target);
-      return node == null || node.getAsset() == null;
+      // Only if this exists can it be a directory
+      if (this.exists(mountPoint, target))
+      {
+         final Node node = getNode(mountPoint, target);
+         final Asset asset = node.getAsset();
+         // Null assets under a node indicate a directory
+         return asset == null;
+      }
+      // Doesn't exist, return false
+      return false;
+
    }
 
    /** {@inheritDoc} */

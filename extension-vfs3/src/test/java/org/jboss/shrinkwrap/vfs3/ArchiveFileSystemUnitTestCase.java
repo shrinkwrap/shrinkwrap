@@ -115,12 +115,9 @@ public class ArchiveFileSystemUnitTestCase
    @Test
    public void testArchiveFileSystem() throws Exception
    {
+      // Create and mount an archive
       final JavaArchive archive = ShrinkWrap.create(NAME_ARCHIVE, JavaArchive.class);
-
-      // Back VFS by a temp directory
-      final TempDir tempDir = tempFileProvider.createTempDir(archive.getName());
-      VirtualFile virtualFile = VFS.getChild(UUID.randomUUID().toString()).getChild(archive.getName());
-      vfsHandles.add(VFS.mount(virtualFile, new ArchiveFileSystem(archive, tempDir)));
+      final VirtualFile virtualFile = this.createAndMountArchive(archive);
 
       // Add to the archive
       archive.addResource("META-INF/test", "META-INF/test");
@@ -130,8 +127,43 @@ public class ArchiveFileSystemUnitTestCase
       // Perform assertions
       Assert.assertTrue("Could not read file", virtualFile.getChild("test").isFile());
       Assert.assertTrue("Could not read directory", virtualFile.getChild("META-INF").isDirectory());
+      Assert.assertTrue("Could not read directory", virtualFile.getChild("META-INF").exists());
       Assert.assertTrue("Could not read file in a directory", virtualFile.getChild("META-INF").getChild("test")
             .isFile());
 
+   }
+
+   /**
+    * Ensures that {@link VirtualFile#isDirectory()} returns false for files 
+    * that do not exist
+    */
+   @Test
+   public void nonExistentFilesAreNotDirectory() throws Exception
+   {
+      // Create and mount an archive
+      final JavaArchive archive = ShrinkWrap.create(NAME_ARCHIVE, JavaArchive.class);
+      final VirtualFile virtualFile = this.createAndMountArchive(archive);
+
+      // Control
+      final VirtualFile doesNotExistFile = virtualFile.getChild("doesnotexist");
+      Assert
+            .assertFalse("Test should indicate that this file does not exist (control test)", doesNotExistFile.exists());
+
+      // Ensure file that doesn't exist does not report as directory
+      Assert.assertFalse("File that doesn't exist should not report as a directory", doesNotExistFile.isDirectory());
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Internal Helper Methods ------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   private VirtualFile createAndMountArchive(final Archive<?> archive) throws Exception
+   {
+      assert archive != null : "Archive was null";
+      // Back VFS by a temp directory
+      final TempDir tempDir = tempFileProvider.createTempDir(archive.getName());
+      VirtualFile virtualFile = VFS.getChild(UUID.randomUUID().toString()).getChild(archive.getName());
+      vfsHandles.add(VFS.mount(virtualFile, new ArchiveFileSystem(archive, tempDir)));
+      return virtualFile;
    }
 }
