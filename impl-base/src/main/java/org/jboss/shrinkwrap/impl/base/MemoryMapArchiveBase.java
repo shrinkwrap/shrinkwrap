@@ -25,11 +25,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.IllegalArchivePathException;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.Configuration;
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
@@ -104,7 +104,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.ArchivePath)
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.asset.Asset, org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
    public T add(Asset asset, ArchivePath path)

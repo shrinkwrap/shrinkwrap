@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.api;
 
 import java.util.Map;
 
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 

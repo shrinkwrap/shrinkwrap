@@ -20,7 +20,6 @@ import java.io.InputStream;
 
 import junit.framework.Assert;
 
-import org.jboss.shrinkwrap.api.Asset;
 import org.junit.Test;
 
 /**

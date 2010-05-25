@@ -22,7 +22,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import org.jboss.shrinkwrap.api.Asset;
 
 /**
  * Implementation of an {@link Asset} backed by a {@link File}

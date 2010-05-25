@@ -20,7 +20,7 @@ import java.io.File;
 import java.net.URL;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
  * ResourceAdapterContainer

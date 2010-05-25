@@ -21,8 +21,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Node;
+import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
  * The default implementation of {@link Node}

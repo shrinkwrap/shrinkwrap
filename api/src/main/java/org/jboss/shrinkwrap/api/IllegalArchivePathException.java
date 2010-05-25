@@ -16,6 +16,8 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import org.jboss.shrinkwrap.api.asset.Asset;
+
 /**
  * IllegalPathException
  * 

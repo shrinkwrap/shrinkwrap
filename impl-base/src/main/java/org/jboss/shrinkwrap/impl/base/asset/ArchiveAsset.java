@@ -19,7 +19,7 @@ package org.jboss.shrinkwrap.impl.base.asset;
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.impl.base.ArchiveInputStreamFactory;
 import org.jboss.shrinkwrap.impl.base.Validate;
 

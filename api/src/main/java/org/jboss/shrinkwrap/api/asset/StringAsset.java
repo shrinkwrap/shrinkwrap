@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jboss.shrinkwrap.api.Asset;
 
 /**
  * Implementation of an {@link Asset} backed by a String
@@ -63,7 +62,7 @@ public class StringAsset implements Asset
    //-------------------------------------------------------------------------------------||
 
    /**
-    * @see org.jboss.shrinkwrap.api.Asset#openStream()
+    * @see org.jboss.shrinkwrap.api.asset.Asset#openStream()
     */
 
    @Override

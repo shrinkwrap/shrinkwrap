@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Node;
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.vfs.TempDir;
 import org.jboss.vfs.VFSUtils;
 import org.jboss.vfs.VirtualFile;

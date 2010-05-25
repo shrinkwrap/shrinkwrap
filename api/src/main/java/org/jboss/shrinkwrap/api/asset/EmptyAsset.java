@@ -3,7 +3,6 @@ package org.jboss.shrinkwrap.api.asset;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.jboss.shrinkwrap.api.Asset;
 
 /**
  * Implementation of a {@link Asset} having empty content.
@@ -19,7 +18,7 @@ public enum EmptyAsset implements Asset {
    //-------------------------------------------------------------------------------------||
 
    /**
-    * @see org.jboss.shrinkwrap.api.Asset#openStream()
+    * @see org.jboss.shrinkwrap.api.asset.Asset#openStream()
     */
    @Override
    public InputStream openStream()

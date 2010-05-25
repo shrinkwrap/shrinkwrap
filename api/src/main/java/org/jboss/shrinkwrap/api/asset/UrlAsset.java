@@ -20,7 +20,6 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.jboss.shrinkwrap.api.Asset;
 
 /**
  * Implementation of an {@link Asset} backed by a {@link URL}.

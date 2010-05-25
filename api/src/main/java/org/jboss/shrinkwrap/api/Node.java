@@ -2,6 +2,8 @@ package org.jboss.shrinkwrap.api;
 
 import java.util.Set;
 
+import org.jboss.shrinkwrap.api.asset.Asset;
+
 /**
  * Represents an entry inside an {@link Archive}. It can be a directory or an {@link Asset}.
  * 

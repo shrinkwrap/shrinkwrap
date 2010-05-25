@@ -16,7 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.asset;
 
-import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.junit.Assert;
 import org.junit.Test;

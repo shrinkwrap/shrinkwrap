@@ -18,7 +18,7 @@ package org.jboss.shrinkwrap.impl.base.asset;
 
 import java.io.InputStream;
 
-import org.jboss.shrinkwrap.api.Asset;
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.junit.Assert;
 import org.junit.Test;
 

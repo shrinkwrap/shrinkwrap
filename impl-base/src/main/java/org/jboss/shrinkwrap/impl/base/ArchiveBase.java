@@ -26,12 +26,12 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.Asset;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.Configuration;
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
@@ -107,7 +107,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#add(java.lang.String, org.jboss.shrinkwrap.api.Asset)
+    * @see org.jboss.shrinkwrap.api.Archive#add(java.lang.String, org.jboss.shrinkwrap.api.asset.Asset)
     */
    @Override
    public T add(final Asset asset, final String target) throws IllegalArgumentException
@@ -125,7 +125,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.ArchivePath, java.lang.String, org.jboss.shrinkwrap.api.Asset)
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.ArchivePath, java.lang.String, org.jboss.shrinkwrap.api.asset.Asset)
     */
    @Override
    public T add(final Asset asset, final ArchivePath path, final String name)

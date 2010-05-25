@@ -16,6 +16,8 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import org.jboss.shrinkwrap.api.asset.Asset;
+
 /**
  * Represents a target context within an {@link Archive} under
  * which an {@link Asset} may be found.
