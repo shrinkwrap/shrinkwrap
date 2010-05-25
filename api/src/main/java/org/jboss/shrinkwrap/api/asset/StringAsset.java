@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  * Implementation of an {@link Asset} backed by a String
  *
@@ -78,7 +77,7 @@ public class StringAsset implements Asset
    @Override
    public String toString()
    {
-      return "StringAsset [content size=" + content.length() + " bytes]";
+      return StringAsset.class.getSimpleName() + " [content size=" + content.length() + " bytes]";
    }
 
 }

@@ -18,7 +18,11 @@ package org.jboss.shrinkwrap.api;
 
 /**
  * General interface for representing entities such
- * as {@link Archive}s and descriptors as different extension types. 
+ * as {@link Archive}s, importers and exporters as 
+ * different extension types.  The {@link Assignable} type is typically
+ * the end-user view.   In effect all {@link Assignable}
+ * types achieve some limited form of multiple inheritance via
+ * a wrapping mechanism. 
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $

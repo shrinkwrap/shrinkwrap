@@ -23,8 +23,6 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 
 /**
- * SecurityActions
- * 
  * A set of privileged actions that are not to leak out
  * of this package 
  *

@@ -23,8 +23,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * ByteArrayIOUtil
- *
  * Package private class that helps get byte array from {@link InputStream}.
  * Needed by the common assets in api.
  *
@@ -44,7 +42,7 @@ class ByteArrayIOUtil
     * @throws IllegalArgumentException If the stream was not specified
     * @return the byte[] for the given InputStream
     */
-   public static byte[] asByteArray(final InputStream in) throws IllegalArgumentException
+   static byte[] asByteArray(final InputStream in) throws IllegalArgumentException
    {
       // Precondition check
       if (in == null) {

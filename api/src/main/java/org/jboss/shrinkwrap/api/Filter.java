@@ -17,10 +17,9 @@
 package org.jboss.shrinkwrap.api;
 
 /**
- * Filter
- * 
- * Used to filter what to add to the target {@link Archive}.
- * Used on 'multi' add operations like {@link Archive#merge(Archive, Filter)}. 
+ * Used to filter inputs to be added to the target {@link Archive}.
+ * Used on multi-add operations such as 
+ * {@link Archive#merge(Archive, Filter)}. 
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $

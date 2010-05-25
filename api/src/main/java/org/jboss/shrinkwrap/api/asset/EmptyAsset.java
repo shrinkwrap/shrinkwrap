@@ -13,6 +13,11 @@ import java.io.InputStream;
 public enum EmptyAsset implements Asset {
    INSTANCE;
 
+   /**
+    * Empty contents
+    */
+   final byte[] content = new byte[0];
+   
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -23,7 +28,7 @@ public enum EmptyAsset implements Asset {
    @Override
    public InputStream openStream()
    {
-      return new ByteArrayInputStream(new byte[0]);
+      return new ByteArrayInputStream(content);
    }
 
    /**

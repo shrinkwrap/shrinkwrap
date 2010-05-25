@@ -16,8 +16,13 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import java.util.regex.Pattern;
+
+import javax.annotation.processing.Filer;
+
 /**
- * Filters
+ * Factory class for the creation of new {@link Filter}
+ * instances
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $

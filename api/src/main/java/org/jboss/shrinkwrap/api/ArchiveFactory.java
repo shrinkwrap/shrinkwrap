@@ -17,7 +17,8 @@
 package org.jboss.shrinkwrap.api;
 
 /**
- * 
+ * Responsible for creating {@link Archive}s, which may be
+ * presented to the caller in a designated {@link Assignable} view.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $

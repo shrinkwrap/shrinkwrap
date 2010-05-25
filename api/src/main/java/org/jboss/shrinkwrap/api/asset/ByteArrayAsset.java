@@ -114,6 +114,6 @@ public class ByteArrayAsset implements Asset
    @Override
    public String toString()
    {
-      return "ByteArrayAsset [content size=" + content.length + "bytes]";
+      return ByteArrayAsset.class.getSimpleName() + " [content size=" + content.length + "bytes]";
    }
 }

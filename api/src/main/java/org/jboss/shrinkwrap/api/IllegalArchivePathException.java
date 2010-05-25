@@ -19,8 +19,6 @@ package org.jboss.shrinkwrap.api;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
- * IllegalPathException
- * 
  * Exception thrown when trying to add a {@link Node} on and invalid path 
  * within the {@link Archive} (i.e. you are trying to add an asset to 
  * "/test.txt/somethingelse.txt" where test.txt is an {@link Asset}) 

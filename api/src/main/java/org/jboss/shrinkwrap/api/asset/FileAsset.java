@@ -73,4 +73,14 @@ public class FileAsset implements Asset
          throw new RuntimeException("Could not open file " + file, e);
       }
    }
+
+   /**
+    * {@inheritDoc}
+    * @see java.lang.Object#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return FileAsset.class.getSimpleName() + " [file=" + file.getAbsolutePath() + "]";
+   }
 }

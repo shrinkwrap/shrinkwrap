@@ -20,7 +20,6 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
-
 /**
  * Implementation of an {@link Asset} backed by a {@link URL}.
  * The URL may be of any backing protocol supported by the runtime
@@ -65,5 +64,15 @@ public class UrlAsset implements Asset
       {
          throw new RuntimeException("Could not open stream for url " + url.toExternalForm(), e);
       }
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see java.lang.Object#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return UrlAsset.class.getSimpleName() + " [url=" + url.toExternalForm() + "]";
    }
 }

@@ -23,10 +23,24 @@ import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 
 /**
- * Archive
- * 
  * Represents a collection of resources which may
- * be constructed declaratively / programmatically.
+ * be constructed programmatically.  In effect this
+ * represents a virtual filesystem.  
+ * 
+ * <br /><br />All {@link Archive}
+ * types support the addition of {@link Node}s
+ * under a designated {@link ArchivePath} (context).  The 
+ * contents of a {@link Node} are either a directory
+ * or {@link Asset}.
+ * 
+ * <br /><br />{@link Archive}s are generally created
+ * via an {@link ArchiveFactory} or via the default configuration
+ * shortcut {@link ShrinkWrap} utility class.
+ * 
+ * <br /><br />Because {@link Archive}s are {@link Assignable}, 
+ * they may be wrapped in another user "view" used to perform
+ * operations like adding JavaEE Spec-specific resources
+ * or exporting in ZIP format.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
@@ -78,7 +92,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArchivePathException If the target is invalid.
     */
    T add(Asset asset, String target) throws IllegalArgumentException;
-   
+
    /**
     * Adds the specified directory.
     * 
@@ -225,7 +239,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If the path or existing archive is not specified
     */
    T merge(Archive<?> source, ArchivePath path, Filter<ArchivePath> filter) throws IllegalArgumentException;
-   
+
    /**
     * Acts as a shorthand for {@link Archive#toString(Formatter)}
     * where the {@link Formatters#SIMPLE} is leveraged.
