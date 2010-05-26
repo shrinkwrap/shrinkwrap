@@ -55,7 +55,7 @@ public class Configuration
     */
    private final ExecutorService executorService;
 
-   private final Map<Class<?>, ExtensionType> extensionMapping;
+   private final Map<Class<?>, ExtensionType> extensionMappings;
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -79,7 +79,7 @@ public class Configuration
       // Set 
       this.extensionLoader = builder.getExtensionLoader();
       this.executorService = builder.getExecutorService();
-      this.extensionMapping = builder.getExtensionMapping();
+      this.extensionMappings = builder.getExtensionMapping();
    }
 
    //-------------------------------------------------------------------------------------||
@@ -105,8 +105,8 @@ public class Configuration
    /**
     * @return the extensionMapping
     */
-   public Map<Class<?>, ExtensionType> getExtensionMapping()
+   public Map<Class<?>, ExtensionType> getExtensionMappings()
    {
-      return extensionMapping;
+      return extensionMappings;
    }
 }

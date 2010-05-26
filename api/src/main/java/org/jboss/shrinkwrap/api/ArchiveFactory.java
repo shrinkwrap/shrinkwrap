@@ -97,7 +97,7 @@ public final class ArchiveFactory
     * specific to this {@link ArchiveFactory}.
     * Generates a random name for the archive and adds proper extension based 
     * on the type mappings found in this {@link Domain}'s 
-    * {@link Configuration#getExtensionMapping()}s.
+    * {@link Configuration#getExtensionMappings()}s.
     * If no extension is found for the given type an {@link UnknownExtensionTypeException}
     * is thrown.
     *
@@ -116,7 +116,7 @@ public final class ArchiveFactory
       }
 
       // Get the extension type
-      final ExtensionType extensionType = configuration.getExtensionMapping().get(type);
+      final ExtensionType extensionType = configuration.getExtensionMappings().get(type);
       if (extensionType == null)
       {
          throw UnknownExtensionTypeException.newInstance(type);

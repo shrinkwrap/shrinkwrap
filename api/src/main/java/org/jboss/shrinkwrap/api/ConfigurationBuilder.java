@@ -76,7 +76,7 @@ public class ConfigurationBuilder
    /**
     * Mapping between {@link org.jboss.shrinkwrap.api.Assignable}  and {@link org.jboss.shrinkwrap.api.ExtensionType}
     */
-   private Map<Class<?>, ExtensionType> extensionMapping;
+   private Map<Class<?>, ExtensionType> extensionMappings;
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -116,7 +116,7 @@ public class ConfigurationBuilder
     */
    public Map<Class<?>, ExtensionType> getExtensionMapping()
    {
-      return extensionMapping;
+      return extensionMappings;
    }
 
    /**
@@ -144,12 +144,12 @@ public class ConfigurationBuilder
 
    /**
     *  Sets the extensionMapping to be used, returning this instance
-    * @param extensionMapping the extensionMapping
+    * @param extensionMappings the extensionMapping
     * @return the ConfigurationBuilder
     */
-   public ConfigurationBuilder extensionMapping(final Map<Class<?>, ExtensionType> extensionMapping)
+   public ConfigurationBuilder extensionMappings(final Map<Class<?>, ExtensionType> extensionMappings)
    {
-      this.extensionMapping = extensionMapping;
+      this.extensionMappings = extensionMappings;
       return this;
    }
 
@@ -195,7 +195,7 @@ public class ConfigurationBuilder
          {
             log.finer("User has not defined an explicit extensionMapping; defaulting to " + extensionMapping);
          }
-         this.extensionMapping(extensionMapping);
+         this.extensionMappings(extensionMapping);
       }
    }
 
@@ -217,14 +217,14 @@ public class ConfigurationBuilder
     */
    private Map<Class<?>, ExtensionType> createDefaultExtensionMapping()
    {
-      extensionMapping = new HashMap<Class<?>, ExtensionType>();
+      extensionMappings = new HashMap<Class<?>, ExtensionType>();
 
-      extensionMapping.put(WebArchive.class, ExtensionType.WAR);
-      extensionMapping.put(JavaArchive.class, ExtensionType.JAR);
-      extensionMapping.put(EnterpriseArchive.class, ExtensionType.EAR);
-      extensionMapping.put(ResourceAdapterArchive.class, ExtensionType.RAR);
+      extensionMappings.put(WebArchive.class, ExtensionType.WAR);
+      extensionMappings.put(JavaArchive.class, ExtensionType.JAR);
+      extensionMappings.put(EnterpriseArchive.class, ExtensionType.EAR);
+      extensionMappings.put(ResourceAdapterArchive.class, ExtensionType.RAR);
 
-      return extensionMapping;
+      return extensionMappings;
    }
 
 }

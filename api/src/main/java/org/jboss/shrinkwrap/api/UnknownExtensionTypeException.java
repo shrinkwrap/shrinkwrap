@@ -19,7 +19,7 @@ package org.jboss.shrinkwrap.api;
 /**
  * Indicates that a default name cannot be generated for
  * a given type because no extension mapping has been configured
- * via {@link Configuration#getExtensionMapping()}.  
+ * via {@link Configuration#getExtensionMappings()}.  
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
