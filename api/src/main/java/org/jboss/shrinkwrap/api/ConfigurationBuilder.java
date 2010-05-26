@@ -16,6 +16,13 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +40,7 @@ import java.util.logging.Logger;
  * constructed by calling upon {@link ConfigurationBuilder#build()}.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
 public class ConfigurationBuilder
@@ -64,6 +72,11 @@ public class ConfigurationBuilder
     * {@link ExecutorService} used for all asynchronous operations 
     */
    private ExecutorService executorService;
+
+   /**
+    * Mapping between {@link org.jboss.shrinkwrap.api.Assignable}  and {@link org.jboss.shrinkwrap.api.ExtensionType}
+    */
+   private Map<Class<?>, ExtensionType> extensionMapping;
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -99,6 +112,14 @@ public class ConfigurationBuilder
    }
 
    /**
+    * @return the extensionMapping
+    */
+   public Map<Class<?>, ExtensionType> getExtensionMapping()
+   {
+      return extensionMapping;
+   }
+
+   /**
     * Sets the {@link ExtensionLoader} to be used, returning this instance
     * 
     * @param extensionLoader
@@ -118,6 +139,17 @@ public class ConfigurationBuilder
    public ConfigurationBuilder executorService(final ExecutorService executorService)
    {
       this.executorService = executorService;
+      return this;
+   }
+
+   /**
+    *  Sets the extensionMapping to be used, returning this instance
+    * @param extensionMapping the extensionMapping
+    * @return the ConfigurationBuilder
+    */
+   public ConfigurationBuilder extensionMapping(final Map<Class<?>, ExtensionType> extensionMapping)
+   {
+      this.extensionMapping = extensionMapping;
       return this;
    }
 
@@ -157,10 +189,18 @@ public class ConfigurationBuilder
          }
          this.extensionLoader(loader);
       }
+      if(getExtensionMapping() == null) {
+         final Map<Class<?>, ExtensionType> extensionMapping = createDefaultExtensionMapping();
+         if (log.isLoggable(Level.FINER))
+         {
+            log.finer("User has not defined an explicit extensionMapping; defaulting to " + extensionMapping);
+         }
+         this.extensionMapping(extensionMapping);
+      }
    }
 
    /**
-    * Obtains the default {@link ExtensionLoader} to be used if none 
+    * Obtains the default {@link ExtensionLoader} to be used if none
     * is specified
     * @return
     */
@@ -169,6 +209,22 @@ public class ConfigurationBuilder
       return SecurityActions.newInstance(EXTENSION_LOADER_IMPL, new Class<?>[]
       {}, new Object[]
       {}, ExtensionLoader.class);
+   }
+
+   /**
+    * Creates and populates the default extensionMapping
+    * @return the extensionMapping
+    */
+   private Map<Class<?>, ExtensionType> createDefaultExtensionMapping()
+   {
+      extensionMapping = new HashMap<Class<?>, ExtensionType>();
+
+      extensionMapping.put(WebArchive.class, ExtensionType.WAR);
+      extensionMapping.put(JavaArchive.class, ExtensionType.JAR);
+      extensionMapping.put(EnterpriseArchive.class, ExtensionType.EAR);
+      extensionMapping.put(ResourceAdapterArchive.class, ExtensionType.RAR);
+
+      return extensionMapping;
    }
 
 }

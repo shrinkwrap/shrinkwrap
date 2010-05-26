@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -31,6 +32,7 @@ import java.util.concurrent.ExecutorService;
  * {@link Domain}s when creating {@link Archive}s.
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
 public class Configuration
@@ -52,6 +54,8 @@ public class Configuration
     * {@link ExecutorService} used for all asynchronous operations 
     */
    private final ExecutorService executorService;
+
+   private final Map<Class<?>, ExtensionType> extensionMapping;
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -75,6 +79,7 @@ public class Configuration
       // Set 
       this.extensionLoader = builder.getExtensionLoader();
       this.executorService = builder.getExecutorService();
+      this.extensionMapping = builder.getExtensionMapping();
    }
 
    //-------------------------------------------------------------------------------------||
@@ -97,4 +102,11 @@ public class Configuration
       return executorService;
    }
 
+   /**
+    * @return the extensionMapping
+    */
+   public Map<Class<?>, ExtensionType> getExtensionMapping()
+   {
+      return extensionMapping;
+   }
 }

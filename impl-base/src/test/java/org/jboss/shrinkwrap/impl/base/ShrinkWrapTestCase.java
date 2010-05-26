@@ -32,7 +32,10 @@ import org.jboss.shrinkwrap.api.Domain;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.container.ContainerBase;
 import org.junit.Test;
 
@@ -58,7 +61,7 @@ public class ShrinkWrapTestCase
    public void createNewArchiveUnderDefaultDomain()
    {
       final String archiveName = "test.war";
-      final JavaArchive archive = ShrinkWrap.create(archiveName, JavaArchive.class);
+      final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, archiveName);
 
       // Test
       Assert.assertNotNull("A archive should have been created", archive);
@@ -183,11 +186,77 @@ public class ShrinkWrapTestCase
    {
       final Domain domain = ShrinkWrap.createDomain();
       domain.getConfiguration().getExtensionLoader().addOverride(JavaArchive.class, MockJavaArchiveImpl.class);
-      final JavaArchive archive = domain.getArchiveFactory().create("test.jar", JavaArchive.class);
+      final JavaArchive archive = domain.getArchiveFactory().create(JavaArchive.class, "test.jar");
 
       Assert.assertEquals("Should have overridden normal JavaArchive impl", MockJavaArchiveImpl.class, archive
             .getClass());
 
+   }
+
+   @Test
+   public void shouldCreateArchiveWithCorrectExtensionForJavaArchive() throws Exception
+   {
+      JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class);
+      String archiveExtension = javaArchive.getName().substring(javaArchive.getName().lastIndexOf("."));
+      Assert.assertEquals("JavaArchive should have proper extension", ".jar", archiveExtension);
+   }
+
+   @Test
+   public void shouldCreateJavaArchiveWithGivenName() throws Exception
+   {
+      String archiveName = "testArchive";
+      JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class, archiveName);
+      Assert.assertEquals("JavaArchive should have given name", archiveName, javaArchive.getName());
+   }
+
+   @Test
+   public void shouldCreateArchiveWithCorrectExtensionForWebArchive() throws Exception
+   {
+      WebArchive webArchive = ShrinkWrap.create(WebArchive.class);
+      String archiveExtension = webArchive.getName().substring(webArchive.getName().lastIndexOf("."));
+      Assert.assertEquals("WebArchive should have proper extension", ".war", archiveExtension);
+   }
+
+   @Test
+   public void shouldCreateWebArchiveWithGivenName() throws Exception
+   {
+      String archiveName = "testArchive";
+      WebArchive webArchive = ShrinkWrap.create(WebArchive.class, archiveName);
+      Assert.assertEquals("WebArchive should have given name", archiveName, webArchive.getName());
+   }
+
+   @Test
+   public void shouldCreateArchiveWithCorrectExtensionForEnterpriseArchive() throws Exception
+   {
+      EnterpriseArchive enterpriseArchive = ShrinkWrap.create(EnterpriseArchive.class);
+      String archiveExtension = enterpriseArchive.getName().substring(enterpriseArchive.getName().lastIndexOf("."));
+      Assert.assertEquals("EnterpriseArchive should have proper extension", ".ear", archiveExtension);
+   }
+
+   @Test
+   public void shouldCreateEnterpriseArchiveWithGivenName() throws Exception
+   {
+      String archiveName = "testArchive";
+      EnterpriseArchive enterpriseArchive = ShrinkWrap.create(EnterpriseArchive.class, archiveName);
+      Assert.assertEquals("EnterpriseArchive should have given name", archiveName, enterpriseArchive.getName());
+   }
+
+   @Test
+   public void shouldCreateArchiveWithCorrectExtensionForResourceAdapterArchive() throws Exception
+   {
+      ResourceAdapterArchive resourceAdapterArchive = ShrinkWrap.create(ResourceAdapterArchive.class);
+      String archiveExtension = resourceAdapterArchive.getName().substring(
+            resourceAdapterArchive.getName().lastIndexOf("."));
+      Assert.assertEquals("ResourceAdapterArchive should have proper extension", ".rar", archiveExtension);
+   }
+
+   @Test
+   public void shouldCreateResourceAdapterArchiveWithGivenName() throws Exception
+   {
+      String archiveName = "testArchive";
+      ResourceAdapterArchive resourceAdapterArchive = ShrinkWrap.create(ResourceAdapterArchive.class, archiveName);
+      Assert.assertEquals("ResourceAdapterArchive should have given name", archiveName, resourceAdapterArchive
+            .getName());
    }
 
    //-------------------------------------------------------------------------------------||

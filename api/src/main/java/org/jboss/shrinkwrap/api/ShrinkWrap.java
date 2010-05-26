@@ -16,6 +16,8 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+
 /**
  * Main entry point into the ShrinkWrap system.  Each {@link Archive}
  * has an associated {@link Configuration}
@@ -30,6 +32,7 @@ package org.jboss.shrinkwrap.api;
  * {@link ShrinkWrap#createDomain(Configuration)}.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
 public final class ShrinkWrap
@@ -113,7 +116,7 @@ public final class ShrinkWrap
     * Returns a single domain with default configuration
     * for use in applications with no explicit configuration
     * or isolation requirements.
-    * @return
+    * @return default {@link Domain}
     */
    public static Domain getDefaultDomain()
    {
@@ -129,9 +132,13 @@ public final class ShrinkWrap
     * by {@link ShrinkWrap#getDefaultDomain()}.
     * 
     * @param archiveName The name of the archive
-    * @return An {@link Assignable} archive base  
+    * @param type The type of the archive e.g. {@link WebArchive}
+    * @return An {@link Assignable} archive base
     * @throws IllegalArgumentException If either argument is not specified
+    * @deprecated As part of SHRINKWRAP-163
+    * Use {@link ShrinkWrap#create(Class, String)} instead.
     */
+   @Deprecated
    public static <T extends Assignable> T create(final String archiveName, final Class<T> type)
          throws IllegalArgumentException
    {
@@ -146,7 +153,69 @@ public final class ShrinkWrap
       }
 
       // Delegate to the default domain's archive factory for creation
-      return ShrinkWrap.getDefaultDomain().getArchiveFactory().create(archiveName, type);
+      return ShrinkWrap.getDefaultDomain().getArchiveFactory().create(type, archiveName);
+   }
+
+   /**
+    * Creates a new archive of the specified type.  The archive
+    * will be be backed by the default {@link Configuration}.
+    * specific to this {@link ArchiveFactory}.
+    * Generates a random name for the archive and adds proper extension based 
+    * on the type mappings found in the default {@link Domain}'s 
+    * {@link Configuration#getExtensionMapping()}s.
+    * If no extension is found for the given type an {@link UnknownExtensionTypeException}
+    * is thrown.
+    * Invoking this method is functionally equivalent to calling
+    * {@link ArchiveFactory#create(Class)} upon
+    * {@link Domain#getArchiveFactory()} upon the domain returned
+    * by {@link ShrinkWrap#getDefaultDomain()}.
+    *
+    * @param type The type of the archive e.g. {@link WebArchive}
+    * @return An {@link Assignable} archive base
+    * @throws IllegalArgumentException if type is not specified
+    * @throws UnknownExtensionTypeException If no extension mapping is found for the specified type
+    */
+   public static <T extends Assignable> T create(final Class<T> type)
+      throws IllegalArgumentException
+   {
+      // Precondition checks
+      if (type == null)
+      {
+         throw new IllegalArgumentException("Type must be specified");
+      }
+
+      // Delegate to the default domain's archive factory for creation
+      return ShrinkWrap.getDefaultDomain().getArchiveFactory().create(type);
+   }
+
+   /**
+    * Creates a new archive of the specified type.  The archive
+    * will be be backed by the default {@link Configuration}.
+    * Invoking this method is functionally equivalent to calling
+    * {@link ArchiveFactory#create(String, Class)} upon
+    * {@link Domain#getArchiveFactory()} upon the domain returned
+    * by {@link ShrinkWrap#getDefaultDomain()}.
+    *
+    * @param type The type of the archive e.g. {@link WebArchive}
+    * @param archiveName The name of the archive
+    * @return An {@link Assignable} archive base
+    * @throws IllegalArgumentException either argument is not specified
+    */
+   public static <T extends Assignable> T create(final Class<T> type, final String archiveName)
+      throws IllegalArgumentException
+   {
+      // Precondition checks
+      if (type == null)
+      {
+         throw new IllegalArgumentException("Type must be specified");
+      }
+      if (archiveName == null || archiveName.length() == 0)
+      {
+         throw new IllegalArgumentException("ArchiveName must be specified");
+      }
+
+      // Delegate to the default domain's archive factory for creation
+      return ShrinkWrap.getDefaultDomain().getArchiveFactory().create(type, archiveName);
    }
 
    //-------------------------------------------------------------------------------------||
