@@ -153,6 +153,7 @@ public class ConfigurationBuilderTestCase
     * creates a {@link Configuration} with the same properties
     * as in the builder
     */
+   @Test
    public void createsConfiguration()
    {
       // Create the config
