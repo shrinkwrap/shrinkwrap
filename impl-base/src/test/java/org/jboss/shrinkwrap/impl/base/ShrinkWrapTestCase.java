@@ -31,6 +31,7 @@ import org.jboss.shrinkwrap.api.ConfigurationBuilder;
 import org.jboss.shrinkwrap.api.Domain;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.UnknownExtensionTypeException;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -259,6 +260,20 @@ public class ShrinkWrapTestCase
             .getName());
    }
 
+   /**
+    * Ensures that creating a default name with no extension configured
+    * for a specified type results in {@link UnknownExtensionTypeException}
+    * 
+    * SHRINKWRAP-163
+    * 
+    * @throws Exception
+    */
+   @Test(expected = UnknownExtensionTypeException.class)
+   public void shouldThrowExceptionOnNoConfiguredMappingForType() throws Exception
+   {
+      ShrinkWrap.create(MockAssignable.class);
+   }
+
    //-------------------------------------------------------------------------------------||
    // Internal Helper Members ------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -328,6 +343,25 @@ public class ShrinkWrapTestCase
       {
          return formatter.format(this);
       }
+   }
+
+   /**
+    * Used in testing {@link Assignable} types without the need to 
+    * function
+    * 
+    * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+    * @version $Revision: $
+    */
+   private static class MockAssignable implements Assignable
+   {
+
+      @Override
+      public <TYPE extends Assignable> TYPE as(final Class<TYPE> clazz)
+      {
+         // NO-OP
+         return null;
+      }
+
    }
 
 }
