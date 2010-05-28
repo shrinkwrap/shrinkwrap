@@ -34,7 +34,8 @@ public interface ZipImporter extends Assignable
    // Contracts --------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
    /**
-   * Imports provided {@link ZipInputStream} as a {@link Archive}.
+   * Imports provided {@link ZipInputStream} as a {@link Archive}.  It remains
+   * the responsibility of the caller to close the {@link ZipInputStream}.
    * 
    * @param stream the stream to import
    * @return Archive of the imported Zip
