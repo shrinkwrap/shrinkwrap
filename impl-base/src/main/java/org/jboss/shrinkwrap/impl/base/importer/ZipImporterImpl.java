@@ -19,7 +19,6 @@ package org.jboss.shrinkwrap.impl.base.importer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -73,9 +72,10 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.impl.base.SpecializedBase#getArchive()
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.AssignableBase#getArchive()
     */
    @Override
    protected Archive<?> getArchive()
@@ -121,20 +121,6 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
       catch (IOException e) 
       {
          throw new ArchiveImportException("Could not import stream", e);
-      }
-      finally 
-      {
-         try 
-         {
-            stream.close();
-         } 
-         catch (final Exception ignore) 
-         {
-            if (log.isLoggable(Level.FINER))
-            {
-               log.finer("Caught and ignoring exception while closing instream during import" + ignore);
-            }
-         }
       }
       return this;
    }
