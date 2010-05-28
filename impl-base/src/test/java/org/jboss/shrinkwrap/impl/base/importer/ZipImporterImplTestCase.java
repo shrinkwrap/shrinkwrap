@@ -107,9 +107,15 @@ public class ZipImporterImplTestCase
       ZipInputStream stream = new ZipInputStream(
             SecurityActions.getThreadContextClassLoader().getResourceAsStream(EXISTING_ZIP_RESOURCE));
       
-      Archive<?> archive = ShrinkWrap.create("test.jar", ZipImporter.class)
-                                 .importZip(stream)
-                              .as(JavaArchive.class);
+      final Archive<?> archive;
+      try
+      {
+         archive = ShrinkWrap.create("test.jar", ZipImporter.class).importZip(stream).as(JavaArchive.class);
+      }
+      finally
+      {
+         stream.close();
+      }
 
       Assert.assertNotNull("Should not return a null archive", archive);
 
@@ -129,9 +135,15 @@ public class ZipImporterImplTestCase
       ZipInputStream stream = new ZipInputStream(
             SecurityActions.getThreadContextClassLoader().getResourceAsStream(EXISTING_ZIP_RESOURCE));
       
-      Archive<?> archive = ShrinkWrap.create("test.jar", ZipImporter.class)
-                                 .importZip(stream)
-                              .as(JavaArchive.class);
+      final Archive<?> archive;
+      try
+      {
+         archive = ShrinkWrap.create("test.jar", ZipImporter.class).importZip(stream).as(JavaArchive.class);
+      }
+      finally
+      {
+         stream.close();
+      }
 
       Assert.assertNotNull("Should not return a null archive", archive);
       
@@ -156,7 +168,14 @@ public class ZipImporterImplTestCase
             throw new IOException("Mock exception");
          }
       });
-      ShrinkWrap.create("test.jar", ZipImporter.class).importZip(stream).as(JavaArchive.class);
+      try
+      {
+         ShrinkWrap.create("test.jar", ZipImporter.class).importZip(stream).as(JavaArchive.class);
+      }
+      finally
+      {
+         stream.close();
+      }
    }
 
    /**
