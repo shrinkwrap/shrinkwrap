@@ -109,6 +109,17 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    // Required Implementations - Archive Delegation --------------------------------------||
    //-------------------------------------------------------------------------------------||
 
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, java.lang.String)
+    */
+   @Override
+   public T add(Archive<?> archive, String path)
+   {
+      this.archive.add(archive, path);
+      return covarientReturn();
+   }
+   
    /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path)
     */

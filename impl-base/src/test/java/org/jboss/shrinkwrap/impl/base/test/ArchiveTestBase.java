@@ -496,17 +496,28 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
     * @throws Exception
     */
    @Test
-   public void testAddArchiveToPathRequirePath() throws Exception
+   public void testAddArchiveToPathRequireArchivePath() throws Exception
    {
       Archive<T> archive = getArchive();
       try
       {
-         archive.add(ShrinkWrap.create("test.jar", JavaArchive.class), null);
+         archive.add(ShrinkWrap.create("test.jar", JavaArchive.class), (ArchivePath)null);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
       {
       }
+   }
+   
+   /**
+    * Ensure adding an archive to a path requires a path
+    * @throws Exception
+    */
+   @Test(expected=IllegalArgumentException.class)
+   public void testAddArchiveToPathRequireStringPath() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      archive.add(ShrinkWrap.create("test.jar", JavaArchive.class), (String)null);
    }
 
    /**
