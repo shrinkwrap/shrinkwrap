@@ -193,6 +193,16 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If the path or archive are not specified 
     */
    T add(Archive<?> archive, ArchivePath path) throws IllegalArgumentException;
+   
+   /**
+    * Add an archive under a specific context and maintain the archive name as context path.
+    * 
+    * @param path to use 
+    * @param archive to add
+    * @return
+    * @throws IllegalArgumentException If the path or archive are not specified 
+    */
+   T add(Archive<?> archive, String path) throws IllegalArgumentException;
 
    /**
     * Merge the contents from an existing archive without 

@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.IllegalArchivePathException;
 import org.jboss.shrinkwrap.api.Node;
@@ -133,6 +134,17 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
       }
 
       return covariantReturn();
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, java.lang.String)
+    */
+   @Override
+   public T add(Archive<?> archive, String path)
+   {
+      Validate.notNullOrEmpty(path, "Archive Path must be specified");
+      return this.add(archive, ArchivePaths.create(path));
    }
 
    /**
