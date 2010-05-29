@@ -29,14 +29,14 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
-import org.jboss.shrinkwrap.api.serialization.ZipSerializable;
+import org.jboss.shrinkwrap.api.serialization.ZipSerializableView;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
 /**
- * Copy of {@link ZipSerializableImpl} so we may test for 
+ * Copy of {@link ZipSerializableViewImpl} so we may test for 
  * backwards-compatibility of the wire protocol.  This class is 
  * *never to change* once we publish/lock the wire protocol.  It is 
  * used to mock different ShrinkWrap versions communicating
@@ -45,7 +45,7 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ZipSerializableOriginalImpl extends AssignableBase implements ZipSerializable
+public class ZipSerializableOriginalImpl extends AssignableBase implements ZipSerializableView
 {
 
    //-------------------------------------------------------------------------------------||
@@ -60,7 +60,7 @@ public class ZipSerializableOriginalImpl extends AssignableBase implements ZipSe
    /**
     * Logger
     */
-   private static final Logger log = Logger.getLogger(ZipSerializableImpl.class.getName());
+   private static final Logger log = Logger.getLogger(ZipSerializableViewImpl.class.getName());
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -144,7 +144,7 @@ public class ZipSerializableOriginalImpl extends AssignableBase implements ZipSe
 
    /**
     * Deserializes according to the custom form 
-    * defined by {@link ZipSerializableImpl#writeObject(ObjectOutputStream)}
+    * defined by {@link ZipSerializableViewImpl#writeObject(ObjectOutputStream)}
     */
    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException
    {
@@ -207,7 +207,7 @@ public class ZipSerializableOriginalImpl extends AssignableBase implements ZipSe
    /**
     * A {@link InputStream} which does not delegate the {@link InputStream#close()}
     * operation to the wrapped delegate; we cannot close the {@link ObjectInputStream}
-    * passed into {@link ZipSerializableImpl#readObject(ObjectInputStream)}.
+    * passed into {@link ZipSerializableViewImpl#readObject(ObjectInputStream)}.
     * 
     * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
     * @version $Revision: $

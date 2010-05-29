@@ -36,14 +36,16 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.serialization.ZipSerializable;
+import org.jboss.shrinkwrap.api.serialization.SerializableView;
+import org.jboss.shrinkwrap.api.serialization.ZipSerializableView;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Ensures that serialization of Archives is possible via
- * the {@link ZipSerializable} view.
+ * the {@link SerializableView}s.
  * 
  * SHRINKWRAP-178
  * 
@@ -62,40 +64,88 @@ public class SerializationTestCase
     */
    private static final Logger log = Logger.getLogger(SerializationTestCase.class.getName());
 
+   /**
+    * Name of the payload archive used in testing serialization
+    */
+   private static final String NAME_PAYLOAD_ARCHIVE = "serializedArchive.jar";
+
+   //-------------------------------------------------------------------------------------||
+   // Instance Members -------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * A populated archive to be used in testing serialization
+    */
+   private JavaArchive payload;
+
+   //-------------------------------------------------------------------------------------||
+   // Lifecycle --------------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Creates a payload archive to be used in serialization tests
+    */
+   @Before
+   public void createPayload()
+   {
+      payload = ShrinkWrap.create(JavaArchive.class, NAME_PAYLOAD_ARCHIVE).addClasses(SerializationTestCase.class,
+            JavaArchive.class);
+   }
+
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Ensures we may serialize an {@link Archive} and preserve contents
-    * as expected
+    * Ensures we may serialize an {@link Archive} as {@link ZipSerializableView}
+    * and preserve contents as expected
     */
    @Test
-   public void serialize() throws Exception
+   public void zipSerializableView() throws Exception
+   {
+      this.testSerializableView(ZipSerializableView.class);
+   }
+
+   /**
+    * Ensures we may serialize an {@link Archive} as {@link SerializableView}
+    * and preserve contents as expected
+    */
+   @Test
+   public void serializableView() throws Exception
+   {
+      this.testSerializableView(SerializableView.class);
+   }
+
+   /**
+    * Tests that the payload archive may be serialized as the specified {@link SerializableView}
+    * type and contents of the roundtrip are as expected.
+    * @param <S>
+    * @param serializableView
+    * @throws Exception
+    */
+   private <S extends SerializableView> void testSerializableView(final Class<S> serializableView) throws Exception
    {
       // Define the initial archive
-      final String name = "serializedArchive.jar";
-      final JavaArchive original = ShrinkWrap.create(JavaArchive.class, name).addClasses(SerializationTestCase.class,
-            JavaArchive.class);
-      log.info("Before: " + original.toString(true));
+      log.info("Before: " + payload.toString(true));
 
       // Serialize
-      final JavaArchive roundtrip = serializeAndDeserialize(original.as(ZipSerializable.class)).as(JavaArchive.class);
+      final JavaArchive roundtrip = serializeAndDeserialize(payload.as(serializableView)).as(JavaArchive.class);
       log.info("After: " + roundtrip.toString(true));
 
       // Ensure contents are as expected
-      final Map<ArchivePath, Node> originalContents = original.getContent();
+      final Map<ArchivePath, Node> originalContents = payload.getContent();
       final Map<ArchivePath, Node> roundtripContents = roundtrip.getContent();
       Assert.assertEquals("Contents after serialization were not as expected", originalContents, roundtripContents);
-      Assert.assertEquals("Name of original archive was not as expected", name, original.getName());
-      Assert.assertEquals("Name not as expected after serialization", original.getName(), roundtrip.getName());
+      Assert.assertEquals("Name of original archive was not as expected", NAME_PAYLOAD_ARCHIVE, payload.getName());
+      Assert.assertEquals("Name not as expected after serialization", payload.getName(), roundtrip.getName());
+
    }
 
    /**
     * Ensures that the current serialization protocol is compatible
     * with the version initially released.  We accomplish this by mocking
     * {@link ZipSerializableOriginalImpl} and redefining its class name via 
-    * {@link SerializationTestCase#serializeAndDeserialize(ZipSerializable, Class)}, 
+    * {@link SerializationTestCase#serializeAndDeserialize(ZipSerializableView, Class)}, 
     * which uses the {@link SpoofingObjectOutputStream}.
     * @throws Exception
     */
@@ -109,7 +159,7 @@ public class SerializationTestCase
     * Ensures that the original serialization protocol is compatible
     * with the current version.  We accomplish this by mocking
     * {@link ZipSerializableOriginalImpl} and redefining its class name via 
-    * {@link SerializationTestCase#serializeAndDeserialize(ZipSerializable, Class)}, 
+    * {@link SerializationTestCase#serializeAndDeserialize(ZipSerializableView, Class)}, 
     * which uses the {@link SpoofingObjectOutputStream}.
     * @throws Exception
     */
@@ -138,7 +188,7 @@ public class SerializationTestCase
     * @throws IOException
     * @throws ClassNotFoundException
     */
-   private static ZipSerializable serializeAndDeserialize(final ZipSerializable archive) throws IOException,
+   private static SerializableView serializeAndDeserialize(final SerializableView archive) throws IOException,
          ClassNotFoundException
    {
       assert archive != null : "Archive must be specified";
@@ -148,7 +198,7 @@ public class SerializationTestCase
       out.flush();
       out.close();
       final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(byteOut.toByteArray()));
-      final ZipSerializable roundtrip = (ZipSerializable) in.readObject();
+      final SerializableView roundtrip = (SerializableView) in.readObject();
       in.close();
       return roundtrip;
    }
@@ -157,14 +207,14 @@ public class SerializationTestCase
     * Roundtrip serializes/deserializes the specified {@link Invocation}
     * and reconsitutes/redefines as the specified target type
     * 
-    * @param archive The original {@link ZipSerializable} instance
+    * @param archive The original {@link ZipSerializableView} instance
     * @param The new type we should cast to after deserialization 
     * @see http://crazybob.org/2006/01/unit-testing-serialization-evolution.html
     * @see http://crazybob.org/2006/01/unit-testing-serialization-evolution_13.html
     * @see http://www.theserverside.com/news/thread.tss?thread_id=38398
     * @author Bob Lee
     */
-   private static <S extends ZipSerializable> S serializeAndDeserialize(final ZipSerializable archive,
+   private static <S extends SerializableView> S serializeAndDeserialize(final SerializableView archive,
          final Class<S> targetType) throws IOException
    {
       final ByteArrayOutputStream bout = new ByteArrayOutputStream();

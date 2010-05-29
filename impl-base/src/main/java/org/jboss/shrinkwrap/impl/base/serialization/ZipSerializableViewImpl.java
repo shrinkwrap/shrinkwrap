@@ -30,7 +30,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
-import org.jboss.shrinkwrap.api.serialization.ZipSerializable;
+import org.jboss.shrinkwrap.api.serialization.ZipSerializableView;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
@@ -44,7 +44,7 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ZipSerializableImpl extends AssignableBase implements ZipSerializable
+public class ZipSerializableViewImpl extends AssignableBase implements ZipSerializableView
 {
 
    //-------------------------------------------------------------------------------------||
@@ -59,7 +59,7 @@ public class ZipSerializableImpl extends AssignableBase implements ZipSerializab
    /**
     * Logger
     */
-   private static final Logger log = Logger.getLogger(ZipSerializableOriginalImpl.class.getName());
+   private static final Logger log = Logger.getLogger(ZipSerializableViewImpl.class.getName());
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -83,7 +83,7 @@ public class ZipSerializableImpl extends AssignableBase implements ZipSerializab
    /**
     * Creates a new instance, wrapping the specified {@link Archive}
     */
-   public ZipSerializableImpl(final Archive<?> archive)
+   public ZipSerializableViewImpl(final Archive<?> archive)
    {
       Validate.notNull(archive, "Archive must be specified");
       final String name = archive.getName();
@@ -143,7 +143,7 @@ public class ZipSerializableImpl extends AssignableBase implements ZipSerializab
 
    /**
     * Deserializes according to the custom form 
-    * defined by {@link ZipSerializableOriginalImpl#writeObject(ObjectOutputStream)}
+    * defined by {@link ZipSerializableImpl#writeObject(ObjectOutputStream)}
     */
    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException
    {
@@ -206,7 +206,7 @@ public class ZipSerializableImpl extends AssignableBase implements ZipSerializab
    /**
     * A {@link InputStream} which does not delegate the {@link InputStream#close()}
     * operation to the wrapped delegate; we cannot close the {@link ObjectInputStream}
-    * passed into {@link ZipSerializableOriginalImpl#readObject(ObjectInputStream)}.
+    * passed into {@link ZipSerializableImpl#readObject(ObjectInputStream)}.
     * 
     * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
     * @version $Revision: $

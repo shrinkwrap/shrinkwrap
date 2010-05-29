@@ -22,15 +22,24 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * {@link Serializable} view of an {@link Archive} where
- * contents are encoded in ZIP format during
- * Serialization.  May be reassigned to a normal {@link Archive}
- * view via {@link Assignable#as(Class)}.
+ * {@link Serializable} view of an {@link Archive}.  This is 
+ * the base interface for all {@link Serializable} views of an 
+ * {@link Archive}, and may be extended/implementated 
+ * to define a custom wire protocol.
+ * <br /><br />
+ * ShrinkWrap will use a {@link ZipSerializableView} 
+ * implementation when
+ * assigning archives to this type directly via {@link Assignable#as(Class)}.
+ * However consumers obtaining this type should not assume anything
+ * about the protocol being used under the hood; it may be any subtype.
+ * <br /><br />
+ * May be reassigned back to a normal {@link Archive}
+ * view via {@link Assignable#as(Class)}. 
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public interface ZipSerializable extends Serializable, Assignable
+public interface SerializableView extends Assignable, Serializable
 {
 
 }
