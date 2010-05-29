@@ -32,6 +32,8 @@ import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import junit.framework.TestCase;
+
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Node;
@@ -149,10 +151,11 @@ public class SerializationTestCase
     * which uses the {@link SpoofingObjectOutputStream}.
     * @throws Exception
     */
-   //   @Test
-   public void wireProtocolCurrentToOriginal() throws Exception
+   @Test
+   public void zipWireProtocolCurrentToOriginal() throws Exception
    {
-      //TODO
+      final SerializableView currentWireFormat = this.payload.as(SerializableView.class);
+      this.testWireProtocol(currentWireFormat, ZipSerializableOriginalImpl.class);
    }
 
    /**
@@ -163,22 +166,33 @@ public class SerializationTestCase
     * which uses the {@link SpoofingObjectOutputStream}.
     * @throws Exception
     */
-   //   @Test
-   public void wireProtocolOriginalToCurrent() throws Exception
+   @Test
+   public void zipWireProtocolOriginalToCurrent() throws Exception
    {
-      //TODO
+      final SerializableView originalWireFormat = new ZipSerializableOriginalImpl(payload);
+      this.testWireProtocol(originalWireFormat, ZipSerializableViewImpl.class);
    }
-
-   //TODO Add tests for backwards-compatibility wire protocol, nested archives
-
-   /*
-    * Note: looks like nested archives aren't represented in toString(verbose);
-    * investigate if necessary and open a JIRA
-    */
 
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
+
+   /**
+    * Ensures that the specified client object may be serialized to the specified type
+    * 
+    * @param clientObject The object to be serialized
+    * @param targetType The type we should be represented as
+    * @throws IOException
+    */
+   private void testWireProtocol(final SerializableView clientObject, final Class<? extends SerializableView> targetType)
+         throws IOException
+   {
+      // Roundtrip the object, now representing as the target type
+      final SerializableView roundtrip = serializeAndDeserialize(clientObject, targetType);
+
+      // The type of the object put through roundtrip serialization must be of the type specified
+      TestCase.assertEquals(targetType, roundtrip.getClass());
+   }
 
    /**
     * Roundtrip serializes/deserializes the specified {@link Archive}
@@ -228,8 +242,7 @@ public class SerializationTestCase
       {
          final Object obj = oin.readObject();
          oin.close();
-         log.info("Original invocation type " + archive.getClass().getName() + " now represented as "
-               + obj.getClass().getName());
+         log.info("Original type " + archive.getClass().getName() + " now represented as " + obj.getClass().getName());
          return targetType.cast(obj);
       }
       catch (ClassNotFoundException e)
