@@ -257,6 +257,17 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return archive.contains(path);
    }
    
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#contains(java.lang.String)
+    */
+   @Override
+   public boolean contains(final String path) throws IllegalArgumentException
+   {
+      Validate.notNull(path, "Path must be specified");
+      return this.contains(ArchivePaths.create(path));
+   }
+
    /* (non-Javadoc)
     * @see org.jboss.declarchive.api.Archive#delete(org.jboss.declarchive.api.Path)
     */

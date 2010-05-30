@@ -344,6 +344,31 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       TestCase.assertTrue(message + path2, archive.contains(path2));
       TestCase.assertTrue(message + path3, archive.contains(path3));
    }
+   
+   /**
+    * Ensures that {@link Archive#contains(String)}
+    * works as expected
+    */
+   @Test
+   public void testContainsPathAsString(){
+      final Archive<T> archive = getArchive();
+      final String path = "testpath";
+      archive.add(EmptyAsset.INSTANCE,path);
+      Assert.assertTrue("Archive should contain the path added",archive.contains(path));
+   }
+   
+   /**
+    * Ensures that {@link Archive#contains(ArchivePath)}
+    * works as expected
+    */
+   @Test
+   public void testContainsPathAsArchivePath()
+   {
+      final Archive<T> archive = getArchive();
+      final ArchivePath path = ArchivePaths.create("testpath");
+      archive.add(EmptyAsset.INSTANCE, path);
+      Assert.assertTrue("Archive should contain the path added", archive.contains(path));
+   }
 
    /**
     * Ensure deleting an asset successfully removes asset from storage

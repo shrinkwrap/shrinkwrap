@@ -222,6 +222,18 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
       return found;
    }
 
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#contains(java.lang.String)
+    */
+   @Override
+   public boolean contains(final String path) throws IllegalArgumentException
+   {
+      Validate.notNull(path, "Path must be specified");
+      final ArchivePath archivePath = ArchivePaths.create(path);
+      return this.contains(archivePath);
+   }
+
    /** 
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#delete(org.jboss.declarchive.api.ArchivePath)

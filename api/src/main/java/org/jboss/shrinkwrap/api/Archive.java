@@ -174,6 +174,16 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If the path is not specified
     */
    boolean contains(ArchivePath path) throws IllegalArgumentException;
+   
+   /**
+    * Denotes whether this archive contains a resource at the specified
+    * path
+    * 
+    * @param path
+    * @return
+    * @throws IllegalArgumentException If the path is not specified
+    */
+   boolean contains(String path) throws IllegalArgumentException;
 
    /**
     * Removes the asset in the archive at the specified Path.  If the path
