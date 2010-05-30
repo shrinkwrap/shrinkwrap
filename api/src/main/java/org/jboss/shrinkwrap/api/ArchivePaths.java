@@ -69,6 +69,21 @@ public final class ArchivePaths
       {String.class, String.class}, new Object[]
       {basePath, context});
    }
+   
+   /**
+    * Creates a new {@link ArchivePath} using the specified base 
+    * and specified relative context.
+    * 
+    * @param basePath A absolute path
+    * @param context A relative path to basePath
+    * @return a new path
+    */
+   public static ArchivePath create(final String basePath, final ArchivePath context)
+   {
+      return createInstance(new Class<?>[]
+      {String.class, ArchivePath.class}, new Object[]
+      {basePath, context});
+   }
 
    /**
     * Creates a new {@link ArchivePath} using the specified base 

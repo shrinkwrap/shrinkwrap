@@ -712,6 +712,38 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Assert.assertTrue("Asset should have been added to path: " + expectedPathTwo.getClass(), this.compareAssets(
             nodeTwo.getAsset(), assetTwo));
    }
+   
+   /**
+    * Ensure merging content from another archive to a path successfully stores all assets to specific path
+    * @throws Exception
+    */
+   @Test
+   public void testMergeToStringPath() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      Archive<T> sourceArchive = createNewArchive();
+      ArchivePath location = new BasicPath("/", "test.properties");
+      ArchivePath locationTwo = new BasicPath("/", "test2.properties");
+
+      Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+      Asset assetTwo = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
+      sourceArchive.add(asset, location).add(assetTwo, locationTwo);
+
+      String baseLocation = "somewhere";
+
+      archive.merge(sourceArchive, baseLocation);
+
+      ArchivePath expectedPath = new BasicPath(baseLocation, location);
+      ArchivePath expectedPathTwo = new BasicPath(baseLocation, locationTwo);
+      
+      Node nodeOne = archive.get(expectedPath);
+      Node nodeTwo = archive.get(expectedPathTwo);
+
+      Assert.assertTrue("Asset should have been added to path: " + expectedPath.get(), this.compareAssets(nodeOne.getAsset(), asset));
+
+      Assert.assertTrue("Asset should have been added to path: " + expectedPathTwo.getClass(), this.compareAssets(
+            nodeTwo.getAsset(), assetTwo));
+   }
 
    /**
     * Ensure that the filter is used when merging.
@@ -730,6 +762,38 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       sourceArchive.add(asset, location).add(assetTwo, locationTwo);
 
       ArchivePath baseLocation = new BasicPath("somewhere");
+
+      archive.merge(sourceArchive, baseLocation, Filters.include(".*test2.*"));
+      
+      Assert.assertEquals(
+            "Should only have merged 1",
+            1, 
+            numAssets(archive));
+      
+      ArchivePath expectedPath = new BasicPath(baseLocation, locationTwo);
+
+      Assert.assertTrue(
+            "Asset should have been added to path: " + expectedPath.get(), 
+            this.compareAssets(archive.get(expectedPath).getAsset(), asset));
+   }
+   
+   /**
+    * Ensure that the filter is used when merging.
+    * @throws Exception
+    */
+   @Test
+   public void testMergeToStringPathWithFilter() throws Exception 
+   {
+      Archive<?> archive = getArchive();
+      Archive<T> sourceArchive = createNewArchive();
+      ArchivePath location = new BasicPath("/", "test.properties");
+      ArchivePath locationTwo = new BasicPath("/", "test2.properties");
+
+      Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+      Asset assetTwo = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
+      sourceArchive.add(asset, location).add(assetTwo, locationTwo);
+
+      String baseLocation = "somewhere";
 
       archive.merge(sourceArchive, baseLocation, Filters.include(".*test2.*"));
       

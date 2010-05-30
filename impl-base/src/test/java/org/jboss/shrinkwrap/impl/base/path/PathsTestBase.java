@@ -82,6 +82,16 @@ public abstract class PathsTestBase
     * @throws IllegalArgumentException If the context or base is not specified
     */
    abstract ArchivePath createPath(final String base, final String context);
+   
+   /**
+    * Creates and returns a new {@link ArchivePath}
+    * with the specified context and base
+    * 
+    * @param base Parent context
+    * @param context Context to assign the Path
+    * @throws IllegalArgumentException If the context or base is not specified
+    */
+   abstract ArchivePath createPath(final String base, final ArchivePath context);
 
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
@@ -197,6 +207,31 @@ public abstract class PathsTestBase
       final String expected = PathUtil.SLASH + base + PathUtil.SLASH + context;
       Assert.assertEquals("Context under base should resolve to relative", expected, resolved);
       log.info("\"" + context + "\" under base " + basePath + " resolves to: " + path);
+   }
+   
+   /**
+    * Ensures that a new path may be created from a 
+    * context (as {@link ArchivePath}) under a specified base path
+    * (as String)
+    */
+   @Test
+   public void testBasePathAsStringAndRelativeContext()
+   {
+      // Log
+      log.info("testBasePathAsStringAndRelativeContext");
+
+      // Create a base path
+      final String base = "base";
+
+      // Create a new path using a relative context to the base
+      final ArchivePath context = this.createPath("context");
+      final ArchivePath path = this.createPath(base, context);
+
+      // Ensure expected
+      final String resolved = path.get();
+      final String expected = PathUtil.SLASH + base + context.get();
+      Assert.assertEquals("Context under base should resolve to relative", expected, resolved);
+      log.info("\"" + context + "\" under base " + base + " resolves to: " + path);
    }
 
    /**

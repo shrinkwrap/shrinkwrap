@@ -22,8 +22,6 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.ArchivePath;
 
 /**
- * BasicPath
- * 
  * A Path which may be optionally prefixed with some common
  * namespace context at construction time.  Thread-safe.
  *
@@ -104,6 +102,18 @@ public class BasicPath implements ArchivePath, Comparable<ArchivePath>
    public BasicPath(final ArchivePath basePath, final String context)
    {
       this(basePath.get(), context);
+   }
+   
+   /**
+    * Creates a new Path using the specified base 
+    * and specified relative context.
+    * 
+    * @param basePath
+    * @param context
+    */
+   public BasicPath(final String basePath, final ArchivePath context)
+   {
+      this(basePath, context.get());
    }
 
    /**

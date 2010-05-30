@@ -86,4 +86,14 @@ public class PathsTestCase extends PathsTestBase
    {
       return ArchivePaths.create(base, context);
    }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(java.lang.String, org.jboss.shrinkwrap.api.ArchivePath)
+    */
+   @Override
+   ArchivePath createPath(final String base, final ArchivePath context)
+   {
+      return ArchivePaths.create(base, context);
+   }
 }

@@ -27,10 +27,10 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Assignable;
+import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Node;
-import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
@@ -289,6 +289,29 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
       Validate.notNull(path, "No path was specified");
 
       return merge(source, path, Filters.includeAll());
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, java.lang.String, org.jboss.shrinkwrap.api.Filter)
+    */
+   @Override
+   public T merge(final Archive<?> source, final String path, final Filter<ArchivePath> filter)
+         throws IllegalArgumentException
+   {
+      Validate.notNull(path, "path must be specified");
+      return this.merge(source, ArchivePaths.create(path), filter);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, java.lang.String)
+    */
+   @Override
+   public T merge(final Archive<?> source, final String path) throws IllegalArgumentException
+   {
+      Validate.notNull(path, "path must be specified");
+      return this.merge(source, ArchivePaths.create(path));
    }
 
    /**

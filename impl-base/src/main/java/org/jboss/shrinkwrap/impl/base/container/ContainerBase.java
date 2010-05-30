@@ -238,6 +238,29 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return covarientReturn();
    }
    
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, java.lang.String, org.jboss.shrinkwrap.api.Filter)
+    */
+   @Override
+   public T merge(final Archive<?> source, final String path, final Filter<ArchivePath> filter)
+         throws IllegalArgumentException
+   {
+      archive.merge(source, path, filter);
+      return covarientReturn();
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, java.lang.String)
+    */
+   @Override
+   public T merge(final Archive<?> source, final String path) throws IllegalArgumentException
+   {
+      archive.merge(source, path);
+      return covarientReturn();
+   }
+
    /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Asset, java.lang.String)
     */

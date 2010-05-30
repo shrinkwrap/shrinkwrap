@@ -28,7 +28,7 @@ public interface Filter<T>
 {
 
    /**
-    * Called pr operation in a multi add operation.
+    * Called per operation in a multi add operation.
     * 
     * @param object a object to filter on
     * @return true if the object should be included in target
