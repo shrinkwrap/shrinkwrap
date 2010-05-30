@@ -125,6 +125,18 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
    /**
     * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.asset.Asset, java.lang.String, java.lang.String)
+    */
+   @Override
+   public T add(final Asset asset, final String target, final String name) throws IllegalArgumentException
+   {
+      Validate.notNull(target, "target must be specified");
+      final ArchivePath path = ArchivePaths.create(target);
+      return this.add(asset, path, name);
+   }
+
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.ArchivePath, java.lang.String, org.jboss.shrinkwrap.api.asset.Asset)
     */
    @Override

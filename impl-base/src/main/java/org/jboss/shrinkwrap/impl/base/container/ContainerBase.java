@@ -150,6 +150,17 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return covarientReturn();
    }
    
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.asset.Asset, java.lang.String, java.lang.String)
+    */
+   @Override
+   public T add(final Asset asset, final String target, final String name) throws IllegalArgumentException
+   {
+      archive.add(asset, target, name);
+      return covarientReturn();
+   }
+
    /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.Archive#addDirectories(org.jboss.shrinkwrap.api.ArchivePath[])
     */

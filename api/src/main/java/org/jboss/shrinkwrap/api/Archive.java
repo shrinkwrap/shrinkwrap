@@ -81,6 +81,20 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArchivePathException If the target is invalid.
     */
    T add(Asset asset, ArchivePath target, String name) throws IllegalArgumentException;
+   
+   /**
+    * Adds the specified asset under the specified target (directory)
+    * using the specified name.  The resultant path will be treating 
+    * the specified path as a prefix namespace, then appending the name.
+    * 
+    * @param target The context directory under which to add the asset
+    * @param name The name to assign the assent under the target namespace
+    * @param asset
+    * @return
+    * @throws IllegalArgumentException If the target, name, or asset was not specified
+    * @throws IllegalArchivePathException If the target is invalid.
+    */
+   T add(Asset asset, String target, String name) throws IllegalArgumentException;
 
    /**
     * Adds the specified resource under the context denoted by the specified target

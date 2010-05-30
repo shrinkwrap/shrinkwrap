@@ -30,6 +30,7 @@ import org.jboss.shrinkwrap.api.IllegalArchivePathException;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
@@ -209,18 +210,38 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
    }
 
    /** 
-    * Ensure adding an asset with a name results in successful storage
+    * Ensure adding an asset with a name under an {@link ArchivePath}
+    * context results in successful storage
     * @throws Exception
     */
    @Test
-   public void testAddAssetWithName() throws Exception
+   public void testAddAssetWithArchivePathAndName() throws Exception
    {
       Archive<T> archive = getArchive();
       final String name = "test.properties";
       final Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
-      ArchivePath location = new BasicPath("/");
-
+      ArchivePath location = ArchivePaths.root();
+      
       archive.add(asset, location, name);
+
+      ArchivePath expectedPath = new BasicPath("/", "test.properties");
+
+      Assert.assertTrue("Asset should be placed on " + expectedPath.get(), archive.contains(expectedPath));
+   }
+   
+   /** 
+    * Ensure adding an asset with a name under an {@link String}
+    * context results in successful storage
+    * @throws Exception
+    */
+   @Test
+   public void testAddAssetWithStringPathAndName() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      final String name = "test.properties";
+      final Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+
+      archive.add(asset, "/", name);
 
       ArchivePath expectedPath = new BasicPath("/", "test.properties");
 
@@ -229,22 +250,35 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
    /**
     * Ensure adding an asset with name requires the path attribute
+    * as an {@link ArchivePath}.
     * @throws Exception
     */
    @Test
-   public void testAddAssetWithNameRequiresPath() throws Exception
+   public void testAddAssetWithNameRequiresArchivePath() throws Exception
    {
       Archive<T> archive = getArchive();
       final String name = "test.properties";
       final Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       try
       {
-         archive.add(asset, null, name);
+         archive.add(asset, (ArchivePath)null, name);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
       {
       }
+   }
+   
+   /**
+    * Ensure adding an asset with name requires the path attribute
+    * as a String
+    * @throws Exception
+    */
+   @Test(expected = IllegalArgumentException.class)
+   public void testAddAssetWithNameRequiresStringPath() throws Exception
+   {
+      final Archive<T> archive = getArchive();
+      archive.add(EmptyAsset.INSTANCE, (String) null, "childPath");
    }
 
    /**
