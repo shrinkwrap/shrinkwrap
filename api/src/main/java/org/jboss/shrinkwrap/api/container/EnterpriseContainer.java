@@ -24,8 +24,6 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
- * EnterpriseContainer
- * 
  * Defines the contract for a component capable of storing 
  * Enterprise related resources.
  * <br/><br/>

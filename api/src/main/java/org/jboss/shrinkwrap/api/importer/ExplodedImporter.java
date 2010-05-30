@@ -22,8 +22,6 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * ExplodedImporter
- *
  * Importer used to import Exploded directory structures into a {@link Archive}
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

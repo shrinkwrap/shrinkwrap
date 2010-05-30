@@ -21,8 +21,6 @@ import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 
 /**
- * JavaArchive
- * 
  * Traditional JAR (Java Archive) structure. Used in 
  * construction of libraries and applications.
  *

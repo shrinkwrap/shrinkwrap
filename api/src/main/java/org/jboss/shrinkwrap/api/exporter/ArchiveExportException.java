@@ -17,8 +17,6 @@
 package org.jboss.shrinkwrap.api.exporter;
 
 /**
- * ArchiveExportException
- * 
  * Exception thrown when an error occurs exporting an Archive.
  * 
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>

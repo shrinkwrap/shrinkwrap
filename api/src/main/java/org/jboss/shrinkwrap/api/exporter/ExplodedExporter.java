@@ -21,8 +21,6 @@ import java.io.File;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * ExplodedExporter
- * 
  * Exporter used to export an Archive as an exploded directory structure. 
  * 
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>

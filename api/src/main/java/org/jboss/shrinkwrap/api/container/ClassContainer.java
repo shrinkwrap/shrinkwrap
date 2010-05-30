@@ -21,8 +21,6 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Filter;
 
 /**
- * ClassContainer
- * 
  * Defines the contract for a component capable of storing 
  * Java Classes.
  * <br/><br/>

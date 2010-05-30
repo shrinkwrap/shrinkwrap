@@ -24,10 +24,9 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
- * ResourceContainer
- * 
  * Defines the contract for a component capable of storing 
- * a series of {@link ClassLoader} resources
+ * a series of {@link ClassLoader}, {@link File}, and {@link URL}-based
+ * Assets as resources within an archive.
  * <br/><br/>
  * The actual path to the Resources within the {@link Archive} 
  * is up to the implementations/specifications.
@@ -56,7 +55,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @see #addResource(Asset, ArchivePath)
     */
    T addResource(String resourceName) throws IllegalArgumentException;
-   
+
    /**
     * Adds the {@link File} as a resource to the container, returning the container itself.
     * <br/>
@@ -82,7 +81,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @see #addResource(Asset, ArchivePath)
     */
    T addResource(String resourceName, String target) throws IllegalArgumentException;
-   
+
    /**
     * Adds the {@link File} as a resource to the container, returning the container itself.
     * 
@@ -94,7 +93,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @see #addResource(Asset, ArchivePath)
     */
    T addResource(File resource, String target) throws IllegalArgumentException;
-   
+
    /**
     * Adds the {@link URL} as a resource to the container, returning the container itself.
     * 
@@ -131,7 +130,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException If the resourceName is null
     */
    T addResource(String resourceName, ArchivePath target) throws IllegalArgumentException;
-   
+
    /**
     * Adds the resource as a resource to the container, returning the container itself.
     * <br/><br/>
@@ -193,7 +192,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if no resourceNames are specified or containing null 
     */
    T addResources(Package resourcePackage, String... resourceNames) throws IllegalArgumentException;
-   
+
    /**
     * Adds the resource as a resource to the container, returning the container itself.
     * <br/><br/>
@@ -206,7 +205,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourceName is null 
     */
    T addResource(Package resourcePackage, String resourceName) throws IllegalArgumentException;
-   
+
    /**
     * Adds the resource as a resource to a specific path inside the container, returning the container itself.
     * <br/><br/>

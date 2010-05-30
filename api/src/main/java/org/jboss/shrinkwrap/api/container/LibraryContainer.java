@@ -24,8 +24,6 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
- * LibraryContainer
- * 
  * Defines the contract for a component capable of storing 
  * Libraries.
  * <br/><br/>
@@ -55,7 +53,7 @@ public interface LibraryContainer<T extends Archive<T>>
     * @see #addLibrary(Asset, ArchivePath)
     */
    T addLibrary(String resourceName) throws IllegalArgumentException;
-   
+
    /**
     * Adds the {@link File} as a library to the container, returning the container itself.
     * <br/>
@@ -81,7 +79,7 @@ public interface LibraryContainer<T extends Archive<T>>
     * @see #addLibrary(Asset, ArchivePath)
     */
    T addLibrary(String resourceName, String target) throws IllegalArgumentException;
-   
+
    /**
     * Adds the {@link File} as a library to the container, returning the container itself.
     * 
@@ -93,7 +91,7 @@ public interface LibraryContainer<T extends Archive<T>>
     * @see #addLibrary(Asset, ArchivePath)
     */
    T addLibrary(File resource, String target) throws IllegalArgumentException;
-   
+
    /**
     * Adds the {@link URL} as a library to the container, returning the container itself.
     * 
@@ -105,7 +103,7 @@ public interface LibraryContainer<T extends Archive<T>>
     * @see #addLibrary(Asset, ArchivePath)
     */
    T addLibrary(URL resource, String target) throws IllegalArgumentException;
-   
+
    /**
     * Adds the {@link Asset} as a library to the container, returning the container itself.
     * 
@@ -132,7 +130,7 @@ public interface LibraryContainer<T extends Archive<T>>
     * @see #addLibrary(Asset, ArchivePath)
     */
    T addLibrary(String resourceName, ArchivePath target) throws IllegalArgumentException;
-   
+
    /**
     * Adds the {@link File} as a library to the container, returning the container itself.
     * 
@@ -179,7 +177,7 @@ public interface LibraryContainer<T extends Archive<T>>
     * @see #addLibrary(Asset, ArchivePath)
     */
    T addLibrary(Archive<?> archive) throws IllegalArgumentException;
-   
+
    /**
     * Add multiple resources to this {@link Archive} as libraries to the container, returning the container itself.
     * <br/>
@@ -194,7 +192,7 @@ public interface LibraryContainer<T extends Archive<T>>
     * @see #addLibrary(String)
     */
    T addLibraries(String... resourceNames) throws IllegalArgumentException;
-  
+
    /**
     * Add multiple {@link File} to this {@link Archive} as libraries to the container, returning the container itself.
     * <br/>

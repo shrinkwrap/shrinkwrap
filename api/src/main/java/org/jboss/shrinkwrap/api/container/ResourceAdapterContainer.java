@@ -23,8 +23,6 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
- * ResourceAdapterContainer
- * 
  * Defines the contract for a component capable of storing Resource adapter
  * resources. <br/>
  * <br/>
@@ -47,7 +45,7 @@ public interface ResourceAdapterContainer<T extends Archive<T>>
     * @see #setResourceAdapterXML(Asset)
     */
    T setResourceAdapterXML(String resourceName) throws IllegalArgumentException;
-   
+
    /**
     * Adds the {@link File} as ra.xml to the container, returning the container itself.
     * 
@@ -57,7 +55,7 @@ public interface ResourceAdapterContainer<T extends Archive<T>>
     * @see #setResourceAdapterXML(Asset)
     */
    T setResourceAdapterXML(File resource) throws IllegalArgumentException;
-   
+
    /**
     * Adds the {@link URL} as ra.xml to the container, returning the container itself.
     * 
@@ -67,7 +65,7 @@ public interface ResourceAdapterContainer<T extends Archive<T>>
     * @see #setResourceAdapterXML(Asset)
     */
    T setResourceAdapterXML(URL resource) throws IllegalArgumentException;
-   
+
    /**
     * Adds the {@link Asset} as ra.xml to the container, returning the container itself.
     * 

@@ -24,10 +24,8 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
- * WebContainer
- *
  * Defines the contract for a component capable of storing 
- * Web related resources.
+ * web-related resources.
  * <br/><br/>
  * The actual path to the Web resources within the Archive 
  * is up to the implementations/specifications.

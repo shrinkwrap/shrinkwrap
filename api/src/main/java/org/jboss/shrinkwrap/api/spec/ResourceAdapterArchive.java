@@ -23,8 +23,6 @@ import org.jboss.shrinkwrap.api.container.ResourceAdapterContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
 
 /**
- * ResourceAdapterArchive
- * 
  * Traditional RAR (Resource Adapter Archive) structure. Used in 
  * construction of resource adapters.
  *

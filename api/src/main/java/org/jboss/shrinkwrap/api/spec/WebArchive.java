@@ -23,12 +23,9 @@ import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.WebContainer;
 
 /**
- * WebArchive
- * 
  * Traditional WAR (Java Web Archive) structure. Used in 
  * construction of web applications.
  *
- * @see TODO: find war spec doc url
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
