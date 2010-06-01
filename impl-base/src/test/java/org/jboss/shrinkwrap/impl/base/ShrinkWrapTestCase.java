@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -23,6 +24,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchiveFactory;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Assignable;
@@ -38,6 +40,7 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.container.ContainerBase;
+import org.jboss.shrinkwrap.impl.base.importer.ZipContentAssertionDelegate;
 import org.junit.Test;
 
 /**
@@ -50,6 +53,20 @@ import org.junit.Test;
  */
 public class ShrinkWrapTestCase
 {
+
+   //-------------------------------------------------------------------------------------||
+   // Class Members ----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Delegate for performing ZIP content assertions
+    */
+   private static final ZipContentAssertionDelegate delegate = new ZipContentAssertionDelegate();
+
+   /**
+    * The name of a simple TXT file
+    */
+   private static final String NAME_FILE_NON_ZIP = "nonzipfile.txt";
 
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
@@ -261,6 +278,84 @@ public class ShrinkWrapTestCase
    }
 
    /**
+    * Ensures we can create a new Archive fro a ZIP file via {@link ShrinkWrap} convenience
+    * class
+    */
+   @Test
+   public void shouldBeAbleToimportZipFileViaShrinkWrap() throws Exception
+   {
+      // Get the test file
+      final File testFile = delegate.getExistingZipResource();
+
+      // Make a new archive via the default domain
+      final JavaArchive archive = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile);
+
+      // Assert
+      Assert.assertNotNull("Should not return a null archive", archive);
+      Assert.assertEquals("name of the archive imported from a ZIP file was not as expected", testFile.getName(),
+            archive.getName());
+      delegate.assertContent(archive, testFile);
+   }
+
+   /**
+    * Ensures we can create a new Archive fro a ZIP file via an {@link ArchiveFactory}
+    */
+   @Test
+   public void shouldBeAbleToimportZipFileViaArchiveFactory() throws Exception
+   {
+      // Get the test file
+      final File testFile = delegate.getExistingZipResource();
+
+      // Make a new archive via the default domain
+      final JavaArchive archive = ShrinkWrap.getDefaultDomain().getArchiveFactory().createFromZipFile(
+            JavaArchive.class, testFile);
+
+      // Assert
+      Assert.assertNotNull("Should not return a null archive", archive);
+      Assert.assertEquals("name of the archive imported from a ZIP file was not as expected", testFile.getName(),
+            archive.getName());
+      delegate.assertContent(archive, testFile);
+   }
+
+   /**
+    * Ensures that attempting to import as ZIP from a non-ZIP file 
+    * leads to {@link IllegalArgumentException}
+    * @throws Exception
+    */
+   @Test(expected = IllegalArgumentException.class)
+   public void importFromNonZipFileThrowsException() throws Exception
+   {
+      final File nonZipFile = new File(SecurityActions.getThreadContextClassLoader().getResource(NAME_FILE_NON_ZIP)
+            .toURI());
+      ShrinkWrap.createFromZipFile(JavaArchive.class, nonZipFile);
+   }
+
+   /**
+    * Ensures that attempting to import as ZIP from null file 
+    * leads to {@link IllegalArgumentException}
+    * @throws Exception
+    */
+   @Test(expected = IllegalArgumentException.class)
+   public void importFromNullFileThrowsException() throws Exception
+   {
+      ShrinkWrap.createFromZipFile(JavaArchive.class, null);
+   }
+   
+   /**
+    * Ensures that attempting to import as ZIP from a {@link File}
+    * that doesn't exist 
+    * leads to {@link IllegalArgumentException}
+    * @throws Exception
+    */
+   @Test(expected = IllegalArgumentException.class)
+   public void importFromNonexistantlFileThrowsException() throws Exception
+   {
+      final File file = new File("fileThatDoesntExist.tmp");
+      Assert.assertFalse("Error in test setup, file should not exist: " + file.getAbsolutePath(), file.exists());
+      ShrinkWrap.createFromZipFile(JavaArchive.class, null);
+   }
+
+   /**
     * Ensures that creating a default name with no extension configured
     * for a specified type results in {@link UnknownExtensionTypeException}
     * 
@@ -340,7 +435,7 @@ public class ShrinkWrapTestCase
 
       @Override
       public String toString(final Formatter formatter) throws IllegalArgumentException
-      {
+      { 
          return formatter.format(this);
       }
    }

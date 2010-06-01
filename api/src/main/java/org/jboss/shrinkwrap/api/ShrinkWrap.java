@@ -16,6 +16,9 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import java.io.File;
+
+import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 /**
@@ -175,8 +178,7 @@ public final class ShrinkWrap
     * @throws IllegalArgumentException if type is not specified
     * @throws UnknownExtensionTypeException If no extension mapping is found for the specified type
     */
-   public static <T extends Assignable> T create(final Class<T> type)
-      throws IllegalArgumentException
+   public static <T extends Assignable> T create(final Class<T> type) throws IllegalArgumentException
    {
       // Precondition checks
       if (type == null)
@@ -202,7 +204,7 @@ public final class ShrinkWrap
     * @throws IllegalArgumentException either argument is not specified
     */
    public static <T extends Assignable> T create(final Class<T> type, final String archiveName)
-      throws IllegalArgumentException
+         throws IllegalArgumentException
    {
       // Precondition checks
       if (type == null)
@@ -216,6 +218,26 @@ public final class ShrinkWrap
 
       // Delegate to the default domain's archive factory for creation
       return ShrinkWrap.getDefaultDomain().getArchiveFactory().create(type, archiveName);
+   }
+
+   /**
+    * Creates a new archive of the specified type as imported 
+    * from the specified {@link File}.  The file is expected to be encoded as
+    * ZIP (ie. JAR/WAR/EAR).   The name of the archive will be set to {@link File#getName()}. 
+    * The archive will be be backed by the {@link Configuration}
+    * within the {@link ShrinkWrap#getDefaultDomain()}
+    *
+    * @param type The type of the archive e.g. {@link org.jboss.shrinkwrap.api.spec.WebArchive}
+    * @param archiveName the archiveName to use
+    * @return An {@link Assignable} view
+    * @throws IllegalArgumentException If either argument is not supplied, if the specified
+    * {@link File} does not exist, or is not a valid ZIP file
+    */
+   public static <T extends Assignable> T createFromZipFile(final Class<T> type, final File archiveFile)
+         throws IllegalArgumentException, ArchiveImportException
+   {
+      // Delegate
+      return getDefaultDomain().getArchiveFactory().createFromZipFile(type, archiveFile);
    }
 
    //-------------------------------------------------------------------------------------||

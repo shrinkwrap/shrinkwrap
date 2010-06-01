@@ -16,8 +16,14 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
+import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 /**
@@ -106,8 +112,8 @@ public final class ArchiveFactory
     * @throws IllegalArgumentException if type is not specified
     * @throws UnknownExtensionTypeException If no extension mapping is found for the specified type
     */
-   public <T extends Assignable> T create(final Class<T> type)
-      throws IllegalArgumentException, UnknownExtensionTypeException
+   public <T extends Assignable> T create(final Class<T> type) throws IllegalArgumentException,
+         UnknownExtensionTypeException
    {
       // Precondition checks
       if (type == null)
@@ -121,10 +127,10 @@ public final class ArchiveFactory
       {
          throw UnknownExtensionTypeException.newInstance(type);
       }
-      
+
       // Generate a random name
       String archiveName = UUID.randomUUID().toString();
-      
+
       // Delegate
       return create(type, archiveName += extensionType);
    }
@@ -136,11 +142,11 @@ public final class ArchiveFactory
     *
     * @param type The type of the archive e.g. {@link org.jboss.shrinkwrap.api.spec.WebArchive}
     * @param archiveName the archiveName to use
-    * @return An {@link Assignable} archive base
+    * @return An {@link Assignable} view
     * @throws IllegalArgumentException either argument is not supplied
     */
    public <T extends Assignable> T create(final Class<T> type, final String archiveName)
-      throws IllegalArgumentException
+         throws IllegalArgumentException
    {
       // Precondition checks
       if (type == null)
@@ -156,5 +162,60 @@ public final class ArchiveFactory
       {String.class, Configuration.class}, new Object[]
       {archiveName, configuration}, Archive.class);
       return archive.as(type);
+   }
+
+   /**
+    * Creates a new archive of the specified type as imported 
+    * from the specified {@link File}.  The file is expected to be encoded as
+    * ZIP (ie. JAR/WAR/EAR).   The name of the archive will be set to {@link File#getName()}. 
+    * The archive will be be backed by the {@link Configuration}
+    * specific to this {@link ArchiveFactory}.
+    *
+    * @param type The type of the archive e.g. {@link org.jboss.shrinkwrap.api.spec.WebArchive}
+    * @param archiveName the archiveName to use
+    * @return An {@link Assignable} view
+    * @throws IllegalArgumentException If either argument is not supplied, if the specified
+    * {@link File} does not exist, or is not a valid ZIP file
+    */
+   public <T extends Assignable> T createFromZipFile(final Class<T> type, final File archiveFile)
+         throws IllegalArgumentException, ArchiveImportException
+   {
+      // Precondition checks
+      if (type == null)
+      {
+         throw new IllegalArgumentException("Type must be specified");
+      }
+      if (archiveFile == null)
+      {
+         throw new IllegalArgumentException("file must be specified");
+      }
+      if (!archiveFile.exists())
+      {
+         throw new IllegalArgumentException("File for import exist: " + archiveFile.getAbsolutePath());
+      }
+      if (archiveFile.isDirectory())
+      {
+         throw new IllegalArgumentException("File for import must not be a directory: " + archiveFile.getAbsolutePath());
+      }
+
+      // Construct ZipFile
+      final ZipFile zipFile;
+      try
+      {
+         zipFile = new ZipFile(archiveFile);
+      }
+      catch (final ZipException ze)
+      {
+         throw new IllegalArgumentException("Does not appear to be a valid ZIP file: " + archiveFile.getAbsolutePath());
+      }
+      catch (final IOException ioe)
+      {
+         throw new RuntimeException("I/O Error in importing new archive from ZIP: " + archiveFile.getAbsolutePath(),
+               ioe);
+      }
+
+      // Import
+      return ShrinkWrap.create(type, archiveFile.getName()).as(ZipImporter.class).importZip(zipFile).as(type);
+
    }
 }

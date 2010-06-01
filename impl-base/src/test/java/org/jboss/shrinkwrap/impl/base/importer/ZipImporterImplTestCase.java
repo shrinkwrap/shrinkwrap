@@ -17,14 +17,11 @@
 package org.jboss.shrinkwrap.impl.base.importer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -43,10 +40,7 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Test;
 
-
 /**
- * ZipImporterImplTest
- * 
  * TestCase to verify the ZipImporter functionality.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
@@ -54,7 +48,7 @@ import org.junit.Test;
  */
 public class ZipImporterImplTestCase
 {
-   
+
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -64,49 +58,36 @@ public class ZipImporterImplTestCase
     */
    private static final Logger log = Logger.getLogger(ZipImporterImplTestCase.class.getName());
 
-   private static final String EXISTING_ZIP_RESOURCE = "org/jboss/shrinkwrap/impl/base/importer/test.zip";
-   
    private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
-   
+
    /**
-    * Name of the expected empty directory
+    * Delegate for performing ZIP content assertions
     */
-   private static final String EXPECTED_EMPTY_DIR ="empty_dir/";
-   
-   /**
-    * Name of the expected nested directory
-    */
-   private static final String EXPECTED_NESTED_EMPTY_DIR ="parent/empty_dir/";
-   
+   private static final ZipContentAssertionDelegate delegate = new ZipContentAssertionDelegate();
+
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-   
+
    @Test
-   public void shouldBeAbleToimportZipFile() throws Exception 
+   public void shouldBeAbleToimportZipFile() throws Exception
    {
-      ZipFile testZip = new ZipFile(
-            new File(
-                  SecurityActions.getThreadContextClassLoader().getResource(EXISTING_ZIP_RESOURCE).toURI()));
-      
-      Archive<?> archive = ShrinkWrap.create("test.jar", ZipImporter.class)
-                                 .importZip(testZip)
-                              .as(JavaArchive.class);
-      
+      final File testFile = delegate.getExistingZipResource();
+      ZipFile testZip = new ZipFile(testFile);
+
+      Archive<?> archive = ShrinkWrap.create("test.jar", ZipImporter.class).importZip(testZip).as(JavaArchive.class);
+
       Assert.assertNotNull("Should not return a null archive", archive);
-      
-      assertContent(
-            archive, 
-            SecurityActions.getThreadContextClassLoader().getResource(EXISTING_ZIP_RESOURCE).toURI());
+
+      delegate.assertContent(archive, testFile);
    }
-   
 
    @Test
    public void shouldBeAbleToImportAddAndExport() throws Exception
    {
-      ZipInputStream stream = new ZipInputStream(
-            SecurityActions.getThreadContextClassLoader().getResourceAsStream(EXISTING_ZIP_RESOURCE));
-      
+      final File testFile = delegate.getExistingZipResource();
+      ZipInputStream stream = new ZipInputStream(new FileInputStream(testFile));
+
       final Archive<?> archive;
       try
       {
@@ -120,21 +101,21 @@ public class ZipImporterImplTestCase
       Assert.assertNotNull("Should not return a null archive", archive);
 
       archive.add(new ClassLoaderAsset(EXISTING_RESOURCE), new BasicPath("test.properties"));
-      
+
       File tempFile = new File("target/test.zip");
       tempFile.deleteOnExit();
       InputStream zipStream = archive.as(ZipExporter.class).exportZip();
       IOUtil.copyWithClose(zipStream, new FileOutputStream(tempFile));
-      
-      assertContent(archive, tempFile.toURI());
+
+      delegate.assertContent(archive, tempFile);
    }
-   
+
    @Test
    public void shouldBeAbleToImportZipInputStream() throws Exception
    {
-      ZipInputStream stream = new ZipInputStream(
-            SecurityActions.getThreadContextClassLoader().getResourceAsStream(EXISTING_ZIP_RESOURCE));
-      
+      final File testFile = delegate.getExistingZipResource();
+      ZipInputStream stream = new ZipInputStream(new FileInputStream(testFile));
+
       final Archive<?> archive;
       try
       {
@@ -146,10 +127,8 @@ public class ZipImporterImplTestCase
       }
 
       Assert.assertNotNull("Should not return a null archive", archive);
-      
-      assertContent(
-            archive, 
-            SecurityActions.getThreadContextClassLoader().getResource(EXISTING_ZIP_RESOURCE).toURI());
+
+      delegate.assertContent(archive, testFile);
    }
 
    /**
@@ -186,8 +165,8 @@ public class ZipImporterImplTestCase
    @Test(expected = ArchiveImportException.class)
    public void shouldThrowExceptionOnErrorInImportFromFile() throws Exception
    {
-      ZipFile testZip = new ZipFile(new File(SecurityActions.getThreadContextClassLoader().getResource(
-            EXISTING_ZIP_RESOURCE).toURI()))
+      final File testFile = delegate.getExistingZipResource();
+      ZipFile testZip = new ZipFile(testFile)
       {
          @Override
          public Enumeration<? extends ZipEntry> entries()
@@ -196,76 +175,5 @@ public class ZipImporterImplTestCase
          }
       };
       ShrinkWrap.create("test.jar", ZipImporter.class).importZip(testZip).as(JavaArchive.class);
-   }
-
-   
-   /**
-    * Compare the content of the original file and what was imported.
-    * 
-    * @param importedArchive The archive used for import
-    * @param originalSource The original classpath resource file
-    */
-   private void assertContent(Archive<?> importedArchive, URI originalSource) throws Exception
-   {
-      Assert.assertFalse(
-            "Should have imported something",
-            importedArchive.getContent().isEmpty());
-      
-      ZipFile testZip = new ZipFile(
-            new File(originalSource));
-
-      List<? extends ZipEntry> entries = Collections.list(testZip.entries());
-      
-      Assert.assertFalse(
-            "Test zip should contain data", 
-            entries.isEmpty());
-      Assert.assertEquals(
-            "Should have imported all files and directories",
-            entries.size(),
-            importedArchive.getContent().size());
-      
-      
-      boolean containsEmptyDir = false;
-      boolean containsEmptyNestedDir = false;
-      
-      for(ZipEntry originalEntry : entries) 
-      {
-         
-         if(originalEntry.isDirectory()) 
-         {
-            // Check for expected empty dirs
-            if (originalEntry.getName().equals(EXPECTED_EMPTY_DIR))
-            {
-               containsEmptyDir = true;
-            }
-            if (originalEntry.getName().equals(EXPECTED_NESTED_EMPTY_DIR))
-            {
-               containsEmptyNestedDir = true;
-            }
-            continue;
-         }
-
-         Assert.assertTrue(
-               "Importer should have imported " + originalEntry.getName() + " from " + originalSource,
-               importedArchive.contains(new BasicPath(originalEntry.getName())));
-         
-         byte[] originalContent = IOUtil.asByteArray(testZip.getInputStream(originalEntry));
-         byte[] importedContent = IOUtil.asByteArray(
-               importedArchive.get(new BasicPath(originalEntry.getName())).getAsset().openStream());
-
-         log.fine(
-               Arrays.equals(importedContent, originalContent) + "\t" +
-               originalContent.length + "\t" +
-               importedContent.length + "\t" +
-               originalEntry.getName());
-         
-         Assert.assertTrue(
-               "The content of " + originalEntry.getName() + " should be equal to the imported content",
-               Arrays.equals(importedContent, originalContent));
-      }
-      
-      // Ensure empty directories have come in cleanly
-      Assert.assertTrue("Empty directory not imported", containsEmptyDir);
-      Assert.assertTrue("Empty nested directory not imported", containsEmptyNestedDir);
    }
 }
