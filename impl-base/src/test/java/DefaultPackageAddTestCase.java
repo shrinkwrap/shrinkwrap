@@ -59,7 +59,7 @@ public class DefaultPackageAddTestCase
    public void canAddClassFromDefaultPackage() throws Exception
    {
       // Create an archive with Classes from the default package
-      final JavaArchive archive = ShrinkWrap.create("test.jar", JavaArchive.class)
+      final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "test.jar")
             .addClass(ClassInDefaultPackage.class);
       log.info(archive.toString(true));
 

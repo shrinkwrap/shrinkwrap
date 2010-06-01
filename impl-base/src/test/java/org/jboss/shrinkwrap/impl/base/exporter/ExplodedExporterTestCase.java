@@ -141,7 +141,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
    {
       log.info("testExportExplodedRequiresBaseDirectroy");
 
-      ShrinkWrap.create("test.jar", ExplodedExporter.class).exportExploded(null);
+      ShrinkWrap.create(ExplodedExporter.class, "test.jar").exportExploded(null);
    }
 
    /**
@@ -155,7 +155,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
       log.info("testExportExplodedRequiresExisitingDirectroy");
 
       final File directory = this.getNonexistantDirectory();
-      ShrinkWrap.create("test.jar", ExplodedExporter.class).exportExploded(directory);
+      ShrinkWrap.create(ExplodedExporter.class, "test.jar").exportExploded(directory);
    }
 
    /**
@@ -166,7 +166,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
    {
       log.info("testExportExplodedRequiresValidDirectory");
       final File nonDirectory = new File(this.getTarget(), "tempFile.txt");
-      ShrinkWrap.create("test.jar", ExplodedExporter.class).exportExploded(nonDirectory);
+      ShrinkWrap.create(ExplodedExporter.class, "test.jar").exportExploded(nonDirectory);
    }
 
    /**
@@ -179,7 +179,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
       final File directory = createTempDirectory("testExportExplodedOutpuDirCreationFails");
       directory.deleteOnExit();
       
-      ShrinkWrap.create("test/" + NAME_ARCHIVE, ExplodedExporter.class).exportExploded(directory);
+      ShrinkWrap.create(ExplodedExporter.class, "test/" + NAME_ARCHIVE).exportExploded(directory);
    }
 
    /**

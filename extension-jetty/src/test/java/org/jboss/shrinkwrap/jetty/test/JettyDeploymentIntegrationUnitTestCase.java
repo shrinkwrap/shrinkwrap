@@ -124,7 +124,7 @@ public class JettyDeploymentIntegrationUnitTestCase
       // Create the new server
       server = new Server(HTTP_BIND_PORT);
 
-      final WebArchive archive = ShrinkWrap.create(NAME_WAR, WebArchive.class);
+      final WebArchive archive = ShrinkWrap.create(WebArchive.class, NAME_WAR);
       final ArchivePath targetPathWebXml = ArchivePaths.create("web.xml");
       archive.addWebResource(PATH_ACTUAL_WEB_XML, targetPathWebXml).addResource(PATH_JSP).addClass(servletClass);
       log.info(archive.toString(true));

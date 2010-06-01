@@ -78,7 +78,7 @@ public class ZipExporterStressTest extends ExportTestBase
       log.info("This test may take awhile as it's intended to fill memory");
 
       // Get an archive instance
-      final JavaArchive archive = ShrinkWrap.create("hugeArchive.jar", JavaArchive.class);
+      final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "hugeArchive.jar");
 
       // Approximate the free memory to start
       final Runtime runtime = Runtime.getRuntime();

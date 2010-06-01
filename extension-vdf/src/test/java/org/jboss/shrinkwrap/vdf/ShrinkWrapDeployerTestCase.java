@@ -214,7 +214,7 @@ public class ShrinkWrapDeployerTestCase
                         + LifecyclePojo.class.getName() + "\" /></deployment>").getBytes());
          }
       };
-      final JavaArchive testJar = ShrinkWrap.create(NAME_ARCHIVE, JavaArchive.class).addClass(LifecyclePojo.class).add(
+      final JavaArchive testJar = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).addClass(LifecyclePojo.class).add(
             deploymentXmlAsset, ArchivePaths.create("pojo-jboss-beans.xml"));
 
       // Deploy the test JAR

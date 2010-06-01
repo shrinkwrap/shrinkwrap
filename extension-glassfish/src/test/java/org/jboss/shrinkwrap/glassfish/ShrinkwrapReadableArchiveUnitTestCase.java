@@ -34,7 +34,7 @@ public class ShrinkwrapReadableArchiveUnitTestCase
    @Test
    public void shouldBeAbleToLoadExtension() throws Exception 
    {
-      ShrinkwrapReadableArchive archive = ShrinkWrap.create("test", ShrinkwrapReadableArchive.class);
+      ShrinkwrapReadableArchive archive = ShrinkWrap.create(ShrinkwrapReadableArchive.class, "test");
       Assert.assertNotNull(archive);
    }
 }

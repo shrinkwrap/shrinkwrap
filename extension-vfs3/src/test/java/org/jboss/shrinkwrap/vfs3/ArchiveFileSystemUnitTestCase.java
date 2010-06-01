@@ -116,7 +116,7 @@ public class ArchiveFileSystemUnitTestCase
    public void testArchiveFileSystem() throws Exception
    {
       // Create and mount an archive
-      final JavaArchive archive = ShrinkWrap.create(NAME_ARCHIVE, JavaArchive.class);
+      final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE);
       final VirtualFile virtualFile = this.createAndMountArchive(archive);
 
       // Add to the archive
@@ -143,7 +143,7 @@ public class ArchiveFileSystemUnitTestCase
    public void nonExistentFilesAreNotDirectory() throws Exception
    {
       // Create and mount an archive
-      final JavaArchive archive = ShrinkWrap.create(NAME_ARCHIVE, JavaArchive.class);
+      final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE);
       final VirtualFile virtualFile = this.createAndMountArchive(archive);
 
       // Control

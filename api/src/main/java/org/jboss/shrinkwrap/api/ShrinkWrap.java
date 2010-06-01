@@ -129,39 +129,6 @@ public final class ShrinkWrap
    /**
     * Creates a new archive of the specified type.  The archive
     * will be be backed by the default {@link Configuration}.
-    * Invoking this method is functionally equivalent to calling
-    * {@link ArchiveFactory#create(String, Class)} upon
-    * {@link Domain#getArchiveFactory()} upon the domain returned
-    * by {@link ShrinkWrap#getDefaultDomain()}.
-    * 
-    * @param archiveName The name of the archive
-    * @param type The type of the archive e.g. {@link WebArchive}
-    * @return An {@link Assignable} archive base
-    * @throws IllegalArgumentException If either argument is not specified
-    * @deprecated As part of SHRINKWRAP-163
-    * Use {@link ShrinkWrap#create(Class, String)} instead.
-    */
-   @Deprecated
-   public static <T extends Assignable> T create(final String archiveName, final Class<T> type)
-         throws IllegalArgumentException
-   {
-      // Precondition checks
-      if (archiveName == null || archiveName.length() == 0)
-      {
-         throw new IllegalArgumentException("ArchiveName must be specified");
-      }
-      if (type == null)
-      {
-         throw new IllegalArgumentException("Type must be specified");
-      }
-
-      // Delegate to the default domain's archive factory for creation
-      return ShrinkWrap.getDefaultDomain().getArchiveFactory().create(type, archiveName);
-   }
-
-   /**
-    * Creates a new archive of the specified type.  The archive
-    * will be be backed by the default {@link Configuration}.
     * specific to this {@link ArchiveFactory}.
     * Generates a random name for the archive and adds proper extension based 
     * on the type mappings found in the default {@link Domain}'s 

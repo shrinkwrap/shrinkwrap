@@ -97,7 +97,7 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
    @Override
    protected WebArchive createNewArchive()
    {
-      return ShrinkWrap.create(UUID.randomUUID().toString() + ".jar", WebArchive.class);
+      return ShrinkWrap.create(WebArchive.class, UUID.randomUUID().toString() + ".jar");
    }
 
    //-------------------------------------------------------------------------------------||

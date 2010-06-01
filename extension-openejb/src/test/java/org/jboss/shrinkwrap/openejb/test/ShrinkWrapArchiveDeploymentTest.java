@@ -120,7 +120,7 @@ public class ShrinkWrapArchiveDeploymentTest
 
       // Create archive to hold our test EJB
       final String name = "echo.jar";
-      final JavaArchive archive = ShrinkWrap.create(name, JavaArchive.class).addClasses(EchoBean.class,
+      final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, name).addClasses(EchoBean.class,
             EchoLocalBusiness.class);
       log.info("Created archive: " + archive.toString(true));
 

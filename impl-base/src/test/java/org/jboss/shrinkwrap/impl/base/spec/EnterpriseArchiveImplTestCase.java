@@ -95,7 +95,7 @@ public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTes
    @Override
    protected EnterpriseArchive createNewArchive()
    {
-      return ShrinkWrap.create(UUID.randomUUID().toString() + ".jar", EnterpriseArchive.class);
+      return ShrinkWrap.create(EnterpriseArchive.class, UUID.randomUUID().toString() + ".jar");
    }
 
    //-------------------------------------------------------------------------------------||

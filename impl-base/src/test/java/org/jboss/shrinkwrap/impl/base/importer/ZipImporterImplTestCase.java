@@ -75,7 +75,7 @@ public class ZipImporterImplTestCase
       final File testFile = delegate.getExistingZipResource();
       ZipFile testZip = new ZipFile(testFile);
 
-      Archive<?> archive = ShrinkWrap.create("test.jar", ZipImporter.class).importZip(testZip).as(JavaArchive.class);
+      Archive<?> archive = ShrinkWrap.create(ZipImporter.class, "test.jar").importZip(testZip).as(JavaArchive.class);
 
       Assert.assertNotNull("Should not return a null archive", archive);
 
@@ -91,7 +91,7 @@ public class ZipImporterImplTestCase
       final Archive<?> archive;
       try
       {
-         archive = ShrinkWrap.create("test.jar", ZipImporter.class).importZip(stream).as(JavaArchive.class);
+         archive = ShrinkWrap.create(ZipImporter.class, "test.jar").importZip(stream).as(JavaArchive.class);
       }
       finally
       {
@@ -119,7 +119,7 @@ public class ZipImporterImplTestCase
       final Archive<?> archive;
       try
       {
-         archive = ShrinkWrap.create("test.jar", ZipImporter.class).importZip(stream).as(JavaArchive.class);
+         archive = ShrinkWrap.create(ZipImporter.class, "test.jar").importZip(stream).as(JavaArchive.class);
       }
       finally
       {
@@ -149,7 +149,7 @@ public class ZipImporterImplTestCase
       });
       try
       {
-         ShrinkWrap.create("test.jar", ZipImporter.class).importZip(stream).as(JavaArchive.class);
+         ShrinkWrap.create(ZipImporter.class, "test.jar").importZip(stream).as(JavaArchive.class);
       }
       finally
       {
@@ -174,6 +174,6 @@ public class ZipImporterImplTestCase
             throw new IllegalStateException("mock  exception");
          }
       };
-      ShrinkWrap.create("test.jar", ZipImporter.class).importZip(testZip).as(JavaArchive.class);
+      ShrinkWrap.create(ZipImporter.class, "test.jar").importZip(testZip).as(JavaArchive.class);
    }
 }

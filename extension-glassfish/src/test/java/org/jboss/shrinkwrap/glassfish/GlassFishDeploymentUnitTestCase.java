@@ -105,9 +105,9 @@ public class GlassFishDeploymentUnitTestCase
    {
 
       // Create the packaging
-      javaArchive = ShrinkWrap.create(NAME_DEPLOYMENT_JAR, JavaArchive.class).addClasses(EchoLocalBusiness.class,
+      javaArchive = ShrinkWrap.create(JavaArchive.class, NAME_DEPLOYMENT_JAR).addClasses(EchoLocalBusiness.class,
             EchoBean.class).as(ShrinkwrapReadableArchive.class);
-      enterpriseArchive = ShrinkWrap.create(NAME_DEPLOYMENT_EAR, EnterpriseArchive.class).addModule(
+      enterpriseArchive = ShrinkWrap.create(EnterpriseArchive.class, NAME_DEPLOYMENT_EAR).addModule(
             javaArchive.as(JavaArchive.class)).as(ShrinkwrapReadableArchive.class);
 
    }

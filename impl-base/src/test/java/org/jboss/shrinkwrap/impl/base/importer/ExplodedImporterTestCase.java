@@ -42,7 +42,7 @@ public class ExplodedImporterTestCase
    @Test
    public void shouldBeAbleToImportADriectory() throws Exception {
       
-      Archive<?> archive = ShrinkWrap.create("test.jar", ExplodedImporter.class)
+      Archive<?> archive = ShrinkWrap.create(ExplodedImporter.class, "test.jar")
                               .importDirectory(
                                     SecurityActions.getThreadContextClassLoader()
                                        .getResource(EXISTING_DIRECTORY_RESOURCE).toURI().getPath()
@@ -73,7 +73,7 @@ public class ExplodedImporterTestCase
    @Test(expected = IllegalArgumentException.class)
    public void shouldThrowExceptionIfImportingAFile() throws Exception {
     
-      ShrinkWrap.create("test.jar", ExplodedImporter.class)
+      ShrinkWrap.create(ExplodedImporter.class, "test.jar")
                   .importDirectory(
                         SecurityActions.getThreadContextClassLoader()
                            .getResource(EXISTING_FILE_RESOURCE).toURI().getPath()

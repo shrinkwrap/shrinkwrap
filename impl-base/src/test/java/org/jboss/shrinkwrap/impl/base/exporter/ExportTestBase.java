@@ -159,7 +159,7 @@ public abstract class ExportTestBase
    protected Archive<?> createArchiveWithAssets()
    {
       // Create an archive
-      Archive<?> archive = ShrinkWrap.create(NAME_ARCHIVE, JavaArchive.class);
+      Archive<?> archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE);
       // Add some content
       addContent(archive);
       // Return archive
@@ -175,7 +175,7 @@ public abstract class ExportTestBase
       Archive<?> archive = createArchiveWithAssets();
 
       // Create a nested archive
-      Archive<?> nestedArchive = ShrinkWrap.create(NAME_NESTED_ARCHIVE, JavaArchive.class);
+      Archive<?> nestedArchive = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE);
 
       // Add some content
       addContent(nestedArchive);
@@ -184,7 +184,7 @@ public abstract class ExportTestBase
       archive.add(nestedArchive, new BasicPath());
 
       // Add an archive nested in a directory
-      Archive<?> nestedArchiveTwo = ShrinkWrap.create(NAME_NESTED_ARCHIVE_2, JavaArchive.class);
+      Archive<?> nestedArchiveTwo = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE_2);
 
       // Add some content
       addContent(nestedArchiveTwo);

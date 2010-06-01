@@ -91,7 +91,7 @@ public class JavaArchiveImplTestCase extends DynamicContainerTestBase<JavaArchiv
    @Override
    protected JavaArchive createNewArchive()
    {
-      return ShrinkWrap.create(UUID.randomUUID().toString() + ".jar", JavaArchive.class);
+      return ShrinkWrap.create(JavaArchive.class, UUID.randomUUID().toString() + ".jar");
    }
 
    //-------------------------------------------------------------------------------------||

@@ -70,7 +70,7 @@ public abstract class FormatterTestBase
    @Before
    public void createArchive()
    {
-      archive = ShrinkWrap.create(NAME_ARCHIVE, JavaArchive.class).addClasses(FormatterTestBase.class,
+      archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).addClasses(FormatterTestBase.class,
             ArchiveTestBase.class);
    }
 

@@ -81,26 +81,6 @@ public final class ArchiveFactory
     * Creates a new archive of the specified type.  The archive
     * will be be backed by the {@link Configuration}
     * specific to this {@link ArchiveFactory}.
-    *
-    * Deprecated as part of SHRINKWRAP-163
-    * Use {@link ArchiveFactory#create(Class, String)} instead.
-    *
-    * @param archiveName The name of the archive
-    * @param type The type of the archive e.g. {@link org.jboss.shrinkwrap.api.spec.WebArchive}
-    * @return An {@link Assignable} archive base
-    * @throws IllegalArgumentException If either argument is not specified
-    */
-   @Deprecated
-   public <T extends Assignable> T create(final String archiveName, final Class<T> type)
-         throws IllegalArgumentException
-   {
-      return create(type, archiveName);
-   }
-
-   /**
-    * Creates a new archive of the specified type.  The archive
-    * will be be backed by the {@link Configuration}
-    * specific to this {@link ArchiveFactory}.
     * Generates a random name for the archive and adds proper extension based 
     * on the type mappings found in this {@link Domain}'s 
     * {@link Configuration#getExtensionMappings()}s.

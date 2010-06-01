@@ -96,7 +96,7 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
    @Override
    protected ResourceAdapterArchive createNewArchive()
    {
-      return ShrinkWrap.create(UUID.randomUUID().toString() + ".jar", ResourceAdapterArchive.class);
+      return ShrinkWrap.create(ResourceAdapterArchive.class, UUID.randomUUID().toString() + ".jar");
    }
 
    //-------------------------------------------------------------------------------------||

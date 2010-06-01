@@ -115,7 +115,7 @@ public class ZipExporterTestCase extends ExportTestBase
       final Domain domain = ShrinkWrap.createDomain(new ConfigurationBuilder().executorService(service).build());
 
       // Make an archive using the new configuration
-      final Archive<?> archive = domain.getArchiveFactory().create("test.jar", JavaArchive.class).addClass(
+      final Archive<?> archive = domain.getArchiveFactory().create(JavaArchive.class, "test.jar").addClass(
             ZipExporterTestCase.class);
 
       // Fully export by reading all content (export is on-demand)
@@ -149,7 +149,7 @@ public class ZipExporterTestCase extends ExportTestBase
    public void exportEmptyArchiveAsZip() throws Exception
    {
       // Attempt to export an empty archive, should fail
-      ShrinkWrap.create(NAME_ARCHIVE, JavaArchive.class).as(ZipExporter.class).exportZip();
+      ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).as(ZipExporter.class).exportZip();
    }
 
    /**
@@ -162,7 +162,7 @@ public class ZipExporterTestCase extends ExportTestBase
    public void testExportArchiveWithOnlyDirectories()
    {
       // Attempt to export an archive with some directories, should pass
-      ShrinkWrap.create(NAME_ARCHIVE, JavaArchive.class).addDirectories("/test/game").as(ZipExporter.class).exportZip();
+      ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).addDirectories("/test/game").as(ZipExporter.class).exportZip();
    }
 
    /**
