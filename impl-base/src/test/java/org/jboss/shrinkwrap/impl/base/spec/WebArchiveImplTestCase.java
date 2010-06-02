@@ -19,6 +19,7 @@ package org.jboss.shrinkwrap.impl.base.spec;
 import java.util.UUID;
 
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -48,15 +49,15 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   private static final ArchivePath PATH_WEBINF = new BasicPath("WEB-INF");
+   private static final ArchivePath PATH_WEBINF = ArchivePaths.create("WEB-INF");
 
-   private static final ArchivePath PATH_LIBRARY = new BasicPath(PATH_WEBINF, "lib");
+   private static final ArchivePath PATH_LIBRARY = ArchivePaths.create(PATH_WEBINF, "lib");
 
-   private static final ArchivePath PATH_CLASSES = new BasicPath(PATH_WEBINF, "classes");
+   private static final ArchivePath PATH_CLASSES = ArchivePaths.create(PATH_WEBINF, "classes");
 
-   private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
+   private static final ArchivePath PATH_MANIFEST = ArchivePaths.create(PATH_CLASSES, "META-INF");
 
-   private static final ArchivePath PATH_RESOURCE = new BasicPath();
+   private static final ArchivePath PATH_RESOURCE = ArchivePaths.root();;
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
