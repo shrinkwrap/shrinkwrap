@@ -135,6 +135,10 @@
               <property>env.JAVA_HOME</property>
               <message>"JAVA_HOME needs to be set to compile"</message>
             </requireProperty>
+            <requireProperty>
+              <property>env.JAVA5_HOME</property>
+              <message>"JAVA5_HOME needs to be set to run some tests in the JRE5 runtime"</message>
+            </requireProperty>
           </rules>
         </configuration>
       </plugin>
