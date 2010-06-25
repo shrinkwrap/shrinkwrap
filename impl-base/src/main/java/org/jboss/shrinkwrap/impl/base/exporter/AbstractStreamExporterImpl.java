@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -17,56 +17,50 @@
 package org.jboss.shrinkwrap.impl.base.exporter;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
+import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
+import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
- * ExplodedExporterImpl
+ * Base support for I/O Stream-based exporters
  * 
- * Implementation of ExplodedExporter used to export an Archive as an exploded directory structure. 
- * 
- * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- * @version $Revision: $
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class ExplodedExporterImpl extends AssignableBase implements ExplodedExporter
+public abstract class AbstractStreamExporterImpl extends AssignableBase
 {
-
+   
    //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
+   // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(ExplodedExporterImpl.class.getName());
 
    /**
     * Archive to import into. 
     */
-   private Archive<?> archive; 
+   private final Archive<?> archive;
    
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   public ExplodedExporterImpl(Archive<?> archive) 
+   
+   public AbstractStreamExporterImpl(final Archive<?> archive)
    {
       Validate.notNull(archive, "Archive must be specified");
       this.archive = archive;
    }
-
+   
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.impl.base.SpecializedBase#getArchive()
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.AssignableBase#getArchive()
     */
    @Override
    protected Archive<?> getArchive()
@@ -75,42 +69,45 @@ public class ExplodedExporterImpl extends AssignableBase implements ExplodedExpo
    }
    
    //-------------------------------------------------------------------------------------||
-   // Required Implementations - ExplodedExporter ----------------------------------------||
+   // Functional Methods -----------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.ExplodedExporter#exportExploded(java.io.File)
+    * Obtains an {@link OuputStream} to the provided {@link File}.
+    * @param target
+    * @param overwrite Whether we may overwrite an existing file
+    * @return
+    * @throws FileExistsException If the specified file exists and the overwrite flag is false
+    * @throws IllegalArgumentException If the file target is not specified
     */
-   @Override
-   public File exportExploded(final File baseDirectory)
+   protected final OutputStream getOutputStreamToFile(final File target, final boolean overwrite)
+         throws FileExistsException, IllegalArgumentException
    {
-      Validate.notNull(archive, "No archive provided");
-      Validate.notNull(baseDirectory, "No baseDirectory provided");
-
-      // Directory must exist
-      if (!baseDirectory.exists())
+      // Precondition checks
+      if (target == null)
       {
-         throw new IllegalArgumentException("Parent directory does not exist");
+         throw new IllegalArgumentException("Target file must be specified");
       }
-      // Must be a directory
-      if (!baseDirectory.isDirectory())
+      // If target exists and we're not allowed to overwrite it
+      if (target.exists() && !overwrite)
       {
-         throw new IllegalArgumentException("Provided parent directory is not a valid directory");
+         throw new FileExistsException("Target exists and we haven't been flagged to overwrite it: "
+               + target.getAbsolutePath());
       }
 
-      // Get the export delegate
-      final ExplodedExporterDelegate exporterDelegate = new ExplodedExporterDelegate(archive, baseDirectory);
-      
-      // Run the export and get the result
-      final File explodedDirectory = exporterDelegate.export();
-
-      if (log.isLoggable(Level.FINE))
+      // Get Stream
+      final OutputStream out;
+      try
       {
-         log.fine("Created Exploded Archive: " + explodedDirectory.getAbsolutePath());
+         out = new FileOutputStream(target);
       }
-      // Return the exploded dir
-      return explodedDirectory;
+      catch (final FileNotFoundException e)
+      {
+         throw new ArchiveExportException("File could not be created: " + target);
+      }
+
+      // Return
+      return out;
    }
 
 }

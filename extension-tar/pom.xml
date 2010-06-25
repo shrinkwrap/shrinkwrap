@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!--
+  vi:ts=2:sw=2:expandtab:
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- Parent -->
+  <parent>
+    <groupId>org.jboss.shrinkwrap</groupId>
+    <artifactId>shrinkwrap-build</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../build/pom.xml</relativePath>
+  </parent>
+
+  <!-- Model Version -->
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Artifact Configuration -->
+  <artifactId>shrinkwrap-extension-tar</artifactId>
+  <name>ShrinkWrap Extension TAR</name>
+  <description>ShrinkWrap Extension for TAR Import/Export Support</description>
+
+
+  <!-- Properties -->
+  <properties>
+  
+    <!-- Versioning -->
+    <version.org.jboss.javatar>1.0.0-SNAPSHOT</version.org.jboss.javatar>
+
+  </properties>
+
+  <!-- Dependencies -->
+  <dependencies>
+
+    <!-- 
+    org.jboss.shrinkwrap    
+     -->
+    <dependency>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-impl-base</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- 
+    External Projects
+     -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- org.jboss.javatar --> 
+    <dependency>
+      <groupId>org.jboss.javatar</groupId>
+      <artifactId>javatar</artifactId>
+      <version>${version.org.jboss.javatar}</version>
+    </dependency>
+    
+  </dependencies>
+
+  <!-- Build Configuration -->
+  <build>
+  
+    <plugins>
+
+    </plugins>
+    
+  </build>
+  
+</project>
+

@@ -72,6 +72,7 @@
     <module>extension-glassfish</module>
     <module>extension-jetty</module>
     <module>extension-openejb</module>
+    <module>extension-tar</module>
     <module>extension-vfs3</module>
     <module>extension-vdf</module>
   </modules>

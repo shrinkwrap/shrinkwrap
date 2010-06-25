@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.exporter;
+package org.jboss.shrinkwrap.tar.impl.exporter;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,18 +25,19 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
-import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
+import org.jboss.shrinkwrap.impl.base.exporter.AbstractStreamExporterImpl;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
+import org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter;
 
 /**
- * Implementation of ZipExporter used to export an Archive as a Zip format. 
+ * Implementation of {@link TarGzExporter} used to export an Archive as a TAR format
+ * encoded in GZIP. 
  * 
- * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipExporter
+public class TarGzExporterImpl extends AbstractStreamExporterImpl implements TarGzExporter
 {
 
    //-------------------------------------------------------------------------------------||
@@ -46,40 +47,44 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
    /**
     * Logger
     */
-   private static final Logger log = Logger.getLogger(ZipExporterImpl.class.getName());
+   private static final Logger log = Logger.getLogger(TarGzExporterImpl.class.getName());
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   public ZipExporterImpl(final Archive<?> archive)
+   /**
+    * Creates a new exporter for the specified archive
+    */
+   public TarGzExporterImpl(final Archive<?> archive)
    {
       super(archive);
    }
 
    //-------------------------------------------------------------------------------------||
-   // Required Implementations - ZipExporter ---------------------------------------------||
+   // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip()
+    * @see org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter#exportTarGz()
     */
    @Override
-   public InputStream exportZip()
+   public InputStream exportTarGz()
    {
       // Create export delegate
-      AbstractExporterDelegate<InputStream> exportDelegate = new JdkZipExporterDelegate(this.getArchive());
+      final AbstractExporterDelegate<InputStream> exportDelegate = new TarGzExporterDelegate(this.getArchive());
 
-      // Export and get result
+      // Execute export
       return exportDelegate.export();
    }
 
    /**
-    * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip(java.io.OutputStream)
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter#exportTarGz(java.io.OutputStream)
     */
    @Override
-   public void exportZip(final OutputStream target) throws ArchiveExportException, IllegalArgumentException
+   public void exportTarGz(final OutputStream target) throws ArchiveExportException, IllegalArgumentException
    {
       // Precondition checks
       if (target == null)
@@ -88,7 +93,7 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
       }
 
       // Get Stream
-      final InputStream in = this.exportZip();
+      final InputStream in = this.exportTarGz();
 
       // Write out
       try
@@ -103,28 +108,28 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip(java.io.File, boolean)
+    * @see org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter#exportTarGz(java.io.File, boolean)
     */
    @Override
-   public void exportZip(final File target, final boolean overwrite) throws ArchiveExportException,
+   public void exportTarGz(final File target, final boolean overwrite) throws ArchiveExportException,
          FileExistsException, IllegalArgumentException
    {
       // Get stream and perform precondition checks
       final OutputStream out = this.getOutputStreamToFile(target, overwrite);
 
       // Write out
-      this.exportZip(out);
+      this.exportTarGz(out);
    }
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip(java.io.File)
+    * @see org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter#exportTarGz(java.io.File)
     */
    @Override
-   public void exportZip(final File target) throws ArchiveExportException, FileExistsException,
+   public void exportTarGz(final File target) throws ArchiveExportException, FileExistsException,
          IllegalArgumentException
    {
-      this.exportZip(target, false);
+      this.exportTarGz(target, false);
    }
 
 }
