@@ -1,1 +1,1 @@
-org.jboss.shrinkwrap.impl.base.exporter.ZipExporterImpl
+implementingClassName=org.jboss.shrinkwrap.impl.base.exporter.ZipExporterImpl

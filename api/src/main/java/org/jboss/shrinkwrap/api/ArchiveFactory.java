@@ -31,6 +31,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
  * presented to the caller in a designated {@link Assignable} view.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
 public final class ArchiveFactory
@@ -82,8 +83,7 @@ public final class ArchiveFactory
     * will be be backed by the {@link Configuration}
     * specific to this {@link ArchiveFactory}.
     * Generates a random name for the archive and adds proper extension based 
-    * on the type mappings found in this {@link Domain}'s 
-    * {@link Configuration#getExtensionMappings()}s.
+    * on {@link ExtensionLoader#getExtensionFromExtensionMapping(Class)}.
     * If no extension is found for the given type an {@link UnknownExtensionTypeException}
     * is thrown.
     *
@@ -101,18 +101,14 @@ public final class ArchiveFactory
          throw new IllegalArgumentException("Type must be specified");
       }
 
-      // Get the extension type
-      final ExtensionType extensionType = configuration.getExtensionMappings().get(type);
-      if (extensionType == null)
-      {
-         throw UnknownExtensionTypeException.newInstance(type);
-      }
+      // Get the extensionType type
+      final String extension = configuration.getExtensionLoader().getExtensionFromExtensionMapping(type);
 
       // Generate a random name
       String archiveName = UUID.randomUUID().toString();
 
       // Delegate
-      return create(type, archiveName += extensionType);
+      return create(type, archiveName += extension);
    }
 
    /**
@@ -152,7 +148,7 @@ public final class ArchiveFactory
     * specific to this {@link ArchiveFactory}.
     *
     * @param type The type of the archive e.g. {@link org.jboss.shrinkwrap.api.spec.WebArchive}
-    * @param archiveName the archiveName to use
+    * @param archiveFile the archiveFile to use
     * @return An {@link Assignable} view
     * @throws IllegalArgumentException If either argument is not supplied, if the specified
     * {@link File} does not exist, or is not a valid ZIP file

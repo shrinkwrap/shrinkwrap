@@ -24,17 +24,19 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.Assignable;
-import org.jboss.shrinkwrap.impl.base.io.IOUtil;
+import org.jboss.shrinkwrap.api.UnknownExtensionTypeExceptionDelegator;
 
 /**
  * ServiceExtensionLoader
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
 public class ServiceExtensionLoader implements ExtensionLoader
@@ -54,6 +56,8 @@ public class ServiceExtensionLoader implements ExtensionLoader
    
    private ClassLoader classLoader = SecurityActions.getThreadContextClassLoader();
    private Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
+   private Map<Class<?>, ExtensionWrapper> extensionMappings = new HashMap<Class<?>, ExtensionWrapper>();
+
    
    //-------------------------------------------------------------------------------------||
    // Required Implementations - ExtensionLoader -----------------------------------------||
@@ -115,10 +119,28 @@ public class ServiceExtensionLoader implements ExtensionLoader
       return this;
    }
 
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.ExtensionLoader#getExtensionFromExtensionMapping(java.lang.Class)
+    */
+   public <T extends Assignable> String getExtensionFromExtensionMapping(Class<T> type)
+   {
+
+      ExtensionWrapper extensionWrapper = extensionMappings.get(type);
+      if (extensionWrapper == null) {
+         loadExtensionMapping(type);
+      }
+      extensionWrapper = extensionMappings.get(type);
+      if (extensionWrapper == null)
+      {
+         throw UnknownExtensionTypeExceptionDelegator.newExceptionInstance(type);
+      }
+      return extensionWrapper.getProperty("extension");
+   }
+
    /**
     * Check to see if a specific extension interface is beeing overloaded
     * 
-    * @param extensionClass The Extension interface class
+    * @param extensionClass The ExtensionType interface class
     * @return true if found
     */
    public boolean isOverriden(Class<?> extensionClass) 
@@ -131,24 +153,38 @@ public class ServiceExtensionLoader implements ExtensionLoader
    // Internal Helper Methods - Loading --------------------------------------------------||
    //-------------------------------------------------------------------------------------||
    
-   private <T extends Assignable> T createFromLoadExtension(Class<T> extensionClass, Archive<?> archive) 
+   private <T extends Assignable> T createFromLoadExtension(Class<T> extensionClass, Archive<?> archive)
    {
-      Class<T> extensionImplClass = loadExtension(extensionClass);
-      if(!extensionClass.isAssignableFrom(extensionImplClass)) 
+      ExtensionWrapper extensionWrapper = loadExtensionMapping(extensionClass);
+      if (extensionWrapper == null)
       {
+         throw new RuntimeException("Failed to load ExtensionMapping");
+      }
+
+      Class<T> extensionImplClass = loadExtension(extensionWrapper);
+
+      if (!extensionClass.isAssignableFrom(extensionImplClass)) {
          throw new RuntimeException(
-               "Found extension impl class " + extensionImplClass.getName() + 
+            "Found extension impl class " + extensionImplClass.getName() +
                " not assignable to extension interface " + extensionClass.getName());
       }
       return createExtension(extensionImplClass, archive);
    }
 
-   private <T extends Assignable> Class<T> loadExtension(Class<T> extensionClass) 
+   private <T extends Assignable> Class<T> loadExtension(ExtensionWrapper extensionWrapper)
+   {
+      return loadExtensionClass(extensionWrapper.implementingClassName);
+   }
+
+   private <T extends Assignable> ExtensionWrapper loadExtensionMapping(Class<T> extensionClass)   
    {
       URL extensionImplUrl = findExtensionImpl(extensionClass);
-      String extensionImplClassName = loadExtensionName(extensionImplUrl);
-      return loadExtensionClass(extensionImplClassName);
+
+      ExtensionWrapper extensionWrapper = loadExtensionWrapper(extensionImplUrl, extensionClass);
+      this.extensionMappings.put(extensionClass, extensionWrapper);
+      return extensionWrapper;
    }
+
    
    private <T extends Assignable> URL findExtensionImpl(Class<T> extensionClass) 
    {
@@ -177,24 +213,30 @@ public class ServiceExtensionLoader implements ExtensionLoader
       } 
       catch (Exception e) 
       {
-         throw new RuntimeException("Could not find any mapping for extension " + extensionClass.getName(), e);
+         throw UnknownExtensionTypeExceptionDelegator.newExceptionInstance(extensionClass);
       }
    }
 
-   private String loadExtensionName(URL extensionURL) 
+   @SuppressWarnings({"unchecked"})
+   private <T extends Assignable> ExtensionWrapper loadExtensionWrapper(URL extensionURL, Class<T> extensionClass)
    {
-      try 
+      Properties properties = new Properties();
+      try
       {
-         return new String(IOUtil.asByteArray(extensionURL.openStream()));
-      } 
-      catch (IOException e) 
-      {
-         throw new RuntimeException("Could not read extension mapping " + extensionURL, e);
+         properties.load(extensionURL.openStream());
+      } catch (IOException e) {
+         throw new RuntimeException("Could not open stream for extensionURL " + extensionURL, e);
       }
+      String implementingClassName = (String) properties.get("implementingClassName");
+      if(implementingClassName == null)
+      {
+         throw new RuntimeException("Property implementingClassName is not present in " + extensionURL);
+      }
+      return new ExtensionWrapper(implementingClassName, new HashMap<String, String>((Map) properties), extensionClass);
    }
 
    @SuppressWarnings("unchecked")
-   private <T extends Assignable> Class<T> loadExtensionClass(String extensionClassName)  
+   private <T extends Assignable> Class<T> loadExtensionClass(String extensionClassName)
    {
       try 
       {

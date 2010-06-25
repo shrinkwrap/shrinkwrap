@@ -16,7 +16,6 @@
  */
 package org.jboss.shrinkwrap.api;
 
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -55,8 +54,6 @@ public class Configuration
     */
    private final ExecutorService executorService;
 
-   private final Map<Class<?>, ExtensionType> extensionMappings;
-
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -79,7 +76,6 @@ public class Configuration
       // Set 
       this.extensionLoader = builder.getExtensionLoader();
       this.executorService = builder.getExecutorService();
-      this.extensionMappings = builder.getExtensionMapping();
    }
 
    //-------------------------------------------------------------------------------------||
@@ -100,13 +96,5 @@ public class Configuration
    public ExecutorService getExecutorService()
    {
       return executorService;
-   }
-
-   /**
-    * @return the extensionMapping
-    */
-   public Map<Class<?>, ExtensionType> getExtensionMappings()
-   {
-      return extensionMappings;
    }
 }

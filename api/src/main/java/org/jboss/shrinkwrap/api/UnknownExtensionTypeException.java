@@ -14,17 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api;
 
-import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+package org.jboss.shrinkwrap.api;
 
 /**
  * Indicates that a default name cannot be generated for
  * a given type because no extension mapping has been configured
- * via {@link Configuration#getExtensionMappings()}.  
- * 
+ * via {@link ExtensionLoader#getExtensionFromExtensionMapping(Class)}.
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
@@ -40,45 +37,17 @@ public class UnknownExtensionTypeException extends RuntimeException
     */
    private static final long serialVersionUID = 1L;
 
-   /**
-    * Method used in the error message instructing a developer how to add new extension
-    * mappings
-    */
-   private static final Method GET_EXTENSION_MAPPING;
-   static
-   {
-      GET_EXTENSION_MAPPING = AccessController.doPrivileged(new PrivilegedAction<Method>()
-      {
-
-         @Override
-         public Method run()
-         {
-            try
-            {
-               return Configuration.class.getMethod("getExtensionMappings", new Class<?>[]
-               {});
-            }
-            catch (final NoSuchMethodException e)
-            {
-               throw new RuntimeException(
-                     "Incorrect extension mappings method defined for error message; development error in ShrinkWrap");
-            }
-         }
-      });
-   }
-
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Creates a new instance with message indicating the missing type 
+    * Creates a new instance with message indicating the missing type
     */
    private <T extends Assignable> UnknownExtensionTypeException(final Class<T> type)
    {
       super("The current configuration has no mapping for type " + type.getCanonicalName()
-            + ", unable to determine extension. Either add a mapping via " + GET_EXTENSION_MAPPING.toString()
-            + " or manually assign a name.");
+            + ", unable to determine extension. You should provide extension in the services descriptor file");
    }
 
    //-------------------------------------------------------------------------------------||
@@ -87,7 +56,7 @@ public class UnknownExtensionTypeException extends RuntimeException
 
    /**
     * Creates a new {@link UnknownExtensionTypeException} for the specified type
-    * 
+    *
     * @throws IllegalArgumentException If the type is not specified
     */
    static <T extends Assignable> UnknownExtensionTypeException newInstance(final Class<T> type)

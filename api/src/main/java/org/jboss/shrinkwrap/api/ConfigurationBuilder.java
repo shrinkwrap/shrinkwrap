@@ -16,13 +16,6 @@
  */
 package org.jboss.shrinkwrap.api;
 
-import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -73,11 +66,6 @@ public class ConfigurationBuilder
     */
    private ExecutorService executorService;
 
-   /**
-    * Mapping between {@link org.jboss.shrinkwrap.api.Assignable}  and {@link org.jboss.shrinkwrap.api.ExtensionType}
-    */
-   private Map<Class<?>, ExtensionType> extensionMappings;
-
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -111,13 +99,6 @@ public class ConfigurationBuilder
       return executorService;
    }
 
-   /**
-    * @return the extensionMapping
-    */
-   public Map<Class<?>, ExtensionType> getExtensionMapping()
-   {
-      return extensionMappings;
-   }
 
    /**
     * Sets the {@link ExtensionLoader} to be used, returning this instance
@@ -139,17 +120,6 @@ public class ConfigurationBuilder
    public ConfigurationBuilder executorService(final ExecutorService executorService)
    {
       this.executorService = executorService;
-      return this;
-   }
-
-   /**
-    *  Sets the extensionMapping to be used, returning this instance
-    * @param extensionMappings the extensionMapping
-    * @return the ConfigurationBuilder
-    */
-   public ConfigurationBuilder extensionMappings(final Map<Class<?>, ExtensionType> extensionMappings)
-   {
-      this.extensionMappings = extensionMappings;
       return this;
    }
 
@@ -189,14 +159,6 @@ public class ConfigurationBuilder
          }
          this.extensionLoader(loader);
       }
-      if(getExtensionMapping() == null) {
-         final Map<Class<?>, ExtensionType> extensionMapping = createDefaultExtensionMapping();
-         if (log.isLoggable(Level.FINER))
-         {
-            log.finer("User has not defined an explicit extensionMapping; defaulting to " + extensionMapping);
-         }
-         this.extensionMappings(extensionMapping);
-      }
    }
 
    /**
@@ -209,22 +171,6 @@ public class ConfigurationBuilder
       return SecurityActions.newInstance(EXTENSION_LOADER_IMPL, new Class<?>[]
       {}, new Object[]
       {}, ExtensionLoader.class);
-   }
-
-   /**
-    * Creates and populates the default extensionMapping
-    * @return the extensionMapping
-    */
-   private Map<Class<?>, ExtensionType> createDefaultExtensionMapping()
-   {
-      extensionMappings = new HashMap<Class<?>, ExtensionType>();
-
-      extensionMappings.put(WebArchive.class, ExtensionType.WAR);
-      extensionMappings.put(JavaArchive.class, ExtensionType.JAR);
-      extensionMappings.put(EnterpriseArchive.class, ExtensionType.EAR);
-      extensionMappings.put(ResourceAdapterArchive.class, ExtensionType.RAR);
-
-      return extensionMappings;
    }
 
 }

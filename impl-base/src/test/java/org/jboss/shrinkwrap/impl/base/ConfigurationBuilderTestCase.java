@@ -138,6 +138,12 @@ public class ConfigurationBuilderTestCase
          {
             return null;
          }
+
+         @Override
+         public String getExtensionFromExtensionMapping(Class type)
+         {
+            return null;
+         }
       };
 
       // Supply and build

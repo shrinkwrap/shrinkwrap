@@ -22,6 +22,7 @@ package org.jboss.shrinkwrap.api;
  * Describes a way for the {@link Archive} to load extensions.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
 public interface ExtensionLoader
@@ -50,5 +51,13 @@ public interface ExtensionLoader
     */
    public <T extends Assignable> ExtensionLoader addOverride(
          Class<T> extensionClass, 
-         Class<? extends T> extensionImplClass); 
+         Class<? extends T> extensionImplClass);
+
+   /**
+    * Gets the extension for the given type from the extensionMapping
+    * @param extensionClass The Extension interface class
+    * @param <T> The type of Extension
+    * @return the filename extension
+    */
+   public <T extends Assignable> String getExtensionFromExtensionMapping(Class<T> extensionClass);
 }

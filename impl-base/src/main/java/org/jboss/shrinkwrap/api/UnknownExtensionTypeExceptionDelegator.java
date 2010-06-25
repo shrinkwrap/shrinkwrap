@@ -18,29 +18,22 @@
 package org.jboss.shrinkwrap.api;
 
 /**
- * Class to help provide correct extension 
- * in {@link ArchiveFactory#create(Class)} 
+ * UnknownExtensionTypeExceptionDelegator
+ * Delegator added to be able to reach {@link UnknownExtensionTypeException} from impl-base
  *
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
-class ExtensionType
+public class UnknownExtensionTypeExceptionDelegator
 {
-   static final ExtensionType WAR = new ExtensionType("war");
-   static final ExtensionType JAR = new ExtensionType("jar");
-   static final ExtensionType EAR = new ExtensionType("ear");
-   static final ExtensionType RAR = new ExtensionType("rar");
-   private static final String DOT_DELIMITER = ".";
-   private final String extension;
-
-   private ExtensionType(String extension)
+   /**
+    *
+    * @param type The Extension interface class
+    * @param <T> The type of extension
+    * @return an UnknownExtensionTypeException to be thrown
+    */
+   public static <T extends Assignable> UnknownExtensionTypeException newExceptionInstance(Class<T> type)
    {
-      this.extension = extension;
-   }
-
-   @Override
-   public String toString()
-   {
-      return DOT_DELIMITER + extension;
+      return UnknownExtensionTypeException.newInstance(type);
    }
 }

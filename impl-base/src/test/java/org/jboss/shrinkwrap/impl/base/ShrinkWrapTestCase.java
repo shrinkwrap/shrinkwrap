@@ -393,6 +393,12 @@ public class ShrinkWrapTestCase
       {
          return null;
       }
+
+      @Override
+      public String getExtensionFromExtensionMapping(Class type)
+      {
+         return null;
+      }
    }
 
    /**

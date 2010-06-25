@@ -1,1 +1,2 @@
-org.jboss.shrinkwrap.impl.base.spec.WebArchiveImpl
+implementingClassName=org.jboss.shrinkwrap.impl.base.spec.WebArchiveImpl
+extension=.war
