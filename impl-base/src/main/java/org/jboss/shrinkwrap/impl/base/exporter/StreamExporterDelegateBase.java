@@ -248,7 +248,7 @@ public abstract class StreamExporterDelegateBase<O extends OutputStream> extends
       {
 
          @Override
-         public void execute(InputStream stream) throws Exception
+         public void execute(final InputStream stream) throws Exception
          {
             String resolvedPath = pathName;
             if (isDirectory)
