@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+   <parent>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-build</artifactId>
+      <!-- temporary while we link against 1.0.0-alpha-10 -->
+      <version>1.0.0-alpha-10</version>
+      <relativePath>../build/pom.xml</relativePath>
+   </parent>
+
+   <modelVersion>4.0.0</modelVersion>
+
+   <artifactId>shrinkwrap-extension-tomcat</artifactId>
+   <!-- temporary while we link against 1.0.0-alpha-10 -->
+   <version>1.0.0-SNAPSHOT</version>
+   <name>ShrinkWrap Tomcat Integration Extension</name>
+   <description>ShrinkWrap integration extension for the Jetty Project</description>
+
+   <properties>
+      <!-- Known to work with Tomcat version 6.0.13 and up (that's the minimum version in central) -->
+      <version.org.apache.tomcat_tomcat>6.0.26</version.org.apache.tomcat_tomcat>
+      <version.org.apache.httpcomponents_httpclient>4.0.1</version.org.apache.httpcomponents_httpclient>
+   </properties>
+
+   <dependencies>
+
+      <dependency>
+         <groupId>org.jboss.shrinkwrap</groupId>
+         <artifactId>shrinkwrap-api</artifactId>
+         <!-- temporary while we link against 1.0.0-alpha-10 -->
+         <version>1.0.0-alpha-10</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.shrinkwrap</groupId>
+         <artifactId>shrinkwrap-impl-base</artifactId>
+         <!-- temporary while we link against 1.0.0-alpha-10 -->
+         <version>1.0.0-alpha-10</version>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>test</scope>
+      </dependency>
+      
+      <dependency>
+          <groupId>org.apache.tomcat</groupId>
+          <artifactId>catalina</artifactId>
+          <version>${version.org.apache.tomcat_tomcat}</version>
+          <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>org.apache.tomcat</groupId>
+          <artifactId>coyote</artifactId>
+          <version>${version.org.apache.tomcat_tomcat}</version>
+          <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>org.apache.tomcat</groupId>
+          <artifactId>jasper</artifactId>
+          <version>${version.org.apache.tomcat_tomcat}</version>
+          <scope>provided</scope>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.apache.httpcomponents</groupId>
+         <artifactId>httpclient</artifactId>
+         <version>${version.org.apache.httpcomponents_httpclient}</version>
+         <scope>test</scope>
+      </dependency>
+
+   </dependencies>
+
+<!--
+vi:ts=2:sw=2:expandtab:
+-->
+</project>
