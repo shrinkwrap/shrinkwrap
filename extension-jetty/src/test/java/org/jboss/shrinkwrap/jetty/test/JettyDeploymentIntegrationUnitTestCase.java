@@ -166,7 +166,7 @@ public class JettyDeploymentIntegrationUnitTestCase
       final List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair("jsp", PATH_JSP));
       params.add(new BasicNameValuePair("echo", echoValue));
-      final URI uri = URIUtils.createURI("http", "localhost", HTTP_BIND_PORT, NAME_WAR + SEPARATOR
+      final URI uri = URIUtils.createURI("http", "localhost", HTTP_BIND_PORT, NAME_WEBAPP + SEPARATOR
             + servletClass.getSimpleName(), URLEncodedUtils.format(params, "UTF-8"), null);
       final HttpGet request = new HttpGet(uri);
 

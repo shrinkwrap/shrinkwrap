@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.jetty.api;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.AccessController;
@@ -54,6 +55,11 @@ public class ShrinkWrapWebAppContext extends WebAppContext implements Assignable
     * System property denoting the name of the temp directory
     */
    private static final String SYSPROP_KEY_TMP_DIR = "java.io.tmpdir";
+
+   /**
+    * The prefix assigned to the temporary file where the archive is exported
+    */
+   private static final String EXPORT_FILE_PREFIX = "export";
 
    /**
     * Temporary directory into which we'll extract the {@link WebArchive}s
@@ -115,8 +121,22 @@ public class ShrinkWrapWebAppContext extends WebAppContext implements Assignable
 
       // Flush to file
       final String name = archive.getName();
-      final File exported = new File(TMP_DIR, name);
-      archive.as(ZipExporter.class).exportZip(exported);
+      final int extensionOffset = name.lastIndexOf('.');
+      final String baseName = extensionOffset >= 0 ? name.substring(0, extensionOffset) : name;
+      final File exported;
+      try
+      {
+         // If this method returns successfully then it is guaranteed that:
+         // 1. The file denoted by the returned abstract pathname did not exist before this method was invoked, and
+         // 2. Neither this method nor any of its variants will return the same abstract pathname again in the current invocation of the virtual machine.
+         exported = File.createTempFile(EXPORT_FILE_PREFIX, name, TMP_DIR);
+      }
+      catch (IOException e)
+      {
+         throw new RuntimeException("Could not create temporary File in " + TMP_DIR + " to write exported archive", e);
+      }
+      // We are overwriting the temporary file placeholder reserved by File#createTemplateFile()
+      archive.as(ZipExporter.class).exportZip(exported, true);
 
       // Mark to delete when we come down
       exported.deleteOnExit();
@@ -131,11 +151,11 @@ public class ShrinkWrapWebAppContext extends WebAppContext implements Assignable
       {
          throw new RuntimeException("Could not obtain URL of File " + exported.getAbsolutePath(), e);
       }
-      log.info("Webapp location: " + url);
+      log.info("Webapp archive location: " + url);
 
       // Set properties regarding the webbapp
       this.setWar(url.toExternalForm());
-      this.setContextPath(ROOT + name);
+      this.setContextPath(ROOT + baseName);
 
       // Remember the archive from which we're created
       this.archive = archive;
