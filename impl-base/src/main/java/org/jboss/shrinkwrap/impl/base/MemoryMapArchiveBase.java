@@ -26,11 +26,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.IllegalArchivePathException;
 import org.jboss.shrinkwrap.api.Node;
-import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
@@ -138,35 +139,37 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
    
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, java.lang.String)
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, java.lang.String, java.lang.Class)
     */
    @Override
-   public T add(Archive<?> archive, String path)
+   public T add(final Archive<?> archive, final String path, final Class<? extends StreamExporter> exporter)
    {
+      Validate.notNull(archive, "Archive must be specified");
       Validate.notNullOrEmpty(path, "Archive Path must be specified");
-      return this.add(archive, ArchivePaths.create(path));
+      Validate.notNull(exporter, "exporter must be specified");
+      return this.add(archive, ArchivePaths.create(path), exporter);
    }
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.ArchiveBase#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.ArchivePath)
+    * @see org.jboss.shrinkwrap.impl.base.ArchiveBase#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.ArchivePath, java.lang.Class)
     */
    @Override
-   public T add(Archive<?> archive, ArchivePath path)
+   public T add(final Archive<?> archive, final ArchivePath path, final Class<? extends StreamExporter> exporter)
    {
       // Add archive asset
-      super.add(archive, path);
+      super.add(archive, path, exporter);
 
       // Expected Archive Path
-      ArchivePath archivePath = new BasicPath(path, archive.getName());
+      final ArchivePath archivePath = new BasicPath(path, archive.getName());
 
       // Get the Asset that was just added 
-      Node node = get(archivePath);
+      final Node node = get(archivePath);
 
       // Make sure it is an ArchiveAsset
       if (node.getAsset() != null && node.getAsset() instanceof ArchiveAsset)
       {
-         ArchiveAsset archiveAsset = ArchiveAsset.class.cast(node.getAsset());
+         final ArchiveAsset archiveAsset = ArchiveAsset.class.cast(node.getAsset());
          // Add asset to ArchiveAsset Map
          nestedArchives.put(archivePath, archiveAsset);
       }

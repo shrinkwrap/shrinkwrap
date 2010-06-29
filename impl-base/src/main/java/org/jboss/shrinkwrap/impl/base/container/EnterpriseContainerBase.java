@@ -26,6 +26,7 @@ import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.FileAsset;
 import org.jboss.shrinkwrap.api.asset.UrlAsset;
 import org.jboss.shrinkwrap.api.container.EnterpriseContainer;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
@@ -300,19 +301,22 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>>
     */
    protected abstract ArchivePath getModulePath();
    
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.container.EnterpriseContainer#addModule(org.jboss.declarchive.api.Archive)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addModule(org.jboss.shrinkwrap.api.Archive)
     */
    @Override
-   public T addModule(Archive<?> archive) throws IllegalArgumentException
+   public T addModule(final Archive<?> archive) throws IllegalArgumentException
    {
       Validate.notNull(archive, "Archive must be specified");
       
-      return add(archive, getModulePath());
+      // Add as ZIP, as JARs are :)
+      return add(archive, getModulePath(),ZipExporter.class);
    }
    
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.container.EnterpriseContainer#addModule(java.lang.String)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addModule(java.lang.String)
     */
    @Override
    public T addModule(String resourceName)

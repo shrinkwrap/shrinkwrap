@@ -31,6 +31,7 @@ import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
@@ -560,7 +561,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> archive = getArchive();
       try
       {
-         archive.add(ShrinkWrap.create(JavaArchive.class), (ArchivePath) null);
+         archive.add(ShrinkWrap.create(JavaArchive.class), (ArchivePath) null, ZipExporter.class);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
@@ -576,7 +577,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
    public void testAddArchiveToPathRequireStringPath() throws Exception
    {
       Archive<T> archive = getArchive();
-      archive.add(ShrinkWrap.create(JavaArchive.class), (String) null);
+      archive.add(ShrinkWrap.create(JavaArchive.class), (String) null, ZipExporter.class);
    }
 
    /**
@@ -589,7 +590,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> archive = getArchive();
       try
       {
-         archive.add((Archive<?>) null, new BasicPath("/"));
+         archive.add((Archive<?>) null, ArchivePaths.root(), ZipExporter.class);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
@@ -867,7 +868,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       ArchivePath baseLocation = new BasicPath("somewhere");
 
-      archive.add(sourceArchive, baseLocation);
+      archive.add(sourceArchive, baseLocation, ZipExporter.class);
 
       ArchivePath expectedPath = new BasicPath(baseLocation, sourceArchive.getName());
 
@@ -901,7 +902,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       ArchivePath baseLocation = new BasicPath("somewhere");
 
-      archive.add(sourceArchive, baseLocation);
+      archive.add(sourceArchive, baseLocation, ZipExporter.class);
 
       ArchivePath archivePath = new BasicPath(baseLocation, sourceArchive.getName());
 
@@ -924,11 +925,11 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       ArchivePath baseLocation = new BasicPath("somewhere");
 
-      archive.add(nestedArchive, baseLocation);
+      archive.add(nestedArchive, baseLocation, ZipExporter.class);
 
       Archive<T> nestedNestedArchive = createNewArchive();
 
-      nestedArchive.add(nestedNestedArchive, new BasicPath("/"));
+      nestedArchive.add(nestedNestedArchive, ArchivePaths.root(), ZipExporter.class);
       
       Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
 

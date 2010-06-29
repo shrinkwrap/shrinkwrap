@@ -35,6 +35,8 @@ import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.URLPackageScanner;
@@ -111,22 +113,23 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, java.lang.String)
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, java.lang.String, java.lang.Class)
     */
    @Override
-   public T add(Archive<?> archive, String path)
+   public T add(final Archive<?> archive, final String path, final Class<? extends StreamExporter> exporter)
    {
-      this.archive.add(archive, path);
+      this.archive.add(archive, path, exporter);
       return covarientReturn();
    }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path)
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.ArchivePath, java.lang.Class)
     */
    @Override
-   public T add(Archive<?> archive, ArchivePath path)
+   public T add(final Archive<?> archive, final ArchivePath path, final Class<? extends StreamExporter> exporter)
    {
-      this.archive.add(archive, path);
+      this.archive.add(archive, path, exporter);
       return covarientReturn();
    }
    
@@ -1013,17 +1016,20 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     */
    protected abstract ArchivePath getLibraryPath();
    
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.container.LibraryContainer#addLibrary(org.jboss.declarchive.api.Archive)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(org.jboss.shrinkwrap.api.Archive)
     */
-   public T addLibrary(Archive<?> archive) throws IllegalArgumentException 
+   public T addLibrary(final Archive<?> archive) throws IllegalArgumentException
    {
       Validate.notNull(archive, "Archive must be specified");
-      return add(archive, getLibraryPath());
+      // Libraries are JARs, so add as ZIP
+      return add(archive, getLibraryPath(), ZipExporter.class);
    };
 
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.container.LibraryContainer#addLibrary(java.lang.String)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.lang.String)
     */
    @Override
    public T addLibrary(String resourceName) throws IllegalArgumentException
@@ -1032,7 +1038,8 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return addLibrary(new ClassLoaderAsset(resourceName), resourceName);
    }
    
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.io.File)
     */
    @Override
@@ -1042,7 +1049,8 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return addLibrary(new FileAsset(resource), resource.getName());
    }
    
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.lang.String, java.lang.String)
     */
    @Override
@@ -1054,7 +1062,8 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return addLibrary(new ClassLoaderAsset(resourceName), target);
    }
    
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addLibrary(java.io.File, java.lang.String)
     */
    @Override

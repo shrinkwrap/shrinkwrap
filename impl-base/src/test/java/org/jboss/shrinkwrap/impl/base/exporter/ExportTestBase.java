@@ -26,6 +26,7 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
@@ -171,6 +172,12 @@ public abstract class ExportTestBase
     * @return
     */
    protected abstract String getArchiveExtension();
+   
+   /**
+    * Returns the exporter type
+    * @return
+    */
+   protected abstract Class<? extends StreamExporter> getStreamExporter();
 
    /**
     * Create an archive instance and add some assets and some nested archives
@@ -187,7 +194,7 @@ public abstract class ExportTestBase
       addContent(nestedArchive);
 
       // Add nested archive
-      archive.add(nestedArchive, new BasicPath());
+      archive.add(nestedArchive, ArchivePaths.root(), this.getStreamExporter());
 
       // Add an archive nested in a directory
       Archive<?> nestedArchiveTwo = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE_2+ getArchiveExtension());
@@ -196,7 +203,7 @@ public abstract class ExportTestBase
       addContent(nestedArchiveTwo);
 
       // Add the archive under a nested path
-      archive.add(nestedArchiveTwo, NESTED_PATH);
+      archive.add(nestedArchiveTwo, NESTED_PATH, this.getStreamExporter());
       
       // Add empty directories
       archive.addDirectory(PATH_EMPTY_NESTED_DIR);

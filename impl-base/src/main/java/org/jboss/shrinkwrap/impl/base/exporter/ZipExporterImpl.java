@@ -46,6 +46,7 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
    /**
     * Logger
     */
+   @SuppressWarnings("unused")
    private static final Logger log = Logger.getLogger(ZipExporterImpl.class.getName());
 
    //-------------------------------------------------------------------------------------||
@@ -63,10 +64,10 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip()
+    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#export()
     */
    @Override
-   public InputStream exportZip()
+   public InputStream export()
    {
       // Create export delegate
       AbstractExporterDelegate<InputStream> exportDelegate = new JdkZipExporterDelegate(this.getArchive());
@@ -76,10 +77,11 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
    }
 
    /**
-    * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip(java.io.OutputStream)
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#export(java.io.OutputStream)
     */
    @Override
-   public void exportZip(final OutputStream target) throws ArchiveExportException, IllegalArgumentException
+   public void export(final OutputStream target) throws ArchiveExportException, IllegalArgumentException
    {
       // Precondition checks
       if (target == null)
@@ -88,7 +90,7 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
       }
 
       // Get Stream
-      final InputStream in = this.exportZip();
+      final InputStream in = this.export();
 
       // Write out
       try
@@ -113,7 +115,7 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
       final OutputStream out = this.getOutputStreamToFile(target, overwrite);
 
       // Write out
-      this.exportZip(out);
+      this.export(out);
    }
 
    /**

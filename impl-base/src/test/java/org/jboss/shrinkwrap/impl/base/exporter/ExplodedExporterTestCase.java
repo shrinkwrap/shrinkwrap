@@ -31,6 +31,8 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -75,6 +77,16 @@ public class ExplodedExporterTestCase extends ExportTestBase
    protected String getArchiveExtension()
    {
       return EXTENSION;
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getStreamExporter()
+    */
+   @Override
+   protected Class<? extends StreamExporter> getStreamExporter()
+   {
+      return ZipExporter.class;
    }
 
    //-------------------------------------------------------------------------------------||

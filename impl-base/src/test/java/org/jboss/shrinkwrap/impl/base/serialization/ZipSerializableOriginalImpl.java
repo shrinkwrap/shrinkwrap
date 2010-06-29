@@ -124,7 +124,7 @@ public class ZipSerializableOriginalImpl extends AssignableBase implements ZipSe
       out.defaultWriteObject();
 
       // Write as ZIP 
-      final InputStream in = archive.as(ZipExporter.class).exportZip();
+      final InputStream in = archive.as(ZipExporter.class).export();
       try
       {
          IOUtil.copy(in, out); // Don't close the outstream

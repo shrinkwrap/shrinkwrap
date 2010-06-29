@@ -28,6 +28,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
@@ -66,7 +67,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
    protected InputStream exportAsInputStream(final Archive<?> archive)
    {
       assert archive != null : "archive must be specified";
-      return archive.as(ZipExporter.class).exportZip();
+      return archive.as(ZipExporter.class).export();
    }
 
    /**
@@ -93,7 +94,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
    {
       assert archive != null : "archive must be specified";
       assert out != null : "outstream must be specified";
-      archive.as(ZipExporter.class).exportZip(out);
+      archive.as(ZipExporter.class).export(out);
    }
 
    /**
@@ -145,6 +146,16 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
       return EXTENSION;
    }
 
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getStreamExporter()
+    */
+   @Override
+   protected Class<? extends StreamExporter> getStreamExporter()
+   {
+      return ZipExporter.class;
+   }
+   
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -161,7 +172,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
    public void exportEmptyArchiveAsZip() throws Exception
    {
       // Attempt to export an empty archive, should fail
-      ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).as(ZipExporter.class).exportZip();
+      ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).as(ZipExporter.class).export();
    }
 
    //-------------------------------------------------------------------------------------||
@@ -191,31 +202,6 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
    }
 
    /**
-    * Writes out the specified contents (stream) as a file in the specified directory
-    * @param archiveName Name of the file
-    * @param zipStream Contents of the archive in ZIP format
-    * @param tempDirectory Directory in which to place the serialized file
-    * @return
-    * @throws Exception
-    */
-   private ZipFile getExportedZipFile(String archiveName, InputStream zipStream, File tempDirectory) throws IOException
-   {
-      // Validate the InputStream was created 
-      Assert.assertNotNull(zipStream);
-
-      // Create a temp file
-      File outFile = new File(tempDirectory, archiveName);
-
-      // Write Zip contents to file
-      writeOutFile(outFile, zipStream);
-
-      // Use standard ZipFile library to read in written Zip file
-      ZipFile expectedZip = new ZipFile(outFile);
-
-      return expectedZip;
-   }
-
-   /**
     * Assert an asset is actually in the Zip file
     * @throws IOException 
     * @throws IllegalArgumentException 
@@ -224,8 +210,8 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
          IOException
    {
       final ZipEntry entry = this.getEntryFromZip(expectedZip, path);
-      byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
-      byte[] actualContents = IOUtil.asByteArray(expectedZip.getInputStream(entry));
+      final byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
+      final byte[] actualContents = IOUtil.asByteArray(expectedZip.getInputStream(entry));
       Assert.assertArrayEquals(expectedContents, actualContents);
    }
 
@@ -241,8 +227,8 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
    private ZipEntry getEntryFromZip(final ZipFile expectedZip, final ArchivePath path) throws IllegalArgumentException,
          IOException
    {
-      String entryPath = PathUtil.optionallyRemovePrecedingSlash(path.get());
-      ZipEntry entry = expectedZip.getEntry(entryPath);
+      final String entryPath = PathUtil.optionallyRemovePrecedingSlash(path.get());
+      final ZipEntry entry = expectedZip.getEntry(entryPath);
       Assert.assertNotNull("Expected path not found in ZIP: " + path, entry);
       return entry;
    }

@@ -19,6 +19,7 @@ package org.jboss.shrinkwrap.api;
 import java.util.Map;
 
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 
@@ -209,24 +210,29 @@ public interface Archive<T extends Archive<T>> extends Assignable
    Map<ArchivePath, Node> getContent(Filter<ArchivePath> filter);
 
    /**
-    * Add an archive under a specific context and maintain the archive name as context path.
+    * Add an archive under a specific context and maintain the archive name as 
+    * context path.
     * 
     * @param path to use 
     * @param archive to add
+    * @param exporter Exporter type to use in fulfilling the {@link Asset#openStream()} contract for 
+    *   the added (nested) archive.  
     * @return
-    * @throws IllegalArgumentException If the path or archive are not specified 
+    * @throws IllegalArgumentException If any argument is not specified
     */
-   T add(Archive<?> archive, ArchivePath path) throws IllegalArgumentException;
+   T add(Archive<?> archive, ArchivePath path, Class<? extends StreamExporter> exporter) throws IllegalArgumentException;
    
    /**
     * Add an archive under a specific context and maintain the archive name as context path.
     * 
     * @param path to use 
     * @param archive to add
+    * @param exporter Exporter type to use in fulfilling the {@link Asset#openStream()} contract for 
+    *   the added (nested) archive.  
     * @return
     * @throws IllegalArgumentException If the path or archive are not specified 
     */
-   T add(Archive<?> archive, String path) throws IllegalArgumentException;
+   T add(Archive<?> archive, String path, Class<? extends StreamExporter> exporter) throws IllegalArgumentException;
 
    /**
     * Merge the contents from an existing archive without 
