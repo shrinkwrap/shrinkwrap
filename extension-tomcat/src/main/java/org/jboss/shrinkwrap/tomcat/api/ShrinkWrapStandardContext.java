@@ -36,6 +36,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
  * {@link Archive}; capable of being deployed into 
  * the Tomcat Embedded container
  * 
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author Dan Allen
  * @version $Revision: $
  */

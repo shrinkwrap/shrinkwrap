@@ -51,10 +51,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Ensures that deployment on {@link ShrinkWrapWebAppContext} into
- * the Jetty {@link Server} works as expected
+ * Ensures that deployment on {@link ShrinkWrapStandardContext} into
+ * the Tomcat {@link Embedded} works as expected.
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author Dan Allen
  * @version $Revision: $
  */
 public class TomcatDeploymentIntegrationUnitTestCase
