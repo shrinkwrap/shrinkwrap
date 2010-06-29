@@ -47,6 +47,7 @@ public class TarGzExporterImpl extends AbstractStreamExporterImpl implements Tar
    /**
     * Logger
     */
+   @SuppressWarnings("unused")
    private static final Logger log = Logger.getLogger(TarGzExporterImpl.class.getName());
 
    //-------------------------------------------------------------------------------------||
@@ -67,10 +68,10 @@ public class TarGzExporterImpl extends AbstractStreamExporterImpl implements Tar
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter#exportTarGz()
+    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#export()
     */
    @Override
-   public InputStream exportTarGz()
+   public InputStream export()
    {
       // Create export delegate
       final AbstractExporterDelegate<InputStream> exportDelegate = new TarGzExporterDelegate(this.getArchive());
@@ -79,12 +80,13 @@ public class TarGzExporterImpl extends AbstractStreamExporterImpl implements Tar
       return exportDelegate.export();
    }
 
+   
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter#exportTarGz(java.io.OutputStream)
+    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#export(java.io.OutputStream)
     */
    @Override
-   public void exportTarGz(final OutputStream target) throws ArchiveExportException, IllegalArgumentException
+   public void export(final OutputStream target) throws ArchiveExportException, IllegalArgumentException
    {
       // Precondition checks
       if (target == null)
@@ -93,7 +95,7 @@ public class TarGzExporterImpl extends AbstractStreamExporterImpl implements Tar
       }
 
       // Get Stream
-      final InputStream in = this.exportTarGz();
+      final InputStream in = this.export();
 
       // Write out
       try
@@ -118,7 +120,7 @@ public class TarGzExporterImpl extends AbstractStreamExporterImpl implements Tar
       final OutputStream out = this.getOutputStreamToFile(target, overwrite);
 
       // Write out
-      this.exportTarGz(out);
+      this.export(out);
    }
 
    /**

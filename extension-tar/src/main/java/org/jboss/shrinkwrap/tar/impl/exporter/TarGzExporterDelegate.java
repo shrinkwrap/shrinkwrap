@@ -63,13 +63,13 @@ public class TarGzExporterDelegate extends StreamExporterDelegateBase<TarGzOutpu
       super(archive);
 
       //TODO Can this impl export archives with no entries?
-//      // Precondition check
-//      if (archive.getContent().isEmpty())
-//      {
-//         throw new IllegalArgumentException(
-//               "[SHRINKWRAP-93] Cannot use this JDK-based implementation to export as ZIP an archive with no content: "
-//                     + archive.toString());
-//      }
+      //      // Precondition check
+      //      if (archive.getContent().isEmpty())
+      //      {
+      //         throw new IllegalArgumentException(
+      //               "[SHRINKWRAP-93] Cannot use this JDK-based implementation to export as ZIP an archive with no content: "
+      //                     + archive.toString());
+      //      }
    }
 
    //-------------------------------------------------------------------------------------||
@@ -106,7 +106,8 @@ public class TarGzExporterDelegate extends StreamExporterDelegateBase<TarGzOutpu
    protected final void putNextExtry(final TarGzOutputStream outputStream, final String context) throws IOException
    {
       // Put
-      outputStream.putNextEntry(new TarEntry(context));
+      final TarEntry entry = new TarEntry(context);
+      outputStream.putNextEntry(entry);
    }
 
    /**
@@ -136,19 +137,19 @@ public class TarGzExporterDelegate extends StreamExporterDelegateBase<TarGzOutpu
                log.log(Level.WARNING, "Exception encountered during export of archive", e);
 
                //TODO Can this impl export archives with no entries?  JDK ZIP impl cannot. 
-//               // SHRINKWRAP-133 - if the output is empty, it won't close and a deadlock is triggered
-//               final Set<ArchivePath> pathsExported = TarGzExporterDelegate.this.getExportedPaths();
-//               if (pathsExported.isEmpty())
-//               {
-//                  // Ensure the streams are set up before we do any work on them;
-//                  // it's possible that we encountered an exception before 
-//                  // everything has been initialized by the main Thread
-//                  // SHRINKWRAP-137
-//                  latch.await();
-//
-//                  // Write a dummy entry just so the JDK ZIP impl can close cleanly
-//                  putNextExtry(outputStream, "dummy.txt");
-//               }
+               //               // SHRINKWRAP-133 - if the output is empty, it won't close and a deadlock is triggered
+               //               final Set<ArchivePath> pathsExported = TarGzExporterDelegate.this.getExportedPaths();
+               //               if (pathsExported.isEmpty())
+               //               {
+               //                  // Ensure the streams are set up before we do any work on them;
+               //                  // it's possible that we encountered an exception before 
+               //                  // everything has been initialized by the main Thread
+               //                  // SHRINKWRAP-137
+               //                  latch.await();
+               //
+               //                  // Write a dummy entry just so the JDK ZIP impl can close cleanly
+               //                  putNextExtry(outputStream, "dummy.txt");
+               //               }
 
                throw e;
             }

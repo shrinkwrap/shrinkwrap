@@ -18,11 +18,11 @@ package org.jboss.shrinkwrap.tar.api.exporter;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 
 /**
  * Exporter used to represent an {@link Assignable} in TAR format encoded w/
@@ -32,18 +32,11 @@ import org.jboss.shrinkwrap.api.exporter.FileExistsException;
  * @see http://www.gnu.org/software/tar/manual/html_node/Standard.html
  * @see http://www.gzip.org/
  */
-public interface TarGzExporter extends Assignable
+public interface TarGzExporter extends StreamExporter
 {
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   /**
-    * Exports this reference as a TAR.GZ archive.
-    * 
-    * @return {@link InputStream} for exported TAR.GZ
-    */
-   InputStream exportTarGz();
 
    /**
     * Exports provided archive as a TAR.GZ archive, written to the 
@@ -57,17 +50,6 @@ public interface TarGzExporter extends Assignable
     * @throws ArchiveExportException if the export process fails
     */
    void exportTarGz(File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException;
-
-   /**
-    * Exports provided archive as a TAR.GZ archive, written to the 
-    * specified {@link OutputStream} target.  The specified
-    * target will be closed upon completion.
-    * 
-    * @param target
-    * @throws ArchiveExportException
-    * @throws IllegalArgumentException If the target is not specified
-    */
-   void exportTarGz(OutputStream target) throws ArchiveExportException, IllegalArgumentException;
 
    /**
     * Exports provided archive as a TAR.GZ archive, written to the 
