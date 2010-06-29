@@ -44,7 +44,7 @@ import org.junit.Test;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ZipExporterStressTest extends ExportTestBase
+public class ZipExporterStressTest
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||

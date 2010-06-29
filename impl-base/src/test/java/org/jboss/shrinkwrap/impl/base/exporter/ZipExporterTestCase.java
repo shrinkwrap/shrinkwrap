@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -47,6 +46,15 @@ import org.junit.Test;
 public final class ZipExporterTestCase extends StreamExporterTestBase
 {
    //-------------------------------------------------------------------------------------||
+   // Class Members ----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Extension for archives
+    */
+   private static final String EXTENSION = ".jar";
+
+   //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
@@ -59,26 +67,6 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
    {
       assert archive != null : "archive must be specified";
       return archive.as(ZipExporter.class).exportZip();
-   }
-
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#ensureInExpectedForm(java.io.InputStream)
-    */
-   @Override
-   protected void ensureInExpectedForm(final InputStream instream) throws IOException
-   {
-      // Precondition check
-      assert instream != null : "instream must be specified";
-
-      // Get a temp directory for the test
-      final File tempDirectory = createTempDirectory(UUID.randomUUID().toString());
-
-      // Write zip content to temporary file 
-      final ZipFile expectedZip = getExportedZipFile(NAME_ARCHIVE, instream, tempDirectory);
-
-      // Validate
-      ensureZipFileInExpectedForm(expectedZip);
    }
 
    /**
@@ -145,6 +133,16 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
       }
       final byte[] actualContents = IOUtil.asByteArray(zipFile.getInputStream(entry));
       return new ByteArrayInputStream(actualContents);
+   }
+
+   /**
+    * {@inheritDoc
+    * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getArchiveExtension()
+    */
+   @Override
+   protected String getArchiveExtension()
+   {
+      return EXTENSION;
    }
 
    //-------------------------------------------------------------------------------------||

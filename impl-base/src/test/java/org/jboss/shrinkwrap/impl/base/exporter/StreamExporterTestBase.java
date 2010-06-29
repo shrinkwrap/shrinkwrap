@@ -17,7 +17,6 @@
 package org.jboss.shrinkwrap.impl.base.exporter;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,7 +43,6 @@ import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
-import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -94,14 +92,6 @@ public abstract class StreamExporterTestBase extends ExportTestBase
    protected abstract void exportAsFile(Archive<?> archive, File file, boolean overwrite);
 
    /**
-    * Ensures the contents of the specified {@link InputStream} are
-    * as expected
-    * @param instream
-    * @throws IOException If an I/O error occurred
-    */
-   protected abstract void ensureInExpectedForm(InputStream instream) throws IOException;
-
-   /**
     * Ensures the contents of the specified {@link File} are
     * as expected
     * @param file
@@ -138,7 +128,11 @@ public abstract class StreamExporterTestBase extends ExportTestBase
       final InputStream exportStream = this.exportAsInputStream(archive);
 
       // Validate
-      ensureInExpectedForm(exportStream);
+      final File tempDirectory = createTempDirectory("testExport");
+      final File serialized = new File(tempDirectory, archive.getName());
+      final FileOutputStream out = new FileOutputStream(serialized);
+      IOUtil.copyWithClose(exportStream, out);
+      ensureInExpectedForm(serialized);
    }
 
    /**
@@ -233,8 +227,7 @@ public abstract class StreamExporterTestBase extends ExportTestBase
       this.exportAsFile(archive, exported, true);
 
       // Roundtrip assertion
-      final InputStream instream = new FileInputStream(exported);
-      this.ensureInExpectedForm(instream);
+      this.ensureInExpectedForm(exported);
    }
 
    /**
@@ -320,7 +313,7 @@ public abstract class StreamExporterTestBase extends ExportTestBase
       final InputStream exportStream = this.exportAsInputStream(archive);
 
       // Write out and retrieve as exported file
-      final File exported = new File(tempDirectory, NAME_ARCHIVE);
+      final File exported = new File(tempDirectory, NAME_ARCHIVE + this.getArchiveExtension());
       final OutputStream exportedOut = new FileOutputStream(exported);
       IOUtil.copyWithClose(exportStream, exportedOut);
 
@@ -329,13 +322,13 @@ public abstract class StreamExporterTestBase extends ExportTestBase
       this.ensureAssetInExportedFile(exported, PATH_TWO, ASSET_TWO);
 
       // Validate nested archive entries were written out
-      final ArchivePath nestedArchivePath = ArchivePaths.create(NAME_NESTED_ARCHIVE);
+      final ArchivePath nestedArchivePath = ArchivePaths.create(NAME_NESTED_ARCHIVE+this.getArchiveExtension());
 
       // Get inputstream for entry 
       final InputStream nestedArchiveStream = this.getContentsFromExportedFile(exported, nestedArchivePath);
 
       // Write out and retrieve nested contents
-      final File nestedFile = new File(tempDirectory, NAME_NESTED_ARCHIVE);
+      final File nestedFile = new File(tempDirectory, NAME_NESTED_ARCHIVE + this.getArchiveExtension());
       final OutputStream nestedOut = new FileOutputStream(nestedFile);
       IOUtil.copyWithClose(nestedArchiveStream, nestedOut);
 
@@ -344,12 +337,13 @@ public abstract class StreamExporterTestBase extends ExportTestBase
       this.ensureAssetInExportedFile(nestedFile, PATH_TWO, ASSET_TWO);
 
       // Validate nested archive entries were written out
-      final ArchivePath nestedArchiveTwoPath = new BasicPath(NESTED_PATH, NAME_NESTED_ARCHIVE_2);
+      final ArchivePath nestedArchiveTwoPath = ArchivePaths.create(NESTED_PATH, NAME_NESTED_ARCHIVE_2
+            + this.getArchiveExtension());
       this.getContentsFromExportedFile(exported, nestedArchiveTwoPath);
       final InputStream nestedArchiveTwoStream = this.getContentsFromExportedFile(exported, nestedArchiveTwoPath);
 
       // Write out and retrieve secondnested contents
-      final File nestedTwoFile = new File(tempDirectory, NAME_NESTED_ARCHIVE_2);
+      final File nestedTwoFile = new File(tempDirectory, NAME_NESTED_ARCHIVE_2 + this.getArchiveExtension());
       final OutputStream nestedTwoOut = new FileOutputStream(nestedTwoFile);
       IOUtil.copyWithClose(nestedArchiveTwoStream, nestedTwoOut);
 

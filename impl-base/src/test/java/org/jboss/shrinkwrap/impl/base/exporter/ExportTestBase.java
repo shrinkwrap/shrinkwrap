@@ -56,7 +56,7 @@ public abstract class ExportTestBase
    /**
     * Name of an Archive
     */
-   protected static final String NAME_ARCHIVE = "testArchive.jar";
+   protected static final String NAME_ARCHIVE = "testArchive";
 
    /**
     * Name of a properties file upon the test CP
@@ -76,12 +76,12 @@ public abstract class ExportTestBase
    /**
     * Name of a nested archive
     */
-   protected static final String NAME_NESTED_ARCHIVE = "nestedArchive.jar";
+   protected static final String NAME_NESTED_ARCHIVE = "nestedArchive";
 
    /**
     * Name of another nested archive
     */
-   protected static final String NAME_NESTED_ARCHIVE_2 = "nestedArchive2.jar";
+   protected static final String NAME_NESTED_ARCHIVE_2 = "nestedArchive2";
 
    /** 
     * Asset used for testing
@@ -159,12 +159,18 @@ public abstract class ExportTestBase
    protected Archive<?> createArchiveWithAssets()
    {
       // Create an archive
-      Archive<?> archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE);
+      Archive<?> archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE + getArchiveExtension());
       // Add some content
       addContent(archive);
       // Return archive
       return archive;
    }
+   
+   /**
+    * Obtains the extension for created archives
+    * @return
+    */
+   protected abstract String getArchiveExtension();
 
    /**
     * Create an archive instance and add some assets and some nested archives
@@ -175,7 +181,7 @@ public abstract class ExportTestBase
       Archive<?> archive = createArchiveWithAssets();
 
       // Create a nested archive
-      Archive<?> nestedArchive = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE);
+      Archive<?> nestedArchive = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE+ getArchiveExtension());
 
       // Add some content
       addContent(nestedArchive);
@@ -184,7 +190,7 @@ public abstract class ExportTestBase
       archive.add(nestedArchive, new BasicPath());
 
       // Add an archive nested in a directory
-      Archive<?> nestedArchiveTwo = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE_2);
+      Archive<?> nestedArchiveTwo = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE_2+ getArchiveExtension());
 
       // Add some content
       addContent(nestedArchiveTwo);
