@@ -173,7 +173,8 @@ public class TomcatDeploymentIntegrationUnitTestCase
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Doesn't really test anything now; shows end-user view only
+    * Tests that we can execute an HTTP request and it's fulfilled as expected, 
+    * proving our deployment succeeded
     */
    @Test
    public void requestWebapp() throws Exception
