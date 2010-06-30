@@ -133,20 +133,20 @@ public class TomcatDeploymentIntegrationUnitTestCase
       server = new Embedded();
       server.setName("tomcat");
       Engine engine = server.createEngine();
-		engine.setName("tomcat");
-		engine.setDefaultHost(HTTP_BIND_HOST + SEPARATOR);
-		engine.setService(server);
-		server.setContainer(engine);
-		server.addEngine(engine);
+      engine.setName("tomcat");
+      engine.setDefaultHost(HTTP_BIND_HOST + SEPARATOR);
+      engine.setService(server);
+      server.setContainer(engine);
+      server.addEngine(engine);
       Host host = server.createHost(HTTP_BIND_HOST + SEPARATOR, System.getProperty("java.io.tmpdir"));
       host.setParent(engine);
-		engine.addChild(host);
-		Connector connector = server.createConnector(InetAddress.getByName(HTTP_BIND_HOST), HTTP_BIND_PORT, false);
-		server.addConnector(connector);
-		connector.setContainer(engine);
-		//starts tomcat embedded
-		server.init();
-		server.start();
+      engine.addChild(host);
+      Connector connector = server.createConnector(InetAddress.getByName(HTTP_BIND_HOST), HTTP_BIND_PORT, false);
+      server.addConnector(connector);
+      connector.setContainer(engine);
+      //starts tomcat embedded
+      server.init();
+      server.start();
 
       final WebArchive archive = ShrinkWrap.create(WebArchive.class, NAME_WAR);
       archive.setWebXML(PATH_ACTUAL_WEB_XML).addClasses(servletClass, echoServletClass);
@@ -154,7 +154,7 @@ public class TomcatDeploymentIntegrationUnitTestCase
 
       // Deploy
       final StandardContext context = archive.as(ShrinkWrapStandardContext.class);
-		context.setParent(host);
+      context.setParent(host);
       host.addChild(context);
    }
 
