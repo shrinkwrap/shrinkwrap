@@ -992,6 +992,10 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
                {
                   throw new RuntimeException("Could not load found class " + className, e);
                }
+               catch (NoClassDefFoundError e) 
+               {
+                  throw new RuntimeException("Could not load found class " + className, e);
+               }
                Asset asset = new ClassAsset(clazz);
                ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
                add(asset, location);
