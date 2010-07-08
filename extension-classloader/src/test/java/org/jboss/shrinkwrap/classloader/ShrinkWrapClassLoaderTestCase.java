@@ -45,7 +45,7 @@ public class ShrinkWrapClassLoaderTestCase
    @Test
    public void shouldBeAbleToLoadClassFromArchive() throws Exception
    {
-      ShrinkWrapClassLoader archiveClassLoader = new ShrinkWrapClassLoader(createArchive());
+      ShrinkWrapClassLoader archiveClassLoader = new ShrinkWrapClassLoader((ClassLoader)null, createArchive());
       
       try
       {
@@ -53,6 +53,8 @@ public class ShrinkWrapClassLoaderTestCase
                "org.jboss.shrinkwrap.classloader.LoadedTestClass");
          
          Assert.assertNotNull(loadedTestClass);
+         
+         Assert.assertFalse(LoadedTestClass.class == loadedTestClass.newInstance());
       } 
       finally
       {
@@ -63,7 +65,7 @@ public class ShrinkWrapClassLoaderTestCase
    @Test
    public void shouldBeAbleToLoadResourceFromArchive() throws Exception
    {
-      ShrinkWrapClassLoader archiveClassLoader = new ShrinkWrapClassLoader(createArchive());
+      ShrinkWrapClassLoader archiveClassLoader = new ShrinkWrapClassLoader((ClassLoader)null, createArchive());
       
       try
       {

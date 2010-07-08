@@ -47,7 +47,12 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
    private Set<ExecutorService> executorServices = new HashSet<ExecutorService>();
    
    /**
-    * @param archives
+    * Constructs a new ShrinkWrapClassLoader for the specified {@link Archive}s using the
+    * default delegation parent <code>ClassLoader</code>. The {@link Archive}s will
+    * be searched in the order specified for classes and resources after
+    * first searching in the parent class loader.
+    * 
+    * @param archives the {@link Archive}s from which to load classes and resources
     */
    public ShrinkWrapClassLoader(final Archive<?>... archives)
    {
@@ -61,12 +66,16 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
    }
    
    /**
-    * @param parent
-    * @param archives
+    * Constructs a new ShrinkWrapClassLoader for the given {@link Archive}s. The {@link Archive}s will be
+    * searched in the order specified for classes and resources after first
+    * searching in the specified parent class loader. 
+    * 
+    * @param parent the parent class loader for delegation
+    * @param archives the {@link Archive}s from which to load classes and resources
     */
    public ShrinkWrapClassLoader(ClassLoader parent, final Archive<?>... archives)
    {
-      super(new URL[]{});
+      super(new URL[]{}, parent);
       
       if(archives == null) 
       {
