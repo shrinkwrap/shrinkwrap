@@ -82,8 +82,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     */
    public ShrinkWrapClassLoader(final Archive<?>... archives)
    {
-      super(new URL[]
-      {});
+      super(new URL[]{});
 
       if (archives == null)
       {
@@ -102,8 +101,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     */
    public ShrinkWrapClassLoader(final ClassLoader parent, final Archive<?>... archives)
    {
-      super(new URL[]
-      {}, parent);
+      super(new URL[]{}, parent);
 
       if (archives == null)
       {
@@ -174,11 +172,13 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
             log.warning("Could not close VFS handle: " + e);
          }
       }
-
+      vfsHandlesToClose.clear();
+      
       // Shutdown all created Executor Services.
       for (final ExecutorService executorService : executorServicesToShutdown)
       {
          executorService.shutdownNow();
       }
+      executorServicesToShutdown.clear();
    }
 }

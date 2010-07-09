@@ -116,16 +116,27 @@ public class ShrinkWrapClassLoaderTestCase
    public void shouldBeAbleToLoadClassFromArchive() throws ClassNotFoundException
    {
       // Load the test class from the CL
-      final Class<?> loadedTestClass = Class.forName(applicationClassLoaderClass.getName(), false,
+      final Class<?> loadedTestClass = Class.forName(
+            applicationClassLoaderClass.getName(), 
+            false,
             shrinkWrapClassLoader);
+      
       final ClassLoader loadedTestClassClassLoader = loadedTestClass.getClassLoader();
       log.info("Got " + loadedTestClass + " from " + loadedTestClassClassLoader);
 
       // Assertions
-      Assert.assertNotNull("Test class could not be found via the ClassLoader", loadedTestClass);
-      Assert.assertSame("Test class should have been loaded via the archive ClassLoader", shrinkWrapClassLoader,
+      Assert.assertNotNull(
+            "Test class could not be found via the ClassLoader", 
+            loadedTestClass);
+      
+      Assert.assertSame(
+            "Test class should have been loaded via the archive ClassLoader", 
+            shrinkWrapClassLoader,
             loadedTestClassClassLoader);
-      Assert.assertNotSame("Class Loaded from the CL should not be the same as the one on the appCL", loadedTestClass,
+      
+      Assert.assertNotSame(
+            "Class Loaded from the CL should not be the same as the one on the appCL", 
+            loadedTestClass,
             applicationClassLoaderClass);
 
    }
@@ -138,7 +149,9 @@ public class ShrinkWrapClassLoaderTestCase
    {
 
       // Load the class as a resource
-      final URL resource = shrinkWrapClassLoader.getResource(getResourceNameOfClass(applicationClassLoaderClass));
+      final URL resource = shrinkWrapClassLoader.getResource(
+            getResourceNameOfClass(
+                  applicationClassLoaderClass));
 
       // Assertions
       Assert.assertNotNull(resource);
