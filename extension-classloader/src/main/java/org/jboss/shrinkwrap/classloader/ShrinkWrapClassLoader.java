@@ -28,7 +28,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Logger;
 
+import org.jboss.logmanager.Level;
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Configuration;
+import org.jboss.shrinkwrap.spi.Configurable;
 import org.jboss.shrinkwrap.vfs3.ArchiveFileSystem;
 import org.jboss.vfs.TempDir;
 import org.jboss.vfs.TempFileProvider;
@@ -78,11 +81,14 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     * be searched in the order specified for classes and resources after
     * first searching in the parent class loader.
     * 
+    * @param service {@link ScheduledExecutorService} used internally to handle mounting
+    *   of the {@link Archive}s such that they may be read
     * @param archives the {@link Archive}s from which to load classes and resources
     */
-   public ShrinkWrapClassLoader(final Archive<?>... archives)
+   public ShrinkWrapClassLoader(final ScheduledExecutorService service, final Archive<?>... archives)
    {
-      super(new URL[]{});
+      super(new URL[]
+      {});
 
       if (archives == null)
       {
@@ -101,7 +107,8 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     */
    public ShrinkWrapClassLoader(final ClassLoader parent, final Archive<?>... archives)
    {
-      super(new URL[]{}, parent);
+      super(new URL[]
+      {}, parent);
 
       if (archives == null)
       {
@@ -120,23 +127,44 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
 
    private void addArchive(final Archive<?> archive)
    {
-      // TODO: Wrap a ExecutorService in a ScheduledExecutorService 
-      //Configuration configuration = archive.as(Configurable.class).getConfiguration();
-      ScheduledExecutorService executorService = null; //configuration.getExecutorService();
-      if (executorService == null)
+      // Grab or make a ScheduledExecutorService to back the mounting process
+      final Configuration configuration = archive.as(Configurable.class).getConfiguration();
+      final ExecutorService executorServiceFromArchiveConfig = configuration.getExecutorService();
+      ScheduledExecutorService scheduledService;
+      if (executorServiceFromArchiveConfig != null)
       {
-         executorService = Executors.newScheduledThreadPool(2);
-
-         // TODO: only add to 'managed' executor services if it was created here..
-
-         // add to list of resources to cleanup during close()
-         executorServicesToShutdown.add(executorService);
+         if (executorServiceFromArchiveConfig instanceof ScheduledExecutorService)
+         {
+            scheduledService = (ScheduledExecutorService) executorServiceFromArchiveConfig;
+            if (log.isLoggable(Level.TRACE))
+            {
+               log.log(Level.TRACE, "Using " + scheduledService + " from archive configuration for mounting "
+                     + archive.toString());
+            }
+         }
+         else
+         {
+            scheduledService = new ImmediateScheduledExecutorService(executorServiceFromArchiveConfig);
+            if (log.isLoggable(Level.TRACE))
+            {
+               log.log(Level.TRACE, "Wrapping " + executorServiceFromArchiveConfig + " from archive as "
+                     + scheduledService + " configuration for mounting " + archive.toString());
+            }
+         }
+      }
+      else
+      {
+         scheduledService = Executors.newScheduledThreadPool(2);
+         this.executorServicesToShutdown.add(scheduledService);
+         if (log.isLoggable(Level.TRACE))
+         {
+            log.log(Level.TRACE, "Created " + scheduledService + " for mounting " + archive.toString());
+         }
       }
 
       try
       {
-         final TempFileProvider tempFileProvider = TempFileProvider.create("shrinkwrap-classloader", executorService);
-
+         final TempFileProvider tempFileProvider = TempFileProvider.create("shrinkwrap-classloader", scheduledService);
          final TempDir tempDir = tempFileProvider.createTempDir(archive.getName());
          final VirtualFile virtualFile = VFS.getChild(UUID.randomUUID().toString()).getChild(archive.getName());
 
@@ -173,7 +201,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
          }
       }
       vfsHandlesToClose.clear();
-      
+
       // Shutdown all created Executor Services.
       for (final ExecutorService executorService : executorServicesToShutdown)
       {
