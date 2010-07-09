@@ -160,7 +160,7 @@ public class ArchiveFileSystemUnitTestCase
     * Ensure that {@link VirtualFile#openStream()} throws IOException on non existing files and not return a null 
     * {@link InputStream}.
     * 
-    * SHRINKWRAP-
+    * SHRINKWRAP-204
     * 
     * @throws Exception
     * @throws IOException Should throw IOException when trying to open a file that does not exist.
