@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.vfs3;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -155,6 +156,26 @@ public class ArchiveFileSystemUnitTestCase
       Assert.assertFalse("File that doesn't exist should not report as a directory", doesNotExistFile.isDirectory());
    }
 
+   /**
+    * Ensure that {@link VirtualFile#openStream()} throws IOException on non existing files and not return a null 
+    * {@link InputStream}.
+    * 
+    * SHRINKWRAP-
+    * 
+    * @throws Exception
+    * @throws IOException Should throw IOException when trying to open a file that does not exist.
+    */
+   @Test(expected = IOException.class)
+   public void openingNonExistingFilesShouldResultInException() throws Exception
+   {
+
+      final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE);
+      final VirtualFile virtualFile = this.createAndMountArchive(archive);
+
+      final VirtualFile doesNotExistFile = virtualFile.getChild("doesnotexist");
+      doesNotExistFile.openStream(); // IOException, file does not exist
+   }
+   
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||

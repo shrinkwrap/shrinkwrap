@@ -238,19 +238,22 @@ public class ArchiveFileSystem implements FileSystem
    /** {@inheritDoc} */
    public InputStream openInputStream(VirtualFile mountPoint, VirtualFile target) throws IOException
    {
-      InputStream stream = null;
       final Node node = getNode(mountPoint, target);
-      if (node != null)
+      if(node == null || node.getAsset() == null)
       {
-         final File cachedFile = getCachedFile(node);
-         if (cachedFile.exists())
-         {
-            stream = new FileInputStream(cachedFile);
-         }
-         else if (node.getAsset() != null)
-         {
-            stream = node.getAsset().openStream();
-         }
+         throw new IOException("Target not found: " + target.getPathName());
+      }
+
+      InputStream stream = null;
+
+      final File cachedFile = getCachedFile(node);
+      if (cachedFile.exists())
+      {
+         stream = new FileInputStream(cachedFile);
+      }
+      else if (node.getAsset() != null)
+      {
+         stream = node.getAsset().openStream();
       }
       return stream;
    }
