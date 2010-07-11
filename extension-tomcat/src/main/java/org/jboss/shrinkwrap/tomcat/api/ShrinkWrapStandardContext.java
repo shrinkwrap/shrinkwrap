@@ -90,6 +90,11 @@ public class ShrinkWrapStandardContext extends StandardContext implements Assign
       }
    }
 
+   /**
+    *  /
+    */
+   private static final char ROOT = '/';
+
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -145,15 +150,12 @@ public class ShrinkWrapStandardContext extends StandardContext implements Assign
       // Add the context
       log.info("Webapp archive location: " + exported.getAbsolutePath());
       this.setDocBase(exported.getAbsolutePath());
-      // path should not begin with a / or else Tomcat fails to deploy the webapp properly
-      this.setPath(baseName);
+      // context path must begin with a /
+      this.setPath(ROOT + baseName);
+      // we want to be as efficient as possible, so default to not unpack, save config or cache
       this.setUnpackWAR(false);
-      // QUESTION are we over-stepping the bounds w/ ContextConfig, StandardManager and work folder?
-      ContextConfig config = new ContextConfig();
-      ((Lifecycle) this).addLifecycleListener(config);
-      this.setManager(new StandardManager());
-      this.setWorkDir(new File(TMP_DIR, WORK_FOLDER).getAbsolutePath());
-
+      this.setSaveConfig(false);
+      this.setCachingAllowed(false);
       // Remember the archive from which we're created
       this.archive = archive;
    }

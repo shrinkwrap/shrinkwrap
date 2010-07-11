@@ -30,6 +30,8 @@ import org.apache.catalina.Engine;
 import org.apache.catalina.Host;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.core.StandardHost;
+import org.apache.catalina.startup.ContextConfig;
 import org.apache.catalina.startup.Embedded;
 
 import org.apache.http.HttpEntity;
@@ -134,17 +136,19 @@ public class TomcatDeploymentIntegrationUnitTestCase
       server.setName("tomcat");
       Engine engine = server.createEngine();
       engine.setName("tomcat");
-      engine.setDefaultHost(HTTP_BIND_HOST + SEPARATOR);
+      engine.setDefaultHost(HTTP_BIND_HOST);
       engine.setService(server);
       server.setContainer(engine);
       server.addEngine(engine);
-      Host host = server.createHost(HTTP_BIND_HOST + SEPARATOR, System.getProperty("java.io.tmpdir"));
-      host.setParent(engine);
+      StandardHost host = (StandardHost) server.createHost(HTTP_BIND_HOST, System.getProperty("java.io.tmpdir"));
+      host.setUnpackWARs(false);
+      host.setWorkDir("target/work");
       engine.addChild(host);
       Connector connector = server.createConnector(InetAddress.getByName(HTTP_BIND_HOST), HTTP_BIND_PORT, false);
       server.addConnector(connector);
       connector.setContainer(engine);
-      //starts tomcat embedded
+      
+      // starts embedded tomcat
       server.init();
       server.start();
 
@@ -154,7 +158,7 @@ public class TomcatDeploymentIntegrationUnitTestCase
 
       // Deploy
       final StandardContext context = archive.as(ShrinkWrapStandardContext.class);
-      context.setParent(host);
+      context.addLifecycleListener(new ContextConfig());
       host.addChild(context);
    }
 
