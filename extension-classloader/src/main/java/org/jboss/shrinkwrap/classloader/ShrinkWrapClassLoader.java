@@ -21,14 +21,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jboss.logmanager.Level;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.spi.Configurable;
@@ -63,7 +64,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     * All open VFS handles to close when {@link ShrinkWrapClassLoader#close()}
     * is invoked
     */
-   private Set<Closeable> vfsHandlesToClose = new HashSet<Closeable>();
+   private Set<Closeable> vfsHandlesToClose = new LinkedHashSet<Closeable>();
 
    /**
     * {@link ExecutorService}s to shutdown when {@link ShrinkWrapClassLoader#close()}
@@ -71,6 +72,11 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     */
    private Set<ExecutorService> executorServicesToShutdown = new HashSet<ExecutorService>();
 
+   /**
+    *  
+    */
+   private ScheduledExecutorService scheduledExecutorService = null;
+   
    //-------------------------------------------------------------------------------------||
    // Constructors -----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -87,8 +93,31 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     */
    public ShrinkWrapClassLoader(final ScheduledExecutorService service, final Archive<?>... archives)
    {
-      super(new URL[]
-      {});
+      super(new URL[]{});
+
+      if (service == null)
+      {
+         throw new IllegalArgumentException("ScheduledExecutorService must be specified");
+      }
+      if (archives == null)
+      {
+         throw new IllegalArgumentException("Archives must be specified");
+      }
+      scheduledExecutorService = service;
+      addArchives(archives);
+   }
+
+   /**
+    * Constructs a new ShrinkWrapClassLoader for the specified {@link Archive}s using the
+    * default delegation parent <code>ClassLoader</code>. The {@link Archive}s will
+    * be searched in the order specified for classes and resources after
+    * first searching in the parent class loader.
+    * 
+    * @param archives the {@link Archive}s from which to load classes and resources
+    */
+   public ShrinkWrapClassLoader(final Archive<?>... archives)
+   {
+      super(new URL[]{});
 
       if (archives == null)
       {
@@ -107,8 +136,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     */
    public ShrinkWrapClassLoader(final ClassLoader parent, final Archive<?>... archives)
    {
-      super(new URL[]
-      {}, parent);
+      super(new URL[]{}, parent);
 
       if (archives == null)
       {
@@ -136,29 +164,33 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
          if (executorServiceFromArchiveConfig instanceof ScheduledExecutorService)
          {
             scheduledService = (ScheduledExecutorService) executorServiceFromArchiveConfig;
-            if (log.isLoggable(Level.TRACE))
+            if (log.isLoggable(Level.FINER))
             {
-               log.log(Level.TRACE, "Using " + scheduledService + " from archive configuration for mounting "
+               log.log(Level.FINER, "Using " + scheduledService + " from archive configuration for mounting "
                      + archive.toString());
             }
          }
          else
          {
             scheduledService = new ImmediateScheduledExecutorService(executorServiceFromArchiveConfig);
-            if (log.isLoggable(Level.TRACE))
+            if (log.isLoggable(Level.FINER))
             {
-               log.log(Level.TRACE, "Wrapping " + executorServiceFromArchiveConfig + " from archive as "
+               log.log(Level.FINER, "Wrapping " + executorServiceFromArchiveConfig + " from archive as "
                      + scheduledService + " configuration for mounting " + archive.toString());
             }
          }
+      }
+      else if(this.scheduledExecutorService != null)
+      {
+         scheduledService = this.scheduledExecutorService;
       }
       else
       {
          scheduledService = Executors.newScheduledThreadPool(2);
          this.executorServicesToShutdown.add(scheduledService);
-         if (log.isLoggable(Level.TRACE))
+         if (log.isLoggable(Level.FINER))
          {
-            log.log(Level.TRACE, "Created " + scheduledService + " for mounting " + archive.toString());
+            log.log(Level.FINER, "Created " + scheduledService + " for mounting " + archive.toString());
          }
       }
 
@@ -172,6 +204,9 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
 
          // add to list of resources to cleanup during close()
          vfsHandlesToClose.add(handle);
+         vfsHandlesToClose.add(tempDir);
+         vfsHandlesToClose.add(tempFileProvider);
+         
 
          addURL(virtualFile.toURL());
 
@@ -188,25 +223,31 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     */
    public void close() throws IOException
    {
-      // Unmount all VFS3 mount points
-      for (final Closeable handle : vfsHandlesToClose)
+      // Close all opened resources
+      synchronized (vfsHandlesToClose)
       {
-         try
+         for (final Closeable handle : vfsHandlesToClose)
          {
-            handle.close();
+            try
+            {
+               handle.close();
+            }
+            catch (final IOException e)
+            {
+               log.warning("Could not close VFS handle: " + e);
+            }
          }
-         catch (final IOException e)
-         {
-            log.warning("Could not close VFS handle: " + e);
-         }
+         vfsHandlesToClose.clear();
       }
-      vfsHandlesToClose.clear();
-
+      
       // Shutdown all created Executor Services.
-      for (final ExecutorService executorService : executorServicesToShutdown)
+      synchronized (executorServicesToShutdown)
       {
-         executorService.shutdownNow();
+         for (final ExecutorService executorService : executorServicesToShutdown)
+         {
+            executorService.shutdownNow();
+         }
+         executorServicesToShutdown.clear();
       }
-      executorServicesToShutdown.clear();
    }
 }
