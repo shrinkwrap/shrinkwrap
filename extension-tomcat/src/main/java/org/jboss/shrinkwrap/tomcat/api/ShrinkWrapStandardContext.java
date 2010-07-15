@@ -21,11 +21,8 @@ import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.logging.Logger;
-import org.apache.catalina.Lifecycle;
-import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.session.StandardManager;
-import org.apache.catalina.startup.ContextConfig;
 
+import org.apache.catalina.core.StandardContext;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -46,6 +43,8 @@ public class ShrinkWrapStandardContext extends StandardContext implements Assign
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
+
+   private static final long serialVersionUID = 1L;
 
    /**
     * Logger
