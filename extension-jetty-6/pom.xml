@@ -17,7 +17,7 @@
 
   <properties>
   
-    <!-- Known to work with Jetty version 6.1.0 and up -->
+    <!-- Known to work with Jetty version 6.0.0 and greater (note that the name of the JSP 2.1 has changed several times) -->
     <version.org.mortbay.jetty_jetty>6.1.24</version.org.mortbay.jetty_jetty>
     <version.org.apache.httpcomponents_httpclient>4.0.1</version.org.apache.httpcomponents_httpclient>
 
@@ -61,7 +61,16 @@
       <version>${version.org.mortbay.jetty_jetty}</version>
       <scope>provided</scope>
     </dependency> 
-    <!-- use artifactId jsp-2.1 for Jetty < 6.1.15 -->
+    <!-- use artifact org.mortbay.jetty:jsp:2.1-6.0.0 for Jetty 6.0.0 -->
+    <!--
+    <dependency>
+      <groupId>org.mortbay.jetty</groupId>
+      <artifactId>jsp</artifactId>
+      <version>2.1-6.0.0</version>
+      <scope>provided</scope>
+    </dependency> 
+    -->
+    <!-- use artifactId org.mortbay.jetty:jsp-2.1 for Jetty 6.1.0 -> 6.1.15 -->
     <!--
     <dependency>
       <groupId>org.mortbay.jetty</groupId>
