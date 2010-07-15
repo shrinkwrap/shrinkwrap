@@ -3,7 +3,7 @@
   version="2.5">
   <servlet>
     <servlet-name>JspForwardingServlet</servlet-name>
-    <servlet-class>org.jboss.shrinkwrap.jetty.servlet.JspForwardingServlet
+    <servlet-class>org.jboss.shrinkwrap.jetty_6.servlet.JspForwardingServlet
     </servlet-class>
   </servlet>
   <servlet-mapping>

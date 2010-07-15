@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.jetty.servlet;
+package org.jboss.shrinkwrap.jetty_6.servlet;
 
 import java.io.IOException;
 import java.util.logging.Logger;

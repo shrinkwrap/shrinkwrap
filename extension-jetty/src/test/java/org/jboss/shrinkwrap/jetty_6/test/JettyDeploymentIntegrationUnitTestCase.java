@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jboss.shrinkwrap.jetty.test;
+package org.jboss.shrinkwrap.jetty_6.test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -39,8 +39,8 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.jetty.api.ShrinkWrapWebAppContext;
-import org.jboss.shrinkwrap.jetty.servlet.JspForwardingServlet;
+import org.jboss.shrinkwrap.jetty_6.api.ShrinkWrapWebAppContext;
+import org.jboss.shrinkwrap.jetty_6.servlet.JspForwardingServlet;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
