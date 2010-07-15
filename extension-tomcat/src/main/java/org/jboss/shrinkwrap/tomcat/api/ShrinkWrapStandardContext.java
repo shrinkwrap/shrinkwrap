@@ -63,11 +63,6 @@ public class ShrinkWrapStandardContext extends StandardContext implements Assign
    private static final String EXPORT_FILE_PREFIX = "export";
 
    /**
-    * The folder name of the Tomcat work directory
-    */
-   private static final String WORK_FOLDER = "work";
-
-   /**
     * Temporary directory into which we'll extract the {@link WebArchive}s
     */
    private static final File TMP_DIR;
@@ -139,7 +134,7 @@ public class ShrinkWrapStandardContext extends StandardContext implements Assign
       }
       catch (IOException e)
       {
-         throw new RuntimeException("Could not create temporary File in " + TMP_DIR + " to write exported archive", e);
+         throw new RuntimeException("Could not create temporary File in \"" + TMP_DIR + "\" to write exported archive", e);
       }
       // We are overwriting the temporary file placeholder reserved by File#createTemplateFile()
       archive.as(ZipExporter.class).exportZip(exported, true);
@@ -152,7 +147,7 @@ public class ShrinkWrapStandardContext extends StandardContext implements Assign
       this.setDocBase(exported.getAbsolutePath());
       // context path must begin with a /
       this.setPath(ROOT + baseName);
-      // we want to be as efficient as possible, so default to not unpack, save config or cache
+      // we want to be as efficient as possible, so disable unpack, save config or cache by default
       this.setUnpackWAR(false);
       this.setSaveConfig(false);
       this.setCachingAllowed(false);
