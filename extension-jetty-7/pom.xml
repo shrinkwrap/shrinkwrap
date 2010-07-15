@@ -5,16 +5,13 @@
    <parent>
       <groupId>org.jboss.shrinkwrap</groupId>
       <artifactId>shrinkwrap-build</artifactId>
-      <!-- temporary while we link against 1.0.0-alpha-10 -->
-      <version>1.0.0-alpha-10</version>
+      <version>1.0.0-SNAPSHOT</version>
       <relativePath>../build/pom.xml</relativePath>
    </parent>
 
    <modelVersion>4.0.0</modelVersion>
 
    <artifactId>shrinkwrap-extension-jetty-7</artifactId>
-   <!-- temporary while we link against 1.0.0-alpha-10 -->
-   <version>1.0.0-SNAPSHOT</version>
    <name>ShrinkWrap Jetty 7 Integration Extension</name>
    <description>ShrinkWrap integration extension for the Jetty 7 (and up) container</description>
 
@@ -29,15 +26,13 @@
       <dependency>
          <groupId>org.jboss.shrinkwrap</groupId>
          <artifactId>shrinkwrap-api</artifactId>
-         <!-- temporary while we link against 1.0.0-alpha-10 -->
-         <version>1.0.0-alpha-10</version>
+         <version>${project.version}</version>
       </dependency>
 
       <dependency>
          <groupId>org.jboss.shrinkwrap</groupId>
          <artifactId>shrinkwrap-impl-base</artifactId>
-         <!-- temporary while we link against 1.0.0-alpha-10 -->
-         <version>1.0.0-alpha-10</version>
+         <version>${project.version}</version>
          <scope>test</scope>
       </dependency>
 
