@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jboss.shrinkwrap.tomcat.test;
+package org.jboss.shrinkwrap.tomcat_6.test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -45,9 +45,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.tomcat.api.ShrinkWrapStandardContext;
-import org.jboss.shrinkwrap.tomcat.servlet.ForwardingServlet;
-import org.jboss.shrinkwrap.tomcat.servlet.RequestParamEchoServlet;
+import org.jboss.shrinkwrap.tomcat_6.api.ShrinkWrapStandardContext;
+import org.jboss.shrinkwrap.tomcat_6.servlet.ForwardingServlet;
+import org.jboss.shrinkwrap.tomcat_6.servlet.RequestParamEchoServlet;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

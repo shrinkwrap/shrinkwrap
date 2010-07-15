@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.tomcat.api;
+package org.jboss.shrinkwrap.tomcat_6.api;
 
 import java.io.File;
 import java.io.IOException;

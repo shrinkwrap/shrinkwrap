@@ -1,4 +1,4 @@
-package org.jboss.shrinkwrap.tomcat.servlet;
+package org.jboss.shrinkwrap.tomcat_6.servlet;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

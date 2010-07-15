@@ -3,7 +3,7 @@
   version="2.5">
   <servlet>
     <servlet-name>ForwardingServlet</servlet-name>
-    <servlet-class>org.jboss.shrinkwrap.tomcat.servlet.ForwardingServlet</servlet-class>
+    <servlet-class>org.jboss.shrinkwrap.tomcat_6.servlet.ForwardingServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>ForwardingServlet</servlet-name>
@@ -11,7 +11,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>RequestParamEchoServlet</servlet-name>
-    <servlet-class>org.jboss.shrinkwrap.tomcat.servlet.RequestParamEchoServlet</servlet-class>
+    <servlet-class>org.jboss.shrinkwrap.tomcat_6.servlet.RequestParamEchoServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>RequestParamEchoServlet</servlet-name>

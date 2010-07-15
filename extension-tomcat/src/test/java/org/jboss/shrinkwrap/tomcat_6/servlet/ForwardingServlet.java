@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.tomcat.servlet;
+package org.jboss.shrinkwrap.tomcat_6.servlet;
 
 import java.io.IOException;
 import java.util.logging.Logger;
