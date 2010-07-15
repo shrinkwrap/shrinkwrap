@@ -12,8 +12,8 @@
    <modelVersion>4.0.0</modelVersion>
 
    <artifactId>shrinkwrap-extension-tomcat</artifactId>
-   <name>ShrinkWrap Tomcat Integration Extension</name>
-   <description>ShrinkWrap integration extension for the Jetty Project</description>
+   <name>ShrinkWrap Tomcat 6 Integration Extension</name>
+   <description>ShrinkWrap integration extension for the Tomcat 6 container</description>
 
    <properties>
       <!-- Known to work with Tomcat version 6.0.13 and up (that's the minimum version available in central) -->
