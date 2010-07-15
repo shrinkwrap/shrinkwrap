@@ -71,7 +71,7 @@
     <module>spi</module>
     <module>extension-glassfish</module>
     <module>extension-tomcat-6</module>
-    <module>extension-jetty</module>
+    <module>extension-jetty-6</module>
     <module>extension-jetty-7</module>
     <module>extension-openejb</module>
     <module>extension-tar</module>
