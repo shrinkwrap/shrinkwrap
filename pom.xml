@@ -70,7 +70,7 @@
     <module>impl-base</module>
     <module>spi</module>
     <module>extension-glassfish</module>
-    <module>extension-tomcat</module>
+    <module>extension-tomcat-6</module>
     <module>extension-jetty</module>
     <module>extension-jetty-7</module>
     <module>extension-openejb</module>
