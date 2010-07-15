@@ -11,7 +11,7 @@
 
    <modelVersion>4.0.0</modelVersion>
 
-   <artifactId>shrinkwrap-extension-tomcat</artifactId>
+   <artifactId>shrinkwrap-extension-tomcat-6</artifactId>
    <name>ShrinkWrap Tomcat 6 Integration Extension</name>
    <description>ShrinkWrap integration extension for the Tomcat 6 container</description>
 
