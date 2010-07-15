@@ -11,9 +11,9 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>shrinkwrap-extension-jetty</artifactId>
-  <name>ShrinkWrap Jetty Integration Extension</name>
-  <description>ShrinkWrap integration extension for the Jetty Project</description>
+  <artifactId>shrinkwrap-extension-jetty-6</artifactId>
+  <name>ShrinkWrap Jetty 6 Integration Extension</name>
+  <description>ShrinkWrap integration extension for the Jetty 6 container</description>
 
   <properties>
   
