@@ -102,10 +102,10 @@ public class EnterpriseArchiveImpl
    }
    
    /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerBase#getManinfestPath()
+    * @see org.jboss.declarchive.impl.base.ContainerBase#getManifestPath()
     */
    @Override
-   protected ArchivePath getManinfestPath()
+   protected ArchivePath getManifestPath()
    {
       return PATH_MANIFEST;
    }

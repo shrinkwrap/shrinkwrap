@@ -71,10 +71,10 @@ public class GenericArchiveImpl extends ContainerBase<GenericArchive> implements
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getManinfestPath()
+    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getManifestPath()
     */
    @Override
-   protected ArchivePath getManinfestPath()
+   protected ArchivePath getManifestPath()
    {
       throw UNSUPPORTED;
    }

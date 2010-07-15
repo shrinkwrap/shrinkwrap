@@ -428,7 +428,7 @@ public class ShrinkWrapTestCase
       }
 
       @Override
-      protected ArchivePath getManinfestPath()
+      protected ArchivePath getManifestPath()
       {
          return ArchivePaths.root();
       }

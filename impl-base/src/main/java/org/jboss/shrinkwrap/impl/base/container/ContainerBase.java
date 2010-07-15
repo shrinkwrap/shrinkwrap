@@ -401,7 +401,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * 
     * @return Base Path for the ManifestContainer resources
     */
-   protected abstract ArchivePath getManinfestPath();
+   protected abstract ArchivePath getManifestPath();
    
    /* (non-Javadoc)
     * @see org.jboss.declarchive.api.container.ManifestContainer#setManifest(java.lang.String)
@@ -556,7 +556,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resource, "Resource should be specified");
       Validate.notNull(target, "Target should be specified");
       
-      ArchivePath location = new BasicPath(getManinfestPath(), target);
+      ArchivePath location = new BasicPath(getManifestPath(), target);
       return add(resource, location);
    }
    

@@ -89,10 +89,10 @@ public class WebArchiveImpl
    
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getManinfestPath()
+    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getManifestPath()
     */
    @Override
-   protected ArchivePath getManinfestPath()
+   protected ArchivePath getManifestPath()
    {
       return PATH_MANIFEST;
    }
