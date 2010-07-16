@@ -25,10 +25,6 @@
   <!-- Properties -->
   <properties>
   
-    <!-- Versioning -->
-    <version.jboss.logging>2.2.0.CR1</version.jboss.logging>
-    <version.org.jboss.logmanager>1.2.0.CR1</version.org.jboss.logmanager>
-
   </properties>
 
   <!-- Dependencies -->
@@ -40,11 +36,6 @@
     <dependency>
       <groupId>org.jboss.shrinkwrap</groupId>
       <artifactId>shrinkwrap-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.shrinkwrap</groupId>
-      <artifactId>shrinkwrap-extension-vfs3</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -71,34 +62,6 @@
       <scope>test</scope>
     </dependency>
     
-    <!-- org.jboss:jboss-vfs --> 
-    
-    <dependency>
-      <groupId>org.jboss.logging</groupId>
-      <artifactId>jboss-logging-spi</artifactId>
-      <version>${version.jboss.logging}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.logging</groupId>
-      <artifactId>jboss-logging-jdk</artifactId>
-      <version>${version.jboss.logging}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.logmanager</groupId>
-      <artifactId>jboss-logmanager</artifactId>
-      <version>${version.org.jboss.logmanager}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.logging</groupId>
-      <artifactId>jboss-logging-logmanager</artifactId>
-      <version>${version.jboss.logging}</version>
-      <scope>test</scope>
-    </dependency>
-    
-
   </dependencies>
 
   <!-- Build Configuration -->

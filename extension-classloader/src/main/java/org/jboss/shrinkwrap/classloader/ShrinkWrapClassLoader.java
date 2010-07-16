@@ -18,26 +18,18 @@ package org.jboss.shrinkwrap.classloader;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.logging.Level;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Configuration;
-import org.jboss.shrinkwrap.spi.Configurable;
-import org.jboss.shrinkwrap.vfs3.ArchiveFileSystem;
-import org.jboss.vfs.TempDir;
-import org.jboss.vfs.TempFileProvider;
-import org.jboss.vfs.VFS;
-import org.jboss.vfs.VirtualFile;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 
 /**
  * Extension that will create a ClassLoader based on a Array of Archives
@@ -60,52 +52,11 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   /**
-    * All open VFS handles to close when {@link ShrinkWrapClassLoader#close()}
-    * is invoked
-    */
-   private Set<Closeable> vfsHandlesToClose = new LinkedHashSet<Closeable>();
-
-   /**
-    * {@link ExecutorService}s to shutdown when {@link ShrinkWrapClassLoader#close()}
-    * is invoked
-    */
-   private Set<ExecutorService> executorServicesToShutdown = new HashSet<ExecutorService>();
-
-   /**
-    *  
-    */
-   private ScheduledExecutorService scheduledExecutorService = null;
+   private Map<URL, InputStream> openedStreams = new HashMap<URL, InputStream>();
    
    //-------------------------------------------------------------------------------------||
    // Constructors -----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   /**
-    * Constructs a new ShrinkWrapClassLoader for the specified {@link Archive}s using the
-    * default delegation parent <code>ClassLoader</code>. The {@link Archive}s will
-    * be searched in the order specified for classes and resources after
-    * first searching in the parent class loader.
-    * 
-    * @param service {@link ScheduledExecutorService} used internally to handle mounting
-    *   of the {@link Archive}s such that they may be read
-    * @param archives the {@link Archive}s from which to load classes and resources
-    */
-   public ShrinkWrapClassLoader(final ScheduledExecutorService service, final Archive<?>... archives)
-   {
-      super(new URL[]{});
-
-      if (service == null)
-      {
-         throw new IllegalArgumentException("ScheduledExecutorService must be specified");
-      }
-      if (archives == null)
-      {
-         throw new IllegalArgumentException("Archives must be specified");
-      }
-      scheduledExecutorService = service;
-      addArchives(archives);
-   }
 
    /**
     * Constructs a new ShrinkWrapClassLoader for the specified {@link Archive}s using the
@@ -155,99 +106,69 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
 
    private void addArchive(final Archive<?> archive)
    {
-      // Grab or make a ScheduledExecutorService to back the mounting process
-      final Configuration configuration = archive.as(Configurable.class).getConfiguration();
-      final ExecutorService executorServiceFromArchiveConfig = configuration.getExecutorService();
-      ScheduledExecutorService scheduledService;
-      if (executorServiceFromArchiveConfig != null)
-      {
-         if (executorServiceFromArchiveConfig instanceof ScheduledExecutorService)
-         {
-            scheduledService = (ScheduledExecutorService) executorServiceFromArchiveConfig;
-            if (log.isLoggable(Level.FINER))
-            {
-               log.log(Level.FINER, "Using " + scheduledService + " from archive configuration for mounting "
-                     + archive.toString());
-            }
-         }
-         else
-         {
-            scheduledService = new ImmediateScheduledExecutorService(executorServiceFromArchiveConfig);
-            if (log.isLoggable(Level.FINER))
-            {
-               log.log(Level.FINER, "Wrapping " + executorServiceFromArchiveConfig + " from archive as "
-                     + scheduledService + " configuration for mounting " + archive.toString());
-            }
-         }
-      }
-      else if(this.scheduledExecutorService != null)
-      {
-         scheduledService = this.scheduledExecutorService;
-      }
-      else
-      {
-         scheduledService = Executors.newScheduledThreadPool(2);
-         this.executorServicesToShutdown.add(scheduledService);
-         if (log.isLoggable(Level.FINER))
-         {
-            log.log(Level.FINER, "Created " + scheduledService + " for mounting " + archive.toString());
-         }
-      }
-
       try
       {
-         final TempFileProvider tempFileProvider = TempFileProvider.create("shrinkwrap-classloader", scheduledService);
-         final TempDir tempDir = tempFileProvider.createTempDir(archive.getName());
-         final VirtualFile virtualFile = VFS.getChild(UUID.randomUUID().toString()).getChild(archive.getName());
-
-         final Closeable handle = VFS.mount(virtualFile, new ArchiveFileSystem(archive, tempDir));
-
-         // add to list of resources to cleanup during close()
-         vfsHandlesToClose.add(handle);
-         vfsHandlesToClose.add(tempDir);
-         vfsHandlesToClose.add(tempFileProvider);
-         
-
-         addURL(virtualFile.toURL());
-
+         addURL(new URL(null, "archive:" + archive.getName() + "/", new URLStreamHandler()
+         {
+            @Override
+            protected URLConnection openConnection(final URL u) throws IOException
+            {
+               return new URLConnection(u)
+               {
+                  @Override
+                  public void connect() throws IOException
+                  {
+                  }
+                  
+                  @Override
+                  public InputStream getInputStream() throws IOException
+                  {
+                     synchronized (openedStreams)
+                     {
+                        InputStream input = openedStreams.get(u);
+                        if(input == null)
+                        {
+                           ArchivePath path = convertToArchivePath(u);
+                           input = archive.get(path).getAsset().openStream();
+                           openedStreams.put(u, input);
+                        }
+                        return input;
+                     }
+                  }
+                  
+                  private ArchivePath convertToArchivePath(URL url)
+                  {
+                     String path = url.getPath();
+                     path = path.replace(archive.getName(), "");
+                     
+                     return ArchivePaths.create(path);
+                  }
+               };
+            }
+         }));
       }
-      catch (final IOException e)
+      catch (Exception e) 
       {
-         throw new RuntimeException("Could not create ClassLoader from archive: " + archive.getName(), e);
+         throw new RuntimeException("Could not create URL for archive: " + archive.getName(), e);
       }
    }
-
-   /**
-    * {@inheritDoc}
-    * @see java.io.Closeable#close()
-    */
+   
    public void close() throws IOException
    {
-      // Close all opened resources
-      synchronized (vfsHandlesToClose)
+      synchronized (openedStreams)
       {
-         for (final Closeable handle : vfsHandlesToClose)
+         for(InputStream stream : openedStreams.values())
          {
             try
             {
-               handle.close();
+               stream.close();
             }
-            catch (final IOException e)
+            catch (Exception e) 
             {
-               log.warning("Could not close VFS handle: " + e);
+               log.warning("Could not close opened inputstream: " + e);
             }
          }
-         vfsHandlesToClose.clear();
-      }
-      
-      // Shutdown all created Executor Services.
-      synchronized (executorServicesToShutdown)
-      {
-         for (final ExecutorService executorService : executorServicesToShutdown)
-         {
-            executorService.shutdownNow();
-         }
-         executorServicesToShutdown.clear();
+         openedStreams.clear();
       }
    }
 }
