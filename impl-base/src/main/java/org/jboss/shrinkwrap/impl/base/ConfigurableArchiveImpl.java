@@ -41,6 +41,7 @@ public class ConfigurableArchiveImpl extends AssignableBase implements Configura
    /**
     * Logger
     */
+   @SuppressWarnings("unused")
    private static final Logger log = Logger.getLogger(ConfigurableArchiveImpl.class.getName());
 
    /**

@@ -395,7 +395,7 @@ public class ShrinkWrapTestCase
       }
 
       @Override
-      public String getExtensionFromExtensionMapping(Class type)
+      public <T extends Assignable> String getExtensionFromExtensionMapping(final Class<T> extensionClass)
       {
          return null;
       }

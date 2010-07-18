@@ -26,14 +26,13 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import junit.framework.Assert;
+
 import org.apache.catalina.Engine;
-import org.apache.catalina.Host;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.ContextConfig;
 import org.apache.catalina.startup.Embedded;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;

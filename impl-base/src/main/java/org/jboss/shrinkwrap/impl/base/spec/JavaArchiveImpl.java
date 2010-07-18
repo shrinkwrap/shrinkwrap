@@ -42,6 +42,7 @@ public class JavaArchiveImpl
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
+   @SuppressWarnings("unused")
    private static final Logger log = Logger.getLogger(JavaArchiveImpl.class.getName());
 
    /**

@@ -50,6 +50,7 @@ public class ZipExporterImpl extends AssignableBase implements ZipExporter
    /**
     * Logger
     */
+   @SuppressWarnings("unused")
    private static final Logger log = Logger.getLogger(ZipExporterImpl.class.getName());
 
    /**

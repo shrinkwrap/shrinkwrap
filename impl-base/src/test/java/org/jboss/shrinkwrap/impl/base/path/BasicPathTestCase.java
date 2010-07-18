@@ -40,6 +40,7 @@ public class BasicPathTestCase extends PathsTestBase
    /**
     * Logger
     */
+   @SuppressWarnings("unused")
    private static final Logger log = Logger.getLogger(BasicPathTestCase.class.getName());
 
    //-------------------------------------------------------------------------------------||

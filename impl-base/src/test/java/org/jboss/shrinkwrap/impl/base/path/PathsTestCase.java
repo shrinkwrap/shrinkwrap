@@ -41,6 +41,7 @@ public class PathsTestCase extends PathsTestBase
    /**
     * Logger
     */
+   @SuppressWarnings("unused")
    private static final Logger log = Logger.getLogger(PathsTestCase.class.getName());
 
    //-------------------------------------------------------------------------------------||

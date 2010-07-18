@@ -38,6 +38,7 @@ public class ResourceAdapterArchiveImpl
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
+   @SuppressWarnings("unused")
    private static final Logger log = Logger.getLogger(ResourceAdapterArchiveImpl.class.getName());
 
    /**

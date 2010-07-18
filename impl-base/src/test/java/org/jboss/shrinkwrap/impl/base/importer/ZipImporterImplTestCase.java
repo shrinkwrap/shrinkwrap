@@ -56,6 +56,7 @@ public class ZipImporterImplTestCase
    /**
     * Logger
     */
+   @SuppressWarnings("unused")
    private static final Logger log = Logger.getLogger(ZipImporterImplTestCase.class.getName());
 
    private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";

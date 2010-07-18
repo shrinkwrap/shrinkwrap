@@ -140,7 +140,7 @@ public class ConfigurationBuilderTestCase
          }
 
          @Override
-         public String getExtensionFromExtensionMapping(Class type)
+         public <T extends Assignable> String getExtensionFromExtensionMapping(Class<T> type)
          {
             return null;
          }

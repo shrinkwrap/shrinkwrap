@@ -48,7 +48,8 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
    /**
     * Logger
     */
-   private static final Logger log = Logger.getLogger(ZipImporter.class.getName());
+   @SuppressWarnings("unused")
+   private static final Logger log = Logger.getLogger(ZipImporterImpl.class.getName());
    
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||

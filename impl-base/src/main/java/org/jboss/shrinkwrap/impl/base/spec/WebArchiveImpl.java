@@ -38,7 +38,8 @@ public class WebArchiveImpl
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   private static final Logger log = Logger.getLogger(JavaArchiveImpl.class.getName());
+   @SuppressWarnings("unused")
+   private static final Logger log = Logger.getLogger(WebArchiveImpl.class.getName());
 
    /**
     * Path to the web inside of the Archive.

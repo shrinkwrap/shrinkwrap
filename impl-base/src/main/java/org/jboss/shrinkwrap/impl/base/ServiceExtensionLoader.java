@@ -217,7 +217,6 @@ public class ServiceExtensionLoader implements ExtensionLoader
       }
    }
 
-   @SuppressWarnings({"unchecked"})
    private <T extends Assignable> ExtensionWrapper loadExtensionWrapper(URL extensionURL, Class<T> extensionClass)
    {
       Properties properties = new Properties();
@@ -232,7 +231,15 @@ public class ServiceExtensionLoader implements ExtensionLoader
       {
          throw new RuntimeException("Property implementingClassName is not present in " + extensionURL);
       }
-      return new ExtensionWrapper(implementingClassName, new HashMap<String, String>((Map) properties), extensionClass);
+      final Map<String, String> map = new HashMap<String, String>(properties.size());
+      final Enumeration<Object> keys = properties.keys();
+      while (keys.hasMoreElements())
+      {
+         final String key = (String) keys.nextElement();
+         final String value = (String) properties.get(key);
+         map.put(key, value);
+      }
+      return new ExtensionWrapper(implementingClassName, map, extensionClass);
    }
 
    @SuppressWarnings("unchecked")

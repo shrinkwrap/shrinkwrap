@@ -33,9 +33,7 @@ import org.jboss.shrinkwrap.api.exporter.ZipExporter;
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
- * @deprecated Until this becomes part of OpenEJB proper
  */
-@Deprecated
 public class ShrinkWrapConfigurationFactory extends ConfigurationFactory
 {
 

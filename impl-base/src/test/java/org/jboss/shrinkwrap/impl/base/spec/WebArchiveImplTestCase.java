@@ -27,7 +27,6 @@ import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.api.container.WebContainer;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicWebContainerTestBase;
 import org.junit.After;
