@@ -16,6 +16,9 @@
  */
 package org.jboss.shrinkwrap.impl.base.importer;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -24,6 +27,7 @@ import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -38,6 +42,37 @@ public class ExplodedImporterTestCase
    private static final String EXISTING_DIRECTORY_RESOURCE = "exploded_import_test";
    
    private static final String EXISTING_FILE_RESOURCE = "exploded_import_test/Test.properties";
+   
+   /**
+    * Name of the empty directory
+    */
+   private static final String EMPTY_DIR_NAME = "empty_dir";
+   
+   /**
+    * Name of a parent directory
+    */
+   private static final String PARENT_DIR_NAME = "parent";
+   
+   /**
+    * Creates the empty directories for this test, as Git cannot store empty dirs in SCM
+    * @throws IOException
+    * @throws URISyntaxException
+    */
+   @BeforeClass
+   public static void makeEmptyDirectories() throws IOException, URISyntaxException
+   {
+      final File root = new File(ExplodedImporterTestCase.class.getProtectionDomain().getCodeSource().getLocation()
+            .toURI());
+      final File exlodedImportTest = new File(root, EXISTING_DIRECTORY_RESOURCE);
+      Assert.assertTrue("Import test folder does not exist: " + exlodedImportTest.getAbsolutePath(), exlodedImportTest.exists());
+      final File empty = new File(exlodedImportTest, EMPTY_DIR_NAME);
+      Assert.assertTrue("Could not create the empty directory", empty.mkdir());
+      final File parent = new File(exlodedImportTest, PARENT_DIR_NAME);
+      final File parentEmpty = new File(parent, EMPTY_DIR_NAME);
+      Assert.assertTrue("Could not create the parent empty directory", parentEmpty.mkdirs());
+      parentEmpty.deleteOnExit();
+      empty.deleteOnExit();
+   }
    
    @Test
    public void shouldBeAbleToImportADriectory() throws Exception {
