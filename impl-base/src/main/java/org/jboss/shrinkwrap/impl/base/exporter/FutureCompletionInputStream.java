@@ -33,7 +33,7 @@ import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
  * @param <T> Response type of the {@link Future}
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class FutureCompletionInputStream extends PipedInputStream
+class FutureCompletionInputStream extends PipedInputStream
 {
 
    //-------------------------------------------------------------------------------------||

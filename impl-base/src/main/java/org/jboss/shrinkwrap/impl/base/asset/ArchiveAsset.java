@@ -20,16 +20,15 @@ import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.Asset;
-import org.jboss.shrinkwrap.api.exporter.StreamExporter;
+import org.jboss.shrinkwrap.impl.base.ArchiveInputStreamFactory;
 import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
- * An {@link Asset} representing an {@link Archive}; a
- * specified {@link StreamExporter} type will be used to 
- * fulfill the {@link Asset#openStream()} contract.
+ * ArchiveAsset
+ * 
+ * An {@link Asset} representing an {@link Archive}
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
- * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
 public class ArchiveAsset implements Asset
@@ -44,46 +43,34 @@ public class ArchiveAsset implements Asset
     */
    private final Archive<?> archive;
 
-   /**
-    * Exporter used to represent this archive as a {@link InputStream}
-    */
-   private final Class<? extends StreamExporter> exporter;
-
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Creates a new instance wrapping the specified {@link Archive}, which
-    * will use the specified {@link StreamExporter} to represent the archive as
-    * an {@link InputStream} in {@link Asset#openStream()}.
-    * 
-    * @param archive
-    * @param exporter
-    * @throws IllegalArgumentException If either argument is not specified 
+    * Creates an ArchiveAsset with and archive and a byte array of archive contents
+    * @throws IllegalArgumentException if no archive is provided 
     */
-   public ArchiveAsset(final Archive<?> archive, final Class<? extends StreamExporter> exporter)
+   public ArchiveAsset(Archive<?> archive)
    {
       Validate.notNull(archive, "archive must be specified");
-      Validate.notNull(exporter, "exporter must be specified");
 
       this.archive = archive;
-      this.exporter = exporter;
    }
 
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   /**
+   /*
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.asset.Asset#openStream()
+    * @see org.jboss.shrinkwrap.api.Asset#getStream()
     */
    @Override
    public InputStream openStream()
    {
-      // Export via the specified exporter
-      return this.getArchive().as(this.exporter).export();
+      // Get the input stream from the ArchiveInputStreamFactory
+      return ArchiveInputStreamFactory.getInputStream(getArchive());
    }
 
    /**

@@ -123,7 +123,7 @@ public class ZipSerializableViewImpl extends AssignableBase implements ZipSerial
       out.defaultWriteObject();
 
       // Write as ZIP 
-      final InputStream in = archive.as(ZipExporter.class).export();
+      final InputStream in = archive.as(ZipExporter.class).exportZip();
       try
       {
          IOUtil.copy(in, out); // Don't close the outstream

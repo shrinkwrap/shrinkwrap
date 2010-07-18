@@ -74,7 +74,6 @@
     <module>extension-jetty-6</module>
     <module>extension-jetty-7</module>
     <module>extension-openejb</module>
-    <module>extension-tar</module>
     <module>extension-vfs3</module>
     <module>extension-vdf</module>
     <module>extension-classloader</module>

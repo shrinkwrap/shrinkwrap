@@ -17,6 +17,8 @@
 package org.jboss.shrinkwrap.impl.base.exporter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,6 +28,8 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.impl.base.AssignableBase;
+import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
 /**
@@ -36,7 +40,7 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipExporter
+public class ZipExporterImpl extends AssignableBase implements ZipExporter
 {
 
    //-------------------------------------------------------------------------------------||
@@ -46,8 +50,12 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
    /**
     * Logger
     */
-   @SuppressWarnings("unused")
    private static final Logger log = Logger.getLogger(ZipExporterImpl.class.getName());
+
+   /**
+    * Archive to import into. 
+    */
+   private Archive<?> archive;
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -55,7 +63,21 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
 
    public ZipExporterImpl(final Archive<?> archive)
    {
-      super(archive);
+      Validate.notNull(archive, "Archive must be specified");
+      this.archive = archive;
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Required Implementations -----------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.impl.base.SpecializedBase#getArchive()
+    */
+   @Override
+   protected Archive<?> getArchive()
+   {
+      return archive;
    }
 
    //-------------------------------------------------------------------------------------||
@@ -64,24 +86,28 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#export()
+    * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip()
     */
    @Override
-   public InputStream export()
+   public InputStream exportZip()
    {
       // Create export delegate
-      AbstractExporterDelegate<InputStream> exportDelegate = new JdkZipExporterDelegate(this.getArchive());
+      AbstractExporterDelegate<InputStream> exportDelegate = new JdkZipExporterDelegate(archive);
 
-      // Export and get result
-      return exportDelegate.export();
+      // Execute export
+      exportDelegate.export();
+      // Get results
+      InputStream stream = exportDelegate.getResult();
+
+      // Return 
+      return stream;
    }
 
    /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#export(java.io.OutputStream)
+    * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip(java.io.OutputStream)
     */
    @Override
-   public void export(final OutputStream target) throws ArchiveExportException, IllegalArgumentException
+   public void exportZip(final OutputStream target) throws ArchiveExportException, IllegalArgumentException
    {
       // Precondition checks
       if (target == null)
@@ -90,7 +116,7 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
       }
 
       // Get Stream
-      final InputStream in = this.export();
+      final InputStream in = this.exportZip();
 
       // Write out
       try
@@ -111,11 +137,31 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
    public void exportZip(final File target, final boolean overwrite) throws ArchiveExportException,
          FileExistsException, IllegalArgumentException
    {
-      // Get stream and perform precondition checks
-      final OutputStream out = this.getOutputStreamToFile(target, overwrite);
+      // Precondition checks
+      if (target == null)
+      {
+         throw new IllegalArgumentException("Target file must be specified");
+      }
+      // If target exists and we're not allowed to overwrite it
+      if (target.exists() && !overwrite)
+      {
+         throw new FileExistsException("Target exists and we haven't been flagged to overwrite it: "
+               + target.getAbsolutePath());
+      }
+
+      // Get Stream
+      final OutputStream out;
+      try
+      {
+         out = new FileOutputStream(target);
+      }
+      catch (final FileNotFoundException e)
+      {
+         throw new ArchiveExportException("File could not be created: " + target);
+      }
 
       // Write out
-      this.export(out);
+      this.exportZip(out);
    }
 
    /**
