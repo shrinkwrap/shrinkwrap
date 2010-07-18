@@ -23,8 +23,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -52,8 +52,12 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   private Map<URL, InputStream> openedStreams = new HashMap<URL, InputStream>();
-   
+   /**
+    * Map of all streams opened, such that they may be closed in {@link ShrinkWrapClassLoader#close()}.
+    * Guarded by "this".
+    */
+   private final ConcurrentMap<URL, InputStream> openedStreams = new ConcurrentHashMap<URL, InputStream>();
+
    //-------------------------------------------------------------------------------------||
    // Constructors -----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -68,7 +72,8 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     */
    public ShrinkWrapClassLoader(final Archive<?>... archives)
    {
-      super(new URL[]{});
+      super(new URL[]
+      {});
 
       if (archives == null)
       {
@@ -87,7 +92,8 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     */
    public ShrinkWrapClassLoader(final ClassLoader parent, final Archive<?>... archives)
    {
-      super(new URL[]{}, parent);
+      super(new URL[]
+      {}, parent);
 
       if (archives == null)
       {
@@ -119,14 +125,14 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
                   public void connect() throws IOException
                   {
                   }
-                  
+
                   @Override
                   public InputStream getInputStream() throws IOException
                   {
-                     synchronized (openedStreams)
+                     synchronized (this)
                      {
                         InputStream input = openedStreams.get(u);
-                        if(input == null)
+                        if (input == null)
                         {
                            ArchivePath path = convertToArchivePath(u);
                            input = archive.get(path).getAsset().openStream();
@@ -135,35 +141,35 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
                         return input;
                      }
                   }
-                  
+
                   private ArchivePath convertToArchivePath(URL url)
                   {
                      String path = url.getPath();
                      path = path.replace(archive.getName(), "");
-                     
+
                      return ArchivePaths.create(path);
                   }
                };
             }
          }));
       }
-      catch (Exception e) 
+      catch (Exception e)
       {
          throw new RuntimeException("Could not create URL for archive: " + archive.getName(), e);
       }
    }
-   
+
    public void close() throws IOException
    {
-      synchronized (openedStreams)
+      synchronized (this)
       {
-         for(InputStream stream : openedStreams.values())
+         for (InputStream stream : openedStreams.values())
          {
             try
             {
                stream.close();
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                log.warning("Could not close opened inputstream: " + e);
             }
