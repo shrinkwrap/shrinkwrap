@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.classloader;
+package org.jboss.shrinkwrap.api.classloader;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -23,8 +23,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -32,7 +32,8 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 
 /**
- * Extension that will create a ClassLoader based on a Array of Archives
+ * Extension that will create a ClassLoader based on a Array of Archives.
+ * When done, call {@link ShrinkWrapClassLoader#close()} to free resources.
  *
  * @author <a href="mailto:aslak@redhat.com">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
@@ -56,7 +57,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     * Map of all streams opened, such that they may be closed in {@link ShrinkWrapClassLoader#close()}.
     * Guarded by "this".
     */
-   private final ConcurrentMap<URL, InputStream> openedStreams = new ConcurrentHashMap<URL, InputStream>();
+   private final Map<URL, InputStream> openedStreams = new HashMap<URL, InputStream>();
 
    //-------------------------------------------------------------------------------------||
    // Constructors -----------------------------------------------------------------------||

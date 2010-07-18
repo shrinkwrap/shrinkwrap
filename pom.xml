@@ -76,7 +76,6 @@
     <module>extension-openejb</module>
     <module>extension-vfs3</module>
     <module>extension-vdf</module>
-    <module>extension-classloader</module>
   </modules>
   
   <repositories>
