@@ -18,7 +18,7 @@
   <!-- Artifact Configuration -->
   <groupId>org.jboss.shrinkwrap</groupId>
   <artifactId>shrinkwrap-build</artifactId>
-  <version>1.0.0-alpha-11</version>
+  <version>1.0.0-SNAPSHOT</version>
   <name>ShrinkWrap Build</name>
   <description>ShrinkWrap Build Configuration</description>
   <packaging>pom</packaging>
