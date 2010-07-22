@@ -31,6 +31,8 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -57,6 +59,35 @@ public class ExplodedExporterTestCase extends ExportTestBase
     * Logger
     */
    private static final Logger log = Logger.getLogger(ExplodedExporterTestCase.class.getName());
+   
+   /**
+    * Extension for exploded archives
+    */
+   private static final String EXTENSION = ".jar";
+   
+   //-------------------------------------------------------------------------------------||
+   // Required Implementations -----------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+   
+   /**
+    * {@inheritDoc
+    * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getArchiveExtension()
+    */
+   @Override
+   protected String getArchiveExtension()
+   {
+      return EXTENSION;
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getStreamExporter()
+    */
+   @Override
+   protected Class<? extends StreamExporter> getStreamExporter()
+   {
+      return ZipExporter.class;
+   }
 
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
@@ -120,12 +151,12 @@ public class ExplodedExporterTestCase extends ExportTestBase
       Assert.assertEquals(expectedDirectory, explodedDirectory);
 
       // Validate nested archive entries were written out
-      ArchivePath nestedArchivePath = new BasicPath(NAME_NESTED_ARCHIVE);
+      ArchivePath nestedArchivePath = new BasicPath(NAME_NESTED_ARCHIVE + this.getArchiveExtension());
 
       assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePath, PATH_ONE), ASSET_ONE);
       assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePath, PATH_TWO), ASSET_TWO);
 
-      ArchivePath nestedArchivePathTwo = new BasicPath(NESTED_PATH, NAME_NESTED_ARCHIVE_2);
+      ArchivePath nestedArchivePathTwo = new BasicPath(NESTED_PATH, NAME_NESTED_ARCHIVE_2 + this.getArchiveExtension());
 
       assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePathTwo, PATH_ONE), ASSET_ONE);
       assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePathTwo, PATH_TWO), ASSET_TWO);
@@ -244,7 +275,7 @@ public class ExplodedExporterTestCase extends ExportTestBase
       log.info("testExportExplodedOutpuDirIsAFile");
       final File directory = createTempDirectory("testExportExplodedOutpuDirIsAFile");
       // Will cause the creation of Archive directory to fail
-      final File existingFile = new File(directory, NAME_ARCHIVE);
+      final File existingFile = new File(directory, NAME_ARCHIVE + this.getArchiveExtension());
       final boolean created = existingFile.createNewFile();
       
       IOUtil.copyWithClose(new ByteArrayInputStream("test-test".getBytes()), new FileOutputStream(existingFile));

@@ -32,6 +32,7 @@ import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
@@ -89,8 +90,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     * @param configuration The configuration for this archive
     * @throws IllegalArgumentException If the name was not specified
     */
-   protected ArchiveBase(final String name, final Configuration configuration)
-         throws IllegalArgumentException
+   protected ArchiveBase(final String name, final Configuration configuration) throws IllegalArgumentException
    {
       // Precondition checks
       Validate.notNullOrEmpty(name, "name must be specified");
@@ -173,21 +173,22 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.Archive)
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.ArchivePath, java.lang.Class)
     */
    @Override
-   public T add(final Archive<?> archive, final ArchivePath path)
+   public T add(final Archive<?> archive, final ArchivePath path, Class<? extends StreamExporter> exporter)
    {
       // Precondition checks
       Validate.notNull(path, "No path was specified");
       Validate.notNull(archive, "No archive was specified");
+      Validate.notNull(exporter, "No exporter was specified");
 
       // Make a Path
       final String archiveName = archive.getName();
       final ArchivePath contentPath = new BasicPath(path, archiveName);
 
       // Create ArchiveAsset 
-      ArchiveAsset archiveAsset = new ArchiveAsset(archive);
+      final ArchiveAsset archiveAsset = new ArchiveAsset(archive,exporter);
 
       // Delegate
       return add(archiveAsset, contentPath);

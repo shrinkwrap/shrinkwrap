@@ -66,39 +66,52 @@ public abstract class AbstractExporterDelegate<T>
       super();
       this.archive = archive;
    }
+   
+   /**
+    * Runs the export operation, returning the result
+    * @return
+    */
+   public final T export()
+   {
+      // Perform the actual export
+      this.doExport();
+
+      // Return the result
+      return this.getResult();
+   }
 
    /**
     * Primary method providing a template for exporting the contents of an archive
     */
-   protected void export()
+   protected void doExport()
    {
       // Get archive
-      Archive<?> archive = getArchive();
+      final Archive<?> archive = getArchive();
       if (log.isLoggable(Level.FINE))
       {
          log.fine("Exporting archive - " + archive.getName());
       }
 
-      // Obtain all content
-      final Node rootNode = archive.get(ArchivePaths.create("/"));
-      
-      // recursively process the node childs
-      for (Node child : rootNode.getChildren()) 
+      // Obtain the root
+      final Node rootNode = archive.get(ArchivePaths.root());
+
+      // Recursively process the root children
+      for (Node child : rootNode.getChildren())
       {
          processNode(child);
       }
    }
-   
+
    /**
     * Recursive call to process all the node hierarchy
     * @param node
     */
-   protected void processNode(final Node node) 
+   private void processNode(final Node node)
    {
       processNode(node.getPath(), node);
-      
+
       Set<Node> children = node.getChildren();
-      for (Node child : children) 
+      for (Node child : children)
       {
          processNode(child);
       }

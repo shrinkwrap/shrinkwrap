@@ -26,6 +26,7 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
@@ -56,7 +57,7 @@ public abstract class ExportTestBase
    /**
     * Name of an Archive
     */
-   protected static final String NAME_ARCHIVE = "testArchive.jar";
+   protected static final String NAME_ARCHIVE = "testArchive";
 
    /**
     * Name of a properties file upon the test CP
@@ -76,12 +77,12 @@ public abstract class ExportTestBase
    /**
     * Name of a nested archive
     */
-   protected static final String NAME_NESTED_ARCHIVE = "nestedArchive.jar";
+   protected static final String NAME_NESTED_ARCHIVE = "nestedArchive";
 
    /**
     * Name of another nested archive
     */
-   protected static final String NAME_NESTED_ARCHIVE_2 = "nestedArchive2.jar";
+   protected static final String NAME_NESTED_ARCHIVE_2 = "nestedArchive2";
 
    /** 
     * Asset used for testing
@@ -159,12 +160,24 @@ public abstract class ExportTestBase
    protected Archive<?> createArchiveWithAssets()
    {
       // Create an archive
-      Archive<?> archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE);
+      Archive<?> archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE + getArchiveExtension());
       // Add some content
       addContent(archive);
       // Return archive
       return archive;
    }
+   
+   /**
+    * Obtains the extension for created archives
+    * @return
+    */
+   protected abstract String getArchiveExtension();
+   
+   /**
+    * Returns the exporter type
+    * @return
+    */
+   protected abstract Class<? extends StreamExporter> getStreamExporter();
 
    /**
     * Create an archive instance and add some assets and some nested archives
@@ -175,22 +188,22 @@ public abstract class ExportTestBase
       Archive<?> archive = createArchiveWithAssets();
 
       // Create a nested archive
-      Archive<?> nestedArchive = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE);
+      Archive<?> nestedArchive = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE+ getArchiveExtension());
 
       // Add some content
       addContent(nestedArchive);
 
       // Add nested archive
-      archive.add(nestedArchive, new BasicPath());
+      archive.add(nestedArchive, ArchivePaths.root(), this.getStreamExporter());
 
       // Add an archive nested in a directory
-      Archive<?> nestedArchiveTwo = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE_2);
+      Archive<?> nestedArchiveTwo = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE_2+ getArchiveExtension());
 
       // Add some content
       addContent(nestedArchiveTwo);
 
       // Add the archive under a nested path
-      archive.add(nestedArchiveTwo, NESTED_PATH);
+      archive.add(nestedArchiveTwo, NESTED_PATH, this.getStreamExporter());
       
       // Add empty directories
       archive.addDirectory(PATH_EMPTY_NESTED_DIR);

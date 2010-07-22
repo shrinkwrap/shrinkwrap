@@ -14,27 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.exporter;
+package org.jboss.shrinkwrap.tar.impl.exporter;
 
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.impl.base.ArchiveInputStreamFactory;
+import org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter;
 
 /**
- * ZipArchiveInputStreamFactory
- * 
- * Factory used create an InputStream from an Archive by exporting the archive as a  Zip.
+ * Factory used create an InputStream from an Archive by exporting the archive as TAR.GZ.
  *
- * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ZipArchiveInputStreamFactory extends ArchiveInputStreamFactory
+public class TarGzArchiveInputStreamFactory extends ArchiveInputStreamFactory
 {
    //-------------------------------------------------------------------------------------||
-   // Required Implementations - ArchiveInputStreamFactory  ------------------------------||
+   // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
@@ -42,10 +39,10 @@ public class ZipArchiveInputStreamFactory extends ArchiveInputStreamFactory
     * @see org.jboss.shrinkwrap.impl.base.ArchiveInputStreamFactory#doGetInputStream(Archive)
     */
    @Override
-   protected InputStream doGetInputStream(Archive<?> archive)
+   protected InputStream doGetInputStream(final Archive<?> archive)
    {
       // Get InputStream from the ZipExporter
-      final InputStream inputStream = archive.as(ZipExporter.class).export();
+      final InputStream inputStream = archive.as(TarGzExporter.class).export();
       // Return input stream
       return inputStream;
    }

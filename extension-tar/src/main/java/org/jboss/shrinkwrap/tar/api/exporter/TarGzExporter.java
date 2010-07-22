@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -14,30 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api.exporter;
+package org.jboss.shrinkwrap.tar.api.exporter;
 
 import java.io.File;
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Assignable;
+import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
+import org.jboss.shrinkwrap.api.exporter.FileExistsException;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 
 /**
- * Exporter used to represent an {@link Assignable} in ZIP format. 
+ * Exporter used to represent an {@link Assignable} in TAR format encoded w/
+ * GZIP compression
  * 
- * @see http://www.pkware.com/documents/casestudies/APPNOTE.TXT
- * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
- * @version $Revision: $
+ * @see http://www.gnu.org/software/tar/manual/html_node/Standard.html
+ * @see http://www.gzip.org/
  */
-public interface ZipExporter extends StreamExporter
+public interface TarGzExporter extends StreamExporter
 {
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Exports provided archive as a ZIP archive, written to the 
+    * Exports provided archive as a TAR.GZ archive, written to the 
     * specified {@link File} target.  If the target exists this call will
     * fail with {@link IllegalArgumentException}
     * 
@@ -47,20 +49,20 @@ public interface ZipExporter extends StreamExporter
     * @throws FileExistsException If the target already exists 
     * @throws ArchiveExportException if the export process fails
     */
-   void exportZip(File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException;
+   void exportTarGz(File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException;
 
    /**
-    * Exports provided archive as a ZIP archive, written to the 
+    * Exports provided archive as a TAR.GZ archive, written to the 
     * specified {@link File} target.  If the target both exists and the "overwrite"
     * flag is true, this call will allow the existing file to be overwritten, else
     * the invocation will fail with {@link IllegalArgumentException}
     * 
     * @param archive
-    * @return {@link InputStream} for exported Zip
+    * @return {@link InputStream} for exported TAR.GZ
     * @throws IllegalArgumentException If the target is not specified 
     * @throws FileExistsException If the target both already exists and the overwrite flag is false
     * @throws ArchiveExportException if the export process fails
     */
-   void exportZip(File target, boolean overwrite) throws ArchiveExportException, FileExistsException,
+   void exportTarGz(File target, boolean overwrite) throws ArchiveExportException, FileExistsException,
          IllegalArgumentException;
 }

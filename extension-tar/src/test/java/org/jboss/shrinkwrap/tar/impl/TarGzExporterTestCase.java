@@ -14,37 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.exporter;
+package org.jboss.shrinkwrap.tar.impl;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.zip.GZIPInputStream;
 
+import org.jboss.javatar.TarEntry;
+import org.jboss.javatar.TarInputStream;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
-import org.jboss.shrinkwrap.api.exporter.ZipExporter;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
+import org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter;
 import org.junit.Assert;
-import org.junit.Test;
 
 /**
- * TestCase to ensure that the {@link ZipExporter} correctly exports archives to ZIP format.
+ * TestCase to ensure that the {@link TarGzExporter} correctly exports
+ * archives to TAR.GZ format.
  *
- * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public final class ZipExporterTestCase extends StreamExporterTestBase
+public final class TarGzExporterTestCase extends StreamExporterTestBase
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -53,7 +52,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
    /**
     * Extension for archives
     */
-   private static final String EXTENSION = ".jar";
+   private static final String EXTENSION = ".tar.gz";
 
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
@@ -67,7 +66,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
    protected InputStream exportAsInputStream(final Archive<?> archive)
    {
       assert archive != null : "archive must be specified";
-      return archive.as(ZipExporter.class).export();
+      return archive.as(TarGzExporter.class).export();
    }
 
    /**
@@ -82,7 +81,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
       assert archive != null : "archive must be specified";
 
       // Export
-      archive.as(ZipExporter.class).exportZip(file, overwrite);
+      archive.as(TarGzExporter.class).exportTarGz(file, overwrite);
    }
 
    /**
@@ -94,7 +93,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
    {
       assert archive != null : "archive must be specified";
       assert out != null : "outstream must be specified";
-      archive.as(ZipExporter.class).export(out);
+      archive.as(TarGzExporter.class).export(out);
    }
 
    /**
@@ -107,11 +106,8 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
       // Precondition check
       assert file != null : "file must be specified";
 
-      // Get as ZipFile
-      final ZipFile zip = new ZipFile(file);
-
       // Validate
-      this.ensureZipFileInExpectedForm(zip);
+      this.ensureTarGzFileInExpectedForm(file);
    }
 
    /**
@@ -125,25 +121,8 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
       assert file != null : "file must be specified";
       assert path != null : "path must be specified";
 
-      // Get as Zip File
-      final ZipFile zipFile = new ZipFile(file);
-      final ZipEntry entry = zipFile.getEntry(PathUtil.optionallyRemovePrecedingSlash(path.get()));
-      if (entry == null)
-      {
-         return null;
-      }
-      final byte[] actualContents = IOUtil.asByteArray(zipFile.getInputStream(entry));
-      return new ByteArrayInputStream(actualContents);
-   }
-
-   /**
-    * {@inheritDoc
-    * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getArchiveExtension()
-    */
-   @Override
-   protected String getArchiveExtension()
-   {
-      return EXTENSION;
+      // Get as TAR.GZ
+      return this.getEntryFromTarGz(file, path);
    }
 
    /**
@@ -153,84 +132,113 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
    @Override
    protected Class<? extends StreamExporter> getStreamExporter()
    {
-      return ZipExporter.class;
+      return TarGzExporter.class;
    }
-   
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getArchiveExtension()
+    */
+   @Override
+   protected String getArchiveExtension()
+   {
+      return EXTENSION;
+   }
+
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   /**
-    * Test to ensure that the {@link JdkZipExporterDelegate} does not accept 
-    * an empty archive as input
-    * 
-    * SHRINKWRAP-93
-    * 
-    * @throws Exception
-    */
-   @Test(expected = IllegalArgumentException.class)
-   public void exportEmptyArchiveAsZip() throws Exception
-   {
-      // Attempt to export an empty archive, should fail
-      ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).as(ZipExporter.class).export();
-   }
+   //TODO Necessary?
+   //   /**
+   //    * Test to ensure that the {@link JdkZipExporterDelegate} does not accept 
+   //    * an empty archive as input
+   //    * 
+   //    * SHRINKWRAP-93
+   //    * 
+   //    * @throws Exception
+   //    */
+   //   @Test(expected = IllegalArgumentException.class)
+   //   public void exportEmptyArchiveAsZip() throws Exception
+   //   {
+   //      // Attempt to export an empty archive should fail
+   //      ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).as(TarGzExporter.class).exportTarGz();
+   //   }
 
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Ensures that the specified {@link ZipFile} contains entries
+    * Ensures that the specified TAR.GZ {@link File} contains entries
     * in the expected form
     * @param expectedZip
     * @throws IOException
     */
-   private void ensureZipFileInExpectedForm(final ZipFile expectedZip) throws IOException
+   private void ensureTarGzFileInExpectedForm(final File archive) throws IOException
    {
       // Validate entries were written out
-      assertAssetInZip(expectedZip, PATH_ONE, ASSET_ONE);
-      assertAssetInZip(expectedZip, PATH_TWO, ASSET_TWO);
+      assertAssetInTarGz(archive, PATH_ONE, ASSET_ONE);
+      assertAssetInTarGz(archive, PATH_TWO, ASSET_TWO);
 
       // Validate all paths were written
       // SHRINKWRAP-94
-      getEntryFromZip(expectedZip, NESTED_PATH);
+      getEntryFromTarGz(archive, NESTED_PATH);
 
       // Ensure we don't write the root Path
       // SHRINKWRAP-96
-      ZipEntry rootEntry = expectedZip.getEntry("/");
-      Assert.assertNull("ZIP should not have explicit root path written (SHRINKWRAP-96)", rootEntry);
+      InputStream rootEntry = this.getEntryFromTarGz(archive, ArchivePaths.root());
+      Assert.assertNull("TAR.GZ should not have explicit root path written (SHRINKWRAP-96)", rootEntry);
    }
 
    /**
-    * Assert an asset is actually in the Zip file
+    * Assert an asset is actually in the TAR.GZ file
     * @throws IOException 
     * @throws IllegalArgumentException 
     */
-   private void assertAssetInZip(ZipFile expectedZip, ArchivePath path, Asset asset) throws IllegalArgumentException,
-         IOException
+   private void assertAssetInTarGz(final File archive, final ArchivePath path, final Asset asset)
+         throws IllegalArgumentException, IOException
    {
-      final ZipEntry entry = this.getEntryFromZip(expectedZip, path);
-      final byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
-      final byte[] actualContents = IOUtil.asByteArray(expectedZip.getInputStream(entry));
+      final InputStream in = this.getEntryFromTarGz(archive, path);
+      byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
+      byte[] actualContents = IOUtil.asByteArray(in);
       Assert.assertArrayEquals(expectedContents, actualContents);
    }
 
    /**
-    * Obtains the entry from the specified ZIP file at the specified Path, ensuring
-    * it exists along the way
+    * Obtains an {@link InputStream} to an entry of specified name from the specified TAR.GZ file, 
+    * or null if not found.  We have to iterate through all entries for a matching name, as the 
+    * instream does not support random access.
     * @param expectedZip
     * @param path
     * @return
     * @throws IllegalArgumentException
     * @throws IOException
     */
-   private ZipEntry getEntryFromZip(final ZipFile expectedZip, final ArchivePath path) throws IllegalArgumentException,
+   private InputStream getEntryFromTarGz(final File archive, final ArchivePath path) throws IllegalArgumentException,
          IOException
    {
-      final String entryPath = PathUtil.optionallyRemovePrecedingSlash(path.get());
-      final ZipEntry entry = expectedZip.getEntry(entryPath);
-      Assert.assertNotNull("Expected path not found in ZIP: " + path, entry);
-      return entry;
+      String entryPath = PathUtil.optionallyRemovePrecedingSlash(path.get());
+      final TarInputStream in = new TarInputStream(new GZIPInputStream(new FileInputStream(archive)));
+      TarEntry currentEntry = null;
+      while ((currentEntry = in.getNextEntry()) != null)
+      {
+         final String entryName = currentEntry.getName();
+         if (currentEntry.isDirectory())
+         {
+            entryPath = PathUtil.optionallyAppendSlash(entryPath);
+         }
+         else
+         {
+            entryPath = PathUtil.optionallyRemoveFollowingSlash(entryPath);
+         }
+         if (entryName.equals(entryPath))
+         {
+            return in;
+         }
+      }
+      // Not found
+      return null;
    }
 
 }

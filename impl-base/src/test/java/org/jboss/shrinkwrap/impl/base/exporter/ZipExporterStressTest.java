@@ -44,7 +44,7 @@ import org.junit.Test;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ZipExporterStressTest extends ExportTestBase
+public class ZipExporterStressTest
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -103,7 +103,7 @@ public class ZipExporterStressTest extends ExportTestBase
       // Export; at this point we have less than 50% available memory so 
       // we can't carry the whole archive in RAM twice; this
       // should ensure the ZIP impl uses an internal buffer
-      final InputStream in = archive.as(ZipExporter.class).exportZip();
+      final InputStream in = archive.as(ZipExporter.class).export();
       final CountingOutputStream out = new CountingOutputStream();
 
       // Copy, counting the final size of the exported ZIP
