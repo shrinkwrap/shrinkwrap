@@ -41,6 +41,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.junit.Assert;
@@ -68,28 +69,6 @@ public abstract class StreamExporterTestBase extends ExportTestBase
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   /**
-    * Exports the specified archive as an {@link InputStream}
-    * @param archive
-    * @return
-    */
-   protected abstract InputStream exportAsInputStream(Archive<?> archive);
-
-   /**
-    * Exports the specified archive to an {@link OutputStream}
-    * @param archive
-    * @return
-    */
-   protected abstract void exportToOutputStream(Archive<?> archive, OutputStream out);
-
-   /**
-    * Exports the specified archive as a {@link File}
-    * @param archive
-    * @param file
-    * @param overwrite
-    */
-   protected abstract void exportAsFile(Archive<?> archive, File file, boolean overwrite);
 
    /**
     * Ensures the contents of the specified {@link File} are
@@ -150,8 +129,8 @@ public abstract class StreamExporterTestBase extends ExportTestBase
       final Domain domain = ShrinkWrap.createDomain(new ConfigurationBuilder().executorService(service).build());
 
       // Make an archive using the new configuration
-      final Archive<?> archive = domain.getArchiveFactory().create(JavaArchive.class, "test.jar").addClass(
-            StreamExporterTestBase.class);
+      final Archive<?> archive = domain.getArchiveFactory().create(JavaArchive.class, "test.jar")
+            .addClass(StreamExporterTestBase.class);
 
       // Fully export by reading all content (export is on-demand)
       final InputStream content = this.exportAsInputStream(archive);
@@ -171,8 +150,8 @@ public abstract class StreamExporterTestBase extends ExportTestBase
             service.counter);
 
       // Ensure the ES was not shut down by the export process
-      Assert.assertFalse("Export should not shut down a user-supplied " + ExecutorService.class.getName(), service
-            .isShutdown());
+      Assert.assertFalse("Export should not shut down a user-supplied " + ExecutorService.class.getName(),
+            service.isShutdown());
 
       // Shut down the ES (clean up)
       service.shutdown();
@@ -322,7 +301,7 @@ public abstract class StreamExporterTestBase extends ExportTestBase
       this.ensureAssetInExportedFile(exported, PATH_TWO, ASSET_TWO);
 
       // Validate nested archive entries were written out
-      final ArchivePath nestedArchivePath = ArchivePaths.create(NAME_NESTED_ARCHIVE+this.getArchiveExtension());
+      final ArchivePath nestedArchivePath = ArchivePaths.create(NAME_NESTED_ARCHIVE + this.getArchiveExtension());
 
       // Get inputstream for entry 
       final InputStream nestedArchiveStream = this.getContentsFromExportedFile(exported, nestedArchivePath);
@@ -337,8 +316,8 @@ public abstract class StreamExporterTestBase extends ExportTestBase
       this.ensureAssetInExportedFile(nestedFile, PATH_TWO, ASSET_TWO);
 
       // Validate nested archive entries were written out
-      final ArchivePath nestedArchiveTwoPath = ArchivePaths.create(NESTED_PATH, NAME_NESTED_ARCHIVE_2
-            + this.getArchiveExtension());
+      final ArchivePath nestedArchiveTwoPath = ArchivePaths.create(NESTED_PATH,
+            NAME_NESTED_ARCHIVE_2 + this.getArchiveExtension());
       this.getContentsFromExportedFile(exported, nestedArchiveTwoPath);
       final InputStream nestedArchiveTwoStream = this.getContentsFromExportedFile(exported, nestedArchiveTwoPath);
 
@@ -388,15 +367,49 @@ public abstract class StreamExporterTestBase extends ExportTestBase
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Write a InputStream out to file.
-    * @param outFile
-    * @param inputStream
-    * @throws Exception
+    * Exports the specified archive as an {@link InputStream}
     */
-   protected void writeOutFile(File outFile, InputStream inputStream) throws IOException
+   private InputStream exportAsInputStream(final Archive<?> archive)
    {
-      OutputStream fileOutputStream = new FileOutputStream(outFile);
-      IOUtil.copyWithClose(inputStream, fileOutputStream);
+      assert archive != null : "archive must be specified";
+      final Class<? extends StreamExporter> exporter = this.getExporterClass();
+      assert exporter != null : "Exporter class must be specified";
+      return archive.as(this.getExporterClass()).export();
+   }
+
+   /**
+    * Exports the specified archive as a {@link File}, overwriting an existing 
+    * one is specified
+    * @param archive
+    * @param file
+    * @param overwrite
+    */
+   private void exportAsFile(final Archive<?> archive, final File file, final boolean overwrite)
+   {
+      // Precondition checks
+      assert file != null : "file must be specified";
+      assert archive != null : "archive must be specified";
+
+      // Export
+      final Class<? extends StreamExporter> exporter = this.getExporterClass();
+      assert exporter != null : "Exporter class must be specified";
+      archive.as(exporter).export(file, overwrite);
+   }
+
+   /**
+    * Exports the specified archive to an {@link OutputStream}
+    * @param archive
+    * @return
+    */
+   private void exportToOutputStream(final Archive<?> archive, final OutputStream out)
+   {
+      assert archive != null : "archive must be specified";
+      assert out != null : "outstream must be specified";
+
+      // Export
+      final Class<? extends StreamExporter> exporter = this.getExporterClass();
+      assert exporter != null : "Exporter class must be specified";
+      archive.as(exporter).export(out);
    }
 
    /**

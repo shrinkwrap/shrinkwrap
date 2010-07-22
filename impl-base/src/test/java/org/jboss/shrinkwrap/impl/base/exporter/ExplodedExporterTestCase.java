@@ -81,10 +81,10 @@ public class ExplodedExporterTestCase extends ExportTestBase
    
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getStreamExporter()
+    * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getExporterClass()
     */
    @Override
-   protected Class<? extends StreamExporter> getStreamExporter()
+   protected Class<? extends StreamExporter> getExporterClass()
    {
       return ZipExporter.class;
    }

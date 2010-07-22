@@ -17,16 +17,13 @@
 package org.jboss.shrinkwrap.impl.base.exporter;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
-import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
 /**
  * Implementation of ZipExporter used to export an Archive as a Zip format. 
@@ -76,57 +73,21 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
       return exportDelegate.export();
    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#export(java.io.OutputStream)
-    */
+
+   @Deprecated
    @Override
-   public void export(final OutputStream target) throws ArchiveExportException, IllegalArgumentException
+   public void exportZip(File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException
    {
-      // Precondition checks
-      if (target == null)
-      {
-         throw new IllegalArgumentException("Target must be specified");
-      }
-
-      // Get Stream
-      final InputStream in = this.export();
-
-      // Write out
-      try
-      {
-         IOUtil.copyWithClose(in, target);
-      }
-      catch (final IOException e)
-      {
-         throw new ArchiveExportException("Error encountered in exporting archive to " + target, e);
-      }
+     this.export(target);
+      
    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip(java.io.File, boolean)
-    */
+   @Deprecated
    @Override
-   public void exportZip(final File target, final boolean overwrite) throws ArchiveExportException,
-         FileExistsException, IllegalArgumentException
-   {
-      // Get stream and perform precondition checks
-      final OutputStream out = this.getOutputStreamToFile(target, overwrite);
-
-      // Write out
-      this.export(out);
-   }
-
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.ZipExporter#exportZip(java.io.File)
-    */
-   @Override
-   public void exportZip(final File target) throws ArchiveExportException, FileExistsException,
+   public void exportZip(File target, boolean overwrite) throws ArchiveExportException, FileExistsException,
          IllegalArgumentException
    {
-      this.exportZip(target, false);
+      this.export(target, overwrite);
    }
 
 }

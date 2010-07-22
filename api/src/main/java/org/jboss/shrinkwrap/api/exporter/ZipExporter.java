@@ -17,7 +17,6 @@
 package org.jboss.shrinkwrap.api.exporter;
 
 import java.io.File;
-import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Assignable;
 
@@ -42,11 +41,12 @@ public interface ZipExporter extends StreamExporter
     * fail with {@link IllegalArgumentException}
     * 
     * @param archive
-    * @return {@link InputStream} for exported Zip
     * @throws IllegalArgumentException If the target is not specified
     * @throws FileExistsException If the target already exists 
     * @throws ArchiveExportException if the export process fails
+    * @deprecated Replaced by {@link ZipExporter#export(File)}
     */
+   @Deprecated
    void exportZip(File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException;
 
    /**
@@ -56,11 +56,13 @@ public interface ZipExporter extends StreamExporter
     * the invocation will fail with {@link IllegalArgumentException}
     * 
     * @param archive
-    * @return {@link InputStream} for exported Zip
+    * 
     * @throws IllegalArgumentException If the target is not specified 
     * @throws FileExistsException If the target both already exists and the overwrite flag is false
     * @throws ArchiveExportException if the export process fails
+    * @deprecated Replaced by {@link ZipExporter#export(File, boolean)}
     */
+   @Deprecated
    void exportZip(File target, boolean overwrite) throws ArchiveExportException, FileExistsException,
          IllegalArgumentException;
 }

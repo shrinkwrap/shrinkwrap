@@ -20,11 +20,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
@@ -61,40 +59,12 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#exportAsInputStream(org.jboss.shrinkwrap.api.Archive)
+    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#getExporterClass()
     */
    @Override
-   protected InputStream exportAsInputStream(final Archive<?> archive)
+   protected Class<? extends StreamExporter> getExporterClass()
    {
-      assert archive != null : "archive must be specified";
-      return archive.as(ZipExporter.class).export();
-   }
-
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#exportAsFile(org.jboss.shrinkwrap.api.Archive, java.io.File, boolean)
-    */
-   @Override
-   protected void exportAsFile(final Archive<?> archive, final File file, final boolean overwrite)
-   {
-      // Precondition checks
-      assert file != null : "file must be specified";
-      assert archive != null : "archive must be specified";
-
-      // Export
-      archive.as(ZipExporter.class).exportZip(file, overwrite);
-   }
-
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#exportToOutputStream(org.jboss.shrinkwrap.api.Archive, java.io.OutputStream)
-    */
-   @Override
-   protected void exportToOutputStream(final Archive<?> archive, final OutputStream out)
-   {
-      assert archive != null : "archive must be specified";
-      assert out != null : "outstream must be specified";
-      archive.as(ZipExporter.class).export(out);
+      return ZipExporter.class;
    }
 
    /**
@@ -146,16 +116,6 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
       return EXTENSION;
    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getStreamExporter()
-    */
-   @Override
-   protected Class<? extends StreamExporter> getStreamExporter()
-   {
-      return ZipExporter.class;
-   }
-   
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||

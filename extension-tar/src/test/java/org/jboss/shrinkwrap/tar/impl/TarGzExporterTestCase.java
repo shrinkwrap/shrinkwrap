@@ -20,12 +20,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.zip.GZIPInputStream;
 
 import org.jboss.javatar.TarEntry;
 import org.jboss.javatar.TarInputStream;
-import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.asset.Asset;
@@ -60,77 +58,10 @@ public final class TarGzExporterTestCase extends StreamExporterTestBase
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#exportAsInputStream(org.jboss.shrinkwrap.api.Archive)
-    */
-   @Override
-   protected InputStream exportAsInputStream(final Archive<?> archive)
-   {
-      assert archive != null : "archive must be specified";
-      return archive.as(TarGzExporter.class).export();
-   }
-
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#exportAsFile(org.jboss.shrinkwrap.api.Archive, java.io.File, boolean)
-    */
-   @Override
-   protected void exportAsFile(final Archive<?> archive, final File file, final boolean overwrite)
-   {
-      // Precondition checks
-      assert file != null : "file must be specified";
-      assert archive != null : "archive must be specified";
-
-      // Export
-      archive.as(TarGzExporter.class).exportTarGz(file, overwrite);
-   }
-
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#exportToOutputStream(org.jboss.shrinkwrap.api.Archive, java.io.OutputStream)
-    */
-   @Override
-   protected void exportToOutputStream(final Archive<?> archive, final OutputStream out)
-   {
-      assert archive != null : "archive must be specified";
-      assert out != null : "outstream must be specified";
-      archive.as(TarGzExporter.class).export(out);
-   }
-
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#ensureInExpectedForm(java.io.File)
-    */
-   @Override
-   protected void ensureInExpectedForm(final File file) throws IOException
-   {
-      // Precondition check
-      assert file != null : "file must be specified";
-
-      // Validate
-      this.ensureTarGzFileInExpectedForm(file);
-   }
-
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#getAssetFromExportedFile(java.io.File, org.jboss.shrinkwrap.api.ArchivePath)
-    */
-   @Override
-   protected InputStream getContentsFromExportedFile(final File file, final ArchivePath path) throws IOException
-   {
-      // Precondition checks
-      assert file != null : "file must be specified";
-      assert path != null : "path must be specified";
-
-      // Get as TAR.GZ
-      return this.getEntryFromTarGz(file, path);
-   }
-
-   /**
-    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getStreamExporter()
     */
    @Override
-   protected Class<? extends StreamExporter> getStreamExporter()
+   protected Class<? extends StreamExporter> getExporterClass()
    {
       return TarGzExporter.class;
    }
@@ -145,51 +76,51 @@ public final class TarGzExporterTestCase extends StreamExporterTestBase
       return EXTENSION;
    }
 
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#ensureInExpectedForm(java.io.File)
+    */
+   @Override
+   protected void ensureInExpectedForm(File file) throws IOException
+   {
+      // Validate entries were written out
+      assertAssetInTarGz(file, PATH_ONE, ASSET_ONE);
+      assertAssetInTarGz(file, PATH_TWO, ASSET_TWO);
+
+      // Validate all paths were written
+      // SHRINKWRAP-94
+      getEntryFromTarGz(file, NESTED_PATH);
+
+      // Ensure we don't write the root Path
+      // SHRINKWRAP-96
+      InputStream rootEntry = this.getEntryFromTarGz(file, ArchivePaths.root());
+      Assert.assertNull("TAR.GZ should not have explicit root path written (SHRINKWRAP-96)", rootEntry);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#getContentsFromExportedFile(java.io.File, org.jboss.shrinkwrap.api.ArchivePath)
+    */
+   @Override
+   protected InputStream getContentsFromExportedFile(File file, ArchivePath path) throws IOException
+   {
+      // Precondition checks
+      assert file != null : "file must be specified";
+      assert path != null : "path must be specified";
+
+      // Get as TAR.GZ
+      return this.getEntryFromTarGz(file, path);
+   }
+
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   //TODO Necessary?
-   //   /**
-   //    * Test to ensure that the {@link JdkZipExporterDelegate} does not accept 
-   //    * an empty archive as input
-   //    * 
-   //    * SHRINKWRAP-93
-   //    * 
-   //    * @throws Exception
-   //    */
-   //   @Test(expected = IllegalArgumentException.class)
-   //   public void exportEmptyArchiveAsZip() throws Exception
-   //   {
-   //      // Attempt to export an empty archive should fail
-   //      ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).as(TarGzExporter.class).exportTarGz();
-   //   }
+   // Inherited
 
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   /**
-    * Ensures that the specified TAR.GZ {@link File} contains entries
-    * in the expected form
-    * @param expectedZip
-    * @throws IOException
-    */
-   private void ensureTarGzFileInExpectedForm(final File archive) throws IOException
-   {
-      // Validate entries were written out
-      assertAssetInTarGz(archive, PATH_ONE, ASSET_ONE);
-      assertAssetInTarGz(archive, PATH_TWO, ASSET_TWO);
-
-      // Validate all paths were written
-      // SHRINKWRAP-94
-      getEntryFromTarGz(archive, NESTED_PATH);
-
-      // Ensure we don't write the root Path
-      // SHRINKWRAP-96
-      InputStream rootEntry = this.getEntryFromTarGz(archive, ArchivePaths.root());
-      Assert.assertNull("TAR.GZ should not have explicit root path written (SHRINKWRAP-96)", rootEntry);
-   }
 
    /**
     * Assert an asset is actually in the TAR.GZ file
@@ -240,5 +171,4 @@ public final class TarGzExporterTestCase extends StreamExporterTestBase
       // Not found
       return null;
    }
-
 }

@@ -103,12 +103,12 @@ public abstract class ExportTestBase
    * Another path used for testing
    */
    protected static final ArchivePath PATH_TWO = new BasicPath(NESTED_PATH, "Test2.properties");
-   
+
    /**
     * Path to a nested empty directory
     */
    protected static final ArchivePath PATH_EMPTY_NESTED_DIR = ArchivePaths.create("/empty");
-   
+
    /**
     * Path to an empty directory, a child of the nested
     */
@@ -166,18 +166,18 @@ public abstract class ExportTestBase
       // Return archive
       return archive;
    }
-   
+
    /**
     * Obtains the extension for created archives
     * @return
     */
    protected abstract String getArchiveExtension();
-   
+
    /**
     * Returns the exporter type
     * @return
     */
-   protected abstract Class<? extends StreamExporter> getStreamExporter();
+   protected abstract Class<? extends StreamExporter> getExporterClass();
 
    /**
     * Create an archive instance and add some assets and some nested archives
@@ -188,23 +188,23 @@ public abstract class ExportTestBase
       Archive<?> archive = createArchiveWithAssets();
 
       // Create a nested archive
-      Archive<?> nestedArchive = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE+ getArchiveExtension());
+      Archive<?> nestedArchive = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE + getArchiveExtension());
 
       // Add some content
       addContent(nestedArchive);
 
       // Add nested archive
-      archive.add(nestedArchive, ArchivePaths.root(), this.getStreamExporter());
+      archive.add(nestedArchive, ArchivePaths.root(), this.getExporterClass());
 
       // Add an archive nested in a directory
-      Archive<?> nestedArchiveTwo = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE_2+ getArchiveExtension());
+      Archive<?> nestedArchiveTwo = ShrinkWrap.create(JavaArchive.class, NAME_NESTED_ARCHIVE_2 + getArchiveExtension());
 
       // Add some content
       addContent(nestedArchiveTwo);
 
       // Add the archive under a nested path
-      archive.add(nestedArchiveTwo, NESTED_PATH, this.getStreamExporter());
-      
+      archive.add(nestedArchiveTwo, NESTED_PATH, this.getExporterClass());
+
       // Add empty directories
       archive.addDirectory(PATH_EMPTY_NESTED_DIR);
       archive.addDirectory(PATH_EMPTY_TOPLEVEL_DIR);

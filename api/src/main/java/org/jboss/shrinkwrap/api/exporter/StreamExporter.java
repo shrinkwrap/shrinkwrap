@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.api.exporter;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -53,4 +54,30 @@ public interface StreamExporter extends Assignable
     * @throws IllegalArgumentException If the target is not specified or is closed
     */
    void export(OutputStream target) throws ArchiveExportException, IllegalArgumentException;
+
+   /**
+    * Exports provided archive as in an implementation-specific format, written to the 
+    * specified {@link File} target.  If the target exists this call will
+    * fail with {@link IllegalArgumentException}
+    * 
+    * @param archive
+    * @throws IllegalArgumentException If the target is not specified
+    * @throws FileExistsException If the target already exists 
+    * @throws ArchiveExportException if the export process fails
+    */
+   void export(File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException;
+
+   /**
+    * Exports provided archive an implementation-specific format, written to the 
+    * specified {@link File} target.  If the target both exists and the "overwrite"
+    * flag is true, this call will allow the existing file to be overwritten, else
+    * the invocation will fail with {@link IllegalArgumentException}
+    * 
+    * @param archive
+    * @throws IllegalArgumentException If the target is not specified 
+    * @throws FileExistsException If the target both already exists and the overwrite flag is false
+    * @throws ArchiveExportException if the export process fails
+    */
+   void export(File target, boolean overwrite) throws ArchiveExportException, FileExistsException,
+         IllegalArgumentException;
 }

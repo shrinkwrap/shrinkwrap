@@ -16,12 +16,7 @@
  */
 package org.jboss.shrinkwrap.tar.api.exporter;
 
-import java.io.File;
-import java.io.InputStream;
-
 import org.jboss.shrinkwrap.api.Assignable;
-import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
-import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 
 /**
@@ -38,31 +33,5 @@ public interface TarGzExporter extends StreamExporter
    // Contracts --------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   /**
-    * Exports provided archive as a TAR.GZ archive, written to the 
-    * specified {@link File} target.  If the target exists this call will
-    * fail with {@link IllegalArgumentException}
-    * 
-    * @param archive
-    * @return {@link InputStream} for exported Zip
-    * @throws IllegalArgumentException If the target is not specified
-    * @throws FileExistsException If the target already exists 
-    * @throws ArchiveExportException if the export process fails
-    */
-   void exportTarGz(File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException;
-
-   /**
-    * Exports provided archive as a TAR.GZ archive, written to the 
-    * specified {@link File} target.  If the target both exists and the "overwrite"
-    * flag is true, this call will allow the existing file to be overwritten, else
-    * the invocation will fail with {@link IllegalArgumentException}
-    * 
-    * @param archive
-    * @return {@link InputStream} for exported TAR.GZ
-    * @throws IllegalArgumentException If the target is not specified 
-    * @throws FileExistsException If the target both already exists and the overwrite flag is false
-    * @throws ArchiveExportException if the export process fails
-    */
-   void exportTarGz(File target, boolean overwrite) throws ArchiveExportException, FileExistsException,
-         IllegalArgumentException;
+   // Inherited from superclass
 }
