@@ -17,9 +17,6 @@
 package org.jboss.shrinkwrap.impl.base.importer;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.logging.Logger;
@@ -27,26 +24,21 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import junit.framework.Assert;
-
-import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
-import org.jboss.shrinkwrap.impl.base.io.IOUtil;
-import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Test;
 
 /**
  * TestCase to verify the ZipImporter functionality.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- * @version $Revision: $
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class ZipImporterImplTestCase
+public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImporter>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -59,8 +51,6 @@ public class ZipImporterImplTestCase
    @SuppressWarnings("unused")
    private static final Logger log = Logger.getLogger(ZipImporterImplTestCase.class.getName());
 
-   private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
-
    /**
     * Delegate for performing ZIP content assertions
     */
@@ -70,94 +60,6 @@ public class ZipImporterImplTestCase
    // Tests ------------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   @Test
-   public void shouldBeAbleToimportZipFile() throws Exception
-   {
-      final File testFile = delegate.getExistingZipResource();
-      ZipFile testZip = new ZipFile(testFile);
-
-      Archive<?> archive = ShrinkWrap.create(ZipImporter.class, "test.jar").importZip(testZip).as(JavaArchive.class);
-
-      Assert.assertNotNull("Should not return a null archive", archive);
-
-      delegate.assertContent(archive, testFile);
-   }
-
-   @Test
-   public void shouldBeAbleToImportAddAndExport() throws Exception
-   {
-      final File testFile = delegate.getExistingZipResource();
-      ZipInputStream stream = new ZipInputStream(new FileInputStream(testFile));
-
-      final Archive<?> archive;
-      try
-      {
-         archive = ShrinkWrap.create(ZipImporter.class, "test.jar").importZip(stream).as(JavaArchive.class);
-      }
-      finally
-      {
-         stream.close();
-      }
-
-      Assert.assertNotNull("Should not return a null archive", archive);
-
-      archive.add(new ClassLoaderAsset(EXISTING_RESOURCE), new BasicPath("test.properties"));
-
-      File tempFile = new File("target/test.zip");
-      tempFile.deleteOnExit();
-      final InputStream zipStream = archive.as(ZipExporter.class).exportAsInputStream();
-      IOUtil.copyWithClose(zipStream, new FileOutputStream(tempFile));
-
-      delegate.assertContent(archive, tempFile);
-   }
-
-   @Test
-   public void shouldBeAbleToImportZipInputStream() throws Exception
-   {
-      final File testFile = delegate.getExistingZipResource();
-      ZipInputStream stream = new ZipInputStream(new FileInputStream(testFile));
-
-      final Archive<?> archive;
-      try
-      {
-         archive = ShrinkWrap.create(ZipImporter.class, "test.jar").importZip(stream).as(JavaArchive.class);
-      }
-      finally
-      {
-         stream.close();
-      }
-
-      Assert.assertNotNull("Should not return a null archive", archive);
-
-      delegate.assertContent(archive, testFile);
-   }
-
-   /**
-    * Ensures that an import of {@link InputStream} results in {@link ArchiveImportException}
-    * if an unexpected error occurred.
-    * @throws Exception
-    */
-   @Test(expected = ArchiveImportException.class)
-   public void shouldThrowExceptionOnErrorInImportFromStream() throws Exception
-   {
-      ZipInputStream stream = new ZipInputStream(new InputStream()
-      {
-         @Override
-         public int read() throws IOException
-         {
-            throw new IOException("Mock exception");
-         }
-      });
-      try
-      {
-         ShrinkWrap.create(ZipImporter.class, "test.jar").importZip(stream).as(JavaArchive.class);
-      }
-      finally
-      {
-         stream.close();
-      }
-   }
-
    /**
     * Ensures that an import of {@link ZipFile} results in {@link ArchiveImportException}
     * if an unexpected error occurred.
@@ -166,7 +68,10 @@ public class ZipImporterImplTestCase
    @Test(expected = ArchiveImportException.class)
    public void shouldThrowExceptionOnErrorInImportFromFile() throws Exception
    {
-      final File testFile = delegate.getExistingZipResource();
+      final ContentAssertionDelegateBase delegate = this.getDelegate();
+      assert delegate != null : "Delegate must be specified by implementations";
+      final File testFile = delegate.getExistingResource();
+
       ZipFile testZip = new ZipFile(testFile)
       {
          @Override
@@ -175,6 +80,63 @@ public class ZipImporterImplTestCase
             throw new IllegalStateException("mock  exception");
          }
       };
-      ShrinkWrap.create(ZipImporter.class, "test.jar").importZip(testZip).as(JavaArchive.class);
+      ShrinkWrap.create(ZipImporter.class, "test.jar").importFrom(testZip).as(JavaArchive.class);
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Required Implementations -----------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getDelegate()
+    */
+   @Override
+   protected ContentAssertionDelegateBase getDelegate()
+   {
+      return delegate;
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getImporterClass()
+    */
+   @Override
+   protected Class<ZipImporter> getImporterClass()
+   {
+      return ZipImporter.class;
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExporterClass()
+    */
+   @Override
+   protected Class<? extends StreamExporter> getExporterClass()
+   {
+      return ZipExporter.class;
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#importFromStream(org.jboss.shrinkwrap.api.importer.StreamImporter, java.io.InputStream)
+    */
+   @Override
+   protected ZipImporter importFromStream(final ZipImporter importer, final InputStream in)
+         throws IllegalArgumentException
+   {
+      // Precondition checks
+      if (importer == null)
+      {
+         throw new IllegalArgumentException("importer must be specified");
+      }
+      if (in == null)
+      {
+         throw new IllegalArgumentException("stream must be specified");
+      }
+
+      // Import
+      final ZipInputStream zipIn = new ZipInputStream(in);
+      return importer.importFrom(zipIn);
    }
 }

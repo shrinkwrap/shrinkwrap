@@ -17,7 +17,6 @@
 package org.jboss.shrinkwrap.impl.base.importer;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +37,7 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ZipContentAssertionDelegate
+public class ZipContentAssertionDelegate extends ContentAssertionDelegateBase
 {
 
    //-------------------------------------------------------------------------------------||
@@ -63,14 +62,6 @@ public class ZipContentAssertionDelegate
    //-------------------------------------------------------------------------------------||
    // Functional Methods -----------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   /**
-    * Obtains the test ZIP file
-    */
-   public File getExistingZipResource() throws URISyntaxException
-   {
-      return new File(SecurityActions.getThreadContextClassLoader().getResource(EXISTING_ZIP_RESOURCE).toURI());
-   }
 
    /**
     * Compare the content of the original file and what was imported.
@@ -124,5 +115,19 @@ public class ZipContentAssertionDelegate
       // Ensure empty directories have come in cleanly
       Assert.assertTrue("Empty directory not imported", containsEmptyDir);
       Assert.assertTrue("Empty nested directory not imported", containsEmptyNestedDir);
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Required Implementations -----------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.importer.ContentAssertionDelegateBase#getExistingResourceName()
+    */
+   @Override
+   protected String getExistingResourceName()
+   {
+      return EXISTING_ZIP_RESOURCE;
    }
 }

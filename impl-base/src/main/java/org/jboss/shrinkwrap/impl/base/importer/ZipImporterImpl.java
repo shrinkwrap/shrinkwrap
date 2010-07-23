@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.impl.base.importer;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.logging.Logger;
@@ -147,10 +148,32 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
       }
       return this;
    }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.File)
+    */
+   public ZipImporter importFrom(final File file) throws ArchiveImportException
+   {
+      Validate.notNull(file, "File must be specified");
+
+      final ZipFile zipFile;
+      try
+      {
+         zipFile = new ZipFile(file);
+      }
+      catch (final IOException ioe)
+      {
+         throw new ArchiveImportException("Could not obtain ZIP File from File", ioe);
+      }
+
+      // Delegate
+      return this.importFrom(zipFile);
+   }
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.lang.Object)
+    * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.File)
     */
    @Override
    public ZipImporter importFrom(final ZipFile file) throws ArchiveImportException

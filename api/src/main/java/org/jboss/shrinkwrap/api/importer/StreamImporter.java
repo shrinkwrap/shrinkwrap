@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.api.importer;
 
+import java.io.File;
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -27,11 +28,10 @@ import org.jboss.shrinkwrap.api.Assignable;
  * file type.
  * 
  * @param <S> {@link InputStream} type supported
- * @param <F> File type
  * @param <I> Concrete type used in covariant return
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public interface StreamImporter<S extends InputStream, F, I extends StreamImporter<S, F, I>> extends Assignable
+public interface StreamImporter<S extends InputStream, I extends StreamImporter<S, I>> extends Assignable
 {
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
@@ -55,5 +55,5 @@ public interface StreamImporter<S extends InputStream, F, I extends StreamImport
     * @throws ArchiveImportException If an error occurred during the import process
     * @throws IllegalArgumentException If no file is specified
     */
-   I importFrom(F file) throws ArchiveImportException;
+   I importFrom(File file) throws ArchiveImportException;
 }

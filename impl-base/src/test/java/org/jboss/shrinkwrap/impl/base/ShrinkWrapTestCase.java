@@ -285,7 +285,7 @@ public class ShrinkWrapTestCase
    public void shouldBeAbleToimportZipFileViaShrinkWrap() throws Exception
    {
       // Get the test file
-      final File testFile = delegate.getExistingZipResource();
+      final File testFile = delegate.getExistingResource();
 
       // Make a new archive via the default domain
       final JavaArchive archive = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile);
@@ -304,7 +304,7 @@ public class ShrinkWrapTestCase
    public void shouldBeAbleToimportZipFileViaArchiveFactory() throws Exception
    {
       // Get the test file
-      final File testFile = delegate.getExistingZipResource();
+      final File testFile = delegate.getExistingResource();
 
       // Make a new archive via the default domain
       final JavaArchive archive = ShrinkWrap.getDefaultDomain().getArchiveFactory().createFromZipFile(
