@@ -132,7 +132,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
    public void exportEmptyArchiveAsZip() throws Exception
    {
       // Attempt to export an empty archive, should fail
-      ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).as(ZipExporter.class).export();
+      ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).as(ZipExporter.class).exportAsInputStream();
    }
 
    //-------------------------------------------------------------------------------------||

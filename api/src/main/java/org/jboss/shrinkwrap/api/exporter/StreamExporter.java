@@ -25,7 +25,7 @@ import org.jboss.shrinkwrap.api.Assignable;
 /**
  * Generic exporter capable of representing an {@link Assignable}
  * as an {@link InputStream}, or writing its contents to
- * a provided {@link OutputStream}.
+ * a provided {@link OutputStream} or {@link File}.
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
@@ -38,22 +38,24 @@ public interface StreamExporter extends Assignable
 
    /**
     * Exports this reference in an implementation-specific
-    * format represented by the returned {@link InputStream}
+    * format represented by the returned new {@link InputStream}
+    * instance
     * 
-    * @return {@link InputStream} to read the exported view
+    * @return A new {@link InputStream} to read the exported view
     */
-   InputStream export();
+   InputStream exportAsInputStream();
 
    /**
     * Exports provided archive in an implementation-specific format, 
     * written to the specified {@link OutputStream} target.  The specified
-    * target will be closed upon completion.
+    * target will not be closed or flushed; this is the responsibility of the 
+    * caller (who supplied the {@link OutputStream} in the first place).
     * 
     * @param target
     * @throws ArchiveExportException
     * @throws IllegalArgumentException If the target is not specified or is closed
     */
-   void export(OutputStream target) throws ArchiveExportException, IllegalArgumentException;
+   void exportTo(OutputStream target) throws ArchiveExportException, IllegalArgumentException;
 
    /**
     * Exports provided archive as in an implementation-specific format, written to the 
@@ -65,7 +67,7 @@ public interface StreamExporter extends Assignable
     * @throws FileExistsException If the target already exists 
     * @throws ArchiveExportException if the export process fails
     */
-   void export(File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException;
+   void exportTo(File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException;
 
    /**
     * Exports provided archive an implementation-specific format, written to the 
@@ -78,6 +80,6 @@ public interface StreamExporter extends Assignable
     * @throws FileExistsException If the target both already exists and the overwrite flag is false
     * @throws ArchiveExportException if the export process fails
     */
-   void export(File target, boolean overwrite) throws ArchiveExportException, FileExistsException,
+   void exportTo(File target, boolean overwrite) throws ArchiveExportException, FileExistsException,
          IllegalArgumentException;
 }

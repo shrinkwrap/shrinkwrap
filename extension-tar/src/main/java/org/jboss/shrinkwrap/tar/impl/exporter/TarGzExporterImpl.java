@@ -62,10 +62,10 @@ public class TarGzExporterImpl extends AbstractStreamExporterImpl implements Tar
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#export()
+    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportAsInputStream()
     */
    @Override
-   public InputStream export()
+   public InputStream exportAsInputStream()
    {
       // Create export delegate
       final AbstractExporterDelegate<InputStream> exportDelegate = new TarGzExporterDelegate(this.getArchive());

@@ -103,7 +103,7 @@ public class ZipExporterStressTest
       // Export; at this point we have less than 50% available memory so 
       // we can't carry the whole archive in RAM twice; this
       // should ensure the ZIP impl uses an internal buffer
-      final InputStream in = archive.as(ZipExporter.class).export();
+      final InputStream in = archive.as(ZipExporter.class).exportAsInputStream();
       final CountingOutputStream out = new CountingOutputStream();
 
       // Copy, counting the final size of the exported ZIP

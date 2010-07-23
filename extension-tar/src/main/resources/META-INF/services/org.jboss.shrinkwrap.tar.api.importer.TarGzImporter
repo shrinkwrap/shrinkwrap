@@ -1,0 +1,2 @@
+implementingClassName=org.jboss.shrinkwrap.tar.impl.exporter.TarGzImporterImpl
+extension=.tar.gz

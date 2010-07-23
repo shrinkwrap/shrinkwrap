@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
@@ -38,6 +39,15 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
  */
 public abstract class AbstractStreamExporterImpl extends AssignableBase implements StreamExporter
 {
+   
+   //-------------------------------------------------------------------------------------||
+   // Class Members ----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+   
+   /**
+    * Logger
+    */
+   private static final Logger log = Logger.getLogger(AbstractStreamExporterImpl.class.getSimpleName());
    
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -116,10 +126,10 @@ public abstract class AbstractStreamExporterImpl extends AssignableBase implemen
    
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#export(java.io.OutputStream)
+    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportTo(java.io.OutputStream)
     */
    @Override
-   public void export(final OutputStream target) throws ArchiveExportException, IllegalArgumentException
+   public void exportTo(final OutputStream target) throws ArchiveExportException, IllegalArgumentException
    {
       // Precondition checks
       if (target == null)
@@ -128,42 +138,73 @@ public abstract class AbstractStreamExporterImpl extends AssignableBase implemen
       }
 
       // Get Stream
-      final InputStream in = this.export();
+      final InputStream in = this.exportAsInputStream();
 
-      // Write out
       try
       {
-         IOUtil.copyWithClose(in, target);
+         // Write out
+         try
+         {
+            IOUtil.copy(in, target);
+         }
+         catch (final IOException e)
+         {
+            throw new ArchiveExportException("Error encountered in exporting archive to " + target, e);
+         }
       }
-      catch (final IOException e)
+      finally
       {
-         throw new ArchiveExportException("Error encountered in exporting archive to " + target, e);
+         // Close
+         try
+         {
+            in.close();
+         }
+         catch (final IOException ioe)
+         {
+            // Just log
+            log.warning("Could not close " + in + ": " + ioe);
+         }
       }
    }
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#export(java.io.File, boolean)
+    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportTo(java.io.File, boolean)
     */
    @Override
-   public final void export(final File target, final boolean overwrite) throws ArchiveExportException, FileExistsException,
+   public final void exportTo(final File target, final boolean overwrite) throws ArchiveExportException, FileExistsException,
          IllegalArgumentException
    {
       // Get stream and perform precondition checks
       final OutputStream out = this.getOutputStreamToFile(target, overwrite);
 
-      // Write out
-      this.export(out);
+      try{
+         // Write out
+         this.exportTo(out);
+      }
+      finally
+      {
+         // Close
+         try
+         {
+            out.close();
+         }
+         catch (final IOException ioe)
+         {
+            // Just log
+            log.warning("Could not close " + out + ": " + ioe);
+         }
+      }
    }
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#export(java.io.File)
+    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportTo(java.io.File)
     */
    @Override
-   public final void export(final File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException
+   public final void exportTo(final File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException
    {
-      this.export(target, false);
+      this.exportTo(target, false);
    }
 
 }

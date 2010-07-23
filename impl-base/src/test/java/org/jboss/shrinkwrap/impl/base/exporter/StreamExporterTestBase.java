@@ -374,7 +374,7 @@ public abstract class StreamExporterTestBase extends ExportTestBase
       assert archive != null : "archive must be specified";
       final Class<? extends StreamExporter> exporter = this.getExporterClass();
       assert exporter != null : "Exporter class must be specified";
-      return archive.as(this.getExporterClass()).export();
+      return archive.as(this.getExporterClass()).exportAsInputStream();
    }
 
    /**
@@ -393,7 +393,7 @@ public abstract class StreamExporterTestBase extends ExportTestBase
       // Export
       final Class<? extends StreamExporter> exporter = this.getExporterClass();
       assert exporter != null : "Exporter class must be specified";
-      archive.as(exporter).export(file, overwrite);
+      archive.as(exporter).exportTo(file, overwrite);
    }
 
    /**
@@ -409,7 +409,21 @@ public abstract class StreamExporterTestBase extends ExportTestBase
       // Export
       final Class<? extends StreamExporter> exporter = this.getExporterClass();
       assert exporter != null : "Exporter class must be specified";
-      archive.as(exporter).export(out);
+      try
+      {
+         archive.as(exporter).exportTo(out);
+      }
+      finally
+      {
+         try
+         {
+            out.close();
+         }
+         catch (final IOException ioe)
+         {
+            log.warning("Could not close " + out + ": " + ioe);
+         }
+      }
    }
 
    /**

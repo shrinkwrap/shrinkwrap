@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -14,32 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.importer;
+package org.jboss.shrinkwrap.tar.impl.importer;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
+import org.jboss.javatar.TarEntry;
+import org.jboss.javatar.TarGzInputStream;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
-import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
-import org.jboss.shrinkwrap.impl.base.asset.ZipFileEntryAsset;
-import org.jboss.shrinkwrap.impl.base.path.BasicPath;
+import org.jboss.shrinkwrap.tar.api.importer.TarGzImporter;
 
 /**
- * Used to import existing Zip files/streams into the given {@link Archive}  
+ * Used to import existing TAR.GZ files/streams into the given {@link Archive}  
  *
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- * @version $Revision: $
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class ZipImporterImpl extends AssignableBase implements ZipImporter
+public class TarGzImporterImpl extends AssignableBase implements TarGzImporter
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -49,7 +46,7 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
     * Logger
     */
    @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(ZipImporterImpl.class.getName());
+   private static final Logger log = Logger.getLogger(TarGzImporterImpl.class.getName());
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -64,7 +61,7 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   public ZipImporterImpl(Archive<?> archive)
+   public TarGzImporterImpl(Archive<?> archive)
    {
       Validate.notNull(archive, "Archive must be specified");
       this.archive = archive;
@@ -86,38 +83,15 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.importer.ZipImporter#importZip(java.util.zip.ZipInputStream)
-    */
-   @Override
-   @Deprecated
-   public ZipImporter importZip(final ZipInputStream stream)
-   {
-      // Delegate
-      return this.importFrom(stream);
-   }
-
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.importer.ZipImporter#importZip(java.util.zip.ZipFile)
-    */
-   @Deprecated
-   @Override
-   public ZipImporter importZip(ZipFile file)
-   {
-      // Delegate
-      return this.importFrom(file);
-   }
-
-   /**
-    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.InputStream)
     */
    @Override
-   public ZipImporter importFrom(final ZipInputStream stream) throws ArchiveImportException
+   public TarGzImporter importFrom(final TarGzInputStream stream) throws ArchiveImportException
    {
       Validate.notNull(stream, "Stream must be specified");
       try
       {
-         ZipEntry entry;
+         TarEntry entry;
          while ((entry = stream.getNextEntry()) != null)
          {
             // Get the name
@@ -138,7 +112,6 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
                output.write(content, 0, readBytes);
             }
             archive.add(new ByteArrayAsset(output.toByteArray()), entryName);
-            stream.closeEntry();
          }
       }
       catch (IOException e)
@@ -153,34 +126,29 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.lang.Object)
     */
    @Override
-   public ZipImporter importFrom(final ZipFile file) throws ArchiveImportException
+   public TarGzImporter importFrom(final File file) throws ArchiveImportException
    {
       Validate.notNull(file, "File must be specified");
+      if (!file.exists())
+      {
+         throw new IllegalArgumentException("Specified file for import does not exist: " + file);
+      }
+      if (file.isDirectory())
+      {
+         throw new IllegalArgumentException("Specified file for import is a directory: " + file);
+      }
 
+      final TarGzInputStream archive;
       try
       {
-         Enumeration<? extends ZipEntry> entries = file.entries();
-         while (entries.hasMoreElements())
-         {
-            ZipEntry entry = entries.nextElement();
-
-            // Get the entry (path) name
-            final String entryName = entry.getName();
-
-            // Handle directories separately
-            if (entry.isDirectory())
-            {
-               archive.addDirectory(entryName);
-               continue;
-            }
-
-            archive.add(new ZipFileEntryAsset(file, entry), new BasicPath(entryName));
-         }
+         archive = new TarGzInputStream(new FileInputStream(file));
       }
-      catch (Exception e)
+      catch (IOException e)
       {
-         throw new ArchiveImportException("Could not import file", e);
+         throw new ArchiveImportException("Could not read archive file " + file, e);
       }
-      return this;
+
+      return this.importFrom(archive);
+
    }
 }

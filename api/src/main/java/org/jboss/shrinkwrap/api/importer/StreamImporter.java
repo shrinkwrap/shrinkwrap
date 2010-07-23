@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -16,45 +16,44 @@
  */
 package org.jboss.shrinkwrap.api.importer;
 
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
+import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * {@link Assignable} type capable of importing ZIP content.
- *
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- * @version $Revision: $
+ * Generic importer capable of representing an {@link Assignable}
+ * as an entity capable of reading from an {@link InputStream}, or
+ * file type.
+ * 
+ * @param <S> {@link InputStream} type supported
+ * @param <F> File type
+ * @param <I> Concrete type used in covariant return
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public interface ZipImporter extends StreamImporter<ZipInputStream, ZipFile, ZipImporter>
+public interface StreamImporter<S extends InputStream, F, I extends StreamImporter<S, F, I>> extends Assignable
 {
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
    /**
-   * Imports provided {@link ZipInputStream} as a {@link Archive}.  It remains
-   * the responsibility of the caller to close the {@link ZipInputStream}.
+   * Imports provided stream as a {@link Archive}.  It remains
+   * the responsibility of the caller to close the stream.
    * 
    * @param stream the stream to import
-   * @return Archive of the imported Zip
+   * @return Archive of the imported stream
    * @throws ArchiveImportException If an error occurred during the import process
    * @throws IllegalArgumentException If no stream is specified
-   * @deprecated Use {@link ZipImporter#importFrom(ZipInputStream)}
    */
-   @Deprecated
-   ZipImporter importZip(ZipInputStream stream) throws ArchiveImportException;
+   I importFrom(S stream) throws ArchiveImportException;
 
    /**
-    * Imports provided {@link ZipFile} as a {@link Archive}.
+    * Imports provided File as a {@link Archive}.
     * 
     * @param file the file to import
     * @return Archive of the imported Zip
     * @throws ArchiveImportException If an error occurred during the import process
     * @throws IllegalArgumentException If no file is specified
-    * @deprecated Use {@link ZipImporter#importFrom(ZipFile)}
     */
-   @Deprecated
-   ZipImporter importZip(ZipFile file) throws ArchiveImportException;
+   I importFrom(F file) throws ArchiveImportException;
 }

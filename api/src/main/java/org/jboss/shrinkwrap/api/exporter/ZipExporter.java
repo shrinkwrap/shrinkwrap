@@ -44,7 +44,7 @@ public interface ZipExporter extends StreamExporter
     * @throws IllegalArgumentException If the target is not specified
     * @throws FileExistsException If the target already exists 
     * @throws ArchiveExportException if the export process fails
-    * @deprecated Replaced by {@link ZipExporter#export(File)}
+    * @deprecated Replaced by {@link ZipExporter#exportTo(File)}
     */
    @Deprecated
    void exportZip(File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException;
@@ -60,7 +60,7 @@ public interface ZipExporter extends StreamExporter
     * @throws IllegalArgumentException If the target is not specified 
     * @throws FileExistsException If the target both already exists and the overwrite flag is false
     * @throws ArchiveExportException if the export process fails
-    * @deprecated Replaced by {@link ZipExporter#export(File, boolean)}
+    * @deprecated Replaced by {@link ZipExporter#exportTo(File, boolean)}
     */
    @Deprecated
    void exportZip(File target, boolean overwrite) throws ArchiveExportException, FileExistsException,
