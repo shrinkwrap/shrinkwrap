@@ -160,7 +160,7 @@ public class ZipSerializableViewImpl extends AssignableBase implements ZipSerial
       try
       {
          // Read in
-         archive.importZip(remains);
+         archive.importFrom(remains);
 
          // Set
          this.archive = archive.as(JavaArchive.class);
