@@ -21,13 +21,10 @@ import java.io.OutputStream;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.jboss.javatar.TarEntry;
 import org.jboss.javatar.TarGzOutputStream;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase;
 
 /**
@@ -52,13 +49,9 @@ public class TarGzExporterDelegate extends StreamExporterDelegateBase<TarGzOutpu
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Creates a new exporter delegate for exporting archives as ZIP
-    * 
-    * @throws IllegalArgumentException If the archive has no {@link Asset}s; JDK ZIP
-    * handling cannot support writing out to a {@link ZipOutputStream} with no
-    * {@link ZipEntry}s.
+    * Creates a new exporter delegate for exporting archives as TAR/GZ
     */
-   public TarGzExporterDelegate(final Archive<?> archive) throws IllegalArgumentException
+   public TarGzExporterDelegate(final Archive<?> archive)
    {
       super(archive);
    }

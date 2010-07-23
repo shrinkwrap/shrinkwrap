@@ -42,9 +42,10 @@ import org.junit.Test;
  * implementations may build
  *
  * @param <T> Type of importer under test
+ * @param <I> {@link InputStream} type used in importing
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public abstract class StreamImporterImplTestBase<T extends StreamImporter<?, T>>
+public abstract class StreamImporterImplTestBase<T extends StreamImporter<I, T>, I extends InputStream>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -90,8 +91,16 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<?, T>>
     * @param in
     * @return
     * @throws IllegalArgumentException If either argument was not specified
+    * @throws IOException If an I/O Error occurred
     */
-   protected abstract T importFromStream(T importer, InputStream in) throws IllegalArgumentException;
+   protected abstract T importFromStream(T importer, InputStream in) throws IllegalArgumentException, IOException;
+
+   /**
+    * Obtains an {@link InputStream} used to throw an exception
+    * for testing {@link StreamImporterImplTestBase#shouldThrowExceptionOnErrorInImportFromStream()}
+    * @return
+    */
+   protected abstract I getExceptionThrowingInputStream();
 
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
@@ -203,14 +212,7 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<?, T>>
    @Test(expected = ArchiveImportException.class)
    public void shouldThrowExceptionOnErrorInImportFromStream() throws Exception
    {
-      final InputStream exceptionIn = new InputStream()
-      {
-         @Override
-         public int read() throws IOException
-         {
-            throw new IOException("Mock exception");
-         }
-      };
+      final I exceptionIn = this.getExceptionThrowingInputStream();
 
       // Get the importer
       final Class<T> importerClass = this.getImporterClass();
@@ -218,7 +220,7 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<?, T>>
       final T importer = ShrinkWrap.create(importerClass, "test.jar");
       try
       {
-         this.importFromStream(importer, exceptionIn).as(GenericArchive.class);
+         importer.importFrom(exceptionIn).as(GenericArchive.class);
       }
       finally
       {

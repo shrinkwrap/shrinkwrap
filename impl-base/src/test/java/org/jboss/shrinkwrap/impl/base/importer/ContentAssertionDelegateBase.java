@@ -31,6 +31,20 @@ import org.jboss.shrinkwrap.api.Archive;
 public abstract class ContentAssertionDelegateBase
 {
    //-------------------------------------------------------------------------------------||
+   // Class Members ----------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+   
+   /**
+    * Name of the expected empty directory
+    */
+   protected static final String EXPECTED_EMPTY_DIR = "empty_dir/";
+
+   /**
+    * Name of the expected nested directory
+    */
+   protected static final String EXPECTED_NESTED_EMPTY_DIR = "parent/empty_dir/";
+   
+   //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 

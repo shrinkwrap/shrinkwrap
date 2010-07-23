@@ -95,7 +95,7 @@ public class TarGzImporterImpl extends AssignableBase implements TarGzImporter
          while ((entry = stream.getNextEntry()) != null)
          {
             // Get the name
-            final String entryName = entry.getName();
+            String entryName = entry.getName();
 
             // Handle directories separately
             if (entry.isDirectory())

@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.impl.base.importer;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.logging.Logger;
@@ -38,7 +39,7 @@ import org.junit.Test;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImporter>
+public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImporter, ZipInputStream>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -138,5 +139,22 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
       // Import
       final ZipInputStream zipIn = new ZipInputStream(in);
       return importer.importFrom(zipIn);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExceptionThrowingInputStream()
+    */
+   @Override
+   protected ZipInputStream getExceptionThrowingInputStream()
+   {
+      return new ZipInputStream(new InputStream()
+      {
+         @Override
+         public int read() throws IOException
+         {
+            throw new IOException("Mock exception");
+         }
+      });
    }
 }
