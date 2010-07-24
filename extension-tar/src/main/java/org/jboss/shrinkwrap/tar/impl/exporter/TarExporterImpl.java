@@ -26,11 +26,10 @@ import org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter;
 
 /**
  * Implementation of {@link TarGzExporter} used to export an Archive as a TAR format
- * encoded in GZIP. 
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class TarGzExporterImpl extends AbstractStreamExporterImpl implements TarGzExporter
+public class TarExporterImpl extends AbstractStreamExporterImpl implements TarGzExporter
 {
 
    //-------------------------------------------------------------------------------------||
@@ -41,7 +40,7 @@ public class TarGzExporterImpl extends AbstractStreamExporterImpl implements Tar
     * Logger
     */
    @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(TarGzExporterImpl.class.getName());
+   private static final Logger log = Logger.getLogger(TarExporterImpl.class.getName());
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
@@ -50,7 +49,7 @@ public class TarGzExporterImpl extends AbstractStreamExporterImpl implements Tar
    /**
     * Creates a new exporter for the specified archive
     */
-   public TarGzExporterImpl(final Archive<?> archive)
+   public TarExporterImpl(final Archive<?> archive)
    {
       super(archive);
    }
@@ -67,7 +66,7 @@ public class TarGzExporterImpl extends AbstractStreamExporterImpl implements Tar
    public InputStream exportAsInputStream()
    {
       // Create export delegate
-      final AbstractExporterDelegate<InputStream> exportDelegate = new TarGzExporterDelegate(this.getArchive());
+      final AbstractExporterDelegate<InputStream> exportDelegate = new TarExporterDelegate(this.getArchive());
 
       // Execute export
       return exportDelegate.export();

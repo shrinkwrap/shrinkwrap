@@ -81,7 +81,7 @@ public final class TarGzExporterTestCase extends StreamExporterTestBase
     * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#ensureInExpectedForm(java.io.File)
     */
    @Override
-   protected void ensureInExpectedForm(File file) throws IOException
+   protected void ensureInExpectedForm(final File file) throws IOException
    {
       // Validate entries were written out
       assertAssetInTarGz(file, PATH_ONE, ASSET_ONE);
@@ -102,7 +102,7 @@ public final class TarGzExporterTestCase extends StreamExporterTestBase
     * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#getContentsFromExportedFile(java.io.File, org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
-   protected InputStream getContentsFromExportedFile(File file, ArchivePath path) throws IOException
+   protected InputStream getContentsFromExportedFile(final File file, final ArchivePath path) throws IOException
    {
       // Precondition checks
       assert file != null : "file must be specified";
