@@ -21,13 +21,13 @@ import java.io.OutputStream;
 import java.util.logging.Logger;
 
 import org.jboss.javatar.TarOutputStream;
+import org.jboss.javatar.TarOutputStreamWrapper;
 import org.jboss.shrinkwrap.api.Archive;
 
 /**
  * Implementation of an exporter for the TAR format
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
- * @version $Revision: $
  */
 public class TarExporterDelegate extends TarExporterDelegateBase<TarOutputStream>
 {
@@ -65,6 +65,6 @@ public class TarExporterDelegate extends TarExporterDelegateBase<TarOutputStream
    protected final TarOutputStream createOutputStream(final OutputStream out) throws IOException
    {
       // Create and return
-      return new TarOutputStream(out);
+      return new TarOutputStreamWrapper(out);
    }
 }

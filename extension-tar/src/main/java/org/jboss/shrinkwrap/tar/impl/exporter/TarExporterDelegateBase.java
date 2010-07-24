@@ -120,8 +120,9 @@ public abstract class TarExporterDelegateBase<T extends TarOutputStream> extends
                catch (final IOException ioe)
                {
                   // Ignore, but warn of danger
-                  log.log(Level.WARNING,
-                        "[SHRINKWRAP-120] Possible deadlock scenario: Got exception on closing the TAR.GZ out stream: "
+                  log.log(
+                        Level.WARNING,
+                        "[SHRINKWRAP-120] Possible deadlock scenario: Got exception on closing the out stream: "
                               + ioe.getMessage(), ioe);
                }
             }

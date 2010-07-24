@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
 import org.jboss.shrinkwrap.impl.base.exporter.AbstractStreamExporterImpl;
+import org.jboss.shrinkwrap.tar.api.exporter.TarExporter;
 import org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter;
 
 /**
@@ -29,7 +30,7 @@ import org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter;
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class TarExporterImpl extends AbstractStreamExporterImpl implements TarGzExporter
+public class TarExporterImpl extends AbstractStreamExporterImpl implements TarExporter
 {
 
    //-------------------------------------------------------------------------------------||

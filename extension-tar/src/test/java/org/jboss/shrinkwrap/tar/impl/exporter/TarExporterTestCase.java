@@ -19,20 +19,19 @@ package org.jboss.shrinkwrap.tar.impl.exporter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.zip.GZIPInputStream;
 
 import org.jboss.javatar.TarInputStream;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
-import org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter;
+import org.jboss.shrinkwrap.tar.api.exporter.TarExporter;
 
 /**
- * TestCase to ensure that the {@link TarGzExporter} correctly exports
- * archives to TAR.GZ format.
+ * TestCase to ensure that the {@link TarExporter} correctly exports
+ * archives to TAR format.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public final class TarGzExporterTestCase extends TarExporterTestBase
+public final class TarExporterTestCase extends TarExporterTestBase
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -41,7 +40,7 @@ public final class TarGzExporterTestCase extends TarExporterTestBase
    /**
     * Extension for archives
     */
-   private static final String EXTENSION = ".tar.gz";
+   private static final String EXTENSION = ".tar";
 
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
@@ -54,7 +53,7 @@ public final class TarGzExporterTestCase extends TarExporterTestBase
    @Override
    protected Class<? extends StreamExporter> getExporterClass()
    {
-      return TarGzExporter.class;
+      return TarExporter.class;
    }
 
    /**
@@ -74,7 +73,7 @@ public final class TarGzExporterTestCase extends TarExporterTestBase
    @Override
    protected TarInputStream getTarInputStreamFromFile(final File archive) throws IOException
    {
-      return new TarInputStream(new GZIPInputStream(new FileInputStream(archive)));
+      return new TarInputStream(new FileInputStream(archive));
    }
 
    //-------------------------------------------------------------------------------------||
