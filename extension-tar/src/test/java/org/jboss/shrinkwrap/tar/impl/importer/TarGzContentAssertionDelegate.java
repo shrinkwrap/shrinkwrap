@@ -24,8 +24,6 @@ import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
-import org.jboss.javatar.TarEntry;
-import org.jboss.javatar.TarGzInputStream;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -33,6 +31,8 @@ import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.impl.base.importer.ContentAssertionDelegateBase;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
+import org.jboss.tarbarian.api.TarEntry;
+import org.jboss.tarbarian.api.TarGzInputStream;
 
 /**
  * Delegate class for asserting that TAR.GZ contents may be 

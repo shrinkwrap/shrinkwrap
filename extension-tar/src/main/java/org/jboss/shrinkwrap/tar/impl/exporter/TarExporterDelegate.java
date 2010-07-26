@@ -20,9 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Logger;
 
-import org.jboss.javatar.TarOutputStream;
-import org.jboss.javatar.TarOutputStreamWrapper;
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.tarbarian.api.TarOutputStream;
 
 /**
  * Implementation of an exporter for the TAR format
@@ -65,6 +64,6 @@ public class TarExporterDelegate extends TarExporterDelegateBase<TarOutputStream
    protected final TarOutputStream createOutputStream(final OutputStream out) throws IOException
    {
       // Create and return
-      return new TarOutputStreamWrapper(out);
+      return new TarOutputStream(out);
    }
 }

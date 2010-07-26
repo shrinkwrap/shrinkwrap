@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Logger;
 
-import org.jboss.javatar.TarGzOutputStream;
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.tarbarian.api.TarGzOutputStream;
 
 /**
  * Implementation of an exporter for the TAR format, further encoded as GZIP.  

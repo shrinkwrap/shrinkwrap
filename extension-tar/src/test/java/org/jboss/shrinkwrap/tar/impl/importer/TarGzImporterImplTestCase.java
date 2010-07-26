@@ -23,12 +23,12 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
-import org.jboss.javatar.TarGzInputStream;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.impl.base.importer.ContentAssertionDelegateBase;
 import org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase;
 import org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter;
 import org.jboss.shrinkwrap.tar.api.importer.TarGzImporter;
+import org.jboss.tarbarian.api.TarGzInputStream;
 
 /**
  * TestCase to verify the {@link TarGzImporterImpl} functionality.

@@ -16,9 +16,9 @@
  */
 package org.jboss.shrinkwrap.tar.api.importer;
 
-import org.jboss.javatar.TarGzInputStream;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.importer.StreamImporter;
+import org.jboss.tarbarian.api.TarGzInputStream;
 
 /**
  * {@link Assignable} type capable of importing TAR archive

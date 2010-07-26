@@ -20,14 +20,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.jboss.javatar.TarEntry;
-import org.jboss.javatar.TarInputStream;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
+import org.jboss.tarbarian.api.TarEntry;
+import org.jboss.tarbarian.api.TarInputStream;
 import org.junit.Assert;
 
 /**

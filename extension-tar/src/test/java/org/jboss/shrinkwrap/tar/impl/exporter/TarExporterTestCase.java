@@ -20,9 +20,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.jboss.javatar.TarInputStream;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.tar.api.exporter.TarExporter;
+import org.jboss.tarbarian.api.TarInputStream;
 
 /**
  * TestCase to ensure that the {@link TarExporter} correctly exports

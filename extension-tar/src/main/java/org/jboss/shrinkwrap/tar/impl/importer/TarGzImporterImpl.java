@@ -22,14 +22,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import org.jboss.javatar.TarEntry;
-import org.jboss.javatar.TarGzInputStream;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.tar.api.importer.TarGzImporter;
+import org.jboss.tarbarian.api.TarEntry;
+import org.jboss.tarbarian.api.TarGzInputStream;
 
 /**
  * Used to import existing TAR.GZ files/streams into the given {@link Archive}  

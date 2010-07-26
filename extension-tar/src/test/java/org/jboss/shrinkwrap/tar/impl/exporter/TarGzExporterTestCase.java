@@ -21,9 +21,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
-import org.jboss.javatar.TarInputStream;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter;
+import org.jboss.tarbarian.api.TarInputStream;
 
 /**
  * TestCase to ensure that the {@link TarGzExporter} correctly exports

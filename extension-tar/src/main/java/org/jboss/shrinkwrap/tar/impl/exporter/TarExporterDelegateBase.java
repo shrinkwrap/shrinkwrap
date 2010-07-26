@@ -21,10 +21,10 @@ import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jboss.javatar.TarEntry;
-import org.jboss.javatar.TarOutputStream;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase;
+import org.jboss.tarbarian.api.TarEntry;
+import org.jboss.tarbarian.api.TarOutputStreamImpl;
 
 /**
  * Base implementation for exporter delegates of the TAR format
@@ -32,7 +32,7 @@ import org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public abstract class TarExporterDelegateBase<T extends TarOutputStream> extends StreamExporterDelegateBase<T>
+public abstract class TarExporterDelegateBase<T extends TarOutputStreamImpl> extends StreamExporterDelegateBase<T>
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
