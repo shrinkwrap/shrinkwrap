@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.impl.base;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -254,28 +255,43 @@ public class ServiceExtensionLoader implements ExtensionLoader
       }
    }
 
-   private <T extends Assignable> T createExtension(Class<T> extensionImplClass, Archive<?> archive) 
+   private <T extends Assignable> T createExtension(Class<T> extensionImplClass, Archive<?> archive)
    {
+
+      T extension;
+      Constructor<T> extensionImplConstructor = findConstructor(extensionImplClass);
+
+      @SuppressWarnings("unchecked")
+      Class<T> constructorArg = (Class<T>) extensionImplConstructor.getParameterTypes()[0];
       try
       {
-         Constructor<T> extensionImplConstructor = findConstructor(extensionImplClass);
-         
-         @SuppressWarnings("unchecked")
-         Class<T> constructorArg = (Class<T>)extensionImplConstructor.getParameterTypes()[0];
-         if(constructorArg.isInstance(archive)) 
+
+         if (constructorArg.isInstance(archive))
          {
-            return extensionImplConstructor.newInstance(archive);
-         }
-         else 
+            extension = extensionImplConstructor.newInstance(archive);
+         } else
          {
-            return extensionImplConstructor.newInstance(
-                  load(constructorArg, archive));
+            extension = extensionImplConstructor.newInstance(
+               load(constructorArg, archive));
          }
       }
-      catch(Exception e)
+      catch (InstantiationException e)
       {
-         throw new RuntimeException("Could not create new instance of " + extensionImplClass, e);
+         throw new ExtensionLoadingException("Failed to instantiate class of type " + archive.getClass() +
+            ". The underlying class can not be abstract.", e);
       }
+      catch (IllegalAccessException e)
+      {
+         throw new ExtensionLoadingException("Failed to instantiate class of type " + archive.getClass() +
+            ". The underlying constructor is inaccessible.", e);
+      }
+      catch (InvocationTargetException e)
+      {
+         throw new ExtensionLoadingException("Failed to instantiate class of type " + archive.getClass() +
+            ". The underlying constructor threw an exception.", e);
+      }
+
+      return extension;
    }
 
    @SuppressWarnings("unchecked")
@@ -295,8 +311,7 @@ public class ServiceExtensionLoader implements ExtensionLoader
             return (Constructor<T>)constructor;
          }
       }
-      throw new RuntimeException(
-            "No constructor with a single argument of type " + 
+      throw new ExtensionLoadingException("No constructor with a single argument of type " +
             Archive.class.getName() + " could be found");
    }
    
