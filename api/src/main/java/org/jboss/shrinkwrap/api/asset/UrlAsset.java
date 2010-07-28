@@ -30,7 +30,7 @@ import java.net.URL;
  */
 public class UrlAsset implements Asset
 {
-   private URL url;
+   private final URL url;
 
    /**
     * Create a new resource with a <code>URL</code> source.
@@ -38,7 +38,7 @@ public class UrlAsset implements Asset
     * @param url A valid URL
     * @throws IllegalArgumentException <Code>URL</code> can not be null
     */
-   public UrlAsset(URL url)
+   public UrlAsset(final URL url)
    {
       // Precondition check
       if (url == null)
