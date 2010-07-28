@@ -17,6 +17,9 @@
 package org.jboss.shrinkwrap.api.asset;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URL;
 
 import junit.framework.Assert;
 
@@ -42,8 +45,8 @@ public class UrlAssetTestCase
       InputStream io = asset.openStream();
 
       Assert.assertNotNull(io);
-      Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true", ApiTestUtils
-            .convertToString(io));
+      Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true",
+            ApiTestUtils.convertToString(io));
    }
 
    @Test
@@ -59,5 +62,46 @@ public class UrlAssetTestCase
          Assert.assertEquals("A null url argument should result in a IllegalArgumentException",
                IllegalArgumentException.class, e.getClass());
       }
+   }
+
+   @Test
+   public void shouldCreateDefensiveCopyOfURLOnConstruction() throws Exception
+   {
+      URL mutableURL = SecurityActions.getThreadContextClassLoader().getResource(EXISTING_RESOURCE);
+      Asset asset = new UrlAsset(mutableURL);
+
+      // mutate the URL - can't be sure that some malicious code or user won't do this?
+      mutateURL(mutableURL);
+
+      // now try to get a stream to read the asset
+      InputStream io = null;
+
+      try
+      {
+         io = asset.openStream();
+      }
+      catch (Exception e)
+      {
+         Assert.fail("Mutated URL leaked into the UrlAsset");
+      }
+
+      Assert.assertNotNull(io);
+      Assert.assertEquals("Mutated URL leaked into the UrlAsset", "shrinkwrap=true", ApiTestUtils.convertToString(io));
+   }
+
+   /*
+    * Ugly reflection needed to mutate a URL - not 100% sure how to do this other than using reflection,
+    * but seems possible that other libraries may be doing this same thing so we must protect for it.
+    */
+   private void mutateURL(URL mutableURL) throws Exception
+   {
+      Class<?>[] parameterTypes =
+      {String.class, String.class, Integer.TYPE, String.class, String.class};
+      Method m = URL.class.getDeclaredMethod("set", parameterTypes);
+
+      Object[] arguments =
+      {"file", "", -1, "/UNKNOWN_FILE", null};
+      m.setAccessible(true);
+      m.invoke(mutableURL, arguments);
    }
 }
