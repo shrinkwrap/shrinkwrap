@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.api.asset;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -45,7 +46,15 @@ public class UrlAsset implements Asset
       {
          throw new IllegalArgumentException("URL must be specified");
       }
-      this.url = url;
+      // create a defensible copy
+      try
+      {
+         this.url = new URL(url.toString());
+      }
+      catch (MalformedURLException e)
+      {
+         throw new IllegalArgumentException("URL is malformed " + e.getLocalizedMessage());
+      }
    }
 
    /**
