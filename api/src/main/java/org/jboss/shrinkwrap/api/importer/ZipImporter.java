@@ -28,7 +28,7 @@ import org.jboss.shrinkwrap.api.Assignable;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface ZipImporter extends StreamImporter<ZipInputStream, ZipImporter>
+public interface ZipImporter extends StreamImporter<ZipImporter>
 {
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||

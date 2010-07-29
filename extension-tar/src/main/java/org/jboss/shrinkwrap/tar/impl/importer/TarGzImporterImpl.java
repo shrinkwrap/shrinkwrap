@@ -16,9 +16,8 @@
  */
 package org.jboss.shrinkwrap.tar.impl.importer;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.tar.api.importer.TarGzImporter;
@@ -47,13 +46,13 @@ public class TarGzImporterImpl extends TarImporterBase<TarGzInputStream, TarGzIm
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.tar.impl.importer.TarImporterBase#getInputStreamForFile(java.io.File)
+    * @see org.jboss.shrinkwrap.tar.impl.importer.TarImporterBase#getInputStreamForRawStream(java.io.InputStream)
     */
    @Override
-   TarGzInputStream getInputStreamForFile(final File file) throws IOException
+   TarGzInputStream getInputStreamForRawStream(final InputStream in) throws IOException
    {
-      assert file != null : "File must be specified";
-      return new TarGzInputStream(new FileInputStream(file));
+      assert in != null : "Specified inputstream was null";
+      return new TarGzInputStream(in);
    }
 
    /**

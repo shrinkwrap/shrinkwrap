@@ -23,7 +23,6 @@ import java.util.Enumeration;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
@@ -39,7 +38,7 @@ import org.junit.Test;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImporter, ZipInputStream>
+public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImporter>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -120,41 +119,18 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#importFromStream(org.jboss.shrinkwrap.api.importer.StreamImporter, java.io.InputStream)
-    */
-   @Override
-   protected ZipImporter importFromStream(final ZipImporter importer, final InputStream in)
-         throws IllegalArgumentException
-   {
-      // Precondition checks
-      if (importer == null)
-      {
-         throw new IllegalArgumentException("importer must be specified");
-      }
-      if (in == null)
-      {
-         throw new IllegalArgumentException("stream must be specified");
-      }
-
-      // Import
-      final ZipInputStream zipIn = new ZipInputStream(in);
-      return importer.importFrom(zipIn);
-   }
-
-   /**
-    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExceptionThrowingInputStream()
     */
    @Override
-   protected ZipInputStream getExceptionThrowingInputStream()
+   protected InputStream getExceptionThrowingInputStream()
    {
-      return new ZipInputStream(new InputStream()
+      return new InputStream()
       {
          @Override
          public int read() throws IOException
          {
             throw new IOException("Mock exception");
          }
-      });
+      };
    }
 }

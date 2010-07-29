@@ -19,7 +19,6 @@ package org.jboss.shrinkwrap.impl.base.importer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
@@ -45,7 +44,7 @@ import org.junit.Test;
  * @param <I> {@link InputStream} type used in importing
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public abstract class StreamImporterImplTestBase<T extends StreamImporter<I, T>, I extends InputStream>
+public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -84,22 +83,11 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<I, T>,
    protected abstract Class<? extends StreamExporter> getExporterClass();
 
    /**
-    * Imports the specified generic {@link InputStream} using the
-    * specified importer as an archive, returning the importer
-    * @param importer
-    * @param in
-    * @return
-    * @throws IllegalArgumentException If either argument was not specified
-    * @throws IOException If an I/O Error occurred
-    */
-   protected abstract T importFromStream(T importer, InputStream in) throws IllegalArgumentException, IOException;
-
-   /**
     * Obtains an {@link InputStream} used to throw an exception
     * for testing {@link StreamImporterImplTestBase#shouldThrowExceptionOnErrorInImportFromStream()}
     * @return
     */
-   protected abstract I getExceptionThrowingInputStream();
+   protected abstract InputStream getExceptionThrowingInputStream();
 
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
@@ -118,7 +106,7 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<I, T>,
       final File testFile = delegate.getExistingResource();
 
       // Import
-      final Class<? extends StreamImporter<?, ?>> importerClass = this.getImporterClass();
+      final Class<? extends StreamImporter<?>> importerClass = this.getImporterClass();
       assert importerClass != null : "Importer class must be specified by implementations";
       Archive<?> archive = ShrinkWrap.create(importerClass, "test.jar").importFrom(testFile).as(JavaArchive.class);
 
@@ -145,7 +133,7 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<I, T>,
       final File testFile = delegate.getExistingResource();
 
       // Import from file
-      final Class<? extends StreamImporter<?, ?>> importerClass = this.getImporterClass();
+      final Class<? extends StreamImporter<?>> importerClass = this.getImporterClass();
       assert importerClass != null : "Importer class must be specified by implementations";
       final Archive<?> archive = ShrinkWrap.create(importerClass, "test.jar").importFrom(testFile)
             .as(JavaArchive.class);
@@ -191,7 +179,7 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<I, T>,
       final Archive<?> archive;
       try
       {
-         archive = this.importFromStream(importer, stream).as(GenericArchive.class);
+         archive = importer.importFrom(stream).as(GenericArchive.class);
       }
       finally
       {
@@ -211,7 +199,7 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<I, T>,
    @Test(expected = ArchiveImportException.class)
    public void shouldThrowExceptionOnErrorInImportFromStream() throws Exception
    {
-      final I exceptionIn = this.getExceptionThrowingInputStream();
+      final InputStream exceptionIn = this.getExceptionThrowingInputStream();
 
       // Get the importer
       final Class<T> importerClass = this.getImporterClass();

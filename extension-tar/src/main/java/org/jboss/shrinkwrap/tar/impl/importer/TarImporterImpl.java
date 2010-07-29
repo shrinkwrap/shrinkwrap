@@ -16,9 +16,8 @@
  */
 package org.jboss.shrinkwrap.tar.impl.importer;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.tar.api.importer.TarImporter;
@@ -47,23 +46,23 @@ public class TarImporterImpl extends TarImporterBase<TarInputStream, TarImporter
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.tar.impl.importer.TarImporterBase#getInputStreamForFile(java.io.File)
-    */
-   @Override
-   TarInputStream getInputStreamForFile(final File file) throws IOException
-   {
-      assert file != null : "File must be specified";
-      return new TarInputStream(new FileInputStream(file));
-   }
-
-   /**
-    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.tar.impl.importer.TarImporterBase#getActualClass()
     */
    @Override
    Class<TarImporter> getActualClass()
    {
       return TarImporter.class;
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.tar.impl.importer.TarImporterBase#getInputStreamForRawStream(java.io.InputStream)
+    */
+   @Override
+   TarInputStream getInputStreamForRawStream(final InputStream in) throws IOException
+   {
+      assert in != null : "Specified inputstream was null";
+      return new TarInputStream(in);
    }
 
 }

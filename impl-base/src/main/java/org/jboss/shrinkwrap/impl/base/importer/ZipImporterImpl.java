@@ -19,6 +19,7 @@ package org.jboss.shrinkwrap.impl.base.importer;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -32,6 +33,7 @@ import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.ZipFileEntryAsset;
+import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
@@ -113,13 +115,17 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.InputStream)
     */
    @Override
-   public ZipImporter importFrom(final ZipInputStream stream) throws ArchiveImportException
+   public ZipImporter importFrom(final InputStream stream) throws ArchiveImportException
    {
       Validate.notNull(stream, "Stream must be specified");
+
       try
       {
+         // Wrap in ZipInputStream if we haven't been given one
+         final ZipInputStream zipStream = new ZipInputStream(stream);
+
          ZipEntry entry;
-         while ((entry = stream.getNextEntry()) != null)
+         while ((entry = zipStream.getNextEntry()) != null)
          {
             // Get the name
             final String entryName = entry.getName();
@@ -131,15 +137,10 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
                continue;
             }
 
-            ByteArrayOutputStream output = new ByteArrayOutputStream(8192);
-            byte[] content = new byte[4096];
-            int readBytes;
-            while ((readBytes = stream.read(content, 0, content.length)) != -1)
-            {
-               output.write(content, 0, readBytes);
-            }
+            final ByteArrayOutputStream output = new ByteArrayOutputStream(8192);
+            IOUtil.copy(zipStream, output);
             archive.add(new ByteArrayAsset(output.toByteArray()), entryName);
-            stream.closeEntry();
+            zipStream.closeEntry();
          }
       }
       catch (IOException e)
@@ -148,7 +149,7 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
       }
       return this;
    }
-   
+
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.File)

@@ -191,7 +191,7 @@ public final class ArchiveFactory
       }
 
       // Import
-      return ShrinkWrap.create(type, archiveFile.getName()).as(ZipImporter.class).importZip(zipFile).as(type);
+      return ShrinkWrap.create(type, archiveFile.getName()).as(ZipImporter.class).importFrom(zipFile).as(type);
 
    }
 }

@@ -18,7 +18,9 @@ package org.jboss.shrinkwrap.tar.impl.importer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -36,9 +38,9 @@ import org.jboss.tarbarian.api.TarInputStream;
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporter<S, I>> extends AssignableBase
+abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporter<I>> extends AssignableBase
       implements
-         StreamImporter<S, I>
+         StreamImporter<I>
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -78,6 +80,15 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
     */
    abstract Class<I> getActualClass();
 
+   /**
+    * Obtains the correct {@link InputStream} wrapper type for the specified raw
+    * data input
+    * @param in
+    * @return
+    * @throws IOException
+    */
+   abstract S getInputStreamForRawStream(InputStream in) throws IOException;
+
    //-------------------------------------------------------------------------------------||
    // Functional Methods -----------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -109,7 +120,30 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.InputStream)
     */
    @Override
-   public I importFrom(final S stream) throws ArchiveImportException
+   public I importFrom(final InputStream stream) throws ArchiveImportException
+   {
+      Validate.notNull(stream, "Stream must be specified");
+      final S tarStream;
+      try
+      {
+         tarStream = this.getInputStreamForRawStream(stream);
+      }
+      catch (final RuntimeException re)
+      {
+         throw new ArchiveImportException("Could not wrap raw input with TAR stream", re);
+      }
+      catch (final IOException e)
+      {
+         throw new ArchiveImportException("Could not wrap raw input with TAR stream", e);
+      }
+      return this.importFrom(tarStream);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.InputStream)
+    */
+   private I importFrom(final S stream) throws ArchiveImportException
    {
       Validate.notNull(stream, "Stream must be specified");
       try
@@ -179,11 +213,20 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
 
    }
 
+   //-------------------------------------------------------------------------------------||
+   // Internal Helper Methods ------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
    /**
     * Obtains an implementation-specific stream to the specified {@link File}
     * @param file To open a stream to, must be specified
     * @return
     * @throws IOException If there was a problem getting an instream to the file
     */
-   abstract S getInputStreamForFile(File file) throws IOException;
+   private S getInputStreamForFile(File file) throws IOException
+   {
+      assert file != null : "File must be specified";
+      return this.getInputStreamForRawStream(new FileInputStream(file));
+   }
+
 }

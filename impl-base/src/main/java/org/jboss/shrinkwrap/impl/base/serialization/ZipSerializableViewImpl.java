@@ -16,7 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.serialization;
 
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -24,7 +23,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipInputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -154,22 +152,11 @@ public class ZipSerializableViewImpl extends AssignableBase implements ZipSerial
       final String name = this.name;
       final ZipImporter archive = ShrinkWrap.create(ZipImporter.class, name);
 
-      // Read in archive
-      final ZipInputStream remains = new ZipInputStream(new DoNotDelegateCloseInputStream(in));
+      // Read in
+      archive.importFrom(in);
 
-      try
-      {
-         // Read in
-         archive.importFrom(remains);
-
-         // Set
-         this.archive = archive.as(JavaArchive.class);
-      }
-      finally
-      {
-         // Close up our stream, but not the underlying ObjectInputStream
-         remains.close();
-      }
+      // Set
+      this.archive = archive.as(JavaArchive.class);
 
       // Log
       if (log.isLoggable(Level.FINER))
@@ -196,38 +183,6 @@ public class ZipSerializableViewImpl extends AssignableBase implements ZipSerial
        * Thus we must be able to read them.
        */
       while (in.read() != -1);
-
-   }
-
-   //-------------------------------------------------------------------------------------||
-   // Internal Helper Classes ------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * A {@link InputStream} which does not delegate the {@link InputStream#close()}
-    * operation to the wrapped delegate; we cannot close the {@link ObjectInputStream}
-    * passed into {@link ZipSerializableImpl#readObject(ObjectInputStream)}.
-    * 
-    * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
-    * @version $Revision: $
-    */
-   private static class DoNotDelegateCloseInputStream extends FilterInputStream
-   {
-
-      protected DoNotDelegateCloseInputStream(final InputStream in)
-      {
-         super(in);
-      }
-
-      /**
-       * {@inheritDoc}
-       * @see java.io.FilterInputStream#close()
-       */
-      @Override
-      public void close() throws IOException
-      {
-         // NOOP
-      }
 
    }
 

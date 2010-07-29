@@ -35,7 +35,7 @@ import org.jboss.tarbarian.api.TarGzInputStream;
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzImporter, TarGzInputStream>
+public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzImporter>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -85,29 +85,6 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
    protected Class<? extends StreamExporter> getExporterClass()
    {
       return TarGzExporter.class;
-   }
-
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#importFromStream(org.jboss.shrinkwrap.api.importer.StreamImporter, java.io.InputStream)
-    */
-   @Override
-   protected TarGzImporter importFromStream(final TarGzImporter importer, final InputStream in)
-         throws IllegalArgumentException, IOException
-   {
-      // Precondition checks
-      if (importer == null)
-      {
-         throw new IllegalArgumentException("importer must be specified");
-      }
-      if (in == null)
-      {
-         throw new IllegalArgumentException("stream must be specified");
-      }
-
-      // Import
-      final TarGzInputStream tarGzIn = new TarGzInputStream(in);
-      return importer.importFrom(tarGzIn);
    }
 
    /**
