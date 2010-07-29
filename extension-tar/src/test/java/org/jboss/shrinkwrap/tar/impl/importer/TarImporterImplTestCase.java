@@ -33,7 +33,7 @@ import org.jboss.tarbarian.api.TarInputStream;
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class TarImporterImplTestCase extends StreamImporterImplTestBase<TarImporter, TarInputStream>
+public class TarImporterImplTestCase extends StreamImporterImplTestBase<TarImporter>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -83,29 +83,6 @@ public class TarImporterImplTestCase extends StreamImporterImplTestBase<TarImpor
    protected Class<? extends StreamExporter> getExporterClass()
    {
       return TarExporter.class;
-   }
-
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#importFromStream(org.jboss.shrinkwrap.api.importer.StreamImporter, java.io.InputStream)
-    */
-   @Override
-   protected TarImporter importFromStream(final TarImporter importer, final InputStream in)
-         throws IllegalArgumentException, IOException
-   {
-      // Precondition checks
-      if (importer == null)
-      {
-         throw new IllegalArgumentException("importer must be specified");
-      }
-      if (in == null)
-      {
-         throw new IllegalArgumentException("stream must be specified");
-      }
-
-      // Import
-      final TarInputStream tarIn = new TarInputStream(in);
-      return importer.importFrom(tarIn);
    }
 
    /**

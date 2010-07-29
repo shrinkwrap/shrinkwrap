@@ -18,7 +18,6 @@ package org.jboss.shrinkwrap.tar.api.importer;
 
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.importer.StreamImporter;
-import org.jboss.tarbarian.api.TarInputStream;
 
 /**
  * {@link Assignable} type capable of importing TAR archive
@@ -26,7 +25,7 @@ import org.jboss.tarbarian.api.TarInputStream;
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public interface TarImporter extends StreamImporter<TarInputStream, TarImporter>
+public interface TarImporter extends StreamImporter<TarImporter>
 {
    // Inherited contracts
 }
