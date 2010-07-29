@@ -16,19 +16,12 @@
  */
 package org.jboss.shrinkwrap.tar.impl.importer;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
-import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
-import org.jboss.shrinkwrap.impl.base.AssignableBase;
-import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.tar.api.importer.TarGzImporter;
-import org.jboss.tarbarian.api.TarEntry;
 import org.jboss.tarbarian.api.TarGzInputStream;
 
 /**
@@ -36,35 +29,16 @@ import org.jboss.tarbarian.api.TarGzInputStream;
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class TarGzImporterImpl extends AssignableBase implements TarGzImporter
+public class TarGzImporterImpl extends TarImporterBase<TarGzInputStream, TarGzImporter> implements TarGzImporter
 {
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Logger
-    */
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(TarGzImporterImpl.class.getName());
-
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Archive to import into. 
-    */
-   private Archive<?> archive;
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   public TarGzImporterImpl(Archive<?> archive)
+   public TarGzImporterImpl(final Archive<?> archive)
    {
-      Validate.notNull(archive, "Archive must be specified");
-      this.archive = archive;
+      super(archive);
    }
 
    //-------------------------------------------------------------------------------------||
@@ -73,82 +47,23 @@ public class TarGzImporterImpl extends AssignableBase implements TarGzImporter
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.AssignableBase#getArchive()
+    * @see org.jboss.shrinkwrap.tar.impl.importer.TarImporterBase#getInputStreamForFile(java.io.File)
     */
    @Override
-   protected Archive<?> getArchive()
+   TarGzInputStream getInputStreamForFile(final File file) throws IOException
    {
-      return archive;
+      assert file != null : "File must be specified";
+      return new TarGzInputStream(new FileInputStream(file));
    }
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.InputStream)
+    * @see org.jboss.shrinkwrap.tar.impl.importer.TarImporterBase#getActualClass()
     */
    @Override
-   public TarGzImporter importFrom(final TarGzInputStream stream) throws ArchiveImportException
+   Class<TarGzImporter> getActualClass()
    {
-      Validate.notNull(stream, "Stream must be specified");
-      try
-      {
-         TarEntry entry;
-         while ((entry = stream.getNextEntry()) != null)
-         {
-            // Get the name
-            String entryName = entry.getName();
-
-            // Handle directories separately
-            if (entry.isDirectory())
-            {
-               archive.addDirectory(entryName);
-               continue;
-            }
-
-            ByteArrayOutputStream output = new ByteArrayOutputStream(8192);
-            byte[] content = new byte[4096];
-            int readBytes;
-            while ((readBytes = stream.read(content, 0, content.length)) != -1)
-            {
-               output.write(content, 0, readBytes);
-            }
-            archive.add(new ByteArrayAsset(output.toByteArray()), entryName);
-         }
-      }
-      catch (IOException e)
-      {
-         throw new ArchiveImportException("Could not import stream", e);
-      }
-      return this;
+      return TarGzImporter.class;
    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.lang.Object)
-    */
-   @Override
-   public TarGzImporter importFrom(final File file) throws ArchiveImportException
-   {
-      Validate.notNull(file, "File must be specified");
-      if (!file.exists())
-      {
-         throw new IllegalArgumentException("Specified file for import does not exist: " + file);
-      }
-      if (file.isDirectory())
-      {
-         throw new IllegalArgumentException("Specified file for import is a directory: " + file);
-      }
-
-      final TarGzInputStream archive;
-      try
-      {
-         archive = new TarGzInputStream(new FileInputStream(file));
-      }
-      catch (IOException e)
-      {
-         throw new ArchiveImportException("Could not read archive file " + file, e);
-      }
-
-      return this.importFrom(archive);
-
-   }
 }
