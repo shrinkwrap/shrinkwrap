@@ -53,7 +53,7 @@ public final class Domain
    /**
     * Creates a new instance backed by the supplied {@link Configuration}
     * 
-    * @param configuration
+    * @param configuration backing the new instance
     * @throws IllegalArgumentException If the configuration is not supplied
     */
    Domain(final Configuration configuration) throws IllegalArgumentException
@@ -85,7 +85,7 @@ public final class Domain
    /**
     * Obtains the {@link ArchiveFactory} for this domain.  All {@link Archive}s
     * created from the factory will be backed by this domain's configuration.
-    * @return
+    * @return the archiveFactory
     */
    public ArchiveFactory getArchiveFactory()
    {

@@ -82,10 +82,10 @@ public final class ArchiveFactory
     * Creates a new archive of the specified type.  The archive
     * will be be backed by the {@link Configuration}
     * specific to this {@link ArchiveFactory}.
-    * Generates a random name for the archive and adds proper extension based 
-    * on {@link ExtensionLoader#getExtensionFromExtensionMapping(Class)}.
-    * If no extension is found for the given type an {@link UnknownExtensionTypeException}
-    * is thrown.
+    * Generates a random name for the archive and adds proper extension based
+    * on the service descriptor properties file if extension property is present
+    * (e.g. shrinkwrap/impl-base/src/main/resources/META-INF/services/org.jboss.shrinkwrap.api.spec.JavaArchive)
+    *
     *
     * @param type The type of the archive e.g. {@link WebArchive}
     * @return An {@link Assignable} archive base
@@ -152,7 +152,9 @@ public final class ArchiveFactory
     * @return An {@link Assignable} view
     * @throws IllegalArgumentException If either argument is not supplied, if the specified
     * {@link File} does not exist, or is not a valid ZIP file
+    * @throws org.jboss.shrinkwrap.api.importer.ArchiveImportException If an error occurred during the import process
     */
+   @SuppressWarnings({"deprecation"})
    public <T extends Assignable> T createFromZipFile(final Class<T> type, final File archiveFile)
          throws IllegalArgumentException, ArchiveImportException
    {

@@ -29,7 +29,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
  * default {@link Domain} (and by extension the default 
  * {@link Configuration}), as well as a shortcut mechanism to create
  * {@link Archive}s under these defaults by way of 
- * {@link ShrinkWrap#create(String, Class)}.  Additionally, this class is
+ * {@link ShrinkWrap#create(Class, String)}.  Additionally, this class is
  * the hook to create new {@link Domain}s via 
  * {@link ShrinkWrap#createDomain()}, {@link ShrinkWrap#createDomain(ConfigurationBuilder)} or 
  * {@link ShrinkWrap#createDomain(Configuration)}.
@@ -131,10 +131,9 @@ public final class ShrinkWrap
     * will be be backed by the default {@link Configuration}.
     * specific to this {@link ArchiveFactory}.
     * Generates a random name for the archive and adds proper extension based 
-    * on the type mappings found in the default {@link Domain}'s 
-    * {@link Configuration#getExtensionMappings()}s.
-    * If no extension is found for the given type an {@link UnknownExtensionTypeException}
-    * is thrown.
+    * on the service descriptor properties file if extension property is present
+    * (e.g. shrinkwrap/impl-base/src/main/resources/META-INF/services/org.jboss.shrinkwrap.api.spec.JavaArchive)
+    *
     * Invoking this method is functionally equivalent to calling
     * {@link ArchiveFactory#create(Class)} upon
     * {@link Domain#getArchiveFactory()} upon the domain returned
@@ -145,7 +144,8 @@ public final class ShrinkWrap
     * @throws IllegalArgumentException if type is not specified
     * @throws UnknownExtensionTypeException If no extension mapping is found for the specified type
     */
-   public static <T extends Assignable> T create(final Class<T> type) throws IllegalArgumentException
+   public static <T extends Assignable> T create(final Class<T> type) throws IllegalArgumentException,
+      UnknownExtensionTypeException
    {
       // Precondition checks
       if (type == null)
@@ -161,7 +161,7 @@ public final class ShrinkWrap
     * Creates a new archive of the specified type.  The archive
     * will be be backed by the default {@link Configuration}.
     * Invoking this method is functionally equivalent to calling
-    * {@link ArchiveFactory#create(String, Class)} upon
+    * {@link ArchiveFactory#create(Class, String)} upon
     * {@link Domain#getArchiveFactory()} upon the domain returned
     * by {@link ShrinkWrap#getDefaultDomain()}.
     *
@@ -195,10 +195,11 @@ public final class ShrinkWrap
     * within the {@link ShrinkWrap#getDefaultDomain()}
     *
     * @param type The type of the archive e.g. {@link org.jboss.shrinkwrap.api.spec.WebArchive}
-    * @param archiveName the archiveName to use
+    * @param archiveFile the archiveName to use
     * @return An {@link Assignable} view
     * @throws IllegalArgumentException If either argument is not supplied, if the specified
     * {@link File} does not exist, or is not a valid ZIP file
+    * @throws org.jboss.shrinkwrap.api.importer.ArchiveImportException If an error occurred during the import process
     */
    public static <T extends Assignable> T createFromZipFile(final Class<T> type, final File archiveFile)
          throws IllegalArgumentException, ArchiveImportException
@@ -227,7 +228,7 @@ public final class ShrinkWrap
 
       /**
        * Obtains the default domain for the system
-       * @return
+       * @return the default domain for the system
        */
       private Domain getDefaultDomain()
       {
