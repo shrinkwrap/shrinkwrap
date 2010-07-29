@@ -55,7 +55,6 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<I, T>,
    /**
     * Logger
     */
-   @SuppressWarnings("unused")
    private static final Logger log = Logger.getLogger(StreamImporterImplTestBase.class.getName());
 
    /**
@@ -220,7 +219,8 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<I, T>,
       final T importer = ShrinkWrap.create(importerClass, "test.jar");
       try
       {
-         importer.importFrom(exceptionIn).as(GenericArchive.class);
+         final GenericArchive archive = importer.importFrom(exceptionIn).as(GenericArchive.class);
+         log.info("Imported: " + archive.toString(true));
       }
       finally
       {

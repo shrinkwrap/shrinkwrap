@@ -17,25 +17,23 @@
 package org.jboss.shrinkwrap.tar.impl.importer;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
-import java.util.zip.GZIPOutputStream;
 
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.impl.base.importer.ContentAssertionDelegateBase;
 import org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase;
-import org.jboss.shrinkwrap.tar.api.exporter.TarGzExporter;
-import org.jboss.shrinkwrap.tar.api.importer.TarGzImporter;
-import org.jboss.tarbarian.api.TarGzInputStream;
+import org.jboss.shrinkwrap.tar.api.exporter.TarExporter;
+import org.jboss.shrinkwrap.tar.api.importer.TarImporter;
+import org.jboss.tarbarian.api.TarInputStream;
 
 /**
- * TestCase to verify the {@link TarGzImporterImpl} functionality.
+ * TestCase to verify the {@link TarImporterImpl} functionality.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzImporter, TarGzInputStream>
+public class TarImporterImplTestCase extends StreamImporterImplTestBase<TarImporter, TarInputStream>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -46,12 +44,12 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
     * Logger
     */
    @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(TarGzImporterImplTestCase.class.getName());
+   private static final Logger log = Logger.getLogger(TarImporterImplTestCase.class.getName());
 
    /**
-    * Delegate for performing TAR.GZ content assertions
+    * Delegate for performing TAR content assertions
     */
-   private static final TarGzContentAssertionDelegate delegate = new TarGzContentAssertionDelegate();
+   private static final TarContentAssertionDelegate delegate = new TarContentAssertionDelegate();
 
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
@@ -72,9 +70,9 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getImporterClass()
     */
    @Override
-   protected Class<TarGzImporter> getImporterClass()
+   protected Class<TarImporter> getImporterClass()
    {
-      return TarGzImporter.class;
+      return TarImporter.class;
    }
 
    /**
@@ -84,7 +82,7 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
    @Override
    protected Class<? extends StreamExporter> getExporterClass()
    {
-      return TarGzExporter.class;
+      return TarExporter.class;
    }
 
    /**
@@ -92,7 +90,7 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#importFromStream(org.jboss.shrinkwrap.api.importer.StreamImporter, java.io.InputStream)
     */
    @Override
-   protected TarGzImporter importFromStream(final TarGzImporter importer, final InputStream in)
+   protected TarImporter importFromStream(final TarImporter importer, final InputStream in)
          throws IllegalArgumentException, IOException
    {
       // Precondition checks
@@ -106,8 +104,8 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
       }
 
       // Import
-      final TarGzInputStream tarGzIn = new TarGzInputStream(in);
-      return importer.importFrom(tarGzIn);
+      final TarInputStream tarIn = new TarInputStream(in);
+      return importer.importFrom(tarIn);
    }
 
    /**
@@ -115,11 +113,11 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExceptionThrowingInputStream()
     */
    @Override
-   protected TarGzInputStream getExceptionThrowingInputStream()
+   protected TarInputStream getExceptionThrowingInputStream()
    {
       try
       {
-         return ExceptionThrowingTarGzInputStream.create();
+         return ExceptionThrowingTarInputStream.create();
       }
       catch (final IOException e)
       {
@@ -132,25 +130,22 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Test {@link TarGzInputStream} extension which throws errors when read
+    * Test {@link TarInputStream} extension which throws errors when read
     * in order to test exception handling of the import process
     * 
     * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
     */
-   private static final class ExceptionThrowingTarGzInputStream extends TarGzInputStream
+   private static final class ExceptionThrowingTarInputStream extends TarInputStream
    {
 
-      static ExceptionThrowingTarGzInputStream create() throws IOException
+      static ExceptionThrowingTarInputStream create() throws IOException
       {
-         // First provide real GZIP content so we don't err out when initialized
          final byte[] test = "Something".getBytes();
-         final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-         new GZIPOutputStream(stream).write(test);
-         final InputStream in = new ByteArrayInputStream(stream.toByteArray());
-         return new ExceptionThrowingTarGzInputStream(in);
+         final InputStream in = new ByteArrayInputStream(test);
+         return new ExceptionThrowingTarInputStream(in);
       }
 
-      private ExceptionThrowingTarGzInputStream(final InputStream in) throws IOException
+      private ExceptionThrowingTarInputStream(final InputStream in) throws IOException
       {
          super(in);
       }
@@ -163,6 +158,18 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
       public int read() throws IOException
       {
          throw new RuntimeException("Mock Exception, should be wrapped in the import process");
+      }
+
+      @Override
+      public int read(byte[] buf) throws IOException
+      {
+         return this.read();
+      }
+
+      @Override
+      public int read(byte[] buf, int offset, int numToRead) throws IOException
+      {
+         return this.read();
       }
 
    }
