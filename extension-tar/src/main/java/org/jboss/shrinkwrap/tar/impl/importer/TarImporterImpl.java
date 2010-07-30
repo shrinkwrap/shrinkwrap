@@ -20,22 +20,22 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.tar.api.importer.TarGzImporter;
-import org.jboss.tarbarian.api.TarGzInputStream;
+import org.jboss.shrinkwrap.tar.api.importer.TarImporter;
+import org.jboss.tarbarian.api.TarInputStream;
 
 /**
- * Used to import existing TAR.GZ files/streams into the given {@link Archive}  
+ * Used to import existing TAR files/streams into the given {@link Archive}  
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class TarGzImporterImpl extends TarImporterBase<TarGzInputStream, TarGzImporter> implements TarGzImporter
+public class TarImporterImpl extends TarImporterBase<TarInputStream, TarImporter> implements TarImporter
 {
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   public TarGzImporterImpl(final Archive<?> archive)
+   public TarImporterImpl(final Archive<?> archive)
    {
       super(archive);
    }
@@ -46,23 +46,23 @@ public class TarGzImporterImpl extends TarImporterBase<TarGzInputStream, TarGzIm
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.tar.impl.importer.TarImporterBase#getInputStreamForRawStream(java.io.InputStream)
+    * @see org.jboss.shrinkwrap.tar.impl.importer.TarImporterBase#getActualClass()
     */
    @Override
-   TarGzInputStream getInputStreamForRawStream(final InputStream in) throws IOException
+   Class<TarImporter> getActualClass()
    {
-      assert in != null : "Specified inputstream was null";
-      return new TarGzInputStream(in);
+      return TarImporter.class;
    }
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.tar.impl.importer.TarImporterBase#getActualClass()
+    * @see org.jboss.shrinkwrap.tar.impl.importer.TarImporterBase#getInputStreamForRawStream(java.io.InputStream)
     */
    @Override
-   Class<TarGzImporter> getActualClass()
+   TarInputStream getInputStreamForRawStream(final InputStream in) throws IOException
    {
-      return TarGzImporter.class;
+      assert in != null : "Specified inputstream was null";
+      return new TarInputStream(in);
    }
 
 }

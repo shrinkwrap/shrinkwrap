@@ -21,11 +21,11 @@ import org.jboss.shrinkwrap.api.importer.StreamImporter;
 
 /**
  * {@link Assignable} type capable of importing TAR archive
- * content encoded in GZIP compression.
+ * content
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public interface TarGzImporter extends StreamImporter<TarGzImporter>
+public interface TarImporter extends StreamImporter<TarImporter>
 {
    // Inherited contracts
 }
