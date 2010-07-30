@@ -23,8 +23,8 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase;
-import org.jboss.tarbarian.api.TarEntry;
-import org.jboss.tarbarian.api.TarOutputStreamImpl;
+import org.jboss.shrinkwrap.tar.impl.io.TarEntry;
+import org.jboss.shrinkwrap.tar.impl.io.TarOutputStreamImpl;
 
 /**
  * Base implementation for exporter delegates of the TAR format

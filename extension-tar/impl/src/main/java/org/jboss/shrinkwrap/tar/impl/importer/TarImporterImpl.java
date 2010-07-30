@@ -21,7 +21,7 @@ import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.tar.api.importer.TarImporter;
-import org.jboss.tarbarian.api.TarInputStream;
+import org.jboss.shrinkwrap.tar.impl.io.TarInputStream;
 
 /**
  * Used to import existing TAR files/streams into the given {@link Archive}  

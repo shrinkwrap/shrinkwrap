@@ -74,12 +74,6 @@
       <scope>test</scope>
     </dependency>
     
-    <!-- org.jboss.javatar --> 
-    <dependency>
-      <groupId>org.jboss.tarbarian</groupId>
-      <artifactId>tarbarian-api</artifactId>
-    </dependency>
-    
   </dependencies>
 
 </project>

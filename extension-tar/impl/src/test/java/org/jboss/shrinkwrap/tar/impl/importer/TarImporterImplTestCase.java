@@ -26,7 +26,7 @@ import org.jboss.shrinkwrap.impl.base.importer.ContentAssertionDelegateBase;
 import org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase;
 import org.jboss.shrinkwrap.tar.api.exporter.TarExporter;
 import org.jboss.shrinkwrap.tar.api.importer.TarImporter;
-import org.jboss.tarbarian.api.TarInputStream;
+import org.jboss.shrinkwrap.tar.impl.io.TarInputStream;
 
 /**
  * TestCase to verify the {@link TarImporterImpl} functionality.

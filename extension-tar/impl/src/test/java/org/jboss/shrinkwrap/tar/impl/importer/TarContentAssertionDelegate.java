@@ -31,8 +31,8 @@ import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.impl.base.importer.ContentAssertionDelegateBase;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
-import org.jboss.tarbarian.api.TarEntry;
-import org.jboss.tarbarian.api.TarInputStream;
+import org.jboss.shrinkwrap.tar.impl.io.TarEntry;
+import org.jboss.shrinkwrap.tar.impl.io.TarInputStream;
 
 /**
  * Delegate class for asserting that TAR contents may be 

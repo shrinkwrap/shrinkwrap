@@ -29,8 +29,8 @@ import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.importer.StreamImporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
-import org.jboss.tarbarian.api.TarEntry;
-import org.jboss.tarbarian.api.TarInputStream;
+import org.jboss.shrinkwrap.tar.impl.io.TarEntry;
+import org.jboss.shrinkwrap.tar.impl.io.TarInputStream;
 
 /**
  * Base of implementations used to import existing 

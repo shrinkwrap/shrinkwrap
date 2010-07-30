@@ -21,7 +21,7 @@ import java.io.OutputStream;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.tarbarian.api.TarOutputStream;
+import org.jboss.shrinkwrap.tar.impl.io.TarOutputStream;
 
 /**
  * Implementation of an exporter for the TAR format

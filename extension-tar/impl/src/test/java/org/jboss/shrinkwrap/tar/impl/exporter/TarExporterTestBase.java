@@ -26,8 +26,8 @@ import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
-import org.jboss.tarbarian.api.TarEntry;
-import org.jboss.tarbarian.api.TarInputStream;
+import org.jboss.shrinkwrap.tar.impl.io.TarEntry;
+import org.jboss.shrinkwrap.tar.impl.io.TarInputStream;
 import org.junit.Assert;
 
 /**
