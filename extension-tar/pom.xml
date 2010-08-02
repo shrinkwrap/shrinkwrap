@@ -13,68 +13,38 @@
     <relativePath>../build/pom.xml</relativePath>
   </parent>
 
-  <!-- Model Version -->
+  <!-- Model Information -->
   <modelVersion>4.0.0</modelVersion>
-
-  <!-- Artifact Configuration -->
-  <artifactId>shrinkwrap-extension-tar</artifactId>
-  <name>ShrinkWrap Extension TAR</name>
-  <description>ShrinkWrap Extension for TAR Import/Export Support</description>
-
-
-  <!-- Properties -->
-  <properties>
   
-    <!-- Versioning -->
-    <version.org.jboss.tarbarian>1.0.0-SNAPSHOT</version.org.jboss.tarbarian>
+    <!-- Artifact Information  -->
+  <groupId>org.jboss.shrinkwrap.tar</groupId>
+  <artifactId>shrinkwrap-tar-parent</artifactId>
+  <packaging>pom</packaging>
+  <name>ShrinkWrap TAR Extension Aggregator</name>
+  <description>ShrinkWrap TAR Extension Aggregator</description>
 
-  </properties>
-
-  <!-- Dependencies -->
-  <dependencies>
-
-    <!-- 
-    org.jboss.shrinkwrap    
-     -->
-    <dependency>
-      <groupId>org.jboss.shrinkwrap</groupId>
-      <artifactId>shrinkwrap-impl-base</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.shrinkwrap</groupId>
-      <artifactId>shrinkwrap-impl-base</artifactId>
-      <version>${project.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- 
-    External Projects
-     -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    
-    <!-- org.jboss.javatar --> 
-    <dependency>
-      <groupId>org.jboss.tarbarian</groupId>
-      <artifactId>tarbarian-api</artifactId>
-      <version>${version.org.jboss.tarbarian}</version>
-    </dependency>
-    
-  </dependencies>
-
-  <!-- Build Configuration -->
+  <!-- Plugin Configuration -->
   <build>
-  
     <plugins>
 
-    </plugins>
-    
-  </build>
-  
-</project>
+      <!-- Deploy -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <!-- Don't include this aggregator in the deployment -->
+          <skip>true</skip>
+        </configuration>
+      </plugin>
 
+    </plugins>
+  </build>
+
+  <!-- Aggregate Modules -->
+  <modules>
+    <module>api</module>
+    <module>build</module>
+    <module>impl</module>
+  </modules>
+
+</project>

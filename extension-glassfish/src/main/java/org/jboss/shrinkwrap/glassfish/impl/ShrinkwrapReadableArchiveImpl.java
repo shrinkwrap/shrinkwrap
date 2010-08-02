@@ -35,7 +35,6 @@ import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.glassfish.api.ShrinkwrapReadableArchive;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
-import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 
 /**
@@ -45,27 +44,14 @@ import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements ShrinkwrapReadableArchive
+public class ShrinkwrapReadableArchiveImpl extends AssignableBase<Archive<?>> implements ShrinkwrapReadableArchive
 {
-   private final Archive<?> archive;
-
    /**
     * @param archive
     */
    public ShrinkwrapReadableArchiveImpl(final Archive<?> archive)
    {
-      Validate.notNull(archive, "Archive must be specified");
-      this.archive = archive;
-   }
-
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.AssignableBase#getArchive()
-    */
-   @Override
-   protected Archive<?> getArchive()
-   {
-      return archive;
+      super(archive);
    }
 
    /**
@@ -97,7 +83,7 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    @Override
    public boolean exists(String path) throws IOException
    {
-      return archive.contains(ArchivePaths.create(path));
+      return this.getArchive().contains(ArchivePaths.create(path));
    }
 
    /**
@@ -107,7 +93,7 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    @Override
    public InputStream getEntry(String path) throws IOException
    {
-      return archive.get(ArchivePaths.create(path)).getAsset().openStream();
+      return this.getArchive().get(ArchivePaths.create(path)).getAsset().openStream();
    }
 
    /**
@@ -150,7 +136,7 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    @Override
    public ReadableArchive getSubArchive(String path) throws IOException
    {
-      Node archiveNode = archive.get(ArchivePaths.create(path));
+      final Node archiveNode = this.getArchive().get(ArchivePaths.create(path));
       if (archiveNode.getAsset() instanceof ArchiveAsset)
       {
          return ((ArchiveAsset) archiveNode.getAsset()).getArchive().as(ShrinkwrapReadableArchive.class);
@@ -193,7 +179,7 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    {
       List<String> entries = new ArrayList<String>();
 
-      for (Entry<ArchivePath, Node> entry : archive.getContent().entrySet())
+      for (Entry<ArchivePath, Node> entry : this.getArchive().getContent().entrySet())
       {
          if (entry.getValue().getAsset() != null) 
          {
@@ -211,7 +197,7 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    {
       List<String> entries = new ArrayList<String>();
 
-      for (Entry<ArchivePath, Node> entry : archive.getContent().entrySet())
+      for (Entry<ArchivePath, Node> entry : this.getArchive().getContent().entrySet())
       {
          if (entry.getKey().get().startsWith(path))
          {
@@ -243,7 +229,7 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    {
       List<String> entries = new ArrayList<String>();
 
-      for (Entry<ArchivePath, Node> entry : archive.getContent().entrySet())
+      for (Entry<ArchivePath, Node> entry : this.getArchive().getContent().entrySet())
       {
          if (entry.getValue().getAsset() == null)
          {
@@ -260,6 +246,7 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    public Manifest getManifest() throws IOException
    {
       ArchivePath manifestPath = ArchivePaths.create("META-INF/MANIFEST.MF");
+      final Archive<?> archive = this.getArchive();
       if (archive.contains(manifestPath))
       {
          return new Manifest(archive.get(manifestPath).getAsset().openStream());
@@ -273,7 +260,7 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    @Override
    public String getName()
    {
-      return archive.getName();
+      return this.getArchive().getName();
    }
 
    /* (non-Javadoc)
@@ -284,7 +271,7 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    {
       try
       {
-         return new URI("archive://" + archive.getName());
+         return new URI("archive://" + this.getArchive().getName());
       }
       catch (URISyntaxException e)
       {
@@ -298,6 +285,6 @@ public class ShrinkwrapReadableArchiveImpl extends AssignableBase implements Shr
    @Override
    public boolean isDirectory(String path)
    {
-      return archive.get(ArchivePaths.create(path)).getAsset() == null;
+      return this.getArchive().get(ArchivePaths.create(path)).getAsset() == null;
    }
 }

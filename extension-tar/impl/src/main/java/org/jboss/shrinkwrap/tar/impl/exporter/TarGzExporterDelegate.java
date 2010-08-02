@@ -14,46 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base;
+package org.jboss.shrinkwrap.tar.impl.exporter;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Assignable;
+import org.jboss.shrinkwrap.tar.impl.io.TarGzOutputStream;
 
 /**
- * A generic implementation of {@link Assignable} that delegates down to the Archive
- * extensions inner archive. Used by Archive extensions to simplify handling the generic extension
- * mechanism. 
- *
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * Implementation of an exporter for the TAR format, further encoded as GZIP.  
+ * 
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public abstract class AssignableBase<T extends Archive<?>> implements Assignable
+public class TarGzExporterDelegate extends TarExporterDelegateBase<TarGzOutputStream>
 {
    //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
+   // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Underlying archive
+    * Logger
     */
-   private final T archive;
+   @SuppressWarnings("unused")
+   private static final Logger log = Logger.getLogger(TarGzExporterDelegate.class.getName());
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Constructs a new instance using the underlying specified
-    * archive, which is required
-    * @param archive
+    * Creates a new exporter delegate for exporting archives as TAR/GZ
     */
-   protected AssignableBase(final T archive)
+   public TarGzExporterDelegate(final Archive<?> archive)
    {
-      // Precondition check
-      Validate.notNull(archive, "archive must be specified");
-
-      // Set
-      this.archive = archive;
+      super(archive);
    }
 
    //-------------------------------------------------------------------------------------||
@@ -62,24 +59,12 @@ public abstract class AssignableBase<T extends Archive<?>> implements Assignable
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Specializer#as(java.lang.Class)
+    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase#createOutputStream(java.io.OutputStream)
     */
    @Override
-   public final <TYPE extends Assignable> TYPE as(Class<TYPE> clazz)
+   protected final TarGzOutputStream createOutputStream(final OutputStream out) throws IOException
    {
-      return this.getArchive().as(clazz);
-   }
-
-   //-------------------------------------------------------------------------------------||
-   // Functional Methods -----------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Returns the underlying archive
-    * @return
-    */
-   protected final T getArchive()
-   {
-      return archive;
+      // Create and return
+      return new TarGzOutputStream(out);
    }
 }

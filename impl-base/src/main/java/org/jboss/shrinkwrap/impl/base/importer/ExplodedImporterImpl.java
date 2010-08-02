@@ -36,58 +36,37 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ExplodedImporterImpl extends AssignableBase implements
-      ExplodedImporter
+public class ExplodedImporterImpl extends AssignableBase<Archive<?>> implements ExplodedImporter
 {
    // -------------------------------------------------------------------------------------||
    // Class Members -----------------------------------------------------------------------||
    // -------------------------------------------------------------------------------------||
-   
+
    /**
     * Logger
     */
    private static final Logger log = Logger.getLogger(ExplodedImporterImpl.class.getName());
-   
-   // -------------------------------------------------------------------------------------||
-   // Instance Members --------------------------------------------------------------------||
-   // -------------------------------------------------------------------------------------||
-
-   /**
-    * Archive to import into.
-    */
-   private Archive<?> archive;
 
    // -------------------------------------------------------------------------------------||
    // Constructor -------------------------------------------------------------------------||
    // -------------------------------------------------------------------------------------||
 
-   public ExplodedImporterImpl(Archive<?> archive)
+   public ExplodedImporterImpl(final Archive<?> archive)
    {
-      Validate.notNull(archive, "Archive must be specified");
-      this.archive = archive;
+      super(archive);
    }
 
    // -------------------------------------------------------------------------------------||
    // Required Implementations ------------------------------------------------------------||
    // -------------------------------------------------------------------------------------||
-
-   /*
-    * (non-Javadoc)
-    * 
-    * @see org.jboss.shrinkwrap.impl.base.SpecializedBase#getArchive()
-    */
-   @Override
-   protected Archive<?> getArchive()
+   void a()
    {
-      return archive;
+
    }
 
-   /*
-    * (non-Javadoc)
-    * 
-    * @see
-    * org.jboss.shrinkwrap.api.importer.ExplodedImporter#importDirectory(java
-    * .lang.String)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.importer.ExplodedImporter#importDirectory(java.lang.String)
     */
    @Override
    public ExplodedImporter importDirectory(String fileName)
@@ -96,12 +75,9 @@ public class ExplodedImporterImpl extends AssignableBase implements
       return importDirectory(new File(fileName));
    }
 
-   /*
-    * (non-Javadoc)
-    * 
-    * @see
-    * org.jboss.shrinkwrap.api.importer.ExplodedImporter#importDirectory(java
-    * .io.File)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.importer.ExplodedImporter#importDirectory(java.io.File)
     */
    @Override
    public ExplodedImporter importDirectory(File file)
@@ -109,8 +85,7 @@ public class ExplodedImporterImpl extends AssignableBase implements
       Validate.notNull(file, "FileName must be specified");
       if (!file.isDirectory())
       {
-         throw new IllegalArgumentException("Given file is not a directory "
-               + file.getAbsolutePath());
+         throw new IllegalArgumentException("Given file is not a directory " + file.getAbsolutePath());
       }
 
       doImport(file, file.listFiles());
@@ -125,12 +100,14 @@ public class ExplodedImporterImpl extends AssignableBase implements
          {
             log.finer("Importing: " + file.getAbsolutePath());
          }
-         final ArchivePath path  = calculatePath(root, file);
+         final Archive<?> archive = this.getArchive();
+         final ArchivePath path = calculatePath(root, file);
          if (file.isDirectory())
          {
             archive.addDirectory(path);
             doImport(root, file.listFiles());
-         } else
+         }
+         else
          {
             archive.add(new FileAsset(file), path);
          }

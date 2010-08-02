@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -14,41 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base;
+package org.jboss.shrinkwrap.tar.impl.importer;
 
-import java.util.logging.Logger;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Assignable;
-import org.jboss.shrinkwrap.api.Configuration;
-import org.jboss.shrinkwrap.spi.Configurable;
+import org.jboss.shrinkwrap.tar.api.importer.TarGzImporter;
+import org.jboss.shrinkwrap.tar.impl.io.TarGzInputStream;
 
 /**
- * {@link Assignable} implementation view of an {@link ConfigurableArchive}. 
- * Provides access to the internal {@link Configuration} of an 
- * {@link Archive}.
- * 
+ * Used to import existing TAR.GZ files/streams into the given {@link Archive}  
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
- * @version $Revision: $
  */
-public class ConfigurableArchiveImpl extends AssignableBase<ArchiveBase<?>> implements Configurable
+public class TarGzImporterImpl extends TarImporterBase<TarGzInputStream, TarGzImporter> implements TarGzImporter
 {
-
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Logger
-    */
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(ConfigurableArchiveImpl.class.getName());
 
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   public ConfigurableArchiveImpl(final ArchiveBase<?> archive)
+   public TarGzImporterImpl(final Archive<?> archive)
    {
       super(archive);
    }
@@ -59,11 +46,23 @@ public class ConfigurableArchiveImpl extends AssignableBase<ArchiveBase<?>> impl
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.spi.Configurable#getConfiguration()
+    * @see org.jboss.shrinkwrap.tar.impl.importer.TarImporterBase#getInputStreamForRawStream(java.io.InputStream)
     */
    @Override
-   public Configuration getConfiguration()
+   TarGzInputStream getInputStreamForRawStream(final InputStream in) throws IOException
    {
-      return this.getArchive().getConfiguration();
+      assert in != null : "Specified inputstream was null";
+      return new TarGzInputStream(in);
    }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.tar.impl.importer.TarImporterBase#getActualClass()
+    */
+   @Override
+   Class<TarGzImporter> getActualClass()
+   {
+      return TarGzImporter.class;
+   }
+
 }
