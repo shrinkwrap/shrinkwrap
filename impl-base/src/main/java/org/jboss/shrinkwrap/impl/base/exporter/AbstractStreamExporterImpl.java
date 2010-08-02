@@ -29,7 +29,6 @@ import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
-import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
 /**
@@ -37,51 +36,27 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public abstract class AbstractStreamExporterImpl extends AssignableBase implements StreamExporter
+public abstract class AbstractStreamExporterImpl extends AssignableBase<Archive<?>> implements StreamExporter
 {
-   
+
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-   
+
    /**
     * Logger
     */
-   private static final Logger log = Logger.getLogger(AbstractStreamExporterImpl.class.getSimpleName());
-   
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+   private static final Logger log = Logger.getLogger(AbstractStreamExporterImpl.class.getName());
 
-   /**
-    * Archive to import into. 
-    */
-   private final Archive<?> archive;
-   
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-   
+
    public AbstractStreamExporterImpl(final Archive<?> archive)
    {
-      Validate.notNull(archive, "Archive must be specified");
-      this.archive = archive;
+      super(archive);
    }
-   
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-   
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.AssignableBase#getArchive()
-    */
-   @Override
-   protected Archive<?> getArchive()
-   {
-      return archive;
-   }
-   
+
    //-------------------------------------------------------------------------------------||
    // Functional Methods -----------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -123,7 +98,7 @@ public abstract class AbstractStreamExporterImpl extends AssignableBase implemen
       // Return
       return out;
    }
-   
+
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportTo(java.io.OutputStream)
@@ -172,13 +147,14 @@ public abstract class AbstractStreamExporterImpl extends AssignableBase implemen
     * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportTo(java.io.File, boolean)
     */
    @Override
-   public final void exportTo(final File target, final boolean overwrite) throws ArchiveExportException, FileExistsException,
-         IllegalArgumentException
+   public final void exportTo(final File target, final boolean overwrite) throws ArchiveExportException,
+         FileExistsException, IllegalArgumentException
    {
       // Get stream and perform precondition checks
       final OutputStream out = this.getOutputStreamToFile(target, overwrite);
 
-      try{
+      try
+      {
          // Write out
          this.exportTo(out);
       }
@@ -202,7 +178,8 @@ public abstract class AbstractStreamExporterImpl extends AssignableBase implemen
     * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportTo(java.io.File)
     */
    @Override
-   public final void exportTo(final File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException
+   public final void exportTo(final File target) throws ArchiveExportException, FileExistsException,
+         IllegalArgumentException
    {
       this.exportTo(target, false);
    }

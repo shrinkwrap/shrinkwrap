@@ -38,7 +38,7 @@ import org.jboss.shrinkwrap.tar.impl.io.TarInputStream;
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporter<I>> extends AssignableBase
+abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporter<I>> extends AssignableBase<Archive<?>>
       implements
          StreamImporter<I>
 {
@@ -53,22 +53,12 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
    private static final Logger log = Logger.getLogger(TarImporterBase.class.getName());
 
    //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Archive to import into. 
-    */
-   private Archive<?> archive;
-
-   //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    public TarImporterBase(final Archive<?> archive)
    {
-      Validate.notNull(archive, "Archive must be specified");
-      this.archive = archive;
+      super(archive);
    }
 
    //-------------------------------------------------------------------------------------||
@@ -104,16 +94,6 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.AssignableBase#getArchive()
-    */
-   @Override
-   protected Archive<?> getArchive()
-   {
-      return archive;
-   }
 
    /**
     * {@inheritDoc}
@@ -153,6 +133,8 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
          {
             // Get the name
             String entryName = entry.getName();
+            
+            final Archive<?> archive = this.getArchive();
 
             // Handle directories separately
             if (entry.isDirectory())

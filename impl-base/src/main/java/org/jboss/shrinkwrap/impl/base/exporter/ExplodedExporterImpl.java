@@ -34,7 +34,7 @@ import org.jboss.shrinkwrap.impl.base.Validate;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ExplodedExporterImpl extends AssignableBase implements ExplodedExporter
+public class ExplodedExporterImpl extends AssignableBase<Archive<?>> implements ExplodedExporter
 {
 
    //-------------------------------------------------------------------------------------||
@@ -46,34 +46,15 @@ public class ExplodedExporterImpl extends AssignableBase implements ExplodedExpo
     */
    private static final Logger log = Logger.getLogger(ExplodedExporterImpl.class.getName());
 
-   /**
-    * Archive to import into. 
-    */
-   private Archive<?> archive; 
-   
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   public ExplodedExporterImpl(Archive<?> archive) 
+   public ExplodedExporterImpl(final Archive<?> archive)
    {
-      Validate.notNull(archive, "Archive must be specified");
-      this.archive = archive;
+      super(archive);
    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.impl.base.SpecializedBase#getArchive()
-    */
-   @Override
-   protected Archive<?> getArchive()
-   {
-      return archive;
-   }
-   
    //-------------------------------------------------------------------------------------||
    // Required Implementations - ExplodedExporter ----------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -85,6 +66,7 @@ public class ExplodedExporterImpl extends AssignableBase implements ExplodedExpo
    @Override
    public File exportExploded(final File baseDirectory)
    {
+      final Archive<?> archive = this.getArchive();
       Validate.notNull(archive, "No archive provided");
       Validate.notNull(baseDirectory, "No baseDirectory provided");
 
@@ -101,7 +83,7 @@ public class ExplodedExporterImpl extends AssignableBase implements ExplodedExpo
 
       // Get the export delegate
       final ExplodedExporterDelegate exporterDelegate = new ExplodedExporterDelegate(archive, baseDirectory);
-      
+
       // Run the export and get the result
       final File explodedDirectory = exporterDelegate.export();
 

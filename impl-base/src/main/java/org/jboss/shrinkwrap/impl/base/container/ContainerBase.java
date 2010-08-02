@@ -57,7 +57,7 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  * @version $Revision: $
  * @param <T>
  */
-public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase implements 
+public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase<Archive<?>> implements 
    Archive<T>, ManifestContainer<T>, ResourceContainer<T>, ClassContainer<T>, LibraryContainer<T>
 {
    //-------------------------------------------------------------------------------------||
@@ -83,11 +83,6 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   /**
-    * The backing storage engine.
-    */
-   private final Archive<?> archive;
    
    /**
     * The exposed archive type. 
@@ -98,13 +93,13 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   protected ContainerBase(Class<T> actualType, Archive<?> archive) 
+   protected ContainerBase(final Class<T> actualType, final Archive<?> archive) 
    {
+      super(archive);
+      
       Validate.notNull(actualType, "ActualType should be specified");
-      Validate.notNull(archive, "Archive should be specified");
       
       this.actualType = actualType;
-      this.archive = archive;
    }
    
    //-------------------------------------------------------------------------------------||
@@ -118,7 +113,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    @Override
    public T add(final Archive<?> archive, final String path, final Class<? extends StreamExporter> exporter)
    {
-      this.archive.add(archive, path, exporter);
+      this.getArchive().add(archive, path, exporter);
       return covarientReturn();
    }
 
@@ -129,27 +124,29 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    @Override
    public T add(final Archive<?> archive, final ArchivePath path, final Class<? extends StreamExporter> exporter)
    {
-      this.archive.add(archive, path, exporter);
+      this.getArchive().add(archive, path, exporter);
       return covarientReturn();
    }
    
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.asset.Asset, org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
    public T add(Asset asset, ArchivePath target) throws IllegalArgumentException
    {
-      archive.add(asset, target);
+      this.getArchive().add(asset, target);
       return covarientReturn();
    }
    
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Asset, org.jboss.shrinkwrap.api.Path, java.lang.String)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.asset.Asset, org.jboss.shrinkwrap.api.ArchivePath, java.lang.String)
     */
    @Override
    public T add(Asset asset, ArchivePath path, String name)
    {
-      archive.add(asset, path, name);
+      this.getArchive().add(asset, path, name);
       return covarientReturn();
    }
    
@@ -160,84 +157,95 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    @Override
    public T add(final Asset asset, final String target, final String name) throws IllegalArgumentException
    {
-      archive.add(asset, target, name);
+      this.getArchive().add(asset, target, name);
       return covarientReturn();
    }
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#addDirectories(org.jboss.shrinkwrap.api.ArchivePath[])
     */
    @Override
    public T addDirectories(ArchivePath... paths) throws IllegalArgumentException
    {
-      archive.addDirectories(paths);
+      this.getArchive().addDirectories(paths);
       return covarientReturn();
    }
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#addDirectories(java.lang.String[])
     */
    @Override
    public T addDirectories(String... paths) throws IllegalArgumentException
    {
-      archive.addDirectories(paths);
+      this.getArchive().addDirectories(paths);
       return covarientReturn();
    }
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#addDirectory(org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
    public T addDirectory(ArchivePath path) throws IllegalArgumentException
    {
-      archive.addDirectory(path);
+      this.getArchive().addDirectory(path);
       return covarientReturn();
    }
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#addDirectory(java.lang.String)
     */
    @Override
    public T addDirectory(String path) throws IllegalArgumentException
    {
-      archive.addDirectory(path);
+      this.getArchive().addDirectory(path);
       return covarientReturn();
    }
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive)
     */
    @Override
    public T merge(Archive<?> source) throws IllegalArgumentException
    {
-      archive.merge(source);
+      this.getArchive().merge(source);
       return covarientReturn();
    }
    
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Filter)
     */
    @Override
    public T merge(Archive<?> source, Filter<ArchivePath> filter) throws IllegalArgumentException
    {
-      archive.merge(source, filter);
+      this.getArchive().merge(source, filter);
       return covarientReturn();
    }
    
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
    public T merge(Archive<?> source, ArchivePath path) throws IllegalArgumentException
    {
-      archive.merge(source, path);
+      this.getArchive().merge(source, path);
       return covarientReturn();
    }
    
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.Filter)
+    */
    @Override
    public T merge(Archive<?> source, ArchivePath path, Filter<ArchivePath> filter) throws IllegalArgumentException
    {
-      archive.merge(source, path, filter);
+      this.getArchive().merge(source, path, filter);
       return covarientReturn();
    }
    
@@ -249,7 +257,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public T merge(final Archive<?> source, final String path, final Filter<ArchivePath> filter)
          throws IllegalArgumentException
    {
-      archive.merge(source, path, filter);
+      this.getArchive().merge(source, path, filter);
       return covarientReturn();
    }
 
@@ -260,27 +268,29 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    @Override
    public T merge(final Archive<?> source, final String path) throws IllegalArgumentException
    {
-      archive.merge(source, path);
+      this.getArchive().merge(source, path);
       return covarientReturn();
    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Asset, java.lang.String)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.asset.Asset, java.lang.String)
     */
    @Override
    public T add(Asset asset, String name)
    {
-      archive.add(asset, name);
+      this.getArchive().add(asset, name);
       return covarientReturn();
    }
    
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#contains(org.jboss.declarchive.api.Path)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#contains(org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
    public boolean contains(ArchivePath path)
    {
-      return archive.contains(path);
+      return this.getArchive().contains(path);
    }
    
    /**
@@ -294,58 +304,64 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return this.contains(ArchivePaths.create(path));
    }
 
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#delete(org.jboss.declarchive.api.Path)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#delete(org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
    public boolean delete(ArchivePath path)
    {
-      return archive.delete(path);
+      return this.getArchive().delete(path);
    }
    
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#get(org.jboss.declarchive.api.Path)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#get(org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
    public Node get(ArchivePath path)
    {
-      return archive.get(path);
+      return this.getArchive().get(path);
    }
    
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#get(java.lang.String)
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#get(java.lang.String)
     */
    @Override
    public Node get(String path) throws IllegalArgumentException
    {
-      return archive.get(path);
+      return this.getArchive().get(path);
    }
    
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#getContent()
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#getContent()
     */
    @Override
    public Map<ArchivePath, Node> getContent()
    {
-      return archive.getContent();
+      return this.getArchive().getContent();
    }
    
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#getContent(org.jboss.shrinkwrap.api.Filter)
     */
    @Override
    public Map<ArchivePath, Node> getContent(Filter<ArchivePath> filter)
    {
-      return archive.getContent(filter);
+      return this.getArchive().getContent(filter);
    }
    
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Archive#getName()
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#getName()
     */
    @Override
    public String getName()
    {
-      return archive.getName();
+      return this.getArchive().getName();
    }
 
    /**
@@ -355,7 +371,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    @Override
    public String toString()
    {
-      return archive.toString();
+      return this.getArchive().toString();
    }
    
    /**
@@ -365,7 +381,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    @Override
    public String toString(final boolean verbose)
    {
-      return archive.toString(verbose);
+      return this.getArchive().toString(verbose);
    }
    
    /**
@@ -375,20 +391,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    @Override
    public String toString(final Formatter formatter) throws IllegalArgumentException
    {
-      return archive.toString(formatter);
-   }
-
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations - SpecializedBase -----------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.impl.base.SpecializedBase#getArchive()
-    */
-   @Override
-   protected Archive<?> getArchive()
-   {
-      return archive;
+      return this.getArchive().toString(formatter);
    }
    
    //-------------------------------------------------------------------------------------||

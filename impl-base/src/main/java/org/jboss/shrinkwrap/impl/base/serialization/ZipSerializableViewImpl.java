@@ -25,12 +25,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.serialization.ZipSerializableView;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
@@ -42,7 +42,7 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ZipSerializableViewImpl extends AssignableBase implements ZipSerializableView
+public class ZipSerializableViewImpl implements ZipSerializableView
 {
 
    //-------------------------------------------------------------------------------------||
@@ -93,16 +93,15 @@ public class ZipSerializableViewImpl extends AssignableBase implements ZipSerial
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
+   
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.AssignableBase#getArchive()
+    * @see org.jboss.shrinkwrap.api.Assignable#as(java.lang.Class)
     */
    @Override
-   protected Archive<?> getArchive()
+   public <TYPE extends Assignable> TYPE as(final Class<TYPE> clazz)
    {
-      assert archive != null : "Underlying archive may never be null; illegal state";
-      return archive;
+      return archive.as(clazz);
    }
 
    //-------------------------------------------------------------------------------------||
@@ -185,5 +184,4 @@ public class ZipSerializableViewImpl extends AssignableBase implements ZipSerial
       while (in.read() != -1);
 
    }
-
 }

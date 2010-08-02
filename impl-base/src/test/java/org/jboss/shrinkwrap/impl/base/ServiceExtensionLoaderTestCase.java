@@ -86,33 +86,19 @@ public class ServiceExtensionLoaderTestCase
       
    }
 
-   public static class ExtensionImpl extends AssignableBase implements Extension {
-
-      private Archive<?> archive;
+   public static class ExtensionImpl extends AssignableBase<Archive<?>> implements Extension
+   {
       public ExtensionImpl(Archive<?> archive)
       {
-         this.archive = archive;
-      }
-      
-      @Override
-      protected Archive<?> getArchive()
-      {
-         return archive;
+         super(archive);
       }
    }
 
-   public static class ExtensionImpl2 extends AssignableBase implements Extension {
-
-      private Archive<?> archive;
+   public static class ExtensionImpl2 extends AssignableBase<Archive<?>> implements Extension
+   {
       public ExtensionImpl2(Archive<?> archive)
       {
-         this.archive = archive;
-      }
-      
-      @Override
-      protected Archive<?> getArchive()
-      {
-         return archive;
+         super(archive);
       }
    }
    

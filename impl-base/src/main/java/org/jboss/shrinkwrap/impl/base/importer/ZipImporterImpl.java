@@ -42,7 +42,7 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ZipImporterImpl extends AssignableBase implements ZipImporter
+public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipImporter
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -55,37 +55,17 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
    private static final Logger log = Logger.getLogger(ZipImporterImpl.class.getName());
 
    //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Archive to import into. 
-    */
-   private Archive<?> archive;
-
-   //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   public ZipImporterImpl(Archive<?> archive)
+   public ZipImporterImpl(final Archive<?> archive)
    {
-      Validate.notNull(archive, "Archive must be specified");
-      this.archive = archive;
+      super(archive);
    }
 
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.AssignableBase#getArchive()
-    */
-   @Override
-   protected Archive<?> getArchive()
-   {
-      return archive;
-   }
 
    /**
     * {@inheritDoc}
@@ -99,7 +79,8 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
       return this.importFrom(stream);
    }
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.importer.ZipImporter#importZip(java.util.zip.ZipFile)
     */
    @Deprecated
@@ -130,6 +111,9 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
             // Get the name
             final String entryName = entry.getName();
 
+            // Get the archive
+            final Archive<?> archive = this.getArchive();
+            
             // Handle directories separately
             if (entry.isDirectory())
             {
@@ -190,6 +174,9 @@ public class ZipImporterImpl extends AssignableBase implements ZipImporter
 
             // Get the entry (path) name
             final String entryName = entry.getName();
+            
+            // Get the archive
+            final Archive<?> archive = this.getArchive();
 
             // Handle directories separately
             if (entry.isDirectory())

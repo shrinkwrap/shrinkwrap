@@ -31,7 +31,7 @@ import org.jboss.shrinkwrap.spi.Configurable;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ConfigurableArchiveImpl extends AssignableBase implements Configurable
+public class ConfigurableArchiveImpl extends AssignableBase<ArchiveBase<?>> implements Configurable
 {
 
    //-------------------------------------------------------------------------------------||
@@ -44,19 +44,13 @@ public class ConfigurableArchiveImpl extends AssignableBase implements Configura
    @SuppressWarnings("unused")
    private static final Logger log = Logger.getLogger(ConfigurableArchiveImpl.class.getName());
 
-   /**
-    * Implementation class view 
-    */
-   private final ArchiveBase<?> archive;
-
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    public ConfigurableArchiveImpl(final ArchiveBase<?> archive)
    {
-      Validate.notNull(archive, "Archive must be specified");
-      this.archive = archive;
+      super(archive);
    }
 
    //-------------------------------------------------------------------------------------||
@@ -65,21 +59,11 @@ public class ConfigurableArchiveImpl extends AssignableBase implements Configura
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.AssignableBase#getArchive()
-    */
-   @Override
-   protected Archive<?> getArchive()
-   {
-      return archive;
-   }
-
-   /**
-    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.spi.Configurable#getConfiguration()
     */
    @Override
    public Configuration getConfiguration()
    {
-      return archive.getConfiguration();
+      return this.getArchive().getConfiguration();
    }
 }

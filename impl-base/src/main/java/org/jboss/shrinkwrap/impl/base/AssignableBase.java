@@ -27,22 +27,59 @@ import org.jboss.shrinkwrap.api.Assignable;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public abstract class AssignableBase implements Assignable
+public abstract class AssignableBase<T extends Archive<?>> implements Assignable
 {
+   //-------------------------------------------------------------------------------------||
+   // Instance Members -------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
    /**
-    * Used by the Generic {@link Assignable} implementation to 
-    * get the extension wrapped inner {@link Archive}.
-    * 
-    * @return The wrapped {@link Archive}  
+    * Underlying archive
     */
-   protected abstract Archive<?> getArchive();
-   
-   /* (non-Javadoc)
+   private final T archive;
+
+   //-------------------------------------------------------------------------------------||
+   // Constructor ------------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Constructs a new instance using the underlying specified
+    * archive, which is required
+    * @param archive
+    */
+   protected AssignableBase(final T archive)
+   {
+      // Precondition check
+      Validate.notNull(archive, "archive must be specified");
+
+      // Set
+      this.archive = archive;
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Required Implementations -----------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Specializer#as(java.lang.Class)
     */
    @Override
-   public <TYPE extends Assignable> TYPE as(Class<TYPE> clazz)
+   public final <TYPE extends Assignable> TYPE as(Class<TYPE> clazz)
    {
-      return getArchive().as(clazz);
+      return this.getArchive().as(clazz);
+   }
+
+   //-------------------------------------------------------------------------------------||
+   // Functional Methods -----------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+
+   /**
+    * Returns the underlying archive
+    * @return
+    */
+   protected final T getArchive()
+   {
+      return archive;
    }
 }
