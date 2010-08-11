@@ -381,48 +381,13 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    @Override
    public int hashCode()
    {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((archive.getName() == null) ? 0 : archive.getName().hashCode());
-      result = prime * result + ((archive.getContent() == null) ? 0 : archive.getContent().hashCode());
-      return result;
+      return archive.hashCode();
    }
 
    @Override
    public boolean equals(Object obj)
    {
-      if (this == obj)
-         return true;
-      if (obj == null)
-         return false;
-      if (!(obj instanceof ContainerBase))
-         return false;
-      
-      ContainerBase<?> other = (ContainerBase<?>) obj;
-      
-      if (archive == null)
-      {
-         if (other.archive != null)
-            return false;
-      }
-      else if (!archive.equals(other.archive))
-         return false;
-      if (archive.getContent() == null)
-      {
-         if (other.getArchive().getContent() != null)
-            return false;
-      }
-      else if (!archive.getContent().equals(other.getArchive().getContent()))
-         return false;
-      if (archive.getName() == null)
-      {
-         if (other.getArchive().getName() != null)
-            return false;
-      }
-      else if (!archive.getName().equals(other.getArchive().getName()))
-         return false;
-      
-      return true;
+     return archive.equals(obj);
    }   
 
    //-------------------------------------------------------------------------------------||
