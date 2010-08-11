@@ -36,6 +36,7 @@ import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
+import org.jboss.shrinkwrap.impl.base.container.ContainerBase;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.spi.Configurable;
 
@@ -188,7 +189,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
       final ArchivePath contentPath = new BasicPath(path, archiveName);
 
       // Create ArchiveAsset 
-      final ArchiveAsset archiveAsset = new ArchiveAsset(archive,exporter);
+      final ArchiveAsset archiveAsset = new ArchiveAsset(archive, exporter);
 
       // Delegate
       return add(archiveAsset, contentPath);
@@ -427,11 +428,21 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
          return true;
       if (obj == null)
          return false;
-      if (getClass() != obj.getClass())
-         return false;
-      
+      if (!(obj instanceof ArchiveBase))
+      {
+         if (obj instanceof ContainerBase)
+         {
+            // compare the underlying archive
+            obj = ((ContainerBase<?>) obj).getArchive();
+         }
+         else
+         {
+            return false;
+         }
+      }
+
       ArchiveBase<?> other = (ArchiveBase<?>) obj;
-      
+
       if (getContent() == null)
       {
          if (other.getContent() != null)
@@ -448,7 +459,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
          return false;
       return true;
    }
-   
+
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.spi.Configurable#getConfiguration()

@@ -398,7 +398,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.impl.base.SpecializedBase#getArchive()
     */
    @Override
-   protected Archive<?> getArchive()
+   public Archive<?> getArchive()
    {
       return archive;
    }
