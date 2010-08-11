@@ -106,8 +106,12 @@ public class ArchiveEqualsHashCodeTestCase
 
    }
 
+   /**
+    * Calls to hashCode with the same value should always hash to the same result.
+    * @throws Exception
+    */
    @Test
-   public void archivesShouldHaveHashCodeConsistency() throws Exception
+   public void archiveHashCodeShouldBeIdempotent() throws Exception
    {
       final File testFile1 = delegate.getExistingResource();
 
