@@ -117,25 +117,8 @@ public class ArchiveEqualsHashCodeTestCase
 
       final JavaArchive jar = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile1);
 
-      Assert.assertEquals("Archive's hashCode did not return consistent value for same instance", jar.hashCode(),
+      Assert.assertEquals("Archive#hashCode did not return consistent value for same instance", jar.hashCode(),
             jar.hashCode());
-   }
-
-   @Test
-   public void setShouldRestrictDuplicateArchives() throws Exception
-   {
-      final File testFile1 = delegate.getExistingResource();
-
-      final Archive<?> jar = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile1);
-      final Archive<?> jar2 = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile1);
-
-      Set<Archive<?>> set = new HashSet<Archive<?>>();
-      set.add(jar);
-      set.add(jar2);
-
-      Assert.assertEquals("Equals and hashCode semantics did not catch add of duplicate Archive entry to set.", 1,
-            set.size());
-
    }
 
 }
