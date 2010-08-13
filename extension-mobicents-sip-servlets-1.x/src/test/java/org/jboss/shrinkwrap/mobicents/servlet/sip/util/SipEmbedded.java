@@ -113,7 +113,7 @@ public class SipEmbedded {
 	 * @throws Exception
 	 */
 	public void initTomcat(String tomcatBasePath) throws Exception {
-//		setPath(tomcatBasePath);
+		setPath("./target");
 		// Set the home directory
 //		System.setProperty("CATALINA_HOME", getPath());
 //		System.setProperty("CATALINA_BASE", getPath());
