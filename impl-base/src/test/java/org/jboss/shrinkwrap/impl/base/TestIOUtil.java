@@ -17,6 +17,8 @@
 package org.jboss.shrinkwrap.impl.base;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * IOUtil
@@ -80,5 +82,19 @@ public class TestIOUtil
          throw new RuntimeException("Unable to delete directory: " + directory
                + ".  It is either not a directory or does not exist.");
       }
+   }
+   
+   /**
+    * Given an existing resource location, create and return a File
+    * @param existingResourceLocation
+    * @return
+    * @throws URISyntaxException
+    */
+   public static File createFileFromResourceName(final String resourceName) throws URISyntaxException
+   {
+      assert resourceName != null : "Resource name must be specified";
+      final URL resourceLocation = SecurityActions.getThreadContextClassLoader().getResource(resourceName);
+      assert resourceLocation != null : "Resource was not found at specified location: " + resourceName;
+      return new File(resourceLocation.toURI());
    }
 }

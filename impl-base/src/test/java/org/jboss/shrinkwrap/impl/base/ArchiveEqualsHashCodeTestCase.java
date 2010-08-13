@@ -1,8 +1,6 @@
 package org.jboss.shrinkwrap.impl.base;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -10,7 +8,6 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.importer.ZipContentAssertionDelegate;
 import org.junit.Test;
 
 /**
@@ -29,10 +26,10 @@ public class ArchiveEqualsHashCodeTestCase
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   /**
-    * Delegate for performing ZIP content assertions
-    */
-   private static final ZipContentAssertionDelegate delegate = new ZipContentAssertionDelegate();
+   // These two files have the same contents, used for testing equality.
+
+   private static final String TEST_ZIP_1 = "org/jboss/shrinkwrap/impl/base/importer/test.zip";
+   private static final String TEST_ZIP_2 = "org/jboss/shrinkwrap/impl/base/asset/test.zip";
 
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
@@ -42,8 +39,8 @@ public class ArchiveEqualsHashCodeTestCase
    public void archiveEqualsShouldReturnTrueWhenNameAndContentsAreEqual() throws Exception
    {
 
-      final File testFile = delegate.getExistingResource();
-      final File testFile2 = delegate.getExistingResource();
+      final File testFile = TestIOUtil.createFileFromResourceName(TEST_ZIP_1);
+      final File testFile2 = TestIOUtil.createFileFromResourceName(TEST_ZIP_2);
 
       final Archive<?> archive = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile);
       final Archive<?> archive2 = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile2);
@@ -53,12 +50,26 @@ public class ArchiveEqualsHashCodeTestCase
    }
 
    @Test
+   public void archiveEqualsShouldReturnTrueWhenEqualByReference() throws Exception
+   {
+
+      // reference the same file
+      final File testFile = TestIOUtil.createFileFromResourceName(TEST_ZIP_1);
+      final File testFile2 = TestIOUtil.createFileFromResourceName(TEST_ZIP_1);
+
+      final Archive<?> archive = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile);
+      final Archive<?> archive2 = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile2);
+
+      Assert.assertEquals("Archives were not equal, but should be.", archive, archive2);
+   }
+
+   @Test
    public void archiveEqualsShouldReturnFalseWhenArchivesContentsAreNotEqual() throws Exception
    {
       final String archiveName = "test.zip";
       final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, archiveName);
 
-      final File testFile = delegate.getExistingResource();
+      final File testFile = TestIOUtil.createFileFromResourceName(TEST_ZIP_1);
       final JavaArchive archive2 = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile);
 
       Assert.assertFalse("Archives were equal, but should not have been - contents differ.", archive.equals(archive2));
@@ -83,8 +94,8 @@ public class ArchiveEqualsHashCodeTestCase
    public void enterpriseArchiveEqualsShouldReturnTrueWhenNameAndContentsAreEqual() throws Exception
    {
 
-      final File testFile1 = delegate.getExistingResource();
-      final File testFile2 = delegate.getExistingResource();
+      final File testFile1 = TestIOUtil.createFileFromResourceName(TEST_ZIP_1);
+      final File testFile2 = TestIOUtil.createFileFromResourceName(TEST_ZIP_2);
 
       final EnterpriseArchive ear1 = ShrinkWrap.createFromZipFile(EnterpriseArchive.class, testFile1);
       final EnterpriseArchive ear2 = ShrinkWrap.createFromZipFile(EnterpriseArchive.class, testFile2);
@@ -96,8 +107,8 @@ public class ArchiveEqualsHashCodeTestCase
    @Test
    public void javaArchiveShouldEqualEnterpriseArchiveWhenNameAndContentsAreEqual() throws Exception
    {
-      final File testFile1 = delegate.getExistingResource();
-      final File testFile2 = delegate.getExistingResource();
+      final File testFile1 = TestIOUtil.createFileFromResourceName(TEST_ZIP_1);
+      final File testFile2 = TestIOUtil.createFileFromResourceName(TEST_ZIP_2);
 
       final JavaArchive jar = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile1);
       final EnterpriseArchive ear = ShrinkWrap.createFromZipFile(EnterpriseArchive.class, testFile2);
@@ -113,12 +124,11 @@ public class ArchiveEqualsHashCodeTestCase
    @Test
    public void archiveHashCodeShouldBeIdempotent() throws Exception
    {
-      final File testFile1 = delegate.getExistingResource();
+      final File testFile1 = TestIOUtil.createFileFromResourceName(TEST_ZIP_1);
 
       final JavaArchive jar = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile1);
 
-      Assert.assertEquals("Archive#hashCode did not return consistent value for same instance", jar.hashCode(),
-            jar.hashCode());
+      Assert.assertEquals("hashCode did not return consistent value for same instance", jar.hashCode(), jar.hashCode());
    }
 
 }
