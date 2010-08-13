@@ -135,7 +135,7 @@ public class ShrinkWrapSipStandardContext extends SipStandardContext implements 
          throw new RuntimeException("Could not create temporary File in \"" + TMP_DIR + "\" to write exported archive", e);
       }
       // We are overwriting the temporary file placeholder reserved by File#createTemplateFile()
-      archive.as(ZipExporter.class).exportZip(exported, true);
+      archive.as(ZipExporter.class).exportTo(exported, true);
 
       // Mark to delete when we come down
       exported.deleteOnExit();
