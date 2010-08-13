@@ -18,9 +18,9 @@ package org.jboss.shrinkwrap.impl.base.importer;
 
 import java.io.File;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 
 /**
  * Base delegate class for asserting that contents in some
@@ -62,14 +62,9 @@ public abstract class ContentAssertionDelegateBase
     */
    public final File getExistingResource() throws URISyntaxException
    {
-      final String existingResourceName = this.getExistingResourceName();
-      assert existingResourceName != null : "Existing resource name must be specified by implementors";
-      final URL existingResourceLocation = SecurityActions.getThreadContextClassLoader().getResource(
-            existingResourceName);
-      assert existingResourceLocation != null : "Existing resource was not found at specified location: "
-            + existingResourceName;
-      return new File(existingResourceLocation.toURI());
+      return TestIOUtil.createFileFromResourceName(this.getExistingResourceName());
    }
+
 
    /**
     * Compare the content of the original file and what was imported.

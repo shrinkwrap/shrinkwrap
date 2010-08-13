@@ -26,14 +26,13 @@ import org.jboss.shrinkwrap.impl.base.importer.ContentAssertionDelegateBase;
 import org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase;
 import org.jboss.shrinkwrap.tar.api.exporter.TarExporter;
 import org.jboss.shrinkwrap.tar.api.importer.TarImporter;
-import org.jboss.shrinkwrap.tar.impl.io.TarInputStream;
+import org.jboss.tarbarian.api.TarInputStream;
 
 /**
  * TestCase to verify the {@link TarImporterImpl} functionality.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-
 public class TarImporterImplTestCase extends StreamImporterImplTestBase<TarImporter>
 {
 

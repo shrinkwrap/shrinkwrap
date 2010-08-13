@@ -188,7 +188,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
       final ArchivePath contentPath = new BasicPath(path, archiveName);
 
       // Create ArchiveAsset 
-      final ArchiveAsset archiveAsset = new ArchiveAsset(archive,exporter);
+      final ArchiveAsset archiveAsset = new ArchiveAsset(archive, exporter);
 
       // Delegate
       return add(archiveAsset, contentPath);
@@ -400,6 +400,55 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
       // Delegate
       return formatter.format(this);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#hashCode()
+    */
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((getContent() == null) ? 0 : getContent().hashCode());
+      result = prime * result + ((name == null) ? 0 : name.hashCode());
+      return result;
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#equals(Object)
+    */
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+         return true;
+      if (obj == null)
+         return false;
+      if (!(obj instanceof ArchiveBase))
+      {
+         return false;
+      }
+
+      ArchiveBase<?> other = (ArchiveBase<?>) obj;
+
+      if (getContent() == null)
+      {
+         if (other.getContent() != null)
+            return false;
+      }
+      else if (!getContent().equals(other.getContent()))
+         return false;
+      if (name == null)
+      {
+         if (other.name != null)
+            return false;
+      }
+      else if (!name.equals(other.name))
+         return false;
+      return true;
    }
 
    /**
