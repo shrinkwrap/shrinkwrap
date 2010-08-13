@@ -1,0 +1,2 @@
+implementingClassName=org.jboss.shrinkwrap.impl.sip.base.spec.ConvergedSipWebArchiveImpl
+extension=.war

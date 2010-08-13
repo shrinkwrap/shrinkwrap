@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api.container;
+package org.jboss.shrinkwrap.api.sip.container;
 
 import java.io.File;
 import java.net.URL;
@@ -22,6 +22,7 @@ import java.net.URL;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.container.WebContainer;
 
 
 /**

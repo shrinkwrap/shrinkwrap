@@ -37,7 +37,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.ConvergedSipWebArchive;
+import org.jboss.shrinkwrap.api.sip.spec.ConvergedSipWebArchive;
 import org.jboss.shrinkwrap.mobicents.servlet.sip.api.ShrinkWrapSipStandardContext;
 import org.jboss.shrinkwrap.mobicents.servlet.sip.servlet.ContextServlet;
 import org.jboss.shrinkwrap.mobicents.servlet.sip.servlet.ForwardingServlet;

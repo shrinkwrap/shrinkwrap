@@ -14,16 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.test;
+package org.jboss.shrinkwrap.impl.sip.base.test;
 
 import junit.framework.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.container.ConvergedSipWebContainer;
+import org.jboss.shrinkwrap.api.sip.container.ConvergedSipWebContainer;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
+import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
+import org.jboss.shrinkwrap.impl.base.test.DynamicContainerTestBase;
 import org.junit.Test;
 
 /**

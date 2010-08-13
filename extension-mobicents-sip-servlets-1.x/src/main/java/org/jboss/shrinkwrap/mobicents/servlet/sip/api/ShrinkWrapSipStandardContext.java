@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.api.sip.spec.ConvergedSipWebArchive;
 import org.mobicents.servlet.sip.startup.SipStandardContext;
 
 /**

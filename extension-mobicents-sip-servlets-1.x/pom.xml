@@ -36,6 +36,19 @@
          <scope>test</scope>
          <version>${project.version}</version>
       </dependency>
+      
+      <dependency>
+         <groupId>org.jboss.shrinkwrap.sip</groupId>
+         <artifactId>shrinkwrap-extension-sip-api</artifactId>
+         <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.shrinkwrap.sip</groupId>
+         <artifactId>shrinkwrap-extension-sip-impl</artifactId>
+         <scope>test</scope>
+         <version>${project.version}</version>
+      </dependency>
 
       <dependency>
          <groupId>junit</groupId>
