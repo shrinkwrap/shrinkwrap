@@ -38,6 +38,7 @@ import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
+import org.jboss.shrinkwrap.impl.base.ArchiveBase;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.URLPackageScanner;
 import org.jboss.shrinkwrap.impl.base.Validate;
@@ -387,6 +388,13 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    @Override
    public boolean equals(Object obj)
    {
+      if (obj instanceof ArchiveBase<?>) {
+         return archive.equals(obj);
+      }
+      
+      if (!(obj instanceof ContainerBase))
+         return false;
+      
       final ContainerBase<?> other = (ContainerBase<?>) obj;
       return archive.equals(other.getArchive());
    }   
