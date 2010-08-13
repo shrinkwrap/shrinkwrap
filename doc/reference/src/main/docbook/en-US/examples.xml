@@ -12,9 +12,16 @@
    </section>
 
    <section id="examples.createwebarchive">
-      <title>Create a JavaArchive</title>
+      <title>Create a WebArchive</title>
       <para>
          <programlisting role="JAVA"><![CDATA[WebArchive jar = Archives.create("test.war", WebArchive.class);]]></programlisting>
+      </para>
+   </section>
+
+   <section id="examples.createconvergedsipwebarchive">
+      <title>Create a ConvergedSipWebArchive (as per SIP Servlets 1.1 specification)</title>
+      <para>
+         <programlisting role="JAVA"><![CDATA[ConvergedSipWebArchive jar = Archives.create("test.war", ConvergedSipWebArchive.class);]]></programlisting>
       </para>
    </section>
 

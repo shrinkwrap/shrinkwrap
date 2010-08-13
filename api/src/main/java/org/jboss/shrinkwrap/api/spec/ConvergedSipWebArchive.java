@@ -14,31 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.filter;
+package org.jboss.shrinkwrap.api.spec;
 
-import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.Filter;
+import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.container.ClassContainer;
+import org.jboss.shrinkwrap.api.container.ConvergedSipWebContainer;
+import org.jboss.shrinkwrap.api.container.LibraryContainer;
+import org.jboss.shrinkwrap.api.container.ManifestContainer;
 
 /**
- * IncludeAllPaths
- * 
- * Filter that include all {@link ArchivePath}s.
+ * Converged SIP/Web WAR (Java Web Archive) structure. Used in 
+ * construction of SIP Servlets applications.
  *
- * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * @author Jean Deruelle
  * @version $Revision: $
  */
-public class IncludeAllPaths implements Filter<ArchivePath>
+public interface ConvergedSipWebArchive
+      extends
+         Archive<ConvergedSipWebArchive>,
+         ManifestContainer<ConvergedSipWebArchive>,
+         ClassContainer<ConvergedSipWebArchive>,
+         LibraryContainer<ConvergedSipWebArchive>,
+         ConvergedSipWebContainer<ConvergedSipWebArchive>
 {
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.Filter#include(java.lang.Object)
-    */
-   @Override
-   public boolean include(ArchivePath object)
-   {
-      return true;
-   }
 }

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+   <parent>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-build</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <relativePath>../build/pom.xml</relativePath>
+   </parent>
+
+   <modelVersion>4.0.0</modelVersion>
+
+   <artifactId>shrinkwrap-extension-mobicents-sip-servlets-1x</artifactId>
+   <name>ShrinkWrap Mobicents Sip Servles 1.x Integration Extension</name>
+   <description>ShrinkWrap integration extension for the Mobicents Sip Servles 1.x container</description>
+
+   <properties>
+      <!-- Known to work with Tomcat version 6.0.13 and up (that's the minimum version available in central) -->
+      <version.org.apache.tomcat_tomcat>6.0.29</version.org.apache.tomcat_tomcat>
+      <version.org.mobicents.servlet.sip>1.3.2</version.org.mobicents.servlet.sip>
+      <version.org.apache.httpcomponents_httpclient>4.0.1</version.org.apache.httpcomponents_httpclient>
+   </properties>
+
+   <dependencies>
+
+      <dependency>
+         <groupId>org.jboss.shrinkwrap</groupId>
+         <artifactId>shrinkwrap-api</artifactId>
+         <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.shrinkwrap</groupId>
+         <artifactId>shrinkwrap-impl-base</artifactId>
+         <scope>test</scope>
+         <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>test</scope>
+      </dependency>
+      
+      <dependency>
+          <groupId>org.apache.tomcat</groupId>
+          <artifactId>catalina</artifactId>
+          <version>${version.org.apache.tomcat_tomcat}</version>
+          <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>org.apache.tomcat</groupId>
+          <artifactId>coyote</artifactId>
+          <version>${version.org.apache.tomcat_tomcat}</version>
+          <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>org.apache.tomcat</groupId>
+          <artifactId>jasper</artifactId>
+          <version>${version.org.apache.tomcat_tomcat}</version>
+          <scope>provided</scope>
+      </dependency>
+      
+      <dependency>
+          <groupId>org.mobicents.servlet.sip</groupId>
+          <artifactId>sip-servlets-impl</artifactId>
+          <version>${version.org.mobicents.servlet.sip}</version>
+          <scope>provided</scope>
+      </dependency>
+      
+       <dependency>
+          <groupId>org.mobicents.servlet.sip</groupId>
+          <artifactId>sip-servlets-tomcat-jboss4</artifactId>
+          <version>${version.org.mobicents.servlet.sip}</version>
+          <scope>provided</scope>
+      </dependency>
+      
+      <dependency>
+			<groupId>javax.sip</groupId>
+			<artifactId>jain-sip-api</artifactId>
+			<version>1.2</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.sip</groupId>
+			<artifactId>jain-sip-ri</artifactId>
+			<version>1.2.153</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		
+		<dependency>
+			<groupId>org.mobicents.tools</groupId>
+			<artifactId>sip-balancer-jar</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		
+		<dependency>			
+			<groupId>org.mobicents.ha.javax.sip</groupId>
+			<artifactId>mobicents-jain-sip-ha-core</artifactId>
+			<version>0.11</version>				
+		</dependency>
+		
+		<dependency>			
+			<groupId>org.mobicents.ha.javax.sip</groupId>
+			<artifactId>mobicents-jain-sip-jboss4</artifactId>
+			<version>0.11</version>				
+		</dependency>
+		
+		<dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.14</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+			<groupId>org.dnsjava</groupId>
+			<artifactId>dnsjava</artifactId>
+			<version>2.0.6</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>1.1.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4</version>
+			<scope>provided</scope>
+		</dependency>
+            
+      <dependency>
+         <groupId>org.apache.httpcomponents</groupId>
+         <artifactId>httpclient</artifactId>
+         <version>${version.org.apache.httpcomponents_httpclient}</version>
+         <scope>test</scope>
+      </dependency>
+
+   </dependencies>
+
+<!--
+vi:ts=2:sw=2:expandtab:
+-->
+</project>
