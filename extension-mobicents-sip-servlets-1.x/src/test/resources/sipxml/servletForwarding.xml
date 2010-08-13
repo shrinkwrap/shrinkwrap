@@ -15,7 +15,7 @@
 
   <servlet>
     <javaee:servlet-name>Context</javaee:servlet-name>
-    <javaee:servlet-class>org.jboss.shrinkwrap.mobicents.servlet.sip.ContextServlet</javaee:servlet-class>
+    <javaee:servlet-class>org.jboss.shrinkwrap.mobicents.servlet.sip.servlet.ContextServlet</javaee:servlet-class>
     <javaee:init-param>
       <javaee:param-name>eyes</javaee:param-name>
       <javaee:param-value>brown</javaee:param-value>
