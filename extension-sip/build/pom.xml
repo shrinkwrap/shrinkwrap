@@ -26,9 +26,6 @@
 
   <!-- Properties -->
   <properties>
-  
-    <!-- Versioning -->
-    <version.org.jboss.tarbarian>1.0.0-SNAPSHOT</version.org.jboss.tarbarian>
 
   </properties>
 
@@ -36,12 +33,6 @@
   <dependencyManagement>
     <dependencies>
 
-      <!-- org.jboss.javatar --> 
-      <dependency>
-        <groupId>org.jboss.tarbarian</groupId>
-        <artifactId>tarbarian-api</artifactId>
-        <version>${version.org.jboss.tarbarian}</version>
-      </dependency>
     
     </dependencies>
   </dependencyManagement>
