@@ -110,18 +110,21 @@
 			<groupId>org.mobicents.tools</groupId>
 			<artifactId>sip-balancer-jar</artifactId>
 			<version>1.0.1</version>
+			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>			
 			<groupId>org.mobicents.ha.javax.sip</groupId>
 			<artifactId>mobicents-jain-sip-ha-core</artifactId>
-			<version>0.11</version>				
+			<version>0.11</version>
+			<scope>provided</scope>				
 		</dependency>
 		
 		<dependency>			
 			<groupId>org.mobicents.ha.javax.sip</groupId>
 			<artifactId>mobicents-jain-sip-jboss4</artifactId>
-			<version>0.11</version>				
+			<version>0.11</version>
+			<scope>provided</scope>				
 		</dependency>
 		
 		<dependency>
