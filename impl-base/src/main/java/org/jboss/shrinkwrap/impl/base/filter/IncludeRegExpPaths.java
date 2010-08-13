@@ -16,8 +16,8 @@
  */
 package org.jboss.shrinkwrap.impl.base.filter;
 
-import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**

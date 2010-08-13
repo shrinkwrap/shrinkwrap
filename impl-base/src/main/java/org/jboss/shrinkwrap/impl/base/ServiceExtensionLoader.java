@@ -29,8 +29,8 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.Assignable;
+import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.UnknownExtensionTypeExceptionDelegator;
 
 /**

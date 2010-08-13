@@ -16,8 +16,9 @@
  */
 package org.jboss.shrinkwrap.impl.base.asset;
 
-import org.jboss.shrinkwrap.api.asset.ApiTestUtilsDelegator;
 import java.io.InputStream;
+
+import org.jboss.shrinkwrap.api.asset.ApiTestUtilsDelegator;
 
 /**
  * TestUtils

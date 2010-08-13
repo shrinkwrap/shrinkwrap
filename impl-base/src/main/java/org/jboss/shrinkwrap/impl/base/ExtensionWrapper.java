@@ -17,9 +17,9 @@
 
 package org.jboss.shrinkwrap.impl.base;
 
-import org.jboss.shrinkwrap.api.Assignable;
-
 import java.util.Map;
+
+import org.jboss.shrinkwrap.api.Assignable;
 
 /**
  * ExtensionWrapper
