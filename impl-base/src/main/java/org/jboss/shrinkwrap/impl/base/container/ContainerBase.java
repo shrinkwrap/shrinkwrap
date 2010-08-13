@@ -387,7 +387,8 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    @Override
    public boolean equals(Object obj)
    {
-     return archive.equals(obj);
+      final ContainerBase<?> other = (ContainerBase<?>) obj;
+      return archive.equals(other.getArchive());
    }   
 
    //-------------------------------------------------------------------------------------||
@@ -398,7 +399,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.impl.base.SpecializedBase#getArchive()
     */
    @Override
-   public Archive<?> getArchive()
+   protected Archive<?> getArchive()
    {
       return archive;
    }
