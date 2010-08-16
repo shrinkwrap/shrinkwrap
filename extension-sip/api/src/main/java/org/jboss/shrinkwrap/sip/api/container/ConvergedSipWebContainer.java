@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api.sip.container;
+package org.jboss.shrinkwrap.sip.api.container;
 
 import java.io.File;
 import java.net.URL;

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.sip.base.spec;
+package org.jboss.shrinkwrap.sip.impl.spec;
 
 import java.util.UUID;
 
@@ -25,10 +25,10 @@ import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
-import org.jboss.shrinkwrap.api.sip.container.ConvergedSipWebContainer;
-import org.jboss.shrinkwrap.api.sip.spec.ConvergedSipWebArchive;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
-import org.jboss.shrinkwrap.impl.sip.base.test.DynamicConvergedSipWebContainerTestBase;
+import org.jboss.shrinkwrap.sip.api.container.ConvergedSipWebContainer;
+import org.jboss.shrinkwrap.sip.api.spec.ConvergedSipWebArchive;
+import org.jboss.shrinkwrap.sip.impl.test.DynamicConvergedSipWebContainerTestBase;
 import org.junit.After;
 import org.junit.Before;
 

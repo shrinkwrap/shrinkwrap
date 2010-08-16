@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api.sip.spec;
+package org.jboss.shrinkwrap.sip.api.spec;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
-import org.jboss.shrinkwrap.api.sip.container.ConvergedSipWebContainer;
+import org.jboss.shrinkwrap.sip.api.container.ConvergedSipWebContainer;
 
 /**
  * Converged SIP/Web WAR (Java Web Archive) structure. Used in 

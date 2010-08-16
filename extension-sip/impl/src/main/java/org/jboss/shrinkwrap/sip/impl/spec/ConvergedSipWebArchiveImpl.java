@@ -14,15 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.sip.base.spec;
+package org.jboss.shrinkwrap.sip.impl.spec;
 
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.sip.spec.ConvergedSipWebArchive;
-import org.jboss.shrinkwrap.impl.sip.base.container.ConvergedSipWebContainerBase;
+import org.jboss.shrinkwrap.sip.api.spec.ConvergedSipWebArchive;
+import org.jboss.shrinkwrap.sip.impl.container.ConvergedSipWebContainerBase;
 
 /**
  * ConvergedSipWebArchiveImpl

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.sip.base.container;
+package org.jboss.shrinkwrap.sip.impl.container;
 
 import java.io.File;
 import java.net.URL;
@@ -23,10 +23,10 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.FileAsset;
 import org.jboss.shrinkwrap.api.asset.UrlAsset;
-import org.jboss.shrinkwrap.api.sip.container.ConvergedSipWebContainer;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.container.WebContainerBase;
+import org.jboss.shrinkwrap.sip.api.container.ConvergedSipWebContainer;
 
 /**
  * ConvergedSipWebContainerBase
