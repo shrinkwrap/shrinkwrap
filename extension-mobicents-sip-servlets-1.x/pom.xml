@@ -46,7 +46,6 @@
       <dependency>
          <groupId>org.jboss.shrinkwrap.sip</groupId>
          <artifactId>shrinkwrap-extension-sip-impl</artifactId>
-         <scope>test</scope>
          <version>${project.version}</version>
       </dependency>
 
@@ -95,14 +94,14 @@
 			<groupId>javax.sip</groupId>
 			<artifactId>jain-sip-api</artifactId>
 			<version>1.2</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.sip</groupId>
 			<artifactId>jain-sip-ri</artifactId>
 			<version>1.2.153</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
 		
 		
@@ -110,49 +109,49 @@
 			<groupId>org.mobicents.tools</groupId>
 			<artifactId>sip-balancer-jar</artifactId>
 			<version>1.0.1</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
 		
 		<dependency>			
 			<groupId>org.mobicents.ha.javax.sip</groupId>
 			<artifactId>mobicents-jain-sip-ha-core</artifactId>
 			<version>0.11</version>
-			<scope>provided</scope>				
+			<scope>test</scope>				
 		</dependency>
 		
 		<dependency>			
 			<groupId>org.mobicents.ha.javax.sip</groupId>
 			<artifactId>mobicents-jain-sip-jboss4</artifactId>
 			<version>0.11</version>
-			<scope>provided</scope>				
+			<scope>test</scope>				
 		</dependency>
 		
 		<dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.14</version>
-      <scope>provided</scope>
+      <scope>test</scope>
     </dependency>
     
     <dependency>
 			<groupId>org.dnsjava</groupId>
 			<artifactId>dnsjava</artifactId>
 			<version>2.0.6</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
 		
 		<dependency>
 			<groupId>javax.activation</groupId>
 			<artifactId>activation</artifactId>
 			<version>1.1.1</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>1.4</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
             
       <dependency>
