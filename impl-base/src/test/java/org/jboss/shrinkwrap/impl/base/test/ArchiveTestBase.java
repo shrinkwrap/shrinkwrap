@@ -331,7 +331,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       final Asset testAsset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       
       
-      NamedAsset pna = new NamedAsset() {
+      NamedAsset namedAsset = new NamedAsset() {
 
          @Override
          public String getName()
@@ -347,7 +347,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
          
       };
       
-      archive.add(pna);
+      archive.add(namedAsset);
       
       Assert.assertTrue("Asset should be placed on " + testName, archive.contains(testName));
       

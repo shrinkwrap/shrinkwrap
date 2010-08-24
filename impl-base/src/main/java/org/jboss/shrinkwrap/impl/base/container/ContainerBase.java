@@ -168,9 +168,9 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.Archive#add(NamedAsset))
     */
    @Override
-   public T add(NamedAsset pna)
+   public T add(NamedAsset namedAsset)
    {
-      this.archive.add(pna);
+      this.archive.add(namedAsset);
       return covarientReturn();
       
    }

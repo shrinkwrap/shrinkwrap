@@ -200,12 +200,12 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     * @see org.jboss.shrinkwrap.api.Archive#add(NamedAsset))
     */
    @Override
-   public T add(NamedAsset pna)
+   public T add(NamedAsset namedAsset)
    {
       
-      Validate.notNull(pna, "No pluggable named asset was specified");
+      Validate.notNull(namedAsset, "No pluggable named asset was specified");
       
-      return add(pna.getAsset(), pna.getName());
+      return add(namedAsset.getAsset(), namedAsset.getName());
       
    }
    

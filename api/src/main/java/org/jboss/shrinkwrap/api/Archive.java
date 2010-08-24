@@ -102,12 +102,12 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * Adds the asset encapsulated within the specified PluggableNamedAsset under the
     * encapsulated name and target (directory)
     * 
-    * @param pna
+    * @param namedAsset
     * @return
     * @throws IllegalArgumentException If either the target or asset is not specified 
     * @throws IllegalArchivePathException If the target is invalid.
     */
-   T add(NamedAsset pna) throws IllegalArgumentException;
+   T add(NamedAsset namedAsset) throws IllegalArgumentException;
 
    
    /**
