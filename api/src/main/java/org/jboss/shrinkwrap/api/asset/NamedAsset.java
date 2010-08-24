@@ -29,7 +29,7 @@ package org.jboss.shrinkwrap.api.asset;
  * @author <a href="mailto:chris.wash@gmail.com">Chris Wash</a>
  *
  */
-public interface PluggableNamedAsset
+public interface NamedAsset
 {
 
    /**

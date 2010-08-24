@@ -30,7 +30,7 @@ import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.FileAsset;
-import org.jboss.shrinkwrap.api.asset.PluggableNamedAsset;
+import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.api.asset.UrlAsset;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -165,10 +165,10 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#add(PluggableNamedAsset))
+    * @see org.jboss.shrinkwrap.api.Archive#add(NamedAsset))
     */
    @Override
-   public T add(PluggableNamedAsset pna)
+   public T add(NamedAsset pna)
    {
       this.archive.add(pna);
       return covarientReturn();

@@ -31,7 +31,7 @@ import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.asset.PluggableNamedAsset;
+import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.Validate;
@@ -331,7 +331,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       final Asset testAsset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       
       
-      PluggableNamedAsset pna = new PluggableNamedAsset() {
+      NamedAsset pna = new NamedAsset() {
 
          @Override
          public String getName()

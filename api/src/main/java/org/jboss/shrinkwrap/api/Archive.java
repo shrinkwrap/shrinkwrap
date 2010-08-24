@@ -19,7 +19,7 @@ package org.jboss.shrinkwrap.api;
 import java.util.Map;
 
 import org.jboss.shrinkwrap.api.asset.Asset;
-import org.jboss.shrinkwrap.api.asset.PluggableNamedAsset;
+import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
@@ -107,7 +107,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If either the target or asset is not specified 
     * @throws IllegalArchivePathException If the target is invalid.
     */
-   T add(PluggableNamedAsset pna) throws IllegalArgumentException;
+   T add(NamedAsset pna) throws IllegalArgumentException;
 
    
    /**
