@@ -119,4 +119,42 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
     * @throws IllegalArgumentException If no packages were specified
     */
    T addPackages(boolean recursive, Filter<ArchivePath> filter, Package... packages) throws IllegalArgumentException;
+   
+   /**
+    * Adds all classes in the specified {@link Package} to the {@link Archive}.
+    * <br/>
+    * SubPackages are excluded.
+    * 
+    * @param pack Package to add represented by a String ("my/package")
+    * @return This virtual archive
+    * @throws IllegalArgumentException If no package were specified
+    * @see #addPackages(boolean, Package...)
+    */
+   T addPackage(String pack) throws IllegalArgumentException;
+
+   /**
+    * Adds all classes in the specified {@link Package}s to the {@link Archive}. 
+    * 
+    * @param recursive Should the sub packages be added
+    * @param packages All the packages to add represented by a String ("my/package")
+    * @return This virtual archive
+    * @throws IllegalArgumentException If no packages were specified
+    * @see #addPackages(boolean, Filter, Package...)
+    */
+   T addPackages(boolean recursive, String... packages) throws IllegalArgumentException;
+
+   /**
+    * Adds all classes accepted by the filter in the specified {@link Package}s to the {@link Archive}. <br/>
+    * 
+    * The {@link ArchivePath} returned to the filter is the {@link ArchivePath} of the class, not the final location. <br/>
+    * package.MyClass = /package/MyClass.class <br/>
+    * <b>not:</b> package.MyClass = /WEB-INF/classes/package/MyClass.class <br/>
+    * 
+    * @param recursive Should the sub packages be added
+    * @param filter filter out specific classes
+    * @param packages All the packages to add represented by a String ("my/package")
+    * @return This virtual archive
+    * @throws IllegalArgumentException If no packages were specified
+    */
+   T addPackages(boolean recursive, Filter<ArchivePath> filter, String... packages) throws IllegalArgumentException;
 }

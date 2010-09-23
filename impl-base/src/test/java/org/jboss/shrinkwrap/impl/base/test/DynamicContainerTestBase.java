@@ -690,6 +690,71 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             getArchive().contains(expectedPath));
    }
 
+   /**
+    * Ensure a package as a String can be added to a container
+    * 
+    * @throws Exception
+    */
+   @Test
+   @ArchiveType(ClassContainer.class)
+   public void testAddPackageAsString() throws Exception
+   {
+      getClassContainer().addPackage(DummyClassA.class.getPackage().getName());
+
+      ArchivePath expectedPath = new BasicPath(getClassPath(), AssetUtil
+            .getFullPathForClassResource(DummyClassA.class));
+
+      Assert.assertTrue(
+            "A class should be located at " + expectedPath.get(), 
+            getArchive().contains(expectedPath));
+   }
+
+   /**
+    * Ensure a package as a String can be added to a container
+    * 
+    * @throws Exception
+    */
+   @Test
+   @ArchiveType(ClassContainer.class)
+   public void testAddPackageAsStringNonRecursive() throws Exception
+   {
+      getClassContainer().addPackages(false, DummyClassA.class.getPackage().getName());
+
+      ArchivePath expectedPath = new BasicPath(getClassPath(), AssetUtil
+            .getFullPathForClassResource(DummyClassA.class));
+
+      Assert.assertTrue(
+            "A class should be located at " + expectedPath.get(), 
+            getArchive().contains(expectedPath));
+   }
+   
+   /**
+    * Ensure a package as a String can be added to a container with filter
+    * 
+    * @throws Exception
+    */
+   @Test
+   @ArchiveType(ClassContainer.class)
+   public void testAddPackageAsStringRecursiveFiltered() throws Exception 
+   {
+      getClassContainer().addPackages(
+            true, 
+            Filters.include(DynamicContainerTestBase.class),
+            DynamicContainerTestBase.class.getPackage().getName());
+      
+      ArchivePath expectedPath = new BasicPath(
+            getClassPath(), AssetUtil.getFullPathForClassResource(DynamicContainerTestBase.class));
+
+      Assert.assertEquals(
+            "Should only be one class added",
+            1,
+            numAssets(getArchive()));
+
+      Assert.assertTrue(
+            "A class should be located at " + expectedPath.get(), 
+            getArchive().contains(expectedPath));
+   }
+
    //-------------------------------------------------------------------------------------||
    // Test Implementations - LibraryContainer ----------------------------------------------||
    //-------------------------------------------------------------------------------------||

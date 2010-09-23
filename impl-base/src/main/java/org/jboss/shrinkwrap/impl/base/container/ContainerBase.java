@@ -971,7 +971,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    {
       Validate.notNull(pack, "Pack must be specified");
       
-      return addPackages(false, pack);
+      return addPackage(pack.getName());
    }
    
    /* (non-Javadoc)
@@ -981,6 +981,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public T addPackages(boolean recursive, Package... packages) throws IllegalArgumentException
    {
       Validate.notNull(packages, "Packages must be specified");
+      
       return addPackages(recursive, Filters.includeAll(), packages);
    }
    
@@ -993,9 +994,48 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(filter, "Filter must be specified");
       Validate.notNull(packages, "Packages must be specified");
       
+      String[] packageNames = new String[packages.length];
+      for(int i = 0; i < packages.length; i++)
+      {
+         packageNames[i] = packages[i] == null ? null:packages[i].getName(); 
+      }
+      return addPackages(recursive, filter, packageNames);
+   }
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.ClassContainer#addPackage(java.lang.String)
+    */
+   @Override
+   public T addPackage(String pack) throws IllegalArgumentException
+   {
+      Validate.notNull(pack, "Package must be specified");
+      
+      return addPackages(false, pack);
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.ClassContainer#addPackages(boolean, java.lang.String[])
+    */
+   @Override
+   public T addPackages(boolean recursive, String... packages) throws IllegalArgumentException
+   {
+      Validate.notNullAndNoNullValues(packages, "Pakcages must be specified and can not container null values");
+      
+      return addPackages(recursive, Filters.includeAll(), packages);
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.ClassContainer#addPackages(boolean, org.jboss.shrinkwrap.api.Filter, java.lang.String[])
+    */
+   @Override
+   public T addPackages(boolean recursive, final Filter<ArchivePath> filter, String... packageNames) throws IllegalArgumentException
+   {
+      Validate.notNull(filter, "Filter must be specified");
+      Validate.notNull(packageNames, "PackageNames must be specified");
+
       final ClassLoader classLoader = SecurityActions.getThreadContextClassLoader();
       
-      for(Package pack : packages) 
+      for(String packageName : packageNames) 
       {
          final URLPackageScanner.Callback callback = new URLPackageScanner.Callback()
          {
@@ -1007,26 +1047,14 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
                {
                   return;
                }
-               Class<?> clazz;
-               try
-               {
-                  clazz = classLoader.loadClass(className);
-               }
-               catch (ClassNotFoundException e)
-               {
-                  throw new RuntimeException("Could not load found class " + className, e);
-               }
-               catch (NoClassDefFoundError e) 
-               {
-                  throw new RuntimeException("Could not load found class " + className, e);
-               }
-               Asset asset = new ClassAsset(clazz);
+               Asset asset = new ClassLoaderAsset(classNamePath.get().substring(1), classLoader);
                ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
                add(asset, location);
             }
          };
-         final URLPackageScanner scanner = pack == null ? URLPackageScanner.newInstance(recursive, classLoader,
-               callback) : URLPackageScanner.newInstance(recursive, classLoader, callback, pack);
+         final URLPackageScanner scanner = packageName == null ? 
+                  URLPackageScanner.newInstance(recursive, classLoader, callback) : 
+                  URLPackageScanner.newInstance(recursive, classLoader, callback, packageName);
          scanner.scanPackage();
       }
       return covarientReturn();

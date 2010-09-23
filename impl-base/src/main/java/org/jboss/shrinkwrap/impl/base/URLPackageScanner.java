@@ -70,12 +70,8 @@ public class URLPackageScanner
     * @return new instance of URLPackageScanner
     */
    public static URLPackageScanner newInstance(boolean addRecursively, final ClassLoader classLoader,
-         final Callback callback, final Package pkg)
+         final Callback callback, final String packageName)
    {
-      Validate
-            .notNull(pkg,
-                  "package must be specified; use alternate factory method if you wish to create a scanner for the default package ");
-      final String packageName = pkg.getName();
       Validate.notNull(packageName, "Package name must be specified");
       Validate.notNull(addRecursively, "AddRecursively must be specified");
       Validate.notNull(classLoader, "ClassLoader must be specified");
