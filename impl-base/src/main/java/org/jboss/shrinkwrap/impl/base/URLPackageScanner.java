@@ -155,7 +155,7 @@ public class URLPackageScanner
             if (name.startsWith(packageNamePath) && name.endsWith(".class")
                   && (addRecursively || !name.substring(packageNamePath.length() + 1).contains("/")))
             {
-               String className = name.replace("/", ".").replace(".class", "");
+               String className = name.replace("/", ".").substring(0, name.length()- ".class".length());
                foundClass(className);
             }
          }
