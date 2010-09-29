@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!--
+  vi:ts=2:sw=2:expandtab:
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+   <!-- Parent -->
+   <parent>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-build</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <relativePath>../build/pom.xml</relativePath>
+   </parent>
+
+   <!-- Model Version -->
+   <modelVersion>4.0.0</modelVersion>
+
+   <!-- Artifact Configuration -->
+   <artifactId>shrinkwrap-extension-dependencies</artifactId>
+   <name>ShrinkWrap Extension Dependencies</name>
+   <description>ShrinkWrap Extension for the resolving dependencies</description>
+
+
+   <!-- Properties -->
+   <properties>
+
+      <!-- Versioning -->
+      <version.org.sonatype.aether>1.5</version.org.sonatype.aether>
+      <version.org.codehaus.plexus>1.5.4</version.org.codehaus.plexus>
+      <version.org.apache.maven>3.0-beta-3</version.org.apache.maven>
+      <version.org.apache.maven.wagon>1.0-beta-6</version.org.apache.maven.wagon>
+
+   </properties>
+
+   <!-- Dependencies -->
+   <dependencies>
+
+      <!-- 
+    org.jboss.shrinkwrap    
+     -->
+      <dependency>
+         <groupId>org.jboss.shrinkwrap</groupId>
+         <artifactId>shrinkwrap-api</artifactId>
+         <version>${project.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.shrinkwrap</groupId>
+         <artifactId>shrinkwrap-impl-base</artifactId>
+         <version>${project.version}</version>
+         <scope>test</scope>
+      </dependency>
+
+      <!-- 
+    External Projects
+     -->
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <!-- org.sonatype.aether -->
+      <dependency>
+         <groupId>org.sonatype.aether</groupId>
+         <artifactId>aether-api</artifactId>
+         <version>${version.org.sonatype.aether}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.sonatype.aether</groupId>
+         <artifactId>aether-util</artifactId>
+         <version>${version.org.sonatype.aether}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.sonatype.aether</groupId>
+         <artifactId>aether-connector-wagon</artifactId>
+         <version>${version.org.sonatype.aether}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.sonatype.aether</groupId>
+         <artifactId>aether-impl</artifactId>
+         <version>${version.org.sonatype.aether}</version>
+         <scope>test</scope>
+      </dependency>
+
+
+      <!-- org.codehaus.plexus -->
+      <dependency>
+         <groupId>org.codehaus.plexus</groupId>
+         <artifactId>plexus-container-default</artifactId>
+         <version>${version.org.codehaus.plexus}</version>
+         <exclusions>
+            <exclusion>
+               <groupId>junit</groupId>
+               <artifactId>junit</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>log4j</groupId>
+               <artifactId>log4j</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>commons-logging</groupId>
+               <artifactId>commons-logging-api</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+
+      <!-- org.apache.maven -->
+      <dependency>
+         <groupId>org.apache.maven</groupId>
+         <artifactId>maven-aether-provider</artifactId>
+         <version>${version.org.apache.maven}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.apache.maven</groupId>
+         <artifactId>maven-settings-builder</artifactId>
+         <version>${version.org.apache.maven}</version>
+      </dependency>
+
+      <!-- org.apache.maven.wagon -->
+      <dependency>
+         <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-provider-api</artifactId>
+         <version>${version.org.apache.maven.wagon}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-file</artifactId>
+         <version>${version.org.apache.maven.wagon}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-http-lightweight</artifactId>
+         <version>${version.org.apache.maven.wagon}</version>
+         <exclusions>
+            <exclusion>
+               <groupId>nekohtml</groupId>
+               <artifactId>nekohtml</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>nekohtml</groupId>
+               <artifactId>xercesMinimal</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+
+
+   </dependencies>
+
+   <!-- Build Configuration -->
+   <build>
+
+      <plugins>
+
+      </plugins>
+
+   </build>
+
+</project>
+
