@@ -20,6 +20,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.maven.model.Model;
+import org.apache.maven.model.Repository;
+import org.apache.maven.model.building.DefaultModelBuilderFactory;
+import org.apache.maven.model.building.DefaultModelBuildingRequest;
+import org.apache.maven.model.building.ModelBuilder;
+import org.apache.maven.model.building.ModelBuildingException;
+import org.apache.maven.model.building.ModelBuildingRequest;
+import org.apache.maven.model.building.ModelBuildingResult;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.settings.building.DefaultSettingsBuilderFactory;
 import org.apache.maven.settings.building.DefaultSettingsBuildingRequest;
@@ -27,7 +35,6 @@ import org.apache.maven.settings.building.SettingsBuilder;
 import org.apache.maven.settings.building.SettingsBuildingException;
 import org.apache.maven.settings.building.SettingsBuildingRequest;
 import org.apache.maven.settings.building.SettingsBuildingResult;
-import org.jboss.shrinkwrap.dependencies.RepositorySettings;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.RemoteRepository;
 
@@ -35,33 +42,52 @@ import org.sonatype.aether.repository.RemoteRepository;
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
  */
-public class MavenRepositorySettings implements RepositorySettings
+public class MavenRepositorySettings
 {
-   /**
-    * 
-    */
-   private static final long serialVersionUID = 1L;
-
    private static final String DEFAULT_GLOBAL_SETTINGS_PATH = System.getProperty("user.home").concat("/.m2/settings.xml");
    private static final String DEFAULT_REPOSITORY_PATH = System.getProperty("user.home").concat("/.m2/repository");
 
+   private List<RemoteRepository> repositories;
+
    private Settings settings;
-  
-   
+
    public MavenRepositorySettings()
    {
       SettingsBuilder builder = createBuilder();
       SettingsBuildingRequest request = new DefaultSettingsBuildingRequest();
       request.setGlobalSettingsFile(new File(DEFAULT_GLOBAL_SETTINGS_PATH));
 
+      this.repositories = new ArrayList<RemoteRepository>();
+      this.repositories.add(new RemoteRepository("central", "default", "http://repo1.maven.org/maven2"));
+
       this.settings = buildSettings(builder, request);
+   }
+
+   public Model createModelFromPom(File pom) throws ModelBuildingException
+   {
+      ModelBuildingRequest request = new DefaultModelBuildingRequest();
+      request.setPomFile(pom);
+
+      ModelBuilder builder = new DefaultModelBuilderFactory().newInstance();
+      ModelBuildingResult result = builder.build(request);
+
+      return result.getEffectiveModel();
+   }
+
+   public void setRemoteRepositories(Model model) throws ModelBuildingException
+   {
+
+      List<RemoteRepository> newRepositories = new ArrayList<RemoteRepository>();
+      for (Repository repo : model.getRepositories())
+      {
+         newRepositories.add(new RemoteRepository(repo.getId(), repo.getLayout(), repo.getUrl()));
+      }
+
+      this.repositories = newRepositories;
    }
 
    public List<RemoteRepository> getRemoteRepositories()
    {
-      List<RemoteRepository> repositories = new ArrayList<RemoteRepository>();
-      repositories.add(new RemoteRepository("central", "default", "http://repo1.maven.org/maven2"));
-
       return repositories;
    }
 

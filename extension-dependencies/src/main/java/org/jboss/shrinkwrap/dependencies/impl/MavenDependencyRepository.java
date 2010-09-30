@@ -18,16 +18,13 @@ package org.jboss.shrinkwrap.dependencies.impl;
 
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
 import org.codehaus.plexus.DefaultPlexusContainer;
-import org.jboss.shrinkwrap.dependencies.DependencyRepository;
-import org.jboss.shrinkwrap.dependencies.RepositorySettings;
 import org.sonatype.aether.RepositorySystem;
-import org.sonatype.aether.RepositorySystemSession;
 
 /**
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
  */
-public class MavenDependencyRepository implements DependencyRepository
+public class MavenDependencyRepository
 {
 
    /*
@@ -45,7 +42,7 @@ public class MavenDependencyRepository implements DependencyRepository
     * 
     * @see org.jboss.shrinkwrap.dependencies.DependencyRepository#getSession(org.sonatype.aether.RepositorySystem, org.jboss.shrinkwrap.dependencies.MavenRepositorySettings)
     */
-   public RepositorySystemSession getSession(RepositorySystem system, RepositorySettings settings)
+   public MavenRepositorySystemSession getSession(RepositorySystem system, MavenRepositorySettings settings)
    {
       MavenRepositorySystemSession session = new MavenRepositorySystemSession();
       session.setLocalRepositoryManager(system.newLocalRepositoryManager(settings.getLocalRepository()));
