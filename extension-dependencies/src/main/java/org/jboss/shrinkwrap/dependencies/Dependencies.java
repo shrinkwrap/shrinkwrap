@@ -30,7 +30,7 @@ public class Dependencies
 
    public static <T extends DependencyBuilder> T use(Class<T> clazz)
    {
-      return null;
+      return SecurityActions.newInstance(clazz.getName(), new Class<?>[0], new Object[0], clazz);
    }
 
    public static DependencyBuilder artifact(String coordinates)

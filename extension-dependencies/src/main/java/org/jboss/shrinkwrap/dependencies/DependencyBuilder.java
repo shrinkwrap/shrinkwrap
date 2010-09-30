@@ -39,6 +39,6 @@ public interface DependencyBuilder
    
    DependencyBuilder exclusions(Collection<Exclusion> exclusions);
     
-   Collection<Archive<?>> resolve() throws Exception;
+   Archive<?>[] resolve() throws Exception;
 
 }
