@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!--
+  vi:ts=2:sw=2:expandtab:
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+   <!-- Parent -->
+   <parent>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-dependencies-test-parent</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+   </parent>
+
+   <!-- Model Version -->
+   <modelVersion>4.0.0</modelVersion>
+
+   <!-- Artifact Configuration -->
+   <groupId>org.jboss.shrinkwrap</groupId>
+   <artifactId>shrinkwrap-dependencies-dependency</artifactId>
+   <version>1.0.0-SNAPSHOT</version>
+   <name>Dependencies dependency</name>
+   <description>ShrinkWrap Dependencies dependency pom file</description>
+   <packaging>jar</packaging>
+
+   <properties>
+      <!-- Versioning -->
+      <version.jboss_60>6.0.0.20100721-M4</version.jboss_60>
+      <version.selenium>2.0a5</version.selenium>
+      <version.webdriver>0.9.7376</version.webdriver>
+      <version.selenium.standalone>1.0.3</version.selenium.standalone>
+      <version.slf4j>1.5.10</version.slf4j>
+
+      <!-- example dependencies -->
+      <version.jpa>1.0</version.jpa>
+      <version.cdi>1.0-SP1</version.cdi>
+      <version.jsf>2.0.2-FCS</version.jsf>
+      <version.el>2.2</version.el>
+
+   </properties>
+
+   <!-- Dependencies -->
+   <dependencies>
+      <dependency>
+         <groupId>org.jboss.arquillian</groupId>
+         <artifactId>arquillian-spi</artifactId>
+         <version>${project.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.seleniumhq.selenium</groupId>
+         <artifactId>selenium</artifactId>
+         <version>${version.selenium}</version>
+         <scope>provided</scope>
+         <exclusions>
+            <exclusion>
+               <artifactId>selenium-firefox-driver</artifactId>
+               <groupId>org.seleniumhq.selenium</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>selenium-ie-driver</artifactId>
+               <groupId>org.seleniumhq.selenium</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>selenium-chrome-driver</artifactId>
+               <groupId>org.seleniumhq.selenium</groupId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>org.seleniumhq.selenium</groupId>
+         <artifactId>selenium-server</artifactId>
+         <version>${version.selenium}</version>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-simple</artifactId>
+         <version>${version.slf4j}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.arquillian</groupId>
+         <artifactId>arquillian-junit</artifactId>
+         <version>${project.version}</version>
+         <scope>test</scope>
+      </dependency>
+
+      <!-- we are using a Weld based example -->
+      <dependency>
+         <groupId>javax.enterprise</groupId>
+         <artifactId>cdi-api</artifactId>
+         <version>${version.cdi}</version>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>javax.faces</groupId>
+         <artifactId>jsf-api</artifactId>
+         <version>${version.jsf}</version>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>javax.persistence</groupId>
+         <artifactId>persistence-api</artifactId>
+         <version>${version.jpa}</version>
+         <scope>test</scope>
+      </dependency>
+
+
+   </dependencies>
+
+   <build>
+   </build>
+</project>
+

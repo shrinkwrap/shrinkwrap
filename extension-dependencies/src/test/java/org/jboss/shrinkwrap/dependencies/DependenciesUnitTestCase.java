@@ -28,10 +28,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tests to ensure the {@link ArchiveFileSystem} is working as contracted
+ * Tests to ensure Dependencies resolve dependencies correctly
  * 
- * @author <a href="jbailey@redhat.com">John Bailey</a>
- * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="kpiwko@redhat.com">Karel Piwko</a>
  * @version $Revision: $
  */
 public class DependenciesUnitTestCase
@@ -101,20 +100,56 @@ public class DependenciesUnitTestCase
       // war.as(ZipExporter.class).exportTo(new File("target/testMultipleResolution.war"));
    }
 
-   //@Test
+   @Test
    public void testCustomDependencies() throws Exception
    {
       WebArchive war = ShrinkWrap.create(WebArchive.class, "testCustomDependencies.war")
             .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .loadPom("")
+                                      .artifact("org.apache.maven.plugins:maven-help-plugin:2.1.1")
+                                      .artifact("org.apache.maven.plugins:maven-patch-plugin:1.1.1")
+                                      .resolve());
+
+      log.info("Created archive: " + war.toString(true));
+
+      Assert.assertTrue("Archive contains maven help plugin",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "maven-help-plugin-2.1.1.jar")));
+      Assert.assertTrue("Archive contains maven patch plugin",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "maven-patch-plugin-1.1.1.jar")));
+      Assert.assertTrue("Archive contains maven core",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "maven-core-2.0.6.jar")));
+
+      // war.as(ZipExporter.class).exportTo(new File("target/testCustomDependencies.war"));
+   }
+
+   @Test
+   public void testParentPomRepositories() throws Exception
+   {
+      WebArchive war = ShrinkWrap.create(WebArchive.class, "testParentPomRepositories.war")
+            .addLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("src/test/resources/child/pom.xml")
                            .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
                            .resolve());
 
       log.info("Created archive: " + war.toString(true));
 
-      // Assert.assertTrue("Archive contains maven help plugin",
-      // war.contains(ArchivePaths.create("WEB-INF/lib", "maven-help-plugin-2.1.1.jar")));
+      Assert.assertTrue("Archive contains maven help plugin",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "arquillian-junit-1.0.0.Alpha4.jar")));
 
-      // war.as(ZipExporter.class).exportTo(new File("target/testCustomDependencies.war"));
+      // war.as(ZipExporter.class).exportTo(new File("target/testParentPomRepositories.war"));
+   }
+
+   @Test
+   public void testPomBasedDependencies() throws Exception
+   {
+      WebArchive war = ShrinkWrap.create(WebArchive.class, "testPomBasedDependencies.war")
+            .addLibraries(Dependencies.use(MavenDependencies.class)
+                           .resolveFrom("src/test/resources/dependency/pom.xml"));
+
+      log.info("Created archive: " + war.toString(true));
+
+      Assert.assertTrue("Archive contains maven help plugin",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "selenium-2.0a5.jar")));
+
+      war.as(ZipExporter.class).exportTo(new File("target/testPomBasedDependencies.war"));
    }
 }
