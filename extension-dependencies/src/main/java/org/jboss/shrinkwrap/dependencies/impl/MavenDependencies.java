@@ -50,31 +50,36 @@ public class MavenDependencies implements DependencyBuilder
 
    private DependencyRepository repository;
 
-   private Artifact artifact;
+   private List<Dependency> dependencies;
 
-   private List<Exclusion> exclusions;
+   private Artifact lastArtifact;
 
-   private String scope;
+   private List<Exclusion> lastExclusions;
 
-   private boolean optional;
+   private String lastScope;
+
+   private boolean lastOptional;
+
+   private static final Archive<?>[] ARCHIVE_CAST = new Archive<?>[0];
 
    public MavenDependencies()
    {
       this.settings = new MavenRepositorySettings();
       this.repository = new MavenDependencyRepository();
-      this.exclusions = new ArrayList<Exclusion>();
-      this.scope = "";
-      this.optional = false;
+      this.dependencies = new ArrayList<Dependency>();
+      resetLast();
    }
 
-   public DependencyBuilder configureFrom(String path) {
+   public MavenDependencies configureFrom(String path)
+   {
       return this;
    }
-   
-   public DependencyBuilder loadPom(String path) {
+
+   public MavenDependencies loadPom(String path)
+   {
       return this;
    }
-   
+
    /*
     * (non-Javadoc)
     * 
@@ -82,7 +87,14 @@ public class MavenDependencies implements DependencyBuilder
     */
    public DependencyBuilder artifact(String coordinates)
    {
-      this.artifact = new DefaultArtifact(coordinates);
+      // add as an dependency
+      if (lastArtifact != null)
+      {
+         addLastAsDependency();
+         resetLast();
+      }
+
+      this.lastArtifact = new DefaultArtifact(coordinates);
       return this;
    }
 
@@ -93,7 +105,7 @@ public class MavenDependencies implements DependencyBuilder
     */
    public DependencyBuilder exclusion(Exclusion exclusion)
    {
-      this.exclusions.add(exclusion);
+      this.lastExclusions.add(exclusion);
       return this;
    }
 
@@ -104,7 +116,7 @@ public class MavenDependencies implements DependencyBuilder
     */
    public DependencyBuilder exclusions(Exclusion... exclusions)
    {
-      this.exclusions.addAll(Arrays.asList(exclusions));
+      this.lastExclusions.addAll(Arrays.asList(exclusions));
       return this;
    }
 
@@ -115,7 +127,7 @@ public class MavenDependencies implements DependencyBuilder
     */
    public DependencyBuilder exclusions(Collection<Exclusion> exclusions)
    {
-      this.exclusions.addAll(exclusions);
+      this.lastExclusions.addAll(exclusions);
       return this;
    }
 
@@ -126,7 +138,7 @@ public class MavenDependencies implements DependencyBuilder
     */
    public DependencyBuilder optional(boolean optional)
    {
-      this.optional = optional;
+      this.lastOptional = optional;
       return this;
    }
 
@@ -137,7 +149,7 @@ public class MavenDependencies implements DependencyBuilder
     */
    public DependencyBuilder scope(String scope)
    {
-      this.scope = scope;
+      this.lastScope = scope;
       return this;
    }
 
@@ -146,16 +158,19 @@ public class MavenDependencies implements DependencyBuilder
     * 
     * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder#resolve()
     */
-   public Collection<Archive<?>> resolve() throws Exception
+   public Archive<?>[] resolve() throws Exception
    {
-      Validate.notNull(artifact, "No artifact was set to be resolved");
+      if (lastArtifact != null)
+      {
+         addLastAsDependency();
+      }
+
+      Validate.notEmpty(dependencies, "No dependencies were set to be resolved");
 
       RepositorySystem system = repository.getRepositorySystem();
       RepositorySystemSession session = repository.getSession(system, settings);
 
-      Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
-
-      CollectRequest request = new CollectRequest(dependency, settings.getRemoteRepositories());
+      CollectRequest request = new CollectRequest(dependencies, null, settings.getRemoteRepositories());
 
       List<ArtifactResult> artifacts = system.resolveDependencies(session, request, null);
 
@@ -164,13 +179,27 @@ public class MavenDependencies implements DependencyBuilder
       for (ArtifactResult artifact : artifacts)
       {
          File file = artifact.getArtifact().getFile();
-         Archive<?> archive = ShrinkWrap.create(JavaArchive.class).as(ZipImporter.class).importFrom(new ZipFile(file)).as(JavaArchive.class);
+         Archive<?> archive = ShrinkWrap.create(JavaArchive.class, file.getName()).as(ZipImporter.class).importFrom(new ZipFile(file)).as(JavaArchive.class);
 
          archives.add(archive);
       }
 
-      return archives;
+      return archives.toArray(ARCHIVE_CAST);
 
+   }
+
+   private void resetLast()
+   {
+      this.lastExclusions = new ArrayList<Exclusion>();
+      this.lastScope = "";
+      this.lastOptional = false;
+      this.lastArtifact = null;
+   }
+
+   private void addLastAsDependency()
+   {
+      Dependency dependency = new Dependency(lastArtifact, lastScope, lastOptional, lastExclusions);
+      dependencies.add(dependency);
    }
 
 }

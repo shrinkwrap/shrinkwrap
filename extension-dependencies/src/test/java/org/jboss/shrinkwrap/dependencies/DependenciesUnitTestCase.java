@@ -19,11 +19,12 @@ package org.jboss.shrinkwrap.dependencies;
 import java.io.File;
 import java.util.logging.Logger;
 
-import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.dependencies.Dependencies;
+import org.jboss.shrinkwrap.dependencies.impl.MavenDependencies;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -44,26 +45,76 @@ public class DependenciesUnitTestCase
     * Logger
     */
    private static final Logger log = Logger.getLogger(DependenciesUnitTestCase.class.getName());
-   
-   // -------------------------------------------------------------------------------------||
-   // Lifecycle --------------------------------------------------------------------------||
-   // -------------------------------------------------------------------------------------||
 
    // -------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Adds some files/directories to an {@link Archive}, then reads via the {@link ArchiveFileSystem}
-    */
-   @Test
-   public void simpleResolution() throws Exception
+   // @Test
+   public void testSimpleResolutionWrongArtifact() throws Exception
    {
-      WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war")
-            .addLibraries(Dependencies.artifact("org.apache.maven.plugins:maven-compiler-plugin:2.3.2").resolve().toArray(new Archive<?>[0]));
+      WebArchive war = ShrinkWrap.create(WebArchive.class, "testSimpleResolutionWrongArtifact.war")
+            .addLibraries(Dependencies.artifact("org.apache.maven.plugins:maven-compiler-plugin:2.3.2").resolve());
 
       log.info("Created archive: " + war.toString(true));
 
-      war.as(ZipExporter.class).exportTo(new File("target/test.war"));
+      Assert.assertTrue("Archive containes maven-compiler-plugin",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "maven-compiler-plugin-2.3.2-jar")));
+
+      war.as(ZipExporter.class).exportTo(new File("target/testSimpleResolutionWrongArtifact.war"));
+   }
+
+   @Test
+   public void testSimpleResolution() throws Exception
+   {
+      WebArchive war = ShrinkWrap.create(WebArchive.class, "testSimpleResolution.war")
+            .addLibraries(Dependencies.artifact("org.apache.maven.plugins:maven-help-plugin:2.1.1")
+                                      .resolve());
+
+      log.info("Created archive: " + war.toString(true));
+
+      Assert.assertTrue("Archive contains maven help plugin",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "maven-help-plugin-2.1.1.jar")));
+      Assert.assertTrue("Archive contains maven core",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "maven-core-2.0.6.jar")));
+
+      // war.as(ZipExporter.class).exportTo(new File("target/testSimpleResolution.war"));
+   }
+
+   @Test
+   public void testMultipleResolution() throws Exception
+   {
+      WebArchive war = ShrinkWrap.create(WebArchive.class, "testMultipleResolution.war")
+            .addLibraries(Dependencies.artifact("org.apache.maven.plugins:maven-help-plugin:2.1.1")
+                                      .artifact("org.apache.maven.plugins:maven-patch-plugin:1.1.1")
+                                      .resolve());
+
+      log.info("Created archive: " + war.toString(true));
+
+      Assert.assertTrue("Archive contains maven help plugin",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "maven-help-plugin-2.1.1.jar")));
+      Assert.assertTrue("Archive contains maven patch plugin",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "maven-patch-plugin-1.1.1.jar")));
+      Assert.assertTrue("Archive contains maven core",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "maven-core-2.0.6.jar")));
+
+      // war.as(ZipExporter.class).exportTo(new File("target/testMultipleResolution.war"));
+   }
+
+   //@Test
+   public void testCustomDependencies() throws Exception
+   {
+      WebArchive war = ShrinkWrap.create(WebArchive.class, "testCustomDependencies.war")
+            .addLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("")
+                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+                           .resolve());
+
+      log.info("Created archive: " + war.toString(true));
+
+      // Assert.assertTrue("Archive contains maven help plugin",
+      // war.contains(ArchivePaths.create("WEB-INF/lib", "maven-help-plugin-2.1.1.jar")));
+
+      // war.as(ZipExporter.class).exportTo(new File("target/testCustomDependencies.war"));
    }
 }

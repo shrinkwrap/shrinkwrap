@@ -16,12 +16,15 @@
  */
 package org.jboss.shrinkwrap.dependencies.impl;
 
+import java.util.Collection;
+
 /**
  * Validate
  * 
  * Validation utility
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+ * @auther <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * @version $Revision: $
  */
 public final class Validate
@@ -40,6 +43,20 @@ public final class Validate
    public static void notNull(final Object obj, final String message) throws IllegalArgumentException
    {
       if (obj == null)
+      {
+         throw new IllegalArgumentException(message);
+      }
+   }
+
+   /**
+    * Checks that collection is not {@code null} or empty, throws exception if it is.
+    * @param collection The collection to be checked
+    * @param message The exception message
+    * @throws IllegalArgumentException Thrown if {@code collection} is {@code null} or empty
+    */
+   public static void notEmpty(final Collection<?> collection, final String message) throws IllegalArgumentException
+   {
+      if (collection == null || collection.size() == 0)
       {
          throw new IllegalArgumentException(message);
       }
