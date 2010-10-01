@@ -46,8 +46,8 @@ public class MavenDependencyRepository
    {
       MavenRepositorySystemSession session = new MavenRepositorySystemSession();
       session.setLocalRepositoryManager(system.newLocalRepositoryManager(settings.getLocalRepository()));
-      session.setTransferListener(new ConsoleTransferListener(System.out));
-      session.setRepositoryListener(new ConsoleRepositoryListener(System.out));
+      session.setTransferListener(new LogTransferListerer());
+      session.setRepositoryListener(new LogRepositoryListener());
 
       return session;
    }

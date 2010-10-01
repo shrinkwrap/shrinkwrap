@@ -67,6 +67,7 @@ public class MavenRepositorySettings
    {
       ModelBuildingRequest request = new DefaultModelBuildingRequest();
       request.setPomFile(pom);
+      // FIXME the ModelResolver must be set here for artifact with parents not accessible via local file-system
 
       ModelBuilder builder = new DefaultModelBuilderFactory().newInstance();
       ModelBuildingResult result = builder.build(request);

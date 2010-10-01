@@ -28,7 +28,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tests to ensure Dependencies resolve dependencies correctly
+ * Tests to ensure Dependencies resolves dependencies correctly
  * 
  * @author <a href="kpiwko@redhat.com">Karel Piwko</a>
  * @version $Revision: $
@@ -127,7 +127,7 @@ public class DependenciesUnitTestCase
       WebArchive war = ShrinkWrap.create(WebArchive.class, "testParentPomRepositories.war")
             .addLibraries(Dependencies.use(MavenDependencies.class)
                            .loadPom("src/test/resources/child/pom.xml")
-                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")                     
                            .resolve());
 
       log.info("Created archive: " + war.toString(true));
@@ -147,7 +147,7 @@ public class DependenciesUnitTestCase
 
       log.info("Created archive: " + war.toString(true));
 
-      Assert.assertTrue("Archive contains maven help plugin",
+      Assert.assertTrue("Archive contains selenium",
             war.contains(ArchivePaths.create("WEB-INF/lib", "selenium-2.0a5.jar")));
 
       war.as(ZipExporter.class).exportTo(new File("target/testPomBasedDependencies.war"));

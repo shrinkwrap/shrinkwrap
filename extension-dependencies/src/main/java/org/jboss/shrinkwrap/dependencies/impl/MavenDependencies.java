@@ -38,11 +38,14 @@ import org.sonatype.aether.resolution.ArtifactResult;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
 
 /**
+ * A default implementation of dependency builder based on Maven
+ * 
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
  */
 public class MavenDependencies implements DependencyBuilder
 {
+   private static final Archive<?>[] ARCHIVE_CAST = new Archive<?>[0];
 
    private MavenRepositorySettings settings;
 
@@ -50,22 +53,11 @@ public class MavenDependencies implements DependencyBuilder
 
    private List<Dependency> dependencies;
 
-   private Artifact lastArtifact;
-
-   private List<Exclusion> lastExclusions;
-
-   private String lastScope;
-
-   private boolean lastOptional;
-
-   private static final Archive<?>[] ARCHIVE_CAST = new Archive<?>[0];
-
    public MavenDependencies()
    {
       this.settings = new MavenRepositorySettings();
       this.repository = new MavenDependencyRepository();
       this.dependencies = new ArrayList<Dependency>();
-      resetLast();
    }
 
    public MavenDependencies configureFrom(String path)
@@ -89,9 +81,7 @@ public class MavenDependencies implements DependencyBuilder
       Model model = settings.createModelFromPom(pom);
       settings.setRemoteRepositories(model);
 
-      List<Dependency> dependencies = new ArrayList<Dependency>();
-
-      // re-wrap from Maven to Aether
+      // wrap from Maven to Aether
       for (org.apache.maven.model.Dependency d : model.getDependencies())
       {
 
@@ -108,10 +98,7 @@ public class MavenDependencies implements DependencyBuilder
 
          dependencies.add(new Dependency(artifact, d.getScope(), optional, exclusions));
       }
-
-      resetLast();
-      this.dependencies = dependencies;
-      return resolve();
+      return new MavenArtifactBuilder().resolution();
    }
 
    /*
@@ -119,119 +106,135 @@ public class MavenDependencies implements DependencyBuilder
     * 
     * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder#artifact(java.lang.String)
     */
-   public DependencyBuilder artifact(String coordinates)
+   public MavenArtifactBuilder artifact(String coordinates)
    {
-      // add as an dependency
-      if (lastArtifact != null)
+      Validate.notNullOrEmpty(coordinates, "Artifact coordinates must not be null or empty");
+      return new MavenArtifactBuilder(coordinates);
+   }
+
+   public class MavenArtifactBuilder implements DependencyBuilder.ArtifactBuilder
+   {
+      private Artifact artifact;
+
+      private List<Exclusion> exclusions = new ArrayList<Exclusion>();
+
+      private String scope;
+
+      private boolean optional;
+
+      public MavenArtifactBuilder(String coordinates)
       {
-         addLastAsDependency();
-         resetLast();
+         this.artifact = new DefaultArtifact(coordinates);
       }
 
-      this.lastArtifact = new DefaultArtifact(coordinates);
-      return this;
-   }
-
-   /*
-    * (non-Javadoc)
-    * 
-    * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder#exclusion(org.sonatype.aether.graph.Exclusion)
-    */
-   public DependencyBuilder exclusion(Exclusion exclusion)
-   {
-      this.lastExclusions.add(exclusion);
-      return this;
-   }
-
-   /*
-    * (non-Javadoc)
-    * 
-    * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder#exclusions(org.sonatype.aether.graph.Exclusion[])
-    */
-   public DependencyBuilder exclusions(Exclusion... exclusions)
-   {
-      this.lastExclusions.addAll(Arrays.asList(exclusions));
-      return this;
-   }
-
-   /*
-    * (non-Javadoc)
-    * 
-    * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder#exclusions(java.util.Collection)
-    */
-   public DependencyBuilder exclusions(Collection<Exclusion> exclusions)
-   {
-      this.lastExclusions.addAll(exclusions);
-      return this;
-   }
-
-   /*
-    * (non-Javadoc)
-    * 
-    * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder#optional(boolean)
-    */
-   public DependencyBuilder optional(boolean optional)
-   {
-      this.lastOptional = optional;
-      return this;
-   }
-
-   /*
-    * (non-Javadoc)
-    * 
-    * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder#scope(java.lang.String)
-    */
-   public DependencyBuilder scope(String scope)
-   {
-      this.lastScope = scope;
-      return this;
-   }
-
-   /*
-    * (non-Javadoc)
-    * 
-    * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder#resolve()
-    */
-   public Archive<?>[] resolve() throws Exception
-   {
-      if (lastArtifact != null)
+      // used for resolution from pom.xml only
+      private MavenArtifactBuilder()
       {
-         addLastAsDependency();
       }
 
-      Validate.notEmpty(dependencies, "No dependencies were set to be resolved");
-
-      RepositorySystem system = repository.getRepositorySystem();
-
-      CollectRequest request = new CollectRequest(dependencies, null, settings.getRemoteRepositories());
-
-      // wrap artifact files to archives
-      List<ArtifactResult> artifacts = system.resolveDependencies(repository.getSession(system, settings), request, null);
-      Collection<Archive<?>> archives = new ArrayList<Archive<?>>(artifacts.size());
-      for (ArtifactResult artifact : artifacts)
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder.ArtifactBuilder#exclusion(org.sonatype.aether.graph.Exclusion)
+       */
+      public MavenArtifactBuilder exclusion(Exclusion exclusion)
       {
-         File file = artifact.getArtifact().getFile();
-         Archive<?> archive = ShrinkWrap.create(JavaArchive.class, file.getName()).as(ZipImporter.class).importFrom(new ZipFile(file)).as(JavaArchive.class);
-
-         archives.add(archive);
+         this.exclusions.add(exclusion);
+         return this;
       }
 
-      return archives.toArray(ARCHIVE_CAST);
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder.ArtifactBuilder#exclusions(org.sonatype.aether.graph.Exclusion[])
+       */
+      public MavenArtifactBuilder exclusions(Exclusion... exclusions)
+      {
+         this.exclusions.addAll(Arrays.asList(exclusions));
+         return this;
+      }
 
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder.ArtifactBuilder#exclusions(java.util.Collection)
+       */
+      public MavenArtifactBuilder exclusions(Collection<Exclusion> exclusions)
+      {
+         this.exclusions.addAll(exclusions);
+         return this;
+      }
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder.ArtifactBuilder#optional(boolean)
+       */
+      public MavenArtifactBuilder optional(boolean optional)
+      {
+         this.optional = optional;
+         return this;
+      }
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder.ArtifactBuilder#scope(java.lang.String)
+       */
+      public MavenArtifactBuilder scope(String scope)
+      {
+         this.scope = scope;
+         return this;
+      }
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder.ArtifactBuilder#resolve()
+       */
+      public Archive<?>[] resolve() throws Exception
+      {
+         Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
+         dependencies.add(dependency);
+
+         return resolution();
+      }
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder#artifact(java.lang.String)
+       */
+      public MavenArtifactBuilder artifact(String coordinates)
+      {
+         Validate.notNullOrEmpty(coordinates, "Artifact coordinates must not be null or empty");
+
+         Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
+         dependencies.add(dependency);
+
+         return new MavenArtifactBuilder(coordinates);
+      }
+
+      private Archive<?>[] resolution() throws Exception
+      {
+         Validate.notEmpty(dependencies, "No dependencies were set or found");
+
+         RepositorySystem system = repository.getRepositorySystem();
+
+         CollectRequest request = new CollectRequest(dependencies, null, settings.getRemoteRepositories());
+
+         // wrap artifact files to archives
+         List<ArtifactResult> artifacts = system.resolveDependencies(repository.getSession(system, settings), request, null);
+         Collection<Archive<?>> archives = new ArrayList<Archive<?>>(artifacts.size());
+         for (ArtifactResult artifact : artifacts)
+         {
+            File file = artifact.getArtifact().getFile();
+            Archive<?> archive = ShrinkWrap.create(JavaArchive.class, file.getName()).as(ZipImporter.class).importFrom(new ZipFile(file)).as(JavaArchive.class);
+
+            archives.add(archive);
+         }
+
+         return archives.toArray(ARCHIVE_CAST);
+      }
    }
-
-   private void resetLast()
-   {
-      this.lastExclusions = new ArrayList<Exclusion>();
-      this.lastScope = "";
-      this.lastOptional = false;
-      this.lastArtifact = null;
-   }
-
-   private void addLastAsDependency()
-   {
-      Dependency dependency = new Dependency(lastArtifact, lastScope, lastOptional, lastExclusions);
-      dependencies.add(dependency);
-   }
-
 }
