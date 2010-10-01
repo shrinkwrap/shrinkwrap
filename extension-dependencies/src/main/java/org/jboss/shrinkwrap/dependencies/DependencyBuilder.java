@@ -22,23 +22,80 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.sonatype.aether.graph.Exclusion;
 
 /**
+ * 
+ * 
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
- *
+ * 
  */
 public interface DependencyBuilder
 {
-   DependencyBuilder artifact(String coordinates);
-   
-   DependencyBuilder scope(String scope);
-   
-   DependencyBuilder optional(boolean optional);
-   
-   DependencyBuilder exclusion(Exclusion exclusion);
-   
-   DependencyBuilder exclusions(Exclusion...exclusions);
-   
-   DependencyBuilder exclusions(Collection<Exclusion> exclusions);
-    
-   Archive<?>[] resolve() throws Exception;
+   /**
+    * A artifact builder is object which holds and construct dependencies
+    * and it is able to resolve them into an array of ShrinkWrap archives.
+    * 
+    * Artifact builder allows chaining of artifacts, that is specifying
+    * a new artifact. In this case, currently constructed artifact is stored
+    * as a dependency and user is allowed to specify parameters for another
+    * artifact.
+    * 
+    * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
+    * 
+    */
+   public interface ArtifactBuilder extends DependencyBuilder
+   {
+      /**
+       * Sets a scope of dependency
+       * @param scope A scope, for example @{code compile}, @{code test} and others
+       * @return Artifact builder with scope set
+       */
+      ArtifactBuilder scope(String scope);
+
+      /**
+       * Sets dependency as optional. If dependency is marked as optional, it is
+       * always resolved, however, the dependency graph can later be filtered based
+       * on {@code optional} flag
+       * @param optional Optional flag
+       * @return Artifact builder with optional flag set
+       */
+      ArtifactBuilder optional(boolean optional);
+
+      /**
+       * Adds an exclusion for current dependency.
+       * @param exclusion the exclusion to be added to list of artifacts to be excluded
+       * @return Artifact builder with added exclusion
+       */
+      ArtifactBuilder exclusion(Exclusion exclusion);
+
+      /**
+       * Adds multiple exclusions for current dependency
+       * @param exclusions the exclusions to be added to the list of artifacts to be excluded
+       * @return Artifact builder with added exclusions
+       */
+      ArtifactBuilder exclusions(Exclusion... exclusions);
+
+      /**
+       * Adds multiple exclusions for current dependency
+       * @param exclusions the exclusions to be added to the list of artifacts to be excluded
+       * @return Artifact builder with added exclusions
+       */
+      ArtifactBuilder exclusions(Collection<Exclusion> exclusions);
+
+      /**
+       * Resolves dependencies for dependency builder
+       * @return An array of archives which contains resolved artifacts.
+       * @throws Exception
+       */
+      Archive<?>[] resolve() throws Exception;
+   }
+
+   /**
+    * Creates an artifact builder. You can defines additional parameters
+    * for the artifact later.
+    * 
+    * @param coordinates Coordinates specified to a created artifact, specified
+    *        in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>}, must not be {@code null} or empty.
+    * @return A new artifact builder
+    */
+   ArtifactBuilder artifact(String coordinates);
 
 }

@@ -16,51 +16,41 @@
  */
 package org.jboss.shrinkwrap.dependencies;
 
-import java.util.Collection;
-
 import org.jboss.shrinkwrap.dependencies.impl.MavenDependencies;
-import org.sonatype.aether.graph.Exclusion;
 
 /**
+ * This utility provides a way how to add dependencies to an archive in ShrinkWrap.
+ * 
+ * It can use arbitrary implementation of dependency resolution and artifact storage,
+ * default implementation uses Maven.
+ * 
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
  */
 public class Dependencies
 {
 
+   /**
+    * Creates a new implementation of a dependency builder based on passed class.
+    * This allows to switch builder in the test suite dynamically
+    * @param <T> The type of class which extends {@link DependencyBuilder}
+    * @param clazz the class
+    * @return The new instance of dependency builder backed by passed implementation
+    */
    public static <T extends DependencyBuilder> T use(Class<T> clazz)
    {
       return SecurityActions.newInstance(clazz.getName(), new Class<?>[0], new Object[0], clazz);
    }
 
-   public static DependencyBuilder artifact(String coordinates)
+   /**
+    * Creates a new instance of an artifact builder based on default implementation.
+    * @param coordinates The artifact coordinates in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>},
+    *        must not be {@code null} or empty.
+    * @return A new instance of artifact builder
+    */
+   public static DependencyBuilder.ArtifactBuilder artifact(String coordinates)
    {
       return new MavenDependencies().artifact(coordinates);
-   }
-
-   public static DependencyBuilder scope(String scope)
-   {
-      return new MavenDependencies().scope(scope);
-   }
-
-   public static DependencyBuilder optional(boolean optional)
-   {
-      return new MavenDependencies().optional(optional);
-   }
-
-   public static DependencyBuilder exclusion(Exclusion exclusion)
-   {
-      return new MavenDependencies().exclusion(exclusion);
-   }
-
-   public static DependencyBuilder exclusions(Exclusion... exclusions)
-   {
-      return new MavenDependencies().exclusions(exclusions);
-   }
-
-   public static DependencyBuilder exclusions(Collection<Exclusion> exclusions)
-   {
-      return new MavenDependencies().exclusions(exclusions);
    }
 
 }
