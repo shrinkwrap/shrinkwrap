@@ -77,7 +77,7 @@ public class MavenDependencies implements DependencyBuilder
    {
       Validate.notNullOrEmpty(path, "Path to the settings.xml must be defined");
       File settings = new File(path);
-      system.loadSettings(settings);
+      system.loadSettings(settings, session);
       return this;
    }
 

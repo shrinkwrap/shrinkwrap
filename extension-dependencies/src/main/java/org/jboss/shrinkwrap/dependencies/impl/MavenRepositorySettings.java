@@ -41,7 +41,7 @@ import org.sonatype.aether.transfer.TransferListener;
  */
 public class MavenRepositorySettings
 {
-   private static final String DEFAULT_GLOBAL_SETTINGS_PATH = System.getProperty("user.home").concat("/.m2/settings.xml");
+   private static final String DEFAULT_USER_SETTINGS_PATH = System.getProperty("user.home").concat("/.m2/settings.xml");
    private static final String DEFAULT_REPOSITORY_PATH = System.getProperty("user.home").concat("/.m2/repository");
 
    private List<RemoteRepository> repositories;
@@ -51,7 +51,7 @@ public class MavenRepositorySettings
    public MavenRepositorySettings()
    {
       SettingsBuildingRequest request = new DefaultSettingsBuildingRequest();
-      request.setGlobalSettingsFile(new File(DEFAULT_GLOBAL_SETTINGS_PATH));
+      request.setUserSettingsFile(new File(DEFAULT_USER_SETTINGS_PATH));
 
       this.repositories = new ArrayList<RemoteRepository>();
       this.repositories.add(centralRepository());
@@ -112,6 +112,9 @@ public class MavenRepositorySettings
       }
 
       Settings settings = result.getEffectiveSettings();
+      
+      System.out.println("XYZ: " + request.getUserSettingsFile().getAbsolutePath() + " => " + settings.getLocalRepository());
+      
       if (settings.getLocalRepository() == null)
       {
          settings.setLocalRepository(DEFAULT_REPOSITORY_PATH);

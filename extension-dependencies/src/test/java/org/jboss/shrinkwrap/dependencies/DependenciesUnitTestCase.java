@@ -87,6 +87,28 @@ public class DependenciesUnitTestCase
    }
 
    /**
+    * Tests a resolution of an artifact from central
+    * @throws Exception
+    */
+   @Test
+   public void testSimpleResolutionWithCustomSettings() throws Exception
+   {
+      WebArchive war = ShrinkWrap.create(WebArchive.class, "testSimpleResolutionWithCustomSettings.war")
+            .addLibraries(Dependencies.use(MavenDependencies.class)
+                                      .configureFrom("src/test/resources/custom-settings.xml")
+                                      .artifact("org.apache.maven.plugins:maven-help-plugin:2.1.1")
+                                      .resolve());
+
+      log.info("Created archive: " + war.toString(true));
+
+      Assert.assertTrue("Archive contains maven help plugin",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "maven-help-plugin-2.1.1.jar")));
+      Assert.assertTrue("Archive contains maven core",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "maven-core-2.0.6.jar")));
+
+   }
+
+   /**
     * Tests a resolution of two artifacts from central
     * @throws Exception
     */
