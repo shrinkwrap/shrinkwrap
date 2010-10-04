@@ -22,7 +22,8 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.sonatype.aether.graph.Exclusion;
 
 /**
- * 
+ * A dependency builder encapsulates access to a repository which is used
+ * to resolve dependencies.
  * 
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
@@ -83,9 +84,9 @@ public interface DependencyBuilder
       /**
        * Resolves dependencies for dependency builder
        * @return An array of archives which contains resolved artifacts.
-       * @throws Exception
+       * @throws DependencyException If artifacts could not be resolved
        */
-      Archive<?>[] resolve() throws Exception;
+      Archive<?>[] resolve() throws DependencyException;
    }
 
    /**

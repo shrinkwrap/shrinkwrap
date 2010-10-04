@@ -53,7 +53,7 @@ public class DependenciesUnitTestCase
     * Tests that artifact is cannot be packaged, but is is resolved right
     */
    @Test(expected = org.jboss.shrinkwrap.api.importer.ArchiveImportException.class)
-   public void testSimpleResolutionWrongArtifact() throws Exception
+   public void testSimpleResolutionWrongArtifact() throws DependencyException
    {
       WebArchive war = ShrinkWrap.create(WebArchive.class, "testSimpleResolutionWrongArtifact.war")
             .addLibraries(Dependencies.artifact("org.apache.maven.plugins:maven-compiler-plugin:2.3.2").resolve());
@@ -68,10 +68,10 @@ public class DependenciesUnitTestCase
 
    /**
     * Tests a resolution of an artifact from central
-    * @throws Exception
+    * @throws DependencyException
     */
    @Test
-   public void testSimpleResolution() throws Exception
+   public void testSimpleResolution() throws DependencyException
    {
       WebArchive war = ShrinkWrap.create(WebArchive.class, "testSimpleResolution.war")
             .addLibraries(Dependencies.artifact("org.apache.maven.plugins:maven-help-plugin:2.1.1")
@@ -87,11 +87,11 @@ public class DependenciesUnitTestCase
    }
 
    /**
-    * Tests a resolution of an artifact from central
-    * @throws Exception
+    * Tests a resolution of an artifact from central with custom settings
+    * @throws DependencyException
     */
    @Test
-   public void testSimpleResolutionWithCustomSettings() throws Exception
+   public void testSimpleResolutionWithCustomSettings() throws DependencyException
    {
       WebArchive war = ShrinkWrap.create(WebArchive.class, "testSimpleResolutionWithCustomSettings.war")
             .addLibraries(Dependencies.use(MavenDependencies.class)
@@ -109,11 +109,33 @@ public class DependenciesUnitTestCase
    }
 
    /**
+    * Tests passing invalid path to a settings XML
+    * @throws DependencyException
+    */
+   @Test(expected = IllegalArgumentException.class)
+   public void testInvalidSettingsPath() throws DependencyException
+   {
+      WebArchive war = ShrinkWrap.create(WebArchive.class, "testSimpleResolutionWithCustomSettings.war")
+            .addLibraries(Dependencies.use(MavenDependencies.class)
+                                      .configureFrom("src/test/invalid/custom-settings.xml")
+                                      .artifact("org.apache.maven.plugins:maven-help-plugin:2.1.1")
+                                      .resolve());
+
+      log.info("Created archive: " + war.toString(true));
+
+      Assert.assertTrue("Archive contains maven help plugin",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "maven-help-plugin-2.1.1.jar")));
+      Assert.assertTrue("Archive contains maven core",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "maven-core-2.0.6.jar")));
+
+   }
+
+   /**
     * Tests a resolution of two artifacts from central
-    * @throws Exception
+    * @throws DependencyException
     */
    @Test
-   public void testMultipleResolution() throws Exception
+   public void testMultipleResolution() throws DependencyException
    {
       WebArchive war = ShrinkWrap.create(WebArchive.class, "testMultipleResolution.war")
             .addLibraries(Dependencies.artifact("org.apache.maven.plugins:maven-help-plugin:2.1.1")
@@ -133,10 +155,10 @@ public class DependenciesUnitTestCase
 
    /**
     * Tests direct usage of MavenDependencies implementation
-    * @throws Exception
+    * @throws DependencyException
     */
    @Test
-   public void testCustomDependencies() throws Exception
+   public void testCustomDependencies() throws DependencyException
    {
       WebArchive war = ShrinkWrap.create(WebArchive.class, "testCustomDependencies.war")
             .addLibraries(Dependencies.use(MavenDependencies.class)
@@ -157,10 +179,10 @@ public class DependenciesUnitTestCase
 
    /**
     * Tests loading of a POM file with parent not available on local file system
-    * @throws Exception
+    * @throws DependencyException
     */
    @Test
-   public void testParentPomRepositories() throws Exception
+   public void testParentPomRepositories() throws DependencyException
    {
       WebArchive war = ShrinkWrap.create(WebArchive.class, "testParentPomRepositories.war")
             .addLibraries(Dependencies.use(MavenDependencies.class)
@@ -176,10 +198,10 @@ public class DependenciesUnitTestCase
 
    /**
     * Tests loading of a POM file with parent available on local file system
-    * @throws Exception
+    * @throws DependencyException
     */
    @Test
-   public void testParentPomRemoteRepositories() throws Exception
+   public void testParentPomRemoteRepositories() throws DependencyException
    {
       WebArchive war = ShrinkWrap.create(WebArchive.class, "testParentPomRepositories.war")
             .addLibraries(Dependencies.use(MavenDependencies.class)
@@ -195,10 +217,10 @@ public class DependenciesUnitTestCase
 
    /**
     * Tests resolution of dependencies for a POM file with parent on local file system
-    * @throws Exception
+    * @throws DependencyException
     */
    @Test
-   public void testPomBasedDependencies() throws Exception
+   public void testPomBasedDependencies() throws DependencyException
    {
       WebArchive war = ShrinkWrap.create(WebArchive.class, "testPomBasedDependencies.war")
             .addLibraries(Dependencies.use(MavenDependencies.class)
@@ -213,10 +235,10 @@ public class DependenciesUnitTestCase
 
    /**
     * Tests resolution of dependencies for a POM file without parent on local file system
-    * @throws Exception
+    * @throws DependencyException
     */
    @Test
-   public void testPomRemoteBasedDependencies() throws Exception
+   public void testPomRemoteBasedDependencies() throws DependencyException
    {
       WebArchive war = ShrinkWrap.create(WebArchive.class, "testPomRemoteBasedDependencies.war")
             .addLibraries(Dependencies.use(MavenDependencies.class)

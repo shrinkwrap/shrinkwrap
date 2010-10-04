@@ -17,10 +17,12 @@
 package org.jboss.shrinkwrap.dependencies.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.apache.maven.model.Model;
@@ -29,12 +31,15 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.dependencies.DependencyBuilder;
+import org.jboss.shrinkwrap.dependencies.DependencyException;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.artifact.ArtifactTypeRegistry;
 import org.sonatype.aether.collection.CollectRequest;
+import org.sonatype.aether.collection.DependencyCollectionException;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.Exclusion;
+import org.sonatype.aether.resolution.ArtifactResolutionException;
 import org.sonatype.aether.resolution.ArtifactResult;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
 
@@ -75,7 +80,7 @@ public class MavenDependencies implements DependencyBuilder
     */
    public MavenDependencies configureFrom(String path)
    {
-      Validate.notNullOrEmpty(path, "Path to the settings.xml must be defined");
+      Validate.readable(path, "Path to the settings.xml must be defined and accessible");
       File settings = new File(path);
       system.loadSettings(settings, session);
       return this;
@@ -95,9 +100,9 @@ public class MavenDependencies implements DependencyBuilder
     *         to the content of POM file.
     * @throws Exception
     */
-   public MavenDependencies loadPom(String path) throws Exception
+   public MavenDependencies loadPom(String path) throws DependencyException
    {
-      Validate.notNullOrEmpty(path, "Path to the pom.xml file must be defined");
+      Validate.readable(path, "Path to the pom.xml file must be defined and accessible");
 
       File pom = new File(path);
       system.loadPom(pom, session);
@@ -109,11 +114,12 @@ public class MavenDependencies implements DependencyBuilder
     * tries to resolve them
     * @param path A path to the POM file
     * @return An array of ShrinkWrap archives
-    * @throws Exception
+    * @throws DependencyException If dependencies could not be resolved or the
+    *         POM processing failed
     */
-   public Archive<?>[] resolveFrom(String path) throws Exception
+   public Archive<?>[] resolveFrom(String path) throws DependencyException
    {
-      Validate.notNullOrEmpty(path, "Path to the pom.xml file must be defined");
+      Validate.readable(path, "Path to the pom.xml file must be defined and accessible");
       File pom = new File(path);
       Model model = system.loadPom(pom, session);
 
@@ -218,7 +224,7 @@ public class MavenDependencies implements DependencyBuilder
        * 
        * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder.ArtifactBuilder#resolve()
        */
-      public Archive<?>[] resolve() throws Exception
+      public Archive<?>[] resolve() throws DependencyException
       {
          Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
          dependencies.add(dependency);
@@ -241,24 +247,53 @@ public class MavenDependencies implements DependencyBuilder
          return new MavenArtifactBuilder(coordinates);
       }
 
-      private Archive<?>[] resolution() throws Exception
+      private Archive<?>[] resolution() throws DependencyException
       {
          Validate.notEmpty(dependencies, "No dependencies were set for resolution");
 
          CollectRequest request = new CollectRequest(dependencies, null, system.getRemoteRepositories());
 
          // wrap artifact files to archives
-         Collection<ArtifactResult> artifacts = system.resolveDependencies(session, request, null);
+         Collection<ArtifactResult> artifacts;
+         try
+         {
+            artifacts = system.resolveDependencies(session, request, null);
+         }
+         catch (DependencyCollectionException e)
+         {
+            throw new DependencyException("Unable to collect dependeny tree for a resolution", e);
+         }
+         catch (ArtifactResolutionException e)
+         {
+            throw new DependencyException("Unable to resolve an artifact", e);
+         }
          Collection<Archive<?>> archives = new ArrayList<Archive<?>>(artifacts.size());
          for (ArtifactResult artifact : artifacts)
          {
             File file = artifact.getArtifact().getFile();
-            Archive<?> archive = ShrinkWrap.create(JavaArchive.class, file.getName()).as(ZipImporter.class).importFrom(new ZipFile(file)).as(JavaArchive.class);
+            Archive<?> archive = ShrinkWrap.create(JavaArchive.class, file.getName()).as(ZipImporter.class).importFrom(convert(file)).as(JavaArchive.class);
 
             archives.add(archive);
          }
 
          return archives.toArray(ARCHIVE_CAST);
+      }
+
+      // converts a file to a ZIP file
+      private ZipFile convert(File file) throws DependencyException
+      {
+         try
+         {
+            return new ZipFile(file);
+         }
+         catch (ZipException e)
+         {
+            throw new DependencyException("Unable to treat dependecy artifact \"" + file.getAbsolutePath() + "\" as a ZIP file", e);
+         }
+         catch (IOException e)
+         {
+            throw new DependencyException("Unable to access artifact file at \"" + file.getAbsolutePath() + "\".");
+         }
       }
    }
 }

@@ -16,100 +16,154 @@
  */
 package org.jboss.shrinkwrap.dependencies.impl;
 
-import java.util.logging.Handler;
 import java.util.logging.Logger;
-import java.util.logging.StreamHandler;
 
 import org.sonatype.aether.RepositoryEvent;
 import org.sonatype.aether.util.listener.AbstractRepositoryListener;
 
 /**
+ * A listener which reports Maven repository event to a logger.
+ * 
+ * The logger is shared with {@link LogTransferListerer}
+ * 
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
  */
 public class LogRepositoryListener extends AbstractRepositoryListener
 {
-   private static final Logger log = Logger.getLogger(LogRepositoryListener.class.getPackage().getName() + ".Listener");
+   private static final Logger log = Logger.getLogger(LogRepositoryListener.class.getPackage().getName() + ".MavenListener");
 
-   // set up new logger with output directed to standard out
-   static
-   {
-      Handler h = new StreamHandler(System.out, new ListenerFormatter());
-      log.addHandler(h);
-      log.setUseParentHandlers(false);
-   }
-
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#artifactDeployed(org.sonatype.aether.RepositoryEvent)
+    */
    public void artifactDeployed(RepositoryEvent event)
    {
       log.info("Deployed " + event.getArtifact() + " to " + event.getRepository());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#artifactDeploying(org.sonatype.aether.RepositoryEvent)
+    */
    public void artifactDeploying(RepositoryEvent event)
    {
       log.fine("Deploying " + event.getArtifact() + " to " + event.getRepository());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#artifactDescriptorInvalid(org.sonatype.aether.RepositoryEvent)
+    */
    public void artifactDescriptorInvalid(RepositoryEvent event)
    {
       log.warning("Invalid artifact descriptor for " + event.getArtifact() + ": "
             + event.getException().getMessage());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#artifactDescriptorMissing(org.sonatype.aether.RepositoryEvent)
+    */
    public void artifactDescriptorMissing(RepositoryEvent event)
    {
       log.warning("Missing artifact descriptor for " + event.getArtifact());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#artifactInstalled(org.sonatype.aether.RepositoryEvent)
+    */
    public void artifactInstalled(RepositoryEvent event)
    {
       log.info("Installed " + event.getArtifact() + " to " + event.getFile());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#artifactInstalling(org.sonatype.aether.RepositoryEvent)
+    */
    public void artifactInstalling(RepositoryEvent event)
    {
       log.fine("Installing " + event.getArtifact() + " to " + event.getFile());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#artifactResolved(org.sonatype.aether.RepositoryEvent)
+    */
    public void artifactResolved(RepositoryEvent event)
    {
       log.info("Resolved artifact " + event.getArtifact() + " from " + event.getRepository());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#artifactResolving(org.sonatype.aether.RepositoryEvent)
+    */
    public void artifactResolving(RepositoryEvent event)
    {
       log.fine("Resolving artifact " + event.getArtifact());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#metadataDeployed(org.sonatype.aether.RepositoryEvent)
+    */
    public void metadataDeployed(RepositoryEvent event)
    {
       log.info("Deployed " + event.getMetadata() + " to " + event.getRepository());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#metadataDeploying(org.sonatype.aether.RepositoryEvent)
+    */
    public void metadataDeploying(RepositoryEvent event)
    {
       log.fine("Deploying " + event.getMetadata() + " to " + event.getRepository());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#metadataInstalled(org.sonatype.aether.RepositoryEvent)
+    */
    public void metadataInstalled(RepositoryEvent event)
    {
       log.info("Installed " + event.getMetadata() + " to " + event.getFile());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#metadataInstalling(org.sonatype.aether.RepositoryEvent)
+    */
    public void metadataInstalling(RepositoryEvent event)
    {
       log.fine("Installing " + event.getMetadata() + " to " + event.getFile());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#metadataInvalid(org.sonatype.aether.RepositoryEvent)
+    */
    public void metadataInvalid(RepositoryEvent event)
    {
       log.warning("Invalid metadata " + event.getMetadata());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#metadataResolved(org.sonatype.aether.RepositoryEvent)
+    */
    public void metadataResolved(RepositoryEvent event)
    {
       log.info("Resolved metadata " + event.getMetadata() + " from " + event.getRepository());
    }
 
+   /*
+    * (non-Javadoc)
+    * @see org.sonatype.aether.util.listener.AbstractRepositoryListener#metadataResolving(org.sonatype.aether.RepositoryEvent)
+    */
    public void metadataResolving(RepositoryEvent event)
    {
       log.fine("Resolving metadata " + event.getMetadata() + " from " + event.getRepository());
