@@ -29,8 +29,9 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.dependencies.DependencyBuilder;
-import org.sonatype.aether.RepositorySystem;
+import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
+import org.sonatype.aether.artifact.ArtifactTypeRegistry;
 import org.sonatype.aether.collection.CollectRequest;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.Exclusion;
@@ -38,7 +39,11 @@ import org.sonatype.aether.resolution.ArtifactResult;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
 
 /**
- * A default implementation of dependency builder based on Maven
+ * A default implementation of dependency builder based on Maven.
+ * 
+ * Apart from contract, it allows to load Maven settings from an
+ * XML file, configure remote repositories from an POM file and retrieve
+ * dependencies defined in a POM file, including ones in POM parents.
  * 
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
@@ -47,56 +52,77 @@ public class MavenDependencies implements DependencyBuilder
 {
    private static final Archive<?>[] ARCHIVE_CAST = new Archive<?>[0];
 
-   private MavenRepositorySettings settings;
+   private MavenRepositorySystem system;
 
-   private MavenDependencyRepository repository;
+   private RepositorySystemSession session;
 
    private List<Dependency> dependencies;
 
+   /**
+    * Constructs new instance of MavenDependencies
+    */
    public MavenDependencies()
    {
-      this.settings = new MavenRepositorySettings();
-      this.repository = new MavenDependencyRepository();
+      this.system = new MavenRepositorySystem(new MavenRepositorySettings());
       this.dependencies = new ArrayList<Dependency>();
+      this.session = system.getSession();
    }
 
+   /**
+    * Configures Maven from a settings.xml file
+    * @param path A path to a settings.xml configuration file
+    * @return A dependency builder with a configuration from given file
+    */
    public MavenDependencies configureFrom(String path)
    {
+      Validate.notNullOrEmpty(path, "Path to the settings.xml must be defined");
+      File settings = new File(path);
+      system.loadSettings(settings);
       return this;
    }
 
+   /**
+    * Loads remote repositories for a POM file. If repositories are
+    * defined in the parent of the POM file and there are accessible
+    * via local file system, they are set as well.
+    * 
+    * These remote repositories are used to resolve the
+    * artifacts during dependency resolution.
+    * 
+    * 
+    * @param path A path to the POM file, must not be {@code null} or empty
+    * @return A dependency builder with remote repositories set according
+    *         to the content of POM file.
+    * @throws Exception
+    */
    public MavenDependencies loadPom(String path) throws Exception
    {
       Validate.notNullOrEmpty(path, "Path to the pom.xml file must be defined");
 
       File pom = new File(path);
-      settings.setRemoteRepositories(settings.createModelFromPom(pom));
+      system.loadPom(pom, session);
       return this;
    }
 
+   /**
+    * Uses dependencies and remote repositories defined in a POM file to and
+    * tries to resolve them
+    * @param path A path to the POM file
+    * @return An array of ShrinkWrap archives
+    * @throws Exception
+    */
    public Archive<?>[] resolveFrom(String path) throws Exception
    {
       Validate.notNullOrEmpty(path, "Path to the pom.xml file must be defined");
       File pom = new File(path);
-      Model model = settings.createModelFromPom(pom);
-      settings.setRemoteRepositories(model);
+      Model model = system.loadPom(pom, session);
+
+      ArtifactTypeRegistry stereotypes = session.getArtifactTypeRegistry();
 
       // wrap from Maven to Aether
-      for (org.apache.maven.model.Dependency d : model.getDependencies())
+      for (org.apache.maven.model.Dependency dependency : model.getDependencies())
       {
-
-         List<Exclusion> exclusions = new ArrayList<Exclusion>();
-         for (org.apache.maven.model.Exclusion e : d.getExclusions())
-         {
-            Exclusion exclusion = new Exclusion(e.getGroupId(), e.getArtifactId(), null, null);
-            exclusions.add(exclusion);
-         }
-
-         // TODO does Maven type always map to Aether extension ?
-         Artifact artifact = new DefaultArtifact(d.getGroupId(), d.getArtifactId(), d.getClassifier(), d.getType(), d.getVersion());
-         boolean optional = Boolean.valueOf(d.getOptional());
-
-         dependencies.add(new Dependency(artifact, d.getScope(), optional, exclusions));
+         dependencies.add(MavenConverter.convert(dependency, stereotypes));
       }
       return new MavenArtifactBuilder().resolution();
    }
@@ -217,14 +243,12 @@ public class MavenDependencies implements DependencyBuilder
 
       private Archive<?>[] resolution() throws Exception
       {
-         Validate.notEmpty(dependencies, "No dependencies were set or found");
+         Validate.notEmpty(dependencies, "No dependencies were set for resolution");
 
-         RepositorySystem system = repository.getRepositorySystem();
-
-         CollectRequest request = new CollectRequest(dependencies, null, settings.getRemoteRepositories());
+         CollectRequest request = new CollectRequest(dependencies, null, system.getRemoteRepositories());
 
          // wrap artifact files to archives
-         List<ArtifactResult> artifacts = system.resolveDependencies(repository.getSession(system, settings), request, null);
+         Collection<ArtifactResult> artifacts = system.resolveDependencies(session, request, null);
          Collection<Archive<?>> archives = new ArrayList<Archive<?>>(artifacts.size());
          for (ArtifactResult artifact : artifacts)
          {
