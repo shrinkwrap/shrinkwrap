@@ -49,7 +49,10 @@ public class DependenciesUnitTestCase
    // Tests ------------------------------------------------------------------------------||
    // -------------------------------------------------------------------------------------||
 
-   // @Test
+   /**
+    * Tests that artifact is cannot be packaged, but is is resolved right
+    */
+   @Test(expected = org.jboss.shrinkwrap.api.importer.ArchiveImportException.class)
    public void testSimpleResolutionWrongArtifact() throws Exception
    {
       WebArchive war = ShrinkWrap.create(WebArchive.class, "testSimpleResolutionWrongArtifact.war")
@@ -63,6 +66,10 @@ public class DependenciesUnitTestCase
       war.as(ZipExporter.class).exportTo(new File("target/testSimpleResolutionWrongArtifact.war"));
    }
 
+   /**
+    * Tests a resolution of an artifact from central
+    * @throws Exception
+    */
    @Test
    public void testSimpleResolution() throws Exception
    {
@@ -77,9 +84,12 @@ public class DependenciesUnitTestCase
       Assert.assertTrue("Archive contains maven core",
             war.contains(ArchivePaths.create("WEB-INF/lib", "maven-core-2.0.6.jar")));
 
-      // war.as(ZipExporter.class).exportTo(new File("target/testSimpleResolution.war"));
    }
 
+   /**
+    * Tests a resolution of two artifacts from central
+    * @throws Exception
+    */
    @Test
    public void testMultipleResolution() throws Exception
    {
@@ -97,9 +107,12 @@ public class DependenciesUnitTestCase
       Assert.assertTrue("Archive contains maven core",
             war.contains(ArchivePaths.create("WEB-INF/lib", "maven-core-2.0.6.jar")));
 
-      // war.as(ZipExporter.class).exportTo(new File("target/testMultipleResolution.war"));
    }
 
+   /**
+    * Tests direct usage of MavenDependencies implementation
+    * @throws Exception
+    */
    @Test
    public void testCustomDependencies() throws Exception
    {
@@ -118,26 +131,50 @@ public class DependenciesUnitTestCase
       Assert.assertTrue("Archive contains maven core",
             war.contains(ArchivePaths.create("WEB-INF/lib", "maven-core-2.0.6.jar")));
 
-      // war.as(ZipExporter.class).exportTo(new File("target/testCustomDependencies.war"));
    }
 
+   /**
+    * Tests loading of a POM file with parent not available on local file system
+    * @throws Exception
+    */
    @Test
    public void testParentPomRepositories() throws Exception
    {
       WebArchive war = ShrinkWrap.create(WebArchive.class, "testParentPomRepositories.war")
             .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .loadPom("src/test/resources/child/pom.xml")
-                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")                     
+                           .loadPom("pom.xml")
+                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
                            .resolve());
 
       log.info("Created archive: " + war.toString(true));
 
       Assert.assertTrue("Archive contains maven help plugin",
             war.contains(ArchivePaths.create("WEB-INF/lib", "arquillian-junit-1.0.0.Alpha4.jar")));
-
-      // war.as(ZipExporter.class).exportTo(new File("target/testParentPomRepositories.war"));
    }
 
+   /**
+    * Tests loading of a POM file with parent available on local file system
+    * @throws Exception
+    */
+   @Test
+   public void testParentPomRemoteRepositories() throws Exception
+   {
+      WebArchive war = ShrinkWrap.create(WebArchive.class, "testParentPomRepositories.war")
+            .addLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("src/test/resources/child/pom.xml")
+                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+                           .resolve());
+
+      log.info("Created archive: " + war.toString(true));
+
+      Assert.assertTrue("Archive contains maven help plugin",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "arquillian-junit-1.0.0.Alpha4.jar")));
+   }
+
+   /**
+    * Tests resolution of dependencies for a POM file with parent on local file system
+    * @throws Exception
+    */
    @Test
    public void testPomBasedDependencies() throws Exception
    {
@@ -150,6 +187,23 @@ public class DependenciesUnitTestCase
       Assert.assertTrue("Archive contains selenium",
             war.contains(ArchivePaths.create("WEB-INF/lib", "selenium-2.0a5.jar")));
 
-      war.as(ZipExporter.class).exportTo(new File("target/testPomBasedDependencies.war"));
+   }
+
+   /**
+    * Tests resolution of dependencies for a POM file without parent on local file system
+    * @throws Exception
+    */
+   @Test
+   public void testPomRemoteBasedDependencies() throws Exception
+   {
+      WebArchive war = ShrinkWrap.create(WebArchive.class, "testPomRemoteBasedDependencies.war")
+            .addLibraries(Dependencies.use(MavenDependencies.class)
+                           .resolveFrom("pom.xml"));
+
+      log.info("Created archive: " + war.toString(true));
+
+      Assert.assertTrue("Archive contains selenium",
+            war.contains(ArchivePaths.create("WEB-INF/lib", "aether-spi-1.5.jar")));
+
    }
 }

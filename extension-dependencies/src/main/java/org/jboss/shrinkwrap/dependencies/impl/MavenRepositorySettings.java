@@ -22,12 +22,7 @@ import java.util.List;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Repository;
-import org.apache.maven.model.building.DefaultModelBuilderFactory;
-import org.apache.maven.model.building.DefaultModelBuildingRequest;
-import org.apache.maven.model.building.ModelBuilder;
 import org.apache.maven.model.building.ModelBuildingException;
-import org.apache.maven.model.building.ModelBuildingRequest;
-import org.apache.maven.model.building.ModelBuildingResult;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.settings.building.DefaultSettingsBuilderFactory;
 import org.apache.maven.settings.building.DefaultSettingsBuildingRequest;
@@ -35,8 +30,10 @@ import org.apache.maven.settings.building.SettingsBuilder;
 import org.apache.maven.settings.building.SettingsBuildingException;
 import org.apache.maven.settings.building.SettingsBuildingRequest;
 import org.apache.maven.settings.building.SettingsBuildingResult;
+import org.sonatype.aether.RepositoryListener;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.RemoteRepository;
+import org.sonatype.aether.transfer.TransferListener;
 
 /**
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
@@ -53,35 +50,22 @@ public class MavenRepositorySettings
 
    public MavenRepositorySettings()
    {
-      SettingsBuilder builder = createBuilder();
       SettingsBuildingRequest request = new DefaultSettingsBuildingRequest();
       request.setGlobalSettingsFile(new File(DEFAULT_GLOBAL_SETTINGS_PATH));
 
       this.repositories = new ArrayList<RemoteRepository>();
-      this.repositories.add(new RemoteRepository("central", "default", "http://repo1.maven.org/maven2"));
+      this.repositories.add(centralRepository());
 
-      this.settings = buildSettings(builder, request);
-   }
-
-   public Model createModelFromPom(File pom) throws ModelBuildingException
-   {
-      ModelBuildingRequest request = new DefaultModelBuildingRequest();
-      request.setPomFile(pom);
-      // FIXME the ModelResolver must be set here for artifact with parents not accessible via local file-system
-
-      ModelBuilder builder = new DefaultModelBuilderFactory().newInstance();
-      ModelBuildingResult result = builder.build(request);
-
-      return result.getEffectiveModel();
+      buildSettings(request);
    }
 
    public void setRemoteRepositories(Model model) throws ModelBuildingException
    {
-
       List<RemoteRepository> newRepositories = new ArrayList<RemoteRepository>();
-      for (Repository repo : model.getRepositories())
+      newRepositories.add(centralRepository());
+      for (Repository repository : model.getRepositories())
       {
-         newRepositories.add(new RemoteRepository(repo.getId(), repo.getLayout(), repo.getUrl()));
+         newRepositories.add(MavenConverter.convert(repository));
       }
 
       this.repositories = newRepositories;
@@ -97,12 +81,28 @@ public class MavenRepositorySettings
       return new LocalRepository(settings.getLocalRepository());
    }
 
-   private Settings buildSettings(SettingsBuilder builder, SettingsBuildingRequest request)
+   public RepositoryListener getRepositoryListener()
+   {
+      return new LogRepositoryListener();
+   }
+
+   public TransferListener getTransferListener()
+   {
+      return new LogTransferListerer();
+   }
+
+   private RemoteRepository centralRepository()
+   {
+      return new RemoteRepository("central", "default", "http://repo1.maven.org/maven2");
+   }
+
+   public void buildSettings(SettingsBuildingRequest request)
    {
 
       SettingsBuildingResult result;
       try
       {
+         SettingsBuilder builder = new DefaultSettingsBuilderFactory().newInstance();
          result = builder.build(request);
       }
       catch (SettingsBuildingException e)
@@ -116,12 +116,6 @@ public class MavenRepositorySettings
       {
          settings.setLocalRepository(DEFAULT_REPOSITORY_PATH);
       }
-      return settings;
+      this.settings = settings;
    }
-
-   private SettingsBuilder createBuilder()
-   {
-      return new DefaultSettingsBuilderFactory().newInstance();
-   }
-
 }
