@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Repository;
-import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.settings.building.DefaultSettingsBuilderFactory;
 import org.apache.maven.settings.building.DefaultSettingsBuildingRequest;
@@ -59,7 +58,7 @@ public class MavenRepositorySettings
       buildSettings(request);
    }
 
-   public void setRemoteRepositories(Model model) throws ModelBuildingException
+   public void setRemoteRepositories(Model model)
    {
       List<RemoteRepository> newRepositories = new ArrayList<RemoteRepository>();
       newRepositories.add(centralRepository());
@@ -112,9 +111,7 @@ public class MavenRepositorySettings
       }
 
       Settings settings = result.getEffectiveSettings();
-      
-      System.out.println("XYZ: " + request.getUserSettingsFile().getAbsolutePath() + " => " + settings.getLocalRepository());
-      
+
       if (settings.getLocalRepository() == null)
       {
          settings.setLocalRepository(DEFAULT_REPOSITORY_PATH);

@@ -14,42 +14,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.dependencies.impl;
-
-import java.util.logging.Formatter;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
+package org.jboss.shrinkwrap.dependencies;
 
 /**
+ * Signals a failure during resolution of dependencies from a repository
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
  */
-public class ListenerFormatter extends Formatter
+public class DependencyException extends RuntimeException
 {
-   /*
-    * (non-Javadoc)
+
+   /**
     * 
-    * @see java.util.logging.Formatter#format(java.util.logging.LogRecord)
     */
-   @Override
-   public String format(LogRecord record)
+   private static final long serialVersionUID = -5494130553315008915L;
+
+   /**
+    * @param message
+    */
+   public DependencyException(String message)
    {
-      StringBuilder sb = new StringBuilder();
+      super(message);
+   }
 
-      if (record.getLevel().intValue() > Level.FINE.intValue())
-      {
-         sb.append("[")
-               .append(record.getLevel())
-               .append("] ")
-               .append(record.getMessage())
-               .append("\n");
-      }
-      else
-      {
-         sb.append(record.getMessage());
-      }
+   /**
+    * @param cause
+    */
+   public DependencyException(Throwable cause)
+   {
+      super(cause);
+   }
 
-      return sb.toString();
+   /**
+    * @param message
+    * @param cause
+    */
+   public DependencyException(String message, Throwable cause)
+   {
+      super(message, cause);
    }
 
 }

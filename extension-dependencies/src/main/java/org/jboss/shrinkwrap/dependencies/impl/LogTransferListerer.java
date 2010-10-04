@@ -28,13 +28,17 @@ import org.sonatype.aether.transfer.TransferResource;
 import org.sonatype.aether.util.listener.AbstractTransferListener;
 
 /**
+ * A listener which reports Maven transfer events to a logger.
+ * 
+ * The logger is shared with {@link LogRepositoryListener}.
+ * 
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
  */
 public class LogTransferListerer extends AbstractTransferListener
 {
    // set up new logger with output directed to standard out
-   private static final Logger log = Logger.getLogger(LogTransferListerer.class.getPackage().getName() + ".Listener");
+   private static final Logger log = Logger.getLogger(LogTransferListerer.class.getPackage().getName() + ".MavenListener");
 
    // a map of transferred data sizes for the last notification
    private Map<TransferResource, Long> downloads = new ConcurrentHashMap<TransferResource, Long>();
@@ -42,7 +46,11 @@ public class LogTransferListerer extends AbstractTransferListener
    // a minimal amount of data transferred for an artifact required to inform the user
    private static final long TRANSFER_THRESHOLD = 1024 * 50;
 
-   @Override
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.sonatype.aether.util.listener.AbstractTransferListener#transferInitiated(org.sonatype.aether.transfer.TransferEvent)
+    */
    public void transferInitiated(TransferEvent event)
    {
       TransferResource resource = event.getResource();
@@ -57,7 +65,11 @@ public class LogTransferListerer extends AbstractTransferListener
       log.info(sb.toString());
    }
 
-   @Override
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.sonatype.aether.util.listener.AbstractTransferListener#transferProgressed(org.sonatype.aether.transfer.TransferEvent)
+    */
    public void transferProgressed(TransferEvent event)
    {
       TransferResource resource = event.getResource();
@@ -73,7 +85,11 @@ public class LogTransferListerer extends AbstractTransferListener
       }
    }
 
-   @Override
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.sonatype.aether.util.listener.AbstractTransferListener#transferSucceeded(org.sonatype.aether.transfer.TransferEvent)
+    */
    public void transferSucceeded(TransferEvent event)
    {
       TransferResource resource = event.getResource();
@@ -102,7 +118,11 @@ public class LogTransferListerer extends AbstractTransferListener
       }
    }
 
-   @Override
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.sonatype.aether.util.listener.AbstractTransferListener#transferFailed(org.sonatype.aether.transfer.TransferEvent)
+    */
    public void transferFailed(TransferEvent event)
    {
       TransferResource resource = event.getResource();
@@ -121,6 +141,11 @@ public class LogTransferListerer extends AbstractTransferListener
       log.warning(sb.toString());
    }
 
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.sonatype.aether.util.listener.AbstractTransferListener#transferCorrupted(org.sonatype.aether.transfer.TransferEvent)
+    */
    public void transferCorrupted(TransferEvent event)
    {
       TransferResource resource = event.getResource();
@@ -140,6 +165,7 @@ public class LogTransferListerer extends AbstractTransferListener
 
    }
 
+   // converts into status message
    private String getStatus(long complete, long total)
    {
       if (total >= 1024)
@@ -160,6 +186,7 @@ public class LogTransferListerer extends AbstractTransferListener
       }
    }
 
+   // converts bytes to kilobytes
    private long toKB(long bytes)
    {
       return (bytes + 1023) / 1024;

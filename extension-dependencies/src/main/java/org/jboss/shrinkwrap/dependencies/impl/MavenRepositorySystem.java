@@ -27,12 +27,14 @@ import org.apache.maven.model.building.ModelBuilder;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.model.building.ModelBuildingResult;
+import org.apache.maven.model.building.ModelProblem;
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
 import org.apache.maven.settings.building.DefaultSettingsBuildingRequest;
 import org.apache.maven.settings.building.SettingsBuildingRequest;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.jboss.shrinkwrap.dependencies.DependencyException;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.collection.CollectRequest;
@@ -77,14 +79,32 @@ public class MavenRepositorySystem
       return session;
    }
 
-   public Model loadPom(File pom, RepositorySystemSession session) throws ModelBuildingException
+   public Model loadPom(File pom, RepositorySystemSession session) throws DependencyException
    {
       ModelBuildingRequest request = new DefaultModelBuildingRequest();
       request.setPomFile(pom);
       request.setModelResolver(new MavenModelResolver(system, session, getRemoteRepositories()));
 
       ModelBuilder builder = new DefaultModelBuilderFactory().newInstance();
-      ModelBuildingResult result = builder.build(request);
+      ModelBuildingResult result;
+      try
+      {
+         result = builder.build(request);
+      }
+      // wrap exception message
+      catch (ModelBuildingException e)
+      {
+         StringBuilder sb = new StringBuilder("Found ")
+               .append(e.getProblems().size()).append(" problems while building POM model from ").append(pom.getAbsolutePath());
+
+         int counter = 1;
+         for (ModelProblem problem : e.getProblems())
+         {
+            sb.append(counter++).append("/ ").append(problem).append("\n");
+         }
+
+         throw new DependencyException(sb.toString(), e);
+      }
 
       Model model = result.getEffectiveModel();
       settings.setRemoteRepositories(model);
