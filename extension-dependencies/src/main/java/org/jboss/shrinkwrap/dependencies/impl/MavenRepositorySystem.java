@@ -70,13 +70,10 @@ public class MavenRepositorySystem
     */
    public RepositorySystemSession getSession()
    {
-      RepositorySystem system = getRepositorySystem();
-
       MavenRepositorySystemSession session = new MavenRepositorySystemSession();
       session.setLocalRepositoryManager(system.newLocalRepositoryManager(settings.getLocalRepository()));
       session.setTransferListener(settings.getTransferListener());
       session.setRepositoryListener(settings.getRepositoryListener());
-
       return session;
    }
 
@@ -94,11 +91,17 @@ public class MavenRepositorySystem
       return model;
    }
 
-   public void loadSettings(File file)
+   public void loadSettings(File file, RepositorySystemSession session)
    {
+      if (!(session instanceof MavenRepositorySystemSession))
+      {
+         throw new IllegalArgumentException("Cannot set local repository path for a Maven repository, expecting instance of " + MavenRepositorySystemSession.class.getName() + ", but got " + session.getClass().getName());
+      }
+
       SettingsBuildingRequest request = new DefaultSettingsBuildingRequest();
       request.setUserSettingsFile(file);
       settings.buildSettings(request);
+      ((MavenRepositorySystemSession) session).setLocalRepositoryManager(system.newLocalRepositoryManager(settings.getLocalRepository()));
    }
 
    public List<RemoteRepository> getRemoteRepositories()
