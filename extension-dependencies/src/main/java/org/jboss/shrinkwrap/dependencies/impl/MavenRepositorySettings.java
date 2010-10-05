@@ -35,18 +35,31 @@ import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.transfer.TransferListener;
 
 /**
+ * An encapsulation of settings required to be handle Maven dependency resolution.
+ * 
+ * It holds links to local and remote repositories
+ * 
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
  */
 public class MavenRepositorySettings
 {
-   private static final String DEFAULT_USER_SETTINGS_PATH = System.getProperty("user.home").concat("/.m2/settings.xml");
-   private static final String DEFAULT_REPOSITORY_PATH = System.getProperty("user.home").concat("/.m2/repository");
+   private static final String DEFAULT_USER_SETTINGS_PATH = SecurityActions.getProperty("user.home").concat("/.m2/settings.xml");
+   private static final String DEFAULT_REPOSITORY_PATH = SecurityActions.getProperty("user.home").concat("/.m2/repository");
 
    private List<RemoteRepository> repositories;
 
+   // settings object
    private Settings settings;
 
+   /**
+    * Creates a new Maven settings using default user settings,
+    * that is the one located in ${user.home}/.m2/settings.xml.
+    * 
+    * Appends Maven Central repository to available remote repositories.
+    * 
+    * The file is used to track local Maven repository.
+    */
    public MavenRepositorySettings()
    {
       SettingsBuildingRequest request = new DefaultSettingsBuildingRequest();
@@ -58,6 +71,11 @@ public class MavenRepositorySettings
       buildSettings(request);
    }
 
+   /**
+    * Sets a list of remote repositories using a POM model.
+    * Maven Central repository is always added, even if it is not included in the model.
+    * @param model the POM model
+    */
    public void setRemoteRepositories(Model model)
    {
       List<RemoteRepository> newRepositories = new ArrayList<RemoteRepository>();
@@ -70,31 +88,58 @@ public class MavenRepositorySettings
       this.repositories = newRepositories;
    }
 
+   /**
+    * Returns a list of available remote repositories
+    * @return The list of remote repositories
+    */
    public List<RemoteRepository> getRemoteRepositories()
    {
       return repositories;
    }
 
+   /**
+    * Returns a local repository determined from settings.xml or the
+    * default repository located
+    * @return The local repository
+    */
    public LocalRepository getLocalRepository()
    {
       return new LocalRepository(settings.getLocalRepository());
    }
 
+   /**
+    * Returns a listener which captures repository based events, such as
+    * an attempt to download from a repository and similar events.
+    * @return The {@link RepositoryListener} implementation
+    */
    public RepositoryListener getRepositoryListener()
    {
       return new LogRepositoryListener();
    }
 
+   /**
+    * Returns a listener which captures transfer based events, such
+    * as a download progress and similar events.
+    * @return The {@link TransferListener} implementation
+    */
    public TransferListener getTransferListener()
    {
       return new LogTransferListerer();
    }
 
+   // creates a link to Maven Central Repository
    private RemoteRepository centralRepository()
    {
       return new RemoteRepository("central", "default", "http://repo1.maven.org/maven2");
    }
 
+   /**
+    * Replaces currents settings with ones retrieved from request.
+    * 
+    * The list of remote repositories is not affected.
+    * 
+    * @param request The request for new settings
+    */
    public void buildSettings(SettingsBuildingRequest request)
    {
 
