@@ -65,7 +65,8 @@ public class MavenRepositorySystem
    }
 
    /**
-    * Spawns a working session from the repository system
+    * Spawns a working session from the repository system. Working session is
+    * shared between all Maven based commands
     * @param system A repository system
     * @param settings A configuration of current session, such as local or remote repositories and listeners
     * @return The working session for dependency resolution
@@ -79,6 +80,14 @@ public class MavenRepositorySystem
       return session;
    }
 
+   /**
+    * Loads a POM file and updates settings both in current system and the session.
+    * Namely remote repositories are updated using the settings found in the POM file.
+    * @param pom The POM file which contains either settings or a reference to a parent POM
+    * @param session The session to be used to fetch possible parents
+    * @return The model generated from the POM file
+    * @throws DependencyException If dependency resolution, such as retrieving an artifact parent fails
+    */
    public Model loadPom(File pom, RepositorySystemSession session) throws DependencyException
    {
       ModelBuildingRequest request = new DefaultModelBuildingRequest();
@@ -111,6 +120,11 @@ public class MavenRepositorySystem
       return model;
    }
 
+   /**
+    * Loads Maven settings and updates session settings
+    * @param file The file which contains Maven settings
+    * @param session The session to be updated appart from settings
+    */
    public void loadSettings(File file, RepositorySystemSession session)
    {
       if (!(session instanceof MavenRepositorySystemSession))
@@ -124,16 +138,39 @@ public class MavenRepositorySystem
       ((MavenRepositorySystemSession) session).setLocalRepositoryManager(system.newLocalRepositoryManager(settings.getLocalRepository()));
    }
 
+   /**
+    * 
+    * @return
+    */
    public List<RemoteRepository> getRemoteRepositories()
    {
       return settings.getRemoteRepositories();
    }
 
+   /**
+    * Resolves artifact dependencies.
+    * 
+    * The {@see ArtifactResult} contains a reference to a file in Maven local repository.
+    * 
+    * @param session The current Maven session
+    * @param request The request to be computed
+    * @param filter The filter of dependency results
+    * @return A collection of artifacts which have built dependency tree from {@link request}
+    * @throws DependencyCollectionException If a dependency could not be computed or collected
+    * @throws ArtifactResolutionException If an artifact could not be fetched
+    */
    public Collection<ArtifactResult> resolveDependencies(RepositorySystemSession session, CollectRequest request, DependencyFilter filter) throws DependencyCollectionException, ArtifactResolutionException
    {
       return system.resolveDependencies(session, request, filter);
    }
 
+   /**
+    * Resolves an artifact
+    * @param session The current Maven session
+    * @param request The request to be computed
+    * @return The artifact
+    * @throws ArtifactResolutionException If the artifact could not be fetched
+    */
    public ArtifactResult resolveArtifact(RepositorySystemSession session, ArtifactRequest request) throws ArtifactResolutionException
    {
       return system.resolveArtifact(session, request);

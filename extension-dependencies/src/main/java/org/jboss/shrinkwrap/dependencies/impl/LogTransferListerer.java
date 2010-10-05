@@ -38,7 +38,7 @@ import org.sonatype.aether.util.listener.AbstractTransferListener;
 public class LogTransferListerer extends AbstractTransferListener
 {
    // set up new logger with output directed to standard out
-   private static final Logger log = Logger.getLogger(LogTransferListerer.class.getPackage().getName() + ".MavenListener");
+   private static final Logger log = Logger.getLogger(LogTransferListerer.class.getName());
 
    // a map of transferred data sizes for the last notification
    private Map<TransferResource, Long> downloads = new ConcurrentHashMap<TransferResource, Long>();
