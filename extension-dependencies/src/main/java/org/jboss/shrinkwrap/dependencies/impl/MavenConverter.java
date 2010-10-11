@@ -1,4 +1,6 @@
 /*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ * 
  * JBoss, Home of Professional Open Source
  * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
@@ -35,6 +37,7 @@ import org.sonatype.aether.util.artifact.DefaultArtifactType;
 /**
  * An utility class which provides conversion between Maven and Aether objects
  * 
+ * @author Benjamin Bentmann
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
  */
