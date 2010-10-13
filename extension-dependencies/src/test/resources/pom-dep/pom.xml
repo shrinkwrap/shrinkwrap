@@ -7,8 +7,8 @@
 
    <!-- Artifact Configuration -->
    <groupId>org.jboss.shrinkwrap</groupId>
-   <artifactId>shrinkwrap-dependencies-test-parent</artifactId>
-   <version>1.0.0-SNAPSHOT</version>
+   <artifactId>shrinkwrap-dependencies-pom-dep</artifactId>
+   <version>1.0.0</version>
    <name>Dependencies test parent</name>
    <description>ShrinkWrap Dependencies test parent</description>
    <packaging>pom</packaging>
@@ -56,6 +56,14 @@
          </snapshots>
       </pluginRepository>
    </pluginRepositories>
+
+   <dependencies>
+      <dependency>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-help-plugin</artifactId>
+         <version>2.1.1</version>
+      </dependency>
+   </dependencies>
 
    <build>
    </build>

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
@@ -55,6 +56,8 @@ import org.sonatype.aether.util.artifact.DefaultArtifact;
  */
 public class MavenDependencies implements DependencyBuilder
 {
+   private static final Logger log = Logger.getLogger(MavenDependencies.class.getName());
+
    private static final Archive<?>[] ARCHIVE_CAST = new Archive<?>[0];
 
    private MavenRepositorySystem system;
@@ -146,6 +149,7 @@ public class MavenDependencies implements DependencyBuilder
 
    public class MavenArtifactBuilder implements DependencyBuilder.ArtifactBuilder
    {
+
       private Artifact artifact;
 
       private List<Exclusion> exclusions = new ArrayList<Exclusion>();
@@ -270,9 +274,16 @@ public class MavenDependencies implements DependencyBuilder
          Collection<Archive<?>> archives = new ArrayList<Archive<?>>(artifacts.size());
          for (ArtifactResult artifact : artifacts)
          {
-            File file = artifact.getArtifact().getFile();
-            Archive<?> archive = ShrinkWrap.create(JavaArchive.class, file.getName()).as(ZipImporter.class).importFrom(convert(file)).as(JavaArchive.class);
+            Artifact a = artifact.getArtifact();
+            // skip all non-jar artifacts
+            if (!"jar".equals(a.getExtension()))
+            {
+               log.info("Removed non-JAR artifact " + a.toString() + " from archive, it's dependencies were fetched");
+               continue;
+            }
 
+            File file = a.getFile();
+            Archive<?> archive = ShrinkWrap.create(JavaArchive.class, file.getName()).as(ZipImporter.class).importFrom(convert(file)).as(JavaArchive.class);
             archives.add(archive);
          }
 

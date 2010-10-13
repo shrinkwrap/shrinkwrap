@@ -152,7 +152,29 @@
    <build>
 
       <plugins>
-
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.4.3</version>
+            <executions>
+               <execution>
+                  <id>copy-pom-dep-resources</id>
+                  <phase>process-test-resources</phase>
+                  <goals>
+                     <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                     <outputDirectory>${basedir}/target/pom-dep-repository</outputDirectory>
+                     <resources>
+                        <resource>
+                           <directory>src/test/resources/pom-dep/repository</directory>
+                           <filtering>false</filtering>
+                        </resource>
+                     </resources>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
       </plugins>
 
    </build>
