@@ -1,0 +1,8 @@
+org.jboss.shrinkwrap:shrinkwrap-dependencies-dependency:jar:1.0.0-SNAPSHOT
+\- org.jboss.arquillian:arquillian-junit:jar:1.0.0-SNAPSHOT:test
+   \- org.jboss.arquillian:arquillian-impl-base:jar:1.0.0-SNAPSHOT:test
+      +- org.jboss.arquillian:arquillian-api:jar:1.0.0-SNAPSHOT:test
+      |  \- org.jboss.shrinkwrap:shrinkwrap-api:jar:1.0.0-alpha-11:test
+      +- org.jboss.arquillian:arquillian-spi:jar:1.0.0-SNAPSHOT:test
+      +- org.jboss.shrinkwrap:shrinkwrap-impl-base:jar:1.0.0-alpha-11:test
+      \- org.jboss.shrinkwrap:shrinkwrap-spi:jar:1.0.0-alpha-11:test

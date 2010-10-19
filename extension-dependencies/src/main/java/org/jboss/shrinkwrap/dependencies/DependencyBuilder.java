@@ -94,9 +94,12 @@ public interface DependencyBuilder
     * for the artifact later.
     * 
     * @param coordinates Coordinates specified to a created artifact, specified
-    *        in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>}, must not be {@code null} or empty.
+    *        in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]][:<version>]}, must not be {@code null} or empty.
+    *        If {@code version} is not specified, is it determined if underlying repository system supports so.
+    * 
     * @return A new artifact builder
+    * @throws DependencyException if artifact coordinates are wrong or if version cannot be determined.
     */
-   ArtifactBuilder artifact(String coordinates);
+   ArtifactBuilder artifact(String coordinates) throws DependencyException;
 
 }

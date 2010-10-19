@@ -72,6 +72,51 @@ public class PomDependenciesUnitTestCase
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
    }
+   
+   /**
+    * Tests loading of a POM file with parent available on local file system
+    * Uses POM to get artifact version
+    * @throws DependencyException
+    */
+   @Test
+   public void testArtifactVersionRetrievalFromPom() throws DependencyException
+   {
+      String name = "artifactVersionRetrievalFromPom";
+
+      WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
+            .addLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("src/test/resources/dependency/pom.xml")
+                           .artifact("org.jboss.arquillian:arquillian-junit")
+                           .resolve());
+
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
+      desc.validateArchive(war).results();
+
+      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
+   }
+   
+   /**
+    * Tests loading of a POM file with parent available on local file system.
+    * However, the artifact version is not used from there, but specified manually
+    * @throws DependencyException
+    */
+   @Test
+   public void testArtifactVersionRetrievalFromPomOverride() throws DependencyException
+   {
+      String name = "artifactVersionRetrievalFromPomOverride";
+
+      WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
+            .addLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("src/test/resources/dependency/pom.xml")
+                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+                           .resolve());
+
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
+      desc.validateArchive(war).results();
+
+      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
+   }
+
 
    /**
     * Tests resolution of dependencies for a POM file with parent on local file system
