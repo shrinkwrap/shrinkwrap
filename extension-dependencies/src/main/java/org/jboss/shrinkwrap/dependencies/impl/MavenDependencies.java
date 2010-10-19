@@ -21,8 +21,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
@@ -60,11 +64,21 @@ public class MavenDependencies implements DependencyBuilder
 
    private static final Archive<?>[] ARCHIVE_CAST = new Archive<?>[0];
 
+   private static final Pattern COORDINATES_PATTERN = Pattern.compile("([^: ]+):([^: ]+)(:([^: ]*)(:([^: ]+))?)?(:([^: ]+))?");
+
+   private static final int COORDINATES_GROUP_ID = 1;
+   private static final int COORDINATES_ARTIFACT_ID = 2;
+   private static final int COORDINATES_TYPE_ID = 4;
+   private static final int COORDINATES_CLASSIFIER_ID = 6;
+   private static final int COORDINATES_VERSION_ID = 8;
+
    private MavenRepositorySystem system;
 
    private RepositorySystemSession session;
 
    private List<Dependency> dependencies;
+
+   private Map<ArtifactAsKey, Dependency> pomInternalDependencyManagement;
 
    /**
     * Constructs new instance of MavenDependencies
@@ -73,6 +87,7 @@ public class MavenDependencies implements DependencyBuilder
    {
       this.system = new MavenRepositorySystem(new MavenRepositorySettings());
       this.dependencies = new ArrayList<Dependency>();
+      this.pomInternalDependencyManagement = new HashMap<ArtifactAsKey, Dependency>();
       this.session = system.getSession();
    }
 
@@ -97,6 +112,9 @@ public class MavenDependencies implements DependencyBuilder
     * These remote repositories are used to resolve the
     * artifacts during dependency resolution.
     * 
+    * Additionally, it loads dependencies defined in the POM file model
+    * in an internal cache, which can be later used to resolve an artifact
+    * without explicitly specifying its version.
     * 
     * @param path A path to the POM file, must not be {@code null} or empty
     * @return A dependency builder with remote repositories set according
@@ -108,7 +126,17 @@ public class MavenDependencies implements DependencyBuilder
       Validate.readable(path, "Path to the pom.xml file must be defined and accessible");
 
       File pom = new File(path);
-      system.loadPom(pom, session);
+      Model model = system.loadPom(pom, session);
+
+      ArtifactTypeRegistry stereotypes = session.getArtifactTypeRegistry();
+
+      // store all dependency information to be able to retrieve versions later
+      for (org.apache.maven.model.Dependency dependency : model.getDependencies())
+      {
+         Dependency d = MavenConverter.convert(dependency, stereotypes);
+         pomInternalDependencyManagement.put(new ArtifactAsKey(d.getArtifact()), d);
+      }
+
       return this;
    }
 
@@ -141,9 +169,10 @@ public class MavenDependencies implements DependencyBuilder
     * 
     * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder#artifact(java.lang.String)
     */
-   public MavenArtifactBuilder artifact(String coordinates)
+   public MavenArtifactBuilder artifact(String coordinates) throws DependencyException
    {
       Validate.notNullOrEmpty(coordinates, "Artifact coordinates must not be null or empty");
+
       return new MavenArtifactBuilder(coordinates);
    }
 
@@ -158,9 +187,18 @@ public class MavenDependencies implements DependencyBuilder
 
       private boolean optional;
 
-      public MavenArtifactBuilder(String coordinates)
+      public MavenArtifactBuilder(String coordinates) throws DependencyException
       {
-         this.artifact = new DefaultArtifact(coordinates);
+         try
+         {
+            coordinates = resolveArtifactVersion(coordinates);
+            this.artifact = new DefaultArtifact(coordinates);
+         }
+         catch (IllegalArgumentException e)
+         {
+            throw new DependencyException("Unable to create artifact from coordinates " + coordinates + ", " +
+                  "they are either invalid or version information was not specified in loaded POM file (maybe the POM file wasn't load at all)", e);
+         }
       }
 
       // used for resolution from pom.xml only
@@ -306,5 +344,35 @@ public class MavenDependencies implements DependencyBuilder
             throw new DependencyException("Unable to access artifact file at \"" + file.getAbsolutePath() + "\".");
          }
       }
+
+      /**
+       * Tries to resolve artifact version from internal dependencies from a fetched POM file.
+       * If no version is found, it simply returns original coordinates
+       * @param coordinates The coordinates excluding the {@code version} part
+       * @return Either coordinates with appended {@code version} or original coordinates
+       */
+      private String resolveArtifactVersion(String coordinates)
+      {
+         Matcher m = COORDINATES_PATTERN.matcher(coordinates);
+         if (!m.matches())
+         {
+            throw new DependencyException("Bad artifact coordinates"
+                  + ", expected format is <groupId>:<artifactId>[:<extension>[:<classifier>]][:<version>]");
+         }
+
+         ArtifactAsKey key = new ArtifactAsKey(m.group(COORDINATES_GROUP_ID), m.group(COORDINATES_ARTIFACT_ID),
+               m.group(COORDINATES_TYPE_ID), m.group(COORDINATES_CLASSIFIER_ID));
+
+         if (m.group(COORDINATES_VERSION_ID) == null && pomInternalDependencyManagement.containsKey(key))
+         {
+            String version = pomInternalDependencyManagement.get(key).getArtifact().getVersion();
+            log.fine("Resolved version " + version + " from the POM file for the artifact: " + coordinates);
+            coordinates = coordinates + ":" + version;
+         }
+
+         return coordinates;
+      }
+
    }
+
 }
