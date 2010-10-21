@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
+import org.jboss.shrinkwrap.api.UnknownExtensionTypeException;
 import org.jboss.shrinkwrap.api.UnknownExtensionTypeExceptionDelegator;
 
 /**
@@ -55,7 +56,6 @@ public class ServiceExtensionLoader implements ExtensionLoader
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
    
-   private ClassLoader classLoader = SecurityActions.getThreadContextClassLoader();
    private Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
    private Map<Class<?>, ExtensionWrapper> extensionMappings = new HashMap<Class<?>, ExtensionWrapper>();
 
@@ -64,11 +64,13 @@ public class ServiceExtensionLoader implements ExtensionLoader
    // Required Implementations - ExtensionLoader -----------------------------------------||
    //-------------------------------------------------------------------------------------||
    
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.ExtensionLoader#load(java.lang.Class, org.jboss.shrinkwrap.api.Archive)
     */
    @Override
    public <T extends Assignable> T load(Class<T> extensionClass, Archive<?> baseArchive)
+         throws UnknownExtensionTypeException
    {
       if(isCached(extensionClass))
       {
@@ -316,7 +318,7 @@ public class ServiceExtensionLoader implements ExtensionLoader
    }
    
    private ClassLoader getClassLoader() 
-   {
-      return classLoader;
+   {      
+      return SecurityActions.getThreadContextClassLoader();
    }
 }
