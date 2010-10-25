@@ -20,8 +20,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
@@ -43,13 +46,17 @@ public class DependencyTreeDescription
 
    private Map<ArtifactHolder, Boolean> artifacts;
 
+   private Set<String> allowedScopes;
+
    /**
     * Creates a description from the file
     * @param file A file with dependency:tree output
+    * @param scopes A list of allowed scopes
     * @throws DependencyException
     */
-   public DependencyTreeDescription(File file) throws DependencyException
+   public DependencyTreeDescription(File file, String... scopes) throws DependencyException
    {
+      this.allowedScopes = new HashSet<String>(Arrays.asList(scopes));
       this.artifacts = load(file);
    }
 
@@ -139,7 +146,8 @@ public class DependencyTreeDescription
             {
                log.fine("Root of the tree (" + holder.toString() + ")should not be included in the artifact itself");
             }
-            else
+            // add artifact if in allowed scope
+            else if (allowedScopes.isEmpty() || (!allowedScopes.isEmpty() && allowedScopes.contains(holder.scope)))
             {
                artifacts.put(new ArtifactHolder(line), Boolean.FALSE);
             }

@@ -180,7 +180,7 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
                <includes>
-                  <include>org/jboss/shrinkwrap/dependencies/Pom*UnitTestCase.class</include>
+                  <include>org/jboss/shrinkwrap/dependencies/*UnitTestCase.class</include>
                </includes>
             </configuration>
          </plugin>

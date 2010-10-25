@@ -37,7 +37,7 @@ public class Dependencies
     * @param clazz the class
     * @return The new instance of dependency builder backed by passed implementation
     */
-   public static <T extends DependencyBuilder> T use(Class<T> clazz)
+   public static <T extends DependencyBuilder<T>> T use(Class<T> clazz)
    {
       return SecurityActions.newInstance(clazz.getName(), new Class<?>[0], new Object[0], clazz);
    }
@@ -48,7 +48,7 @@ public class Dependencies
     *        must not be {@code null} or empty.
     * @return A new instance of artifact builder
     */
-   public static DependencyBuilder.ArtifactBuilder artifact(String coordinates)
+   public static DependencyBuilder.ArtifactBuilder<MavenDependencies> artifact(String coordinates)
    {
       return new MavenDependencies().artifact(coordinates);
    }

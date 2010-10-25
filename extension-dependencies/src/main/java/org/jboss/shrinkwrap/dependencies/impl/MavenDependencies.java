@@ -37,6 +37,8 @@ import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.dependencies.DependencyBuilder;
 import org.jboss.shrinkwrap.dependencies.DependencyException;
+import org.jboss.shrinkwrap.dependencies.DependencyFilter;
+import org.jboss.shrinkwrap.dependencies.impl.filter.AcceptAllFilter;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.artifact.ArtifactTypeRegistry;
@@ -58,13 +60,15 @@ import org.sonatype.aether.util.artifact.DefaultArtifact;
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
  */
-public class MavenDependencies implements DependencyBuilder
+public class MavenDependencies implements DependencyBuilder<MavenDependencies>
 {
    private static final Logger log = Logger.getLogger(MavenDependencies.class.getName());
 
    private static final Archive<?>[] ARCHIVE_CAST = new Archive<?>[0];
 
    private static final Pattern COORDINATES_PATTERN = Pattern.compile("([^: ]+):([^: ]+)(:([^: ]*)(:([^: ]+))?)?(:([^: ]+))?");
+
+   private static final DependencyFilter<MavenDependencies> ACCEPT_ALL = new AcceptAllFilter();
 
    private static final int COORDINATES_GROUP_ID = 1;
    private static final int COORDINATES_ARTIFACT_ID = 2;
@@ -76,9 +80,9 @@ public class MavenDependencies implements DependencyBuilder
 
    private RepositorySystemSession session;
 
-   private List<Dependency> dependencies;
-
-   private Map<ArtifactAsKey, Dependency> pomInternalDependencyManagement;
+   // these are package visible, so they can be wrapped and make visible for filters
+   List<Dependency> dependencies;
+   Map<ArtifactAsKey, Dependency> pomInternalDependencyManagement;
 
    /**
     * Constructs new instance of MavenDependencies
@@ -150,6 +154,11 @@ public class MavenDependencies implements DependencyBuilder
     */
    public Archive<?>[] resolveFrom(String path) throws DependencyException
    {
+      return resolveFrom(path, ACCEPT_ALL);
+   }
+
+   public Archive<?>[] resolveFrom(String path, DependencyFilter<MavenDependencies> filter) throws DependencyException
+   {
       Validate.readable(path, "Path to the pom.xml file must be defined and accessible");
       File pom = new File(path);
       Model model = system.loadPom(pom, session);
@@ -161,7 +170,7 @@ public class MavenDependencies implements DependencyBuilder
       {
          dependencies.add(MavenConverter.convert(dependency, stereotypes));
       }
-      return new MavenArtifactBuilder().resolution();
+      return new MavenArtifactBuilder().resolution(filter);
    }
 
    /*
@@ -176,7 +185,7 @@ public class MavenDependencies implements DependencyBuilder
       return new MavenArtifactBuilder(coordinates);
    }
 
-   public class MavenArtifactBuilder implements DependencyBuilder.ArtifactBuilder
+   public class MavenArtifactBuilder implements DependencyBuilder.ArtifactBuilder<MavenDependencies>
    {
 
       private Artifact artifact;
@@ -268,10 +277,20 @@ public class MavenDependencies implements DependencyBuilder
        */
       public Archive<?>[] resolve() throws DependencyException
       {
+         return resolve(ACCEPT_ALL);
+      }
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder.ArtifactBuilder#resolve(org.sonatype.aether.graph.DependencyFilter)
+       */
+      public Archive<?>[] resolve(DependencyFilter<MavenDependencies> filter) throws DependencyException
+      {
          Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
          dependencies.add(dependency);
 
-         return resolution();
+         return resolution(filter);
       }
 
       /*
@@ -289,9 +308,12 @@ public class MavenDependencies implements DependencyBuilder
          return new MavenArtifactBuilder(coordinates);
       }
 
-      private Archive<?>[] resolution() throws DependencyException
+      private Archive<?>[] resolution(DependencyFilter<MavenDependencies> filter) throws DependencyException
       {
          Validate.notEmpty(dependencies, "No dependencies were set for resolution");
+
+         // configure filter to have access to properties set in the parent class
+         filter.configure(MavenDependencies.this);
 
          CollectRequest request = new CollectRequest(dependencies, null, system.getRemoteRepositories());
 
@@ -299,7 +321,7 @@ public class MavenDependencies implements DependencyBuilder
          Collection<ArtifactResult> artifacts;
          try
          {
-            artifacts = system.resolveDependencies(session, request, null);
+            artifacts = system.resolveDependencies(session, request, filter);
          }
          catch (DependencyCollectionException e)
          {
@@ -309,6 +331,7 @@ public class MavenDependencies implements DependencyBuilder
          {
             throw new DependencyException("Unable to resolve an artifact", e);
          }
+
          Collection<Archive<?>> archives = new ArrayList<Archive<?>>(artifacts.size());
          for (ArtifactResult artifact : artifacts)
          {
