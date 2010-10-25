@@ -28,7 +28,7 @@ import org.sonatype.aether.graph.Exclusion;
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
  */
-public interface DependencyBuilder
+public interface DependencyBuilder<T extends DependencyBuilder<T>>
 {
    /**
     * A artifact builder is object which holds and construct dependencies
@@ -42,14 +42,14 @@ public interface DependencyBuilder
     * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
     * 
     */
-   public interface ArtifactBuilder extends DependencyBuilder
+   public interface ArtifactBuilder<T extends DependencyBuilder<T>> extends DependencyBuilder<T>
    {
       /**
        * Sets a scope of dependency
        * @param scope A scope, for example @{code compile}, @{code test} and others
        * @return Artifact builder with scope set
        */
-      ArtifactBuilder scope(String scope);
+      ArtifactBuilder<T> scope(String scope);
 
       /**
        * Sets dependency as optional. If dependency is marked as optional, it is
@@ -58,28 +58,28 @@ public interface DependencyBuilder
        * @param optional Optional flag
        * @return Artifact builder with optional flag set
        */
-      ArtifactBuilder optional(boolean optional);
+      ArtifactBuilder<T> optional(boolean optional);
 
       /**
        * Adds an exclusion for current dependency.
        * @param exclusion the exclusion to be added to list of artifacts to be excluded
        * @return Artifact builder with added exclusion
        */
-      ArtifactBuilder exclusion(Exclusion exclusion);
+      ArtifactBuilder<T> exclusion(Exclusion exclusion);
 
       /**
        * Adds multiple exclusions for current dependency
        * @param exclusions the exclusions to be added to the list of artifacts to be excluded
        * @return Artifact builder with added exclusions
        */
-      ArtifactBuilder exclusions(Exclusion... exclusions);
+      ArtifactBuilder<T> exclusions(Exclusion... exclusions);
 
       /**
        * Adds multiple exclusions for current dependency
        * @param exclusions the exclusions to be added to the list of artifacts to be excluded
        * @return Artifact builder with added exclusions
        */
-      ArtifactBuilder exclusions(Collection<Exclusion> exclusions);
+      ArtifactBuilder<T> exclusions(Collection<Exclusion> exclusions);
 
       /**
        * Resolves dependencies for dependency builder
@@ -87,6 +87,15 @@ public interface DependencyBuilder
        * @throws DependencyException If artifacts could not be resolved
        */
       Archive<?>[] resolve() throws DependencyException;
+
+      /**
+       * Resolves dependencies for dependency builder.
+       * Uses a filter to limit dependency tree
+       * @param filter The filter to limit the dependencies during resolution
+       * @return An array of archive which contains resolved artifacts
+       * @throws DependencyException
+       */
+      Archive<?>[] resolve(DependencyFilter<T> filter) throws DependencyException;
    }
 
    /**
@@ -100,6 +109,6 @@ public interface DependencyBuilder
     * @return A new artifact builder
     * @throws DependencyException if artifact coordinates are wrong or if version cannot be determined.
     */
-   ArtifactBuilder artifact(String coordinates) throws DependencyException;
+   ArtifactBuilder<T> artifact(String coordinates) throws DependencyException;
 
 }
