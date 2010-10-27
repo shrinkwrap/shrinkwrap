@@ -23,8 +23,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -54,10 +54,10 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
    //-------------------------------------------------------------------------------------||
 
    /**
-    * Map of all streams opened, such that they may be closed in {@link ShrinkWrapClassLoader#close()}.
+    * List of all streams opened, such that they may be closed in {@link ShrinkWrapClassLoader#close()}.
     * Guarded by "this".
     */
-   private final Map<URL, InputStream> openedStreams = new HashMap<URL, InputStream>();
+   private final List<InputStream> openedStreams = new ArrayList<InputStream>();
 
    //-------------------------------------------------------------------------------------||
    // Constructors -----------------------------------------------------------------------||
@@ -73,8 +73,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     */
    public ShrinkWrapClassLoader(final Archive<?>... archives)
    {
-      super(new URL[]
-      {});
+      super(new URL[]{});
 
       if (archives == null)
       {
@@ -93,8 +92,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     */
    public ShrinkWrapClassLoader(final ClassLoader parent, final Archive<?>... archives)
    {
-      super(new URL[]
-      {}, parent);
+      super(new URL[]{}, parent);
 
       if (archives == null)
       {
@@ -132,13 +130,9 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
                   {
                      synchronized (this)
                      {
-                        InputStream input = openedStreams.get(u);
-                        if (input == null)
-                        {
-                           ArchivePath path = convertToArchivePath(u);
-                           input = archive.get(path).getAsset().openStream();
-                           openedStreams.put(u, input);
-                        }
+                        ArchivePath path = convertToArchivePath(u);
+                        InputStream input = archive.get(path).getAsset().openStream();
+                        openedStreams.add(input);
                         return input;
                      }
                   }
@@ -164,7 +158,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
    {
       synchronized (this)
       {
-         for (InputStream stream : openedStreams.values())
+         for (InputStream stream : openedStreams)
          {
             try
             {

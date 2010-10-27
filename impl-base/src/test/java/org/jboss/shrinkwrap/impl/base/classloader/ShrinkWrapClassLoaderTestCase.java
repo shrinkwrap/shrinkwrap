@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.classloader;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URL;
@@ -25,6 +26,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.classloader.ShrinkWrapClassLoader;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -157,6 +159,33 @@ public class ShrinkWrapClassLoaderTestCase
       // Assertions
       Assert.assertNotNull(resource);
 
+   }
+   
+   /**
+    * SHRINKWRAP-237: Reading the same resource multiple times cause IOException
+    */
+   @Test
+   public void shouldBeAbleToLoadAResourceFromArchiveMultipleTimes() throws Exception
+   {
+      String resourceName = getResourceNameOfClass(applicationClassLoaderClass);
+      
+      // Load the class as a resource
+      URL resource = shrinkWrapClassLoader.getResource(resourceName);
+
+      // Assertions
+      Assert.assertNotNull(resource);
+      
+      // Read the stream until EOF
+      IOUtil.copyWithClose(resource.openStream(), new ByteArrayOutputStream());
+      
+      // Load the class as a resource for the second time
+      resource = shrinkWrapClassLoader.getResource(resourceName);
+
+      // Assertions
+      Assert.assertNotNull(resource);
+
+      // SHRINKWRAP-237: This throws IOException: Stream closed 
+      IOUtil.copyWithClose(resource.openStream(), new ByteArrayOutputStream());
    }
 
    //-------------------------------------------------------------------------------------||
