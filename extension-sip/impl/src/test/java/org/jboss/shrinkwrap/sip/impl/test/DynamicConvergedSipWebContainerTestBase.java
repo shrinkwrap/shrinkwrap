@@ -135,7 +135,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
    @Test
    @ArchiveType(ConvergedSipWebContainer.class)
    public void testAddWebResourceResource() throws Exception {
-      getConvergedSipWebContainer().addWebResource(NAME_TEST_PROPERTIES);
+      getConvergedSipWebContainer().addAsWebResource(NAME_TEST_PROPERTIES);
       
       ArchivePath testPath = new BasicPath(getWebPath(), "Test.properties");
       Assert.assertTrue(
@@ -146,7 +146,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
    @Test
    @ArchiveType(ConvergedSipWebContainer.class)
    public void testAddWebResourceFile() throws Exception {
-      getConvergedSipWebContainer().addWebResource(getFileForClassResource(NAME_TEST_PROPERTIES));
+      getConvergedSipWebContainer().addAsWebResource(getFileForClassResource(NAME_TEST_PROPERTIES));
       
       ArchivePath testPath = new BasicPath(getWebPath(), "Test.properties");
       Assert.assertTrue(
@@ -158,7 +158,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
    @ArchiveType(ConvergedSipWebContainer.class)
    public void testAddWebResourceURL() throws Exception {
       ArchivePath targetPath = new BasicPath("Test.properties");
-      getConvergedSipWebContainer().addWebResource(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
+      getConvergedSipWebContainer().addAsWebResource(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
       ArchivePath testPath = new BasicPath(getWebPath(), targetPath);
       Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
    }
@@ -166,7 +166,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
    @Test
    @ArchiveType(ConvergedSipWebContainer.class)
    public void testAddWebResourceStringTargetResource() throws Exception {
-      getConvergedSipWebContainer().addWebResource(NAME_TEST_PROPERTIES, "Test.txt");
+      getConvergedSipWebContainer().addAsWebResource(NAME_TEST_PROPERTIES, "Test.txt");
       
       ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -177,7 +177,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
    @Test
    @ArchiveType(ConvergedSipWebContainer.class)
    public void testAddWebResourceStringTargetFile() throws Exception {
-      getConvergedSipWebContainer().addWebResource(getFileForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
+      getConvergedSipWebContainer().addAsWebResource(getFileForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -188,7 +188,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
    @Test
    @ArchiveType(ConvergedSipWebContainer.class)
    public void testAddWebResourceStringTargetURL() throws Exception {
-      getConvergedSipWebContainer().addWebResource(getURLForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
+      getConvergedSipWebContainer().addAsWebResource(getURLForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -199,7 +199,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
    @Test
    @ArchiveType(ConvergedSipWebContainer.class)
    public void testAddWebResourceStringTargetAsset() throws Exception {
-      getConvergedSipWebContainer().addWebResource(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
+      getConvergedSipWebContainer().addAsWebResource(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
       
       ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -210,7 +210,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
    @Test
    @ArchiveType(ConvergedSipWebContainer.class)
    public void testAddWebResourcePathTargetResource() throws Exception {
-      getConvergedSipWebContainer().addWebResource(NAME_TEST_PROPERTIES, new BasicPath("Test.txt"));
+      getConvergedSipWebContainer().addAsWebResource(NAME_TEST_PROPERTIES, new BasicPath("Test.txt"));
       
       ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -221,7 +221,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
    @Test
    @ArchiveType(ConvergedSipWebContainer.class)
    public void testAddWebResourcePathTargetFile() throws Exception {
-      getConvergedSipWebContainer().addWebResource(getFileForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
+      getConvergedSipWebContainer().addAsWebResource(getFileForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -232,7 +232,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
    @Test
    @ArchiveType(ConvergedSipWebContainer.class)
    public void testAddWebResourcePathTargetURL() throws Exception {
-      getConvergedSipWebContainer().addWebResource(getURLForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
+      getConvergedSipWebContainer().addAsWebResource(getURLForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -243,7 +243,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
    @Test
    @ArchiveType(ConvergedSipWebContainer.class)
    public void testAddWebResourcePathTargetAsset() throws Exception {
-      getConvergedSipWebContainer().addWebResource(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
+      getConvergedSipWebContainer().addAsWebResource(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
       
       ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -254,7 +254,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
    @Test
    @ArchiveType(ConvergedSipWebContainer.class)
    public void testAddWebResourcePackage() throws Exception {
-      getConvergedSipWebContainer().addWebResource(AssetUtil.class.getPackage(), "Test.properties");
+      getConvergedSipWebContainer().addAsWebResource(AssetUtil.class.getPackage(), "Test.properties");
       
       ArchivePath testPath = new BasicPath(getWebPath(), NAME_TEST_PROPERTIES);
       Assert.assertTrue(
@@ -265,7 +265,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
    @Test
    @ArchiveType(ConvergedSipWebContainer.class)
    public void testAddWebResourcePackages() throws Exception {
-      getConvergedSipWebContainer().addWebResources(AssetUtil.class.getPackage(), "Test.properties", "Test2.properties");
+      getConvergedSipWebContainer().addAsWebResources(AssetUtil.class.getPackage(), "Test.properties", "Test2.properties");
       
       ArchivePath testPath = new BasicPath(getWebPath(), NAME_TEST_PROPERTIES);
       ArchivePath testPath2 = new BasicPath(getWebPath(), NAME_TEST_PROPERTIES_2);
@@ -282,7 +282,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
    @ArchiveType(ConvergedSipWebContainer.class)
    public void testAddWebResourcePackageStringTarget() throws Exception {
       
-      getConvergedSipWebContainer().addWebResource(AssetUtil.class.getPackage(), "Test.properties", "Test.txt");
+      getConvergedSipWebContainer().addAsWebResource(AssetUtil.class.getPackage(), "Test.properties", "Test.txt");
       
       ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
       Assert.assertTrue(
@@ -296,7 +296,7 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
       
       ArchivePath targetPath = ArchivePaths.create("Test.txt");
       
-      getConvergedSipWebContainer().addWebResource(AssetUtil.class.getPackage(), "Test.properties", targetPath);
+      getConvergedSipWebContainer().addAsWebResource(AssetUtil.class.getPackage(), "Test.properties", targetPath);
       
       ArchivePath testPath = new BasicPath(getWebPath(), targetPath);
       Assert.assertTrue(

@@ -78,7 +78,7 @@ public interface WebContainer<T extends Archive<T>>
     * @param resource {@link Asset} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
-    * @see #addWebResource(Asset, ArchivePath)
+    * @see #addAsWebResource(Asset, ArchivePath)
     */
    T setWebXML(Asset resource)  throws IllegalArgumentException;
    
@@ -94,9 +94,9 @@ public interface WebContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null
-    * @see #addWebResource(Asset, ArchivePath)
+    * @see #addAsWebResource(Asset, ArchivePath)
     */
-   T addWebResource(String resourceName) throws IllegalArgumentException;
+   T addAsWebResource(String resourceName) throws IllegalArgumentException;
    
    /**
     * Adds the {@link File} as a Web resource to the container, returning the container itself.
@@ -107,9 +107,9 @@ public interface WebContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if {@link File} resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addWebResource(Asset, ArchivePath)
+    * @see #addAsWebResource(Asset, ArchivePath)
     */
-   T addWebResource(File resource) throws IllegalArgumentException;
+   T addAsWebResource(File resource) throws IllegalArgumentException;
    
    /**
     * Adds the resource as a Web resource to the container, returning the container itself.
@@ -121,9 +121,9 @@ public interface WebContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null
-    * @see #addWebResource(Asset, ArchivePath)
+    * @see #addAsWebResource(Asset, ArchivePath)
     */
-   T addWebResource(String resourceName, String target) throws IllegalArgumentException;
+   T addAsWebResource(String resourceName, String target) throws IllegalArgumentException;
    
    /**
     * Adds the {@link File} as a Web resource to the container, returning the container itself.
@@ -133,9 +133,9 @@ public interface WebContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addWebResource(Asset, ArchivePath)
+    * @see #addAsWebResource(Asset, ArchivePath)
     */
-   T addWebResource(File resource, String target) throws IllegalArgumentException;
+   T addAsWebResource(File resource, String target) throws IllegalArgumentException;
    
    /**
     * Adds the {@link URL} as a Web resource to the container, returning the container itself.
@@ -145,9 +145,9 @@ public interface WebContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addWebResource(Asset, ArchivePath)
+    * @see #addAsWebResource(Asset, ArchivePath)
     */
-   T addWebResource(URL resource, String target) throws IllegalArgumentException;
+   T addAsWebResource(URL resource, String target) throws IllegalArgumentException;
    
    /**
     * Adds the {@link Asset} as a Web resource to the container, returning the container itself.
@@ -157,9 +157,9 @@ public interface WebContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addWebResource(Asset, ArchivePath)
+    * @see #addAsWebResource(Asset, ArchivePath)
     */
-   T addWebResource(Asset resource, String target) throws IllegalArgumentException;
+   T addAsWebResource(Asset resource, String target) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a Web resource to the container, returning the container itself.
@@ -172,9 +172,9 @@ public interface WebContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null
-    * @see #addWebResource(Asset, ArchivePath)
+    * @see #addAsWebResource(Asset, ArchivePath)
     */
-   T addWebResource(String resourceName, ArchivePath target) throws IllegalArgumentException;
+   T addAsWebResource(String resourceName, ArchivePath target) throws IllegalArgumentException;
    
    /**
     * Adds the {@link File} as a Web resource to the container, returning the container itself.
@@ -184,9 +184,9 @@ public interface WebContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addWebResource(Asset, ArchivePath)
+    * @see #addAsWebResource(Asset, ArchivePath)
     */
-   T addWebResource(File resource, ArchivePath target) throws IllegalArgumentException;
+   T addAsWebResource(File resource, ArchivePath target) throws IllegalArgumentException;
    
    /**
     * Adds the {@link URL} as a Web resource to the container, returning the container itself.
@@ -196,9 +196,9 @@ public interface WebContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addWebResource(Asset, ArchivePath)
+    * @see #addAsWebResource(Asset, ArchivePath)
     */
-   T addWebResource(URL resource, ArchivePath target) throws IllegalArgumentException;
+   T addAsWebResource(URL resource, ArchivePath target) throws IllegalArgumentException;
    
    /**
     * Adds the {@link Asset} as a Web resource to the container, returning the container itself.
@@ -209,7 +209,7 @@ public interface WebContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
     */
-   T addWebResource(Asset resource, ArchivePath target) throws IllegalArgumentException;
+   T addAsWebResource(Asset resource, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Adds the resources inside the package as multiple resources to the container, returning the container itself.
@@ -222,7 +222,7 @@ public interface WebContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourcePackage is null
     * @throws IllegalArgumentException if no resourceNames are specified or containing null 
     */
-   T addWebResources(Package resourcePackage, String... resourceNames) throws IllegalArgumentException;
+   T addAsWebResources(Package resourcePackage, String... resourceNames) throws IllegalArgumentException;
    
    /**
     * Adds the resource as a resource to the container, returning the container itself.
@@ -235,7 +235,7 @@ public interface WebContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourcePackage is null
     * @throws IllegalArgumentException if resourceName is null 
     */
-   T addWebResource(Package resourcePackage, String resourceName) throws IllegalArgumentException;
+   T addAsWebResource(Package resourcePackage, String resourceName) throws IllegalArgumentException;
    
    /**
     * Adds the resource as a resource to a specific path inside the container, returning the container itself.
@@ -250,7 +250,7 @@ public interface WebContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null 
     */
-   T addWebResource(Package resourcePackage, String resourceName, String target) throws IllegalArgumentException;
+   T addAsWebResource(Package resourcePackage, String resourceName, String target) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a resource to a specific path inside the container, returning the container itself.
@@ -265,5 +265,5 @@ public interface WebContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null 
     */
-   T addWebResource(Package resourcePackage, String resourceName, ArchivePath target) throws IllegalArgumentException;
+   T addAsWebResource(Package resourcePackage, String resourceName, ArchivePath target) throws IllegalArgumentException;
 }

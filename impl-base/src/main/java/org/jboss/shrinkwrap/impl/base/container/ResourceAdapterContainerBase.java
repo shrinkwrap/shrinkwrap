@@ -93,7 +93,7 @@ public abstract class ResourceAdapterContainerBase<T extends Archive<T>> extends
    public T setResourceAdapterXML(Asset resource) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource must be specified");
-      return addManifestResource(resource, "ra.xml");
+      return addAsManifestResource(resource, "ra.xml");
    }
 
 }

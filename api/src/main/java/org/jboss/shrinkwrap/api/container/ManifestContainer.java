@@ -78,7 +78,7 @@ public interface ManifestContainer<T extends Archive<T>>
     * @param resource {@link File} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
-    * @see #addManifestResource(Asset, ArchivePath)
+    * @see #addAsManifestResource(Asset, ArchivePath)
     */
    T setManifest(Asset resource) throws IllegalArgumentException;
 
@@ -94,9 +94,8 @@ public interface ManifestContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null
-    * @see #addManifestResource(Asset, ArchivePath)
     */
-   T addManifestResource(String resourceName) throws IllegalArgumentException;
+   T addAsManifestResource(String resourceName) throws IllegalArgumentException;
 
    /**
     * Adds the {@link File} as a Manifest resource to the container, returning the container itself.
@@ -107,9 +106,9 @@ public interface ManifestContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if {@link File} resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addManifestResource(Asset, ArchivePath)
+    * @see #addAsManifestResource(Asset, ArchivePath)
     */
-   T addManifestResource(File resource) throws IllegalArgumentException;
+   T addAsManifestResource(File resource) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a Manifest resource to the container, returning the container itself.
@@ -121,9 +120,9 @@ public interface ManifestContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null
-    * @see #addManifestResource(Asset, ArchivePath)
+    * @see #addAsManifestResource(Asset, ArchivePath)
     */
-   T addManifestResource(String resourceName, String target) throws IllegalArgumentException;
+   T addAsManifestResource(String resourceName, String target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link File} as a Manifest resource to the container, returning the container itself.
@@ -133,9 +132,9 @@ public interface ManifestContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addManifestResource(Asset, ArchivePath)
+    * @see #addAsManifestResource(Asset, ArchivePath)
     */
-   T addManifestResource(File resource, String target) throws IllegalArgumentException;
+   T addAsManifestResource(File resource, String target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link URL} as a Manifest resource to the container, returning the container itself.
@@ -145,9 +144,9 @@ public interface ManifestContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addManifestResource(Asset, ArchivePath)
+    * @see #addAsManifestResource(Asset, ArchivePath)
     */
-   T addManifestResource(URL resource, String target) throws IllegalArgumentException;
+   T addAsManifestResource(URL resource, String target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link Asset} as a Manifest resource to the container, returning the container itself.
@@ -157,9 +156,9 @@ public interface ManifestContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addManifestResource(Asset, ArchivePath)
+    * @see #addAsManifestResource(Asset, ArchivePath)
     */
-   T addManifestResource(Asset resource, String target) throws IllegalArgumentException;
+   T addAsManifestResource(Asset resource, String target) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a Manifest resource to the container, returning the container itself.
@@ -171,9 +170,9 @@ public interface ManifestContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null
-    * @see #addManifestResource(Asset, ArchivePath)
+    * @see #addAsManifestResource(Asset, ArchivePath)
     */
-   T addManifestResource(String resourceName, ArchivePath target) throws IllegalArgumentException;
+   T addAsManifestResource(String resourceName, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link File} as a Manifest resource to the container, returning the container itself.
@@ -183,9 +182,9 @@ public interface ManifestContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addManifestResource(Asset, ArchivePath)
+    * @see #addAsManifestResource(Asset, ArchivePath)
     */
-   T addManifestResource(File resource, ArchivePath target) throws IllegalArgumentException;
+   T addAsManifestResource(File resource, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link URL} as a Manifest resource to the container, returning the container itself.
@@ -195,9 +194,9 @@ public interface ManifestContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addManifestResource(Asset, ArchivePath)
+    * @see #addAsManifestResource(Asset, ArchivePath)
     */
-   T addManifestResource(URL resource, ArchivePath target) throws IllegalArgumentException;
+   T addAsManifestResource(URL resource, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link Asset} as a Manifest resource to the container, returning the container itself.
@@ -208,7 +207,7 @@ public interface ManifestContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
     */
-   T addManifestResource(Asset resource, ArchivePath target) throws IllegalArgumentException;
+   T addAsManifestResource(Asset resource, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Adds the resources inside the package as multiple resources to the container, returning the container itself.
@@ -221,7 +220,7 @@ public interface ManifestContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourcePackage is null
     * @throws IllegalArgumentException if no resourceNames are specified or containing null 
     */
-   T addManifestResources(Package resourcePackage, String... resourceNames) throws IllegalArgumentException;
+   T addAsManifestResources(Package resourcePackage, String... resourceNames) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a resource to the container, returning the container itself.
@@ -234,7 +233,7 @@ public interface ManifestContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourcePackage is null
     * @throws IllegalArgumentException if resourceName is null 
     */
-   T addManifestResource(Package resourcePackage, String resourceName) throws IllegalArgumentException;
+   T addAsManifestResource(Package resourcePackage, String resourceName) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a resource to a specific path inside the container, returning the container itself.
@@ -249,7 +248,7 @@ public interface ManifestContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null 
     */
-   T addManifestResource(Package resourcePackage, String resourceName, String target) throws IllegalArgumentException;
+   T addAsManifestResource(Package resourcePackage, String resourceName, String target) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a resource to a specific path inside the container, returning the container itself.
@@ -264,7 +263,7 @@ public interface ManifestContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null 
     */
-   T addManifestResource(Package resourcePackage, String resourceName, ArchivePath target)
+   T addAsManifestResource(Package resourcePackage, String resourceName, ArchivePath target)
          throws IllegalArgumentException;
 
    /**
@@ -283,5 +282,5 @@ public interface ManifestContainer<T extends Archive<T>>
     * <X> T addServiceProvider(Class<X> serviceInterface, Class<? extends X>... serviceImpls) throws IllegalArgumentException;
     * But due to how java generic works, this will cause a unsafe warning for the user. 
     */
-   T addServiceProvider(Class<?> serviceInterface, Class<?>... serviceImpls) throws IllegalArgumentException;
+   T addAsServiceProvider(Class<?> serviceInterface, Class<?>... serviceImpls) throws IllegalArgumentException;
 }
