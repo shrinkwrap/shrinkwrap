@@ -50,9 +50,9 @@ public interface LibraryContainer<T extends Archive<T>>
     * @param resourceName resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
-    * @see #addLibrary(Asset, ArchivePath)
+    * @see #addAsLibrary(Asset, ArchivePath)
     */
-   T addLibrary(String resourceName) throws IllegalArgumentException;
+   T addAsLibrary(String resourceName) throws IllegalArgumentException;
 
    /**
     * Adds the {@link File} as a library to the container, returning the container itself.
@@ -62,9 +62,9 @@ public interface LibraryContainer<T extends Archive<T>>
     * @param resource {@link File} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
-    * @see #addLibrary(Asset, ArchivePath)
+    * @see #addAsLibrary(Asset, ArchivePath)
     */
-   T addLibrary(File resource) throws IllegalArgumentException;
+   T addAsLibrary(File resource) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a library to the container, returning the container itself.
@@ -76,9 +76,9 @@ public interface LibraryContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null
-    * @see #addLibrary(Asset, ArchivePath)
+    * @see #addAsLibrary(Asset, ArchivePath)
     */
-   T addLibrary(String resourceName, String target) throws IllegalArgumentException;
+   T addAsLibrary(String resourceName, String target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link File} as a library to the container, returning the container itself.
@@ -88,9 +88,9 @@ public interface LibraryContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addLibrary(Asset, ArchivePath)
+    * @see #addAsLibrary(Asset, ArchivePath)
     */
-   T addLibrary(File resource, String target) throws IllegalArgumentException;
+   T addAsLibrary(File resource, String target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link URL} as a library to the container, returning the container itself.
@@ -100,9 +100,9 @@ public interface LibraryContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addLibrary(Asset, ArchivePath)
+    * @see #addAsLibrary(Asset, ArchivePath)
     */
-   T addLibrary(URL resource, String target) throws IllegalArgumentException;
+   T addAsLibrary(URL resource, String target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link Asset} as a library to the container, returning the container itself.
@@ -112,9 +112,9 @@ public interface LibraryContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addLibrary(Asset, ArchivePath)
+    * @see #addAsLibrary(Asset, ArchivePath)
     */
-   T addLibrary(Asset resource, String target) throws IllegalArgumentException;
+   T addAsLibrary(Asset resource, String target) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a library to the container, returning the container itself.
@@ -127,9 +127,9 @@ public interface LibraryContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null
-    * @see #addLibrary(Asset, ArchivePath)
+    * @see #addAsLibrary(Asset, ArchivePath)
     */
-   T addLibrary(String resourceName, ArchivePath target) throws IllegalArgumentException;
+   T addAsLibrary(String resourceName, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link File} as a library to the container, returning the container itself.
@@ -139,9 +139,9 @@ public interface LibraryContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addLibrary(Asset, ArchivePath)
+    * @see #addAsLibrary(Asset, ArchivePath)
     */
-   T addLibrary(File resource, ArchivePath target) throws IllegalArgumentException;
+   T addAsLibrary(File resource, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link URL} as a library to the container, returning the container itself.
@@ -151,9 +151,9 @@ public interface LibraryContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addLibrary(Asset, ArchivePath)
+    * @see #addAsLibrary(Asset, ArchivePath)
     */
-   T addLibrary(URL resource, ArchivePath target) throws IllegalArgumentException;
+   T addAsLibrary(URL resource, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link Asset} as a library to the container, returning the container itself.
@@ -164,7 +164,7 @@ public interface LibraryContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
     */
-   T addLibrary(Asset resource, ArchivePath target) throws IllegalArgumentException;
+   T addAsLibrary(Asset resource, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Add another {@link Archive} to this {@link Archive} as a library to the container, returning the container itself.
@@ -174,9 +174,9 @@ public interface LibraryContainer<T extends Archive<T>>
     * @param archive {@link Archive} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException if {@link Archive} is null
-    * @see #addLibrary(Asset, ArchivePath)
+    * @see #addAsLibrary(Asset, ArchivePath)
     */
-   T addLibrary(Archive<?> archive) throws IllegalArgumentException;
+   T addAsLibrary(Archive<?> archive) throws IllegalArgumentException;
 
    /**
     * Add multiple resources to this {@link Archive} as libraries to the container, returning the container itself.
@@ -189,9 +189,9 @@ public interface LibraryContainer<T extends Archive<T>>
     * @param resourceNames resources to add
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceNames are null or empty
-    * @see #addLibrary(String)
+    * @see #addAsLibrary(String)
     */
-   T addLibraries(String... resourceNames) throws IllegalArgumentException;
+   T addAsLibraries(String... resourceNames) throws IllegalArgumentException;
 
    /**
     * Add multiple {@link File} to this {@link Archive} as libraries to the container, returning the container itself.
@@ -201,9 +201,9 @@ public interface LibraryContainer<T extends Archive<T>>
     * @param resourceNames {@link File} resources to add
     * @return This virtual archive
     * @throws IllegalArgumentException if {@link File} resources are null or empty
-    * @see #addLibrary(File)
+    * @see #addAsLibrary(File)
     */
-   T addLibraries(File... resources) throws IllegalArgumentException;
+   T addAsLibraries(File... resources) throws IllegalArgumentException;
 
    /**
     * Add multiple {@link Archive}s to this {@link Archive} as libraries to the container, returning the container itself.
@@ -213,7 +213,7 @@ public interface LibraryContainer<T extends Archive<T>>
     * @param archive {@link Archive} resources to add
     * @return This virtual archive
     * @throws IllegalArgumentException if {@link Archive} resources are null
-    * @see #addLibrary(Archive)
+    * @see #addAsLibrary(Archive)
     */
-   T addLibraries(Archive<?>... archives) throws IllegalArgumentException;
+   T addAsLibraries(Archive<?>... archives) throws IllegalArgumentException;
 }

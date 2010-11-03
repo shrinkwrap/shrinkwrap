@@ -92,7 +92,7 @@ public interface ConvergedSipWebContainer<T extends Archive<T>> extends
 	 * @return This virtual archive
 	 * @throws IllegalArgumentException
 	 *             if resource is null
-	 * @see #addWebResource(Asset, ArchivePath)
+	 * @see #addAsWebResource(Asset, ArchivePath)
 	 */
 	T setSipXML(Asset resource) throws IllegalArgumentException;
 }

@@ -121,8 +121,8 @@ public class ArchiveFileSystemUnitTestCase
       final VirtualFile virtualFile = this.createAndMountArchive(archive);
 
       // Add to the archive
-      archive.addResource("META-INF/test", "META-INF/test");
-      archive.addResource("test", "test");
+      archive.addAsResource("META-INF/test", "META-INF/test");
+      archive.addAsResource("test", "test");
       log.info("Using archive: " + archive.toString(true));
 
       // Perform assertions

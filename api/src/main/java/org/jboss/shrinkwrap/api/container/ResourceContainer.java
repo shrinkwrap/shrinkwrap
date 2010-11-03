@@ -52,9 +52,9 @@ public interface ResourceContainer<T extends Archive<T>>
     * @param resourceName resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException If the resourceName is null
-    * @see #addResource(Asset, ArchivePath)
+    * @see #addAsResource(Asset, ArchivePath)
     */
-   T addResource(String resourceName) throws IllegalArgumentException;
+   T addAsResource(String resourceName) throws IllegalArgumentException;
 
    /**
     * Adds the {@link File} as a resource to the container, returning the container itself.
@@ -64,9 +64,9 @@ public interface ResourceContainer<T extends Archive<T>>
     * @param resource {@link File} resource to add
     * @return This virtual archive
     * @throws IllegalArgumentException If the resource is null
-    * @see #addResource(Asset, ArchivePath)
+    * @see #addAsResource(Asset, ArchivePath)
     */
-   T addResource(File resource) throws IllegalArgumentException;
+   T addAsResource(File resource) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a resource to the container, returning the container itself.
@@ -78,9 +78,9 @@ public interface ResourceContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null
-    * @see #addResource(Asset, ArchivePath)
+    * @see #addAsResource(Asset, ArchivePath)
     */
-   T addResource(String resourceName, String target) throws IllegalArgumentException;
+   T addAsResource(String resourceName, String target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link File} as a resource to the container, returning the container itself.
@@ -90,9 +90,9 @@ public interface ResourceContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addResource(Asset, ArchivePath)
+    * @see #addAsResource(Asset, ArchivePath)
     */
-   T addResource(File resource, String target) throws IllegalArgumentException;
+   T addAsResource(File resource, String target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link URL} as a resource to the container, returning the container itself.
@@ -102,9 +102,9 @@ public interface ResourceContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addResource(Asset, ArchivePath)
+    * @see #addAsResource(Asset, ArchivePath)
     */
-   T addResource(URL resource, String target) throws IllegalArgumentException;
+   T addAsResource(URL resource, String target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link Asset} as a resource to the container, returning the container itself.
@@ -114,9 +114,9 @@ public interface ResourceContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addResource(Asset, ArchivePath)
+    * @see #addAsResource(Asset, ArchivePath)
     */
-   T addResource(Asset resource, String target) throws IllegalArgumentException;
+   T addAsResource(Asset resource, String target) throws IllegalArgumentException;
 
    /**
     * Adds the resource with the specified name to the container, returning the container itself.
@@ -129,7 +129,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException If the target is null
     * @throws IllegalArgumentException If the resourceName is null
     */
-   T addResource(String resourceName, ArchivePath target) throws IllegalArgumentException;
+   T addAsResource(String resourceName, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a resource to the container, returning the container itself.
@@ -141,9 +141,9 @@ public interface ResourceContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null
-    * @see #addResource(Asset, ArchivePath)
+    * @see #addAsResource(Asset, ArchivePath)
     */
-   T addResource(String resourceName, ArchivePath target, ClassLoader classLoader) throws IllegalArgumentException;
+   T addAsResource(String resourceName, ArchivePath target, ClassLoader classLoader) throws IllegalArgumentException;
 
    /**
     * Adds the {@link File} as a resource to the container, returning the container itself.
@@ -153,9 +153,9 @@ public interface ResourceContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addResource(Asset, ArchivePath)
+    * @see #addAsResource(Asset, ArchivePath)
     */
-   T addResource(File resource, ArchivePath target) throws IllegalArgumentException;
+   T addAsResource(File resource, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link URL} as a resource to the container, returning the container itself.
@@ -165,9 +165,9 @@ public interface ResourceContainer<T extends Archive<T>>
     * @return This virtual archive
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
-    * @see #addResource(Asset, ArchivePath)
+    * @see #addAsResource(Asset, ArchivePath)
     */
-   T addResource(URL resource, ArchivePath target) throws IllegalArgumentException;
+   T addAsResource(URL resource, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Adds the {@link Asset} as a resource to the container, returning the container itself.
@@ -178,7 +178,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resource is null
     * @throws IllegalArgumentException if target is null
     */
-   T addResource(Asset resource, ArchivePath target) throws IllegalArgumentException;
+   T addAsResource(Asset resource, ArchivePath target) throws IllegalArgumentException;
 
    /**
     * Adds the resources inside the package as multiple resources to the container, returning the container itself.
@@ -191,7 +191,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourcePackage is null
     * @throws IllegalArgumentException if no resourceNames are specified or containing null 
     */
-   T addResources(Package resourcePackage, String... resourceNames) throws IllegalArgumentException;
+   T addAsResources(Package resourcePackage, String... resourceNames) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a resource to the container, returning the container itself.
@@ -204,7 +204,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourcePackage is null
     * @throws IllegalArgumentException if resourceName is null 
     */
-   T addResource(Package resourcePackage, String resourceName) throws IllegalArgumentException;
+   T addAsResource(Package resourcePackage, String resourceName) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a resource to a specific path inside the container, returning the container itself.
@@ -219,7 +219,7 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null 
     */
-   T addResource(Package resourcePackage, String resourceName, String target) throws IllegalArgumentException;
+   T addAsResource(Package resourcePackage, String resourceName, String target) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a resource to a specific path inside the container, returning the container itself.
@@ -234,5 +234,5 @@ public interface ResourceContainer<T extends Archive<T>>
     * @throws IllegalArgumentException if resourceName is null
     * @throws IllegalArgumentException if target is null 
     */
-   T addResource(Package resourcePackage, String resourceName, ArchivePath target) throws IllegalArgumentException;
+   T addAsResource(Package resourcePackage, String resourceName, ArchivePath target) throws IllegalArgumentException;
 }

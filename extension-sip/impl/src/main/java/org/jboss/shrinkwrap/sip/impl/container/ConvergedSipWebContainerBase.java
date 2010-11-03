@@ -99,6 +99,6 @@ public abstract class ConvergedSipWebContainerBase<T extends Archive<T>>
    public T setSipXML(Asset resource) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource should be specified");
-      return addWebResource(resource, "sip.xml");
+      return addAsWebResource(resource, "sip.xml");
    }
 }
