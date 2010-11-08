@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -82,7 +83,7 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
    private RepositorySystemSession session;
 
    // these are package visible, so they can be wrapped and make visible for filters
-   List<Dependency> dependencies;
+   Stack<Dependency> dependencies;
    Map<ArtifactAsKey, Dependency> pomInternalDependencyManagement;
 
    /**
@@ -91,7 +92,7 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
    public MavenDependencies()
    {
       this.system = new MavenRepositorySystem(new MavenRepositorySettings());
-      this.dependencies = new ArrayList<Dependency>();
+      this.dependencies = new Stack<Dependency>();
       this.pomInternalDependencyManagement = new HashMap<ArtifactAsKey, Dependency>();
       this.session = system.getSession();
    }
@@ -169,9 +170,9 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
       // wrap from Maven to Aether
       for (org.apache.maven.model.Dependency dependency : model.getDependencies())
       {
-         dependencies.add(MavenConverter.convert(dependency, stereotypes));
+         dependencies.push(MavenConverter.convert(dependency, stereotypes));
       }
-      return new MavenArtifactBuilder().resolution(filter);
+      return new MavenArtifactBuilder().resolve(filter);
    }
 
    /*
@@ -207,7 +208,7 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
 
       protected String scope;
 
-      protected boolean optional;
+      protected boolean optional = false;
 
       public MavenArtifactBuilder(String coordinates) throws DependencyException
       {
@@ -215,6 +216,9 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
          {
             coordinates = resolveArtifactVersion(coordinates);
             this.artifact = new DefaultArtifact(coordinates);
+
+            Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
+            dependencies.push(dependency);
          }
          catch (IllegalArgumentException e)
          {
@@ -235,7 +239,10 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
        */
       public MavenArtifactBuilder exclusion(Exclusion exclusion)
       {
+         Dependency dependency = dependencies.pop();
          this.exclusions.add(exclusion);
+         dependencies.push(dependency.setExclusions(this.exclusions));
+
          return this;
       }
 
@@ -246,7 +253,10 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
        */
       public MavenArtifactBuilder exclusions(Exclusion... exclusions)
       {
+         Dependency dependency = dependencies.pop();
          this.exclusions.addAll(Arrays.asList(exclusions));
+         dependencies.push(dependency.setExclusions(this.exclusions));
+
          return this;
       }
 
@@ -257,7 +267,10 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
        */
       public MavenArtifactBuilder exclusions(Collection<Exclusion> exclusions)
       {
+         Dependency dependency = dependencies.pop();
          this.exclusions.addAll(exclusions);
+         dependencies.push(dependency.setExclusions(this.exclusions));
+
          return this;
       }
 
@@ -268,7 +281,10 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
        */
       public MavenArtifactBuilder optional(boolean optional)
       {
+         Dependency dependency = dependencies.pop();
          this.optional = optional;
+         dependencies.push(dependency.setOptional(optional));
+
          return this;
       }
 
@@ -279,7 +295,10 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
        */
       public MavenArtifactBuilder scope(String scope)
       {
+         Dependency dependency = dependencies.pop();
          this.scope = scope;
+         dependencies.push(dependency.setScope(scope));
+
          return this;
       }
 
@@ -300,10 +319,15 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
        */
       public Archive<?>[] resolve(DependencyFilter<MavenDependencies> filter) throws DependencyException
       {
-         Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
-         dependencies.add(dependency);
+         File[] files = resolveAsFiles(filter);
+         Collection<Archive<?>> archives = new ArrayList<Archive<?>>(files.length);
+         for (File file : files)
+         {
+            Archive<?> archive = ShrinkWrap.create(JavaArchive.class, file.getName()).as(ZipImporter.class).importFrom(convert(file)).as(JavaArchive.class);
+            archives.add(archive);
+         }
 
-         return resolution(filter);
+         return archives.toArray(ARCHIVE_CAST);
       }
 
       /*
@@ -314,10 +338,6 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
       public MavenArtifactBuilder artifact(String coordinates)
       {
          Validate.notNullOrEmpty(coordinates, "Artifact coordinates must not be null or empty");
-
-         Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
-         dependencies.add(dependency);
-
          return new MavenArtifactBuilder(coordinates);
       }
 
@@ -329,10 +349,6 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
       public MavenArtifactsBuilder artifacts(String... coordinates) throws DependencyException
       {
          Validate.notNullAndNoNullValues(coordinates, "Artifacts coordinates must not be null or empty");
-
-         Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
-         dependencies.add(dependency);
-
          return new MavenArtifactsBuilder(coordinates);
       }
 
@@ -353,30 +369,6 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
        */
       public File[] resolveAsFiles(DependencyFilter<MavenDependencies> filter) throws DependencyException
       {
-         Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
-         dependencies.add(dependency);
-
-         return resolutionAsFiles(filter);
-      }
-
-      protected Archive<?>[] resolution(DependencyFilter<MavenDependencies> filter) throws DependencyException
-      {
-         Validate.notEmpty(dependencies, "No dependencies were set for resolution");
-
-         File[] files = resolutionAsFiles(filter);
-         Collection<Archive<?>> archives = new ArrayList<Archive<?>>(files.length);
-         for (File file : files)
-         {
-            Archive<?> archive = ShrinkWrap.create(JavaArchive.class, file.getName()).as(ZipImporter.class).importFrom(convert(file)).as(JavaArchive.class);
-            archives.add(archive);
-         }
-
-         return archives.toArray(ARCHIVE_CAST);
-      }
-
-      protected File[] resolutionAsFiles(DependencyFilter<MavenDependencies> filter) throws DependencyException
-      {
-
          Validate.notEmpty(dependencies, "No dependencies were set for resolution");
 
          // configure filter to have access to properties set in the parent class
@@ -476,6 +468,10 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
                coords = resolveArtifactVersion(coords);
                Artifact artifact = new DefaultArtifact(coords);
                artifacts.add(artifact);
+
+               Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
+               dependencies.push(dependency);
+
             }
             catch (IllegalArgumentException e)
             {
@@ -488,73 +484,131 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
       /*
        * (non-Javadoc)
        * 
-       * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#artifact(java.lang.String)
+       * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#optional(boolean)
        */
       @Override
-      public MavenArtifactBuilder artifact(String coordinates)
+      public MavenArtifactsBuilder optional(boolean optional)
       {
-         Validate.notNullOrEmpty(coordinates, "Artifact coordinates must not be null or empty");
+         this.optional = optional;
+         List<Dependency> workplace = new ArrayList<Dependency>();
 
-         for (Artifact artifact : artifacts)
+         int i;
+         for (i = 0; i < artifacts.size(); i++)
          {
-            Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
-            dependencies.add(dependency);
+            Dependency dependency = dependencies.pop();
+            workplace.add(dependency.setOptional(optional));
          }
 
-         return new MavenArtifactBuilder(coordinates);
+         for (; i > 0; i--)
+         {
+            dependencies.push(workplace.get(i - 1));
+         }
+
+         return this;
       }
 
       /*
        * (non-Javadoc)
        * 
-       * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#artifacts(java.lang.String[])
+       * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#scope(java.lang.String)
        */
       @Override
-      public MavenArtifactsBuilder artifacts(String... coordinates) throws DependencyException
+      public MavenArtifactBuilder scope(String scope)
       {
-         Validate.notNullAndNoNullValues(coordinates, "Artifacts coordinates must not be null or empty");
+         this.scope = scope;
+         List<Dependency> workplace = new ArrayList<Dependency>();
 
-         for (Artifact artifact : artifacts)
+         int i;
+         for (i = 0; i < artifacts.size(); i++)
          {
-            Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
-            dependencies.add(dependency);
+            Dependency dependency = dependencies.pop();
+            workplace.add(dependency.setScope(scope));
          }
 
-         return new MavenArtifactsBuilder(coordinates);
+         for (; i > 0; i--)
+         {
+            dependencies.push(workplace.get(i - 1));
+         }
+
+         return this;
       }
 
       /*
        * (non-Javadoc)
        * 
-       * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#resolve(org.jboss.shrinkwrap.dependencies.DependencyFilter)
+       * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#exclusions(org.sonatype.aether.graph.Exclusion[])
        */
       @Override
-      public Archive<?>[] resolve(DependencyFilter<MavenDependencies> filter) throws DependencyException
+      public MavenArtifactBuilder exclusions(Exclusion... exclusions)
       {
-         for (Artifact artifact : artifacts)
+         this.exclusions.addAll(Arrays.asList(exclusions));
+         List<Dependency> workplace = new ArrayList<Dependency>();
+
+         int i;
+         for (i = 0; i < artifacts.size(); i++)
          {
-            Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
-            dependencies.add(dependency);
+            Dependency dependency = dependencies.pop();
+            workplace.add(dependency.setExclusions(this.exclusions));
          }
 
-         return resolution(filter);
+         for (; i > 0; i--)
+         {
+            dependencies.push(workplace.get(i - 1));
+         }
+
+         return this;
       }
 
       /*
        * (non-Javadoc)
        * 
-       * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#resolveAsFiles(org.jboss.shrinkwrap.dependencies.DependencyFilter)
+       * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#exclusions(java.util.Collection)
        */
       @Override
-      public File[] resolveAsFiles(DependencyFilter<MavenDependencies> filter) throws DependencyException
+      public MavenArtifactBuilder exclusions(Collection<Exclusion> exclusions)
       {
-         for (Artifact artifact : artifacts)
+         this.exclusions.addAll(exclusions);
+         List<Dependency> workplace = new ArrayList<Dependency>();
+
+         int i;
+         for (i = 0; i < artifacts.size(); i++)
          {
-            Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
-            dependencies.add(dependency);
+            Dependency dependency = dependencies.pop();
+            workplace.add(dependency.setExclusions(this.exclusions));
          }
 
-         return resolutionAsFiles(filter);
+         for (; i > 0; i--)
+         {
+            dependencies.push(workplace.get(i - 1));
+         }
+
+         return this;
+      }
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#exclusion(org.sonatype.aether.graph.Exclusion)
+       */
+      @Override
+      public MavenArtifactBuilder exclusion(Exclusion exclusion)
+      {
+         this.exclusions.add(exclusion);
+         List<Dependency> workplace = new ArrayList<Dependency>();
+
+         int i;
+         for (i = 0; i < artifacts.size(); i++)
+         {
+            Dependency dependency = dependencies.pop();
+            workplace.add(dependency.setExclusions(this.exclusions));
+         }
+
+         for (; i > 0; i--)
+         {
+            dependencies.push(workplace.get(i - 1));
+         }
+
+         return this;
       }
 
    }
