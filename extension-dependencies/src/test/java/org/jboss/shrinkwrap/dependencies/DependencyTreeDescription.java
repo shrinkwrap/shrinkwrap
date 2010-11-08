@@ -101,6 +101,41 @@ public class DependencyTreeDescription
    }
 
    /**
+    * Checks that files from dependency tree are present in directory
+    * @param archive The archive to be checked
+    * @param filter The filter for archive content which will be checked
+    * @return The current dependency tree to allow chaining
+    */
+   public DependencyTreeDescription validateDirectory(File directory)
+   {
+      if (!directory.isDirectory())
+      {
+         throw new AssertionError(directory.getAbsolutePath() + " is not a directory");
+      }
+      
+      return validateFiles(directory.listFiles());
+   }
+   
+   public DependencyTreeDescription validateFiles(File...files)
+   {     
+      for (File file : files)
+      {
+         String pathString = file.getAbsolutePath();
+
+         for (ArtifactHolder artifact : artifacts.keySet())
+         {
+            if (pathString.endsWith(artifact.filename()))
+            {
+               artifacts.put(artifact, Boolean.TRUE);
+            }
+         }
+      }
+      return this;
+   }
+
+
+   
+   /**
     * Verifies that all artifacts present in dependency tree were found during validation
     * @throws AssertionError If not all artifacts were found.
     */

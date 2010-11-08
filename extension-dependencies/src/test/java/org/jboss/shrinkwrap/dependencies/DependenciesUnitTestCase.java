@@ -135,6 +135,27 @@ public class DependenciesUnitTestCase
    }
 
    /**
+    * Tests a resolution of two artifacts from central using single call
+    * @throws DependencyException
+    */
+   @Test
+   public void testMultipleResolutionSingleCall() throws DependencyException
+   {
+      String name = "multipleResolutionSingleCall";
+
+      WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
+            .addLibraries(Dependencies.artifacts("org.apache.maven.plugins:maven-help-plugin:2.1.1",
+                                               "org.apache.maven.plugins:maven-patch-plugin:1.1.1")
+                                      .resolve());
+
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/multipleResolution.tree"));
+      desc.validateArchive(war).results();
+
+      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
+
+   }
+
+   /**
     * Tests direct usage of MavenDependencies implementation
     * @throws DependencyException
     */
