@@ -65,6 +65,7 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
    private static final Logger log = Logger.getLogger(MavenDependencies.class.getName());
 
    private static final Archive<?>[] ARCHIVE_CAST = new Archive<?>[0];
+   private static final File[] FILE_CAST = new File[0];
 
    private static final Pattern COORDINATES_PATTERN = Pattern.compile("([^: ]+):([^: ]+)(:([^: ]*)(:([^: ]+))?)?(:([^: ]+))?");
 
@@ -185,16 +186,28 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
       return new MavenArtifactBuilder(coordinates);
    }
 
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder#artifact(java.lang.String)
+    */
+   public MavenArtifactsBuilder artifacts(String... coordinates) throws DependencyException
+   {
+      Validate.notNullAndNoNullValues(coordinates, "Artifacts coordinates must not be null or empty");
+
+      return new MavenArtifactsBuilder(coordinates);
+   }
+
    public class MavenArtifactBuilder implements DependencyBuilder.ArtifactBuilder<MavenDependencies>
    {
 
       private Artifact artifact;
 
-      private List<Exclusion> exclusions = new ArrayList<Exclusion>();
+      protected List<Exclusion> exclusions = new ArrayList<Exclusion>();
 
-      private String scope;
+      protected String scope;
 
-      private boolean optional;
+      protected boolean optional;
 
       public MavenArtifactBuilder(String coordinates) throws DependencyException
       {
@@ -210,7 +223,7 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
          }
       }
 
-      // used for resolution from pom.xml only
+      // used for resolution from pom.xml only or for inheritance
       private MavenArtifactBuilder()
       {
       }
@@ -308,8 +321,62 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
          return new MavenArtifactBuilder(coordinates);
       }
 
-      private Archive<?>[] resolution(DependencyFilter<MavenDependencies> filter) throws DependencyException
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder#artifacts(java.lang.String[])
+       */
+      public MavenArtifactsBuilder artifacts(String... coordinates) throws DependencyException
       {
+         Validate.notNullAndNoNullValues(coordinates, "Artifacts coordinates must not be null or empty");
+
+         Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
+         dependencies.add(dependency);
+
+         return new MavenArtifactsBuilder(coordinates);
+      }
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder.ArtifactBuilder#resolveAsFiles()
+       */
+      public File[] resolveAsFiles() throws DependencyException
+      {
+         return resolveAsFiles(ACCEPT_ALL);
+      }
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder.ArtifactBuilder#resolveAsFiles()
+       */
+      public File[] resolveAsFiles(DependencyFilter<MavenDependencies> filter) throws DependencyException
+      {
+         Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
+         dependencies.add(dependency);
+
+         return resolutionAsFiles(filter);
+      }
+
+      protected Archive<?>[] resolution(DependencyFilter<MavenDependencies> filter) throws DependencyException
+      {
+         Validate.notEmpty(dependencies, "No dependencies were set for resolution");
+
+         File[] files = resolutionAsFiles(filter);
+         Collection<Archive<?>> archives = new ArrayList<Archive<?>>(files.length);
+         for (File file : files)
+         {
+            Archive<?> archive = ShrinkWrap.create(JavaArchive.class, file.getName()).as(ZipImporter.class).importFrom(convert(file)).as(JavaArchive.class);
+            archives.add(archive);
+         }
+
+         return archives.toArray(ARCHIVE_CAST);
+      }
+
+      protected File[] resolutionAsFiles(DependencyFilter<MavenDependencies> filter) throws DependencyException
+      {
+
          Validate.notEmpty(dependencies, "No dependencies were set for resolution");
 
          // configure filter to have access to properties set in the parent class
@@ -332,7 +399,7 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
             throw new DependencyException("Unable to resolve an artifact", e);
          }
 
-         Collection<Archive<?>> archives = new ArrayList<Archive<?>>(artifacts.size());
+         Collection<File> files = new ArrayList<File>(artifacts.size());
          for (ArtifactResult artifact : artifacts)
          {
             Artifact a = artifact.getArtifact();
@@ -343,29 +410,10 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
                continue;
             }
 
-            File file = a.getFile();
-            Archive<?> archive = ShrinkWrap.create(JavaArchive.class, file.getName()).as(ZipImporter.class).importFrom(convert(file)).as(JavaArchive.class);
-            archives.add(archive);
+            files.add(a.getFile());
          }
 
-         return archives.toArray(ARCHIVE_CAST);
-      }
-
-      // converts a file to a ZIP file
-      private ZipFile convert(File file) throws DependencyException
-      {
-         try
-         {
-            return new ZipFile(file);
-         }
-         catch (ZipException e)
-         {
-            throw new DependencyException("Unable to treat dependecy artifact \"" + file.getAbsolutePath() + "\" as a ZIP file", e);
-         }
-         catch (IOException e)
-         {
-            throw new DependencyException("Unable to access artifact file at \"" + file.getAbsolutePath() + "\".");
-         }
+         return files.toArray(FILE_CAST);
       }
 
       /**
@@ -374,7 +422,7 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
        * @param coordinates The coordinates excluding the {@code version} part
        * @return Either coordinates with appended {@code version} or original coordinates
        */
-      private String resolveArtifactVersion(String coordinates)
+      protected String resolveArtifactVersion(String coordinates)
       {
          Matcher m = COORDINATES_PATTERN.matcher(coordinates);
          if (!m.matches())
@@ -394,6 +442,119 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
          }
 
          return coordinates;
+      }
+
+      // converts a file to a ZIP file
+      private ZipFile convert(File file) throws DependencyException
+      {
+         try
+         {
+            return new ZipFile(file);
+         }
+         catch (ZipException e)
+         {
+            throw new DependencyException("Unable to treat dependecy artifact \"" + file.getAbsolutePath() + "\" as a ZIP file", e);
+         }
+         catch (IOException e)
+         {
+            throw new DependencyException("Unable to access artifact file at \"" + file.getAbsolutePath() + "\".");
+         }
+      }
+   }
+
+   public class MavenArtifactsBuilder extends MavenArtifactBuilder implements DependencyBuilder.ArtifactsBuilder<MavenDependencies>
+   {
+
+      private List<Artifact> artifacts = new ArrayList<Artifact>();
+
+      public MavenArtifactsBuilder(String... coordinates)
+      {
+         for (String coords : coordinates)
+         {
+            try
+            {
+               coords = resolveArtifactVersion(coords);
+               Artifact artifact = new DefaultArtifact(coords);
+               artifacts.add(artifact);
+            }
+            catch (IllegalArgumentException e)
+            {
+               throw new DependencyException("Unable to create artifact from coordinates " + coords + ", " +
+                     "they are either invalid or version information was not specified in loaded POM file (maybe the POM file wasn't load at all)", e);
+            }
+         }
+      }
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#artifact(java.lang.String)
+       */
+      @Override
+      public MavenArtifactBuilder artifact(String coordinates)
+      {
+         Validate.notNullOrEmpty(coordinates, "Artifact coordinates must not be null or empty");
+
+         for (Artifact artifact : artifacts)
+         {
+            Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
+            dependencies.add(dependency);
+         }
+
+         return new MavenArtifactBuilder(coordinates);
+      }
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#artifacts(java.lang.String[])
+       */
+      @Override
+      public MavenArtifactsBuilder artifacts(String... coordinates) throws DependencyException
+      {
+         Validate.notNullAndNoNullValues(coordinates, "Artifacts coordinates must not be null or empty");
+
+         for (Artifact artifact : artifacts)
+         {
+            Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
+            dependencies.add(dependency);
+         }
+
+         return new MavenArtifactsBuilder(coordinates);
+      }
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#resolve(org.jboss.shrinkwrap.dependencies.DependencyFilter)
+       */
+      @Override
+      public Archive<?>[] resolve(DependencyFilter<MavenDependencies> filter) throws DependencyException
+      {
+         for (Artifact artifact : artifacts)
+         {
+            Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
+            dependencies.add(dependency);
+         }
+
+         return resolution(filter);
+      }
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#resolveAsFiles(org.jboss.shrinkwrap.dependencies.DependencyFilter)
+       */
+      @Override
+      public File[] resolveAsFiles(DependencyFilter<MavenDependencies> filter) throws DependencyException
+      {
+         for (Artifact artifact : artifacts)
+         {
+            Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
+            dependencies.add(dependency);
+         }
+
+         return resolutionAsFiles(filter);
       }
 
    }

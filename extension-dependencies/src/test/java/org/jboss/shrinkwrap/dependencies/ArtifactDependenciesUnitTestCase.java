@@ -51,4 +51,6 @@ public class ArtifactDependenciesUnitTestCase
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
    }
+
+   
 }

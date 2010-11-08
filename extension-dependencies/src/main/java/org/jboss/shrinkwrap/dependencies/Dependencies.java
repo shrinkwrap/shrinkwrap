@@ -52,5 +52,16 @@ public class Dependencies
    {
       return new MavenDependencies().artifact(coordinates);
    }
+   
+   /**
+    * Creates a new instance of an artifacts bulider based on default implemenation
+    * 
+    * @param coordinates A list of artifact coordinates in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>},
+    *        must not be {@code null} or empty.
+    * @return A new instance of artifacts builder
+    */
+   public static DependencyBuilder.ArtifactsBuilder<MavenDependencies> artifacts(String...coordinates) {
+      return new MavenDependencies().artifacts(coordinates);
+   }
 
 }

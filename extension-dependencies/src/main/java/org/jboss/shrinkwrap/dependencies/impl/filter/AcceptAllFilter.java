@@ -23,6 +23,9 @@ import org.jboss.shrinkwrap.dependencies.impl.MavenDependencies;
 import org.sonatype.aether.graph.DependencyNode;
 
 /**
+ * A filter which accept all dependencies. This is the default behavior
+ * is no other filter is specified.
+ * 
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
  */

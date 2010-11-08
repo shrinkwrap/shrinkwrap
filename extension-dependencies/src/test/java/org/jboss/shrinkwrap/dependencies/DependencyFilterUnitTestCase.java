@@ -166,13 +166,40 @@ public class DependencyFilterUnitTestCase
    }
 
    /**
-    * Tests limiting of the scope and strict artifacts
+    * Tests limiting of the scope and strict artifacts. Uses artifacts() method
     * @throws DependencyException
     */
    @Test
    public void testCombinedScopeFilter2() throws DependencyException
    {
       String name = "testCombinedScopeFilter2";
+
+      WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
+            .addLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("pom.xml")
+                           .artifacts("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4", "org.jboss.arquillian:arquillian-testng:1.0.0.Alpha4")
+                           .scope("test")
+                           .resolve(new CombinedFilter(new ScopeFilter("test"), new StrictFilter())));
+
+      Map<ArchivePath, Node> map = war.getContent(JAR_FILTER);
+
+      Assert.assertEquals("There are two jars in the package", 2, map.size());
+      Assert.assertTrue("The artifact is packaged arquillian-junit:1.0.0.Alpha4",
+            map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-junit-1.0.0.Alpha4.jar")));
+      Assert.assertTrue("The artifact is packaged arquillian-testng:1.0.0.Alpha4",
+            map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-testng-1.0.0.Alpha4.jar")));
+
+      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
+   }
+
+   /**
+    * Tests limiting of the scope and strict artifacts
+    * @throws DependencyException
+    */
+   @Test
+   public void testCombinedScopeFilter3() throws DependencyException
+   {
+      String name = "testCombinedScopeFilter3";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
             .addLibraries(Dependencies.use(MavenDependencies.class)
