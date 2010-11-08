@@ -48,8 +48,8 @@ public class MiscUnitTestCase
       deps.artifacts("org.apache.maven.plugins:maven-help-plugin:2.1.1",
                      "org.apache.maven.plugins:maven-compiler-plugin:2.3.2")
                   .artifact("org.apache.maven.plugins:maven-patch-plugin:1.1.1")                  
-                  .artifacts("abc:xyz:1.2.3", "abc:qqq:1.45")
-                  .artifact("this:is-not-included:0");
+                  .artifacts("abc:xyz:1.2.3", "abc:qqq:1.45");
+                  
 
       MavenDependencyFilterWrap wrap = new MavenDependencyFilterWrap(deps);
 

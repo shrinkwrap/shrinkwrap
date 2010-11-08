@@ -142,10 +142,6 @@ public interface DependencyBuilder<T extends DependencyBuilder<T>>
     * Creates an artifact builder. You can define additional parameters
     * for the artifact later. 
     * 
-    * <p><b>IMPORTANT:</b> The artifact is not included into resolution chain
-    * until asked to include other artifact(s) or until any resolution method is called.
-    * </p>
-    * 
     * @param coordinates Coordinates specified to a created artifact, specified
     *        in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]][:<version>]}, must not be {@code null} or empty.
     *        If {@code version} is not specified, is it determined if underlying repository system supports so.
@@ -159,10 +155,6 @@ public interface DependencyBuilder<T extends DependencyBuilder<T>>
     * Creates an artifact builder. You can define additional parameters
     * for the artifacts later. Additional parameters will be changed for all artifacts
     * defined by this call.
-    * 
-    * <p><b>IMPORTANT:</b> The artifacts are not included into resolution chain
-    * until asked to include other artifact(s) or until any resolution method is called.
-    * </p>
     * 
     * @param coordinates A list of coordinates specified to the created artifacts, specified
     *        in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]][:<version>]}, must not be {@code null} or empty.
