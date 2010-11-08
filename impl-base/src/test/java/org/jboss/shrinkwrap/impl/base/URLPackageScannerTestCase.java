@@ -39,6 +39,6 @@ public class URLPackageScannerTestCase
                public void classFound(String className)
                {
                }
-            }, (Package) null);
+            }, null);
    }
 }
