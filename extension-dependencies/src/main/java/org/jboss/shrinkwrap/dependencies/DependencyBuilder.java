@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.Collection;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.sonatype.aether.graph.Exclusion;
 
 /**
  * A dependency builder encapsulates access to a repository which is used
@@ -63,24 +62,27 @@ public interface DependencyBuilder<T extends DependencyBuilder<T>>
 
       /**
        * Adds an exclusion for current dependency.
-       * @param exclusion the exclusion to be added to list of artifacts to be excluded
+       * @param exclusion the exclusion to be added to list of artifacts to be excluded,
+       *        specified in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]}
        * @return Artifact builder with added exclusion
        */
-      ArtifactBuilder<T> exclusion(Exclusion exclusion);
+      ArtifactBuilder<T> exclusion(String exclusion);
 
       /**
        * Adds multiple exclusions for current dependency
-       * @param exclusions the exclusions to be added to the list of artifacts to be excluded
+       * @param exclusions the exclusions to be added to the list of artifacts to be excluded,
+       *        specified in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]}
        * @return Artifact builder with added exclusions
        */
-      ArtifactBuilder<T> exclusions(Exclusion... exclusions);
+      ArtifactBuilder<T> exclusions(String... exclusions);
 
       /**
        * Adds multiple exclusions for current dependency
-       * @param exclusions the exclusions to be added to the list of artifacts to be excluded
+       * @param exclusions the exclusions to be added to the list of artifacts to be excluded,
+       *        specified in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]}
        * @return Artifact builder with added exclusions
        */
-      ArtifactBuilder<T> exclusions(Collection<Exclusion> exclusions);
+      ArtifactBuilder<T> exclusions(Collection<String> exclusions);
 
       /**
        * Resolves dependencies for dependency builder
@@ -114,7 +116,7 @@ public interface DependencyBuilder<T extends DependencyBuilder<T>>
        * @return An array of Files which contains resolved artifacts
        * @throws DependencyException
        */
-      File[] resolveAsFiles(DependencyFilter<T> filter) throws DependencyException;    
+      File[] resolveAsFiles(DependencyFilter<T> filter) throws DependencyException;
 
    }
 
@@ -129,7 +131,7 @@ public interface DependencyBuilder<T extends DependencyBuilder<T>>
     * 
     * The special ability of this object when compared to {@link ArtifactBuilder} is
     * the ability to work in batch, that is allow to define more artifacts at once and
-    * modify their scope etc. by a single call. 
+    * modify their scope etc. by a single call.
     * 
     * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
     * @see ArtifactBuilder
@@ -140,7 +142,7 @@ public interface DependencyBuilder<T extends DependencyBuilder<T>>
 
    /**
     * Creates an artifact builder. You can define additional parameters
-    * for the artifact later. 
+    * for the artifact later.
     * 
     * @param coordinates Coordinates specified to a created artifact, specified
     *        in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]][:<version>]}, must not be {@code null} or empty.
