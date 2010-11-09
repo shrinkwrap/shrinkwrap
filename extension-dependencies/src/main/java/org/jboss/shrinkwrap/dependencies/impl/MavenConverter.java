@@ -103,12 +103,19 @@ public class MavenConverter
 
    /**
     * Converts string coordinates to Aether exclusion object
-    * @param coordinates Coordinates specified in the format specified in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]}
+    * @param coordinates Coordinates specified in the format specified in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]}, an empty string or {@code *} will
+    *        match all exclusions, you can pass an {@code *} instead of any part of the coordinates to match all possible values
     * @return Exclusion object based on the coordinates
     * @throws DependencyException If coordinates cannot be converted
     */
    public static Exclusion convertExclusion(String coordinates)
    {
+      Validate.notNull(coordinates, "Exclusion string must not be null");
+
+      if (coordinates.length() == 0 || coordinates.equals("*"))
+      {
+         return new Exclusion("*", "*", "*", "*");
+      }
 
       Matcher m = EXCLUSION_PATTERN.matcher(coordinates);
       if (!m.matches())
@@ -117,7 +124,17 @@ public class MavenConverter
                + ", expected format is <groupId>:<artifactId>[:<extension>[:<classifier>]]");
       }
 
-      return new Exclusion(m.group(EXCLUSION_GROUP_ID), m.group(EXCLUSION_ARTIFACT_ID), m.group(EXCLUSION_TYPE_ID), m.group(EXCLUSION_CLASSIFIER_ID));
+      String group = m.group(EXCLUSION_GROUP_ID);
+      String artifact = m.group(EXCLUSION_ARTIFACT_ID);
+      String type = m.group(EXCLUSION_TYPE_ID);
+      String classifier = m.group(EXCLUSION_CLASSIFIER_ID);
+
+      group = (group == null || group.length() == 0) ? "*" : group;
+      artifact = (artifact == null || artifact.length() == 0) ? "*" : artifact;
+      type = (type == null || type.length() == 0) ? "*" : type;
+      classifier = (classifier == null || classifier.length() == 0) ? "*" : classifier;
+
+      return new Exclusion(group, artifact, classifier, type);
    }
 
    /**

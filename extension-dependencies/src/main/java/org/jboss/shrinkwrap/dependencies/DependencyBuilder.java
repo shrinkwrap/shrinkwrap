@@ -63,7 +63,8 @@ public interface DependencyBuilder<T extends DependencyBuilder<T>>
       /**
        * Adds an exclusion for current dependency.
        * @param exclusion the exclusion to be added to list of artifacts to be excluded,
-       *        specified in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]}
+       *        specified in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]}, an empty string or {@code *} will
+       *        match all exclusions, you can pass an {@code *} instead of any part of the coordinates to match all possible values
        * @return Artifact builder with added exclusion
        */
       ArtifactBuilder<T> exclusion(String exclusion);
@@ -71,7 +72,8 @@ public interface DependencyBuilder<T extends DependencyBuilder<T>>
       /**
        * Adds multiple exclusions for current dependency
        * @param exclusions the exclusions to be added to the list of artifacts to be excluded,
-       *        specified in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]}
+       *        specified in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]}, an empty string or {@code *} will
+       *        match all exclusions, you can pass an {@code *} instead of any part of the coordinates to match all possible values
        * @return Artifact builder with added exclusions
        */
       ArtifactBuilder<T> exclusions(String... exclusions);
@@ -79,7 +81,8 @@ public interface DependencyBuilder<T extends DependencyBuilder<T>>
       /**
        * Adds multiple exclusions for current dependency
        * @param exclusions the exclusions to be added to the list of artifacts to be excluded,
-       *        specified in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]}
+       *        specified in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]}, an empty string or {@code *} will
+       *        match all exclusions, you can pass an {@code *} instead of any part of the coordinates to match all possible values
        * @return Artifact builder with added exclusions
        */
       ArtifactBuilder<T> exclusions(Collection<String> exclusions);
