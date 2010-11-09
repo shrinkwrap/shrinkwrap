@@ -19,10 +19,15 @@
 package org.jboss.shrinkwrap.dependencies.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.jboss.shrinkwrap.dependencies.DependencyException;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.artifact.ArtifactType;
 import org.sonatype.aether.artifact.ArtifactTypeRegistry;
@@ -35,7 +40,8 @@ import org.sonatype.aether.util.artifact.DefaultArtifact;
 import org.sonatype.aether.util.artifact.DefaultArtifactType;
 
 /**
- * An utility class which provides conversion between Maven and Aether objects
+ * An utility class which provides conversion between Maven and Aether objects.
+ * It allows creation of Aether object from different objects than Maven objects as well.
  * 
  * @author Benjamin Bentmann
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
@@ -43,10 +49,91 @@ import org.sonatype.aether.util.artifact.DefaultArtifactType;
  */
 public class MavenConverter
 {
+   private static final Logger log = Logger.getLogger(MavenConverter.class.getName());
+
+   private static final Pattern DEPENDENCY_PATTERN = Pattern.compile("([^: ]+):([^: ]+)(:([^: ]*)(:([^: ]+))?)?(:([^: ]+))?");
+
+   private static final int DEPENDENCY_GROUP_ID = 1;
+   private static final int DEPENDENCY_ARTIFACT_ID = 2;
+   private static final int DEPENDENCY_TYPE_ID = 4;
+   private static final int DEPENDENCY_CLASSIFIER_ID = 6;
+   private static final int DEPENDENCY_VERSION_ID = 8;
+
+   private static final Pattern EXCLUSION_PATTERN = Pattern.compile("([^: ]+):([^: ]+)(:([^: ]*)(:([^: ]+))?)?");
+
+   private static final int EXCLUSION_GROUP_ID = 1;
+   private static final int EXCLUSION_ARTIFACT_ID = 2;
+   private static final int EXCLUSION_TYPE_ID = 4;
+   private static final int EXCLUSION_CLASSIFIER_ID = 6;
+
    // disable instantiation
    private MavenConverter()
    {
       throw new AssertionError("Utility class MavenConverter cannot be instantiated.");
+   }
+
+   /**
+    * Tries to resolve artifact version from internal dependencies from a fetched POM file.
+    * If no version is found, it simply returns original coordinates
+    * @param dependencyManagement The map including dependency information retrieved from the POM file
+    * @param coordinates The coordinates excluding the {@code version} part
+    * @return Either coordinates with appended {@code version} or original coordinates
+    */
+   public static String resolveArtifactVersion(Map<ArtifactAsKey, Dependency> dependencyManagement, String coordinates)
+   {
+      Matcher m = DEPENDENCY_PATTERN.matcher(coordinates);
+      if (!m.matches())
+      {
+         throw new DependencyException("Bad artifact coordinates"
+               + ", expected format is <groupId>:<artifactId>[:<extension>[:<classifier>]][:<version>]");
+      }
+
+      ArtifactAsKey key = new ArtifactAsKey(m.group(DEPENDENCY_GROUP_ID), m.group(DEPENDENCY_ARTIFACT_ID),
+            m.group(DEPENDENCY_TYPE_ID), m.group(DEPENDENCY_CLASSIFIER_ID));
+
+      if (m.group(DEPENDENCY_VERSION_ID) == null && dependencyManagement.containsKey(key))
+      {
+         String version = dependencyManagement.get(key).getArtifact().getVersion();
+         log.fine("Resolved version " + version + " from the POM file for the artifact: " + coordinates);
+         coordinates = coordinates + ":" + version;
+      }
+
+      return coordinates;
+   }
+
+   /**
+    * Converts string coordinates to Aether exclusion object
+    * @param coordinates Coordinates specified in the format specified in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]}
+    * @return Exclusion object based on the coordinates
+    * @throws DependencyException If coordinates cannot be converted
+    */
+   public static Exclusion convertExclusion(String coordinates)
+   {
+
+      Matcher m = EXCLUSION_PATTERN.matcher(coordinates);
+      if (!m.matches())
+      {
+         throw new DependencyException("Bad exclusion coordinates"
+               + ", expected format is <groupId>:<artifactId>[:<extension>[:<classifier>]]");
+      }
+
+      return new Exclusion(m.group(EXCLUSION_GROUP_ID), m.group(EXCLUSION_ARTIFACT_ID), m.group(EXCLUSION_TYPE_ID), m.group(EXCLUSION_CLASSIFIER_ID));
+   }
+
+   /**
+    * Converts a collection of string coordinates to Aether exclusions objects
+    * @param coordinates A collection of coordinates specified in the format specified in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]}
+    * @return List of Exclusion objects based on the coordinates
+    * @throws DependencyException If coordinates cannot be converted
+    */
+   public static List<Exclusion> convertExclusions(Collection<String> coordinates)
+   {
+      List<Exclusion> list = new ArrayList<Exclusion>(coordinates.size());
+      for (String coords : coordinates)
+      {
+         list.add(convertExclusion(coords));
+      }
+      return list;
    }
 
    /**

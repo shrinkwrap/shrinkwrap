@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
@@ -68,15 +66,7 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
    private static final Archive<?>[] ARCHIVE_CAST = new Archive<?>[0];
    private static final File[] FILE_CAST = new File[0];
 
-   private static final Pattern COORDINATES_PATTERN = Pattern.compile("([^: ]+):([^: ]+)(:([^: ]*)(:([^: ]+))?)?(:([^: ]+))?");
-
    private static final DependencyFilter<MavenDependencies> ACCEPT_ALL = new AcceptAllFilter();
-
-   private static final int COORDINATES_GROUP_ID = 1;
-   private static final int COORDINATES_ARTIFACT_ID = 2;
-   private static final int COORDINATES_TYPE_ID = 4;
-   private static final int COORDINATES_CLASSIFIER_ID = 6;
-   private static final int COORDINATES_VERSION_ID = 8;
 
    private MavenRepositorySystem system;
 
@@ -214,7 +204,7 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
       {
          try
          {
-            coordinates = resolveArtifactVersion(coordinates);
+            coordinates = MavenConverter.resolveArtifactVersion(pomInternalDependencyManagement, coordinates);
             this.artifact = new DefaultArtifact(coordinates);
 
             Dependency dependency = new Dependency(artifact, scope, optional, exclusions);
@@ -237,10 +227,10 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
        * 
        * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder.ArtifactBuilder#exclusion(org.sonatype.aether.graph.Exclusion)
        */
-      public MavenArtifactBuilder exclusion(Exclusion exclusion)
+      public MavenArtifactBuilder exclusion(String coordinates)
       {
          Dependency dependency = dependencies.pop();
-         this.exclusions.add(exclusion);
+         this.exclusions.add(MavenConverter.convertExclusion(coordinates));
          dependencies.push(dependency.setExclusions(this.exclusions));
 
          return this;
@@ -251,10 +241,10 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
        * 
        * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder.ArtifactBuilder#exclusions(org.sonatype.aether.graph.Exclusion[])
        */
-      public MavenArtifactBuilder exclusions(Exclusion... exclusions)
+      public MavenArtifactBuilder exclusions(String... coordinates)
       {
          Dependency dependency = dependencies.pop();
-         this.exclusions.addAll(Arrays.asList(exclusions));
+         this.exclusions.addAll(MavenConverter.convertExclusions(Arrays.asList(coordinates)));
          dependencies.push(dependency.setExclusions(this.exclusions));
 
          return this;
@@ -265,10 +255,10 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
        * 
        * @see org.jboss.shrinkwrap.dependencies.DependencyBuilder.ArtifactBuilder#exclusions(java.util.Collection)
        */
-      public MavenArtifactBuilder exclusions(Collection<Exclusion> exclusions)
+      public MavenArtifactBuilder exclusions(Collection<String> coordinates)
       {
          Dependency dependency = dependencies.pop();
-         this.exclusions.addAll(exclusions);
+         this.exclusions.addAll(MavenConverter.convertExclusions(coordinates));
          dependencies.push(dependency.setExclusions(this.exclusions));
 
          return this;
@@ -408,34 +398,6 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
          return files.toArray(FILE_CAST);
       }
 
-      /**
-       * Tries to resolve artifact version from internal dependencies from a fetched POM file.
-       * If no version is found, it simply returns original coordinates
-       * @param coordinates The coordinates excluding the {@code version} part
-       * @return Either coordinates with appended {@code version} or original coordinates
-       */
-      protected String resolveArtifactVersion(String coordinates)
-      {
-         Matcher m = COORDINATES_PATTERN.matcher(coordinates);
-         if (!m.matches())
-         {
-            throw new DependencyException("Bad artifact coordinates"
-                  + ", expected format is <groupId>:<artifactId>[:<extension>[:<classifier>]][:<version>]");
-         }
-
-         ArtifactAsKey key = new ArtifactAsKey(m.group(COORDINATES_GROUP_ID), m.group(COORDINATES_ARTIFACT_ID),
-               m.group(COORDINATES_TYPE_ID), m.group(COORDINATES_CLASSIFIER_ID));
-
-         if (m.group(COORDINATES_VERSION_ID) == null && pomInternalDependencyManagement.containsKey(key))
-         {
-            String version = pomInternalDependencyManagement.get(key).getArtifact().getVersion();
-            log.fine("Resolved version " + version + " from the POM file for the artifact: " + coordinates);
-            coordinates = coordinates + ":" + version;
-         }
-
-         return coordinates;
-      }
-
       // converts a file to a ZIP file
       private ZipFile convert(File file) throws DependencyException
       {
@@ -465,7 +427,7 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
          {
             try
             {
-               coords = resolveArtifactVersion(coords);
+               coords = MavenConverter.resolveArtifactVersion(pomInternalDependencyManagement, coords);
                Artifact artifact = new DefaultArtifact(coords);
                artifacts.add(artifact);
 
@@ -539,9 +501,9 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
        * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#exclusions(org.sonatype.aether.graph.Exclusion[])
        */
       @Override
-      public MavenArtifactBuilder exclusions(Exclusion... exclusions)
+      public MavenArtifactBuilder exclusions(String... coordinates)
       {
-         this.exclusions.addAll(Arrays.asList(exclusions));
+         this.exclusions.addAll(MavenConverter.convertExclusions(Arrays.asList(coordinates)));
          List<Dependency> workplace = new ArrayList<Dependency>();
 
          int i;
@@ -565,9 +527,9 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
        * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#exclusions(java.util.Collection)
        */
       @Override
-      public MavenArtifactBuilder exclusions(Collection<Exclusion> exclusions)
+      public MavenArtifactBuilder exclusions(Collection<String> coordinates)
       {
-         this.exclusions.addAll(exclusions);
+         this.exclusions.addAll(MavenConverter.convertExclusions(coordinates));
          List<Dependency> workplace = new ArrayList<Dependency>();
 
          int i;
@@ -591,9 +553,9 @@ public class MavenDependencies implements DependencyBuilder<MavenDependencies>
        * @see org.jboss.shrinkwrap.dependencies.impl.MavenDependencies.MavenArtifactBuilder#exclusion(org.sonatype.aether.graph.Exclusion)
        */
       @Override
-      public MavenArtifactBuilder exclusion(Exclusion exclusion)
+      public MavenArtifactBuilder exclusion(String exclusion)
       {
-         this.exclusions.add(exclusion);
+         this.exclusions.add(MavenConverter.convertExclusion(exclusion));
          List<Dependency> workplace = new ArrayList<Dependency>();
 
          int i;
