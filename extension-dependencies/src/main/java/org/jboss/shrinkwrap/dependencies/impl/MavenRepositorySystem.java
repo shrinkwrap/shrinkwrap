@@ -77,6 +77,7 @@ public class MavenRepositorySystem
       session.setLocalRepositoryManager(system.newLocalRepositoryManager(settings.getLocalRepository()));
       session.setTransferListener(settings.getTransferListener());
       session.setRepositoryListener(settings.getRepositoryListener());
+
       return session;
    }
 

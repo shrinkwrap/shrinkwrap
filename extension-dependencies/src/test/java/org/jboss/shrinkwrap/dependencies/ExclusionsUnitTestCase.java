@@ -72,10 +72,14 @@ public class ExclusionsUnitTestCase
                            .exclusions("org.jboss.arquillian:arquillian-api", "org.jboss.arquillian:arquillian-spi")
                            .resolve(new ScopeFilter("test")));
 
+      
       DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"), "test");
       desc.validateArchive(war).results();
+      
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
    }
+   
+   
 
 }
