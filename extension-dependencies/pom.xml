@@ -25,7 +25,7 @@
    <properties>
 
       <!-- Versioning -->
-      <version.org.sonatype.aether>1.5</version.org.sonatype.aether>
+      <version.org.sonatype.aether>1.7</version.org.sonatype.aether>
       <version.org.codehaus.plexus>1.5.4</version.org.codehaus.plexus>
       <version.org.apache.maven>3.0-beta-3</version.org.apache.maven>
       <version.org.apache.maven.wagon>1.0-beta-6</version.org.apache.maven.wagon>
