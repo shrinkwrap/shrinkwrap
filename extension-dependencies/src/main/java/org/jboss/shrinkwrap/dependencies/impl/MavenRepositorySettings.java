@@ -19,9 +19,13 @@ package org.jboss.shrinkwrap.dependencies.impl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Repository;
+import org.apache.maven.settings.Activation;
+import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.settings.building.DefaultSettingsBuilderFactory;
 import org.apache.maven.settings.building.DefaultSettingsBuildingRequest;
@@ -64,22 +68,19 @@ public class MavenRepositorySettings
    {
       SettingsBuildingRequest request = new DefaultSettingsBuildingRequest();
       request.setUserSettingsFile(new File(DEFAULT_USER_SETTINGS_PATH));
-
-      this.repositories = new ArrayList<RemoteRepository>();
-      this.repositories.add(centralRepository());
-
       buildSettings(request);
    }
 
    /**
     * Sets a list of remote repositories using a POM model.
-    * Maven Central repository is always added, even if it is not included in the model.
+    * Maven Central repository and repositories from Maven settings.xml file are always added
+    * even if they are not explicitly listed in the the model.
     * @param model the POM model
     */
    public void setRemoteRepositories(Model model)
    {
       List<RemoteRepository> newRepositories = new ArrayList<RemoteRepository>();
-      newRepositories.add(centralRepository());
+      newRepositories.addAll(settingsRepositories());
       for (Repository repository : model.getRepositories())
       {
          newRepositories.add(MavenConverter.convert(repository));
@@ -127,12 +128,6 @@ public class MavenRepositorySettings
       return new LogTransferListerer();
    }
 
-   // creates a link to Maven Central Repository
-   private RemoteRepository centralRepository()
-   {
-      return new RemoteRepository("central", "default", "http://repo1.maven.org/maven2");
-   }
-
    /**
     * Replaces currents settings with ones retrieved from request.
     * 
@@ -162,5 +157,35 @@ public class MavenRepositorySettings
          settings.setLocalRepository(DEFAULT_REPOSITORY_PATH);
       }
       this.settings = settings;
+      this.repositories = settingsRepositories();
+   }
+
+   // creates links to Repositories from settings.xml file
+   @SuppressWarnings("unchecked")
+   private List<RemoteRepository> settingsRepositories()
+   {
+      List<String> actives = settings.getActiveProfiles();
+      List<RemoteRepository> settingsRepos = new ArrayList<RemoteRepository>();
+      settingsRepos.add(centralRepository());
+      for (Map.Entry<String, Profile> profile : (Set<Map.Entry<String, Profile>>) settings.getProfilesAsMap().entrySet())
+      {
+         Activation activation = profile.getValue().getActivation();
+         if (actives.contains(profile.getKey()) || (activation != null && activation.isActiveByDefault()))
+         {
+            for (org.apache.maven.settings.Repository repo : profile.getValue().getRepositories())
+            {
+               settingsRepos.add(MavenConverter.convert(repo));
+            }
+         }
+      }
+
+      return settingsRepos;
+
+   }
+
+   // creates a link to Maven Central Repository
+   private RemoteRepository centralRepository()
+   {
+      return new RemoteRepository("central", "default", "http://repo1.maven.org/maven2");
    }
 }

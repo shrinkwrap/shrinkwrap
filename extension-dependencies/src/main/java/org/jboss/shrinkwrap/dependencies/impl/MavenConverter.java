@@ -170,6 +170,21 @@ public class MavenConverter
    }
 
    /**
+    * Converts Maven {@link Repository} to Aether {@link RemoteRepository}
+    * @param repository the Maven repository to be converted
+    * @return Equivalent remote repository
+    */
+   public static RemoteRepository convert(org.apache.maven.settings.Repository repository)
+   {
+      return new RemoteRepository()
+            .setId(repository.getId())
+            .setContentType(repository.getLayout())
+            .setUrl(repository.getUrl())
+            .setPolicy(true, convertPolicy(repository.getSnapshots()))
+            .setPolicy(false, convertPolicy(repository.getReleases()));
+   }
+
+   /**
     * Converts Maven {@link org.apache.maven.model.Dependency} to Aether {@link org.sonatype.aether.graph.Dependency}
     * @param dependency the Maven dependency to be converted
     * @param registry the Artifact type catalog to determine common artifact properties
@@ -207,6 +222,29 @@ public class MavenConverter
 
    // converts repository policy
    private static RepositoryPolicy convertPolicy(org.apache.maven.model.RepositoryPolicy policy)
+   {
+      boolean enabled = true;
+      String checksums = RepositoryPolicy.CHECKSUM_POLICY_WARN;
+      String updates = RepositoryPolicy.UPDATE_POLICY_DAILY;
+
+      if (policy != null)
+      {
+         enabled = policy.isEnabled();
+         if (policy.getUpdatePolicy() != null)
+         {
+            updates = policy.getUpdatePolicy();
+         }
+         if (policy.getChecksumPolicy() != null)
+         {
+            checksums = policy.getChecksumPolicy();
+         }
+      }
+
+      return new RepositoryPolicy(enabled, updates, checksums);
+   }
+
+   // converts repository policy
+   private static RepositoryPolicy convertPolicy(org.apache.maven.settings.RepositoryPolicy policy)
    {
       boolean enabled = true;
       String checksums = RepositoryPolicy.CHECKSUM_POLICY_WARN;
