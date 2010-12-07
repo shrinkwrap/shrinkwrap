@@ -69,6 +69,7 @@
     <module>build</module>
     <module>impl-base</module>
     <module>spi</module>
+    <module>extension-dependencies</module>
     <module>extension-sip</module>
     <module>extension-glassfish</module>
     <module>extension-tomcat-6</module>
