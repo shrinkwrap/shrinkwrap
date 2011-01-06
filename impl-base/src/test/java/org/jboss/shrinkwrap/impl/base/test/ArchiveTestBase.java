@@ -381,13 +381,15 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> archive = getArchive();
       String resource = NAME_TEST_PROPERTIES;
       ArchivePath location = new BasicPath("/", "test.properties");
-      archive.add(new ClassLoaderAsset(resource), location);
+      final Asset asset = new ClassLoaderAsset(resource);
+      archive.add(asset, location);
       Assert.assertTrue(archive.contains(location)); // Sanity check
 
-      Assert.assertTrue("Successfully deleting an Asset should return true", archive.delete(location));
+      Assert.assertEquals("Successfully deleting an Asset should return the removed Node", asset,
+            archive.delete(location).getAsset());
 
-      Assert.assertFalse("There should no longer be an asset at: " + location.get() + " after deleted", archive
-            .contains(location));
+      Assert.assertFalse("There should no longer be an asset at: " + location.get() + " after deleted",
+            archive.contains(location));
    }
 
    /**
@@ -400,7 +402,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> archive = getArchive();
       ArchivePath location = new BasicPath("/", "test.properties");
 
-      Assert.assertFalse("Deleting a non-existent Asset should return false", archive.delete(location));
+      Assert.assertNull("Deleting a non-existent Asset should return null", archive.delete(location));
    }
 
    /**

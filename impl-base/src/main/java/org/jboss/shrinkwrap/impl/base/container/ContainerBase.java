@@ -310,7 +310,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.Archive#delete(org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
-   public boolean delete(ArchivePath path)
+   public Node delete(ArchivePath path)
    {
       return this.getArchive().delete(path);
    }

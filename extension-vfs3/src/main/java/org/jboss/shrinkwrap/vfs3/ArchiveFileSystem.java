@@ -95,7 +95,7 @@ public class ArchiveFileSystem implements FileSystem
          {
             deleted = cachedFile.delete();
          }
-         deleted = deleted && archive.delete(node.getPath());
+         deleted = deleted && archive.delete(node.getPath()) != null;
       }
       return deleted;
    }

@@ -242,23 +242,23 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     * @see org.jboss.shrinkwrap.api.Archive#delete(org.jboss.declarchive.api.ArchivePath)
     */
    @Override
-   public boolean delete(ArchivePath path)
+   public Node delete(ArchivePath path)
    {
       Validate.notNull(path, "No path was specified");
 
-      NodeImpl node = content.get(path);
+      final Node node = content.get(path);
       if (node == null)
       {
-         return false;
+         return null;
       }
 
-      NodeImpl parentNode = content.get(path.getParent());
+      final NodeImpl parentNode = content.get(path.getParent());
       if (parentNode != null)
       {
          parentNode.removeChild(node);
       }
 
-      return content.remove(path) != null;
+      return content.remove(path);
    }
 
    /** 

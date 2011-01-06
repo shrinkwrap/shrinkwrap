@@ -82,7 +82,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArchivePathException If the target is invalid.
     */
    T add(Asset asset, ArchivePath target, String name) throws IllegalArgumentException;
-   
+
    /**
     * Adds the specified asset under the specified target (directory)
     * using the specified name.  The resultant path will be treating 
@@ -175,7 +175,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If the path is not specified
     */
    boolean contains(ArchivePath path) throws IllegalArgumentException;
-   
+
    /**
     * Denotes whether this archive contains a resource at the specified
     * path
@@ -187,13 +187,14 @@ public interface Archive<T extends Archive<T>> extends Assignable
    boolean contains(String path) throws IllegalArgumentException;
 
    /**
-    * Removes the asset in the archive at the specified Path.  If the path
-    * is a directory, recursively removes all contents.
+    * Removes the {@link Node} in the {@link Archive} at the specified {@link ArchivePath}.  
+    * If the path is a directory, recursively removes all contents.  If the path does
+    * not exist, return null.
     * 
     * @param path
-    * @return Whether or not a deletion was made
+    * @return The Node removed
     */
-   boolean delete(ArchivePath path) throws IllegalArgumentException;
+   Node delete(ArchivePath path) throws IllegalArgumentException;
 
    /**
     * Obtains all assets in this archive, along with its respective Path.
@@ -220,8 +221,9 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @return
     * @throws IllegalArgumentException If any argument is not specified
     */
-   T add(Archive<?> archive, ArchivePath path, Class<? extends StreamExporter> exporter) throws IllegalArgumentException;
-   
+   T add(Archive<?> archive, ArchivePath path, Class<? extends StreamExporter> exporter)
+         throws IllegalArgumentException;
+
    /**
     * Add an archive under a specific context and maintain the archive name as context path.
     * 
@@ -266,7 +268,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If the path or existing archive is not specified
     */
    T merge(Archive<?> source, ArchivePath path) throws IllegalArgumentException;
-   
+
    /**
     * Merge the contents from an existing archive in a specific path 
     * without maintaining the archive name in the context path.
@@ -290,7 +292,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If the path or existing archive is not specified
     */
    T merge(Archive<?> source, ArchivePath path, Filter<ArchivePath> filter) throws IllegalArgumentException;
-   
+
    /**
     * Merge the contents from an existing archive in a specific path 
     * without maintaining the archive name in the context path. 
