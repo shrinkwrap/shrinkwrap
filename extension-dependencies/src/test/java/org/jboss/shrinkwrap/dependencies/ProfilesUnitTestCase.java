@@ -21,6 +21,7 @@ import java.io.File;
 import junit.framework.Assert;
 
 import org.jboss.shrinkwrap.dependencies.impl.MavenDependencies;
+import org.jboss.shrinkwrap.dependencies.impl.MavenRepositorySettings;
 import org.jboss.shrinkwrap.dependencies.impl.filter.StrictFilter;
 import org.junit.Test;
 
@@ -56,6 +57,25 @@ public class ProfilesUnitTestCase
    {
       File[] files = Dependencies.use(MavenDependencies.class)
             .configureFrom("src/test/resources/profiles/settings2.xml")
+            .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+            .resolveAsFiles(new StrictFilter());
+
+      Assert.assertEquals("There is only one jar in the package", 1, files.length);
+      Assert.assertEquals("The file is packaged arquillian-junit:1.0.0.Alpha4", "arquillian-junit-1.0.0.Alpha4.jar", files[0].getName());
+   }
+   
+   /**
+    * Tests a resolution of an artifact from JBoss repository specified in settings.xml within activeProfiles.
+    * The path to do file is defined via system property.
+    * @throws DependencyException
+    */
+   @Test
+   public void testSystemPropertiesSettingsProfiles() throws DependencyException
+   {
+      System.setProperty(MavenRepositorySettings.ALT_USER_SETTINGS_XML_LOCATION, "src/test/resources/profiles/settings3.xml");
+      System.setProperty(MavenRepositorySettings.ALT_LOCAL_REPOSITORY_LOCATION, "target/prop-profiles");
+      
+      File[] files = Dependencies
             .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
             .resolveAsFiles(new StrictFilter());
 

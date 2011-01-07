@@ -39,15 +39,39 @@ import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.transfer.TransferListener;
 
 /**
- * An encapsulation of settings required to be handle Maven dependency resolution.
+ * An encapsulation of settings required to be handle Maven dependency
+ * resolution.
  * 
- * It holds links to local and remote repositories
+ * It holds links to local and remote repositories.
+ * 
+ * Maven can be configured externally, using following properties:
+ * 
+ * <ul>
+ *    <li>{@see MavenRepositorySettings.ALT_USER_SETTINGS_XML_LOCATION} - a path to local settings.xml file</li>
+ *    <li>{@see MavenRepositorySettings.ALT_GLOBAL_SETTINGS_XML_LOCATION} - a path to global settings.xml file</li>
+ *    <li>{@see MavenRepositorySettings.ALT_LOCAL_REPOSITORY_LOCATION} - a path to local repository</li>
+ * </ul>
  * 
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
  * 
  */
 public class MavenRepositorySettings
 {
+   /**
+    * Sets an alternate location to Maven user settings.xml configuration
+    */
+   public static final String ALT_USER_SETTINGS_XML_LOCATION = "org.apache.maven.user-settings";
+
+   /**
+    * Sets an alternate location of Maven global settings.xml configuration
+    */
+   public static final String ALT_GLOBAL_SETTINGS_XML_LOCATION = "org.apache.maven.global-settings";
+
+   /**
+    * Sets an alternate location of Maven local repository
+    */
+   public static final String ALT_LOCAL_REPOSITORY_LOCATION = "maven.repo.local";
+
    private static final String DEFAULT_USER_SETTINGS_PATH = SecurityActions.getProperty("user.home").concat("/.m2/settings.xml");
    private static final String DEFAULT_REPOSITORY_PATH = SecurityActions.getProperty("user.home").concat("/.m2/repository");
 
@@ -57,8 +81,8 @@ public class MavenRepositorySettings
    private Settings settings;
 
    /**
-    * Creates a new Maven settings using default user settings,
-    * that is the one located in ${user.home}/.m2/settings.xml.
+    * Creates a new Maven settings using default user settings, that is the one
+    * located in ${user.home}/.m2/settings.xml.
     * 
     * Appends Maven Central repository to available remote repositories.
     * 
@@ -67,14 +91,31 @@ public class MavenRepositorySettings
    public MavenRepositorySettings()
    {
       SettingsBuildingRequest request = new DefaultSettingsBuildingRequest();
+
+      String altUserSettings = SecurityActions.getProperty(ALT_USER_SETTINGS_XML_LOCATION);
+      String altGlobalSettings = SecurityActions.getProperty(ALT_GLOBAL_SETTINGS_XML_LOCATION);
+
       request.setUserSettingsFile(new File(DEFAULT_USER_SETTINGS_PATH));
+
+      // set alternate files
+      if (altUserSettings != null && altUserSettings.length() > 0)
+      {
+         request.setUserSettingsFile(new File(altUserSettings));
+      }
+
+      if (altGlobalSettings != null && altGlobalSettings.length() > 0)
+      {
+         request.setUserSettingsFile(new File(altGlobalSettings));
+      }
+
       buildSettings(request);
    }
 
    /**
-    * Sets a list of remote repositories using a POM model.
-    * Maven Central repository and repositories from Maven settings.xml file are always added
+    * Sets a list of remote repositories using a POM model. Maven Central
+    * repository and repositories from Maven settings.xml file are always added
     * even if they are not explicitly listed in the the model.
+    * 
     * @param model the POM model
     */
    public void setRemoteRepositories(Model model)
@@ -91,6 +132,7 @@ public class MavenRepositorySettings
 
    /**
     * Returns a list of available remote repositories
+    * 
     * @return The list of remote repositories
     */
    public List<RemoteRepository> getRemoteRepositories()
@@ -99,8 +141,9 @@ public class MavenRepositorySettings
    }
 
    /**
-    * Returns a local repository determined from settings.xml or the
-    * default repository located
+    * Returns a local repository determined from settings.xml or the default
+    * repository located
+    * 
     * @return The local repository
     */
    public LocalRepository getLocalRepository()
@@ -109,8 +152,9 @@ public class MavenRepositorySettings
    }
 
    /**
-    * Returns a listener which captures repository based events, such as
-    * an attempt to download from a repository and similar events.
+    * Returns a listener which captures repository based events, such as an
+    * attempt to download from a repository and similar events.
+    * 
     * @return The {@link RepositoryListener} implementation
     */
    public RepositoryListener getRepositoryListener()
@@ -119,8 +163,9 @@ public class MavenRepositorySettings
    }
 
    /**
-    * Returns a listener which captures transfer based events, such
-    * as a download progress and similar events.
+    * Returns a listener which captures transfer based events, such as a
+    * download progress and similar events.
+    * 
     * @return The {@link TransferListener} implementation
     */
    public TransferListener getTransferListener()
@@ -152,9 +197,18 @@ public class MavenRepositorySettings
 
       Settings settings = result.getEffectiveSettings();
 
+      // set local repository path if no other was set
       if (settings.getLocalRepository() == null)
       {
+         String altLocalRepository = SecurityActions.getProperty(ALT_LOCAL_REPOSITORY_LOCATION);
+
          settings.setLocalRepository(DEFAULT_REPOSITORY_PATH);
+
+         if (altLocalRepository != null && altLocalRepository.length() > 0)
+         {
+            settings.setLocalRepository(altLocalRepository);
+         }
+
       }
       this.settings = settings;
       this.repositories = settingsRepositories();

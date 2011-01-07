@@ -56,8 +56,16 @@ import org.sonatype.aether.util.artifact.DefaultArtifact;
  * XML file, configure remote repositories from an POM file and retrieve
  * dependencies defined in a POM file, including ones in POM parents.
  * 
- * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
+ * Maven can be configured externally, using following properties:
  * 
+ * <ul>
+ *    <li>{@see MavenRepositorySettings.ALT_USER_SETTINGS_XML_LOCATION} - a path to local settings.xml file</li>
+ *    <li>{@see MavenRepositorySettings.ALT_GLOBAL_SETTINGS_XML_LOCATION} - a path to global settings.xml file</li>
+ *    <li>{@see MavenRepositorySettings.ALT_LOCAL_REPOSITORY_LOCATION} - a path to local repository</li>
+ * </ul>
+ * 
+ * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
+ * @see MavenRepositorySettings
  */
 public class MavenDependencies implements DependencyBuilder<MavenDependencies>
 {
