@@ -22,10 +22,9 @@
    <properties>
 
       <!-- Versioning -->
-      <version.org.sonatype.aether>1.7</version.org.sonatype.aether>
-      <version.org.codehaus.plexus>1.5.4</version.org.codehaus.plexus>
-      <version.org.apache.maven>3.0-beta-3</version.org.apache.maven>
-      <version.org.apache.maven.wagon>1.0-beta-6</version.org.apache.maven.wagon>
+      <version.org.sonatype.aether>1.8</version.org.sonatype.aether>
+      <version.org.apache.maven>3.0.1</version.org.apache.maven>
+      <version.org.apache.maven.wagon>1.0-beta-7</version.org.apache.maven.wagon>
 
    </properties>
 
@@ -77,28 +76,6 @@
          <artifactId>aether-impl</artifactId>
          <version>${version.org.sonatype.aether}</version>
          <scope>test</scope>
-      </dependency>
-
-
-      <!-- org.codehaus.plexus -->
-      <dependency>
-         <groupId>org.codehaus.plexus</groupId>
-         <artifactId>plexus-container-default</artifactId>
-         <version>${version.org.codehaus.plexus}</version>
-         <exclusions>
-            <exclusion>
-               <groupId>junit</groupId>
-               <artifactId>junit</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>log4j</groupId>
-               <artifactId>log4j</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>commons-logging</groupId>
-               <artifactId>commons-logging-api</artifactId>
-            </exclusion>
-         </exclusions>
       </dependency>
 
       <!-- org.apache.maven -->
