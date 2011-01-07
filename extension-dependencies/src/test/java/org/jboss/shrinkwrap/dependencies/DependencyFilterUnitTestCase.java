@@ -61,7 +61,7 @@ public class DependencyFilterUnitTestCase
       Assert.assertTrue("The artifact is packaged arquillian-junit:1.0.0.Alpha4",
             map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-junit-1.0.0.Alpha4.jar")));
 
-      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
+      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
 
    }
 
@@ -87,7 +87,7 @@ public class DependencyFilterUnitTestCase
       Assert.assertTrue("The artifact is packaged selenium:2.0b1",
             map.containsKey(ArchivePaths.create("WEB-INF/lib/selenium-2.0b1.jar")));
 
-      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
+      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
 
    }
 
@@ -112,7 +112,7 @@ public class DependencyFilterUnitTestCase
       Assert.assertTrue("The artifact is packaged arquillian-junit:1.0.0.Alpha4",
             map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-junit-1.0.0.Alpha4.jar")));
 
-      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
+      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
    }
 
    /**
@@ -134,7 +134,7 @@ public class DependencyFilterUnitTestCase
       DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/artifactVersionRetrievalFromPomOverride.tree"), "test");
       desc.validateArchive(war).results();
 
-      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
+      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
    }
 
    /**
@@ -162,7 +162,7 @@ public class DependencyFilterUnitTestCase
       Assert.assertTrue("The artifact is packaged arquillian-testng:1.0.0.Alpha4",
             map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-testng-1.0.0.Alpha4.jar")));
 
-      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
+      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
    }
 
    /**
@@ -189,7 +189,7 @@ public class DependencyFilterUnitTestCase
       Assert.assertTrue("The artifact is packaged arquillian-testng:1.0.0.Alpha4",
             map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-testng-1.0.0.Alpha4.jar")));
 
-      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
+      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
    }
 
    /**
@@ -216,7 +216,7 @@ public class DependencyFilterUnitTestCase
       Assert.assertTrue("The artifact is packaged arquillian-testng:1.0.0.Alpha4",
             map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-testng-1.0.0.Alpha4.jar")));
 
-      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
+      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
    }
 
    /**
@@ -235,7 +235,7 @@ public class DependencyFilterUnitTestCase
       DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/pomBasedDependencies.tree"), "test");
       desc.validateArchive(war).results();
 
-      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
+      war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
 
    }
 
