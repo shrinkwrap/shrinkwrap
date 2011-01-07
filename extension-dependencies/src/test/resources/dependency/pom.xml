@@ -25,9 +25,7 @@
 
    <properties>
       <!-- Versioning -->
-      <version.jboss_60>6.0.0.20100721-M4</version.jboss_60>
-      <version.selenium>2.0a5</version.selenium>
-      <version.webdriver>0.9.7376</version.webdriver>
+      <version.selenium>2.0b1</version.selenium>
       <version.selenium.standalone>1.0.3</version.selenium.standalone>
       <version.slf4j>1.5.10</version.slf4j>
 
@@ -42,15 +40,9 @@
    <!-- Dependencies -->
    <dependencies>
       <dependency>
-         <groupId>org.jboss.arquillian</groupId>
-         <artifactId>arquillian-spi</artifactId>
-         <version>${project.version}</version>
-      </dependency>
-      <dependency>
          <groupId>org.seleniumhq.selenium</groupId>
          <artifactId>selenium</artifactId>
          <version>${version.selenium}</version>
-         <scope>provided</scope>
          <exclusions>
             <exclusion>
                <artifactId>selenium-firefox-driver</artifactId>
@@ -65,7 +57,7 @@
                <groupId>org.seleniumhq.selenium</groupId>
             </exclusion>
          </exclusions>
-      </dependency>
+      </dependency> 
       <dependency>
          <groupId>org.seleniumhq.selenium</groupId>
          <artifactId>selenium-server</artifactId>
@@ -78,14 +70,7 @@
          <version>${version.slf4j}</version>
          <scope>test</scope>
       </dependency>
-      <dependency>
-         <groupId>org.jboss.arquillian</groupId>
-         <artifactId>arquillian-junit</artifactId>
-         <version>${project.version}</version>
-         <scope>test</scope>
-      </dependency>
 
-      <!-- we are using a Weld based example -->
       <dependency>
          <groupId>javax.enterprise</groupId>
          <artifactId>cdi-api</artifactId>
