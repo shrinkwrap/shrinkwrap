@@ -54,7 +54,7 @@ public class Dependencies
    }
    
    /**
-    * Creates a new instance of an artifacts bulider based on default implemenation
+    * Creates a new instance of an artifacts builder based on default implementation
     * 
     * @param coordinates A list of artifact coordinates in the format {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>},
     *        must not be {@code null} or empty.
