@@ -78,14 +78,14 @@ public class DependencyFilterUnitTestCase
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
             .addLibraries(Dependencies.use(MavenDependencies.class)
                   .loadPom("src/test/resources/dependency/pom.xml")
-                  .artifact("org.jboss.arquillian:arquillian-junit")
+                  .artifact("org.seleniumhq.selenium:selenium")
                   .resolve(new StrictFilter()));
 
       Map<ArchivePath, Node> map = war.getContent(JAR_FILTER);
 
       Assert.assertEquals("There is only one jar in the package", 1, map.size());
-      Assert.assertTrue("The artifact is packaged arquillian-junit:1.0.0-SNAPSHOT",
-            map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-junit-1.0.0-SNAPSHOT.jar")));
+      Assert.assertTrue("The artifact is packaged selenium:2.0b1",
+            map.containsKey(ArchivePaths.create("WEB-INF/lib/selenium-2.0b1.jar")));
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"));
 

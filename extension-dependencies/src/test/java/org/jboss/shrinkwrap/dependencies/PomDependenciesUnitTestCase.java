@@ -86,7 +86,8 @@ public class PomDependenciesUnitTestCase
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
             .addLibraries(Dependencies.use(MavenDependencies.class)
                            .loadPom("src/test/resources/dependency/pom.xml")
-                           .artifact("org.jboss.arquillian:arquillian-junit")
+                           .artifact("org.seleniumhq.selenium:selenium")
+                              .exclusions("org.seleniumhq.selenium:selenium-firefox-driver", "org.seleniumhq.selenium:selenium-chrome-driver", "org.seleniumhq.selenium:selenium-ie-driver")
                            .resolve());
 
       DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
