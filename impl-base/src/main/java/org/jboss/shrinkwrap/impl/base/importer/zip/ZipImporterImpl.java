@@ -141,6 +141,10 @@ public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipIm
    public ZipImporter importFrom(final File file) throws ArchiveImportException
    {
       Validate.notNull(file, "File must be specified");
+      if (file.isDirectory())
+      {
+         throw new IllegalArgumentException("File to import as ZIP must not be a directory: " + file.getAbsolutePath());
+      }
 
       final ZipFile zipFile;
       try

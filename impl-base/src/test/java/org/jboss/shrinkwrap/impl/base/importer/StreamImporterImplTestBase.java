@@ -117,6 +117,37 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>>
       // which it was created
       delegate.assertContent(archive, testFile);
    }
+   
+   /**
+    * Ensures an attempt to import a directory fails w/ 
+    * {@link IllegalArgumentException}
+    */
+   @Test
+   public void shouldNotBeAbleToImportDirectory() throws Exception
+   {
+      // Get the delegate
+      final ContentAssertionDelegateBase delegate = this.getDelegate();
+      assert delegate != null : "Delegate must be specified by implementations";
+      final File testDir = delegate.getExistingResource().getParentFile();
+
+      // Import
+      final Class<? extends StreamImporter<?>> importerClass = this.getImporterClass();
+      assert importerClass != null : "Importer class must be specified by implementations";
+      try
+      {
+         ShrinkWrap.create(importerClass, "test.jar").importFrom(testDir);
+      }
+      // Expected
+      catch (final IllegalArgumentException iae)
+      {
+         // Good
+         return;
+      }
+
+      Assert.fail("Should have received " + IllegalArgumentException.class.getSimpleName()
+            + " on attempt to import a dir");
+
+   }
 
    /**
     * Ensures that we may import an archive, add content to it, 

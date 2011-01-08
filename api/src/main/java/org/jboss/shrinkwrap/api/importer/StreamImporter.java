@@ -57,7 +57,7 @@ public interface StreamImporter<I extends StreamImporter<I>> extends Assignable
     * @param file the file to import
     * @return Archive of the imported Zip
     * @throws ArchiveImportException If an error occurred during the import process
-    * @throws IllegalArgumentException If no file is specified
+    * @throws IllegalArgumentException If no file is specified or if the file is a directory
     */
    I importFrom(File file) throws ArchiveImportException;
 }
