@@ -38,7 +38,7 @@ public interface ExplodedExporter extends Assignable
     * Exports provided archive as an exploded directory structure.
     * 
     * @param archive
-    * @param parentDirectory
+    * @param parentDirectory Must be a folder
     * @return File for exploded archive contents
     * @throws IllegalArgumentException if the archive or parent directory not valid
     * @throws ArchiveExportException if the export process fails

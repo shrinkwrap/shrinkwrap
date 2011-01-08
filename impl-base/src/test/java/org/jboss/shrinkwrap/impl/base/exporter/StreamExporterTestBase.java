@@ -208,6 +208,39 @@ public abstract class StreamExporterTestBase extends ExportTestBase
       // Roundtrip assertion
       this.ensureInExpectedForm(exported);
    }
+   
+   /**
+    * Ensures that we get an {@link IllegalArgumentException} if we attempt to
+    * export to a directory
+    * 
+    * @throws IOException
+    */
+   @Test
+   public void testExportToDirectoryFails() throws IOException
+   {
+      log.info("testExportToDirectoryFails");
+
+      // Get a temp directory for the test
+      File tempDirectory = createTempDirectory("testExportToFile");
+
+      // Get an archive instance
+      Archive<?> archive = createArchiveWithAssets();
+
+      // Export as File to a directory
+      try{
+         this.exportAsFile(archive, tempDirectory, true);
+      }
+      // Expected
+      catch(final IllegalArgumentException iae)
+      {
+         // Good
+         return;
+      }
+      
+      // Fail
+      Assert.fail("Should have encountered " + IllegalArgumentException.class.getSimpleName() + " exporting to a dir");
+
+   }
 
    /**
     * Test to make sure an archive can be exported to a {@link OutputStream} and all 

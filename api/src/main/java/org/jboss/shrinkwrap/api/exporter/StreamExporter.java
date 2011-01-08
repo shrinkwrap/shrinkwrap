@@ -62,7 +62,7 @@ public interface StreamExporter extends Assignable
     * specified {@link File} target.  If the target exists this call will
     * fail with {@link IllegalArgumentException}
     * 
-    * @param archive
+    * @param target
     * @throws IllegalArgumentException If the target is not specified
     * @throws FileExistsException If the target already exists 
     * @throws ArchiveExportException if the export process fails
@@ -75,8 +75,8 @@ public interface StreamExporter extends Assignable
     * flag is true, this call will allow the existing file to be overwritten, else
     * the invocation will fail with {@link IllegalArgumentException}
     * 
-    * @param archive
-    * @throws IllegalArgumentException If the target is not specified 
+    * @param target
+    * @throws IllegalArgumentException If the target is not specified or is a directory
     * @throws FileExistsException If the target both already exists and the overwrite flag is false
     * @throws ArchiveExportException if the export process fails
     */
