@@ -107,7 +107,7 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
    @Override
    protected ManifestContainer<WebArchive> getManifestContainer()
    {
-      throw new UnsupportedOperationException(WebArchive.class.getSimpleName() + " does not support manifest paths.");
+      return getArchive();
    }
 
    @Override
