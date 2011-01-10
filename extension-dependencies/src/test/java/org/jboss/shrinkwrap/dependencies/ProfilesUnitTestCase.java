@@ -40,12 +40,12 @@ public class ProfilesUnitTestCase
    public void testSettingsProfiles() throws DependencyException
    {
       File[] files = Dependencies.use(MavenDependencies.class)
-            .configureFrom("src/test/resources/profiles/settings.xml")
-            .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+            .configureFrom("target/settings/profiles/settings.xml")
+            .artifact("org.jboss.shrinkwrap.test:test-deps-c:1.0.0")
             .resolveAsFiles(new StrictFilter());
 
       Assert.assertEquals("There is only one jar in the package", 1, files.length);
-      Assert.assertEquals("The file is packaged arquillian-junit:1.0.0.Alpha4", "arquillian-junit-1.0.0.Alpha4.jar", files[0].getName());
+      Assert.assertEquals("The file is packaged as test-deps-c-1.0.0.jar", "test-deps-c-1.0.0.jar", files[0].getName());
    }
 
    /**
@@ -56,12 +56,12 @@ public class ProfilesUnitTestCase
    public void testSettingsProfiles2() throws DependencyException
    {
       File[] files = Dependencies.use(MavenDependencies.class)
-            .configureFrom("src/test/resources/profiles/settings2.xml")
-            .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+            .configureFrom("target/settings/profiles/settings2.xml")
+            .artifact("org.jboss.shrinkwrap.test:test-deps-c:1.0.0")
             .resolveAsFiles(new StrictFilter());
 
       Assert.assertEquals("There is only one jar in the package", 1, files.length);
-      Assert.assertEquals("The file is packaged arquillian-junit:1.0.0.Alpha4", "arquillian-junit-1.0.0.Alpha4.jar", files[0].getName());
+      Assert.assertEquals("The file is packaged as test-deps-c-1.0.0.jar", "test-deps-c-1.0.0.jar", files[0].getName());
    }
    
    /**
@@ -72,15 +72,15 @@ public class ProfilesUnitTestCase
    @Test
    public void testSystemPropertiesSettingsProfiles() throws DependencyException
    {
-      System.setProperty(MavenRepositorySettings.ALT_USER_SETTINGS_XML_LOCATION, "src/test/resources/profiles/settings3.xml");
+      System.setProperty(MavenRepositorySettings.ALT_USER_SETTINGS_XML_LOCATION, "target/settings/profiles/settings3.xml");
       System.setProperty(MavenRepositorySettings.ALT_LOCAL_REPOSITORY_LOCATION, "target/prop-profiles");
       
       File[] files = Dependencies
-            .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+            .artifact("org.jboss.shrinkwrap.test:test-deps-c:1.0.0")
             .resolveAsFiles(new StrictFilter());
 
       Assert.assertEquals("There is only one jar in the package", 1, files.length);
-      Assert.assertEquals("The file is packaged arquillian-junit:1.0.0.Alpha4", "arquillian-junit-1.0.0.Alpha4.jar", files[0].getName());
+      Assert.assertEquals("The file is packaged as test-deps-c-1.0.0.jar", "test-deps-c-1.0.0.jar", files[0].getName());      
    }
 
 }
