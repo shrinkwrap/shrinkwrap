@@ -131,17 +131,33 @@
             <version>2.4.3</version>
             <executions>
                <execution>
-                  <id>copy-pom-dep-resources</id>
+                  <id>copy-repository</id>
                   <phase>process-test-resources</phase>
                   <goals>
                      <goal>copy-resources</goal>
                   </goals>
                   <configuration>
-                     <outputDirectory>${basedir}/target/pom-dep-repository</outputDirectory>
+                     <outputDirectory>${basedir}/target/repository</outputDirectory>
                      <resources>
                         <resource>
-                           <directory>src/test/resources/pom-dep/repository</directory>
+                           <directory>${basedir}/src/test/resources/repository</directory>
                            <filtering>false</filtering>
+                        </resource>
+                     </resources>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>copy-settings</id>
+                  <phase>process-test-resources</phase>
+                  <goals>
+                     <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                     <outputDirectory>${basedir}/target/settings/profiles</outputDirectory>
+                     <resources>
+                        <resource>
+                           <directory>${basedir}/src/test/resources/profiles</directory>
+                           <filtering>true</filtering>
                         </resource>
                      </resources>
                   </configuration>
@@ -153,7 +169,7 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
                <includes>
-                  <include>org/jboss/shrinkwrap/dependencies/*UnitTestCase.class</include>
+                  <include>org/jboss/shrinkwrap/dependencies/Prof*UnitTestCase.class</include>
                </includes>
             </configuration>
          </plugin>

@@ -8,9 +8,9 @@
 
          <repositories>
             <repository>
-               <id>jboss-public-repository-group</id>
-               <name>JBoss Public Repository Group</name>
-               <url>http://repository.jboss.org/nexus/content/groups/public</url>
+               <id>test-repository</id>
+               <name>Test repository</name>
+               <url>file://${basedir}/target/repository</url>
                <layout>default</layout>
                <releases>
                   <enabled>true</enabled>
@@ -24,9 +24,9 @@
          </repositories>
          <pluginRepositories>
             <pluginRepository>
-               <id>jboss-public-repository-group</id>
-               <name>JBoss Public Repository Group</name>
-               <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+               <id>test-repository</id>
+               <name>Test repository</name>
+               <url>file://${basedir}/target/repository</url>
                <releases>
                   <enabled>true</enabled>
                </releases>
