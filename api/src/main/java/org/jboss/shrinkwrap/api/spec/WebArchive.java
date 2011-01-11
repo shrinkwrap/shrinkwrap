@@ -20,6 +20,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
+import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.api.container.WebContainer;
 
 /**
@@ -32,9 +33,10 @@ import org.jboss.shrinkwrap.api.container.WebContainer;
 public interface WebArchive
       extends
          Archive<WebArchive>,
-         ManifestContainer<WebArchive>,
          ClassContainer<WebArchive>,
          LibraryContainer<WebArchive>,
-         WebContainer<WebArchive>
+         WebContainer<WebArchive>,
+         ResourceContainer<WebArchive>,
+         ManifestContainer<WebArchive>
 {
 }

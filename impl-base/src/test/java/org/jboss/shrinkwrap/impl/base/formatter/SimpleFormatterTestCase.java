@@ -36,7 +36,8 @@ public class SimpleFormatterTestCase extends FormatterTestBase
    /**
     * The output expected of the formatter
     */
-   private static final String EXPECTED_OUTPUT = NAME_ARCHIVE + ": 2 assets";
+   /* ArchiveTestBase contains an anonymous innerclass which must be accounted for. */
+   private static final String EXPECTED_OUTPUT = NAME_ARCHIVE + ": 3 assets";
 
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||

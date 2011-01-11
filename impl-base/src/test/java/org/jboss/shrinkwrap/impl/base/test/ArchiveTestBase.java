@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.test;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.Validate;
@@ -320,6 +322,37 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       catch (IllegalArgumentException expectedException)
       {
       }
+   }
+   
+   @Test
+   public void testAddNamedAsset() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      final String testName = "check.properties";
+      final Asset testAsset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+      
+      
+      final NamedAsset namedAsset = new NamedAsset() {
+
+         @Override
+         public String getName()
+         {
+            return testName;
+         }
+
+         @Override
+         public InputStream openStream()
+         {
+            return testAsset.openStream();
+         }
+
+         
+      };
+      
+      archive.add(namedAsset);
+      
+      Assert.assertTrue("Asset should be placed on " + testName, archive.contains(testName));
+      
    }
 
    /**

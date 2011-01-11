@@ -19,6 +19,7 @@ package org.jboss.shrinkwrap.api;
 import java.util.Map;
 
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
@@ -98,6 +99,17 @@ public interface Archive<T extends Archive<T>> extends Assignable
    T add(Asset asset, String target, String name) throws IllegalArgumentException;
 
    /**
+    * Adds the asset encapsulated within the specified {@link NamedAsset} under the
+    * encapsulated name and target (directory)
+    * 
+    * @param namedAsset
+    * @return
+    * @throws IllegalArgumentException If either the target or asset is not specified 
+    * @throws IllegalArchivePathException If the target is invalid.
+    */
+   T add(NamedAsset namedAsset) throws IllegalArgumentException;
+   
+   /**
     * Adds the specified resource under the context denoted by the specified target
     * 
     * @param target
@@ -107,7 +119,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArchivePathException If the target is invalid.
     */
    T add(Asset asset, String target) throws IllegalArgumentException;
-
+   
    /**
     * Adds the specified directory.
     * 

@@ -45,6 +45,11 @@ public class ConvergedSipWebArchiveImpl
     * Path to the web inside of the Archive.
     */
    private static final ArchivePath PATH_WEB = ArchivePaths.create("WEB-INF");
+   
+   /**
+    * Path to the WEB-INF inside of the Archive.
+    */
+   private static final ArchivePath PATH_WEB_INF = ArchivePaths.create("WEB-INF");
 
    /**
     * Path to the resources inside of the Archive.
@@ -136,6 +141,16 @@ public class ConvergedSipWebArchiveImpl
    protected ArchivePath getWebPath()
    {
       return PATH_WEB;
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.container.WebContainerBase#getWebInfPath()
+    */
+   @Override
+   protected ArchivePath getWebInfPath()
+   {
+      return PATH_WEB_INF;
    }
    
 }

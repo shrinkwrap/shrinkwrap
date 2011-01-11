@@ -36,7 +36,9 @@ public class VerboseFormatterTestCase extends FormatterTestBase
    private static final String EXPECTED_OUTPUT = NAME_ARCHIVE
       + ":\n/org/\n/org/jboss/\n/org/jboss/shrinkwrap/\n/org/jboss/shrinkwrap/impl/\n/org/jboss/shrinkwrap/impl/base/\n"
       + "/org/jboss/shrinkwrap/impl/base/formatter/\n/org/jboss/shrinkwrap/impl/base/formatter/FormatterTestBase.class\n"
-      + "/org/jboss/shrinkwrap/impl/base/test/\n/org/jboss/shrinkwrap/impl/base/test/ArchiveTestBase.class";
+      + "/org/jboss/shrinkwrap/impl/base/test/\n/org/jboss/shrinkwrap/impl/base/test/ArchiveTestBase.class\n"
+      /* ArchiveTestBase contains an anonymous innerclass which must be accounted for. */
+      + "/org/jboss/shrinkwrap/impl/base/test/ArchiveTestBase$1.class";
 
    //-------------------------------------------------------------------------------------||
    // Required Implementations -----------------------------------------------------------||

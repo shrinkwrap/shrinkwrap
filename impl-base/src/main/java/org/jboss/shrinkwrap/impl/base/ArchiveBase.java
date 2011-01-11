@@ -32,6 +32,7 @@ import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
@@ -193,6 +194,21 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
       // Delegate
       return add(archiveAsset, contentPath);
    }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#add(NamedAsset))
+    */
+   @Override
+   public T add(NamedAsset namedAsset)
+   {
+      
+      Validate.notNull(namedAsset, "No named asset was specified");
+      
+      return add(namedAsset, namedAsset.getName());
+      
+   }
+   
 
    /**
     * {@inheritDoc}
