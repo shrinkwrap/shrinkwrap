@@ -22,7 +22,9 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.dependencies.impl.MavenDependencies;
+import org.jboss.shrinkwrap.dependencies.impl.MavenRepositorySettings;
 import org.jboss.shrinkwrap.dependencies.impl.filter.ScopeFilter;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -31,6 +33,11 @@ import org.junit.Test;
  */
 public class ExclusionsUnitTestCase
 {
+   @BeforeClass
+   public static void setRemoteRepository() {    
+      System.setProperty(MavenRepositorySettings.ALT_LOCAL_REPOSITORY_LOCATION, "target/the-other-repository");
+   }
+   
 
    /**
     * Tests exclusion of the artifacts
@@ -42,11 +49,11 @@ public class ExclusionsUnitTestCase
       String name = "exclusion";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .loadPom("pom.xml")
-                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
-                           .scope("test")
-                           .exclusion("org.jboss.arquillian:arquillian-api")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("target/poms/test-parent.xml")
+                           .artifact("org.jboss.shrinkwrap.test:test-dependency-test:jar:1.0.0")
+                           .scope("test")     
+                           .exclusion("org.jboss.shrinkwrap.test:test-deps-f")
                            .resolve(new ScopeFilter("test")));
 
       DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"), "test");
@@ -65,13 +72,12 @@ public class ExclusionsUnitTestCase
       String name = "exclusions";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .loadPom("pom.xml")
-                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("target/poms/test-parent.xml")
+                           .artifact("org.jboss.shrinkwrap.test:test-dependency-test:1.0.0")
                            .scope("test")
-                           .exclusions("org.jboss.arquillian:arquillian-api", "org.jboss.arquillian:arquillian-spi")
+                           .exclusions("org.jboss.shrinkwrap.test:test-deps-f", "org.jboss.shrinkwrap.test:test-deps-g")
                            .resolve(new ScopeFilter("test")));
-
       
       DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"), "test");
       desc.validateArchive(war).results();

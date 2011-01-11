@@ -6,6 +6,7 @@ package org.jboss.shrinkwrap.dependencies.util;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +45,7 @@ public class JarGenerator
             { "test-managed-dependency-2", new Class<?>[] { List.class}},
             { "test-dependency", new Class<?>[] { Arrays.class }},
             { "test-dependency-with-exclusion", new Class<?>[] { Collections.class}},
-            { "test-exclusion", new Class<?>[] { ArrayList.class, LinkedList.class}},
+            { "test-exclusion", new Class<?>[] { ArrayList.class, LinkedList.class}},            
             { "test-dependency-provided", new Class<?>[] { List.class, Map.class}},
             { "test-dependency-test", new Class<?>[] { ArrayList.class, HashMap.class}},
             { "test-parent", new Class<?>[] { File.class }},
@@ -53,7 +54,12 @@ public class JarGenerator
             { "test-deps-a", new Class<?>[] {System.class }},
             { "test-deps-b", new Class<?>[] {Field.class }},
             { "test-deps-c", new Class<?>[] {Integer.class }},
-            { "test-deps-c-2", new Class<?>[] {Integer.class, Long.class }},
+            { "test-deps-d", new Class<?>[] {Float.class, Double.class }},
+            { "test-deps-e", new Class<?>[] {String.class, StringBuilder.class }},
+            { "test-deps-f", new Class<?>[] {Thread.class }},
+            { "test-deps-g", new Class<?>[] {Object.class, String.class }},
+            { "test-deps-h", new Class<?>[] {Character.class, Byte.class }},
+            { "test-deps-i", new Class<?>[] {System.class, PrintStream.class }},
       };
 
       return Arrays.asList(data);

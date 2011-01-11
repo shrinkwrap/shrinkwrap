@@ -29,8 +29,7 @@ import org.junit.Test;
  * 
  */
 public class ArtifactDependenciesUnitTestCase
-{
-
+{   
    /**
     * Tests a resolution of an artifact from central with custom settings
     * @throws DependencyException
@@ -41,16 +40,19 @@ public class ArtifactDependenciesUnitTestCase
       String name = "pomBasedArtifact";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                                      .configureFrom("src/test/resources/pom-dep/settings.xml")
-                                      .artifact("org.jboss.shrinkwrap:shrinkwrap-dependencies-pom-dep:pom:1.0.0")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                                      .configureFrom("target/settings/profiles/settings.xml")
+                                      .artifact("org.jboss.shrinkwrap.test:test-parent:pom:1.0.0") 
                                       .resolve());
 
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
+      // only default and compile scoped artifacts are resolved
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-parent.tree"), "compile");
       desc.validateArchive(war).results();
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
    }
+   
+   
 
    
 }

@@ -22,6 +22,8 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.dependencies.impl.MavenDependencies;
+import org.jboss.shrinkwrap.dependencies.impl.MavenRepositorySettings;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -30,6 +32,11 @@ import org.junit.Test;
  */
 public class PomDependenciesUnitTestCase
 {
+   @BeforeClass
+   public static void setRemoteRepository() {    
+      System.setProperty(MavenRepositorySettings.ALT_LOCAL_REPOSITORY_LOCATION, "target/the-other-repository");
+   }
+   
    /**
     * Tests loading of a POM file with parent not available on local file system
     * @throws DependencyException
@@ -40,12 +47,12 @@ public class PomDependenciesUnitTestCase
       String name = "parentPomRepositories";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .loadPom("pom.xml")
-                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("target/poms/test-child.xml")
+                           .artifact("org.jboss.shrinkwrap.test:test-child:1.0.0")
                            .resolve());
 
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-child.tree"), "compile");
       desc.validateArchive(war).results();
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
@@ -62,12 +69,12 @@ public class PomDependenciesUnitTestCase
       String name = "parentPomRemoteRepositories";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .loadPom("src/test/resources/child/pom.xml")
-                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("target/poms/test-remote-child.xml")
+                           .artifact("org.jboss.shrinkwrap.test:test-deps-c:1.0.0")
                            .resolve());
 
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-deps-c.tree"));
       desc.validateArchive(war).results();
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
@@ -84,13 +91,12 @@ public class PomDependenciesUnitTestCase
       String name = "artifactVersionRetrievalFromPom";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .loadPom("src/test/resources/dependency/pom.xml")
-                           .artifact("org.seleniumhq.selenium:selenium")
-                              .exclusions("org.seleniumhq.selenium:selenium-firefox-driver", "org.seleniumhq.selenium:selenium-chrome-driver", "org.seleniumhq.selenium:selenium-ie-driver")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("target/poms/test-remote-child.xml")
+                           .artifact("org.jboss.shrinkwrap.test:test-deps-c")
                            .resolve());
 
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-deps-c.tree"));
       desc.validateArchive(war).results();
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
@@ -107,12 +113,12 @@ public class PomDependenciesUnitTestCase
       String name = "artifactVersionRetrievalFromPomOverride";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .loadPom("src/test/resources/dependency/pom.xml")
-                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("target/poms/test-remote-child.xml")
+                           .artifact("org.jboss.shrinkwrap.test:test-deps-c:2.0.0")
                            .resolve());
 
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-deps-c-2.tree"));
       desc.validateArchive(war).results();
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
@@ -129,10 +135,10 @@ public class PomDependenciesUnitTestCase
       String name = "pomBasedDependencies";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .resolveFrom("src/test/resources/dependency/pom.xml"));
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .resolveFrom("target/poms/test-child.xml"));
 
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-child.tree"));
       desc.validateArchive(war).results();
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
@@ -149,10 +155,10 @@ public class PomDependenciesUnitTestCase
       String name = "pomRemoteBasedDependencies";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .resolveFrom("pom.xml"));
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .resolveFrom("target/poms/test-remote-child.xml"));
 
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-remote-child.tree"));
       desc.validateArchive(war).results();
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);

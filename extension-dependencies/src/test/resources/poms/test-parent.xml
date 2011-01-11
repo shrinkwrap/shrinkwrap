@@ -28,7 +28,7 @@
       </dependency>
       <dependency>
          <groupId>org.jboss.shrinkwrap.test</groupId>
-         <artifactId>test-dependency-with-exclude</artifactId>
+         <artifactId>test-dependency-with-exclusion</artifactId>
          <version>1.0.0</version>
          <exclusions>
             <exclusion>
@@ -54,7 +54,22 @@
 
    </dependencies>
 
-
+   <repositories>
+      <repository>
+         <id>test-repository</id>
+         <name>Test repository</name>
+         <url>file://${basedir}/target/repository</url>
+         <layout>default</layout>
+         <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+         </releases>
+         <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+         </snapshots>
+      </repository>
+   </repositories>
 
    <build>
    </build>

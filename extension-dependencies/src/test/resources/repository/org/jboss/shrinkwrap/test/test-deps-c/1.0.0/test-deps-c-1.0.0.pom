@@ -13,9 +13,8 @@
    <dependencies>
       <dependency>
          <groupId>org.jboss.shrinkwrap.test</groupId>
-         <artifactId>test-dependency-test</artifactId>
+         <artifactId>test-deps-b</artifactId>
          <version>1.0.0</version>
-         <scope>test</scope>
       </dependency>
    </dependencies>
 

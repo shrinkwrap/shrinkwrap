@@ -17,17 +17,10 @@
    <packaging>jar</packaging>
 
    <dependencies>
-
       <dependency>
          <groupId>org.jboss.shrinkwrap.test</groupId>
          <artifactId>test-managed-dependency</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.jboss.shrinkwrap.test</groupId>
-         <artifactId>test-dependency</artifactId>
-         <version>1.0.0</version>
-      </dependency>
+      </dependency>      
    </dependencies>
 
    <build>

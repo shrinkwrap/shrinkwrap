@@ -22,6 +22,8 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.dependencies.impl.MavenDependencies;
+import org.jboss.shrinkwrap.dependencies.impl.MavenRepositorySettings;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -32,24 +34,29 @@ import org.junit.Test;
  */
 public class DependenciesUnitTestCase
 {
-
+   @BeforeClass
+   public static void setRemoteRepository() {
+      System.setProperty(MavenRepositorySettings.ALT_USER_SETTINGS_XML_LOCATION, "target/settings/profiles/settings.xml");
+      System.setProperty(MavenRepositorySettings.ALT_LOCAL_REPOSITORY_LOCATION, "target/the-other-repository");
+   }
+   
+   
    // -------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
    // -------------------------------------------------------------------------------------||
 
    /**
-    * Tests that artifact is cannot be packaged, but is is resolved right
+    * Tests that artifact is cannot be packaged, but is is resolved right.
+    * This test is not executed but shows that some jars cannot be packaged
     */
-   @Test(expected = org.jboss.shrinkwrap.api.importer.ArchiveImportException.class)
+   //@Test(expected = org.jboss.shrinkwrap.api.importer.ArchiveImportException.class)
+   //@Ignore
    public void testSimpleResolutionWrongArtifact() throws DependencyException
    {
       String name = "simpleResolutionWrongArtifact";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.artifact("org.apache.maven.plugins:maven-compiler-plugin:2.3.2").resolve());
-
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
-      desc.validateArchive(war).results();
+            .addAsLibraries(Dependencies.artifact("org.apache.maven.plugins:maven-compiler-plugin:2.3.2").resolve());
 
       // it will fail here
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
@@ -65,10 +72,10 @@ public class DependenciesUnitTestCase
       String name = "simpleResolution";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.artifact("org.apache.maven.plugins:maven-help-plugin:2.1.1")
+            .addAsLibraries(Dependencies.artifact("org.jboss.shrinkwrap.test:test-deps-c:1.0.0")
                                       .resolve());
 
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-deps-c.tree"));
       desc.validateArchive(war).results();
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
@@ -84,12 +91,12 @@ public class DependenciesUnitTestCase
       String name = "simpleResolutionWithCustomSettings";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                                      .configureFrom("src/test/resources/custom-settings.xml")
-                                      .artifact("org.apache.maven.plugins:maven-help-plugin:2.1.1")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                                      .configureFrom("target/settings/profiles/settings.xml")
+                                      .artifact("org.jboss.shrinkwrap.test:test-deps-c:1.0.0")
                                       .resolve());
 
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-deps-c.tree"));
       desc.validateArchive(war).results();
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
@@ -106,9 +113,9 @@ public class DependenciesUnitTestCase
 
       // this should fail
       ShrinkWrap.create(WebArchive.class, "testSimpleResolutionWithCustomSettings.war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
                                       .configureFrom("src/test/invalid/custom-settings.xml")
-                                      .artifact("org.apache.maven.plugins:maven-help-plugin:2.1.1")
+                                      .artifact("org.jboss.shrinkwrap.test:test-deps-c:1.0.0")
                                       .resolve());
 
    }
@@ -123,11 +130,11 @@ public class DependenciesUnitTestCase
       String name = "multipleResolution";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.artifact("org.apache.maven.plugins:maven-help-plugin:2.1.1")
-                                      .artifact("org.apache.maven.plugins:maven-patch-plugin:1.1.1")
+            .addAsLibraries(Dependencies.artifact("org.jboss.shrinkwrap.test:test-deps-c:1.0.0")
+                                      .artifact("org.jboss.shrinkwrap.test:test-deps-g:1.0.0")
                                       .resolve());
 
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-deps-c+g.tree"));
       desc.validateArchive(war).results();
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
@@ -144,11 +151,11 @@ public class DependenciesUnitTestCase
       String name = "multipleResolutionSingleCall";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.artifacts("org.apache.maven.plugins:maven-help-plugin:2.1.1",
-                                               "org.apache.maven.plugins:maven-patch-plugin:1.1.1")
+            .addAsLibraries(Dependencies.artifacts("org.jboss.shrinkwrap.test:test-deps-c:1.0.0",
+                                                 "org.jboss.shrinkwrap.test:test-deps-g:1.0.0")
                                       .resolve());
 
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/multipleResolution.tree"));
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-deps-c+g.tree"));
       desc.validateArchive(war).results();
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
@@ -165,12 +172,12 @@ public class DependenciesUnitTestCase
       String name = "customDependencies";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                                      .artifact("org.apache.maven.plugins:maven-help-plugin:2.1.1")
-                                      .artifact("org.apache.maven.plugins:maven-patch-plugin:1.1.1")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                                      .artifact("org.jboss.shrinkwrap.test:test-deps-c:1.0.0")
+                                      .artifact("org.jboss.shrinkwrap.test:test-deps-g:1.0.0")
                                       .resolve());
 
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-deps-c+g.tree"));
       desc.validateArchive(war).results();
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);

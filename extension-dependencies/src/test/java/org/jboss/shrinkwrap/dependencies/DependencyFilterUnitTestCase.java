@@ -29,9 +29,11 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.dependencies.impl.MavenDependencies;
+import org.jboss.shrinkwrap.dependencies.impl.MavenRepositorySettings;
 import org.jboss.shrinkwrap.dependencies.impl.filter.CombinedFilter;
 import org.jboss.shrinkwrap.dependencies.impl.filter.ScopeFilter;
 import org.jboss.shrinkwrap.dependencies.impl.filter.StrictFilter;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -40,6 +42,11 @@ import org.junit.Test;
  */
 public class DependencyFilterUnitTestCase
 {
+   @BeforeClass
+   public static void setRemoteRepository() {    
+      System.setProperty(MavenRepositorySettings.ALT_LOCAL_REPOSITORY_LOCATION, "target/the-other-repository");
+   }
+   
    /**
     * Tests that only directly defined artifacts are added to dependencies
     * @throws DependencyException
@@ -50,16 +57,16 @@ public class DependencyFilterUnitTestCase
       String name = "strictFilter";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .loadPom("pom.xml")
-                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("target/poms/test-child.xml")
+                           .artifact("org.jboss.shrinkwrap.test:test-child:1.0.0")
                            .resolve(new StrictFilter()));
 
       Map<ArchivePath, Node> map = war.getContent(JAR_FILTER);
 
       Assert.assertEquals("There is only one jar in the package", 1, map.size());
-      Assert.assertTrue("The artifact is packaged arquillian-junit:1.0.0.Alpha4",
-            map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-junit-1.0.0.Alpha4.jar")));
+      Assert.assertTrue("The artifact is packaged as test-child:1.0.0",
+            map.containsKey(ArchivePaths.create("WEB-INF/lib/test-child-1.0.0.jar")));
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
 
@@ -76,16 +83,16 @@ public class DependencyFilterUnitTestCase
       String name = "strictFilterInferredVersion";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                  .loadPom("src/test/resources/dependency/pom.xml")
-                  .artifact("org.seleniumhq.selenium:selenium")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                  .loadPom("target/poms/test-remote-child.xml")
+                  .artifact("org.jboss.shrinkwrap.test:test-deps-c")
                   .resolve(new StrictFilter()));
 
       Map<ArchivePath, Node> map = war.getContent(JAR_FILTER);
 
       Assert.assertEquals("There is only one jar in the package", 1, map.size());
-      Assert.assertTrue("The artifact is packaged selenium:2.0b1",
-            map.containsKey(ArchivePaths.create("WEB-INF/lib/selenium-2.0b1.jar")));
+      Assert.assertTrue("The artifact is packaged as test-deps-c:1.0.0",
+            map.containsKey(ArchivePaths.create("WEB-INF/lib/test-deps-c-1.0.0.jar")));
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
 
@@ -101,16 +108,16 @@ public class DependencyFilterUnitTestCase
       String name = "defaultScopeFilter";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .loadPom("pom.xml")
-                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("target/poms/test-remote-child.xml")
+                           .artifact("org.jboss.shrinkwrap.test:test-remote-child:1.0.0")                                 
                            .resolve(new ScopeFilter()));
 
       Map<ArchivePath, Node> map = war.getContent(JAR_FILTER);
 
-      Assert.assertEquals("There is only one jar in the package", 1, map.size());
-      Assert.assertTrue("The artifact is packaged arquillian-junit:1.0.0.Alpha4",
-            map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-junit-1.0.0.Alpha4.jar")));
+      Assert.assertEquals("There is one jar in the package", 1, map.size());
+      Assert.assertTrue("The artifact is packaged as test-remote-child:1.0.0",
+            map.containsKey(ArchivePaths.create("WEB-INF/lib/test-remote-child-1.0.0.jar")));
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
    }
@@ -120,20 +127,23 @@ public class DependencyFilterUnitTestCase
     * @throws DependencyException
     */
    @Test
-   public void testTestScopeFilter() throws DependencyException
+   public void testRuntimeScopeFilter() throws DependencyException
    {
-      String name = "testScopeFilter";
+      String name = "runtimeScopeFilter";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .loadPom("pom.xml")
-                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
-                           .scope("test")
-                           .resolve(new ScopeFilter("test")));
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("target/poms/test-parent.xml")
+                           .artifact("org.jboss.shrinkwrap.test:test-dependency:1.0.0")                           
+                           .resolve(new ScopeFilter("runtime")));
 
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/artifactVersionRetrievalFromPomOverride.tree"), "test");
-      desc.validateArchive(war).results();
+      Map<ArchivePath, Node> map = war.getContent(JAR_FILTER);
 
+      Assert.assertEquals("There is one jar in the package", 1, map.size());
+      Assert.assertTrue("The artifact is packaged as test-deps-b:1.0.0",
+            map.containsKey(ArchivePaths.create("WEB-INF/lib/test-deps-b-1.0.0.jar")));
+      
+      
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
    }
 
@@ -147,20 +157,20 @@ public class DependencyFilterUnitTestCase
       String name = "testCombinedScopeFilter";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .loadPom("pom.xml")
-                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("target/poms/test-parent.xml")
+                           .artifact("org.jboss.shrinkwrap.test:test-dependency-test:1.0.0")
                            .scope("test")
-                           .artifact("org.jboss.arquillian:arquillian-testng:1.0.0.Alpha4")
+                           .artifact("org.jboss.shrinkwrap.test:test-dependency:1.0.0")
                            .resolve(new CombinedFilter(new ScopeFilter("", "test"), new StrictFilter())));
 
       Map<ArchivePath, Node> map = war.getContent(JAR_FILTER);
 
       Assert.assertEquals("There are two jars in the package", 2, map.size());
-      Assert.assertTrue("The artifact is packaged arquillian-junit:1.0.0.Alpha4",
-            map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-junit-1.0.0.Alpha4.jar")));
-      Assert.assertTrue("The artifact is packaged arquillian-testng:1.0.0.Alpha4",
-            map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-testng-1.0.0.Alpha4.jar")));
+      Assert.assertTrue("The artifact is packaged as org.jboss.shrinkwrapt.test:test-dependency-test:1.0.0",
+            map.containsKey(ArchivePaths.create("WEB-INF/lib/test-dependency-test-1.0.0.jar")));
+      Assert.assertTrue("The artifact is packaged as org.jboss.shrinkwrapt.test:test-dependency:1.0.0",
+            map.containsKey(ArchivePaths.create("WEB-INF/lib/test-dependency-1.0.0.jar")));
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
    }
@@ -175,19 +185,19 @@ public class DependencyFilterUnitTestCase
       String name = "testCombinedScopeFilter2";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .loadPom("pom.xml")
-                           .artifacts("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4", "org.jboss.arquillian:arquillian-testng:1.0.0.Alpha4")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("target/poms/test-parent.xml")
+                           .artifacts("org.jboss.shrinkwrap.test:test-dependency-test:1.0.0", "org.jboss.shrinkwrap.test:test-dependency:1.0.0")
                            .scope("test")
                            .resolve(new CombinedFilter(new ScopeFilter("test"), new StrictFilter())));
 
       Map<ArchivePath, Node> map = war.getContent(JAR_FILTER);
 
       Assert.assertEquals("There are two jars in the package", 2, map.size());
-      Assert.assertTrue("The artifact is packaged arquillian-junit:1.0.0.Alpha4",
-            map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-junit-1.0.0.Alpha4.jar")));
-      Assert.assertTrue("The artifact is packaged arquillian-testng:1.0.0.Alpha4",
-            map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-testng-1.0.0.Alpha4.jar")));
+      Assert.assertTrue("The artifact is packaged as org.jboss.shrinkwrapt.test:test-dependency-test:1.0.0",
+            map.containsKey(ArchivePaths.create("WEB-INF/lib/test-dependency-test-1.0.0.jar")));
+      Assert.assertTrue("The artifact is packaged as org.jboss.shrinkwrapt.test:test-dependency:1.0.0",
+            map.containsKey(ArchivePaths.create("WEB-INF/lib/test-dependency-1.0.0.jar")));
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
    }
@@ -202,19 +212,19 @@ public class DependencyFilterUnitTestCase
       String name = "testCombinedScopeFilter3";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .loadPom("pom.xml")
-                           .artifact("org.jboss.arquillian:arquillian-junit:1.0.0.Alpha4")
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .loadPom("target/poms/test-parent.xml")
+                           .artifact("org.jboss.shrinkwrap.test:test-dependency-test:1.0.0")
                            .scope("test")
-                           .artifact("org.jboss.arquillian:arquillian-testng:1.0.0.Alpha4")
+                           .artifact("org.jboss.shrinkwrap.test:test-dependency:1.0.0")
                            .scope("provided")
                            .resolve(new CombinedFilter(new ScopeFilter("provided"), new StrictFilter())));
 
       Map<ArchivePath, Node> map = war.getContent(JAR_FILTER);
 
       Assert.assertEquals("There is one jar in the package", 1, map.size());
-      Assert.assertTrue("The artifact is packaged arquillian-testng:1.0.0.Alpha4",
-            map.containsKey(ArchivePaths.create("WEB-INF/lib/arquillian-testng-1.0.0.Alpha4.jar")));
+      Assert.assertTrue("The artifact is packaged as org.jboss.shrinkwrap.test:test-dependency:1.0.0",
+            map.containsKey(ArchivePaths.create("WEB-INF/lib/test-dependency-1.0.0.jar")));
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);
    }
@@ -229,10 +239,10 @@ public class DependencyFilterUnitTestCase
       String name = "pomBasedDependenciesWithScope";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
-            .addLibraries(Dependencies.use(MavenDependencies.class)
-                           .resolveFrom("src/test/resources/dependency/pom.xml", new ScopeFilter("test")));
+            .addAsLibraries(Dependencies.use(MavenDependencies.class)
+                           .resolveFrom("target/poms/test-child.xml", new ScopeFilter("test")));
 
-      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/pomBasedDependencies.tree"), "test");
+      DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-child.tree"), "test");
       desc.validateArchive(war).results();
 
       war.as(ZipExporter.class).exportTo(new File("target/" + name + ".war"), true);

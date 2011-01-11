@@ -10,6 +10,24 @@
    <version>1.0.0</version>
    <packaging>jar</packaging>
 
+   <dependencies>
+      <dependency>
+         <groupId>org.jboss.shrinkwrap.test</groupId>
+         <artifactId>test-deps-d</artifactId>
+         <version>1.0.0</version>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.shrinkwrap.test</groupId>
+         <artifactId>test-deps-f</artifactId>
+         <version>1.0.0</version>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.shrinkwrap.test</groupId>
+         <artifactId>test-deps-g</artifactId>
+         <version>1.0.0</version>
+      </dependency>
+   </dependencies>
+
    <build>
    </build>
 

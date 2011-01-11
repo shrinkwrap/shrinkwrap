@@ -22,6 +22,8 @@ import junit.framework.Assert;
 
 import org.jboss.shrinkwrap.dependencies.impl.MavenDependencies;
 import org.jboss.shrinkwrap.dependencies.impl.MavenDependencyFilterWrap;
+import org.jboss.shrinkwrap.dependencies.impl.MavenRepositorySettings;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -32,7 +34,12 @@ import org.junit.Test;
  */
 public class MiscUnitTestCase
 {
-
+   @BeforeClass
+   public static void setRemoteRepository() {
+      System.setProperty(MavenRepositorySettings.ALT_USER_SETTINGS_XML_LOCATION, "target/settings/profiles/settings.xml");
+      System.setProperty(MavenRepositorySettings.ALT_LOCAL_REPOSITORY_LOCATION, "target/the-other-repository");
+   }
+   
    /**
     * Tests chaining
     * @throws DependencyException
@@ -43,8 +50,6 @@ public class MiscUnitTestCase
 
       MavenDependencies deps = Dependencies.use(MavenDependencies.class);
 
-      // this shows an problem of the api...there is no simple way to define
-      // artifacts object and call resolution later
       deps.artifacts("org.apache.maven.plugins:maven-help-plugin:2.1.1",
                      "org.apache.maven.plugins:maven-compiler-plugin:2.3.2")
                   .artifact("org.apache.maven.plugins:maven-patch-plugin:1.1.1")                  
@@ -65,10 +70,10 @@ public class MiscUnitTestCase
    {
       String name = "customDependencies";
 
-      File[] files = Dependencies.use(MavenDependencies.class)
-                                      .artifact("org.apache.maven.plugins:maven-help-plugin:2.1.1")
-                                      .artifact("org.apache.maven.plugins:maven-patch-plugin:1.1.1")
-                                      .resolveAsFiles();
+      File[] files = Dependencies
+                        .artifact("org.jboss.shrinkwrap.test:test-deps-a:1.0.0")
+                        .artifact("org.jboss.shrinkwrap.test:test-deps-c:1.0.0")
+                        .resolveAsFiles();
 
       DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/" + name + ".tree"));
       desc.validateFiles(files).results();
