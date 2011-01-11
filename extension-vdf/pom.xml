@@ -32,7 +32,7 @@
     <version.jboss.logging>2.2.0.CR1</version.jboss.logging>
     <version.org.jboss.logmanager>1.2.0.CR1</version.org.jboss.logmanager>
     <version.org.jboss.threads>2.0.0.CR4</version.org.jboss.threads>
-    <version.org.jboss.reloaded.vdf.bootstrap.minimal>0.1.2</version.org.jboss.reloaded.vdf.bootstrap.minimal>
+    <version.org.jboss.reloaded.vdf.bootstrap.minimal>0.1.4</version.org.jboss.reloaded.vdf.bootstrap.minimal>
 
   </properties>
 
