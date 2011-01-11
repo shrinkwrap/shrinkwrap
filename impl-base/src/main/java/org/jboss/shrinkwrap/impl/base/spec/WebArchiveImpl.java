@@ -42,7 +42,7 @@ public class WebArchiveImpl extends WebContainerBase<WebArchive> implements WebA
    /**
     * Path to the web inside of the Archive.
     */
-   private static final ArchivePath PATH_WEB = ArchivePaths.create("WEB-INF");
+   private static final ArchivePath PATH_WEB = ArchivePaths.root();
 
    /**
     * Path to the WEB-INF inside of the Archive.
@@ -52,17 +52,17 @@ public class WebArchiveImpl extends WebContainerBase<WebArchive> implements WebA
    /**
     * Path to the resources inside of the Archive.
     */
-   private static final ArchivePath PATH_RESOURCE = ArchivePaths.create("/");
+   private static final ArchivePath PATH_RESOURCE = ArchivePaths.create(PATH_WEB_INF, "classes");
 
    /**
     * Path to the libraries inside of the Archive.
     */
-   private static final ArchivePath PATH_LIBRARY = ArchivePaths.create(PATH_WEB, "lib");
+   private static final ArchivePath PATH_LIBRARY = ArchivePaths.create(PATH_WEB_INF, "lib");
 
    /**
     * Path to the classes inside of the Archive.
     */
-   private static final ArchivePath PATH_CLASSES = ArchivePaths.create(PATH_WEB, "classes");
+   private static final ArchivePath PATH_CLASSES = ArchivePaths.create(PATH_WEB_INF, "classes");
 
    /**
     * Path to the manifests inside of the Archive.

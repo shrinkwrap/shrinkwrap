@@ -114,7 +114,7 @@ public abstract class WebContainerBase<T extends Archive<T>> extends ContainerBa
    public T setWebXML(Asset resource) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource should be specified");
-      return addAsWebResource(resource, "web.xml");
+      return addAsWebInfResource(resource, "web.xml");
    }
 
    /* (non-Javadoc)

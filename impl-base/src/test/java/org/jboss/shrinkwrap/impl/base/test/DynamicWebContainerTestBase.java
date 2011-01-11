@@ -36,6 +36,7 @@ import org.junit.Test;
 public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends DynamicContainerTestBase<T>
 {
    public abstract ArchivePath getWebPath();
+   public abstract ArchivePath getWebInfPath();
    public abstract WebContainer<T> getWebContainer();
    
    //-------------------------------------------------------------------------------------||
@@ -47,7 +48,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
    public void testSetWebXMLResource() throws Exception {
       getWebContainer().setWebXML(NAME_TEST_PROPERTIES);
       
-      ArchivePath testPath = new BasicPath(getWebPath(), "web.xml");
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "web.xml");
       Assert.assertTrue(
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
@@ -58,7 +59,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
    public void testSetWebXMLFile() throws Exception {
       getWebContainer().setWebXML(getFileForClassResource(NAME_TEST_PROPERTIES));
       
-      ArchivePath testPath = new BasicPath(getWebPath(), "web.xml");
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "web.xml");
       Assert.assertTrue(
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
@@ -69,7 +70,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
    public void testSetWebXMLURL() throws Exception {
       getWebContainer().setWebXML(getURLForClassResource(NAME_TEST_PROPERTIES));
       
-      ArchivePath testPath = new BasicPath(getWebPath(), "web.xml");
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "web.xml");
       Assert.assertTrue(
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
@@ -80,7 +81,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
    public void testSetWebXMLAsset() throws Exception {
       getWebContainer().setWebXML(getAssetForClassResource(NAME_TEST_PROPERTIES));
       
-      ArchivePath testPath = new BasicPath(getWebPath(), "web.xml");
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "web.xml");
       Assert.assertTrue(
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
@@ -256,5 +257,162 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
       Assert.assertTrue(
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
+   }
+   
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourceResource() throws Exception
+   {
+      getWebContainer().addAsWebInfResource(NAME_TEST_PROPERTIES);
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.properties");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourceFile() throws Exception
+   {
+      getWebContainer().addAsWebInfResource(getFileForClassResource(NAME_TEST_PROPERTIES));
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.properties");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourceURL() throws Exception
+   {
+      ArchivePath targetPath = new BasicPath("Test.properties");
+      getWebContainer().addAsWebInfResource(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
+      ArchivePath testPath = new BasicPath(getWebInfPath(), targetPath);
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourceStringTargetResource() throws Exception
+   {
+      getWebContainer().addAsWebInfResource(NAME_TEST_PROPERTIES, "Test.txt");
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourceStringTargetFile() throws Exception
+   {
+      getWebContainer().addAsWebInfResource(getFileForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourceStringTargetURL() throws Exception
+   {
+      getWebContainer().addAsWebInfResource(getURLForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourceStringTargetAsset() throws Exception
+   {
+      getWebContainer().addAsWebInfResource(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourcePathTargetResource() throws Exception
+   {
+      getWebContainer().addAsWebInfResource(NAME_TEST_PROPERTIES, new BasicPath("Test.txt"));
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourcePathTargetFile() throws Exception
+   {
+      getWebContainer().addAsWebInfResource(getFileForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourcePathTargetURL() throws Exception
+   {
+      getWebContainer().addAsWebInfResource(getURLForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourcePathTargetAsset() throws Exception
+   {
+      getWebContainer().addAsWebInfResource(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourcePackage() throws Exception
+   {
+      getWebContainer().addAsWebInfResource(AssetUtil.class.getPackage(), "Test.properties");
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), NAME_TEST_PROPERTIES);
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourcePackages() throws Exception
+   {
+      getWebContainer().addAsWebInfResources(AssetUtil.class.getPackage(), "Test.properties", "Test2.properties");
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), NAME_TEST_PROPERTIES);
+      ArchivePath testPath2 = new BasicPath(getWebInfPath(), NAME_TEST_PROPERTIES_2);
+
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+      Assert.assertTrue("Archive should contain " + testPath2, getArchive().contains(testPath2));
+   }
+
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourcePackageStringTarget() throws Exception
+   {
+
+      getWebContainer().addAsWebInfResource(AssetUtil.class.getPackage(), "Test.properties", "Test.txt");
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfResourcePackagePathTarget() throws Exception
+   {
+
+      ArchivePath targetPath = ArchivePaths.create("Test.txt");
+
+      getWebContainer().addAsWebInfResource(AssetUtil.class.getPackage(), "Test.properties", targetPath);
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), targetPath);
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
    }
 }

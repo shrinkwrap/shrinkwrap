@@ -133,8 +133,7 @@ public class JettyDeploymentIntegrationUnitTestCase
       server = new Server(HTTP_BIND_PORT);
 
       final WebArchive archive = ShrinkWrap.create(WebArchive.class, NAME_WAR);
-      final ArchivePath targetPathWebXml = ArchivePaths.create("web.xml");
-      archive.addAsWebResource(PATH_ACTUAL_WEB_XML, targetPathWebXml).addClasses(forwardingServletClass, echoServletClass);
+      archive.setWebXML(PATH_ACTUAL_WEB_XML).addClasses(forwardingServletClass, echoServletClass);
       log.info(archive.toString(true));
 
       // Deploy

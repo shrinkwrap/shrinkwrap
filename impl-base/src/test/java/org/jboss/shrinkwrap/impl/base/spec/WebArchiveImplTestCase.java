@@ -48,6 +48,8 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
+   private static final ArchivePath PATH_WEB = ArchivePaths.root();
+
    private static final ArchivePath PATH_WEBINF = ArchivePaths.create("WEB-INF");
 
    private static final ArchivePath PATH_LIBRARY = ArchivePaths.create(PATH_WEBINF, "lib");
@@ -56,7 +58,7 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
 
    private static final ArchivePath PATH_MANIFEST = ArchivePaths.create(PATH_CLASSES, "META-INF");
 
-   private static final ArchivePath PATH_RESOURCE = ArchivePaths.root();;
+   private static final ArchivePath PATH_RESOURCE = ArchivePaths.create(PATH_WEBINF, "classes");
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -162,8 +164,22 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
       return getArchive();
    }
 
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.test.DynamicWebContainerTestBase#getWebPath()
+    */
    @Override
    public ArchivePath getWebPath()
+   {
+      return PATH_WEB;
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.test.DynamicWebContainerTestBase#getWebInfPath()
+    */
+   @Override
+   public ArchivePath getWebInfPath()
    {
       return PATH_WEBINF;
    }

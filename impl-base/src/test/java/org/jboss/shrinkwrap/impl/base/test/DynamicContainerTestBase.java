@@ -891,7 +891,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
    @Test
    @ArchiveType(LibraryContainer.class)
-   public void testAddLibriesResource() throws Exception {
+   public void testAddLibrariesResource() throws Exception {
       getLibraryContainer().addAsLibraries(NAME_TEST_PROPERTIES, NAME_TEST_PROPERTIES_2);
       
       ArchivePath testPath = new BasicPath(getLibraryPath(), NAME_TEST_PROPERTIES);
@@ -906,7 +906,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
    @Test
    @ArchiveType(LibraryContainer.class)
-   public void testAddLibriesFile() throws Exception {
+   public void testAddLibrariesFile() throws Exception {
       getLibraryContainer().addAsLibraries(
             getFileForClassResource(NAME_TEST_PROPERTIES), 
             getFileForClassResource(NAME_TEST_PROPERTIES_2));
