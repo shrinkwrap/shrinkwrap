@@ -170,7 +170,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    @Override
    public T add(NamedAsset namedAsset)
    {
-      this.archive.add(namedAsset);
+      this.getArchive().add(namedAsset);
       return covarientReturn();
       
    }
