@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.test;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -331,7 +332,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       final Asset testAsset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       
       
-      NamedAsset namedAsset = new NamedAsset() {
+      final NamedAsset namedAsset = new NamedAsset() {
 
          @Override
          public String getName()
@@ -340,10 +341,11 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
          }
 
          @Override
-         public Asset getAsset()
+         public InputStream openStream()
          {
-            return testAsset;
+            return testAsset.openStream();
          }
+
          
       };
       

@@ -203,9 +203,9 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
    public T add(NamedAsset namedAsset)
    {
       
-      Validate.notNull(namedAsset, "No pluggable named asset was specified");
+      Validate.notNull(namedAsset, "No named asset was specified");
       
-      return add(namedAsset.getAsset(), namedAsset.getName());
+      return add(namedAsset, namedAsset.getName());
       
    }
    
