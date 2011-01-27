@@ -177,7 +177,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, java.lang.String)
     */
    @Override
-   public <X extends Archive<?>> X getAsType(Class<X> type, String path)
+   public <X extends Archive<X>> X getAsType(Class<X> type, String path)
    {
       Validate.notNull(path, "Path must be specified");
       return getAsType(type, ArchivePaths.create(path));
@@ -188,7 +188,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.Filter)
     */
    @Override
-   public <X extends Archive<?>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter)
+   public <X extends Archive<X>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter)
    {
       Validate.notNull(type, "Type must be specified");
       Validate.notNull(filter, "Filter must be specified");
@@ -208,7 +208,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
-   public <X extends Archive<?>> X getAsType(Class<X> type, ArchivePath path)
+   public <X extends Archive<X>> X getAsType(Class<X> type, ArchivePath path)
    {
       Validate.notNull(type, "Type must be specified");
       Validate.notNull(path, "ArchivePath must be specified");

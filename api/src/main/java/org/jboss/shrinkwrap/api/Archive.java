@@ -194,7 +194,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @see Archive#add(Archive, ArchivePath, Class)
     * @see Archive#add(Archive, String, Class) 
     */
-   <X extends Archive<?>> X getAsType(Class<X> type, String path);
+   <X extends Archive<X>> X getAsType(Class<X> type, String path);
    
    /**
     * Get a nested {@link Archive} as a specific type.<br/><br/>
@@ -209,7 +209,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @see Archive#add(Archive, ArchivePath, Class)
     * @see Archive#add(Archive, String, Class) 
     */
-   <X extends Archive<?>> X getAsType(Class<X> type, ArchivePath path);
+   <X extends Archive<X>> X getAsType(Class<X> type, ArchivePath path);
    
    /**
     * Get all nested {@link Archive} matching the filter as a specific type.<br/><br/>
@@ -225,7 +225,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @see Archive#add(Archive, ArchivePath, Class)
     * @see Archive#add(Archive, String, Class) 
     */
-   <X extends Archive<?>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter);
+   <X extends Archive<X>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter);
    
    /**
     * Denotes whether this archive contains a resource at the specified
