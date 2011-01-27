@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.impl.base.test;
 
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 
 import junit.framework.Assert;
@@ -27,6 +28,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Filters;
+import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.IllegalArchivePathException;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -525,6 +527,72 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       {
       }
    }
+
+   /**
+    * Ensure we can get a added Archive as a specific type
+    * @throws Exception
+    */
+   @Test
+   public void testGetAsTypeString() throws Exception
+   {
+      Archive<?> archive = getArchive();
+      GenericArchive child = ShrinkWrap.create(GenericArchive.class);
+      archive.add(child, "/", ZipExporter.class);
+      
+      GenericArchive found = archive.get(GenericArchive.class, child.getName());
+      
+      Assert.assertNotNull(found);
+   }
+
+   /**
+    * Ensure we can get a added Archive as a specific type
+    * @throws Exception
+    */
+   @Test
+   public void testGetAsTypeArchivePath() throws Exception
+   {
+      Archive<?> archive = getArchive();
+      GenericArchive child = ShrinkWrap.create(GenericArchive.class);
+      archive.add(child, "/", ZipExporter.class);
+      
+      GenericArchive found = archive.get(GenericArchive.class, ArchivePaths.create(child.getName()));
+      
+      Assert.assertNotNull(found);
+   }
+   
+   /**
+    * Ensure we can get a added Archive as a specific type
+    * @throws Exception
+    */
+   @Test
+   public void testGetAsTypeWithFilter() throws Exception
+   {
+      GenericArchive child1 = ShrinkWrap.create(GenericArchive.class);
+      GenericArchive child2 = ShrinkWrap.create(GenericArchive.class);
+      // Create one not to be found by filter.
+      GenericArchive child3 = ShrinkWrap.create(GenericArchive.class, "SHOULD_NOT_BE_FOUND.xxx");
+      
+      Archive<?> archive = getArchive()
+         .add(child1, "/", ZipExporter.class)
+         .add(child2, "/", ZipExporter.class)
+         .add(child3, "/", ZipExporter.class);
+      
+      Collection<GenericArchive> matches = archive.get(GenericArchive.class, Filters.include(".*\\.jar"));
+      
+      Assert.assertNotNull(matches);
+      Assert.assertEquals(
+            "Two archives should be found", 
+            2, matches.size());
+      
+      for(GenericArchive match : matches)
+      {
+         if(!match.getName().equals(child1.getName()) && !match.getName().equals(child2.getName()))
+         {
+            Assert.fail("Wrong archive found, " + match.getName() + ". Expected " + child1.getName() + " or " + child2.getName());
+         }
+      }
+   }
+
 
    /**
     * Ensure get content returns the correct map of content

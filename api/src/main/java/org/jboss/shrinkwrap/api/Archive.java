@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import java.util.Collection;
 import java.util.Map;
 
 import org.jboss.shrinkwrap.api.asset.Asset;
@@ -178,6 +179,54 @@ public interface Archive<T extends Archive<T>> extends Assignable
     */
    Node get(String path) throws IllegalArgumentException;
 
+
+   /**
+    * Get a nested {@link Archive} as a specific type.<br/><br/>
+    * 
+    * The found Archives must have been added as a Archive, no import is performed. 
+    * 
+    * @param <X>
+    * @param type The Type to return the Archive as
+    * @param path The location of the Archive
+    * @return The found Archive as given type or null if none found at given path
+    * @throws IllegalArgumentException if found {@link Asset} is not pointing to a {@link Archive}
+    * @see Archive#get(Class, ArchivePath)
+    * @see Archive#add(Archive, ArchivePath, Class)
+    * @see Archive#add(Archive, String, Class) 
+    */
+   <X extends Archive<?>> X get(Class<X> type, String path);
+   
+   /**
+    * Get a nested {@link Archive} as a specific type.<br/><br/>
+    * 
+    * The found Archives  must have been added as a Archive, no import is performed. 
+    * 
+    * @param <X>
+    * @param type The Type to return the Archive as
+    * @param path The location of the Archive
+    * @return The found Archive as given type or null if none found at given {@link ArchivePath}
+    * @throws IllegalArgumentException if found {@link Asset} is not pointing to a {@link Archive}
+    * @see Archive#add(Archive, ArchivePath, Class)
+    * @see Archive#add(Archive, String, Class) 
+    */
+   <X extends Archive<?>> X get(Class<X> type, ArchivePath path);
+   
+   /**
+    * Get all nested {@link Archive} matching the filter as a specific type.<br/><br/>
+    * 
+    * The found Archives must have been added as a Archive, no import is performed. 
+    * 
+    * @param <X>
+    * @param type The Type to return the Archive as
+    * @param filter Filter to match result
+    * @return A {@link Collection} of found Archives matching given filter or empty {@link Collection} if non found.
+    * @throws IllegalArgumentException if found {@link Asset} is not pointing to a {@link Archive}
+    * @see Archive#get(Class, ArchivePath)
+    * @see Archive#add(Archive, ArchivePath, Class)
+    * @see Archive#add(Archive, String, Class) 
+    */
+   <X extends Archive<?>> Collection<X> get(Class<X> type, Filter<ArchivePath> filter);
+   
    /**
     * Denotes whether this archive contains a resource at the specified
     * path
