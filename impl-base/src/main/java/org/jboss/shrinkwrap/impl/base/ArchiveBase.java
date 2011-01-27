@@ -174,21 +174,21 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#get(java.lang.Class, java.lang.String)
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, java.lang.String)
     */
    @Override
-   public <X extends Archive<?>> X get(Class<X> type, String path)
+   public <X extends Archive<?>> X getAsType(Class<X> type, String path)
    {
       Validate.notNull(path, "Path must be specified");
-      return get(type, ArchivePaths.create(path));
+      return getAsType(type, ArchivePaths.create(path));
    }
    
    /**
     * {@inheritDoc} 
-    * @see org.jboss.shrinkwrap.api.Archive#get(java.lang.Class, org.jboss.shrinkwrap.api.Filter)
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.Filter)
     */
    @Override
-   public <X extends Archive<?>> Collection<X> get(Class<X> type, Filter<ArchivePath> filter)
+   public <X extends Archive<?>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter)
    {
       Validate.notNull(type, "Type must be specified");
       Validate.notNull(filter, "Filter must be specified");
@@ -198,17 +198,17 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
       Map<ArchivePath, Node> matches = getContent(filter);
       for(ArchivePath path : matches.keySet())
       {
-         archives.add(get(type, path));
+         archives.add(getAsType(type, path));
       }
       return archives;
    }
    
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#get(java.lang.Class, org.jboss.shrinkwrap.api.ArchivePath)
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
-   public <X extends Archive<?>> X get(Class<X> type, ArchivePath path)
+   public <X extends Archive<?>> X getAsType(Class<X> type, ArchivePath path)
    {
       Validate.notNull(type, "Type must be specified");
       Validate.notNull(path, "ArchivePath must be specified");

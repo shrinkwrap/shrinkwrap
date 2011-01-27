@@ -539,7 +539,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       GenericArchive child = ShrinkWrap.create(GenericArchive.class);
       archive.add(child, "/", ZipExporter.class);
       
-      GenericArchive found = archive.get(GenericArchive.class, child.getName());
+      GenericArchive found = archive.getAsType(GenericArchive.class, child.getName());
       
       Assert.assertNotNull(found);
    }
@@ -555,7 +555,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       GenericArchive child = ShrinkWrap.create(GenericArchive.class);
       archive.add(child, "/", ZipExporter.class);
       
-      GenericArchive found = archive.get(GenericArchive.class, ArchivePaths.create(child.getName()));
+      GenericArchive found = archive.getAsType(GenericArchive.class, ArchivePaths.create(child.getName()));
       
       Assert.assertNotNull(found);
    }
@@ -577,7 +577,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
          .add(child2, "/", ZipExporter.class)
          .add(child3, "/", ZipExporter.class);
       
-      Collection<GenericArchive> matches = archive.get(GenericArchive.class, Filters.include(".*\\.jar"));
+      Collection<GenericArchive> matches = archive.getAsType(GenericArchive.class, Filters.include(".*\\.jar"));
       
       Assert.assertNotNull(matches);
       Assert.assertEquals(
