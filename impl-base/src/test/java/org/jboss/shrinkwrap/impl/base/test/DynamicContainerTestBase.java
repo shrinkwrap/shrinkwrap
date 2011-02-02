@@ -790,6 +790,36 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             getArchive().contains(notExpectedPath));
    }
    
+   /**
+    * Ensure a package as a String can be added to a container with filter
+    * 
+    * @throws Exception
+    */
+   @Test
+   @ArchiveType(ClassContainer.class)
+   public void testShouldExcludeOnlySelectedPackages() throws Exception 
+   {
+      getClassContainer().addPackages(
+            true,
+            Filters.exclude(EmptyClassForFiltersTest.class.getPackage()),
+            DynamicContainerTestBase.class.getPackage().getName()
+           );
+      
+      ArchivePath notExpectedPath = new BasicPath(
+            getClassPath(), AssetUtil.getFullPathForClassResource(EmptyClassForFiltersTest.class));
+
+      ArchivePath expectedPath = new BasicPath(
+            getClassPath(), AssetUtil.getFullPathForClassResource(DynamicContainerTestBase.class));
+      
+      Assert.assertTrue(
+            "A class should be located at " + expectedPath.get(), 
+            getArchive().contains(expectedPath));
+      
+      Assert.assertFalse(
+            "Located unexpected class at " + notExpectedPath.get(), 
+            getArchive().contains(notExpectedPath));
+   }
+   
    @Test
    @ArchiveType(ClassContainer.class)
    public void shouldIncludeOnlySelectedClasses() throws Exception

@@ -89,12 +89,29 @@ public final class Filters
    }
    
    /**
-    * {@link Filter} that includes listed {@link Class}.
+    * {@link Filter} that includes listed {@link Package}.
     * 
-    * @param classes To be included
+    * @param packages To be included
+    * @return 
+    */
+   public static Filter<ArchivePath> exclude(Package... packages)
+   {
+      return createFilterThat(EXCLUDE_REGEXP_PATHS, packages);
+   }
+
+   /**
+    * {@link Filter} that excludes listed {@link Package}.
+    * 
+    * @param packages To be excluded
     * @return 
     */
    public static Filter<ArchivePath> include(Package... packages)
+   {
+      return createFilterThat(INCLUDE_REGEXP_PATHS, packages);
+   }
+   
+   @SuppressWarnings("unchecked")
+   private static Filter<ArchivePath> createFilterThat(String regExp, Package... packages)
    {
       StringBuilder classExpression = new StringBuilder();
       for (Package pack : packages)
@@ -105,7 +122,7 @@ public final class Filters
       classExpression.deleteCharAt(0);
 
       return SecurityActions.newInstance(
-            INCLUDE_REGEXP_PATHS
+            regExp
             , new Class<?>[]{String.class}
             , new Object[]{classExpression.toString()}
             , Filter.class);
