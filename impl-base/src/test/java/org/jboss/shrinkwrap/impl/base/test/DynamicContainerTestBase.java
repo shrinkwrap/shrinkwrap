@@ -784,6 +784,30 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             "A class should be located at " + expectedPath2.get(), 
             getArchive().contains(expectedPath2));
    }
+   
+   @Test
+   @ArchiveType(ClassContainer.class)
+   public void shouldExcludeOnlySelectedClasses() throws Exception
+   {
+      getClassContainer().addPackages(
+            true, 
+            Filters.exclude(DynamicContainerTestBase.class, ArchiveType.class),
+            DynamicContainerTestBase.class.getPackage().getName());
+      
+      ArchivePath notExpectedPath = new BasicPath(
+            getClassPath(), AssetUtil.getFullPathForClassResource(DynamicContainerTestBase.class));
+      
+      ArchivePath notExpectedPath2 = new BasicPath(
+            getClassPath(), AssetUtil.getFullPathForClassResource(ArchiveType.class));
+
+      Assert.assertFalse(
+            "Archive should not contain " + notExpectedPath.get(), 
+            getArchive().contains(notExpectedPath));
+      
+      Assert.assertFalse(
+            "Archive should not contain " + notExpectedPath2.get(), 
+            getArchive().contains(notExpectedPath2));
+   }
 
    //-------------------------------------------------------------------------------------||
    // Test Implementations - LibraryContainer ----------------------------------------------||

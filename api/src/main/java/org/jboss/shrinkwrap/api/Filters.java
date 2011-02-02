@@ -94,8 +94,24 @@ public final class Filters
     * @param classes To be included
     * @return 
     */
-   @SuppressWarnings("unchecked")
    public static Filter<ArchivePath> include(Class<?>... classes)
+   {
+      return createFilterThat(INCLUDE_REGEXP_PATHS, classes);
+   }
+   
+   /**
+    * {@link Filter} that excludes a specific {@link Class}.
+    * 
+    * @param classes To be excluded
+    * @return 
+    */
+   public static Filter<ArchivePath> exclude(Class<?>... classes)
+   {
+      return createFilterThat(EXCLUDE_REGEXP_PATHS, classes);
+   }
+
+   @SuppressWarnings("unchecked")
+   private static Filter<ArchivePath> createFilterThat(String regExpPath, Class<?>... classes)
    {
       StringBuilder classExpression = new StringBuilder();
       for (Class<?> clazz : classes)
@@ -105,9 +121,11 @@ public final class Filters
       }
       classExpression.deleteCharAt(0);
 
-      return SecurityActions.newInstance(INCLUDE_REGEXP_PATHS, new Class<?>[]
-      {String.class}, new Object[]
-      {classExpression.toString()}, Filter.class);
+      return SecurityActions.newInstance(
+            regExpPath
+            , new Class<?>[]{String.class}
+            , new Object[]{classExpression.toString()}
+            , Filter.class);
    }
    
    //-------------------------------------------------------------------------------------||
