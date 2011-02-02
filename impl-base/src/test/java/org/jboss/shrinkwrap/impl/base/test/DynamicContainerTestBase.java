@@ -37,6 +37,7 @@ import org.jboss.shrinkwrap.impl.base.spec.donotchange.DummyClassA;
 import org.jboss.shrinkwrap.impl.base.spec.donotchange.DummyClassParent;
 import org.jboss.shrinkwrap.impl.base.test.dummy.DummyClassForTest;
 import org.jboss.shrinkwrap.impl.base.test.dummy.DummyInterfaceForTest;
+import org.jboss.shrinkwrap.impl.base.test.dummy.nested.EmptyClassForFiltersTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -752,6 +753,41 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       Assert.assertTrue(
             "A class should be located at " + expectedPath.get(), 
             getArchive().contains(expectedPath));
+   }
+   
+   /**
+    * Ensure a package as a String can be added to a container with filter
+    * 
+    * @throws Exception
+    */
+   @Test
+   @ArchiveType(ClassContainer.class)
+   public void testShouldIcludeOnlySelectedPackages() throws Exception 
+   {
+      getClassContainer().addPackages(
+            true, 
+            Filters.include(EmptyClassForFiltersTest.class.getPackage()),
+            DynamicContainerTestBase.class.getPackage().getName()
+           );
+      
+      ArchivePath expectedPath = new BasicPath(
+            getClassPath(), AssetUtil.getFullPathForClassResource(EmptyClassForFiltersTest.class));
+
+      ArchivePath notExpectedPath = new BasicPath(
+            getClassPath(), AssetUtil.getFullPathForClassResource(DynamicContainerTestBase.class));
+      
+      Assert.assertEquals(
+            "Should only include selected classes",
+            1,
+            numAssets(getArchive()));
+      
+      Assert.assertTrue(
+            "A class should be located at " + expectedPath.get(), 
+            getArchive().contains(expectedPath));
+      
+      Assert.assertFalse(
+            "Located unexpected class at " + notExpectedPath.get(), 
+            getArchive().contains(notExpectedPath));
    }
    
    @Test
