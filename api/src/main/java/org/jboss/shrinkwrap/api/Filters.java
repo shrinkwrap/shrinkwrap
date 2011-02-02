@@ -89,7 +89,30 @@ public final class Filters
    }
    
    /**
-    * {@link Filter} that includes a specific {@link Class}.
+    * {@link Filter} that includes listed {@link Class}.
+    * 
+    * @param classes To be included
+    * @return 
+    */
+   public static Filter<ArchivePath> include(Package... packages)
+   {
+      StringBuilder classExpression = new StringBuilder();
+      for (Package pack : packages)
+      {
+         classExpression.append("|");
+         classExpression.append("(.*" + pack.getName().replaceAll("\\.", "\\.") + ".*)");
+      }
+      classExpression.deleteCharAt(0);
+
+      return SecurityActions.newInstance(
+            INCLUDE_REGEXP_PATHS
+            , new Class<?>[]{String.class}
+            , new Object[]{classExpression.toString()}
+            , Filter.class);
+   }
+   
+   /**
+    * {@link Filter} that includes listed {@link Class}.
     * 
     * @param classes To be included
     * @return 
@@ -100,7 +123,7 @@ public final class Filters
    }
    
    /**
-    * {@link Filter} that excludes a specific {@link Class}.
+    * {@link Filter} that excludes listed {@link Class}.
     * 
     * @param classes To be excluded
     * @return 
