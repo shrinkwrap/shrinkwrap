@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,9 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
+import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
+import org.jboss.shrinkwrap.impl.base.path.BasicPath;
+import org.jboss.shrinkwrap.impl.base.test.DynamicContainerTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -85,7 +89,7 @@ public class FiltersTestCase
             ArchivePaths.create("/WEB-INF/"),
             filteredPaths.get(0));
    }
-
+   
    private <T> List<T> executeFilter(Class<T> clazz, List<T> items, Filter<T> filter) 
    {
       List<T> result = new ArrayList<T>();

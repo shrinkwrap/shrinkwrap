@@ -91,19 +91,23 @@ public final class Filters
    /**
     * {@link Filter} that includes a specific {@link Class}.
     * 
-    * @param clazz To be included
+    * @param classes To be included
     * @return 
     */
    @SuppressWarnings("unchecked")
-   public static Filter<ArchivePath> include(Class<?> clazz)
+   public static Filter<ArchivePath> include(Class<?>... classes)
    {
-      String classExpression = ".*" + clazz.getName().replaceAll("\\.", "\\.") + "\\.class";
-      
-      return SecurityActions.newInstance(
-            INCLUDE_REGEXP_PATHS, 
-            new Class<?>[]{String.class}, 
-            new Object[]{ classExpression }, 
-            Filter.class);
+      StringBuilder classExpression = new StringBuilder();
+      for (Class<?> clazz : classes)
+      {
+         classExpression.append("|");
+         classExpression.append("(.*" + clazz.getName().replaceAll("\\.", "\\.") + "\\.class)");
+      }
+      classExpression.deleteCharAt(0);
+
+      return SecurityActions.newInstance(INCLUDE_REGEXP_PATHS, new Class<?>[]
+      {String.class}, new Object[]
+      {classExpression.toString()}, Filter.class);
    }
    
    //-------------------------------------------------------------------------------------||
