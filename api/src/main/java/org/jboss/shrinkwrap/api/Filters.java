@@ -96,7 +96,7 @@ public final class Filters
     */
    public static Filter<ArchivePath> exclude(Package... packages)
    {
-      return createFilterThat(EXCLUDE_REGEXP_PATHS, packages);
+      return createRegExpFilter(EXCLUDE_REGEXP_PATHS, packages);
    }
 
    /**
@@ -107,11 +107,11 @@ public final class Filters
     */
    public static Filter<ArchivePath> include(Package... packages)
    {
-      return createFilterThat(INCLUDE_REGEXP_PATHS, packages);
+      return createRegExpFilter(INCLUDE_REGEXP_PATHS, packages);
    }
    
    @SuppressWarnings("unchecked")
-   private static Filter<ArchivePath> createFilterThat(String regExp, Package... packages)
+   private static Filter<ArchivePath> createRegExpFilter(String regExp, Package... packages)
    {
       StringBuilder classExpression = new StringBuilder();
       for (Package pack : packages)
@@ -136,7 +136,7 @@ public final class Filters
     */
    public static Filter<ArchivePath> include(Class<?>... classes)
    {
-      return createFilterThat(INCLUDE_REGEXP_PATHS, classes);
+      return createRegExpFilter(INCLUDE_REGEXP_PATHS, classes);
    }
    
    /**
@@ -147,11 +147,11 @@ public final class Filters
     */
    public static Filter<ArchivePath> exclude(Class<?>... classes)
    {
-      return createFilterThat(EXCLUDE_REGEXP_PATHS, classes);
+      return createRegExpFilter(EXCLUDE_REGEXP_PATHS, classes);
    }
 
    @SuppressWarnings("unchecked")
-   private static Filter<ArchivePath> createFilterThat(String regExpPath, Class<?>... classes)
+   private static Filter<ArchivePath> createRegExpFilter(String regExpPath, Class<?>... classes)
    {
       StringBuilder classExpression = new StringBuilder();
       for (Class<?> clazz : classes)
