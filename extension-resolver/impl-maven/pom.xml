@@ -3,19 +3,19 @@
 
    <!-- Parent -->
    <parent>
-      <groupId>org.jboss.shrinkwrap</groupId>
-      <artifactId>shrinkwrap-build</artifactId>
+      <groupId>org.jboss.shrinkwrap.resolver</groupId>
+      <artifactId>shrinkwrap-resolver-parent</artifactId>
       <version>1.0.0-alpha-12-SNAPSHOT</version>
-      <relativePath>../build/pom.xml</relativePath>
+      <relativePath>../pom.xml</relativePath>
    </parent>
 
    <!-- Model Version -->
    <modelVersion>4.0.0</modelVersion>
 
    <!-- Artifact Configuration -->
-   <artifactId>shrinkwrap-extension-dependencies</artifactId>
-   <name>ShrinkWrap Extension Dependencies</name>
-   <description>ShrinkWrap Extension for the resolving dependencies</description>
+   <artifactId>shrinkwrap-resolver-maven-impl</artifactId>
+   <name>ShrinkWrap Resolver Maven Implementation</name>
+   <description>ShrinkWrap Extension for Resolving Dependencies from a Maven backend</description>
 
 
    <!-- Properties -->
@@ -31,12 +31,17 @@
    <!-- Dependencies -->
    <dependencies>
 
-      <!-- 
+    <!-- 
     org.jboss.shrinkwrap    
      -->
       <dependency>
          <groupId>org.jboss.shrinkwrap</groupId>
          <artifactId>shrinkwrap-api</artifactId>
+         <version>${project.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.shrinkwrap.resolver</groupId>
+         <artifactId>shrinkwrap-resolver-api-maven</artifactId>
          <version>${project.version}</version>
       </dependency>
       <dependency>
