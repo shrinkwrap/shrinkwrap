@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.test.dummy.nested;
+package org.jboss.shrinkwrap.impl.base.test.dummy.nested1;
 
 /**
  * EmptyClass used to test package filtering.
@@ -22,7 +22,7 @@ package org.jboss.shrinkwrap.impl.base.test.dummy.nested;
  * @author "Davide D'Alto"
  *
  */
-public class EmptyClassForFiltersTest
+public class EmptyClassForFiltersTest1
 {
 
 }
