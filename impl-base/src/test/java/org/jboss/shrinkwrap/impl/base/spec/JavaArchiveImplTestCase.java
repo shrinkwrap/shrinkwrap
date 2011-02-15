@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
-import java.util.UUID;
-
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
@@ -91,7 +89,7 @@ public class JavaArchiveImplTestCase extends DynamicContainerTestBase<JavaArchiv
    @Override
    protected JavaArchive createNewArchive()
    {
-      return ShrinkWrap.create(JavaArchive.class, UUID.randomUUID().toString() + ".jar");
+      return ShrinkWrap.create(JavaArchive.class);
    }
 
    //-------------------------------------------------------------------------------------||

@@ -20,6 +20,7 @@ import java.io.File;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Collection;
 import java.util.Map;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -346,6 +347,36 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public Node get(String path) throws IllegalArgumentException
    {
       return this.getArchive().get(path);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, java.lang.String)
+    */
+   @Override
+   public <X extends Archive<X>> X getAsType(Class<X> type, String path)
+   {
+      return this.getArchive().getAsType(type, path);
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.ArchivePath)
+    */
+   @Override
+   public <X extends Archive<X>> X getAsType(Class<X> type, ArchivePath path)
+   {
+      return this.getArchive().getAsType(type, path);
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.Filter)
+    */
+   @Override
+   public <X extends Archive<X>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter)
+   {
+      return this.getArchive().getAsType(type, filter);
    }
    
    /**

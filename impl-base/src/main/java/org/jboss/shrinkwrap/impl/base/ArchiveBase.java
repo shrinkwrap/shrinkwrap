@@ -174,6 +174,66 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
    /**
     * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, java.lang.String)
+    */
+   @Override
+   public <X extends Archive<X>> X getAsType(Class<X> type, String path)
+   {
+      Validate.notNull(path, "Path must be specified");
+      return getAsType(type, ArchivePaths.create(path));
+   }
+   
+   /**
+    * {@inheritDoc} 
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.Filter)
+    */
+   @Override
+   public <X extends Archive<X>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter)
+   {
+      Validate.notNull(type, "Type must be specified");
+      Validate.notNull(filter, "Filter must be specified");
+      
+      Collection<X> archives = new ArrayList<X>();
+      
+      Map<ArchivePath, Node> matches = getContent(filter);
+      for(ArchivePath path : matches.keySet())
+      {
+         archives.add(getAsType(type, path));
+      }
+      return archives;
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.ArchivePath)
+    */
+   @Override
+   public <X extends Archive<X>> X getAsType(Class<X> type, ArchivePath path)
+   {
+      Validate.notNull(type, "Type must be specified");
+      Validate.notNull(path, "ArchivePath must be specified");
+      
+      Node content = get(path);
+      if(content == null)
+      {
+         return null;
+      }
+      Asset asset = content.getAsset();
+      if(asset == null)
+      {
+         return null;
+      }
+      
+      if(asset instanceof ArchiveAsset)
+      {
+         ArchiveAsset archiveAsset = (ArchiveAsset) asset;
+         return archiveAsset.getArchive().as(type);
+      }
+      throw new IllegalArgumentException("Found content does not contain a Archive, " + asset);
+   }
+
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.ArchivePath, java.lang.Class)
     */
    @Override

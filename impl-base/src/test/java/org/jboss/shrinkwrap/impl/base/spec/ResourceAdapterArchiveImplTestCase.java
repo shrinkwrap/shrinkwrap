@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
-import java.util.UUID;
-
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
@@ -96,7 +94,7 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
    @Override
    protected ResourceAdapterArchive createNewArchive()
    {
-      return ShrinkWrap.create(ResourceAdapterArchive.class, UUID.randomUUID().toString() + ".jar");
+      return ShrinkWrap.create(ResourceAdapterArchive.class);
    }
 
    //-------------------------------------------------------------------------------------||
