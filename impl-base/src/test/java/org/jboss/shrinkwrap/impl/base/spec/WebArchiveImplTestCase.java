@@ -54,7 +54,7 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
 
    private static final ArchivePath PATH_CLASSES = ArchivePaths.create(PATH_WEBINF, "classes");
 
-   private static final ArchivePath PATH_MANIFEST = ArchivePaths.create(PATH_CLASSES, "META-INF");
+   private static final ArchivePath PATH_MANIFEST = ArchivePaths.create("META-INF");
 
    private static final ArchivePath PATH_RESOURCE = ArchivePaths.create(PATH_WEBINF, "classes");
 

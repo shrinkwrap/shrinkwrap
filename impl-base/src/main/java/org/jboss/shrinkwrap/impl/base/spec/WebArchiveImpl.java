@@ -67,7 +67,7 @@ public class WebArchiveImpl extends WebContainerBase<WebArchive> implements WebA
    /**
     * Path to the manifests inside of the Archive.
     */
-   private static final ArchivePath PATH_MANIFEST = ArchivePaths.create(PATH_CLASSES, "META-INF");
+   private static final ArchivePath PATH_MANIFEST = ArchivePaths.create("META-INF");
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
