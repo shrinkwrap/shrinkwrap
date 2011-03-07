@@ -18,6 +18,8 @@ package org.jboss.shrinkwrap.impl.base.test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import junit.framework.Assert;
 
@@ -928,6 +930,27 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       Archive<?> archive2 = createNewArchive();
 
       getLibraryContainer().addAsLibraries(archive, archive2);
+      
+      ArchivePath testPath = new BasicPath(getLibraryPath(), archive.getName());
+      ArchivePath testPath2 = new BasicPath(getLibraryPath(), archive.getName());
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+      Assert.assertTrue(
+            "Archive should contain " + testPath2,
+            getArchive().contains(testPath2));
+   }
+   
+   @Test
+   @ArchiveType(LibraryContainer.class)
+   public void testAddLibrariesArchiveCollection() throws Exception {
+      Archive<?> archive = createNewArchive();
+      Archive<?> archive2 = createNewArchive();
+      final Collection<Archive<?>> archives = new ArrayList<Archive<?>>();
+      archives.add(archive);
+      archives.add(archive2);
+
+      getLibraryContainer().addAsLibraries(archives);
       
       ArchivePath testPath = new BasicPath(getLibraryPath(), archive.getName());
       ArchivePath testPath2 = new BasicPath(getLibraryPath(), archive.getName());

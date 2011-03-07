@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.api.container;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collection;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
@@ -216,4 +217,16 @@ public interface LibraryContainer<T extends Archive<T>>
     * @see #addAsLibrary(Archive)
     */
    T addAsLibraries(Archive<?>... archives) throws IllegalArgumentException;
+   
+   /**
+    * Add multiple {@link Archive}s to this {@link Archive} as libraries to the container, returning the container itself.
+    * <br/>
+    * The {@link Archive}s will be placed into the Container Library path under {@link Archive#getName()}.
+    *  
+    * @param archive {@link Archive} resources to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if {@link Collection} of archives is null
+    * @see #addAsLibrary(Archive)
+    */
+   T addAsLibraries(Collection<? extends Archive<?>> archives) throws IllegalArgumentException;
 }

@@ -83,6 +83,8 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       }
    }
    
+   private static final Archive<?>[] CAST = new Archive[]{};
+   
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -1283,11 +1285,22 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public T addAsLibraries(Archive<?>... archives) throws IllegalArgumentException 
    {
       Validate.notNull(archives, "Archives must be specified");
-      for(Archive<?> archive : archives) 
+      for(final Archive<?> archive : archives) 
       {
          addAsLibrary(archive);
       }
       return covarientReturn();
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addAsLibraries(java.util.Collection)
+    */
+   @Override
+   public T addAsLibraries(final Collection<? extends Archive<?>> archives) throws IllegalArgumentException
+   {
+      Validate.notNull(archives, "Archives must be specified");
+      return this.addAsLibraries(archives.toArray(CAST));
    }
    
    //-------------------------------------------------------------------------------------||
