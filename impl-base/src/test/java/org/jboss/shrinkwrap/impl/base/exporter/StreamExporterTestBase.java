@@ -16,6 +16,8 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,11 +39,14 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ConfigurationBuilder;
 import org.jboss.shrinkwrap.api.Domain;
+import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
+import org.jboss.shrinkwrap.api.importer.StreamImporter;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.junit.Assert;
@@ -55,7 +60,7 @@ import org.junit.Test;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public abstract class StreamExporterTestBase extends ExportTestBase
+public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extends ExportTestBase
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -86,6 +91,12 @@ public abstract class StreamExporterTestBase extends ExportTestBase
     * @return
     */
    protected abstract InputStream getContentsFromExportedFile(File file, ArchivePath path) throws IOException;
+   
+   /**
+    * Obtains the type of {@link StreamImporter} used for this test
+    * @return
+    */
+   protected abstract Class<T> getImporterClass();
 
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
@@ -167,22 +178,18 @@ public abstract class StreamExporterTestBase extends ExportTestBase
    public void testExportArchiveWithOnlyDirectories() throws IOException
    {
       // Create an archive with directories
-      final Archive<?> archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).addDirectories("/test/game");
+      final ArchivePath path = ArchivePaths.create("/test/game");
+      final Archive<?> archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).addDirectories(path);
 
       // Fully export by reading all content (export is on-demand)
       final InputStream content = this.exportAsInputStream(archive);
-      final OutputStream sink = new OutputStream()
-      {
+      final ByteArrayOutputStream exportedContents = new ByteArrayOutputStream();
+      IOUtil.copyWithClose(content, exportedContents);
 
-         @Override
-         public void write(int b) throws IOException
-         {
-            //NOOP
-         }
-      };
-      IOUtil.copyWithClose(content, sink);
-
-      //TODO Why was this test originally written with no assertions? SHRINKWRAP-195
+      final GenericArchive roundtrip = ShrinkWrap.create(this.getImporterClass(), "roundtrip.zip")
+            .importFrom(new ByteArrayInputStream(exportedContents.toByteArray())).as(GenericArchive.class);
+      log.info(roundtrip.toString(true));
+      Assert.assertTrue(roundtrip.contains(path));      
    }
 
    /**

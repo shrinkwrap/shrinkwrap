@@ -23,6 +23,7 @@ import java.util.zip.GZIPInputStream;
 
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.TarGzExporter;
+import org.jboss.shrinkwrap.api.importer.TarGzImporter;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream;
 
 /**
@@ -32,7 +33,7 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public final class TarGzExporterTestCase extends TarExporterTestBase
+public final class TarGzExporterTestCase extends TarExporterTestBase<TarGzImporter>
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -55,6 +56,16 @@ public final class TarGzExporterTestCase extends TarExporterTestBase
    protected Class<? extends StreamExporter> getExporterClass()
    {
       return TarGzExporter.class;
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#getImporterClass()
+    */
+   @Override
+   protected Class<TarGzImporter> getImporterClass()
+   {
+      return TarGzImporter.class;
    }
 
    /**

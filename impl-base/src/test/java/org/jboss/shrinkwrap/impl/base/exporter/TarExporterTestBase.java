@@ -23,6 +23,7 @@ import java.io.InputStream;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.importer.StreamImporter;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarEntry;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream;
@@ -36,7 +37,7 @@ import org.junit.Assert;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public abstract class TarExporterTestBase extends StreamExporterTestBase
+public abstract class TarExporterTestBase<T extends StreamImporter<T>> extends StreamExporterTestBase<T>
 {
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||

@@ -28,6 +28,8 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.api.importer.StreamImporter;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.exporter.zip.JdkZipExporterDelegate;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
@@ -43,7 +45,7 @@ import org.junit.Test;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public final class ZipExporterTestCase extends StreamExporterTestBase
+public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporter>
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -66,6 +68,16 @@ public final class ZipExporterTestCase extends StreamExporterTestBase
    protected Class<? extends StreamExporter> getExporterClass()
    {
       return ZipExporter.class;
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#getImporterClass()
+    */
+   @Override
+   protected Class<ZipImporter> getImporterClass()
+   {
+      return ZipImporter.class;
    }
 
    /**

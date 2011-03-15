@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.TarExporter;
+import org.jboss.shrinkwrap.api.importer.TarImporter;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream;
 
 /**
@@ -31,7 +32,7 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public final class TarExporterTestCase extends TarExporterTestBase
+public final class TarExporterTestCase extends TarExporterTestBase<TarImporter>
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -56,6 +57,16 @@ public final class TarExporterTestCase extends TarExporterTestBase
       return TarExporter.class;
    }
 
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#getImporterClass()
+    */
+   @Override
+   protected Class<TarImporter> getImporterClass()
+   {
+      return TarImporter.class;
+   }
+   
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getArchiveExtension()
