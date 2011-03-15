@@ -24,12 +24,14 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -132,5 +134,19 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
             throw new IOException("Mock exception");
          }
       };
+   }
+   
+   //-------------------------------------------------------------------------------------||
+   // Tests ------------------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+   
+   /**
+    * SHRINKWRAP-259
+    */
+   @Test
+   public void createZipImporter()
+   {
+      final GenericArchive importer = ShrinkWrap.create(ZipImporter.class).as(GenericArchive.class);
+      Assert.assertTrue("Archive did not have expected suffix", importer.getName().endsWith(".jar"));
    }
 }
