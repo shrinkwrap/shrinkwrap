@@ -270,6 +270,18 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
             "Archive should contain " + expectedPath,
             getArchive().contains(expectedPath));
    }
+   
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddModulesResources() throws Exception
+   {
+      getEnterpriseContainer().addAsModules(NAME_TEST_PROPERTIES, NAME_TEST_PROPERTIES_2);
+
+      final ArchivePath expectedPath1 = new BasicPath(getModulePath(), "Test.properties");
+      final ArchivePath expectedPath2 = new BasicPath(getModulePath(), "Test2.properties");
+      Assert.assertTrue("Archive should contain " + expectedPath1, getArchive().contains(expectedPath1));
+      Assert.assertTrue("Archive should contain " + expectedPath2, getArchive().contains(expectedPath2));
+   }
 
    @Test
    @ArchiveType(EnterpriseContainer.class)
@@ -280,6 +292,19 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
       Assert.assertTrue(
             "Archive should contain " + expectedPath,
             getArchive().contains(expectedPath));
+   }
+   
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddModulesFiles() throws Exception
+   {
+      getEnterpriseContainer().addAsModules(getFileForClassResource(NAME_TEST_PROPERTIES),
+            getFileForClassResource(NAME_TEST_PROPERTIES_2));
+
+      final ArchivePath expectedPath1 = new BasicPath(getModulePath(), "Test.properties");
+      final ArchivePath expectedPath2 = new BasicPath(getModulePath(), "Test2.properties");
+      Assert.assertTrue("Archive should contain " + expectedPath1, getArchive().contains(expectedPath1));
+      Assert.assertTrue("Archive should contain " + expectedPath2, getArchive().contains(expectedPath2));
    }
 
    @Test
@@ -366,4 +391,18 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
             "Archive should contain " + expectedPath,
             getArchive().contains(expectedPath));
    }   
+   
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testAddModulesArchives() throws Exception
+   {
+      final Archive<?> archive1 = createNewArchive();
+      final Archive<?> archive2 = createNewArchive();
+      getEnterpriseContainer().addAsModules(archive1, archive2);
+
+      ArchivePath expectedPath1 = new BasicPath(getModulePath(), archive1.getName());
+      ArchivePath expectedPath2 = new BasicPath(getModulePath(), archive2.getName());
+      Assert.assertTrue("Archive should contain " + expectedPath1, getArchive().contains(expectedPath1));
+      Assert.assertTrue("Archive should contain " + expectedPath2, getArchive().contains(expectedPath2));
+   }
 }

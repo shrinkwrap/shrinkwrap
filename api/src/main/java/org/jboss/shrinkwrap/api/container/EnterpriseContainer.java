@@ -314,6 +314,17 @@ public interface EnterpriseContainer<T extends Archive<T>>
    T addAsModule(Archive<?> archive) throws IllegalArgumentException;
    
    /**
+    * Adds the specified archives to this {@link Archive}s module context.
+    * <br/><br/>
+    * The {@link Archive} names are used as paths.
+    *  
+    * @param archives The archives to use
+    * @return This virtual archive
+    * @throws IllegalArgumentException if not archives are specified
+    */
+   T addAsModules(Archive<?>... archives) throws IllegalArgumentException;
+   
+   /**
     * Adds a resource to this {@link Archive}s module context.
     * <br/>
     * The resource name is used as path.
@@ -326,6 +337,18 @@ public interface EnterpriseContainer<T extends Archive<T>>
    T addAsModule(String resourceName) throws IllegalArgumentException;
    
    /**
+    * Adds the specified resources to this {@link Archive}s module context.
+    * <br/>
+    * The resource names are used as paths.
+    * 
+    * @param resourceNames Names of the {@link ClassLoader} resources to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourceNames are not specified
+    * @see #addAsModule(Asset, ArchivePath)
+    */
+   T addAsModules(String... resourceNames) throws IllegalArgumentException;
+   
+   /**
     * Adds a {@link File} to this {@link Archive}s module context.
     * <br/>
     * The {@link File} name is used as path.
@@ -336,6 +359,18 @@ public interface EnterpriseContainer<T extends Archive<T>>
     * @see #addAsModule(Asset, ArchivePath)
     */
    T addAsModule(File resource) throws IllegalArgumentException;
+   
+   /**
+    * Adds the specified {@link File}s to this {@link Archive}s module context.
+    * <br/>
+    * The {@link File} names are used as paths.
+    *  
+    * @param resources {@link File} resources to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resources are not specified
+    * @see #addAsModule(Asset, ArchivePath)
+    */
+   T addAsModules(File... resources) throws IllegalArgumentException;
 
    /**
     * Adds a resource to this {@link Archive}s module context.

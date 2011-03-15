@@ -337,6 +337,66 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>>
       
       return addAsModule(resource, resource.getName());
    }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addAsModules(org.jboss.shrinkwrap.api.Archive<?>[])
+    */
+   @Override
+   public T addAsModules(final Archive<?>... archives) throws IllegalArgumentException
+   {
+      // Precondition checks
+      Validate.notNull(archives, "archives must be specified");
+
+      // Add each
+      for(final Archive<?> archive : archives)
+      {
+         this.addAsModule(archive);
+      }
+      
+      // Return
+      return this.covarientReturn();
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addAsModules(java.lang.String[])
+    */
+   @Override
+   public T addAsModules(final String... resourceNames) throws IllegalArgumentException
+   {
+      // Precondition checks
+      Validate.notNull(resourceNames, "resourceNames must be specified");
+
+      // Add each
+      for(final String resourceName : resourceNames)
+      {
+         this.addAsModule(resourceName);
+      }
+      
+      // Return
+      return this.covarientReturn();
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addAsModules(java.io.File[])
+    */
+   @Override
+   public T addAsModules(final File... resources) throws IllegalArgumentException
+   {
+      // Precondition checks
+      Validate.notNull(resources, "resources must be specified");
+
+      // Add each
+      for(final File resource : resources)
+      {
+         this.addAsModule(resource);
+      }
+      
+      // Return
+      return this.covarientReturn();
+   }
 
    /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addModule(java.io.File, org.jboss.shrinkwrap.api.Path)
