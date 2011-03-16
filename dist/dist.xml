@@ -16,6 +16,7 @@
   <!-- All module dependencies -->
   <moduleSets>
     <moduleSet>
+      <useAllReactorProjects>true</useAllReactorProjects>
       <sources>
         <fileSets>
           <fileSet>

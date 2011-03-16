@@ -20,53 +20,165 @@
   <artifactId>shrinkwrap-parent</artifactId>
   <version>1.0.0-alpha-13-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>ShrinkWrap Aggregator</name>
+  <name>ShrinkWrap Aggregator and Build Parent</name>
   <url>http://www.jboss.org</url>
   <description>ShrinkWrap Aggregator</description>
+  
+  <!-- Properties -->
+  <properties>
+
+    <!-- Versioning -->
+    <version.junit_junit>4.8.2</version.junit_junit>
+
+  </properties>
+  
+  <!-- SCM -->
+  <scm>
+    <connection>scm:git:git://github.com/shrinkwrap/shrinkwrap.git</connection>
+    <developerConnection>scm:git:git@github.com:shrinkwrap/shrinkwrap.git</developerConnection>
+    <url>https://github.com/shrinkwrap/shrinkwrap</url>
+  </scm>
+
+  <!-- Issues -->
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.jboss.com/jira/browse/SHRINKWRAP</url>
+  </issueManagement>
+
+  <!-- Licenses -->
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
 
   <!-- Plugin Configuration -->
   <build>
+  
+    <!-- Plugin Management -->
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.2.1</version>
+          <configuration>
+            <finalName>shrinkwrap-${project.version}</finalName>
+            <descriptors>
+              <descriptor>dist.xml</descriptor>
+            </descriptors>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  
     <plugins>
 
       <!-- Deploy -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
+      </plugin>
+
+      <!-- Compiler -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <inherited>true</inherited>
         <configuration>
-          <!-- Don't include this aggregator in the deployment -->
-          <skip>true</skip>
+          <source>1.5</source>
+          <target>1.5</target>
+          <showDeprecation>false</showDeprecation>
+          <showWarnings>true</showWarnings>
+          <optimize>true</optimize>
+          <compilerVersion>1.6</compilerVersion>
+          <fork>true</fork>
+          <argLine>-Xmx512M</argLine>
+          <executable>${JAVA_HOME}/bin/javac</executable>
         </configuration>
       </plugin>
 
-      <!-- Assembly Plugin -->
+      <!-- Surefire -->
       <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          <trimStackTrace>false</trimStackTrace>
+          <printSummary>true</printSummary>
+          <includes>
+            <include>**/*TestCase.java</include>
+            <include>**/*TestSuite.java</include>
+          </includes>
+          <forkMode>always</forkMode>
+        </configuration>
+      </plugin>
+
+      <!-- Maven Release Plugin Configuration -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+        </configuration>
+      </plugin>
+      
+      <!-- Enforce Maven Environment -->
+      <plugin>
+        <artifactId>maven-enforcer-plugin
+                      </artifactId>
         <executions>
           <execution>
-            <id>make-assembly</id>
-            <phase>package</phase>
+            <id>enforce-maven-environment</id>
             <goals>
-              <goal>single</goal>
+              <goal>enforce</goal>
             </goals>
           </execution>
         </executions>
         <configuration>
-          <finalName>shrinkwrap-${project.version}</finalName>
-          <descriptors>
-            <descriptor>dist.xml</descriptor>
-          </descriptors>
+          <rules>
+            <requireMavenVersion>
+              <version>[2.2.0,)</version>
+              <!--
+                Must be more that 2.2 to support
+                Assembly "includeModuleDirectory":
+                http://maven.apache.org/plugins/maven-assembly-plugin/assembly.html
+              -->
+            </requireMavenVersion>
+            <requireJavaVersion>
+              <version>1.6.0</version> <!-- Must be JDK6 -->
+            </requireJavaVersion>
+            <requireProperty>
+              <property>env.JAVA_HOME</property>
+              <message>"JAVA_HOME needs to be set to compile"</message>
+            </requireProperty>
+            <requireProperty>
+              <property>env.JAVA5_HOME</property>
+              <message>"JAVA5_HOME needs to be set to run some tests in the JRE5 runtime"</message>
+            </requireProperty>
+          </rules>
         </configuration>
-        <inherited>false</inherited>
       </plugin>
-
 
     </plugins>
   </build>
+  
+  <!-- Dependency Management -->
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${version.junit_junit}</version>
+        <scope>test</scope>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
 
   <!-- Aggregate Modules -->
   <modules>
     <module>api</module>
-    <module>build</module>
+    <module>dist</module>
     <module>impl-base</module>
     <module>spi</module>
     <module>extension-descriptors</module>
@@ -82,11 +194,60 @@
     <module>extension-vdf</module>
   </modules>
   
+  <!-- Reporting -->
+  <reporting>
+    <plugins>
+
+      <!-- Cobertura (Code Coverage) -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <formats>
+            <format>html</format>
+            <format>xml</format>
+          </formats>
+        </configuration>
+      </plugin>
+
+      <!-- FindBugs -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>2.3.1</version>
+        <configuration>
+          <xmlOutput>true</xmlOutput>
+          <findbugsXmlOutputDirectory>target/site</findbugsXmlOutputDirectory>
+        </configuration>
+      </plugin>
+    
+      <!-- SHRINKWRAP-157 Workaround -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>project-team</report>
+              <report>mailing-list</report>
+              <report>cim</report>
+              <report>issue-tracking</report>
+              <report>license</report>
+              <report>scm</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+
+    </plugins>
+  </reporting>
+
   <repositories>
     <repository>
       <id>jboss-public-repository</id>
       <name>JBoss Repository</name>
-      <url> https://repository.jboss.org/nexus/content/groups/public </url>
+      <url> https://repository.jboss.org/nexus/content/groups/public</url>
       <releases>
         <enabled>true</enabled>
         <updatePolicy>never</updatePolicy>
@@ -102,7 +263,7 @@
     <pluginRepository>
       <id>jboss-public-repository</id>
       <name>JBoss Repository</name>
-      <url> https://repository.jboss.org/nexus/content/groups/public </url>
+      <url> https://repository.jboss.org/nexus/content/groups/public</url>
       <releases>
         <enabled>true</enabled>
         <updatePolicy>never</updatePolicy>
