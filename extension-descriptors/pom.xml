@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!--
+  vi:ts=2:sw=2:expandtab:
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- Parent -->
+  <parent>
+    <groupId>org.jboss.shrinkwrap</groupId>
+    <artifactId>shrinkwrap-build</artifactId>
+    <version>1.0.0-alpha-13-SNAPSHOT</version>
+    <relativePath>../build/pom.xml</relativePath>
+  </parent>
+
+  <!-- Model Version -->
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Artifact Configuration -->
+  <artifactId>shrinkwrap-extension-descriptors</artifactId>
+  <name>ShrinkWrap Extension Descriptors</name>
+  <description>ShrinkWrap Extension for the SHRINKDESC Descriptors project</description>
+
+
+  <!-- Properties -->
+  <properties>
+  
+    <!-- Versioning -->
+    <version.org.jboss.shrinkwrap.descriptors>0.1.2</version.org.jboss.shrinkwrap.descriptors>
+
+  </properties>
+
+  <!-- Dependencies -->
+  <dependencies>
+
+    <!-- 
+    org.jboss.shrinkwrap    
+     -->
+    <dependency>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-impl-base</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+      <artifactId>shrinkwrap-descriptors-api</artifactId>
+      <version>${version.org.jboss.shrinkwrap.descriptors}</version>
+    </dependency>
+    <!--
+
+     NOTE:
+
+     When Descriptors is further split apart into modules, 
+     leave the API in compile scope, and add further runtime
+     dependencies here as "provided" (so we don't export these deps)
+
+    -->
+
+    <!-- 
+    External Projects
+     -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    
+  </dependencies>
+
+  <!-- Build Configuration -->
+  <build>
+  
+    <plugins>
+
+    </plugins>
+    
+  </build>
+  
+</project>
+
