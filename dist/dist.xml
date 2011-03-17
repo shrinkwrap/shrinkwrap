@@ -46,7 +46,7 @@
         <include>**</include>
       </includes>
       <outputDirectory>apidocs</outputDirectory>
-      <directory>api/target/site/apidocs</directory>
+      <directory>../api/target/site/apidocs</directory>
     </fileSet>
     
     <!-- README -->
