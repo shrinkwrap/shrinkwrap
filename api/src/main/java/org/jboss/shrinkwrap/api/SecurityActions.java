@@ -21,6 +21,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
+import java.util.Arrays;
 
 /**
  * A set of privileged actions that are not to leak out
@@ -103,24 +104,22 @@ final class SecurityActions
    }
 
    /**
-    * Create a new instance by finding a constructor that matches the argumentTypes signature 
-    * using the arguments for instantiation.
-    * 
-    * @param className Full classname of class to create
-    * @param argumentTypes The constructor argument types
-    * @param arguments The constructor arguments
-    * @return a new instance
-    * @throws IllegalArgumentException if className, argumentTypes, or arguments are null
-    * @throws RuntimeException if any exceptions during creation
-    * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
-    * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+    * Creates a new instance of the specified {@link Class} using the specified
+    * construction arguments.  Casts and returns as the specified expected type
+    * @param <T>
+    * @param clazz
+    * @param argumentTypes
+    * @param arguments
+    * @param expectedType
+    * @return
     */
-   static <T> T newInstance(final String className, final Class<?>[] argumentTypes, final Object[] arguments,
+   static <T> T newInstance(final Class<?> clazz, final Class<?>[] argumentTypes, final Object[] arguments,
          final Class<T> expectedType)
    {
-      if (className == null)
+      // Precondition checks
+      if (clazz == null)
       {
-         throw new IllegalArgumentException("ClassName must be specified");
+         throw new IllegalArgumentException("Class must be specified");
       }
       if (argumentTypes == null)
       {
@@ -130,18 +129,33 @@ final class SecurityActions
       {
          throw new IllegalArgumentException("Arguments must be specified. Use empty array if no arguments");
       }
+      if (expectedType == null)
+      {
+         throw new IllegalArgumentException("Expected type must be specified");
+      }
+
+      // Get the ctor
+      final Constructor<?> constructor;
+      try
+      {
+         constructor = getConstructor(clazz, argumentTypes);
+      }
+      catch (final NoSuchMethodException e)
+      {
+         throw new RuntimeException("Could not create new instance of " + clazz + " using ctor argument types "
+               + Arrays.asList(argumentTypes), e);
+      }
+
+      // Create the instance
       final Object obj;
       try
       {
-         final ClassLoader tccl = getThreadContextClassLoader();
-         final Class<?> implClass = Class.forName(className, false, tccl);
-         Constructor<?> constructor = getConstructor(implClass, argumentTypes);
          obj = constructor.newInstance(arguments);
       }
-      catch (Exception e)
+      catch (final Exception e)
       {
-         throw new RuntimeException("Could not create new instance of " + className
-               + ", missing package from classpath?", e);
+         throw new RuntimeException("Could not create a new instance of " + clazz + " using arguments "
+               + Arrays.asList(arguments), e);
       }
 
       // Cast
@@ -155,6 +169,57 @@ final class SecurityActions
          throw new ClassCastException("Incorrect expected type, " + expectedType.getName() + ", defined for "
                + obj.getClass().getName());
       }
+   }
+   
+   /**
+    * Create a new instance by finding a constructor that matches the argumentTypes signature 
+    * using the arguments for instantiation.
+    * 
+    * @param className Full classname of class to create
+    * @param argumentTypes The constructor argument types
+    * @param arguments The constructor arguments
+    * @param cl The ClassLoader to use in constructing the new instance
+    * @return a new instance
+    * @throws IllegalArgumentException if className, argumentTypes, ClassLoader, or arguments are null
+    * @throws RuntimeException if any exceptions during creation
+    * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
+    * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+    */
+   static <T> T newInstance(final String className, final Class<?>[] argumentTypes, final Object[] arguments,
+         final Class<T> expectedType, final ClassLoader cl)
+   {
+      // Precondition checks
+      if (className == null)
+      {
+         throw new IllegalArgumentException("ClassName must be specified");
+      }
+      if (argumentTypes == null)
+      {
+         throw new IllegalArgumentException("ArgumentTypes must be specified. Use empty array if no arguments");
+      }
+      if (arguments == null)
+      {
+         throw new IllegalArgumentException("Arguments must be specified. Use empty array if no arguments");
+      }
+      if (expectedType == null)
+      {
+         throw new IllegalArgumentException("Expected type must be specified");
+      }
+      if (cl == null)
+      {
+         throw new IllegalArgumentException("CL must be specified");
+      }
+      
+      final Class<?> implClass;
+      try{
+         implClass = Class.forName(className,false,cl);
+      }
+      catch(ClassNotFoundException cnfe){
+         throw new IllegalArgumentException("Could not find class named " + className + " in the specified CL: " + cl,cnfe);
+      }
+      
+      // Delegate
+      return newInstance(implClass, argumentTypes, arguments, expectedType);
    }
 
    //-------------------------------------------------------------------------------||

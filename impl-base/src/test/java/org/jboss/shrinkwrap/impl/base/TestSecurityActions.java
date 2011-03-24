@@ -14,21 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.container;
+package org.jboss.shrinkwrap.impl.base;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 /**
- * SecurityActions
- * 
  * A set of privileged actions that are not to leak out
  * of this package 
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-final class SecurityActions
+final class TestSecurityActions
 {
 
    //-------------------------------------------------------------------------------||
@@ -36,11 +34,11 @@ final class SecurityActions
    //-------------------------------------------------------------------------------||
 
    /**
-    * No external instantiation
+    * No instantiation
     */
-   private SecurityActions()
+   private TestSecurityActions()
    {
-
+      throw new UnsupportedOperationException("No instantiation");
    }
 
    //-------------------------------------------------------------------------------||
@@ -52,12 +50,25 @@ final class SecurityActions
     */
    static ClassLoader getThreadContextClassLoader()
    {
-      return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>()
-      {
-         public ClassLoader run()
-         {
-            return Thread.currentThread().getContextClassLoader();
-         }
-      });
+      return AccessController.doPrivileged(GetTcclAction.INSTANCE);
    }
+
+   //-------------------------------------------------------------------------------||
+   // Inner Classes ----------------------------------------------------------------||
+   //-------------------------------------------------------------------------------||
+
+   /**
+    * Single instance to get the TCCL
+    */
+   private enum GetTcclAction implements PrivilegedAction<ClassLoader> {
+      INSTANCE;
+
+      @Override
+      public ClassLoader run()
+      {
+         return Thread.currentThread().getContextClassLoader();
+      }
+
+   }
+
 }

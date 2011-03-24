@@ -22,7 +22,10 @@ import javax.annotation.processing.Filer;
 
 /**
  * Factory class for the creation of new {@link Filter}
- * instances
+ * instances.  Filter instances using this shorthand class
+ * will be created using the {@link ClassLoader} associated with
+ * the default {@link Domain}'s {@link Configuration}. 
+ * 
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
@@ -33,11 +36,11 @@ public final class Filters
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   private static final String INCLUDE_ALL_PATHS = "org.jboss.shrinkwrap.impl.base.filter.IncludeAllPaths";
+   private static final String IMPL_CLASS_NAME_INCLUDE_ALL_PATHS = "org.jboss.shrinkwrap.impl.base.filter.IncludeAllPaths";
    
-   private static final String INCLUDE_REGEXP_PATHS = "org.jboss.shrinkwrap.impl.base.filter.IncludeRegExpPaths";
+   private static final String IMPL_CLASS_NAME_INCLUDE_REGEXP_PATHS = "org.jboss.shrinkwrap.impl.base.filter.IncludeRegExpPaths";
    
-   private static final String EXCLUDE_REGEXP_PATHS = "org.jboss.shrinkwrap.impl.base.filter.ExcludeRegExpPaths";
+   private static final String IMPL_CLASS_NAME_EXCLUDE_REGEXP_PATHS = "org.jboss.shrinkwrap.impl.base.filter.ExcludeRegExpPaths";
    
    /**
     * {@link Filter} that includes all {@link ArchivePath}s.
@@ -46,15 +49,14 @@ public final class Filters
     * 
     * @return A {@link Filter} that always return true
     */
-   @SuppressWarnings("unchecked")
    public static Filter<ArchivePath> includeAll() 
    {
-      return SecurityActions.newInstance(
-            INCLUDE_ALL_PATHS, 
-            new Class<?>[]{}, 
-            new Object[]{}, 
-            Filter.class);
+      return getFilterInstance(IMPL_CLASS_NAME_INCLUDE_ALL_PATHS, new Class<?>[]
+      {}, new Object[]
+      {});
    }
+   
+   
    
    /**
     * {@link Filer} that include all {@link ArchivePath}s that match the given Regular Expression {@link Pattern}.
@@ -62,14 +64,11 @@ public final class Filters
     * @param regexp The expression to include
     * @return A Regular Expression based include {@link Filter}
     */
-   @SuppressWarnings("unchecked")
    public static Filter<ArchivePath> include(String regexp) 
    {
-      return SecurityActions.newInstance(
-            INCLUDE_REGEXP_PATHS, 
-            new Class<?>[]{String.class}, 
-            new Object[]{regexp}, 
-            Filter.class);
+      return getFilterInstance(IMPL_CLASS_NAME_INCLUDE_REGEXP_PATHS, new Class<?>[]
+      {String.class}, new Object[]
+      {regexp});
    }
 
    /**
@@ -78,14 +77,11 @@ public final class Filters
     * @param regexp The expression to exclude
     * @return A Regular Expression based exclude {@link Filter}
     */
-   @SuppressWarnings("unchecked")
-   public static Filter<ArchivePath> exclude(String regexp) 
+   public static Filter<ArchivePath> exclude(final String regexp) 
    {
-      return SecurityActions.newInstance(
-            EXCLUDE_REGEXP_PATHS, 
-            new Class<?>[]{String.class}, 
-            new Object[]{regexp}, 
-            Filter.class);
+      return getFilterInstance(IMPL_CLASS_NAME_EXCLUDE_REGEXP_PATHS, new Class<?>[]
+      {String.class}, new Object[]
+      {regexp});
    }
    
    /**
@@ -96,7 +92,7 @@ public final class Filters
     */
    public static Filter<ArchivePath> exclude(Package... packages)
    {
-      return createRegExpFilter(EXCLUDE_REGEXP_PATHS, packages);
+      return createRegExpFilter(IMPL_CLASS_NAME_EXCLUDE_REGEXP_PATHS, packages);
    }
 
    /**
@@ -107,11 +103,10 @@ public final class Filters
     */
    public static Filter<ArchivePath> include(Package... packages)
    {
-      return createRegExpFilter(INCLUDE_REGEXP_PATHS, packages);
+      return createRegExpFilter(IMPL_CLASS_NAME_INCLUDE_REGEXP_PATHS, packages);
    }
    
-   @SuppressWarnings("unchecked")
-   private static Filter<ArchivePath> createRegExpFilter(String regExp, Package... packages)
+   private static Filter<ArchivePath> createRegExpFilter(String filterClassName, Package... packages)
    {
       StringBuilder classExpression = new StringBuilder();
       for (Package pack : packages)
@@ -120,12 +115,10 @@ public final class Filters
          classExpression.append("(.*" + pack.getName().replaceAll("\\.", "\\.") + ".*)");
       }
       classExpression.deleteCharAt(0);
-
-      return SecurityActions.newInstance(
-            regExp
-            , new Class<?>[]{String.class}
-            , new Object[]{classExpression.toString()}
-            , Filter.class);
+      
+      return getFilterInstance(filterClassName, new Class<?>[]
+      {String.class}, new Object[]
+      {classExpression.toString()});
    }
    
    /**
@@ -136,7 +129,7 @@ public final class Filters
     */
    public static Filter<ArchivePath> include(Class<?>... classes)
    {
-      return createRegExpFilter(INCLUDE_REGEXP_PATHS, classes);
+      return createRegExpFilter(IMPL_CLASS_NAME_INCLUDE_REGEXP_PATHS, classes);
    }
    
    /**
@@ -147,11 +140,10 @@ public final class Filters
     */
    public static Filter<ArchivePath> exclude(Class<?>... classes)
    {
-      return createRegExpFilter(EXCLUDE_REGEXP_PATHS, classes);
+      return createRegExpFilter(IMPL_CLASS_NAME_EXCLUDE_REGEXP_PATHS, classes);
    }
 
-   @SuppressWarnings("unchecked")
-   private static Filter<ArchivePath> createRegExpFilter(String regExpPath, Class<?>... classes)
+   private static Filter<ArchivePath> createRegExpFilter(String regExpFilterImplName, Class<?>... classes)
    {
       StringBuilder classExpression = new StringBuilder();
       for (Class<?> clazz : classes)
@@ -161,11 +153,44 @@ public final class Filters
       }
       classExpression.deleteCharAt(0);
 
-      return SecurityActions.newInstance(
-            regExpPath
-            , new Class<?>[]{String.class}
-            , new Object[]{classExpression.toString()}
-            , Filter.class);
+      return getFilterInstance(regExpFilterImplName, new Class<?>[]
+      {String.class}, new Object[]
+      {classExpression.toString()});
+   }
+   
+   /**
+    * Creates a new {@link Filter} instance using the given impl class name, constructor
+    * arguments and type
+    * @param filterClassName
+    * @param ctorTypes
+    * @param ctorArguments
+    * @return
+    */
+   @SuppressWarnings("unchecked")
+   private static Filter<ArchivePath> getFilterInstance(final String filterClassName, final Class<?>[] ctorTypes,
+         final Object[] ctorArguments)
+   {
+      // Precondition checks
+      assert filterClassName != null && filterClassName.length() > 0 : "Filter class name must be specified";
+      assert ctorTypes != null : "Construction types must be specified";
+      assert ctorArguments != null : "Construction arguments must be specified";
+      assert ctorTypes.length == ctorArguments.length : "The number of ctor arguments and their types must match";
+
+      // Find the filter impl class in the configured CLs
+      final Class<Filter<ArchivePath>> filterClass;
+      try
+      {
+         filterClass = (Class<Filter<ArchivePath>>) ClassLoaderSearchUtil.findClassFromClassLoaders(filterClassName,
+               ShrinkWrap.getDefaultDomain().getConfiguration().getClassLoaders());
+      }
+      catch (final ClassNotFoundException cnfe)
+      {
+         throw new IllegalStateException("Could not find filter implementation class " + filterClassName
+               + " in any of the configured CLs", cnfe);
+      }
+
+      // Make the new instance
+      return SecurityActions.newInstance(filterClass, ctorTypes, ctorArguments, Filter.class);
    }
    
    //-------------------------------------------------------------------------------------||

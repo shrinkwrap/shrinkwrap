@@ -17,7 +17,10 @@
 package org.jboss.shrinkwrap.api;
 
 /**
- * A Factory for {@link ArchivePath} creation.
+ * A Factory for {@link ArchivePath} creation.   Instances 
+ * using this shorthand class
+ * will be created using the {@link ClassLoader} associated with
+ * the default {@link Domain}'s {@link Configuration}. 
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
@@ -119,9 +122,23 @@ public final class ArchivePaths
    // Class Members - Internal Helpers ---------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   private static ArchivePath createInstance(Class<?>[] argumentTypes, Object[] arguments)
+   private static ArchivePath createInstance(final Class<?>[] argumentTypes, final Object[] arguments)
    {
-      return SecurityActions.newInstance(PATH_IMPL, argumentTypes, arguments, ArchivePath.class);
+      // Get the impl class
+      final Class<?> archivePathImplClass;
+      try
+      {
+         archivePathImplClass = ClassLoaderSearchUtil.findClassFromClassLoaders(PATH_IMPL, ShrinkWrap
+               .getDefaultDomain().getConfiguration().getClassLoaders());
+      }
+      catch (final ClassNotFoundException cnfe)
+      {
+         throw new IllegalStateException("Could not find the archive path implementation class " + PATH_IMPL
+               + " in any configured ClassLoader", cnfe);
+      }
+
+      // Create and return
+      return SecurityActions.newInstance(archivePathImplClass, argumentTypes, arguments, ArchivePath.class);
    }
    
    /**

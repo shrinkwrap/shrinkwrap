@@ -16,7 +16,13 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -151,6 +157,82 @@ public class ShrinkWrapTestCase
             + Domain.class.getSimpleName(), service, domain.getConfiguration().getExecutorService());
       TestCase.assertEquals(ExtensionLoader.class.getSimpleName() + " specified was not contained in resultant "
             + Domain.class.getSimpleName(), loader, domain.getConfiguration().getExtensionLoader());
+
+   }
+   
+   
+   /**
+    * SHRINKWRAP-246
+    * Ensures that the user may supply an explicit {@link ClassLoader} to the {@link Domain},
+    * and this will be used when going via the {@link ArchiveFactory} to load 
+    * archive extensions.
+    */
+   @Test
+   public void serviceExtensionLoadingUsesExplicitDomainClassLoader()
+   {
+
+      // Define the custom extension to attempt to load
+      final Class<? extends Assignable> assignable = CustomArchive.class;
+
+      // First ensure that we cannot get at the desired extension via traditional
+      // means (ie. TCCL)
+      try
+      {
+         ShrinkWrap.create(assignable);
+      }
+      catch (final UnknownExtensionTypeException uete)
+      {
+         // Expected
+      }
+
+      // Define the ClassLoaders to search to use our new custom archive impl
+      final List<ClassLoader> classLoaders = new ArrayList<ClassLoader>();
+      classLoaders.add(TestSecurityActions.getThreadContextClassLoader());
+      classLoaders.add(new URLClassLoader(new URL[]
+      {})
+      {
+         @Override
+         public InputStream getResourceAsStream(final String name)
+         {
+
+            final String thisClassName = this.getClass().getName().substring(0, this.getClass().getName().length() - 1);
+            final String searchName = "META-INF/services/" + thisClassName + CustomArchive.class.getSimpleName();
+            if (name.equals(searchName))
+            {
+
+               return new ByteArrayInputStream(("implementingClassName=" + thisClassName
+                     + CustomArchiveImpl.class.getSimpleName() + "\nextension=.jar").getBytes());
+            }
+            else
+            {
+               return super.getResourceAsStream(name);
+            }
+
+         }
+      });
+
+      // Make a configuration and get the ArchiveFactory for it
+      final ConfigurationBuilder builder = new ConfigurationBuilder().classLoaders(classLoaders);
+      final ArchiveFactory factory = ShrinkWrap.createDomain(builder).getArchiveFactory();
+
+      // Now try to get the archive we asked for
+      final Assignable archive = factory.create(assignable);
+      Assert.assertNotNull("Archive using custom extension available in explicit CL should have been loaded", archive);
+
+   }
+
+   public interface CustomArchive extends Assignable
+   {
+
+   }
+
+   public static class CustomArchiveImpl extends GenericArchiveImpl implements CustomArchive
+   {
+
+      public CustomArchiveImpl(final Archive<?> delegate)
+      {
+         super(delegate);
+      }
 
    }
 
@@ -325,7 +407,7 @@ public class ShrinkWrapTestCase
    @Test(expected = IllegalArgumentException.class)
    public void importFromNonZipFileThrowsException() throws Exception
    {
-      final File nonZipFile = new File(SecurityActions.getThreadContextClassLoader().getResource(NAME_FILE_NON_ZIP)
+      final File nonZipFile = new File(TestSecurityActions.getThreadContextClassLoader().getResource(NAME_FILE_NON_ZIP)
             .toURI());
       ShrinkWrap.createFromZipFile(JavaArchive.class, nonZipFile);
    }

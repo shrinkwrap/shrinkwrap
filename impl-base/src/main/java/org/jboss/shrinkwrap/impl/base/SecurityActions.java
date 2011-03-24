@@ -50,14 +50,6 @@ final class SecurityActions
    // Utility Methods --------------------------------------------------------------||
    //-------------------------------------------------------------------------------||
 
-   /**
-    * Obtains the Thread Context ClassLoader
-    */
-   static ClassLoader getThreadContextClassLoader()
-   {
-      return AccessController.doPrivileged(GetTcclAction.INSTANCE);
-   }
-
    static Constructor<?>[] getConstructors(final Class<?> clazz) 
    {
       return AccessController.doPrivileged(new PrivilegedAction<Constructor<?>[]>() {
@@ -113,78 +105,4 @@ final class SecurityActions
          }
       }
    }
-
-   /**
-    * Create a new instance by finding a constructor that matches the argumentTypes signature 
-    * using the arguments for instantiation.
-    * 
-    * @param className Full classname of class to create
-    * @param argumentTypes The constructor argument types
-    * @param arguments The constructor arguments
-    * @return a new instance
-    * @throws IllegalArgumentException if className, argumentTypes, or arguments are null
-    * @throws RuntimeException if any exceptions during creation
-    * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
-    * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
-    */
-   static <T> T newInstance(final String className, final Class<?>[] argumentTypes, final Object[] arguments,
-         final Class<T> expectedType)
-   {
-      if (className == null)
-      {
-         throw new IllegalArgumentException("ClassName must be specified");
-      }
-      if (argumentTypes == null)
-      {
-         throw new IllegalArgumentException("ArgumentTypes must be specified. Use empty array if no arguments");
-      }
-      if (arguments == null)
-      {
-         throw new IllegalArgumentException("Arguments must be specified. Use empty array if no arguments");
-      }
-      final Object obj;
-      try
-      {
-         final ClassLoader tccl = getThreadContextClassLoader();
-         final Class<?> implClass = Class.forName(className, false, tccl);
-         Constructor<?> constructor = getConstructor(implClass, argumentTypes);
-         obj = constructor.newInstance(arguments);
-      }
-      catch (Exception e)
-      {
-         throw new RuntimeException("Could not create new instance of " + className
-               + ", missing package from classpath?", e);
-      }
-
-      // Cast
-      try
-      {
-         return expectedType.cast(obj);
-      }
-      catch (final ClassCastException cce)
-      {
-         // Reconstruct so we get some useful information
-         throw new ClassCastException("Incorrect expected type, " + expectedType.getName() + ", defined for "
-               + obj.getClass().getName());
-      }
-   }
-
-   //-------------------------------------------------------------------------------||
-   // Inner Classes ----------------------------------------------------------------||
-   //-------------------------------------------------------------------------------||
-
-   /**
-    * Single instance to get the TCCL
-    */
-   private enum GetTcclAction implements PrivilegedAction<ClassLoader> {
-      INSTANCE;
-
-      @Override
-      public ClassLoader run()
-      {
-         return Thread.currentThread().getContextClassLoader();
-      }
-
-   }
-
 }

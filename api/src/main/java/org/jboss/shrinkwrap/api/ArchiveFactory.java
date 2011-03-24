@@ -75,7 +75,7 @@ public final class ArchiveFactory
    }
 
    //-------------------------------------------------------------------------------------||
-   // Functional Methods ----------------------------------------------------------------||
+   // Functional Methods -----------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
    /**
@@ -134,9 +134,25 @@ public final class ArchiveFactory
          throw new IllegalArgumentException("ArchiveName must be specified");
       }
 
-      final Archive<?> archive = SecurityActions.newInstance(ARCHIVE_IMPL, new Class<?>[]
+      // Get the impl class
+      final Class<?> archiveImplClass;
+      try
+      {
+         archiveImplClass = ClassLoaderSearchUtil.findClassFromClassLoaders(ARCHIVE_IMPL,
+               this.configuration.getClassLoaders());
+      }
+      catch (final ClassNotFoundException cnfe)
+      {
+         throw new IllegalStateException("Could not find the archive implementation class " + ARCHIVE_IMPL
+               + " in any configured ClassLoader", cnfe);
+      }
+      
+      // Make a new instance
+      final Archive<?> archive = SecurityActions.newInstance(archiveImplClass, new Class<?>[]
       {String.class, Configuration.class}, new Object[]
       {archiveName, configuration}, Archive.class);
+      
+      // Wrap as the requested type and return
       return archive.as(type);
    }
 
@@ -154,7 +170,6 @@ public final class ArchiveFactory
     * {@link File} does not exist, or is not a valid ZIP file
     * @throws org.jboss.shrinkwrap.api.importer.ArchiveImportException If an error occurred during the import process
     */
-   @SuppressWarnings({"deprecation"})
    public <T extends Assignable> T createFromZipFile(final Class<T> type, final File archiveFile)
          throws IllegalArgumentException, ArchiveImportException
    {

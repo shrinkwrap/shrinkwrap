@@ -93,7 +93,7 @@ public class TestIOUtil
    public static File createFileFromResourceName(final String resourceName) throws URISyntaxException
    {
       assert resourceName != null : "Resource name must be specified";
-      final URL resourceLocation = SecurityActions.getThreadContextClassLoader().getResource(resourceName);
+      final URL resourceLocation = TestSecurityActions.getThreadContextClassLoader().getResource(resourceName);
       assert resourceLocation != null : "Resource was not found at specified location: " + resourceName;
       return new File(resourceLocation.toURI());
    }

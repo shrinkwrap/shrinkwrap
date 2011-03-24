@@ -16,6 +16,9 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,6 +69,11 @@ public class ConfigurationBuilder
     */
    private ExecutorService executorService;
 
+   /**
+    * {@link ClassLoader}s used for extension loading, adding resources, etc
+    */
+   private Iterable<ClassLoader> classLoaders;
+
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -99,6 +107,13 @@ public class ConfigurationBuilder
       return executorService;
    }
 
+   /**
+    * @return
+    */
+   public Iterable<ClassLoader> getClassLoaders()
+   {
+      return classLoaders;
+   }
 
    /**
     * Sets the {@link ExtensionLoader} to be used, returning this instance
@@ -124,6 +139,19 @@ public class ConfigurationBuilder
    }
 
    /**
+    * Sets the {@link ClassLoader} used in resolving extension implementations
+    * by the {@link ExtensionLoader}; other tasks requiring a CL by the 
+    * {@link Archive}
+    * @param classLoaders
+    * @return
+    */
+   public ConfigurationBuilder classLoaders(final Iterable<ClassLoader> classLoaders)
+   {
+      this.classLoaders = classLoaders;
+      return this;
+   }
+
+   /**
     * Builds a new {@link Configuration} using the properties contained
     * in this builder.  In the case a property has not been specified, it will be defaulted
     * according to the rules set forth in this {@link ConfigurationBuilder}'s contract.
@@ -131,9 +159,6 @@ public class ConfigurationBuilder
     */
    public Configuration build()
    {
-      // First set all defaults if not explicitly provided by the user
-      this.setDefaults();
-
       // Make a new configuration and return it.
       return new Configuration(this);
    }
@@ -146,8 +171,49 @@ public class ConfigurationBuilder
     * Sets properties to their default values if they haven't been explicitly
     * provided by the user
     */
-   private void setDefaults()
+   void setDefaults()
    {
+      // If no ClassLoaders are specified, use the TCCL
+      // Ensure we default this BEFORE defaulting the extension loader, as 
+      // the loader needs a CL to be created
+      if (this.getClassLoaders() == null)
+      {
+         final ClassLoader tccl = SecurityActions.getThreadContextClassLoader();
+         if (log.isLoggable(Level.FINER))
+         {
+            log.finer("User has not defined an explicit " + ClassLoader.class.getSimpleName()
+                  + "; defaulting to the TCCL: " + tccl);
+         }
+         final Collection<ClassLoader> tcclCollection = new ArrayList<ClassLoader>(1);
+         // Adjust for the bootstrap CL, which may be denoted as null in some JVM impls
+         if (tccl != null)
+         {
+            tcclCollection.add(tccl);
+         }
+         else
+         {
+            tcclCollection.add(ClassLoader.getSystemClassLoader());
+         }
+         this.classLoaders = tcclCollection;
+      }
+
+      // Adjust the CLs to be sure of no duplicate or null references (which may indicate
+      // the bootstrap CL, so get to the system CL)
+      final Collection<ClassLoader> adjustedCls = new HashSet<ClassLoader>();
+      for (ClassLoader cl : this.classLoaders)
+      {
+
+         // Adjust for null references
+         if (cl == null)
+         {
+            cl = ClassLoader.getSystemClassLoader();
+         }
+
+         // Add to the set, which will restrict duplicates
+         adjustedCls.add(cl);
+      }
+      this.classLoaders = adjustedCls;
+
       // If no extension loader is present, create one
       if (getExtensionLoader() == null)
       {
@@ -168,9 +234,23 @@ public class ConfigurationBuilder
     */
    ExtensionLoader createDefaultExtensionLoader()
    {
-      return SecurityActions.newInstance(EXTENSION_LOADER_IMPL, new Class<?>[]
-      {}, new Object[]
-      {}, ExtensionLoader.class);
+      // First find the right Class/ClassLoader
+      final Class<?> extensionLoaderImplClass;
+      try
+      {
+         extensionLoaderImplClass = ClassLoaderSearchUtil.findClassFromClassLoaders(EXTENSION_LOADER_IMPL,
+               getClassLoaders());;
+      }
+      catch (final ClassNotFoundException cnfe)
+      {
+         throw new IllegalStateException(
+               "Could not find extension loader impl class in any of the configured ClassLoaders", cnfe);
+      }
+
+      // Return
+      return SecurityActions.newInstance(extensionLoaderImplClass, new Class<?>[]
+      {Iterable.class}, new Object[]
+      {this.getClassLoaders()}, ExtensionLoader.class);
    }
 
 }

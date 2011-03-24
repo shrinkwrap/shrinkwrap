@@ -17,9 +17,10 @@
 package org.jboss.shrinkwrap.api.asset;
 
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 import junit.framework.Assert;
 
@@ -40,7 +41,7 @@ public class UrlAssetTestCase
    @Test
    public void shouldBeAbleToReadURL() throws Exception
    {
-      Asset asset = new UrlAsset(SecurityActions.getThreadContextClassLoader().getResource(EXISTING_RESOURCE));
+      Asset asset = new UrlAsset(getThreadContextClassLoader().getResource(EXISTING_RESOURCE));
 
       InputStream io = asset.openStream();
 
@@ -67,7 +68,7 @@ public class UrlAssetTestCase
    @Test
    public void shouldCreateDefensiveCopyOfURLOnConstruction() throws Exception
    {
-      URL mutableURL = SecurityActions.getThreadContextClassLoader().getResource(EXISTING_RESOURCE);
+      URL mutableURL = getThreadContextClassLoader().getResource(EXISTING_RESOURCE);
       Asset asset = new UrlAsset(mutableURL);
 
       // mutate the URL - can't be sure that some malicious code or user won't do this?
@@ -103,5 +104,32 @@ public class UrlAssetTestCase
       {"file", "", -1, "/UNKNOWN_FILE", null};
       m.setAccessible(true);
       m.invoke(mutableURL, arguments);
+   }
+   
+   /**
+    * Obtains the Thread Context ClassLoader
+    */
+   static ClassLoader getThreadContextClassLoader()
+   {
+      return AccessController.doPrivileged(GetTcclAction.INSTANCE);
+   }
+
+   //-------------------------------------------------------------------------------||
+   // Inner Classes ----------------------------------------------------------------||
+   //-------------------------------------------------------------------------------||
+
+   /**
+    * Single instance to get the TCCL
+    */
+   private enum GetTcclAction implements PrivilegedAction<ClassLoader>
+   {
+      INSTANCE;
+
+      @Override
+      public ClassLoader run()
+      {
+         return Thread.currentThread().getContextClassLoader();
+      }
+
    }
 }

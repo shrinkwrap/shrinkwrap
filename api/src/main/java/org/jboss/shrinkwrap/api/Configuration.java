@@ -16,6 +16,9 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -54,6 +57,11 @@ public class Configuration
     */
    private final ExecutorService executorService;
 
+   /**
+    * {@link ClassLoader}s used for extension loading
+    */
+   private final Iterable<ClassLoader> classLoaders;
+
    //-------------------------------------------------------------------------------------||
    // Constructor ------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -73,9 +81,26 @@ public class Configuration
          throw new IllegalArgumentException("builder must be specified");
       }
 
+      // Let the builder set defaults
+      builder.setDefaults();
+
       // Set 
       this.extensionLoader = builder.getExtensionLoader();
       this.executorService = builder.getExecutorService();
+      // Defensive copy
+      Collection<ClassLoader> cls = new ArrayList<ClassLoader>();
+      if (builder.getClassLoaders() instanceof Collection)
+      {
+         cls = (Collection<ClassLoader>) builder.getClassLoaders();
+      }
+      else
+      {
+         for (final ClassLoader cl : builder.getClassLoaders())
+         {
+            cls.add(cl);
+         }
+      }
+      this.classLoaders = Collections.unmodifiableCollection(cls);
    }
 
    //-------------------------------------------------------------------------------------||
@@ -96,5 +121,14 @@ public class Configuration
    public ExecutorService getExecutorService()
    {
       return executorService;
+   }
+
+   /**
+    * @return The {@link ClassLoader}s to be used in this configuration;
+    * used in extension loading and adding CL resources to the archive, etc
+    */
+   public Iterable<ClassLoader> getClassLoaders()
+   {
+      return classLoaders;
    }
 }

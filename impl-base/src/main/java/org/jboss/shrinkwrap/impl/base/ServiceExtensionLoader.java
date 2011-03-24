@@ -17,19 +17,18 @@
 package org.jboss.shrinkwrap.impl.base;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
+import org.jboss.shrinkwrap.api.ClassLoaderSearchUtilDelegator;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.UnknownExtensionTypeException;
 import org.jboss.shrinkwrap.api.UnknownExtensionTypeExceptionDelegator;
@@ -58,8 +57,31 @@ public class ServiceExtensionLoader implements ExtensionLoader
    
    private Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
    private Map<Class<?>, ExtensionWrapper> extensionMappings = new HashMap<Class<?>, ExtensionWrapper>();
-
    
+   /**
+    * ClassLoader used for loading extensions
+    */
+   private final Iterable<ClassLoader> classLoaders;
+   
+   //-------------------------------------------------------------------------------------||
+   // Constructor ------------------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+   
+   /**
+    * Creates a new instance, using the specified {@link ClassLoader}s to 
+    * create extensions
+    * @param classLoaders
+    * @throws IllegalArgumentException If the {@link ClassLoader} is not specified
+    */
+   public ServiceExtensionLoader(final Iterable<ClassLoader> classLoaders) throws IllegalArgumentException
+   {
+      if (classLoaders == null)
+      {
+         throw new IllegalArgumentException("ClassLoader must be specified");
+      }
+      this.classLoaders = classLoaders;
+   }
+
    //-------------------------------------------------------------------------------------||
    // Required Implementations - ExtensionLoader -----------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -113,21 +135,23 @@ public class ServiceExtensionLoader implements ExtensionLoader
    // Internal Helper Methods - Override -------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.ExtensionLoader#addOverride(java.lang.Class, java.lang.Class)
     */
-   public <T extends Assignable> ServiceExtensionLoader addOverride(Class<T> extensionClass, Class<? extends T> extensionImplClass)
+   public <T extends Assignable> ServiceExtensionLoader addOverride(final Class<T> extensionClass,
+         final Class<? extends T> extensionImplClass)
    {
       addToCache(extensionClass, extensionImplClass);
       return this;
    }
 
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.ExtensionLoader#getExtensionFromExtensionMapping(java.lang.Class)
     */
-   public <T extends Assignable> String getExtensionFromExtensionMapping(Class<T> type)
+   public <T extends Assignable> String getExtensionFromExtensionMapping(final Class<T> type)
    {
-
       ExtensionWrapper extensionWrapper = extensionMappings.get(type);
       if (extensionWrapper == null) {
          loadExtensionMapping(type);
@@ -181,58 +205,51 @@ public class ServiceExtensionLoader implements ExtensionLoader
 
    private <T extends Assignable> ExtensionWrapper loadExtensionMapping(Class<T> extensionClass)   
    {
-      URL extensionImplUrl = findExtensionImpl(extensionClass);
+      final InputStream extensionStream = findExtensionImpl(extensionClass);
 
-      ExtensionWrapper extensionWrapper = loadExtensionWrapper(extensionImplUrl, extensionClass);
+      ExtensionWrapper extensionWrapper = loadExtensionWrapper(extensionStream, extensionClass);
       this.extensionMappings.put(extensionClass, extensionWrapper);
       return extensionWrapper;
    }
 
    
-   private <T extends Assignable> URL findExtensionImpl(Class<T> extensionClass) 
+   private <T extends Assignable> InputStream findExtensionImpl(final Class<T> extensionClass)
    {
-      try 
+      try
       {
-         Enumeration<URL> urls  = getClassLoader().getResources(
-               "META-INF/services/" + extensionClass.getName());
-   
-         List<URL> foundExtensions = Collections.list(urls);
-         if(foundExtensions.size() == 0)
+         // Add all extension impls found in all CLs
+         for (final ClassLoader cl : this.getClassLoaders())
          {
-            throw new RuntimeException(
-                  "No extension implementation found for " + extensionClass.getName() + 
-                  ", please verify classpath or add a extensionOverride");
+            final InputStream stream = cl.getResourceAsStream("META-INF/services/" + extensionClass.getName());
+            if (stream != null)
+            {
+               return stream;
+            }
          }
-         if(foundExtensions.size() > 1) 
-         {
-            log.warning(
-                  "Multiple extension implementations found for " + extensionClass.getName() + 
-                   ", please verify classpath or add a extensionOverride");
-//            throw new RuntimeException(
-//                "Multiple extension implementations found for " + extensionClass.getName() + 
-//                ", please verify classpath or add a extensionOverride");
-         }
-         return foundExtensions.get(0);
-      } 
-      catch (Exception e) 
+
+         // None found
+         throw new RuntimeException("No extension implementation found for " + extensionClass.getName()
+               + ", please verify classpath or add a extensionOverride");
+      }
+      catch (Exception e)
       {
          throw UnknownExtensionTypeExceptionDelegator.newExceptionInstance(extensionClass);
       }
    }
 
-   private <T extends Assignable> ExtensionWrapper loadExtensionWrapper(URL extensionURL, Class<T> extensionClass)
+   private <T extends Assignable> ExtensionWrapper loadExtensionWrapper(final InputStream extensionStream, Class<T> extensionClass)
    {
       Properties properties = new Properties();
       try
       {
-         properties.load(extensionURL.openStream());
+         properties.load(extensionStream);
       } catch (IOException e) {
-         throw new RuntimeException("Could not open stream for extensionURL " + extensionURL, e);
+         throw new RuntimeException("Could not open stream for extensionURL " + extensionStream, e);
       }
       String implementingClassName = (String) properties.get("implementingClassName");
       if(implementingClassName == null)
       {
-         throw new RuntimeException("Property implementingClassName is not present in " + extensionURL);
+         throw new RuntimeException("Property implementingClassName is not present in " + extensionStream);
       }
       final Map<String, String> map = new HashMap<String, String>(properties.size());
       final Enumeration<Object> keys = properties.keys();
@@ -248,11 +265,13 @@ public class ServiceExtensionLoader implements ExtensionLoader
    @SuppressWarnings("unchecked")
    private <T extends Assignable> Class<T> loadExtensionClass(String extensionClassName)
    {
-      try 
+      try
       {
-         return (Class<T>)getClassLoader().loadClass(extensionClassName);
+         return (Class<T>) ClassLoaderSearchUtilDelegator.findClassFromClassLoaders(extensionClassName,
+               getClassLoaders());
       }
-      catch (ClassNotFoundException e) {
+      catch (final ClassNotFoundException e)
+      {
          throw new RuntimeException("Could not load class " + extensionClassName, e);
       }
    }
@@ -317,8 +336,8 @@ public class ServiceExtensionLoader implements ExtensionLoader
             Archive.class.getName() + " could be found");
    }
    
-   private ClassLoader getClassLoader() 
-   {      
-      return SecurityActions.getThreadContextClassLoader();
+   private Iterable<ClassLoader> getClassLoaders()
+   {
+      return this.classLoaders;
    }
 }

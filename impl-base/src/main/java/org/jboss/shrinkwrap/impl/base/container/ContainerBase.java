@@ -17,7 +17,6 @@
 package org.jboss.shrinkwrap.impl.base.container;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.security.AccessController;
@@ -28,6 +27,7 @@ import java.util.Map;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.ClassLoaderSearchUtilDelegator;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Node;
@@ -51,6 +51,7 @@ import org.jboss.shrinkwrap.impl.base.asset.ClassAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ServiceProviderAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
+import org.jboss.shrinkwrap.spi.Configurable;
 
 /**
  * ContainerBase
@@ -68,22 +69,6 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
-   
-   /**
-    * Secure action to obtain the Thread Context ClassLoader
-    * 
-    * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
-    * @version $Revision: $
-    */
-   private enum GetTcclAction implements PrivilegedAction<ClassLoader>{
-      INSTANCE;
-
-      @Override
-      public ClassLoader run()
-      {
-         return Thread.currentThread().getContextClassLoader();
-      }
-   }
    
    private static final Archive<?>[] CAST = new Archive[]{};
    
@@ -974,23 +959,38 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return addClasses(clazz);
    }
    
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.container.ClassContainer#addClass(java.lang.String)
-    */
    /**
-    * @see #addClass(String, ClassLoader)
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.container.ClassContainer#addClass(java.lang.String)
     */
    @Override
    public T addClass(String fullyQualifiedClassName) throws IllegalArgumentException
    {
       Validate.notNullOrEmpty(fullyQualifiedClassName, "Fully-qualified class name must be specified");
 
-      return addClass(
-            fullyQualifiedClassName, 
-            AccessController.doPrivileged(GetTcclAction.INSTANCE));
+      // Get this archive's CLs
+      final Archive<?> archive = this.getArchive();
+      final Iterable<ClassLoader> cls = ((Configurable) archive).getConfiguration().getClassLoaders();
+      assert cls != null : "CLs of this archive is not specified:" + archive;
+      
+      // Find the class in the configured CLs
+      final Class<?> classToAdd;
+      try
+      {
+         classToAdd = ClassLoaderSearchUtilDelegator.findClassFromClassLoaders(fullyQualifiedClassName, cls);
+      }
+      catch (final ClassNotFoundException cnfe)
+      {
+         throw new IllegalArgumentException("Could not find the requested Class " + fullyQualifiedClassName
+               + " in any of the configured ClassLoaders for this archive", cnfe);
+      }
+
+      // Add
+      return addClass(classToAdd);
    }
    
-   /* (non-Javadoc)
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.container.ClassContainer#addClass(java.lang.String, java.lang.ClassLoader)
     */
    @Override
@@ -1125,29 +1125,33 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(filter, "Filter must be specified");
       Validate.notNull(packageNames, "PackageNames must be specified");
 
-      final ClassLoader classLoader = SecurityActions.getThreadContextClassLoader();
+      // Get the CLs for this archive
+      final Iterable<ClassLoader> classLoaders = ((Configurable) this.getArchive()).getConfiguration().getClassLoaders();
       
-      for(String packageName : packageNames) 
+      for (String packageName : packageNames)
       {
-         final URLPackageScanner.Callback callback = new URLPackageScanner.Callback()
+         
+         for (final ClassLoader classLoader : classLoaders)
          {
-            @Override
-            public void classFound(String className)
+            final URLPackageScanner.Callback callback = new URLPackageScanner.Callback()
             {
-               ArchivePath classNamePath = AssetUtil.getFullPathForClassResource(className);
-               if (!filter.include(classNamePath))
+               @Override
+               public void classFound(String className)
                {
-                  return;
+                  ArchivePath classNamePath = AssetUtil.getFullPathForClassResource(className);
+                  if (!filter.include(classNamePath))
+                  {
+                     return;
+                  }
+                  Asset asset = new ClassLoaderAsset(classNamePath.get().substring(1), classLoader);
+                  ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
+                  add(asset, location);
                }
-               Asset asset = new ClassLoaderAsset(classNamePath.get().substring(1), classLoader);
-               ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
-               add(asset, location);
-            }
-         };
-         final URLPackageScanner scanner = packageName == null ? 
-                  URLPackageScanner.newInstance(recursive, classLoader, callback) : 
-                  URLPackageScanner.newInstance(recursive, classLoader, callback, packageName);
-         scanner.scanPackage();
+            };
+            final URLPackageScanner scanner = packageName == null ? URLPackageScanner.newInstance(recursive,
+                  classLoader, callback) : URLPackageScanner.newInstance(recursive, classLoader, callback, packageName);
+            scanner.scanPackage();
+         }
       }
       return covarientReturn();
    }
@@ -1398,9 +1402,26 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return this.actualType;
    }
 
-   private File fileFromResource(String resourceName)      
+   private File fileFromResource(final String resourceName)
    {
-      String resourcePath = AccessController.doPrivileged(GetTcclAction.INSTANCE).getResource(resourceName).getFile();
+      final String resourcePath = AccessController.doPrivileged(GetTcclAction.INSTANCE).getResource(resourceName)
+            .getFile();
       return new File(resourcePath);
+   }
+   
+   /**
+    * Obtains the {@link Thread} Context {@link ClassLoader}
+    * 
+    * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
+    */
+   private enum GetTcclAction implements PrivilegedAction<ClassLoader> {
+      INSTANCE;
+
+      @Override
+      public ClassLoader run()
+      {
+         return Thread.currentThread().getContextClassLoader();
+      }
+
    }
 }
