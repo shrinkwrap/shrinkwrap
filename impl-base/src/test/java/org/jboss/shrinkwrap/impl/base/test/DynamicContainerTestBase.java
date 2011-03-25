@@ -383,7 +383,23 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
    }
-   
+
+   /*
+    * https://issues.jboss.org/browse/SHRINKWRAP-187 - Do not override existing paths.
+    */
+   @Test
+   public void testAddResourceStringTargetResourceOverride() throws Exception {
+      ArchivePath targetPath = new BasicPath("META-INF/Test.txt");
+      ArchivePath targetPath2 = new BasicPath("META-INF");
+
+      getResourceContainer().addAsResource(NAME_TEST_PROPERTIES, targetPath);
+      getResourceContainer().addAsResource(NAME_TEST_PROPERTIES, targetPath2);
+
+      ArchivePath testPath = new BasicPath(getResourcePath(), "META-INF/Test.txt");
+
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+
    @Test
    @ArchiveType(ResourceContainer.class)
    public void testAddResourceStringTargetFile() throws Exception {
