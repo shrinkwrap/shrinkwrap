@@ -114,24 +114,20 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
       Validate.notNull(asset, "No asset was specified");
       Validate.notNull(path, "No path was specified");
 
-      // Retrieve the parent
-      NodeImpl parentNode = obtainParent(path.getParent());
+      // Check if it exists. If it doesn't, create it and add it.
+      if (!contains(path)) {
+          // Retrieve the parent
+          NodeImpl parentNode = obtainParent(path.getParent());
 
-      // Check if a the path already contains a node so we remove it from the parent's children
-      NodeImpl existingNode = content.get(path);
-      if (parentNode != null && existingNode != null)
-      {
-         parentNode.removeChild(existingNode);
-      }
+          // Add the node to the content of the archive
+          NodeImpl node = new NodeImpl(path, asset);
+          content.put(path, node);
 
-      // Add the node to the content of the archive
-      NodeImpl node = new NodeImpl(path, asset);
-      content.put(path, node);
-
-      // Add the new node to the parent as a child
-      if (parentNode != null)
-      {
-         parentNode.addChild(node);
+          // Add the new node to the parent as a child
+          if (parentNode != null)
+          {
+             parentNode.addChild(node);
+          }
       }
 
       return covariantReturn();
