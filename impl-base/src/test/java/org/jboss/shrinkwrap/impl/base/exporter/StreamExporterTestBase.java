@@ -46,7 +46,6 @@ import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.importer.StreamImporter;
-import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.junit.Assert;
@@ -91,7 +90,7 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
     * @return
     */
    protected abstract InputStream getContentsFromExportedFile(File file, ArchivePath path) throws IOException;
-   
+
    /**
     * Obtains the type of {@link StreamImporter} used for this test
     * @return
@@ -189,7 +188,7 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
       final GenericArchive roundtrip = ShrinkWrap.create(this.getImporterClass(), "roundtrip.zip")
             .importFrom(new ByteArrayInputStream(exportedContents.toByteArray())).as(GenericArchive.class);
       log.info(roundtrip.toString(true));
-      Assert.assertTrue(roundtrip.contains(path));      
+      Assert.assertTrue(roundtrip.contains(path));
    }
 
    /**
@@ -215,7 +214,7 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
       // Roundtrip assertion
       this.ensureInExpectedForm(exported);
    }
-   
+
    /**
     * Ensures that we get an {@link IllegalArgumentException} if we attempt to
     * export to a directory
@@ -234,16 +233,17 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
       Archive<?> archive = createArchiveWithAssets();
 
       // Export as File to a directory
-      try{
+      try
+      {
          this.exportAsFile(archive, tempDirectory, true);
       }
       // Expected
-      catch(final IllegalArgumentException iae)
+      catch (final IllegalArgumentException iae)
       {
          // Good
          return;
       }
-      
+
       // Fail
       Assert.fail("Should have encountered " + IllegalArgumentException.class.getSimpleName() + " exporting to a dir");
 
@@ -376,6 +376,12 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
    {
       log.info("testExportThrowsArchiveExceptionOnAssetWriteFailure");
       Archive<?> archive = createArchiveWithAssets();
+
+      // Check if a the path already contains a node so we remove it from the parent's children
+      if (archive.contains(PATH_ONE))
+      {
+         archive.delete(PATH_ONE);
+      }
 
       archive.add(new Asset()
       {

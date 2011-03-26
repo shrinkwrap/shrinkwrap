@@ -115,24 +115,25 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
       Validate.notNull(path, "No path was specified");
 
       // Check if it exists. If it doesn't, create it and add it.
-      if (!contains(path)) {
-          // Retrieve the parent
-          NodeImpl parentNode = obtainParent(path.getParent());
+      if (!contains(path))
+      {
+         // Retrieve the parent
+         NodeImpl parentNode = obtainParent(path.getParent());
 
-          // Add the node to the content of the archive
-          NodeImpl node = new NodeImpl(path, asset);
-          content.put(path, node);
+         // Add the node to the content of the archive
+         NodeImpl node = new NodeImpl(path, asset);
+         content.put(path, node);
 
-          // Add the new node to the parent as a child
-          if (parentNode != null)
-          {
-             parentNode.addChild(node);
-          }
+         // Add the new node to the parent as a child
+         if (parentNode != null)
+         {
+            parentNode.addChild(node);
+         }
       }
 
       return covariantReturn();
    }
-   
+
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, java.lang.String, java.lang.Class)

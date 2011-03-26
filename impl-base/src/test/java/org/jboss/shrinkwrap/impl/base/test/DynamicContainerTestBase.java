@@ -388,6 +388,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     * https://issues.jboss.org/browse/SHRINKWRAP-187 - Do not override existing paths.
     */
    @Test
+   @ArchiveType(ResourceContainer.class)
    public void testAddResourceStringTargetResourceOverride() throws Exception {
       ArchivePath targetPath = new BasicPath("META-INF/Test.txt");
       ArchivePath targetPath2 = new BasicPath("META-INF");
