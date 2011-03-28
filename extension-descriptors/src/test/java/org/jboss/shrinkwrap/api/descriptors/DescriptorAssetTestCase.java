@@ -16,7 +16,13 @@
  */
 package org.jboss.shrinkwrap.api.descriptors;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.AccessController;
+import java.util.Properties;
+
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.descriptor.api.Descriptor;
 import org.jboss.shrinkwrap.descriptor.api.Descriptors;
 import org.jboss.shrinkwrap.descriptor.api.spec.servlet.web.WebAppDescriptor;
@@ -29,6 +35,7 @@ import org.junit.Test;
  * contracted
  * 
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
+ * @author <a href="mailto:iapazmino@gmail.com">Ivan Pazmino</a>
  */
 public class DescriptorAssetTestCase
 {
@@ -66,4 +73,56 @@ public class DescriptorAssetTestCase
    {
       new DescriptorAsset(null);
    }
+
+   /**
+    * Ensures the name given to a {@link DescriptorAsset} is maintained when represented as an {@link NamedAsset}
+    */
+   @Test
+   public void namedDescriptorAsset()
+   {
+      //Descriptor's name
+      final String descriptorName = "Test";
+
+      //Make a named descriptor
+      final WebAppDescriptor descriptor = Descriptors.create(WebAppDescriptor.class, descriptorName);
+
+      // Represent as an Asset
+      final NamedAsset asset = new DescriptorAsset(descriptor);
+
+      //Get the asset's name
+      final String assetName = asset.getName();
+      Assert.assertEquals("Asset's name differs from descriptor's name", descriptorName, assetName);
+   }
+
+   /**
+    * Ensures a default name given to the {@link DescriptorAsset} is maintained when represented as an {@link NamedAsset}
+    */
+   @Test
+   public void defaultNamedDescriptor()
+   {
+      //Load descriptor's properties
+      final Properties props = new Properties();
+      final String resourceName = "META-INF/services/" + WebAppDescriptor.class.getName();
+      final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+      final InputStream resourceStream = loader.getResourceAsStream(resourceName);
+      try {
+         props.load(resourceStream);
+      } catch (IOException e) {
+         throw new RuntimeException("IO errors getting the properties", e);
+      }
+      
+      //Get the default name
+      final String defaultName = props.getProperty("defaultName");
+      
+      //Make a descriptor
+      final WebAppDescriptor descriptor = Descriptors.create(WebAppDescriptor.class);
+
+      //Represent as an Asset
+      final NamedAsset asset = new DescriptorAsset(descriptor);
+
+      //Get the asset's name
+      final String assetName = asset.getName();
+      Assert.assertEquals("Asset's name differs from the default name", defaultName, assetName);
+   }
+
 }
