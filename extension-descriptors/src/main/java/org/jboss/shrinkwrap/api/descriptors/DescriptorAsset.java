@@ -20,7 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.descriptor.api.Descriptor;
 
 /**
@@ -28,8 +28,9 @@ import org.jboss.shrinkwrap.descriptor.api.Descriptor;
  * of being directly added to an {@link Archive}
  * 
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
+ * @author <a href="mailto:iapazmino@gmail.com">Ivan Pazmino</a>
  */
-public class DescriptorAsset implements Asset
+public class DescriptorAsset implements NamedAsset
 {
 
    //-------------------------------------------------------------------------------------||
@@ -76,5 +77,15 @@ public class DescriptorAsset implements Asset
       // Return
       return new ByteArrayInputStream(descriptor.exportAsString().getBytes());
    }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.asset.NamedAsset#getName()
+    */
+   public String getName()
+   {
+       // Return
+       return descriptor.getDescriptorName();
+    }
 
 }
