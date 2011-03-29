@@ -17,6 +17,8 @@
 package org.jboss.shrinkwrap.impl.base.test;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,6 +44,7 @@ import org.jboss.shrinkwrap.impl.base.test.dummy.DummyInterfaceForTest;
 import org.jboss.shrinkwrap.impl.base.test.dummy.nested1.EmptyClassForFiltersTest1;
 import org.jboss.shrinkwrap.impl.base.test.dummy.nested2.EmptyClassForFiltersTest2;
 import org.jboss.shrinkwrap.impl.base.test.dummy.nested3.EmptyClassForFiltersTest3;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -87,6 +90,14 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       return new ClassLoaderAsset(name);
    }
    
+   @Before
+   public void createEmptyDirectory() throws Exception
+   {
+      File emptyDir = createDirectory("org/jboss/shrinkwrap/impl/base/recursion/empty");
+      Assert.assertTrue("Empty directory not found at " + emptyDir.getAbsolutePath(), emptyDir.exists());
+      Assert.assertEquals("Directory not empty", emptyDir.list().length, 0);
+   }
+   
    //-------------------------------------------------------------------------------------||
    // Test Implementations - ManifestContainer -------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -106,7 +117,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
    }
-   
+
    /** 
     * https://jira.jboss.org/jira/browse/SHRINKWRAP-142
     * 
@@ -165,7 +176,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
    }
-   
+
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testAddManifestResourceRecursively() throws Exception {
@@ -193,6 +204,16 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       getManifestContainer().addAsManifestResource(baseFolder, baseFolder);
       
       assertArchiveContainsFolderRecursively(getFileForClassResource(baseFolder), getManifestPath(), baseFolder);
+   }
+   
+   @Test
+   @ArchiveType(ManifestContainer.class)
+   public void testArchiveContainsEmptyManifestResourceDirectory() throws Exception {
+      String baseFolder = "org/jboss/shrinkwrap/impl/base/recursion";
+      getManifestContainer().addAsManifestResource(baseFolder);
+      
+      String emptyFolderPath = baseFolder + "/empty";
+      assertArchiveContainsFolderRecursively(getFileForClassResource(emptyFolderPath), getManifestPath(), emptyFolderPath);
    }
    
    @Test
@@ -552,6 +573,16 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       getResourceContainer().addAsResource(baseFolderUrl, new BasicPath("/new-name"));
       
       assertArchiveContainsFolderRecursively(getFileForClassResource(baseFolderPath), getResourcePath(), "/new-name");
+   }
+   
+   @Test
+   @ArchiveType(ResourceContainer.class)
+   public void testArchiveContainsEmptyResourceDirectory() throws Exception {
+      String baseFolder = "org/jboss/shrinkwrap/impl/base/recursion";
+      getResourceContainer().addAsResource(baseFolder);
+      
+      String emptyFolderPath = baseFolder + "/empty";
+      assertArchiveContainsFolderRecursively(getFileForClassResource(emptyFolderPath), getResourcePath(), emptyFolderPath);
    }
 
    @Test
@@ -1060,6 +1091,16 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    
    @Test
    @ArchiveType(LibraryContainer.class)
+   public void testArchiveContainsEmptyLibraryDirectory() throws Exception {
+      String baseFolder = "org/jboss/shrinkwrap/impl/base/recursion";
+      getLibraryContainer().addAsLibrary(baseFolder);
+      
+      String emptyFolderPath = baseFolder + "/empty";
+      assertArchiveContainsFolderRecursively(getFileForClassResource(emptyFolderPath), getLibraryPath(), emptyFolderPath);
+   }
+   
+   @Test
+   @ArchiveType(LibraryContainer.class)
    public void testAddLibraryResourceWithTargetRecursively() throws Exception {
       String baseFolderPath = "org/jboss/shrinkwrap/impl/base/recursion";
       getLibraryContainer().addAsLibrary(baseFolderPath, "/new-name");
@@ -1297,22 +1338,57 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             getArchive().contains(expectedPath));
    }
    
-   private void assertArchiveContainsFolderRecursively(File folder, ArchivePath base, String target) throws Exception
+   //-------------------------------------------------------------------------------------||
+   // Internal Helper Methods ------------------------------------------------------------||
+   //-------------------------------------------------------------------------------------||
+   /**
+    * Asserts that the archive recursively contains the specified file in the target starting from the base position.
+    */
+   private void assertArchiveContainsFolderRecursively(File file, ArchivePath base, String target) throws Exception
    {
       ArchivePath testPath = new BasicPath(base, target);
-      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+      Assert.assertTrue("Archive should contain " + testPath, this.getArchive().contains(testPath));
 
-      if (folder.isDirectory())
+      if (file.isDirectory())
       {
-         for (File child : folder.listFiles())
+         for (File child : file.listFiles())
          {
             assertArchiveContainsFolderRecursively(child, base, target + "/" + child.getName());
          }
-         int folderInArchiveSize = getArchive().get(testPath).getChildren().size();
+         int folderInArchiveSize = this.getArchive().get(testPath).getChildren().size();
          Assert.assertEquals("Wrong number of files in the archive folder: " + testPath.get(),
-               folder.listFiles().length,
+               file.listFiles().length,
                folderInArchiveSize);
       }
+   }
+   
+   protected File getTarget()
+   {
+      try
+      {
+         return new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+      }
+      catch (final URISyntaxException urise)
+      {
+         throw new RuntimeException("Could not obtain the target URI", urise);
+      }
+   }
+   
+   private File createDirectory(String resourcePath) throws IOException
+   {
+      File directory = this.getTarget();
+      String[] split = resourcePath.split("/");
+      for (String folder : split)
+      {
+         directory = new File(directory, folder);
+         if (directory.exists())
+            continue;
+
+         boolean created = directory.mkdir();
+         if (!created)
+            throw new RuntimeException("Impossible to create directory at path:" + directory.getAbsolutePath());
+      }
+      return directory;
    }
    
 }
