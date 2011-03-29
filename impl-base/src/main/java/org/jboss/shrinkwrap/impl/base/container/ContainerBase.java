@@ -520,8 +520,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public final T addAsManifestResource(String resourceName)
    {
       Validate.notNull(resourceName, "ResourceName should be specified");
-      File resource = fileFromResource(resourceName);
-      return addAsManifestResource(resource, resourceName);
+      return addAsManifestResource(fileFromResource(resourceName), resourceName);
    }
    
    /* (non-Javadoc)
@@ -543,8 +542,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resourceName, "ResourceName should be specified");
       Validate.notNull(target, "Target should be specified");
       
-      File resource = fileFromResource(resourceName);
-      return addAsManifestResource(resource, target);
+      return addAsManifestResource(fileFromResource(resourceName), target);
    }
 
    /* (non-Javadoc)
@@ -568,7 +566,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resource, "Resource should be specified");
       Validate.notNull(target, "Target should be specified");
       
-      return addAsManifestResource(new UrlAsset(resource), target);
+      return addAsManifestResource(resource, new BasicPath(target));
    }
    
    /* (non-Javadoc)
@@ -592,8 +590,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resourceName, "ResourceName should be specified");
       Validate.notNull(target, "Target should be specified");
       
-      File resource = fileFromResource(resourceName);
-      return addAsManifestResource(resource, target);
+      return addAsManifestResource(fileFromResource(resourceName), target);
    }
    
    /* (non-Javadoc)
@@ -627,6 +624,10 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    {
       Validate.notNull(resource, "Resource should be specified");
       Validate.notNull(target, "Target should be specified");
+      
+      File file = new File(resource.getFile());
+      if (file.exists())
+         return addAsManifestResource(file, target);
       
       return addAsManifestResource(new UrlAsset(resource), target);
    }
@@ -737,7 +738,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public final T addAsResource(String resourceName) throws IllegalArgumentException
    {
       Validate.notNull(resourceName, "ResourceName should be specified");
-      return addAsResource(new ClassLoaderAsset(resourceName), resourceName);
+      return addAsResource(resourceName, resourceName);
    }   
 
    /* (non-Javadoc)
@@ -759,8 +760,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resourceName, "ResourceName should be specified");
       Validate.notNull(target, "Target should be specified");
       
-      File resource = fileFromResource(resourceName);
-      return addAsResource(resource, target);
+      return addAsResource(fileFromResource(resourceName), target);
    }
 
    /* (non-Javadoc)
@@ -784,7 +784,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resource, "Resource should be specified");
       Validate.notNull(target, "Target should be specified");
       
-      return addAsResource(new UrlAsset(resource), target);
+      return addAsResource(resource, new BasicPath(target));
    }
    
    /* (non-Javadoc)
@@ -856,6 +856,10 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    {
       Validate.notNull(resource, "Resource should be specified");
       Validate.notNull(target, "Target should be specified");
+      
+      File file = new File(resource.getFile());
+      if (file.exists())
+         return addAsResource(file, target);
       
       return addAsResource(new UrlAsset(resource), target);
    }
@@ -1164,7 +1168,8 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public T addAsLibrary(String resourceName) throws IllegalArgumentException
    {
       Validate.notNull(resourceName, "ResourceName must be specified");
-      return addAsLibrary(new ClassLoaderAsset(resourceName), resourceName);
+      File file = fileFromResource(resourceName);
+      return addAsLibrary(file, new BasicPath(resourceName));
    }
    
    /**
@@ -1175,7 +1180,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public T addAsLibrary(File resource) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource must be specified");
-      return addAsLibrary(new FileAsset(resource), resource.getName());
+      return addAsLibrary(resource, resource.getName());
    }
    
    /**
@@ -1188,7 +1193,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resourceName, "ResourceName must be specified");
       Validate.notNull(target, "Target must be specified");
 
-      return addAsLibrary(new ClassLoaderAsset(resourceName), target);
+      return addAsLibrary(resourceName, new BasicPath(target));
    }
    
    /**
@@ -1201,7 +1206,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resource, "Resource must be specified");
       Validate.notNull(target, "Target must be specified");
 
-      return addAsLibrary(new FileAsset(resource), target);
+      return addAsLibrary(resource, new BasicPath(target));
    }
    
    /* (non-Javadoc)
@@ -1213,7 +1218,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resource, "Resource must be specified");
       Validate.notNull(target, "Target must be specified");
 
-      return addAsLibrary(new UrlAsset(resource), target);
+      return addAsLibrary(resource, new BasicPath(target));
    }
    
    /* (non-Javadoc)
@@ -1237,7 +1242,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resourceName, "ResourceName must be specified");
       Validate.notNull(target, "Target must be specified");
       
-      return addAsLibrary(new ClassLoaderAsset(resourceName), target);
+      return addAsLibrary(fileFromResource(resourceName), target);
    }
    
    /* (non-Javadoc)
@@ -1248,8 +1253,18 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    {
       Validate.notNull(resource, "Resource must be specified");
       Validate.notNull(target, "Target must be specified");
+
+      if (resource.isFile())
+         return addAsLibrary(new FileAsset(resource), target);
       
-      return addAsLibrary(new FileAsset(resource), target);
+      if (resource.listFiles().length == 0)
+         return addAsLibrary(new FileAsset(resource), target);
+      
+      for (File file : resource.listFiles())
+      {
+         addAsLibrary(file, new BasicPath(target, file.getName()));
+      }
+      return covarientReturn();      
    }
    
    /* (non-Javadoc)
@@ -1261,7 +1276,22 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resource, "Resource must be specified");
       Validate.notNull(target, "Target must be specified");
       
-      return addAsLibrary(new UrlAsset(resource), target);
+      File resourceFile = new File(resource.getFile());
+      if (!resourceFile.exists())
+         return addAsLibrary(new UrlAsset(resource), target);
+      
+      if (resourceFile.isFile())
+         return addAsLibrary(new UrlAsset(resource), target);
+      
+      if (resourceFile.length() == 0)
+         return addAsLibrary(new UrlAsset(resource), target);
+
+      for (File file : resourceFile.listFiles())
+      {
+         addAsLibrary(file, new BasicPath(target, file.getName()));
+      }
+      
+      return covarientReturn();
    }
    
    /* (non-Javadoc)
