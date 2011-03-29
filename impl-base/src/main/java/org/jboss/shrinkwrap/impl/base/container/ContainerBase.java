@@ -17,6 +17,8 @@
 package org.jboss.shrinkwrap.impl.base.container;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -1359,7 +1361,23 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(archives, "Archives must be specified");
       return this.addAsLibraries(archives.toArray(CAST));
    }
-   
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void writeTo(final OutputStream outputStream, final Formatter formatter) throws IllegalArgumentException
+   {
+      try
+      {
+         outputStream.write(toString(formatter).getBytes());
+      }
+      catch(IOException ioe)
+      {
+         throw new IllegalArgumentException("Could not write Archive contents to specified OutputStream", ioe);
+      }
+   }
+
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||

@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Map;
 
@@ -394,5 +395,18 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If the formatter is not specified
     */
    String toString(Formatter formatter) throws IllegalArgumentException;
+
+   /**
+    * Prints the content of this {@link Archive} to the specified
+    * {@link OutputStream} on the format defined by the specified
+    * {@link Formatter}. The caller is responsible for opening,
+    * flushing and eventually closing the stream.
+    *
+    * @param outputStream the stream to print the archive contents to
+    * @param formatter the output format
+    * @throws IllegalArgumentException if an exceptions occur when
+    * writing the archive contents.
+    */
+   void writeTo(OutputStream outputStream, Formatter formatter) throws IllegalArgumentException;
 
 }

@@ -16,6 +16,8 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -476,6 +478,22 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
       // Delegate
       return formatter.format(this);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void writeTo(final OutputStream outputStream, final Formatter formatter) throws IllegalArgumentException
+   {
+      try
+      {
+         outputStream.write(toString(formatter).getBytes());
+      }
+      catch(IOException ioe)
+      {
+         throw new IllegalArgumentException("Could not write Archive contents to specified OutputStream", ioe);
+      }
    }
 
    /**
