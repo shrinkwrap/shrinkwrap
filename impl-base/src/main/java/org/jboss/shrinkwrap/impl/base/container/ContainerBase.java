@@ -520,8 +520,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public final T addAsManifestResource(String resourceName)
    {
       Validate.notNull(resourceName, "ResourceName should be specified");
-      String resourcePath = GetTcclAction.INSTANCE.run().getResource(resourceName).getFile();
-      File resource = new File(resourcePath);
+      File resource = fileFromResource(resourceName);
       return addAsManifestResource(resource, resourceName);
    }
    
@@ -544,8 +543,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resourceName, "ResourceName should be specified");
       Validate.notNull(target, "Target should be specified");
       
-      String resourcePath = GetTcclAction.INSTANCE.run().getResource(resourceName).getFile();
-      File resource = new File(resourcePath);
+      File resource = fileFromResource(resourceName);
       return addAsManifestResource(resource, target);
    }
 
@@ -594,8 +592,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resourceName, "ResourceName should be specified");
       Validate.notNull(target, "Target should be specified");
       
-      String resourcePath = GetTcclAction.INSTANCE.run().getResource(resourceName).getFile();
-      File resource = new File(resourcePath);
+      File resource = fileFromResource(resourceName);
       return addAsManifestResource(resource, target);
    }
    
@@ -750,7 +747,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public final T addAsResource(File resource) throws IllegalArgumentException
    {
       Validate.notNull(resource, "Resource should be specified");
-      return addAsResource(new FileAsset(resource), resource.getName());
+      return addAsResource(resource, resource.getName());
    }
 
    /* (non-Javadoc)
@@ -762,7 +759,8 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resourceName, "ResourceName should be specified");
       Validate.notNull(target, "Target should be specified");
       
-      return addAsResource(new ClassLoaderAsset(resourceName), target);
+      File resource = fileFromResource(resourceName);
+      return addAsResource(resource, target);
    }
 
    /* (non-Javadoc)
@@ -774,7 +772,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resource, "Resource should be specified");
       Validate.notNull(target, "Target should be specified");
       
-      return addAsResource(new FileAsset(resource), target);
+      return addAsResource(resource, new BasicPath(target));
    }
    
    /* (non-Javadoc)
@@ -809,8 +807,9 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    {
       Validate.notNull(resourceName, "ResourceName should be specified");
       Validate.notNull(target, "Target should be specified");
-      
-      return addAsResource(new ClassLoaderAsset(resourceName), target);
+
+      File resource = fileFromResource(resourceName);
+      return addAsResource(resource, target);
    }
 
    /* (non-Javadoc)
@@ -835,7 +834,18 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Validate.notNull(resource, "Resource should be specified");
       Validate.notNull(target, "Target should be specified");
       
-      return addAsResource(new FileAsset(resource), target);
+      if (resource.isFile()) 
+         return addAsResource(new FileAsset(resource), target);
+      
+      if (resource.listFiles().length == 0) 
+         return  addAsResource(new FileAsset(resource), target);
+
+      for (File file : resource.listFiles())
+      {
+         ArchivePath child = ArchivePaths.create(file.getName());
+         addAsResource(file, new BasicPath(target, child));
+      }
+      return covarientReturn();      
    }
    
    /* (non-Javadoc)
@@ -1334,4 +1344,10 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return this.actualType;
    }
 
+   private File fileFromResource(String resourceName)
+   {
+      String resourcePath = GetTcclAction.INSTANCE.run().getResource(resourceName).getFile();
+      File resource = new File(resourcePath);
+      return resource;
+   }
 }

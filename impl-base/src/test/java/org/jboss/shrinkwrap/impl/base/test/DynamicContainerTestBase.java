@@ -172,7 +172,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       String baseFolder = "org/jboss/shrinkwrap/impl/base/recursion";
       getManifestContainer().addAsManifestResource("org/jboss/shrinkwrap/impl/base/recursion");
       
-      assertArchiveContainsResourceRecursively(getFileForClassResource(baseFolder), baseFolder);
+      assertArchiveContainsTargetRecursively(getFileForClassResource(baseFolder), getManifestPath(), baseFolder);
    }
    
    @Test
@@ -192,7 +192,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       String baseFolder = "org/jboss/shrinkwrap/impl/base/recursion";
       getManifestContainer().addAsManifestResource(baseFolder, baseFolder);
       
-      assertArchiveContainsResourceRecursively(getFileForClassResource(baseFolder), baseFolder);
+      assertArchiveContainsTargetRecursively(getFileForClassResource(baseFolder), getManifestPath(), baseFolder);
    }
    
    @Test
@@ -201,7 +201,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       File baseFolder = getFileForClassResource("org/jboss/shrinkwrap/impl/base/recursion");
       getManifestContainer().addAsManifestResource(baseFolder);
       
-      assertArchiveContainsResourceRecursively(baseFolder, "/recursion");
+      assertArchiveContainsTargetRecursively(baseFolder, getManifestPath(), "/recursion");
    }
    
    @Test
@@ -210,17 +210,16 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       File baseFolder = getFileForClassResource("org/jboss/shrinkwrap/impl/base/recursion");
       getManifestContainer().addAsManifestResource(baseFolder, "/new-name");
       
-      assertArchiveContainsResourceRecursively(baseFolder, "/new-name");
+      assertArchiveContainsTargetRecursively(baseFolder, getManifestPath(), "/new-name");
    }
    
    @Test
    @ArchiveType(ManifestContainer.class)
    public void testAddManifestFileRecursivelyWithArchivePath() throws Exception {
-      String baseFolderPath = "org/jboss/shrinkwrap/impl/base/recursion";
-      File baseFolder = getFileForClassResource(baseFolderPath);
+      File baseFolder = getFileForClassResource("org/jboss/shrinkwrap/impl/base/recursion");
       getManifestContainer().addAsManifestResource(baseFolder, new BasicPath("/new-name"));
       
-      assertArchiveContainsResourceRecursively(baseFolder, "/new-name");
+      assertArchiveContainsTargetRecursively(baseFolder, getManifestPath(), "/new-name");
    }
 
    @Test
@@ -229,7 +228,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       String baseFolderPath = "org/jboss/shrinkwrap/impl/base/recursion";
       getManifestContainer().addAsManifestResource(baseFolderPath, new BasicPath("/new-name"));
       
-      assertArchiveContainsResourceRecursively(getFileForClassResource(baseFolderPath), "/new-name");
+      assertArchiveContainsTargetRecursively(getFileForClassResource(baseFolderPath), getManifestPath(), "/new-name");
    }
    
    @Test
@@ -415,7 +414,44 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
    }
+   
+   @Test
+   @ArchiveType(ResourceContainer.class)
+   public void testAddResourceFileRecusively() throws Exception {
+      String baseFolderPath = "org/jboss/shrinkwrap/impl/base/recursion";
+      File baseFolder = getFileForClassResource(baseFolderPath);
+      getResourceContainer().addAsResource(baseFolder);
+      
+      assertArchiveContainsTargetRecursively(baseFolder, getResourcePath(), "/recursion");
+   }
+   
+   @Test
+   @ArchiveType(ResourceContainer.class)
+   public void testAddResourceFileRecusivelyWithTarget() throws Exception {
+      File baseFolder = getFileForClassResource("org/jboss/shrinkwrap/impl/base/recursion");
+      getResourceContainer().addAsResource(baseFolder, "/new-name");
+      
+      assertArchiveContainsTargetRecursively(baseFolder, getResourcePath(), "/new-name");
+   }
 
+   @Test
+   @ArchiveType(ResourceContainer.class)
+   public void testAddResourceRecusivelyWithTarget() throws Exception {
+      String baseFolderPath = "org/jboss/shrinkwrap/impl/base/recursion";
+      getResourceContainer().addAsResource(baseFolderPath, "/new-name");
+      
+      assertArchiveContainsTargetRecursively(getFileForClassResource(baseFolderPath), getResourcePath(), "/new-name");
+   }
+
+   @Test
+   @ArchiveType(ResourceContainer.class)
+   public void testAddResourceRecusivelyWithTargetPath() throws Exception {
+      String baseFolderPath = "org/jboss/shrinkwrap/impl/base/recursion";
+      getResourceContainer().addAsResource(baseFolderPath, new BasicPath("/new-name"));
+      
+      assertArchiveContainsTargetRecursively(getFileForClassResource(baseFolderPath), getResourcePath(), "/new-name");
+   }
+   
    @Test
    @ArchiveType(ResourceContainer.class)
    public void testAddResourceURL() throws Exception {
@@ -1132,8 +1168,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             "Archive should contain " + testPath2,
             getArchive().contains(testPath2));
    }
-   
-<<<<<<< HEAD
+
    @Test
    @ArchiveType(LibraryContainer.class)
    public void testAddLibrariesArchiveCollection() throws Exception {
@@ -1169,9 +1204,9 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             getArchive().contains(expectedPath));
    }
    
-   private void assertArchiveContainsResourceRecursively(File base, String target) throws Exception
+   private void assertArchiveContainsTargetRecursively(File base, ArchivePath location, String target) throws Exception
    {
-      ArchivePath testPath = new BasicPath(getManifestPath(), target);
+      ArchivePath testPath = new BasicPath(location, target);
       Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
 
       if (base.isDirectory())
@@ -1180,12 +1215,12 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
          for (File content : base.listFiles())
          {
             fileCounter++;
-            assertArchiveContainsResourceRecursively(content, target + "/" + content.getName());
+            assertArchiveContainsTargetRecursively(content, location, target + "/" + content.getName());
          }
          int archivePathChildrenSize = getArchive().get(testPath).getChildren().size();
          Assert.assertEquals("Wrong number of files in the archive folder: " + testPath.get(), fileCounter,
                archivePathChildrenSize);
       }
    }
-
+   
 }
