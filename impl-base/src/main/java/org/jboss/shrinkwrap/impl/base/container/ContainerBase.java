@@ -1374,10 +1374,9 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return this.actualType;
    }
 
-   private File fileFromResource(String resourceName)
+   private File fileFromResource(String resourceName)      
    {
-      String resourcePath = GetTcclAction.INSTANCE.run().getResource(resourceName).getFile();
-      File resource = new File(resourcePath);
-      return resource;
+      String resourcePath = AccessController.doPrivileged(GetTcclAction.INSTANCE).getResource(resourceName).getFile();
+      return new File(resourcePath);
    }
 }
