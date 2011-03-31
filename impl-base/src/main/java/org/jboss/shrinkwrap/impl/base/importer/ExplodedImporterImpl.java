@@ -104,7 +104,7 @@ public class ExplodedImporterImpl extends AssignableBase<Archive<?>> implements 
          final ArchivePath path = calculatePath(root, file);
          if (file.isDirectory())
          {
-            archive.addDirectory(path);
+            archive.addAsDirectory(path);
             doImport(root, file.listFiles());
          }
          else

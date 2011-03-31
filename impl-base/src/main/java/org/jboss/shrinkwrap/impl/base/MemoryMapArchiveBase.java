@@ -176,10 +176,10 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#addDirectory(org.jboss.shrinkwrap.api.ArchivePath)
+    * @see org.jboss.shrinkwrap.api.Archive#addAsDirectory(org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
-   public T addDirectory(final ArchivePath path) throws IllegalArgumentException
+   public T addAsDirectory(final ArchivePath path) throws IllegalArgumentException
    {
       // Precondition check
       Validate.notNull(path, "path must be specified");

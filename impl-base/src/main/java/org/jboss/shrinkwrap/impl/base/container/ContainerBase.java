@@ -182,45 +182,45 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#addDirectories(org.jboss.shrinkwrap.api.ArchivePath[])
+    * @see org.jboss.shrinkwrap.api.Archive#addAsDirectories(org.jboss.shrinkwrap.api.ArchivePath[])
     */
    @Override
-   public T addDirectories(ArchivePath... paths) throws IllegalArgumentException
+   public T addAsDirectories(ArchivePath... paths) throws IllegalArgumentException
    {
-      this.getArchive().addDirectories(paths);
+      this.getArchive().addAsDirectories(paths);
       return covarientReturn();
    }
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#addDirectories(java.lang.String[])
+    * @see org.jboss.shrinkwrap.api.Archive#addAsDirectories(java.lang.String[])
     */
    @Override
-   public T addDirectories(String... paths) throws IllegalArgumentException
+   public T addAsDirectories(String... paths) throws IllegalArgumentException
    {
-      this.getArchive().addDirectories(paths);
+      this.getArchive().addAsDirectories(paths);
       return covarientReturn();
    }
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#addDirectory(org.jboss.shrinkwrap.api.ArchivePath)
+    * @see org.jboss.shrinkwrap.api.Archive#addAsDirectory(org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override
-   public T addDirectory(ArchivePath path) throws IllegalArgumentException
+   public T addAsDirectory(ArchivePath path) throws IllegalArgumentException
    {
-      this.getArchive().addDirectory(path);
+      this.getArchive().addAsDirectory(path);
       return covarientReturn();
    }
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#addDirectory(java.lang.String)
+    * @see org.jboss.shrinkwrap.api.Archive#addAsDirectory(java.lang.String)
     */
    @Override
-   public T addDirectory(String path) throws IllegalArgumentException
+   public T addAsDirectory(String path) throws IllegalArgumentException
    {
-      this.getArchive().addDirectory(path);
+      this.getArchive().addAsDirectory(path);
       return covarientReturn();
    }
 
