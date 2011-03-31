@@ -139,7 +139,7 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
             // Handle directories separately
             if (entry.isDirectory())
             {
-               archive.addDirectory(entryName);
+               archive.addAsDirectory(entryName);
                continue;
             }
 

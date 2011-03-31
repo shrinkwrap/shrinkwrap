@@ -117,7 +117,7 @@ public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipIm
             // Handle directories separately
             if (entry.isDirectory())
             {
-               archive.addDirectory(entryName);
+               archive.addAsDirectory(entryName);
                continue;
             }
 
@@ -185,7 +185,7 @@ public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipIm
             // Handle directories separately
             if (entry.isDirectory())
             {
-               archive.addDirectory(entryName);
+               archive.addAsDirectory(entryName);
                continue;
             }
 

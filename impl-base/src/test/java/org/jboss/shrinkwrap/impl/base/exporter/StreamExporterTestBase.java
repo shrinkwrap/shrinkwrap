@@ -178,7 +178,7 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
    {
       // Create an archive with directories
       final ArchivePath path = ArchivePaths.create("/test/game");
-      final Archive<?> archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).addDirectories(path);
+      final Archive<?> archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).addAsDirectories(path);
 
       // Fully export by reading all content (export is on-demand)
       final InputStream content = this.exportAsInputStream(archive);

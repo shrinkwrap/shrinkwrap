@@ -372,7 +372,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       final ArchivePath path3 = ArchivePaths.create("path/to");
 
       // Add
-      archive.addDirectories(path1, path2, path3);
+      archive.addAsDirectories(path1, path2, path3);
 
       // Test
       final String message = "Should be able to add directory: ";
@@ -737,7 +737,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       archive.add(asset, location);
       
       // try to add a directory on an illegal path
-      archive.addDirectory("/somewhere/test.properties/test");
+      archive.addAsDirectory("/somewhere/test.properties/test");
       
    }
 

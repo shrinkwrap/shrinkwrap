@@ -206,8 +206,8 @@ public abstract class ExportTestBase
       archive.add(nestedArchiveTwo, NESTED_PATH, this.getExporterClass());
 
       // Add empty directories
-      archive.addDirectory(PATH_EMPTY_NESTED_DIR);
-      archive.addDirectory(PATH_EMPTY_TOPLEVEL_DIR);
+      archive.addAsDirectory(PATH_EMPTY_NESTED_DIR);
+      archive.addAsDirectory(PATH_EMPTY_TOPLEVEL_DIR);
 
       // Return archive
       return archive;

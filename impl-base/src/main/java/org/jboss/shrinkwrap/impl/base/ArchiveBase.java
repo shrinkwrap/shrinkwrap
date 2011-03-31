@@ -272,24 +272,24 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#addDirectory(java.lang.String)
+    * @see org.jboss.shrinkwrap.api.Archive#addAsDirectory(java.lang.String)
     */
    @Override
-   public T addDirectory(final String path) throws IllegalArgumentException
+   public T addAsDirectory(final String path) throws IllegalArgumentException
    {
       // Precondition check
       Validate.notNullOrEmpty(path, "path must be specified");
 
       // Delegate and return
-      return this.addDirectory(ArchivePaths.create(path));
+      return this.addAsDirectory(ArchivePaths.create(path));
    }
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#addDirectories(org.jboss.shrinkwrap.api.ArchivePath[])
+    * @see org.jboss.shrinkwrap.api.Archive#addAsDirectories(org.jboss.shrinkwrap.api.ArchivePath[])
     */
    @Override
-   public T addDirectories(final ArchivePath... paths) throws IllegalArgumentException
+   public T addAsDirectories(final ArchivePath... paths) throws IllegalArgumentException
    {
       // Precondition check
       Validate.notNull(paths, "paths must be specified");
@@ -297,7 +297,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
       // Add
       for (final ArchivePath path : paths)
       {
-         this.addDirectory(path);
+         this.addAsDirectory(path);
       }
 
       // Return
@@ -306,10 +306,10 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#addDirectories(java.lang.String[])
+    * @see org.jboss.shrinkwrap.api.Archive#addAsDirectories(java.lang.String[])
     */
    @Override
-   public T addDirectories(final String... paths) throws IllegalArgumentException
+   public T addAsDirectories(final String... paths) throws IllegalArgumentException
    {
       // Precondition check
       Validate.notNull(paths, "paths must be specified");
@@ -322,7 +322,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
       }
 
       // Delegate and return
-      return this.addDirectories(pathsCollection.toArray(new ArchivePath[]
+      return this.addAsDirectories(pathsCollection.toArray(new ArchivePath[]
       {}));
    }
 
@@ -419,7 +419,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
          // Delegate
          if (node.getAsset() == null)
          {
-            addDirectory(nodePath);
+            addAsDirectory(nodePath);
          }
          else
          {

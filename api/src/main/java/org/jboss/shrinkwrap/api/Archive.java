@@ -129,17 +129,17 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If no path was specified
     * @throws IllegalArchivePathException If the path is invalid.
     */
-   T addDirectory(String path) throws IllegalArgumentException;
+   T addAsDirectory(String path) throws IllegalArgumentException;
 
    /**
-    * Adds the specified directory.
+    * Adds the specified directories.
     * 
     * @param paths The paths to add
     * @return This archive
     * @throws IllegalArgumentException If no paths were specified
     * @throws IllegalArchivePathException If at least one path is invalid.
     */
-   T addDirectories(String... paths) throws IllegalArgumentException;
+   T addAsDirectories(String... paths) throws IllegalArgumentException;
 
    /**
     * Adds the specified directory.
@@ -149,17 +149,17 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @throws IllegalArgumentException If no path was specified
     * @throws IllegalArchivePathException If the path is invalid.
     */
-   T addDirectory(ArchivePath path) throws IllegalArgumentException;
+   T addAsDirectory(ArchivePath path) throws IllegalArgumentException;
 
    /**
-    * Adds the specified directory.
+    * Adds the specified directories.
     * 
     * @param paths The paths to add
     * @return This archive
     * @throws IllegalArgumentException If no paths were specified
     * @throws IllegalArchivePathException If at least one path is invalid.
     */
-   T addDirectories(ArchivePath... paths) throws IllegalArgumentException;
+   T addAsDirectories(ArchivePath... paths) throws IllegalArgumentException;
 
    /**
     * Obtains the {@link Node} located at the specified path
