@@ -1368,14 +1368,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    @Override
    public void writeTo(final OutputStream outputStream, final Formatter formatter) throws IllegalArgumentException
    {
-      try
-      {
-         outputStream.write(toString(formatter).getBytes());
-      }
-      catch(IOException ioe)
-      {
-         throw new IllegalArgumentException("Could not write Archive contents to specified OutputStream", ioe);
-      }
+      this.getArchive().writeTo(outputStream, formatter);
    }
 
    //-------------------------------------------------------------------------------------||

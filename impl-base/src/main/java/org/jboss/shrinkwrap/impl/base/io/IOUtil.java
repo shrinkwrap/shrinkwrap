@@ -16,12 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.io;
 
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -157,6 +152,26 @@ public final class IOUtil
          output.write(buffer, 0, read);
       }
 
+      output.flush();
+   }
+
+   /**
+    * Writing the specified contents to the specified OutputStream using
+    * an internal buffer. Flushing the stream when completed.
+    *
+    * @param output The OutputStream
+    * @param content The content to write to the specified stream
+    * @throws IOException If a problem occured during any I/O operations
+    */
+   public static void bufferedWrite(final OutputStream output, final byte[] content) throws IOException
+   {
+      final int size = 4096;
+      int offset = 0;
+      while(content.length-(offset+size) > size){
+         output.write(content, offset, offset + size);
+         offset += size;
+      }
+      output.write(content, offset, content.length);
       output.flush();
    }
 

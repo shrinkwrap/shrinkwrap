@@ -39,6 +39,7 @@ import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
+import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.spi.Configurable;
 
@@ -488,7 +489,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
    {
       try
       {
-         outputStream.write(toString(formatter).getBytes());
+         IOUtil.bufferedWrite(outputStream, toString(formatter).getBytes());
       }
       catch(IOException ioe)
       {
