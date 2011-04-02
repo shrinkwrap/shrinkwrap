@@ -489,7 +489,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
    {
       try
       {
-         IOUtil.bufferedWrite(outputStream, toString(formatter).getBytes());
+         IOUtil.bufferedWriteWithFlush(outputStream, toString(formatter).getBytes());
       }
       catch(IOException ioe)
       {
