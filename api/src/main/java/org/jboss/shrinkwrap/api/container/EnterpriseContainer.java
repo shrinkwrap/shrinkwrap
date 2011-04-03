@@ -91,6 +91,21 @@ public interface EnterpriseContainer<T extends Archive<T>>
    T setApplicationXML(Asset resource) throws IllegalArgumentException;
    
    /**
+    * Adds a resource inside the package to this {@link Archive} as application.xml.
+    * <br/><br/>
+    * The {@link ClassLoader} used to obtain the resource is up to
+    * the implementation.
+    * 
+    * @param resourcePackage The package of the resources
+    * @param resourceName The name of the resource inside resourcePackage
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourcePackage is null
+    * @throws IllegalArgumentException if resourceName is null
+    * @see #setApplicationXML(String) 
+    */
+   T setApplicationXML(Package resourcePackage, String resourceName) throws IllegalArgumentException;
+   
+   /**
     * Adds a resource to this {@link Archive}s application context.
     * <br/><br/>
     * The {@link ClassLoader} used to obtain the resource is up to
