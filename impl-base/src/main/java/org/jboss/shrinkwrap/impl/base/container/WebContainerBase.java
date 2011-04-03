@@ -118,6 +118,19 @@ public abstract class WebContainerBase<T extends Archive<T>> extends ContainerBa
    }
 
    /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.WebContainer#setWebXML(java.lang.Package, java.lang.String)
+    */
+   @Override
+   public T setWebXML(Package resourcePackage, String resourceName) throws IllegalArgumentException
+   {
+      Validate.notNull(resourcePackage, "ResourcePackage must be specified");
+      Validate.notNull(resourceName, "ResourceName must be specified");
+
+      String classloaderResourceName = AssetUtil.getClassLoaderResourceName(resourcePackage, resourceName);
+      return setWebXML(new ClassLoaderAsset(classloaderResourceName));
+   }
+   
+   /* (non-Javadoc)
     * @see org.jboss.declarchive.api.container.WebContainer#addWebResource(java.lang.String)
     */
    @Override

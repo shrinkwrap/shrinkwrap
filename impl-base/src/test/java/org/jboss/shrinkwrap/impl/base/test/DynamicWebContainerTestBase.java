@@ -53,6 +53,17 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
    }
+   
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testSetWebXMLResourceInPackage() throws Exception {
+      getWebContainer().setWebXML(AssetUtil.class.getPackage(), "Test.properties");
+      
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "web.xml");
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+   }
 
    @Test
    @ArchiveType(WebContainer.class)
