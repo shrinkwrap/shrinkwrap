@@ -75,4 +75,19 @@ public interface ResourceAdapterContainer<T extends Archive<T>>
     */
    T setResourceAdapterXML(Asset resource) throws IllegalArgumentException;
 
+   /**
+    * Adds the resource inside the package as ra.xml to the container, returning the container itself.
+    * <br/><br/>
+    * The {@link ClassLoader} used to obtain the resource is up to
+    * the implementation.
+    * 
+    * @param resourcePackage The package of the resources
+    * @param resourceName The name of the resource inside resourcePackage
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourcePackage is null
+    * @throws IllegalArgumentException if resourceName is null
+    * @see #setResourceAdapterXML(String) 
+    */
+   T setResourceAdapterXML(Package resourcePackage, String resourceName) throws IllegalArgumentException;
+   
 }

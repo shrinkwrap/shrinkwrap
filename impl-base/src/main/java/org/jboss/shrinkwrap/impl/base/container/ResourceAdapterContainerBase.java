@@ -95,5 +95,19 @@ public abstract class ResourceAdapterContainerBase<T extends Archive<T>> extends
       Validate.notNull(resource, "Resource must be specified");
       return addAsManifestResource(resource, "ra.xml");
    }
+   
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.ResourceAdapterContainer#setResourceAdapterXML(java.lang.Package, java.lang.String)
+    */
+   @Override
+   public T setResourceAdapterXML(Package resourcePackage, String resourceName) throws IllegalArgumentException
+   {
+      Validate.notNull(resourcePackage, "ResourcePackage must be specified");
+      Validate.notNull(resourceName, "ResourceName must be specified");
+      
+      return addAsManifestResource(resourcePackage, resourceName, "ra.xml");
+   }
+   
 
 }
