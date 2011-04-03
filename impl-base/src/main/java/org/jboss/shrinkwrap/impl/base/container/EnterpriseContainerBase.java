@@ -110,6 +110,19 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>>
       Validate.notNull(resource, "Resource must be specified");
       return addAsApplicationResource(resource, "application.xml");
    }
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#setApplicationXML(java.lang.Package, java.lang.String)
+    */
+   @Override
+   public T setApplicationXML(Package resourcePackage, String resourceName) throws IllegalArgumentException
+   {
+      Validate.notNull(resourcePackage, "ResourcePackage must be specified");
+      Validate.notNull(resourceName, "ResourceName must be specified");
+      
+      String classloaderResourceName = AssetUtil.getClassLoaderResourceName(resourcePackage, resourceName);
+      return setApplicationXML(new ClassLoaderAsset(classloaderResourceName));
+   }
    
    /* (non-Javadoc)
     * @see org.jboss.declarchive.api.container.EnterpriseContainer#addApplicationResource(java.lang.String)

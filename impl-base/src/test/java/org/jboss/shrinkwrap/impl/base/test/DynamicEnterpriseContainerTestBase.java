@@ -54,6 +54,17 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
             "Archive should contain " + expectedPath,
             getArchive().contains(expectedPath));
    }
+   
+   @Test
+   @ArchiveType(EnterpriseContainer.class)
+   public void testSetApplicationXMLResourceInPackage() throws Exception {
+      getEnterpriseContainer().setApplicationXML(AssetUtil.class.getPackage(), "Test.properties");
+      
+      ArchivePath expectedPath = new BasicPath(getApplicationPath(), "application.xml");
+      Assert.assertTrue(
+            "Archive should contain " + expectedPath,
+            getArchive().contains(expectedPath));
+   }
 
    @Test
    @ArchiveType(EnterpriseContainer.class)
