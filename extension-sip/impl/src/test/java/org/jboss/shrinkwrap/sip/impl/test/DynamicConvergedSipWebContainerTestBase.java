@@ -98,6 +98,17 @@ public abstract class DynamicConvergedSipWebContainerTestBase<T extends Archive<
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
    }
+   
+   @Test
+   @ArchiveType(ConvergedSipWebContainer.class)
+   public void testSetSipXMLResourceInPackage() throws Exception {
+      getConvergedSipWebContainer().setSipXML(AssetUtil.class.getPackage(), "Test.properties");
+      
+      ArchivePath testPath = new BasicPath(getWebPath(), "sip.xml");
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+   }
 
    @Test
    @ArchiveType(ConvergedSipWebContainer.class)
