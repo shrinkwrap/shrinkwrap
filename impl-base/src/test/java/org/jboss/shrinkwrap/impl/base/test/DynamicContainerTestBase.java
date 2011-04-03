@@ -34,6 +34,7 @@ import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
+import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -111,6 +112,17 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @ArchiveType(ManifestContainer.class)
    public void testSetManifestResource() throws Exception {
       getManifestContainer().setManifest(NAME_TEST_PROPERTIES);
+      
+      ArchivePath testPath = new BasicPath(getManifestPath(), MANIFEST_FILE);
+      Assert.assertTrue(
+            "Archive should contain " + testPath,
+            getArchive().contains(testPath));
+   }
+   
+   @Test
+   @ArchiveType(ManifestContainer.class)
+   public void testSetManifestResourceInPackage() throws Exception {
+      getManifestContainer().setManifest(AssetUtil.class.getPackage(), "Test.properties");
       
       ArchivePath testPath = new BasicPath(getManifestPath(), MANIFEST_FILE);
       Assert.assertTrue(

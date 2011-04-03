@@ -81,6 +81,19 @@ public interface ManifestContainer<T extends Archive<T>>
     * @see #addAsManifestResource(Asset, ArchivePath)
     */
    T setManifest(Asset resource) throws IllegalArgumentException;
+   
+   /**
+    * Adds the resource inside the package as a MANIFEST.MF to the container, returning the container itself.
+    * <br/><br/>
+    * The {@link ClassLoader} used to obtain the resource is up to the implementation.  
+    * 
+    * @param resourcePackage The package of the resource
+    * @param resourceName The name of the resource inside resoucePackage
+    * @return This virtual archive
+    * @throws IllegalArgumentException if resourcePackage is null
+    * @throws IllegalArgumentException if resourceName is null 
+    */
+   T setManifest(Package resourcePackage, String resourceName) throws IllegalArgumentException;
 
    /**
     * Adds the resource as a Manifest resource to the container, returning the container itself.

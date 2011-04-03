@@ -514,6 +514,19 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    }
    
    /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.ManifestContainer#setManifestResource(java.lang.Package, java.lang.String)
+    */
+   @Override
+   public T setManifest(Package resourcePackage, String resourceName) throws IllegalArgumentException
+   {
+      Validate.notNull(resourcePackage, "ResourcePackage must be specified");
+      Validate.notNull(resourceName, "ResourceName must be specified");
+      
+      String classloaderResourceName = AssetUtil.getClassLoaderResourceName(resourcePackage, resourceName);
+      return setManifest(classloaderResourceName);
+   }
+   
+   /* (non-Javadoc)
     * @see org.jboss.declarchive.api.container.ManifestContainer#addManifestResource(java.lang.String)
     */
    @Override
