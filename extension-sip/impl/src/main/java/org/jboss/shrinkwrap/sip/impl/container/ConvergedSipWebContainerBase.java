@@ -101,4 +101,17 @@ public abstract class ConvergedSipWebContainerBase<T extends Archive<T>>
       Validate.notNull(resource, "Resource should be specified");
       return addAsWebResource(resource, "sip.xml");
    }
+   
+   /*
+    * (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.ConvergedSipWebContainer#setSipXML(java.lang.Package, java.lang.String)
+    */
+   @Override
+   public T setSipXML(Package resourcePackage, String resourceName) throws IllegalArgumentException
+   {
+      Validate.notNull(resourcePackage, "Resource Package should be specified");
+      Validate.notNull(resourceName, "Resource Name should be specified");
+
+      return addAsWebResource(resourcePackage, resourceName, "sip.xml");
+   }
 }

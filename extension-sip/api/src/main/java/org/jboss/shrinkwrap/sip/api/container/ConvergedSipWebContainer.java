@@ -95,4 +95,19 @@ public interface ConvergedSipWebContainer<T extends Archive<T>> extends
 	 * @see #addAsWebResource(Asset, ArchivePath)
 	 */
 	T setSipXML(Asset resource) throws IllegalArgumentException;
+
+    /**
+     * Adds the resource inside the package as sip.xml to the container, returning the
+     * container itself.
+     * <br/><br/>
+     * The {@link ClassLoader} used to obtain the resource is up to the implementation.
+     *  
+     * @param resourcePackage The package of the resources
+     * @param resourceName The name of the resources inside resourcePackage
+     * @return This virtual archive
+     * @throws IllegalArgumentException if resourcePackage is null
+     * @throws IllegalArgumentException if resourceName is null 
+     * @see #addAsWebResource(Package, String)
+     */
+    T setSipXML(Package resourcePackage, String resourceName) throws IllegalArgumentException;
 }
