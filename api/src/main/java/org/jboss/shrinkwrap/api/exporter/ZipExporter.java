@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.api.exporter;
 
-import java.io.File;
-
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
@@ -31,38 +29,5 @@ import org.jboss.shrinkwrap.api.Assignable;
  */
 public interface ZipExporter extends StreamExporter
 {
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
 
-   /**
-    * Exports provided archive as a ZIP archive, written to the 
-    * specified {@link File} target.  If the target exists this call will
-    * fail with {@link IllegalArgumentException}
-    * 
-    * @param archive
-    * @throws IllegalArgumentException If the target is not specified
-    * @throws FileExistsException If the target already exists 
-    * @throws ArchiveExportException if the export process fails
-    * @deprecated Replaced by {@link ZipExporter#exportTo(File)}
-    */
-   @Deprecated
-   void exportZip(File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException;
-
-   /**
-    * Exports provided archive as a ZIP archive, written to the 
-    * specified {@link File} target.  If the target both exists and the "overwrite"
-    * flag is true, this call will allow the existing file to be overwritten, else
-    * the invocation will fail with {@link IllegalArgumentException}
-    * 
-    * @param archive
-    * 
-    * @throws IllegalArgumentException If the target is not specified 
-    * @throws FileExistsException If the target both already exists and the overwrite flag is false
-    * @throws ArchiveExportException if the export process fails
-    * @deprecated Replaced by {@link ZipExporter#exportTo(File, boolean)}
-    */
-   @Deprecated
-   void exportZip(File target, boolean overwrite) throws ArchiveExportException, FileExistsException,
-         IllegalArgumentException;
 }

@@ -97,7 +97,7 @@ public class ShrinkWrapConfigurationFactory extends ConfigurationFactory
       tmpFile.deleteOnExit();
 
       // Write the ZIP to the temp file
-      archive.as(ZipExporter.class).exportZip(tmpFile);
+      archive.as(ZipExporter.class).exportTo(tmpFile);
 
       // Delegate to the File-based configuration impl
       return configureApplication(tmpFile);

@@ -16,13 +16,10 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter.zip;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
-import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
 import org.jboss.shrinkwrap.impl.base.exporter.AbstractStreamExporterImpl;
@@ -74,22 +71,4 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
       // Export and get result
       return exportDelegate.export();
    }
-
-
-   @Deprecated
-   @Override
-   public void exportZip(File target) throws ArchiveExportException, FileExistsException, IllegalArgumentException
-   {
-     this.exportTo(target);
-      
-   }
-
-   @Deprecated
-   @Override
-   public void exportZip(File target, boolean overwrite) throws ArchiveExportException, FileExistsException,
-         IllegalArgumentException
-   {
-      this.exportTo(target, overwrite);
-   }
-
 }
