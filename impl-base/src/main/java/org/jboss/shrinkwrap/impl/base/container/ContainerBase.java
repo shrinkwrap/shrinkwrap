@@ -1049,6 +1049,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
                      return path.get().matches(expression);
                   };
                },
+               clazz.getClassLoader(),
                clazz.getPackage()
          );
       }
@@ -1083,6 +1084,11 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    @Override
    public T addPackages(final boolean recursive, final Filter<ArchivePath> filter, final Package... packages) throws IllegalArgumentException
    {
+      return addPackages(recursive, filter, null, packages);
+   }
+   
+   private T addPackages(final boolean recursive, final Filter<ArchivePath> filter, final ClassLoader cl, final Package... packages) throws IllegalArgumentException
+   {
       Validate.notNull(filter, "Filter must be specified");
       Validate.notNull(packages, "Packages must be specified");
       
@@ -1091,7 +1097,11 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       {
          packageNames[i] = packages[i] == null ? null:packages[i].getName(); 
       }
-      return addPackages(recursive, filter, packageNames);
+      
+      if (cl == null)
+         return addPackages(recursive, filter, packageNames);
+      
+      return addPackages(recursive, filter, cl, packageNames);
    }
 
    /* (non-Javadoc)
@@ -1130,32 +1140,49 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       
       for (String packageName : packageNames)
       {
-         
          for (final ClassLoader classLoader : classLoaders)
          {
-            final URLPackageScanner.Callback callback = new URLPackageScanner.Callback()
-            {
-               @Override
-               public void classFound(String className)
-               {
-                  ArchivePath classNamePath = AssetUtil.getFullPathForClassResource(className);
-                  if (!filter.include(classNamePath))
-                  {
-                     return;
-                  }
-                  Asset asset = new ClassLoaderAsset(classNamePath.get().substring(1), classLoader);
-                  ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
-                  add(asset, location);
-               }
-            };
-            final URLPackageScanner scanner = packageName == null ? URLPackageScanner.newInstance(recursive,
-                  classLoader, callback) : URLPackageScanner.newInstance(recursive, classLoader, callback, packageName);
-            scanner.scanPackage();
+            addPackage(recursive, filter, classLoader, packageName);
          }
       }
       return covarientReturn();
    }
 
+   private T addPackages(final boolean recursive, final Filter<ArchivePath> filter, final ClassLoader classLoader, String... packageNames)
+   {
+      Validate.notNull(filter, "Filter must be specified");
+      Validate.notNull(packageNames, "PackageNames must be specified");
+
+      for (String packageName : packageNames)
+      {
+         addPackage(recursive, filter, classLoader, packageName);
+      }
+      return covarientReturn();
+   }
+
+   private void addPackage(final boolean recursive, final Filter<ArchivePath> filter, final ClassLoader classLoader, String packageName)
+   {
+      final URLPackageScanner.Callback callback = new URLPackageScanner.Callback()
+      {
+         @Override
+         public void classFound(String className)
+         {
+            ArchivePath classNamePath = AssetUtil.getFullPathForClassResource(className);
+            if (!filter.include(classNamePath))
+            {
+               return;
+            }
+            Asset asset = new ClassLoaderAsset(classNamePath.get().substring(1), classLoader);
+            ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
+            add(asset, location);
+         }
+      };
+      final URLPackageScanner scanner = packageName == null ? URLPackageScanner.newInstance(recursive,
+            classLoader, callback) : URLPackageScanner.newInstance(recursive, classLoader, callback, packageName);
+      scanner.scanPackage();
+   }
+
+   
    //-------------------------------------------------------------------------------------||
    // Required Implementations - LibraryContainer ----------------------------------------||
    //-------------------------------------------------------------------------------------||
