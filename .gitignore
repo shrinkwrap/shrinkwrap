@@ -5,4 +5,6 @@ bin
 .classpath
 .idea
 *.iml
+*.ipr
+*.iws
 test-output/
