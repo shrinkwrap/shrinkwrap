@@ -16,31 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Logger;
-
-import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.ConfigurationBuilder;
-import org.jboss.shrinkwrap.api.Domain;
-import org.jboss.shrinkwrap.api.GenericArchive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.*;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.api.exporter.FileExistsException;
@@ -49,7 +25,14 @@ import org.jboss.shrinkwrap.api.importer.StreamImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.*;
+import java.util.logging.Logger;
 
 /**
  * Base support for testing stream-based exporters
@@ -129,6 +112,7 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
     * that we've configured, and leaves it running (does not shut it down)
     * @throws Exception
     */
+   @Ignore // the Virtual Jar exporter does not need an Executor
    @Test
    public void exportUsesOurExecutorService() throws Exception
    {

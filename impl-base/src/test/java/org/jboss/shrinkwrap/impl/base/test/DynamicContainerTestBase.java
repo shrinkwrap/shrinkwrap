@@ -18,10 +18,13 @@ package org.jboss.shrinkwrap.impl.base.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 
 import junit.framework.Assert;
 
@@ -34,6 +37,7 @@ import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
+import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -815,7 +819,79 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       ArchivePath expectedPath = new BasicPath(getClassPath(), AssetUtil.getFullPathForClassResource(classToAdd));
       assertContainsClass(expectedPath);
    }
+   
+   /**
+    * Ensure classes can be added to containers by name using a classloader
+    * 
+    * @throws Exception
+    */
+   @Test
+   @ArchiveType(ClassContainer.class)
+   public void testAddClassByFqnAndClassLoader() throws Exception
+   {
+      ClassLoader emptyClassLoader = new ClassLoader(null){};
+      ClassLoader originalClassLoader = SecurityActions.getThreadContextClassLoader();
+      ClassLoaderTester classCl = new ClassLoaderTester("cl-test.jar");
 
+      try {
+         Thread.currentThread().setContextClassLoader(emptyClassLoader);
+         getClassContainer().addClass("test.classloader.DummyClass", classCl);
+      } finally {
+         Thread.currentThread().setContextClassLoader(originalClassLoader);
+      }
+      
+      Assert.assertTrue("Classloader not used to load inner class", classCl.isUsedForInnerClasses());
+      ArchivePath expectedClassPath = new BasicPath(getClassPath(), AssetUtil.getFullPathForClassResource("/test/classloader/DummyClass"));
+      assertContainsClass(expectedClassPath);
+   }
+
+   @Test
+   @ArchiveType(ClassContainer.class)
+   public void testAddClassFromCustomClassloader() throws Exception
+   {
+      ClassLoader emptyClassLoader = new ClassLoader(null){};
+      ClassLoader originalClassLoader = SecurityActions.getThreadContextClassLoader();
+      ClassLoaderTester myClassLoader = new ClassLoaderTester("cl-test.jar");
+
+      try {
+         Thread.currentThread().setContextClassLoader(emptyClassLoader);
+         Class<?> dummyClass = myClassLoader.loadClass("test.classloader.DummyClass");
+         getClassContainer().addClass(dummyClass);
+      } finally {
+         Thread.currentThread().setContextClassLoader(originalClassLoader);
+      }
+      
+      Assert.assertTrue("Classloader not used to load inner class", myClassLoader.isUsedForInnerClasses());
+      ArchivePath expectedClassPath = new BasicPath(getClassPath(), AssetUtil.getFullPathForClassResource("/test/classloader/DummyClass"));
+      assertContainsClass(expectedClassPath);
+   }
+   
+   @Test
+   @ArchiveType(ClassContainer.class)
+   public void testAddClassesFromCustomClassloader() throws Exception
+   {
+      ClassLoader emptyClassLoader = new ClassLoader(null){};
+      ClassLoader originalClassLoader = SecurityActions.getThreadContextClassLoader();
+      ClassLoaderTester myClassLoader = new ClassLoaderTester("cl-test.jar");
+
+      try {
+         Thread.currentThread().setContextClassLoader(emptyClassLoader);
+         Class<?> dummyClass = myClassLoader.loadClass("test.classloader.DummyClass");
+         Class<?> dummyInnerClass = myClassLoader.loadClass("test.classloader.DummyClass$DummyInnerClass");
+         getClassContainer().addClasses(dummyClass, dummyInnerClass);
+      } finally {
+         Thread.currentThread().setContextClassLoader(originalClassLoader);
+      }
+      
+      Assert.assertTrue("Classloader not used to load inner class", myClassLoader.isUsedForInnerClasses());
+      String[] expetedResources = {"/test/classloader/DummyClass", "/test/classloader/DummyClass$DummyInnerClass"};
+      for (String expectedResource : expetedResources)
+      {
+         ArchivePath expectedClassPath = new BasicPath(getClassPath(), AssetUtil.getFullPathForClassResource(expectedResource));
+         assertContainsClass(expectedClassPath);
+      }
+   }
+   
    /**
     * Ensure a package can be added to a container
     * 
@@ -1401,5 +1477,42 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       }
       return directory;
    }
+   
+   /*
+    * Used the check if the classloader is called when loading inner classes.
+    */
+   private class ClassLoaderTester extends URLClassLoader {
+      
+      private boolean usedForInnerClasses = false;
+
+      public ClassLoaderTester(String resource) throws MalformedURLException, URISyntaxException {
+         this(TestIOUtil.createFileFromResourceName(resource));
+      }
+
+      private ClassLoaderTester(File jar) throws MalformedURLException
+      {
+         super(new URL[]{jar.toURI().toURL()}, null);
+      }
+
+      /*
+       * Called by URLPackageScanner class when looking for a resource in a package.
+       * 
+       * @see java.lang.ClassLoader#getResources(java.lang.String)
+       * @see org.jboss.shrinkwrap.impl.base.URLPackageScanner#scanPackage()
+       * @see org.jboss.shrinkwrap.impl.base.container#addPackage(final boolean recursive, final Filter<ArchivePath> filter, final ClassLoader classLoader, String packageName)
+       */
+      @Override
+      public Enumeration<URL> getResources(String name) throws IOException
+      {
+         usedForInnerClasses = true;
+         return super.getResources(name);
+      }
+      
+      public boolean isUsedForInnerClasses()
+      {
+         return usedForInnerClasses;
+      }
+      
+   };
    
 }
