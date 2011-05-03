@@ -169,7 +169,7 @@ public class ConfigurationBuilder
 
    /**
     * Sets properties to their default values if they haven't been explicitly
-    * provided by the user
+    * provided by the user. If no ClassLoaders are specified, use the TCCL.
     */
    void setDefaults()
    {
