@@ -30,7 +30,8 @@ package org.jboss.shrinkwrap.api;
 public interface Assignable
 {
    /**
-    * Wraps a Archive in a different 'view'. 
+    * Wraps an Archive in a different 'view'.
+    * @see org.jboss.shrinkwrap.impl.base.ExtensionLoader
     * 
     * @param <TYPE> 
     * @param clazz Extension interface to load
