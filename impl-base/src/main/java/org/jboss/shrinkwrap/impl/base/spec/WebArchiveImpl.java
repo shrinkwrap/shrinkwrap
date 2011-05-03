@@ -69,6 +69,11 @@ public class WebArchiveImpl extends WebContainerBase<WebArchive> implements WebA
     */
    private static final ArchivePath PATH_MANIFEST = ArchivePaths.create("META-INF");
 
+   /**
+    * Path to web archive service providers.
+    */
+   private static final ArchivePath PATH_SERVICE_PROVIDERS = ArchivePaths.create(PATH_CLASSES, "META-INF/services");
+
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -151,4 +156,13 @@ public class WebArchiveImpl extends WebContainerBase<WebArchive> implements WebA
       return PATH_WEB_INF;
    }
 
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.impl.base.container.WebContainerBase#getWebInfPath()
+    */
+   @Override
+   protected ArchivePath getServiceProvidersPath()
+   {
+      return PATH_SERVICE_PROVIDERS;
+   }
 }
