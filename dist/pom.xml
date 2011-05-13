@@ -33,11 +33,6 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.shrinkwrap</groupId>
-      <artifactId>shrinkwrap-extension-tomcat-6</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.shrinkwrap</groupId>
       <artifactId>shrinkwrap-extension-vdf</artifactId>
       <version>${project.version}</version>
     </dependency>
