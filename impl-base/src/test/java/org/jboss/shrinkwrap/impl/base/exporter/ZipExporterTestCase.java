@@ -35,7 +35,6 @@ import org.jboss.shrinkwrap.impl.base.exporter.zip.JdkZipExporterDelegate;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -142,7 +141,6 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
     * 
     * @throws Exception
     */
-   @Ignore // the Virtual Jar exporter is perfect
    @Test(expected = IllegalArgumentException.class)
    public void exportEmptyArchiveAsZip() throws Exception
    {
