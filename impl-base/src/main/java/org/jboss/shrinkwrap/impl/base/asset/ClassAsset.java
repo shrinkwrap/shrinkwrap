@@ -75,7 +75,7 @@ public class ClassAsset implements Asset
        */
       ClassLoader classLoader= clazz.getClassLoader();
       if(classLoader == null) {
-         classLoader = SecurityActions.getThreadContextClassLoader();
+         classLoader = ClassLoader.getSystemClassLoader();
       }
       return new ClassLoaderAsset(getResourceNameOfClass(clazz), classLoader).openStream();
    }
