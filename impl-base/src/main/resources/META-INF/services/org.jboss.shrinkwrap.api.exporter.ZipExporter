@@ -1,1 +1,1 @@
-implementingClassName=org.jboss.shrinkwrap.impl.base.exporter.zip.VirtualJarExporter
+implementingClassName=org.jboss.shrinkwrap.impl.base.exporter.zip.ZipExporterImpl

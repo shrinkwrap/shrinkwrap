@@ -17,7 +17,7 @@
     <!-- Artifact Information  -->
   <groupId>org.jboss.shrinkwrap</groupId>
   <artifactId>shrinkwrap-parent</artifactId>
-  <version>1.0.0-alpha-14-SNAPSHOT</version>
+  <version>1.0.0-beta-1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>ShrinkWrap Aggregator and Build Parent</name>
   <url>http://www.jboss.org</url>
@@ -190,12 +190,6 @@
     <module>spi</module>
     <module>extension-descriptors</module>
     <module>extension-sip</module>
-    <module>extension-glassfish</module>
-    <module>extension-tomcat-6</module>
-    <module>extension-mobicents-sip-servlets-1.x</module>
-    <module>extension-jetty-6</module>
-    <module>extension-jetty-7</module>
-    <module>extension-openejb</module>
     <module>extension-resolver</module>
     <module>extension-vfs3</module>
     <module>extension-vdf</module>
