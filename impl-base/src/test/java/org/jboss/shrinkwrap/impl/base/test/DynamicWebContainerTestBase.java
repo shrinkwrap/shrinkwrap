@@ -426,4 +426,32 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
       ArchivePath testPath = new BasicPath(getWebInfPath(), targetPath);
       Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
    }
+   
+   /**
+    * SHRINKWRAP-275
+    */
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebStringTargetResourceFromJar() throws Exception
+   {
+      // Causing NPE
+      getWebContainer().addAsWebResource("java/lang/String.class", "String.class");
+
+      ArchivePath testPath = new BasicPath(getWebPath(), "String.class");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+   
+   /**
+    * SHRINKWRAP-275
+    */
+   @Test
+   @ArchiveType(WebContainer.class)
+   public void testAddWebInfStringTargetResourceFromJar() throws Exception
+   {
+      // Causing NPE
+      getWebContainer().addAsWebInfResource("java/lang/String.class", "String.class");
+
+      ArchivePath testPath = new BasicPath(getWebInfPath(), "String.class");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
 }

@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.impl.base.container;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.security.AccessController;
@@ -32,6 +33,7 @@ import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.asset.FileAsset;
 import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.api.asset.UrlAsset;
@@ -593,6 +595,35 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return addAsManifestResource(fileFromResource(resourceName), target);
    }
    
+   
+   /**
+    * Adds the specified {@link File} resource (a nested JAR File form) to the current archive, 
+    * returning the archive itself
+    * 
+    * @param resource
+    * @param target
+    * @return
+    * @throws IllegalArgumentException
+    */
+   private T addNestedJarFileResource(final File resource, final ArchivePath target, final ArchivePath base) throws IllegalArgumentException
+   {
+      final Iterable<ClassLoader> classLoaders = ((Configurable) this.getArchive()).getConfiguration()
+            .getClassLoaders();
+
+      for (final ClassLoader classLoader : classLoaders)
+      {
+         final String path = resource.getPath();
+         final String adjustedPath = path.substring(path.indexOf("!/") + 2, path.length());
+         final InputStream in = classLoader.getResourceAsStream(adjustedPath);
+         if (in != null)
+         {
+            final Asset asset = new ByteArrayAsset(in);
+            return add(asset, base, target.get());
+         }
+      }
+      throw new IllegalArgumentException(resource.getPath() + " was not found in any available ClassLoaders");
+   }
+   
    /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addManifestResource(java.io.File, org.jboss.shrinkwrap.api.Path)
     */
@@ -605,7 +636,15 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       if (resource.isFile()) 
          return addAsManifestResource(new FileAsset(resource), target);
       
-      if (resource.listFiles().length == 0) 
+      final File[] files = resource.listFiles();
+      
+      // SHRINKWRAP-275, resource URL coming in from a JAR
+      if(files==null)
+      {
+         return this.addNestedJarFileResource(resource, target, this.getManifestPath());
+      }
+      
+      if (files.length == 0) 
          return  addAsManifestResource(new FileAsset(resource), target);
 
       for (File file : resource.listFiles())
@@ -837,7 +876,15 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       if (resource.isFile()) 
          return addAsResource(new FileAsset(resource), target);
       
-      if (resource.listFiles().length == 0) 
+      final File[] files = resource.listFiles();
+      
+      // SHRINKWRAP-275, resource URL coming in from a JAR
+      if(files==null)
+      {
+         return this.addNestedJarFileResource(resource, target, this.getResourcePath());
+      }
+      
+      if (files.length == 0) 
          return  addAsResource(new FileAsset(resource), target);
 
       for (File file : resource.listFiles())

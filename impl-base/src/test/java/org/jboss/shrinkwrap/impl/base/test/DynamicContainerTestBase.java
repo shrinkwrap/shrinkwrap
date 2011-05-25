@@ -25,6 +25,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
@@ -514,6 +515,35 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       getResourceContainer().addAsResource(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
       ArchivePath testPath = new BasicPath(getResourcePath(), targetPath);
       Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+   
+   /**
+    * SHRINKWRAP-275
+    */
+   @Test
+   @ArchiveType(ManifestContainer.class)
+   public void testAddManifestStringTargetResourceFromJar() throws Exception
+   {
+      // Causing NPE
+      getManifestContainer().addAsManifestResource("java/lang/String.class", "String.class");
+
+      ArchivePath testPath = new BasicPath(getManifestPath(), "String.class");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+   }
+   
+   /**
+    * SHRINKWRAP-275
+    */
+   @Test
+   @ArchiveType(ResourceContainer.class)
+   public void testAddResourceStringTargetResourceFromJar() throws Exception
+   {
+      // Causing NPE
+      getResourceContainer().addAsResource("java/lang/String.class", "String.class");
+
+      ArchivePath testPath = new BasicPath(getResourcePath(), "String.class");
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+      Logger.getAnonymousLogger().info(getArchive().toString(true));
    }
 
    /*
