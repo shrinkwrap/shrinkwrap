@@ -33,11 +33,13 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Filters;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
@@ -1439,6 +1441,23 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       Assert.assertTrue(
             "Archive should contain " + testPath2,
             getArchive().contains(testPath2));
+   }
+
+   /**
+    * Tests that a default MANIFEST.MF is generated through the addManifest method call. SHRINKWRAP-191
+    * @throws Exception
+    */
+   @Test
+   public void testAddManifest() throws Exception {
+      String expectedManifestPath = "META-INF/MANIFEST.MF";
+
+      JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
+      Assert.assertFalse("Archive should not contain manifest file",
+            archive.contains(expectedManifestPath));
+
+      archive.addManifest();
+      Assert.assertTrue("Archive should contain manifest file: " + expectedManifestPath,
+            archive.contains(expectedManifestPath));
    }
    
    private void assertNotContainsClass(ArchivePath notExpectedPath)

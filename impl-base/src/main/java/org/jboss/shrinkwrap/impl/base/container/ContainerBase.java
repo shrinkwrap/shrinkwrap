@@ -73,6 +73,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    //-------------------------------------------------------------------------------------||
    
    private static final Archive<?>[] CAST = new Archive[]{};
+   private static final String DEFAULT_MANIFEST = "DefaultManifest.MF";
    
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -742,7 +743,14 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
       return addAsManifestResource(resource, target);
    }
-   
+
+   /**
+    * {@inheritDoc}
+    */
+   public T addManifest() throws IllegalArgumentException
+   {
+      return addAsManifestResource(DEFAULT_MANIFEST, ManifestContainer.DEFAULT_MANIFEST_NAME);
+   }
    
    /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addServiceProvider(java.lang.Class, java.lang.Class<?>[])
