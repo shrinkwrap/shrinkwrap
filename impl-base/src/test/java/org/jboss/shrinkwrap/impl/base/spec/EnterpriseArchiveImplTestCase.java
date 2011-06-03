@@ -23,6 +23,7 @@ import org.jboss.shrinkwrap.api.container.EnterpriseContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
+import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
@@ -112,6 +113,12 @@ public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTes
       throw new UnsupportedOperationException("EnterpriseArchives do not support classes");
    }
 
+   @Override
+   protected ServiceProviderContainer<EnterpriseArchive> getServiceProviderContainer()
+   {
+      throw new UnsupportedOperationException("EnterpriseArchives do not support service provider classes");
+   }
+   
    @Override
    protected LibraryContainer<EnterpriseArchive> getLibraryContainer()
    {

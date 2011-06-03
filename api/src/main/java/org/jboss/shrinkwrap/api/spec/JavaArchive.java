@@ -17,8 +17,7 @@
 package org.jboss.shrinkwrap.api.spec;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.container.ClassContainer;
-import org.jboss.shrinkwrap.api.container.ManifestContainer;
+import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 
 /**
  * Traditional JAR (Java Archive) structure. Used in 
@@ -32,7 +31,6 @@ import org.jboss.shrinkwrap.api.container.ManifestContainer;
 public interface JavaArchive
       extends
          Archive<JavaArchive>,
-         ManifestContainer<JavaArchive>,
-         ClassContainer<JavaArchive>
+         ServiceProviderContainer<JavaArchive>
 {
 }

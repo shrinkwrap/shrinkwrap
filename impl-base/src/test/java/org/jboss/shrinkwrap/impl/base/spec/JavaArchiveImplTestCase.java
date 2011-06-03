@@ -22,6 +22,7 @@ import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
+import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
@@ -114,6 +115,12 @@ public class JavaArchiveImplTestCase extends DynamicContainerTestBase<JavaArchiv
       return getArchive();
    }
 
+   @Override
+   protected ServiceProviderContainer<JavaArchive> getServiceProviderContainer()
+   {
+      return getArchive();
+   }
+   
    @Override
    protected LibraryContainer<JavaArchive> getLibraryContainer()
    {
