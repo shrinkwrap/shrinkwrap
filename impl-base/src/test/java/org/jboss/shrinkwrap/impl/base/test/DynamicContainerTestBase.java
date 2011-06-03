@@ -39,6 +39,7 @@ import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
+import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
@@ -82,6 +83,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    protected abstract ClassContainer<T> getClassContainer();
    protected abstract ArchivePath getManifestPath();
    protected abstract ManifestContainer<T> getManifestContainer();
+   protected abstract ServiceProviderContainer<T> getServiceProviderContainer();
    protected abstract ArchivePath getLibraryPath();
    protected abstract LibraryContainer<T> getLibraryContainer();
    
@@ -381,11 +383,27 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    @ArchiveType(ManifestContainer.class)
    public void testAddServiceProvider() throws Exception {
       getManifestContainer().addAsServiceProvider(DummyInterfaceForTest.class, DummyClassForTest.class);
-      
+
       ArchivePath testPath = new BasicPath(getManifestPath(), "services/" + DummyInterfaceForTest.class.getName());
       Assert.assertTrue(
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
+   }
+   
+   @Test
+   @ArchiveType(ServiceProviderContainer.class)
+   public void testAddServiceProviderWithClasses() throws Exception {
+      getServiceProviderContainer().addAsServiceProviderAndClasses(DummyInterfaceForTest.class, DummyClassForTest.class);
+
+      ArchivePath testPath = new BasicPath(getManifestPath(), "services/" + DummyInterfaceForTest.class.getName());
+      Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+      
+      Class<?>[] expectedResources = {DummyInterfaceForTest.class, DummyClassForTest.class};
+      for (Class<?> expectedResource : expectedResources)
+      {
+         ArchivePath expectedClassPath = new BasicPath(getClassPath(), AssetUtil.getFullPathForClassResource(expectedResource));
+         assertContainsClass(expectedClassPath);
+      }
    }
 
    @Test

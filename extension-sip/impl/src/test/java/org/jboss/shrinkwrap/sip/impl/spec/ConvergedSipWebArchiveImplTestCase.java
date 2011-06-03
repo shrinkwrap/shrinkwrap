@@ -25,6 +25,7 @@ import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
+import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.sip.api.container.ConvergedSipWebContainer;
 import org.jboss.shrinkwrap.sip.api.spec.ConvergedSipWebArchive;
@@ -111,6 +112,12 @@ public class ConvergedSipWebArchiveImplTestCase extends DynamicConvergedSipWebCo
       return getArchive();
    }
 
+   @Override
+   protected ServiceProviderContainer<ConvergedSipWebArchive> getServiceProviderContainer()
+   {
+      return getArchive();
+   }
+   
    @Override
    protected ResourceContainer<ConvergedSipWebArchive> getResourceContainer()
    {

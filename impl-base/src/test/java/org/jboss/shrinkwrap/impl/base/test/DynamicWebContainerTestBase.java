@@ -22,6 +22,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.api.container.WebContainer;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
@@ -478,6 +479,31 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
       Assert.assertTrue("Archive should contain " + testPath, webArchive.contains(testPath));
    }
 
+   /**
+    * Override to handle web archive special case (service providers in WEB-INF/classes/META-INF/services)
+    * @throws Exception if an exception occurs
+    */
+   @Test
+   @Override
+   @ArchiveType(ServiceProviderContainer.class)
+   public void testAddServiceProviderWithClasses() throws Exception {
+      ServiceProviderPathExposingWebArchive webArchive = new ServiceProviderPathExposingWebArchive(ShrinkWrap.create(WebArchive.class));
+      webArchive.addAsServiceProviderAndClasses(DummyInterfaceForTest.class, DummyClassForTest.class);
+
+      ArchivePath testPath = webArchive.getServiceProvidersPath();
+      Assert.assertTrue("Archive should contain " + testPath, webArchive.contains(testPath));
+
+      testPath = new BasicPath(webArchive.getServiceProvidersPath(), DummyInterfaceForTest.class.getName());
+      Assert.assertTrue("Archive should contain " + testPath, webArchive.contains(testPath));
+      
+      Class<?>[] expectedResources = {DummyInterfaceForTest.class, DummyClassForTest.class};
+      for (Class<?> expectedResource : expectedResources)
+      {
+         ArchivePath expectedClassPath = new BasicPath(getClassPath(), AssetUtil.getFullPathForClassResource(expectedResource));
+         Assert.assertTrue("Archive should contain " + testPath, webArchive.contains(expectedClassPath));
+      }
+   }
+   
    private class ServiceProviderPathExposingWebArchive extends WebArchiveImpl
    {
       private ServiceProviderPathExposingWebArchive(final Archive<?> delegate)

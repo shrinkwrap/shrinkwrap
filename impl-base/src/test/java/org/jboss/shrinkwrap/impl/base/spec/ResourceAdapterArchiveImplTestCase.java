@@ -23,6 +23,7 @@ import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceAdapterContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
+import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
@@ -117,6 +118,12 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
    protected LibraryContainer<ResourceAdapterArchive> getLibraryContainer()
    {
       return archive;
+   }
+   
+   @Override
+   protected ServiceProviderContainer<ResourceAdapterArchive> getServiceProviderContainer()
+   {
+      throw new UnsupportedOperationException("ResourceAdapterArchive do not support service provider classes");
    }
 
    @Override
