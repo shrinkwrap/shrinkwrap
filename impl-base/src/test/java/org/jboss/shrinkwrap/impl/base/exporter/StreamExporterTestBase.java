@@ -227,7 +227,7 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
       log.info("testExportToDirectoryFails");
 
       // Get a temp directory for the test
-      File tempDirectory = createTempDirectory("testExportToFile");
+      File tempDirectory = createTempDirectory("testExportToDirectoryFails");
 
       // Get an archive instance
       Archive<?> archive = createArchiveWithAssets();
