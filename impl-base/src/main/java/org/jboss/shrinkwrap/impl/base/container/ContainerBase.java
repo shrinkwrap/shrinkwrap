@@ -614,9 +614,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
       for (final ClassLoader classLoader : classLoaders)
       {
-         final String path = resource.getPath();
-         final String adjustedPath = path.substring(path.indexOf("!/") + 2, path.length());
-         final InputStream in = classLoader.getResourceAsStream(adjustedPath);
+         final InputStream in = classLoader.getResourceAsStream(resourceAdjustedPath(resource));
          if (in != null)
          {
             final Asset asset = new ByteArrayAsset(in);
@@ -624,6 +622,13 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
          }
       }
       throw new IllegalArgumentException(resource.getPath() + " was not found in any available ClassLoaders");
+   }
+
+   private String resourceAdjustedPath(final File resource)
+   {
+      final String path = resource.getPath();
+      final String adjustedPath = path.substring(path.indexOf("!" + File.separator) + 2, path.length());
+      return adjustedPath.replace(File.separator, "/");
    }
    
    /* (non-Javadoc)
