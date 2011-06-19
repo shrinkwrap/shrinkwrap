@@ -1404,7 +1404,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       if (resourceFile.isFile())
          return addAsLibrary(new UrlAsset(resource), target);
       
-      if (resourceFile.length() == 0)
+      if (resourceFile.listFiles().length == 0)
          return addAsLibrary(new UrlAsset(resource), target);
 
       for (File file : resourceFile.listFiles())
