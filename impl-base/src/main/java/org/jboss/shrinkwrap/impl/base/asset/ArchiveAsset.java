@@ -83,7 +83,10 @@ public class ArchiveAsset implements Asset
    public InputStream openStream()
    {
       // Export via the specified exporter
-      return this.getArchive().as(this.exporter).exportAsInputStream();
+      if (!this.getArchive().getContent().isEmpty())
+         return this.getArchive().as(this.exporter).exportAsInputStream();
+      else
+         return null;
    }
 
    /**
