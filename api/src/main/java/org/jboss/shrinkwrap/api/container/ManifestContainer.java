@@ -36,6 +36,8 @@ import org.jboss.shrinkwrap.api.asset.Asset;
  */
 public interface ManifestContainer<T extends Archive<T>>
 {
+   public static final String DEFAULT_MANIFEST_NAME = "MANIFEST.MF";
+
    //-------------------------------------------------------------------------------------||
    // Contracts --------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
@@ -296,4 +298,12 @@ public interface ManifestContainer<T extends Archive<T>>
     * But due to how java generic works, this will cause a unsafe warning for the user. 
     */
    T addAsServiceProvider(Class<?> serviceInterface, Class<?>... serviceImpls) throws IllegalArgumentException;
+
+   /**
+    * Adds a default generated MANIFEST.MF manifest to the current archive.
+    *
+    * @return This virtual archive
+    * @throws IllegalArgumentException if serviceInterface is null
+    */
+   T addManifest() throws IllegalArgumentException;
 }

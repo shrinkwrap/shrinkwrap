@@ -41,6 +41,7 @@ import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
+import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
@@ -66,13 +67,14 @@ import org.jboss.shrinkwrap.spi.Configurable;
  * @param <T>
  */
 public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase<Archive<?>> implements 
-   Archive<T>, ManifestContainer<T>, ResourceContainer<T>, ClassContainer<T>, LibraryContainer<T>
+   Archive<T>, ManifestContainer<T>, ServiceProviderContainer<T>, ResourceContainer<T>, ClassContainer<T>, LibraryContainer<T>
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
    
    private static final Archive<?>[] CAST = new Archive[]{};
+   private static final String DEFAULT_MANIFEST = "DefaultManifest.MF";
    
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -612,9 +614,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
       for (final ClassLoader classLoader : classLoaders)
       {
-         final String path = resource.getPath();
-         final String adjustedPath = path.substring(path.indexOf("!/") + 2, path.length());
-         final InputStream in = classLoader.getResourceAsStream(adjustedPath);
+         final InputStream in = classLoader.getResourceAsStream(resourceAdjustedPath(resource));
          if (in != null)
          {
             final Asset asset = new ByteArrayAsset(in);
@@ -622,6 +622,13 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
          }
       }
       throw new IllegalArgumentException(resource.getPath() + " was not found in any available ClassLoaders");
+   }
+
+   private String resourceAdjustedPath(final File resource)
+   {
+      final String path = resource.getPath();
+      final String adjustedPath = path.substring(path.indexOf("!" + File.separator) + 2, path.length());
+      return adjustedPath.replace(File.separator, "/");
    }
    
    /* (non-Javadoc)
@@ -742,7 +749,14 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
       return addAsManifestResource(resource, target);
    }
-   
+
+   /**
+    * {@inheritDoc}
+    */
+   public T addManifest() throws IllegalArgumentException
+   {
+      return addAsManifestResource(DEFAULT_MANIFEST, ManifestContainer.DEFAULT_MANIFEST_NAME);
+   }
    
    /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addServiceProvider(java.lang.Class, java.lang.Class<?>[])
@@ -756,6 +770,20 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       Asset asset = new ServiceProviderAsset(serviceImpls);
       ArchivePath path = new BasicPath("services", serviceInterface.getName());
       return addAsManifestResource(asset, path);
+   }
+
+   /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.ServiceProviderContainerContainer#addServiceProvideraddAsServiceAndClasses(java.lang.Class, java.lang.Class<?>[])
+    */
+   @Override
+   public T addAsServiceProviderAndClasses(Class<?> serviceInterface, Class<?>... serviceImpls) throws IllegalArgumentException 
+   {
+      Validate.notNull(serviceInterface, "ServiceInterface must be specified");
+      Validate.notNullAndNoNullValues(serviceImpls, "ServiceImpls must be specified and can not contain null values");
+      
+      addAsServiceProvider(serviceInterface, serviceImpls);
+      addClass(serviceInterface);
+      return addClasses(serviceImpls);
    }
    
    //-------------------------------------------------------------------------------------||
@@ -1376,7 +1404,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       if (resourceFile.isFile())
          return addAsLibrary(new UrlAsset(resource), target);
       
-      if (resourceFile.length() == 0)
+      if (resourceFile.listFiles().length == 0)
          return addAsLibrary(new UrlAsset(resource), target);
 
       for (File file : resourceFile.listFiles())

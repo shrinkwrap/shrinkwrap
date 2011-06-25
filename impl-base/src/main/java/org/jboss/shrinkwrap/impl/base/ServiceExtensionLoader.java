@@ -24,17 +24,31 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.ClassLoaderSearchUtilDelegator;
+import org.jboss.shrinkwrap.api.Configuration;
+import org.jboss.shrinkwrap.api.ConfigurationBuilder;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.UnknownExtensionTypeException;
 import org.jboss.shrinkwrap.api.UnknownExtensionTypeExceptionDelegator;
 
 /**
  * ServiceExtensionLoader
+ * 
+ * This class is the default strategy to load extensions when an instance of 
+ * {@link ExtensionLoader} is not provided to the {@link ConfigurationBuilder}
+ * and the {@link ConfigurationBuilder#build()} method is invoked. If the 
+ * {@link ConfigurationBuilder} doesn't provide any {@link ClassLoader}, 
+ * {@link ConfigurationBuilder#build()} defaults to a one-element collection 
+ * holding the TCCL. The {@link ServiceExtensionLoader#classLoaders} are used
+ * to find the provider-configuration file for the extension to be loaded in
+ * META-INF/services/. This provider-configuration file is used to make an
+ * instance of the SPI implementation and cached in 
+ * {@link ServiceExtensionLoader#cache}.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
@@ -180,6 +194,16 @@ public class ServiceExtensionLoader implements ExtensionLoader
    // Internal Helper Methods - Loading --------------------------------------------------||
    //-------------------------------------------------------------------------------------||
    
+   /**
+    * Creates a new instance of a <code>extensionClass</code> implementation. 
+    * The implementation class is found in a provider-configuration file
+    * in META-INF/services/
+    * 
+    * @param <T>
+    * @param extensionClass
+    * @param archive
+    * @return an instance of the <code>extensionClass</code>' implementation.
+    */
    private <T extends Assignable> T createFromLoadExtension(Class<T> extensionClass, Archive<?> archive)
    {
       ExtensionWrapper extensionWrapper = loadExtensionMapping(extensionClass);
@@ -198,11 +222,27 @@ public class ServiceExtensionLoader implements ExtensionLoader
       return createExtension(extensionImplClass, archive);
    }
 
+   /**
+    * Loads the implementation class hold in 
+    * {@link ExtensionWrapper#implementingClassName}
+    * 
+    * @param <T>
+    * @param extensionWrapper
+    * @return
+    */
    private <T extends Assignable> Class<T> loadExtension(ExtensionWrapper extensionWrapper)
    {
       return loadExtensionClass(extensionWrapper.implementingClassName);
    }
 
+   /**
+    * Finds the SPI configuration, wraps it into a {@link ExtensionWrapper} and
+    * loads it to {@link ServiceExtensionLoader#extensionMappings}.
+    * 
+    * @param <T>
+    * @param extensionClass
+    * @return
+    */
    private <T extends Assignable> ExtensionWrapper loadExtensionMapping(Class<T> extensionClass)   
    {
       final InputStream extensionStream = findExtensionImpl(extensionClass);
@@ -212,7 +252,17 @@ public class ServiceExtensionLoader implements ExtensionLoader
       return extensionWrapper;
    }
 
-   
+   /**
+    * Iterates through the classloaders to load the provider-configuration file 
+    * for <code>extensionClass</code> in META-INF/services/ using its binary 
+    * name.
+    * 
+    * @param <T>
+    * @param extensionClass SPI type for which the configuration file is looked for
+    * @return An {@link InputStream} representing <code>extensionClass</code>'s configuration file
+    * @throws RuntimeException if it doesn't find a provider-configuration file for <code>extensionClass</code>
+    * @throws UnknownExtensionTypeExceptionDelegator
+    */
    private <T extends Assignable> InputStream findExtensionImpl(final Class<T> extensionClass)
    {
       try
@@ -237,6 +287,16 @@ public class ServiceExtensionLoader implements ExtensionLoader
       }
    }
 
+   /**
+    * Wraps the provider-configuration file <code>extensionStream</code>, the 
+    * SPI <code>extensionClass</code> and its implementation class name into
+    * a {@link ExtensionWrapper} instance.
+    * 
+    * @param <T>
+    * @param extensionStream - a bytes stream representation of the provider-configuration file
+    * @param extensionClass - SPI type
+    * @return a {@link ExtensionWrapper} instance
+    */
    private <T extends Assignable> ExtensionWrapper loadExtensionWrapper(final InputStream extensionStream, Class<T> extensionClass)
    {
       Properties properties = new Properties();
@@ -262,6 +322,16 @@ public class ServiceExtensionLoader implements ExtensionLoader
       return new ExtensionWrapper(implementingClassName, map, extensionClass);
    }
 
+   /**
+    * Delegates class loading of <code>extensionClassName</code> to 
+    * {@link ClassLoaderSearchUtilDelegator#findClassFromClassLoaders(String, Iterable)}
+    * passing the <code>extensionClassName</code> and the instance's
+    * <code>classLoaders</code>.
+    * 
+    * @param <T>
+    * @param extensionClassName
+    * @return
+    */
    @SuppressWarnings("unchecked")
    private <T extends Assignable> Class<T> loadExtensionClass(String extensionClassName)
    {
@@ -276,6 +346,16 @@ public class ServiceExtensionLoader implements ExtensionLoader
       }
    }
 
+   /**
+    * Creates an instance of <code>extensionImplClass</code> using 
+    * <code>archive</code> as the parameter for its one-argument list 
+    * constructor.
+    *  
+    * @param <T>
+    * @param extensionImplClass
+    * @param archive
+    * @return
+    */
    private <T extends Assignable> T createExtension(Class<T> extensionImplClass, Archive<?> archive)
    {
 
@@ -315,6 +395,14 @@ public class ServiceExtensionLoader implements ExtensionLoader
       return extension;
    }
 
+   /**
+    * Finds a constructor with a one-argument list's element which implements 
+    * {@link Archive}.
+    * 
+    * @param <T>
+    * @param extensionImplClass - Implementation of {@link Assignable} with a one-argument list's element which implements {@link Archive}.
+    * @return
+    */
    @SuppressWarnings("unchecked")
    private <T extends Assignable> Constructor<T> findConstructor(Class<T> extensionImplClass) 
    {

@@ -23,6 +23,7 @@ import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
+import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.api.container.WebContainer;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
@@ -110,6 +111,12 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
       return getArchive();
    }
 
+   @Override
+   protected ServiceProviderContainer<WebArchive> getServiceProviderContainer()
+   {
+      return getArchive();
+   }
+   
    @Override
    protected ResourceContainer<WebArchive> getResourceContainer()
    {

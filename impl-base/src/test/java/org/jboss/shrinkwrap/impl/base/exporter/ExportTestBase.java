@@ -146,7 +146,7 @@ public abstract class ExportTestBase
    {
       try
       {
-         return new File(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()), "../");
+         return new File(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParent());
       }
       catch (final URISyntaxException urise)
       {

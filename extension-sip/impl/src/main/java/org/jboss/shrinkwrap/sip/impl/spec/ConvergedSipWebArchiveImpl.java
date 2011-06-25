@@ -70,6 +70,11 @@ public class ConvergedSipWebArchiveImpl
     * Path to the manifests inside of the Archive.
     */
    private static final ArchivePath PATH_MANIFEST = ArchivePaths.create(PATH_CLASSES, "META-INF");
+   
+   /**
+    * Path to web archive service providers.
+    */
+   private static final ArchivePath PATH_SERVICE_PROVIDERS = ArchivePaths.create(PATH_CLASSES, "META-INF/services");
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -151,6 +156,15 @@ public class ConvergedSipWebArchiveImpl
    protected ArchivePath getWebInfPath()
    {
       return PATH_WEB_INF;
+   }
+
+   /**
+    * @see org.jboss.shrinkwrap.impl.base.container.WebContainerBase#getServiceProvidersPath()
+    */
+   @Override
+   protected ArchivePath getServiceProvidersPath()
+   {
+      return PATH_SERVICE_PROVIDERS;
    }
    
 }

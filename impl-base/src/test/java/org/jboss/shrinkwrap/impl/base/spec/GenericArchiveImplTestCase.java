@@ -23,6 +23,7 @@ import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
+import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.impl.base.GenericArchiveImpl;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicContainerTestBase;
@@ -118,6 +119,12 @@ public class GenericArchiveImplTestCase extends DynamicContainerTestBase<Generic
 
    @Override
    protected LibraryContainer<GenericArchive> getLibraryContainer()
+   {
+      throw UNSUPPORTED;
+   }
+   
+   @Override
+   protected ServiceProviderContainer<GenericArchive> getServiceProviderContainer()
    {
       throw UNSUPPORTED;
    }

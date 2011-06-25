@@ -17,9 +17,8 @@
 package org.jboss.shrinkwrap.sip.api.spec;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
-import org.jboss.shrinkwrap.api.container.ManifestContainer;
+import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.sip.api.container.ConvergedSipWebContainer;
 
 /**
@@ -32,8 +31,7 @@ import org.jboss.shrinkwrap.sip.api.container.ConvergedSipWebContainer;
 public interface ConvergedSipWebArchive
       extends
          Archive<ConvergedSipWebArchive>,
-         ManifestContainer<ConvergedSipWebArchive>,
-         ClassContainer<ConvergedSipWebArchive>,
+         ServiceProviderContainer<ConvergedSipWebArchive>,
          LibraryContainer<ConvergedSipWebArchive>,
          ConvergedSipWebContainer<ConvergedSipWebArchive>
 {

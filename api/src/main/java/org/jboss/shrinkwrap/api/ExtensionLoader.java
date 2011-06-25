@@ -20,6 +20,9 @@ package org.jboss.shrinkwrap.api;
  * ExtensionLoader
  * 
  * Describes a way for the {@link Archive} to load extensions.
+ * If an implementation is not set in the {@link Domain}'s 
+ * {@link Configuration}, {@link ServiceExtensionLoader} is set as the
+ * default strategy to load extensions.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
