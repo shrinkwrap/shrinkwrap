@@ -581,6 +581,15 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    }
 
    /*
+    * https://jira.jboss.org/jira/browse/SHRINKWRAP-290 - Should throw IllegalArgumentException
+    */
+   @Test(expected=IllegalArgumentException.class)
+   @ArchiveType(ResourceContainer.class)
+   public void testAddResourceDoesNotExist() throws Exception {
+      getResourceContainer().addAsResource("this/does/not/exists.txt", "Test.txt");
+   }
+   
+   /*
     * https://issues.jboss.org/browse/SHRINKWRAP-187 - Do not override existing paths.
     */
    @Test

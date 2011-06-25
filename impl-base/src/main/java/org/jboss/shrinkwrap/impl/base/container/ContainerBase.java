@@ -1506,8 +1506,12 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
    private File fileFromResource(final String resourceName)
    {
-      final String resourcePath = AccessController.doPrivileged(GetTcclAction.INSTANCE).getResource(resourceName)
-            .getFile();
+      final URL url = AccessController.doPrivileged(GetTcclAction.INSTANCE).getResource(resourceName);
+      if (url == null) {
+            throw new IllegalArgumentException("Resource '" + resourceName
+                    + "' was not found using current thread context classloader");
+      }
+      final String resourcePath = url.getFile();
       return new File(resourcePath);
    }
    
