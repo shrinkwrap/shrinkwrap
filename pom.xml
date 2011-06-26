@@ -122,15 +122,6 @@
         </configuration>
       </plugin>
 
-      <!-- Maven Release Plugin Configuration -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <configuration>
-          <autoVersionSubmodules>true</autoVersionSubmodules>
-        </configuration>
-      </plugin>
-      
       <!-- Enforce Maven Environment -->
       <plugin>
         <artifactId>maven-enforcer-plugin
