@@ -73,7 +73,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
    private static final Logger log = Logger.getLogger(MavenArtifactBuilderImpl.class.getName());
 
    private static final File[] FILE_CAST = new File[0];
-   
+
    private final MavenRepositorySystem system;
 
    private final RepositorySystemSession session;
@@ -81,6 +81,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
    // these are package visible, so they can be wrapped and make visible for
    // filters
    Stack<MavenDependency> dependencies;
+
    Map<ArtifactAsKey, MavenDependency> pomInternalDependencyManagement;
 
    @Override
@@ -138,7 +139,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
     * @throws Exception
     */
    @Override
-   public MavenDependencyResolver loadReposFromPom(final String path) throws ResolutionException
+   public MavenDependencyResolver loadMetadataFromPom(final String path) throws ResolutionException
    {
       Validate.isReadable(path, "Path to the pom.xml file must be defined and accessible");
 
@@ -156,15 +157,9 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
 
       return this;
    }
-   
+
    @Override
-   public MavenDependencyResolver loadDependenciesFromPom(final String path) throws ResolutionException
-   {
-      return this.loadDependenciesFromPom(path, AcceptAllFilter.INSTANCE);
-   }
-   
-   @Override
-   public MavenDependencyResolver loadDependenciesFromPom(final String path, final MavenResolutionFilter filter) throws ResolutionException
+   public MavenDependencyResolver includeDependenciesFromPom(final String path) throws ResolutionException
    {
       Validate.isReadable(path, "Path to the pom.xml file must be defined and accessible");
       File pom = new File(path);
@@ -205,9 +200,8 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
       Validate.notNullAndNoNullValues(coordinates, "Artifacts coordinates must not be null or empty");
 
       return new MavenArtifactsBuilderImpl(this, coordinates);
-   }  
-   
-   
+   }
+
    /*
     * (non-Javadoc)
     * 
@@ -280,7 +274,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
 
       return this;
    }
-   
+
    /*
     * (non-Javadoc)
     * 
@@ -304,7 +298,8 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
    {
       Validate.notEmpty(dependencies, "No dependencies were set for resolution");
 
-      CollectRequest request = new CollectRequest(MavenConverter.asDependencies(dependencies), null, system.getRemoteRepositories());
+      CollectRequest request = new CollectRequest(MavenConverter.asDependencies(dependencies), null,
+            system.getRemoteRepositories());
 
       // configure filter
       filter.configure(Collections.unmodifiableList(dependencies));
@@ -340,7 +335,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
 
       return files.toArray(FILE_CAST);
    }
-   
+
    /*
     * (non-Javadoc)
     * 
@@ -348,7 +343,8 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
     * org.jboss.shrinkwrap.dependencies.DependencyBuilder.ArtifactBuilder
     * #resolve()
     */
-   public <ARCHIVEVIEW extends Assignable> Collection<ARCHIVEVIEW> resolveAs(final Class<ARCHIVEVIEW> archiveView) throws ResolutionException
+   public <ARCHIVEVIEW extends Assignable> Collection<ARCHIVEVIEW> resolveAs(final Class<ARCHIVEVIEW> archiveView)
+         throws ResolutionException
    {
       return resolveAs(archiveView, AcceptAllFilter.INSTANCE);
    }
@@ -372,7 +368,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
       {
          throw new IllegalArgumentException("Filter must be specified");
       }
-      
+
       final File[] files = resolveAsFiles(filter);
       final Collection<ARCHIVEVIEW> archives = new ArrayList<ARCHIVEVIEW>(files.length);
       for (final File file : files)
@@ -384,7 +380,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
 
       return archives;
    }
-   
+
    // converts a file to a ZIP file
    private ZipFile convert(File file) throws ResolutionException
    {
@@ -394,21 +390,23 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
       }
       catch (ZipException e)
       {
-         throw new ResolutionException("Unable to treat dependency artifact \"" + file.getAbsolutePath() + "\" as a ZIP file", e);
+         throw new ResolutionException("Unable to treat dependency artifact \"" + file.getAbsolutePath()
+               + "\" as a ZIP file", e);
       }
       catch (IOException e)
       {
          throw new ResolutionException("Unable to access artifact file at \"" + file.getAbsolutePath() + "\".", e);
       }
    }
-   
+
    class MavenArtifactBuilderImpl implements MavenDependencyResolverInternal
    {
       private final MavenDependencyResolverInternal delegate;
-      
-      MavenArtifactBuilderImpl(final MavenDependencyResolverInternal delegate,String coordinates) throws ResolutionException
+
+      MavenArtifactBuilderImpl(final MavenDependencyResolverInternal delegate, String coordinates)
+            throws ResolutionException
       {
-         assert delegate!=null:"Delegate must be specified";
+         assert delegate != null : "Delegate must be specified";
          this.delegate = delegate;
          coordinates = MavenConverter.resolveArtifactVersion(pomInternalDependencyManagement, coordinates);
          MavenDependency dependency = new MavenDependencyImpl(coordinates);
@@ -442,7 +440,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
          Validate.notNullAndNoNullValues(coordinates, "Artifacts coordinates must not be null or empty");
          return new MavenArtifactsBuilderImpl(this, coordinates);
       }
-      
+
       @Override
       public <ARCHIVEVIEW extends Assignable> Collection<ARCHIVEVIEW> resolveAs(Class<ARCHIVEVIEW> archiveView)
             throws ResolutionException
@@ -472,9 +470,9 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
       }
 
       @Override
-      public MavenDependencyResolver loadReposFromPom(String path) throws ResolutionException
+      public MavenDependencyResolver loadMetadataFromPom(String path) throws ResolutionException
       {
-         return delegate.loadReposFromPom(path);
+         return delegate.loadMetadataFromPom(path);
       }
 
       public MavenDependencyResolver scope(String scope)
@@ -512,30 +510,23 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
          return delegate.getPomInternalDependencyManagement();
       }
 
-      public MavenDependencyResolver loadDependenciesFromPom(String path) throws ResolutionException
+      public MavenDependencyResolver includeDependenciesFromPom(String path) throws ResolutionException
       {
-         return delegate.loadDependenciesFromPom(path);
+         return delegate.includeDependenciesFromPom(path);
       }
-
-      public MavenDependencyResolver loadDependenciesFromPom(String path, MavenResolutionFilter filter)
-            throws ResolutionException
-      {
-         return delegate.loadDependenciesFromPom(path, filter);
-      }
-
    }
-   
+
    static class MavenArtifactsBuilderImpl implements MavenDependencyResolverInternal
    {
       private final MavenDependencyResolverInternal delegate;
-      
+
       private int size;
 
-      MavenArtifactsBuilderImpl(final MavenDependencyResolverInternal delegate,final String... coordinates)
+      MavenArtifactsBuilderImpl(final MavenDependencyResolverInternal delegate, final String... coordinates)
       {
-         assert delegate !=null:"Delegate must be specified";
+         assert delegate != null : "Delegate must be specified";
          this.delegate = delegate;
-         
+
          this.size = coordinates.length;
 
          for (String coords : coordinates)
@@ -689,9 +680,9 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
       }
 
       @Override
-      public MavenDependencyResolver loadReposFromPom(String path) throws ResolutionException
+      public MavenDependencyResolver loadMetadataFromPom(String path) throws ResolutionException
       {
-         return delegate.loadReposFromPom(path);
+         return delegate.loadMetadataFromPom(path);
       }
 
       @Override
@@ -750,16 +741,9 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
          return delegate.getPomInternalDependencyManagement();
       }
 
-      public MavenDependencyResolver loadDependenciesFromPom(String path) throws ResolutionException
+      public MavenDependencyResolver includeDependenciesFromPom(String path) throws ResolutionException
       {
-         return delegate.loadDependenciesFromPom(path);
+         return delegate.includeDependenciesFromPom(path);
       }
-
-      public MavenDependencyResolver loadDependenciesFromPom(String path, MavenResolutionFilter filter)
-            throws ResolutionException
-      {
-         return delegate.loadDependenciesFromPom(path, filter);
-      }
-
    }
 }

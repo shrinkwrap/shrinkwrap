@@ -55,7 +55,7 @@ public class ExclusionsUnitTestCase
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
             .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
-                           .loadReposFromPom("target/poms/test-parent.xml")
+                           .loadMetadataFromPom("target/poms/test-parent.xml")
                            .artifact("org.jboss.shrinkwrap.test:test-dependency-test:jar:1.0.0")
                            .scope("test")
                            .exclusion("org.jboss.shrinkwrap.test:test-deps-f")
@@ -79,7 +79,7 @@ public class ExclusionsUnitTestCase
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
             .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
-                           .loadReposFromPom("target/poms/test-parent.xml")
+                           .loadMetadataFromPom("target/poms/test-parent.xml")
                            .artifact("org.jboss.shrinkwrap.test:test-dependency-test:1.0.0")
                            .scope("test")
                            .exclusions("org.jboss.shrinkwrap.test:test-deps-f", "org.jboss.shrinkwrap.test:test-deps-g")
@@ -99,7 +99,7 @@ public class ExclusionsUnitTestCase
    {
 
       File[] files = DependencyResolvers.use(MavenDependencyResolver.class)
-            .loadReposFromPom("target/poms/test-parent.xml")
+            .loadMetadataFromPom("target/poms/test-parent.xml")
             .artifact("org.jboss.shrinkwrap.test:test-dependency-test:1.0.0")
             .scope("test")
             .exclusion("*")

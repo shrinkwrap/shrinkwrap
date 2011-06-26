@@ -65,7 +65,7 @@ public interface MavenDependencyResolver
     *         the content of POM file.
     * @throws Exception
     */
-   MavenDependencyResolver loadReposFromPom(String path) throws ResolutionException;
+   MavenDependencyResolver loadMetadataFromPom(String path) throws ResolutionException;
 
    /**
     * Sets a scope of dependency
@@ -123,22 +123,13 @@ public interface MavenDependencyResolver
     * @return Artifact builder with added exclusions
     */
    MavenDependencyResolver exclusions(Collection<String> exclusions);
-   
-   /**
-    * Resolves based upon dependencies declared in the POM at the specified path
-    * @param path
-    * @return
-    * @throws ResolutionException
-    */
-   MavenDependencyResolver loadDependenciesFromPom(final String path) throws ResolutionException;
-   
-   /**
-    * Resolves based upon dependencies declared in the POM at the specified path
-    * @param path
-    * @param filter
-    * @return
-    * @throws ResolutionException
-    */
-   MavenDependencyResolver loadDependenciesFromPom(final String path, final MavenResolutionFilter filter) throws ResolutionException;
 
+   /**
+    * Resolves based upon dependencies declared in the POM at the specified path
+    * 
+    * @param path
+    * @return
+    * @throws ResolutionException
+    */
+   MavenDependencyResolver includeDependenciesFromPom(final String path) throws ResolutionException;
 }

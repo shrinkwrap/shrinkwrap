@@ -53,7 +53,7 @@ public class PomDependenciesUnitTestCase
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
             .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
-                           .loadReposFromPom("target/poms/test-child.xml")
+                           .loadMetadataFromPom("target/poms/test-child.xml")
                            .artifact("org.jboss.shrinkwrap.test:test-child:1.0.0")
                            .resolveAs(GenericArchive.class));
 
@@ -76,7 +76,7 @@ public class PomDependenciesUnitTestCase
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
             .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
-                           .loadReposFromPom("target/poms/test-remote-child.xml")
+                           .loadMetadataFromPom("target/poms/test-remote-child.xml")
                            .artifact("org.jboss.shrinkwrap.test:test-deps-c:1.0.0")
                            .resolveAs(GenericArchive.class));
 
@@ -99,7 +99,7 @@ public class PomDependenciesUnitTestCase
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
             .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
-                           .loadReposFromPom("target/poms/test-remote-child.xml")
+                           .loadMetadataFromPom("target/poms/test-remote-child.xml")
                            .artifact("org.jboss.shrinkwrap.test:test-deps-c")
                            .resolveAs(GenericArchive.class));
 
@@ -123,7 +123,7 @@ public class PomDependenciesUnitTestCase
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war")
             .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
-                           .loadReposFromPom("target/poms/test-remote-child.xml")
+                           .loadMetadataFromPom("target/poms/test-remote-child.xml")
                            .artifact("org.jboss.shrinkwrap.test:test-deps-c:2.0.0")
                            .resolveAs(GenericArchive.class));
 
@@ -145,7 +145,7 @@ public class PomDependenciesUnitTestCase
       String name = "pomBasedDependencies";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war").addAsLibraries(
-            DependencyResolvers.use(MavenDependencyResolver.class).loadDependenciesFromPom("target/poms/test-child.xml")
+            DependencyResolvers.use(MavenDependencyResolver.class).includeDependenciesFromPom("target/poms/test-child.xml")
                   .resolveAs(JavaArchive.class));
 
       DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-child.tree"));
@@ -167,7 +167,7 @@ public class PomDependenciesUnitTestCase
       String name = "pomRemoteBasedDependencies";
 
       WebArchive war = ShrinkWrap.create(WebArchive.class, name + ".war").addAsLibraries(
-            DependencyResolvers.use(MavenDependencyResolver.class).loadDependenciesFromPom("target/poms/test-remote-child.xml")
+            DependencyResolvers.use(MavenDependencyResolver.class).includeDependenciesFromPom("target/poms/test-remote-child.xml")
                   .resolveAs(JavaArchive.class));
 
       DependencyTreeDescription desc = new DependencyTreeDescription(new File("src/test/resources/dependency-trees/test-remote-child.tree"));
