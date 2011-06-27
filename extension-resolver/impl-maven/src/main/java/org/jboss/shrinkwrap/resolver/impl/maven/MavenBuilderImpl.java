@@ -158,6 +158,15 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
       return this;
    }
 
+   /**
+    * @Deprecated please use {@link #loadMetadataFromPom(String)} instead
+    */
+   @Override
+   public MavenDependencyResolver loadReposFromPom(final String path) throws ResolutionException
+   {
+      return loadMetadataFromPom(path);
+   }
+
    @Override
    public MavenDependencyResolver includeDependenciesFromPom(final String path) throws ResolutionException
    {
@@ -172,6 +181,25 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
          dependencies.push(MavenConverter.fromDependency(dependency, stereotypes));
       }
       return this;
+   }
+
+   /**
+    * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+    */
+   @Override
+   public MavenDependencyResolver loadDependenciesFromPom(final String path) throws ResolutionException
+   {
+      return includeDependenciesFromPom(path);
+   }
+
+   /**
+    * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+    */
+   @Override
+   public MavenDependencyResolver loadDependenciesFromPom(final String path, final MavenResolutionFilter filter)
+         throws ResolutionException
+   {
+      return includeDependenciesFromPom(path);
    }
 
    /*
@@ -448,22 +476,26 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
          return delegate.resolveAs(archiveView);
       }
 
+      @Override
       public <ARCHIVEVIEW extends Assignable> Collection<ARCHIVEVIEW> resolveAs(Class<ARCHIVEVIEW> archiveView,
             MavenResolutionFilter filter) throws ResolutionException
       {
          return delegate.resolveAs(archiveView, filter);
       }
 
+      @Override
       public File[] resolveAsFiles() throws ResolutionException
       {
          return delegate.resolveAsFiles();
       }
 
+      @Override
       public MavenDependencyResolver configureFrom(String path)
       {
          return delegate.configureFrom(path);
       }
 
+      @Override
       public File[] resolveAsFiles(MavenResolutionFilter filter) throws ResolutionException
       {
          return delegate.resolveAsFiles(filter);
@@ -475,44 +507,80 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
          return delegate.loadMetadataFromPom(path);
       }
 
+      /**
+       * @Deprecated please use {@link #loadMetadataFromPom(String)} instead
+       */
+      @Override
+      public MavenDependencyResolver loadReposFromPom(String path) throws ResolutionException
+      {
+         return delegate.loadReposFromPom(path);
+      }
+
+      @Override
       public MavenDependencyResolver scope(String scope)
       {
          return delegate.scope(scope);
       }
 
+      @Override
       public MavenDependencyResolver optional(boolean optional)
       {
          return delegate.optional(optional);
       }
 
+      @Override
       public MavenDependencyResolver exclusion(String exclusion)
       {
          return delegate.exclusion(exclusion);
       }
 
+      @Override
       public MavenDependencyResolver exclusions(String... exclusions)
       {
          return delegate.exclusions(exclusions);
       }
 
+      @Override
       public MavenDependencyResolver exclusions(Collection<String> exclusions)
       {
          return delegate.exclusions(exclusions);
       }
 
+      @Override
       public Stack<MavenDependency> getDependencies()
       {
          return delegate.getDependencies();
       }
 
+      @Override
       public Map<ArtifactAsKey, MavenDependency> getPomInternalDependencyManagement()
       {
          return delegate.getPomInternalDependencyManagement();
       }
 
+      @Override
       public MavenDependencyResolver includeDependenciesFromPom(String path) throws ResolutionException
       {
          return delegate.includeDependenciesFromPom(path);
+      }
+
+      /**
+       * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+       */
+      @Override
+      public MavenDependencyResolver loadDependenciesFromPom(String path) throws ResolutionException
+      {
+         return delegate.loadDependenciesFromPom(path);
+      }
+
+      /**
+       * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+       */
+      @Override
+      public MavenDependencyResolver loadDependenciesFromPom(String path, MavenResolutionFilter filter)
+            throws ResolutionException
+      {
+         return delegate.loadDependenciesFromPom(path, filter);
       }
    }
 
@@ -685,6 +753,15 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
          return delegate.loadMetadataFromPom(path);
       }
 
+      /**
+       * @Deprecated please use {@link #loadMetadataFromPom(String)} instead
+       */
+      @Override
+      public MavenDependencyResolver loadReposFromPom(String path) throws ResolutionException
+      {
+         return delegate.loadReposFromPom(path);
+      }
+
       @Override
       public MavenDependencyResolver artifact(String coordinates) throws ResolutionException
       {
@@ -741,9 +818,29 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
          return delegate.getPomInternalDependencyManagement();
       }
 
+      @Override
       public MavenDependencyResolver includeDependenciesFromPom(String path) throws ResolutionException
       {
          return delegate.includeDependenciesFromPom(path);
+      }
+
+      /**
+       * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+       */
+      @Override
+      public MavenDependencyResolver loadDependenciesFromPom(String path) throws ResolutionException
+      {
+         return delegate.loadDependenciesFromPom(path);
+      }
+
+      /**
+       * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+       */
+      @Override
+      public MavenDependencyResolver loadDependenciesFromPom(String path, MavenResolutionFilter filter)
+            throws ResolutionException
+      {
+         return delegate.loadDependenciesFromPom(path, filter);
       }
    }
 }

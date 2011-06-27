@@ -68,6 +68,27 @@ public interface MavenDependencyResolver
    MavenDependencyResolver loadMetadataFromPom(String path) throws ResolutionException;
 
    /**
+    * Loads remote repositories for a POM file. If repositories are defined in
+    * the parent of the POM file and there are accessible via local file
+    * system, they are set as well.
+    * 
+    * These remote repositories are used to resolve the artifacts during
+    * dependency resolution.
+    * 
+    * Additionally, it loads dependencies defined in the POM file model in an
+    * internal cache, which can be later used to resolve an artifact without
+    * explicitly specifying its version.
+    * 
+    * @param path
+    *            A path to the POM file, must not be {@code null} or empty
+    * @return A dependency builder with remote repositories set according to
+    *         the content of POM file.
+    * @throws Exception
+    * @Deprecated please use {@link #loadMetadataFromPom(String)} instead
+    */
+   MavenDependencyResolver loadReposFromPom(String path) throws ResolutionException;
+
+   /**
     * Sets a scope of dependency
     * 
     * @param scope A scope, for example @{code compile}, @{code test} and others
@@ -132,4 +153,26 @@ public interface MavenDependencyResolver
     * @throws ResolutionException
     */
    MavenDependencyResolver includeDependenciesFromPom(final String path) throws ResolutionException;
+
+   /**
+    * Resolves based upon dependencies declared in the POM at the specified path
+    * 
+    * @param path
+    * @return
+    * @throws ResolutionException
+    * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+    */
+   MavenDependencyResolver loadDependenciesFromPom(final String path) throws ResolutionException;
+
+   /**
+    * Resolves based upon dependencies declared in the POM at the specified path
+    * 
+    * @param path
+    * @param filter
+    * @return
+    * @throws ResolutionException
+    * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+    */
+   MavenDependencyResolver loadDependenciesFromPom(final String path, final MavenResolutionFilter filter)
+         throws ResolutionException;
 }
