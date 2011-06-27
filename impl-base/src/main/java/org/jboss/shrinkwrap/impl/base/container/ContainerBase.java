@@ -1504,10 +1504,19 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return this.actualType;
    }
 
-   private File fileFromResource(final String resourceName)
+   /**
+    * Gets a resource from the TCCL and returns its file path.
+    * 
+    * @param resourceName is the name of the resource in the classpath
+    * @return the file path for resourceName @see {@link java.net.URL#getFile()}
+    * @throws IllegalArgumentException if resourceName doesn't exist in the classpath or privileges are not granted
+    */
+   private File fileFromResource(final String resourceName) throws IllegalArgumentException
    {
-      final String resourcePath = AccessController.doPrivileged(GetTcclAction.INSTANCE).getResource(resourceName)
-            .getFile();
+      final URL resourceUrl = AccessController.doPrivileged(GetTcclAction.INSTANCE).getResource(resourceName);
+      Validate.notNull(resourceUrl, resourceName + " doesn't exist or can't be accessed");
+      
+      final String resourcePath = resourceUrl.getFile();
       return new File(resourcePath);
    }
    

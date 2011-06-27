@@ -196,6 +196,15 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
    }
+   
+   @Test(expected = IllegalArgumentException.class)
+   @ArchiveType(ManifestContainer.class)
+   public void testAddNonExistentManifestResource() throws Exception {
+      final String nonExistentResourceName = "ejb/security/ejb-jar.xml";
+      
+      //Since the resource doesn't exist the ManifestContainer implementation throws the expected exception
+      getManifestContainer().addAsManifestResource(nonExistentResourceName);
+   }
 
    @Test
    @ArchiveType(ManifestContainer.class)
