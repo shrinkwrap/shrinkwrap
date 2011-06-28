@@ -18,7 +18,6 @@ package org.jboss.shrinkwrap.api.descriptors;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.AccessController;
 import java.util.Properties;
 
 import org.jboss.shrinkwrap.api.asset.Asset;
