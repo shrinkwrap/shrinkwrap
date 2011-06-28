@@ -159,7 +159,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
    }
 
    /**
-    * @Deprecated please use {@link #loadMetadataFromPom(String)} instead
+    * @deprecated please use {@link #loadMetadataFromPom(String)} instead
     */
    @Override
    public MavenDependencyResolver loadReposFromPom(final String path) throws ResolutionException
@@ -184,7 +184,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
    }
 
    /**
-    * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+    * @deprecated please use {@link #includeDependenciesFromPom(String)} instead
     */
    @Override
    public MavenDependencyResolver loadDependenciesFromPom(final String path) throws ResolutionException
@@ -193,7 +193,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
    }
 
    /**
-    * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+    * @deprecated please use {@link #includeDependenciesFromPom(String)} instead
     */
    @Override
    public MavenDependencyResolver loadDependenciesFromPom(final String path, final MavenResolutionFilter filter)
@@ -508,7 +508,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
       }
 
       /**
-       * @Deprecated please use {@link #loadMetadataFromPom(String)} instead
+       * @deprecated please use {@link #loadMetadataFromPom(String)} instead
        */
       @Override
       public MavenDependencyResolver loadReposFromPom(String path) throws ResolutionException
@@ -565,7 +565,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
       }
 
       /**
-       * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+       * @deprecated please use {@link #includeDependenciesFromPom(String)} instead
        */
       @Override
       public MavenDependencyResolver loadDependenciesFromPom(String path) throws ResolutionException
@@ -574,7 +574,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
       }
 
       /**
-       * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+       * @deprecated please use {@link #includeDependenciesFromPom(String)} instead
        */
       @Override
       public MavenDependencyResolver loadDependenciesFromPom(String path, MavenResolutionFilter filter)
@@ -754,7 +754,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
       }
 
       /**
-       * @Deprecated please use {@link #loadMetadataFromPom(String)} instead
+       * @deprecated please use {@link #loadMetadataFromPom(String)} instead
        */
       @Override
       public MavenDependencyResolver loadReposFromPom(String path) throws ResolutionException
@@ -825,7 +825,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
       }
 
       /**
-       * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+       * @deprecated please use {@link #includeDependenciesFromPom(String)} instead
        */
       @Override
       public MavenDependencyResolver loadDependenciesFromPom(String path) throws ResolutionException
@@ -834,7 +834,7 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
       }
 
       /**
-       * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+       * @deprecated please use {@link #includeDependenciesFromPom(String)} instead
        */
       @Override
       public MavenDependencyResolver loadDependenciesFromPom(String path, MavenResolutionFilter filter)

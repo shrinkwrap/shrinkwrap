@@ -84,8 +84,9 @@ public interface MavenDependencyResolver
     * @return A dependency builder with remote repositories set according to
     *         the content of POM file.
     * @throws Exception
-    * @Deprecated please use {@link #loadMetadataFromPom(String)} instead
+    * @deprecated please use {@link #loadMetadataFromPom(String)} instead
     */
+   @Deprecated
    MavenDependencyResolver loadReposFromPom(String path) throws ResolutionException;
 
    /**
@@ -160,8 +161,9 @@ public interface MavenDependencyResolver
     * @param path
     * @return
     * @throws ResolutionException
-    * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+    * @deprecated please use {@link #includeDependenciesFromPom(String)} instead
     */
+   @Deprecated
    MavenDependencyResolver loadDependenciesFromPom(final String path) throws ResolutionException;
 
    /**
@@ -171,8 +173,9 @@ public interface MavenDependencyResolver
     * @param filter
     * @return
     * @throws ResolutionException
-    * @Deprecated please use {@link #includeDependenciesFromPom(String)} instead
+    * @deprecated please use {@link #includeDependenciesFromPom(String)} instead
     */
+   @Deprecated
    MavenDependencyResolver loadDependenciesFromPom(final String path, final MavenResolutionFilter filter)
          throws ResolutionException;
 }
