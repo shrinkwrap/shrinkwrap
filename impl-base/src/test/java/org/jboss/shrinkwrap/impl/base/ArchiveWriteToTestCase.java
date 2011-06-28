@@ -1,16 +1,15 @@
 package org.jboss.shrinkwrap.impl.base;
 
+import java.io.File;
+import java.io.PrintStream;
+import java.util.ArrayList;
+
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Test;
 import org.junit.Assert;
-
-import java.io.File;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:tommy.tynja@diabol.se">Tommy Tynj&auml;</a>

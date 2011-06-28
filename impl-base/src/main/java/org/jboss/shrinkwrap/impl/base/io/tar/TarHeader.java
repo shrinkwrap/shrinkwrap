@@ -463,8 +463,6 @@ implements	Cloneable
 	public static int
 	getOctalBytes( long value, byte[] buf, int offset, int length )
 		{
-		byte[] result = new byte[ length ];
-
 		int idx = length - 1;
 
 		buf[ offset + idx ] = 0;
