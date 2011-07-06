@@ -25,8 +25,10 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.IllegalArchivePathException;
@@ -34,9 +36,12 @@ import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.FileAsset;
 import org.jboss.shrinkwrap.api.asset.NamedAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
@@ -526,6 +531,112 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       catch (IllegalArgumentException expectedException)
       {
       }
+   }
+
+   @Test
+   public void testImportArchiveAsTypeFromString() throws Exception
+   {
+      String resourcePath = "/test/cl-test.jar";
+      GenericArchive archive = ShrinkWrap.create(GenericArchive.class)
+         .add(new FileAsset(TestIOUtil.createFileFromResourceName("cl-test.jar")), resourcePath);
+
+      JavaArchive jar = archive.getAsType(JavaArchive.class, resourcePath, ArchiveFormat.ZIP)
+         .add(new StringAsset("test file content"), "test.txt");
+      
+      Assert.assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
+      Assert.assertNotNull("Class in JAR not imported", jar.get("test/classloader/DummyClass.class"));
+      Assert.assertNotNull("Inner Class in JAR not imported", jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
+      Assert.assertNotNull("Should contain a new asset", ((ArchiveAsset) archive.get(resourcePath).getAsset()).getArchive().get("test.txt"));
+   }
+
+   @Test
+   public void testImportArchiveAsTypeFromArchivePath() throws Exception
+   {
+      String resourcePath = "/test/cl-test.jar";
+      GenericArchive archive = ShrinkWrap.create(GenericArchive.class)
+         .add(new FileAsset(TestIOUtil.createFileFromResourceName("cl-test.jar")), resourcePath);
+
+      JavaArchive jar = archive.getAsType(JavaArchive.class, ArchivePaths.create(resourcePath), ArchiveFormat.ZIP)
+         .add(new StringAsset("test file content"), "test.txt");
+      
+      Assert.assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
+      Assert.assertNotNull("Class in JAR not imported", jar.get("test/classloader/DummyClass.class"));
+      Assert.assertNotNull("Inner Class in JAR not imported", jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
+      Assert.assertNotNull("Should contain an archive asset", ((ArchiveAsset) archive.get(resourcePath).getAsset()).getArchive().get("test.txt"));
+   }
+
+   @Test
+   public void testImportArchiveAsTypeFromFilter() throws Exception
+   {
+      String resourcePath = "/test/cl-test.jar";
+      GenericArchive archive = ShrinkWrap.create(GenericArchive.class)
+         .add(new FileAsset(TestIOUtil.createFileFromResourceName("cl-test.jar")), resourcePath);
+
+      Collection<JavaArchive> jars = archive
+         .getAsType(JavaArchive.class, Filters.include(".*jar"), ArchiveFormat.ZIP);
+      
+      Assert.assertEquals("Unexpected result found", 1, jars.size());
+      
+      JavaArchive jar = jars.iterator().next().add(new StringAsset("test file content"), "test.txt");
+      
+      Assert.assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
+      Assert.assertNotNull("Class in JAR not imported", jar.get("test/classloader/DummyClass.class"));
+      Assert.assertNotNull("Inner Class in JAR not imported", jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
+      Assert.assertNotNull("Should contain a new asset", ((ArchiveAsset) archive.get(resourcePath).getAsset()).getArchive().get("test.txt"));
+   }
+   
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromStringThrowExceptionIfClassIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType((Class<GenericArchive>) null, "/path", ArchiveFormat.ZIP);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromStringThrowExceptionIfPathIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, (String) null, ArchiveFormat.ZIP);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromStringThrowExceptionIfFormatIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, "/path", null);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromArchivePathThrowExceptionIfClassIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType((Class<GenericArchive>) null, ArchivePaths.create("/path"), ArchiveFormat.ZIP);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromArchivePathThrowExceptionIfPathIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, (ArchivePath) null, ArchiveFormat.ZIP);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromArchivePathThrowExceptionIfFormatIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, ArchivePaths.create("/path"), null);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromFilterThrowExceptionIfClassIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType((Class<JavaArchive>) null, Filters.includeAll(), ArchiveFormat.ZIP);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromFilterThrowExceptionIfPathIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, (Filter<ArchivePath>) null, ArchiveFormat.ZIP);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromFilterThrowExceptionIfFormatIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, Filters.includeAll(), null);
    }
 
    /**

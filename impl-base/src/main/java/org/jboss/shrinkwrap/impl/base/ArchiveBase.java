@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.impl.base;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Assignable;
@@ -33,11 +35,13 @@ import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.Node;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
+import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -235,6 +239,84 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
       throw new IllegalArgumentException("Found content does not contain a Archive, " + asset);
    }
 
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#importAsType(java.lang.Class, java.util.String, org.jboss.shrinkwrap.api.ArchiveFormat)
+    */
+   @Override
+   public <X extends Archive<X>> X getAsType(Class<X> type, String path, ArchiveFormat archiveFormat)
+   {
+      Validate.notNull(path, "ArchiveFormat must be specified");
+
+      return getAsType(type, ArchivePaths.create(path), archiveFormat);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#importAsType(java.lang.Class, org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.ArchiveFormat)
+    */
+   @Override
+   public <X extends Archive<X>> X getAsType(Class<X> type, ArchivePath path, ArchiveFormat archiveFormat)
+   {
+      Validate.notNull(type, "Type must be specified");
+      Validate.notNull(path, "ArchivePath must be specified");
+      Validate.notNull(archiveFormat, "ArchiveFormat must be specified");
+
+      Node content = get(path);
+      if (content == null)
+         return null;
+
+      Asset asset = content.getAsset();
+      if (asset == null)
+         return null;
+
+      InputStream stream = null;
+      try
+      {
+         stream = asset.openStream();
+         X archive = ShrinkWrap.create(archiveFormat.getImporter(), path.get()).importFrom(stream).as(type);
+         delete(path);
+         add(new ArchiveAsset(archive, archiveFormat.getExporter()), path);
+         
+         return archive;
+      }
+      finally
+      {
+         if (stream != null)
+         {
+            try
+            {
+               stream.close();
+            }
+            catch (IOException e)
+            {
+               throw new ArchiveImportException("Stream not closed after import", e);
+            }
+         }
+      }
+   }
+   
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.ArchiveFormat)
+    */
+   @Override
+   public <X extends Archive<X>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter, ArchiveFormat archiveFormat)
+   {
+      Validate.notNull(type, "Type must be specified");
+      Validate.notNull(filter, "Filter must be specified");
+      Validate.notNull(archiveFormat, "ArchiveFormat must be specified");
+
+      Collection<X> archives = new ArrayList<X>();
+
+      Map<ArchivePath, Node> matches = getContent(filter);
+      for (ArchivePath path : matches.keySet())
+      {
+         archives.add(getAsType(type, path, archiveFormat));
+      }
+      return archives;
+   }
+   
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.ArchivePath, java.lang.Class)
