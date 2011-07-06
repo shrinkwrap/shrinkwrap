@@ -227,7 +227,45 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @see Archive#add(Archive, String, Class) 
     */
    <X extends Archive<X>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter);
-   
+
+   /**
+    * Get a nested {@link Archive} as a specific type using the specify {@code ArchiveFormat}
+    *
+    * @param type The Type to return the Archive as
+    * @param path The location of the Archive
+    * @param archive The archive format
+    * @return The found Archive as given type or null if none found at the given path
+    * @see Archive#add(Archive, ArchivePath, Class)
+    * @see Archive#add(Archive, String, Class)
+    */
+   <X extends Archive<X>> X getAsType(Class<X> type, String path, ArchiveFormat archiveFormat);
+
+   /**
+    * Get a nested {@link Archive} located in a {@code ArchivePath} as a specific type using the specify {@code ArchiveFormat}
+    *
+    * @param type The Type to return the Archive as
+    * @param path The location of the Archive
+    * @param archive The archive format
+    * @return The found Archive as given type or null if none found at given {@link ArchivePath}
+    * @see Archive#add(Archive, ArchivePath, Class)
+    * @see Archive#add(Archive, String, Class)
+    */
+   <X extends Archive<X>> X getAsType(Class<X> type, ArchivePath path, ArchiveFormat archiveFormat);
+
+   /**
+    * Get all nested {@link Archive} matching the filter as a specific type using the specify {@code ArchiveFormat}.
+    *
+    * @param <X>
+    * @param type The Type to return the Archive as
+    * @param filter Filter to match result
+    * @param archive The archive format
+    * @return A {@link Collection} of found Archives matching given filter or empty {@link Collection} if non found.
+    * @see Archive#getAsType(Class, ArchivePath, ArchiveFormat)
+    * @see Archive#add(Archive, ArchivePath, Class)
+    * @see Archive#add(Archive, String, Class)
+    */
+   <X extends Archive<X>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter, ArchiveFormat archiveFormat);
+
    /**
     * Denotes whether this archive contains a resource at the specified
     * path
