@@ -1070,6 +1070,20 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
    }
    
    /**
+    * SHRINKWRAP-233: Tests adding a non existent package doesn't add any asset to the archive.
+    * 
+    */
+   @Test(expected = IllegalArgumentException.class)
+   public void testAddNonExistentPackage()
+   {
+      final String packageName = "non.existent.package";
+      JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
+      
+      //Here the exception should be thrown
+      archive.addPackages(true, Package.getPackage(packageName));
+   }
+   
+   /**
     * Ensure a package as a String can be added to a container with filter
     * 
     * @throws Exception
