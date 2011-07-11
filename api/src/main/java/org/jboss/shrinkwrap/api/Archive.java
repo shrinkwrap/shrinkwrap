@@ -260,7 +260,7 @@ public interface Archive<T extends Archive<T>> extends Assignable
     * @param filter Filter to match result
     * @param archive The archive format
     * @return A {@link Collection} of found Archives matching given filter or empty {@link Collection} if non found.
-    * @see Archive#getAsType(Class, ArchivePath, ArchiveFormat)
+    * @see Archive#getAsType(Class, ArchivePath, ArchiveFormatStreamBindings)
     * @see Archive#add(Archive, ArchivePath, Class)
     * @see Archive#add(Archive, String, Class)
     */

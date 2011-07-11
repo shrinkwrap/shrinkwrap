@@ -375,10 +375,11 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, java.util.String, org.jboss.shrinkwrap.api.ArchiveFormat)
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, java.lang.String, org.jboss.shrinkwrap.api.ArchiveFormat)
     */
    @Override
-   public <X extends Archive<X>> X getAsType(Class<X> type, String path, ArchiveFormat archiveCompression)
+   public <X extends Archive<X>> X getAsType(final Class<X> type, final String path,
+         final ArchiveFormat archiveCompression)
    {
       return this.getArchive().getAsType(type, path, archiveCompression);
    }
@@ -388,17 +389,19 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.ArchiveFormat)
     */
    @Override
-   public <X extends Archive<X>> X getAsType(Class<X> type, ArchivePath path, ArchiveFormat archiveCompression)
+   public <X extends Archive<X>> X getAsType(final Class<X> type, final ArchivePath path,
+         final ArchiveFormat archiveCompression)
    {
       return this.getArchive().getAsType(type, path, archiveCompression);
    }
-   
+
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.ArchiveFormat)
     */
    @Override
-   public <X extends Archive<X>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter, ArchiveFormat archiveCompression)
+   public <X extends Archive<X>> Collection<X> getAsType(final Class<X> type, final Filter<ArchivePath> filter,
+         final ArchiveFormat archiveCompression)
    {
       return this.getArchive().getAsType(type, filter, archiveCompression);
    }

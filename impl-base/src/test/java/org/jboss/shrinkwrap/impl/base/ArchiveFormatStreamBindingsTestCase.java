@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2011, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -14,15 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api;
+package org.jboss.shrinkwrap.impl.base;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static org.jboss.shrinkwrap.api.ArchiveFormat.TAR;
-import static org.jboss.shrinkwrap.api.ArchiveFormat.TAR_GZ;
-import static org.jboss.shrinkwrap.api.ArchiveFormat.ZIP;
-import static org.jboss.shrinkwrap.api.ArchiveFormat.values;
 
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.exporter.TarExporter;
 import org.jboss.shrinkwrap.api.exporter.TarGzExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -33,62 +29,43 @@ import org.junit.Test;
 
 /**
  * @author Davide D'Alto
- *
- * @version $Revision: $
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class ArchiveFormatTestCase
+public class ArchiveFormatStreamBindingsTestCase
 {
-   @Test
-   public void testNotNullImporters() throws Exception
-   {
-      for (ArchiveFormat format : values())
-      {
-         assertNotNull("Importer class for " + format + " should not be null", format.getImporter());
-      }
-   }
-
-   @Test
-   public void testNotNullExporters() throws Exception
-   {
-      for (ArchiveFormat format : values())
-      {
-         assertNotNull("Exporter class for " + format + " should not be null", format.getExporter());
-      }
-   }
-
    @Test
    public void testZipImporter() throws Exception
    {
-      assertEquals(ZipImporter.class, ZIP.getImporter());
+      assertEquals(ZipImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.ZIP).getImporter());
    }
 
    @Test
    public void testZipExporter() throws Exception
    {
-      assertEquals(ZipExporter.class, ZIP.getExporter());
+      assertEquals(ZipExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.ZIP).getExporter());
    }
 
    @Test
    public void testTarImporter() throws Exception
    {
-      assertEquals(TarImporter.class, TAR.getImporter());
+      assertEquals(TarImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR).getImporter());
    }
 
    @Test
    public void testTarExporter() throws Exception
    {
-      assertEquals(TarExporter.class, TAR.getExporter());
+      assertEquals(TarExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR).getExporter());
    }
 
    @Test
    public void testTarGzImporter() throws Exception
    {
-      assertEquals(TarGzImporter.class, TAR_GZ.getImporter());
+      assertEquals(TarGzImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_GZ).getImporter());
    }
 
    @Test
    public void testTarGzExporter() throws Exception
    {
-      assertEquals(TarGzExporter.class, TAR_GZ.getExporter());
+      assertEquals(TarGzExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_GZ).getExporter());
    }
 }

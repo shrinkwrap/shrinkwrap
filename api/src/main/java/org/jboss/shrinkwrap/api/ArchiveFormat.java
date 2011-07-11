@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2011, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -16,45 +16,11 @@
  */
 package org.jboss.shrinkwrap.api;
 
-import org.jboss.shrinkwrap.api.exporter.StreamExporter;
-import org.jboss.shrinkwrap.api.exporter.TarExporter;
-import org.jboss.shrinkwrap.api.exporter.TarGzExporter;
-import org.jboss.shrinkwrap.api.exporter.ZipExporter;
-import org.jboss.shrinkwrap.api.importer.StreamImporter;
-import org.jboss.shrinkwrap.api.importer.TarGzImporter;
-import org.jboss.shrinkwrap.api.importer.TarImporter;
-import org.jboss.shrinkwrap.api.importer.ZipImporter;
-
 /**
- * Binds the {@code StreamExporter} and the {@code StreamImporter} implementations of the same archive format.
+ * Supported archive formats known by the base implementation
  *
- * @author Davide D'Alto
- * @version $Revision: $
- * @see StreamImporter
- * @see StreamExporter
+ * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
 public enum ArchiveFormat {
-   ZIP(ZipImporter.class, ZipExporter.class),
-   TAR(TarImporter.class, TarExporter.class),
-   TAR_GZ(TarGzImporter.class, TarGzExporter.class);
-
-   private final Class<? extends StreamImporter<?>> importer;
-
-   private final Class<? extends StreamExporter> exporter;
-
-   private ArchiveFormat(Class<? extends StreamImporter<?>> importer, Class<? extends StreamExporter> exporter)
-   {
-      this.importer = importer;
-      this.exporter = exporter;
-   }
-
-   public Class<? extends StreamExporter> getExporter()
-   {
-      return exporter;
-   }
-
-   public Class<? extends StreamImporter<?>> getImporter()
-   {
-      return importer;
-   }
+   ZIP, TAR, TAR_GZ;
 }

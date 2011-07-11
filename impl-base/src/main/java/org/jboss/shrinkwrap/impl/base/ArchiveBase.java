@@ -241,10 +241,10 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#importAsType(java.lang.Class, java.util.String, org.jboss.shrinkwrap.api.ArchiveFormat)
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, java.lang.String, org.jboss.shrinkwrap.api.ArchiveFormat)
     */
    @Override
-   public <X extends Archive<X>> X getAsType(Class<X> type, String path, ArchiveFormat archiveFormat)
+   public <X extends Archive<X>> X getAsType(final Class<X> type, final String path, final ArchiveFormat archiveFormat)
    {
       Validate.notNull(path, "ArchiveFormat must be specified");
 
@@ -253,14 +253,17 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
    /**
     * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Archive#importAsType(java.lang.Class, org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.ArchiveFormat)
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.ArchiveFormat)
     */
    @Override
-   public <X extends Archive<X>> X getAsType(Class<X> type, ArchivePath path, ArchiveFormat archiveFormat)
+   public <X extends Archive<X>> X getAsType(Class<X> type, ArchivePath path, final ArchiveFormat archiveFormat)
    {
       Validate.notNull(type, "Type must be specified");
       Validate.notNull(path, "ArchivePath must be specified");
       Validate.notNull(archiveFormat, "ArchiveFormat must be specified");
+      
+      // Get stream importer/exporter bindings for specified format
+      final ArchiveFormatStreamBindings formatBinding = new ArchiveFormatStreamBindings(archiveFormat);
 
       Node content = get(path);
       if (content == null)
@@ -274,9 +277,9 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
       try
       {
          stream = asset.openStream();
-         X archive = ShrinkWrap.create(archiveFormat.getImporter(), path.get()).importFrom(stream).as(type);
+         X archive = ShrinkWrap.create(formatBinding.getImporter(), path.get()).importFrom(stream).as(type);
          delete(path);
-         add(new ArchiveAsset(archive, archiveFormat.getExporter()), path);
+         add(new ArchiveAsset(archive, formatBinding.getExporter()), path);
          
          return archive;
       }
@@ -301,7 +304,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.ArchiveFormat)
     */
    @Override
-   public <X extends Archive<X>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter, ArchiveFormat archiveFormat)
+   public <X extends Archive<X>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter, final ArchiveFormat archiveFormat)
    {
       Validate.notNull(type, "Type must be specified");
       Validate.notNull(filter, "Filter must be specified");
