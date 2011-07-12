@@ -1466,7 +1466,8 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     * @throws Exception
     */
    @Test
-   public void testAddManifest() throws Exception {
+   public void testAddManifest() throws Exception
+   {
       String expectedManifestPath = "META-INF/MANIFEST.MF";
 
       JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
@@ -1476,6 +1477,23 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       archive.addManifest();
       Assert.assertTrue("Archive should contain manifest file: " + expectedManifestPath,
             archive.contains(expectedManifestPath));
+   }
+
+   /**
+    * Reproduces the bug in SHRINKWRAP-300
+    */
+   @Test
+   public void testAddFileWithWhitespaceInFilename()
+   {
+      String manifest = "Whitespace manifest.MF";
+
+      JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
+      org.junit.Assert.assertFalse("Archive should not contain file",
+            archive.contains(manifest));
+      archive.addAsResource(manifest);
+
+      Assert.assertTrue("Archive should contain file: " + manifest,
+            archive.contains(manifest));
    }
    
    private void assertNotContainsClass(ArchivePath notExpectedPath)
