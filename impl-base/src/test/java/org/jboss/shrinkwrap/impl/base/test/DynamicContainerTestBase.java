@@ -196,6 +196,15 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             "Archive should contain " + testPath,
             getArchive().contains(testPath));
    }
+   
+   @Test(expected = IllegalArgumentException.class)
+   @ArchiveType(ManifestContainer.class)
+   public void testAddNonExistentManifestResource() throws Exception {
+      final String nonExistentResourceName = "ejb/security/ejb-jar.xml";
+      
+      //Since the resource doesn't exist the ManifestContainer implementation throws the expected exception
+      getManifestContainer().addAsManifestResource(nonExistentResourceName);
+   }
 
    @Test
    @ArchiveType(ManifestContainer.class)
@@ -1058,6 +1067,20 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             numAssets(getArchive()));
 
       assertContainsClass(expectedPath);
+   }
+   
+   /**
+    * SHRINKWRAP-233: Tests adding a non existent package doesn't add any asset to the archive.
+    * 
+    */
+   @Test(expected = IllegalArgumentException.class)
+   public void testAddNonExistentPackage()
+   {
+      final String packageName = "non.existent.package";
+      JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
+      
+      //Here the exception should be thrown
+      archive.addPackages(true, Package.getPackage(packageName));
    }
    
    /**

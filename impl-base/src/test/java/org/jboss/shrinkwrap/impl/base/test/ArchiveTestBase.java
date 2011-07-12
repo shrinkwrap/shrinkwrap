@@ -25,8 +25,10 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.IllegalArchivePathException;
@@ -34,9 +36,12 @@ import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.FileAsset;
 import org.jboss.shrinkwrap.api.asset.NamedAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
@@ -172,8 +177,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       archive.add(asset, location.get());
 
-      Assert.assertTrue("Asset should be placed on " + new BasicPath("/", "test.properties"), archive
-            .contains(location));
+      Assert.assertTrue("Asset should be placed on " + new BasicPath("/", "test.properties"),
+            archive.contains(location));
    }
 
    /**
@@ -226,14 +231,14 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       final String name = "test.properties";
       final Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       ArchivePath location = ArchivePaths.root();
-      
+
       archive.add(asset, location, name);
 
       ArchivePath expectedPath = new BasicPath("/", "test.properties");
 
       Assert.assertTrue("Asset should be placed on " + expectedPath.get(), archive.contains(expectedPath));
    }
-   
+
    /** 
     * Ensure adding an asset with a name under an {@link String}
     * context results in successful storage
@@ -266,14 +271,14 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       final Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       try
       {
-         archive.add(asset, (ArchivePath)null, name);
+         archive.add(asset, (ArchivePath) null, name);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
       {
       }
    }
-   
+
    /**
     * Ensure adding an asset with name requires the path attribute
     * as a String
@@ -325,16 +330,16 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       {
       }
    }
-   
+
    @Test
    public void testAddNamedAsset() throws Exception
    {
       Archive<T> archive = getArchive();
       final String testName = "check.properties";
       final Asset testAsset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
-      
-      
-      final NamedAsset namedAsset = new NamedAsset() {
+
+      final NamedAsset namedAsset = new NamedAsset()
+      {
 
          @Override
          public String getName()
@@ -348,13 +353,12 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
             return testAsset.openStream();
          }
 
-         
       };
-      
+
       archive.add(namedAsset);
-      
+
       Assert.assertTrue("Asset should be placed on " + testName, archive.contains(testName));
-      
+
    }
 
    /**
@@ -380,19 +384,20 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       TestCase.assertTrue(message + path2, archive.contains(path2));
       TestCase.assertTrue(message + path3, archive.contains(path3));
    }
-   
+
    /**
     * Ensures that {@link Archive#contains(String)}
     * works as expected
     */
    @Test
-   public void testContainsPathAsString(){
+   public void testContainsPathAsString()
+   {
       final Archive<T> archive = getArchive();
       final String path = "testpath";
-      archive.add(EmptyAsset.INSTANCE,path);
-      Assert.assertTrue("Archive should contain the path added",archive.contains(path));
+      archive.add(EmptyAsset.INSTANCE, path);
+      Assert.assertTrue("Archive should contain the path added", archive.contains(path));
    }
-   
+
    /**
     * Ensures that {@link Archive#contains(ArchivePath)}
     * works as expected
@@ -472,7 +477,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       Node fetchedNode = archive.get(location);
 
-      Assert.assertTrue("Asset should be returned from path: " + location.get(), compareAssets(asset, fetchedNode.getAsset()));
+      Assert.assertTrue("Asset should be returned from path: " + location.get(),
+            compareAssets(asset, fetchedNode.getAsset()));
    }
 
    /**
@@ -507,7 +513,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       Node fetchedNode = archive.get(location.get());
 
-      Assert.assertTrue("Asset should be returned from path: " + location.get(), compareAssets(asset, fetchedNode.getAsset()));
+      Assert.assertTrue("Asset should be returned from path: " + location.get(),
+            compareAssets(asset, fetchedNode.getAsset()));
    }
 
    /**
@@ -528,6 +535,120 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       }
    }
 
+   @Test
+   public void testImportArchiveAsTypeFromString() throws Exception
+   {
+      String resourcePath = "/test/cl-test.jar";
+      GenericArchive archive = ShrinkWrap.create(GenericArchive.class).add(
+            new FileAsset(TestIOUtil.createFileFromResourceName("cl-test.jar")), resourcePath);
+
+      JavaArchive jar = archive.getAsType(JavaArchive.class, resourcePath, ArchiveFormat.ZIP).add(
+            new StringAsset("test file content"), "test.txt");
+
+      Assert.assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
+      Assert.assertNotNull("Class in JAR not imported", jar.get("test/classloader/DummyClass.class"));
+      Assert.assertNotNull("Inner Class in JAR not imported",
+            jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
+      Assert.assertNotNull("Should contain a new asset", ((ArchiveAsset) archive.get(resourcePath).getAsset())
+            .getArchive().get("test.txt"));
+   }
+
+   @Test
+   public void testImportArchiveAsTypeFromArchivePath() throws Exception
+   {
+      String resourcePath = "/test/cl-test.jar";
+      GenericArchive archive = ShrinkWrap.create(GenericArchive.class).add(
+            new FileAsset(TestIOUtil.createFileFromResourceName("cl-test.jar")), resourcePath);
+
+      JavaArchive jar = archive.getAsType(JavaArchive.class, ArchivePaths.create(resourcePath), ArchiveFormat.ZIP).add(
+            new StringAsset("test file content"), "test.txt");
+
+      Assert.assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
+      Assert.assertNotNull("Class in JAR not imported", jar.get("test/classloader/DummyClass.class"));
+      Assert.assertNotNull("Inner Class in JAR not imported",
+            jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
+      Assert.assertNotNull("Should contain an archive asset", ((ArchiveAsset) archive.get(resourcePath).getAsset())
+            .getArchive().get("test.txt"));
+   }
+
+   @Test
+   public void testImportArchiveAsTypeFromFilter() throws Exception
+   {
+      String resourcePath = "/test/cl-test.jar";
+      GenericArchive archive = ShrinkWrap.create(GenericArchive.class).add(
+            new FileAsset(TestIOUtil.createFileFromResourceName("cl-test.jar")), resourcePath);
+
+      Collection<JavaArchive> jars = archive.getAsType(JavaArchive.class, Filters.include(".*jar"), ArchiveFormat.ZIP);
+
+      Assert.assertEquals("Unexpected result found", 1, jars.size());
+
+      JavaArchive jar = jars.iterator().next().add(new StringAsset("test file content"), "test.txt");
+
+      Assert.assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
+      Assert.assertNotNull("Class in JAR not imported", jar.get("test/classloader/DummyClass.class"));
+      Assert.assertNotNull("Inner Class in JAR not imported",
+            jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
+      Assert.assertNotNull("Should contain a new asset", ((ArchiveAsset) archive.get(resourcePath).getAsset())
+            .getArchive().get("test.txt"));
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromStringThrowExceptionIfClassIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType((Class<GenericArchive>) null, "/path", ArchiveFormat.ZIP);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromStringThrowExceptionIfPathIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, (String) null, ArchiveFormat.ZIP);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromStringThrowExceptionIfFormatIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, "/path", null);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromArchivePathThrowExceptionIfClassIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType((Class<GenericArchive>) null, ArchivePaths.create("/path"),
+            ArchiveFormat.ZIP);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromArchivePathThrowExceptionIfPathIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, (ArchivePath) null, ArchiveFormat.ZIP);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromArchivePathThrowExceptionIfFormatIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, ArchivePaths.create("/path"), null);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromFilterThrowExceptionIfClassIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType((Class<JavaArchive>) null, Filters.includeAll(),
+            ArchiveFormat.ZIP);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromFilterThrowExceptionIfPathIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, (Filter<ArchivePath>) null,
+            ArchiveFormat.ZIP);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testImportArchiveFromFilterThrowExceptionIfFormatIsNull() throws Exception
+   {
+      ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, Filters.includeAll(), null);
+   }
+
    /**
     * Ensure we can get a added Archive as a specific type
     * @throws Exception
@@ -538,9 +659,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<?> archive = getArchive();
       GenericArchive child = ShrinkWrap.create(GenericArchive.class);
       archive.add(child, "/", ZipExporter.class);
-      
+
       GenericArchive found = archive.getAsType(GenericArchive.class, child.getName());
-      
+
       Assert.assertNotNull(found);
    }
 
@@ -554,12 +675,12 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<?> archive = getArchive();
       GenericArchive child = ShrinkWrap.create(GenericArchive.class);
       archive.add(child, "/", ZipExporter.class);
-      
+
       GenericArchive found = archive.getAsType(GenericArchive.class, ArchivePaths.create(child.getName()));
-      
+
       Assert.assertNotNull(found);
    }
-   
+
    /**
     * Ensure we can get a added Archive as a specific type
     * @throws Exception
@@ -571,28 +692,24 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       GenericArchive child2 = ShrinkWrap.create(GenericArchive.class);
       // Create one not to be found by filter.
       GenericArchive child3 = ShrinkWrap.create(GenericArchive.class, "SHOULD_NOT_BE_FOUND.xxx");
-      
-      Archive<?> archive = getArchive()
-         .add(child1, "/", ZipExporter.class)
-         .add(child2, "/", ZipExporter.class)
-         .add(child3, "/", ZipExporter.class);
-      
+
+      Archive<?> archive = getArchive().add(child1, "/", ZipExporter.class).add(child2, "/", ZipExporter.class)
+            .add(child3, "/", ZipExporter.class);
+
       Collection<GenericArchive> matches = archive.getAsType(GenericArchive.class, Filters.include(".*\\.jar"));
-      
+
       Assert.assertNotNull(matches);
-      Assert.assertEquals(
-            "Two archives should be found", 
-            2, matches.size());
-      
-      for(GenericArchive match : matches)
+      Assert.assertEquals("Two archives should be found", 2, matches.size());
+
+      for (GenericArchive match : matches)
       {
-         if(!match.getName().equals(child1.getName()) && !match.getName().equals(child2.getName()))
+         if (!match.getName().equals(child1.getName()) && !match.getName().equals(child2.getName()))
          {
-            Assert.fail("Wrong archive found, " + match.getName() + ". Expected " + child1.getName() + " or " + child2.getName());
+            Assert.fail("Wrong archive found, " + match.getName() + ". Expected " + child1.getName() + " or "
+                  + child2.getName());
          }
       }
    }
-
 
    /**
     * Ensure get content returns the correct map of content
@@ -614,11 +731,11 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       final Node node1 = content.get(location);
       final Node node2 = content.get(locationTwo);
 
-      Assert.assertTrue("Asset should existing in content with key: " + location.get(), this.compareAssets(asset,
-            node1.getAsset()));
+      Assert.assertTrue("Asset should existing in content with key: " + location.get(),
+            this.compareAssets(asset, node1.getAsset()));
 
-      Assert.assertTrue("Asset should existing in content with key: " + locationTwo.get(), this.compareAssets(assetTwo,
-            node2.getAsset()));
+      Assert.assertTrue("Asset should existing in content with key: " + locationTwo.get(),
+            this.compareAssets(assetTwo, node2.getAsset()));
    }
 
    /**
@@ -640,20 +757,13 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       final Node node1 = content.get(location);
       final Node node2 = content.get(locationTwo);
-      
-      Assert.assertEquals(
-            "Only 1 Asset should have been included",
-            1, 
-            content.size());
-      Assert.assertNull(
-            "Should not be included in content", 
-            node1);
-      
-      Assert.assertNotNull(
-            "Should be included in content", 
-            node2);
+
+      Assert.assertEquals("Only 1 Asset should have been included", 1, content.size());
+      Assert.assertNull("Should not be included in content", node1);
+
+      Assert.assertNotNull("Should be included in content", node2);
    }
-   
+
    /**
     * Ensure adding an archive to a path requires a path
     * @throws Exception
@@ -671,12 +781,12 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       {
       }
    }
-   
+
    /**
     * Ensure adding an archive to a path requires a path
     * @throws Exception
     */
-   @Test(expected=IllegalArgumentException.class)
+   @Test(expected = IllegalArgumentException.class)
    public void testAddArchiveToPathRequireStringPath() throws Exception
    {
       Archive<T> archive = getArchive();
@@ -700,45 +810,45 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       {
       }
    }
-   
+
    /**
     * Ensure that trying to add an asset on an illegal path throws an Exception
     * @throws Exception
     */
-   @Test(expected=IllegalArchivePathException.class)
-   public void shouldNotBeAbleToAddAssetOnIllegalPath() throws Exception 
+   @Test(expected = IllegalArchivePathException.class)
+   public void shouldNotBeAbleToAddAssetOnIllegalPath() throws Exception
    {
       Archive<T> archive = getArchive();
-      
+
       // add an asset
       Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       ArchivePath location = new BasicPath("/", "test.properties");
       archive.add(asset, location);
-      
+
       // try to add an asset on an illegal path
       Asset assetTwo = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
       ArchivePath locationTwo = ArchivePaths.create("/test.properties/somewhere");
       archive.add(assetTwo, locationTwo);
-      
+
    }
-   
+
    /**
     * Ensure that trying to add a directory on an illegal path throws an Exception
     * @throws Exception
     */
-   @Test(expected=IllegalArchivePathException.class)
-   public void shouldNotBeAbleToAddDirectoryOnIllegalPath() throws Exception 
+   @Test(expected = IllegalArchivePathException.class)
+   public void shouldNotBeAbleToAddDirectoryOnIllegalPath() throws Exception
    {
       Archive<T> archive = getArchive();
-      
+
       // add an asset
       Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
       ArchivePath location = new BasicPath("/somewhere/test.properties");
       archive.add(asset, location);
-      
+
       // try to add a directory on an illegal path
       archive.addAsDirectory("/somewhere/test.properties/test");
-      
+
    }
 
    /**
@@ -776,13 +886,15 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       sourceArchive.add(asset, location).add(assetTwo, locationTwo);
 
       archive.merge(sourceArchive);
-      
+
       Node node1 = archive.get(location);
       Node node2 = archive.get(locationTwo);
-      
-      Assert.assertTrue("Asset should have been added to path: " + location.get(), this.compareAssets(node1.getAsset(), asset));
 
-      Assert.assertTrue("Asset should have been added to path: " + location.get(), this.compareAssets(node2.getAsset(), assetTwo));
+      Assert.assertTrue("Asset should have been added to path: " + location.get(),
+            this.compareAssets(node1.getAsset(), asset));
+
+      Assert.assertTrue("Asset should have been added to path: " + location.get(),
+            this.compareAssets(node2.getAsset(), assetTwo));
    }
 
    /**
@@ -807,16 +919,17 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       ArchivePath expectedPath = new BasicPath(baseLocation, location);
       ArchivePath expectedPathTwo = new BasicPath(baseLocation, locationTwo);
-      
+
       Node nodeOne = archive.get(expectedPath);
       Node nodeTwo = archive.get(expectedPathTwo);
 
-      Assert.assertTrue("Asset should have been added to path: " + expectedPath.get(), this.compareAssets(nodeOne.getAsset(), asset));
+      Assert.assertTrue("Asset should have been added to path: " + expectedPath.get(),
+            this.compareAssets(nodeOne.getAsset(), asset));
 
-      Assert.assertTrue("Asset should have been added to path: " + expectedPathTwo.getClass(), this.compareAssets(
-            nodeTwo.getAsset(), assetTwo));
+      Assert.assertTrue("Asset should have been added to path: " + expectedPathTwo.getClass(),
+            this.compareAssets(nodeTwo.getAsset(), assetTwo));
    }
-   
+
    /**
     * Ensure merging content from another archive to a path successfully stores all assets to specific path
     * @throws Exception
@@ -839,14 +952,15 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       ArchivePath expectedPath = new BasicPath(baseLocation, location);
       ArchivePath expectedPathTwo = new BasicPath(baseLocation, locationTwo);
-      
+
       Node nodeOne = archive.get(expectedPath);
       Node nodeTwo = archive.get(expectedPathTwo);
 
-      Assert.assertTrue("Asset should have been added to path: " + expectedPath.get(), this.compareAssets(nodeOne.getAsset(), asset));
+      Assert.assertTrue("Asset should have been added to path: " + expectedPath.get(),
+            this.compareAssets(nodeOne.getAsset(), asset));
 
-      Assert.assertTrue("Asset should have been added to path: " + expectedPathTwo.getClass(), this.compareAssets(
-            nodeTwo.getAsset(), assetTwo));
+      Assert.assertTrue("Asset should have been added to path: " + expectedPathTwo.getClass(),
+            this.compareAssets(nodeTwo.getAsset(), assetTwo));
    }
 
    /**
@@ -854,7 +968,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
     * @throws Exception
     */
    @Test
-   public void testMergeToPathWithFilter() throws Exception 
+   public void testMergeToPathWithFilter() throws Exception
    {
       Archive<?> archive = getArchive();
       Archive<T> sourceArchive = createNewArchive();
@@ -868,25 +982,21 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       ArchivePath baseLocation = new BasicPath("somewhere");
 
       archive.merge(sourceArchive, baseLocation, Filters.include(".*test2.*"));
-      
-      Assert.assertEquals(
-            "Should only have merged 1",
-            1, 
-            numAssets(archive));
-      
+
+      Assert.assertEquals("Should only have merged 1", 1, numAssets(archive));
+
       ArchivePath expectedPath = new BasicPath(baseLocation, locationTwo);
 
-      Assert.assertTrue(
-            "Asset should have been added to path: " + expectedPath.get(), 
+      Assert.assertTrue("Asset should have been added to path: " + expectedPath.get(),
             this.compareAssets(archive.get(expectedPath).getAsset(), asset));
    }
-   
+
    /**
     * Ensure that the filter is used when merging.
     * @throws Exception
     */
    @Test
-   public void testMergeToStringPathWithFilter() throws Exception 
+   public void testMergeToStringPathWithFilter() throws Exception
    {
       Archive<?> archive = getArchive();
       Archive<T> sourceArchive = createNewArchive();
@@ -900,16 +1010,12 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       String baseLocation = "somewhere";
 
       archive.merge(sourceArchive, baseLocation, Filters.include(".*test2.*"));
-      
-      Assert.assertEquals(
-            "Should only have merged 1",
-            1, 
-            numAssets(archive));
-      
+
+      Assert.assertEquals("Should only have merged 1", 1, numAssets(archive));
+
       ArchivePath expectedPath = new BasicPath(baseLocation, locationTwo);
 
-      Assert.assertTrue(
-            "Asset should have been added to path: " + expectedPath.get(), 
+      Assert.assertTrue("Asset should have been added to path: " + expectedPath.get(),
             this.compareAssets(archive.get(expectedPath).getAsset(), asset));
    }
 
@@ -918,7 +1024,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
     * @throws Exception
     */
    @Test
-   public void testMergeWithFilter() throws Exception 
+   public void testMergeWithFilter() throws Exception
    {
       Archive<?> archive = getArchive();
       Archive<T> sourceArchive = createNewArchive();
@@ -930,14 +1036,10 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       sourceArchive.add(asset, location).add(assetTwo, locationTwo);
 
       archive.merge(sourceArchive, Filters.include(".*test2.*"));
-      
-      Assert.assertEquals(
-            "Should only have merged 1",
-            1, 
-            numAssets(archive));
-      
-      Assert.assertTrue(
-            "Asset should have been added to path: " + locationTwo.get(), 
+
+      Assert.assertEquals("Should only have merged 1", 1, numAssets(archive));
+
+      Assert.assertTrue("Asset should have been added to path: " + locationTwo.get(),
             this.compareAssets(archive.get(locationTwo).getAsset(), asset));
    }
 
@@ -951,7 +1053,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> archive = getArchive();
       try
       {
-         archive.merge(createNewArchive(), (ArchivePath)null);
+         archive.merge(createNewArchive(), (ArchivePath) null);
          Assert.fail("Should have throw an IllegalArgumentException");
       }
       catch (IllegalArgumentException expectedException)
@@ -1011,8 +1113,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       ArchivePath expectedPath = new BasicPath(archivePath, "test.properties");
 
-      Assert.assertTrue("Nested archive assets should be verified through a fully qualified path", archive
-            .contains(expectedPath));
+      Assert.assertTrue("Nested archive assets should be verified through a fully qualified path",
+            archive.contains(expectedPath));
    }
 
    /**
@@ -1033,15 +1135,15 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Archive<T> nestedNestedArchive = createNewArchive();
 
       nestedArchive.add(nestedNestedArchive, ArchivePaths.root(), ZipExporter.class);
-      
+
       Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
 
       ArchivePath nestedAssetPath = new BasicPath("/", "test.properties");
 
       nestedNestedArchive.add(asset, nestedAssetPath);
-      
+
       ArchivePath nestedArchivePath = new BasicPath(baseLocation, nestedArchive.getName());
-      
+
       ArchivePath nestedNestedArchivePath = new BasicPath(nestedArchivePath, nestedNestedArchive.getName());
 
       ArchivePath expectedPath = new BasicPath(nestedNestedArchivePath, "test.properties");
@@ -1077,7 +1179,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
 
       return Arrays.equals(oneData, twoData);
    }
-   
+
    /**
     * Returns the number of assets in a file.
     * 
@@ -1086,21 +1188,22 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
     * @return the number of assets in the archive
     * @throws IllegalArgumentException If the archive is not specified
     */
-   protected int numAssets(final Archive<?> archive) 
+   protected int numAssets(final Archive<?> archive)
    {
       // Precondition check
       Validate.notNull(archive, "Archive must be specified");
-      
+
       int assets = 0;
-      
+
       Map<ArchivePath, Node> content = archive.getContent();
-      for (Map.Entry<ArchivePath, Node> entry : content.entrySet()) {
-         if (entry.getValue().getAsset() != null) 
+      for (Map.Entry<ArchivePath, Node> entry : content.entrySet())
+      {
+         if (entry.getValue().getAsset() != null)
          {
             assets++;
          }
       }
-      
+
       return assets;
    }
 

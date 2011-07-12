@@ -24,13 +24,11 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.ClassLoaderSearchUtilDelegator;
-import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.ConfigurationBuilder;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.UnknownExtensionTypeException;
@@ -63,6 +61,7 @@ public class ServiceExtensionLoader implements ExtensionLoader
    /**
     * Logger
     */
+   @SuppressWarnings("unused")
    private static final Logger log = Logger.getLogger(ServiceExtensionLoader.class.getName());
 
    //-------------------------------------------------------------------------------------||

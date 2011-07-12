@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ClassLoaderSearchUtilDelegator;
@@ -75,6 +76,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    
    private static final Archive<?>[] CAST = new Archive[]{};
    private static final String DEFAULT_MANIFEST = "DefaultManifest.MF";
+   private static final String DEFAULT_PACKAGE_NAME = "";
    
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -370,6 +372,39 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public <X extends Archive<X>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter)
    {
       return this.getArchive().getAsType(type, filter);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, java.lang.String, org.jboss.shrinkwrap.api.ArchiveFormat)
+    */
+   @Override
+   public <X extends Archive<X>> X getAsType(final Class<X> type, final String path,
+         final ArchiveFormat archiveCompression)
+   {
+      return this.getArchive().getAsType(type, path, archiveCompression);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.ArchiveFormat)
+    */
+   @Override
+   public <X extends Archive<X>> X getAsType(final Class<X> type, final ArchivePath path,
+         final ArchiveFormat archiveCompression)
+   {
+      return this.getArchive().getAsType(type, path, archiveCompression);
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#getAsType(java.lang.Class, org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.ArchiveFormat)
+    */
+   @Override
+   public <X extends Archive<X>> Collection<X> getAsType(final Class<X> type, final Filter<ArchivePath> filter,
+         final ArchiveFormat archiveCompression)
+   {
+      return this.getArchive().getAsType(type, filter, archiveCompression);
    }
    
    /**
@@ -1125,7 +1160,8 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
                   };
                },
                clazz.getClassLoader(),
-               clazz.getPackage()
+               //Assumes a null package is a class in the default package
+               clazz.getPackage() == null ? DEFAULT_PACKAGE_NAME : clazz.getPackage().getName()
          );
       }
       return covarientReturn();
@@ -1190,6 +1226,16 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return addPackages(false, pack);
    }
    
+   /*
+    * (non-Javadoc)
+    * @see org.jboss.shrinkwrap.api.container.ClassContainer#addDefaultPackage()
+    */
+   @Override
+   public T addDefaultPackage()
+   {
+      return addPackages(false, DEFAULT_PACKAGE_NAME);
+   }
+   
    /* (non-Javadoc)
     * @see org.jboss.shrinkwrap.api.container.ClassContainer#addPackages(boolean, java.lang.String[])
     */
@@ -1237,6 +1283,9 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
    private void addPackage(final boolean recursive, final Filter<ArchivePath> filter, final ClassLoader classLoader, String packageName)
    {
+      //precondition checks
+      Validate.notNull(packageName, "Package doesn't exist");
+      
       final URLPackageScanner.Callback callback = new URLPackageScanner.Callback()
       {
          @Override
@@ -1252,8 +1301,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
             add(asset, location);
          }
       };
-      final URLPackageScanner scanner = packageName == null ? URLPackageScanner.newInstance(recursive,
-            classLoader, callback) : URLPackageScanner.newInstance(recursive, classLoader, callback, packageName);
+      final URLPackageScanner scanner = URLPackageScanner.newInstance(recursive, classLoader, callback, packageName);
       scanner.scanPackage();
    }
 
@@ -1504,10 +1552,19 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       return this.actualType;
    }
 
-   private File fileFromResource(final String resourceName)
+   /**
+    * Gets a resource from the TCCL and returns its file path.
+    * 
+    * @param resourceName is the name of the resource in the classpath
+    * @return the file path for resourceName @see {@link java.net.URL#getFile()}
+    * @throws IllegalArgumentException if resourceName doesn't exist in the classpath or privileges are not granted
+    */
+   private File fileFromResource(final String resourceName) throws IllegalArgumentException
    {
-      final String resourcePath = AccessController.doPrivileged(GetTcclAction.INSTANCE).getResource(resourceName)
-            .getFile();
+      final URL resourceUrl = AccessController.doPrivileged(GetTcclAction.INSTANCE).getResource(resourceName);
+      Validate.notNull(resourceUrl, resourceName + " doesn't exist or can't be accessed");
+      
+      final String resourcePath = resourceUrl.getFile();
       return new File(resourcePath);
    }
    
