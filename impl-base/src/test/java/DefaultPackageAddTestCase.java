@@ -1,7 +1,9 @@
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
@@ -91,12 +93,27 @@ public class DefaultPackageAddTestCase
       assertClassesWereAdded(archive);
    }
    
+   /**
+    * Makes sure classes in the default package, and only in the default package, are added.
+    * 
+    * SHRINKWRAP-233, SHRINKWRAP-302
+    */
    @Test
    public void testAddDefaultPackage() {
       JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
       archive.addDefaultPackage();
       
       assertClassesWereAdded(archive);
+      
+      /*
+       * It should have added only the following three classes:
+       * 1. /DefaultPackageAddTestCase.class
+       * 2. /ClassInDefaultPackage.class
+       * 3. /ClassInDefaultPackage$InnerClassInDefaultPackage.class
+       */ 
+      final int expectedSize = 3;
+      final int size = archive.getContent().size();
+      Assert.assertEquals("Not the expected number of assets added to the archive", expectedSize, size);
    }
 
    private void assertClassesWereAdded(JavaArchive archive) {
