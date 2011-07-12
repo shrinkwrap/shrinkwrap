@@ -19,7 +19,9 @@ package org.jboss.shrinkwrap.impl.base.container;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Collection;
@@ -1564,7 +1566,16 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
       final URL resourceUrl = AccessController.doPrivileged(GetTcclAction.INSTANCE).getResource(resourceName);
       Validate.notNull(resourceUrl, resourceName + " doesn't exist or can't be accessed");
       
-      final String resourcePath = resourceUrl.getFile();
+      String resourcePath = AccessController.doPrivileged(GetTcclAction.INSTANCE).getResource(resourceName)
+            .getFile();
+      try{
+         // Have to URL decode the string as the ClassLoader.getResource(String) returns an URL encoded URL
+         resourcePath = URLDecoder.decode(resourcePath, "UTF-8");
+      }
+      catch(UnsupportedEncodingException uee)
+      {
+         throw new IllegalArgumentException(uee);
+      }
       return new File(resourcePath);
    }
    
