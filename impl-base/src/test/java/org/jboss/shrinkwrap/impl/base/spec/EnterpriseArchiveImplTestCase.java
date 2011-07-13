@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
@@ -171,5 +172,11 @@ public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTes
    protected EnterpriseContainer<EnterpriseArchive> getEnterpriseContainer()
    {
       return getArchive();
+   }
+
+   @Override
+   protected ArchiveFormat getExpectedArchiveFormat()
+   {
+      return ArchiveFormat.ZIP;
    }
 }

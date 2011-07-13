@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -151,5 +152,11 @@ public class GenericArchiveImplTestCase extends DynamicContainerTestBase<Generic
    protected ArchivePath getLibraryPath()
    {
       throw UNSUPPORTED;
+   }
+
+   @Override
+   protected ArchiveFormat getExpectedArchiveFormat()
+   {
+      return ArchiveFormat.UNKNOWN;
    }
 }

@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.impl.base;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -96,5 +97,13 @@ public class TestIOUtil
       final URL resourceLocation = TestSecurityActions.getThreadContextClassLoader().getResource(resourceName);
       assert resourceLocation != null : "Resource was not found at specified location: " + resourceName;
       return new File(resourceLocation.toURI());
+   }
+   
+   public static InputStream createInputstreamFromResourceName(final String resourceName) throws URISyntaxException
+   {
+      assert resourceName != null : "Resource name must be specified";
+      final InputStream resourceStream = TestSecurityActions.getThreadContextClassLoader().getResourceAsStream(resourceName);
+      assert resourceStream != null : "Resource was not found at specified location: " + resourceName;
+      return resourceStream;
    }
 }

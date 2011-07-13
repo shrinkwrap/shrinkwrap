@@ -57,6 +57,7 @@ import org.jboss.shrinkwrap.impl.base.asset.ClassAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ServiceProviderAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
+import org.jboss.shrinkwrap.spi.ArchiveFormatAssociable;
 import org.jboss.shrinkwrap.spi.Configurable;
 
 /**
@@ -70,7 +71,7 @@ import org.jboss.shrinkwrap.spi.Configurable;
  * @param <T>
  */
 public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase<Archive<?>> implements 
-   Archive<T>, ManifestContainer<T>, ServiceProviderContainer<T>, ResourceContainer<T>, ClassContainer<T>, LibraryContainer<T>
+   Archive<T>, ManifestContainer<T>, ServiceProviderContainer<T>, ResourceContainer<T>, ClassContainer<T>, LibraryContainer<T>, ArchiveFormatAssociable
 {
    //-------------------------------------------------------------------------------------||
    // Class Members ----------------------------------------------------------------------||
@@ -105,6 +106,13 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    //-------------------------------------------------------------------------------------||
    // Required Implementations - Archive Delegation --------------------------------------||
    //-------------------------------------------------------------------------------------||
+
+   @Override
+   public ArchiveFormat getArchiveFormat()
+   {
+      return getArchive().as(Configurable.class).getConfiguration().getExtensionLoader()
+            .getArchiveFormatFromExtensionMapping(actualType);
+   }
 
    /**
     * {@inheritDoc}

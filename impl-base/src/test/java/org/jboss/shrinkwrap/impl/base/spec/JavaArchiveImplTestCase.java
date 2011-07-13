@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
@@ -150,4 +151,11 @@ public class JavaArchiveImplTestCase extends DynamicContainerTestBase<JavaArchiv
    {
       throw new UnsupportedOperationException("JavaArchive does not support libraries");
    }
+
+   @Override
+   protected ArchiveFormat getExpectedArchiveFormat()
+   {
+      return ArchiveFormat.ZIP;
+   }
+
 }

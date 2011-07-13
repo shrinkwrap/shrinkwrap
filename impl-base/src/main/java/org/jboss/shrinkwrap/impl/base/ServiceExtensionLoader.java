@@ -27,6 +27,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.ClassLoaderSearchUtilDelegator;
 import org.jboss.shrinkwrap.api.ConfigurationBuilder;
@@ -175,6 +176,26 @@ public class ServiceExtensionLoader implements ExtensionLoader
          throw UnknownExtensionTypeExceptionDelegator.newExceptionInstance(type);
       }
       return extensionWrapper.getProperty("extension");
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.ExtensionLoader#getArchiveFormatFromExtensionMapping(java.lang.Class)
+    */
+   public <T extends Archive<T>> ArchiveFormat getArchiveFormatFromExtensionMapping(final Class<T> type)
+   {
+      ExtensionWrapper extensionWrapper = extensionMappings.get(type);
+      if (extensionWrapper == null)
+      {
+         loadExtensionMapping(type);
+      }
+      extensionWrapper = extensionMappings.get(type);
+      if (extensionWrapper == null)
+      {
+         throw UnknownExtensionTypeExceptionDelegator.newExceptionInstance(type);
+      }
+      String archiveFormat = extensionWrapper.getProperty("archiveFormat");
+      return ArchiveFormat.valueOf(archiveFormat);
    }
 
    /**

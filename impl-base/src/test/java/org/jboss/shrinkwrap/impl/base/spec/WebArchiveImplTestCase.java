@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -187,5 +188,11 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
    public ArchivePath getWebInfPath()
    {
       return PATH_WEBINF;
+   }
+
+   @Override
+   protected ArchiveFormat getExpectedArchiveFormat()
+   {
+      return ArchiveFormat.ZIP;
    }
 }
