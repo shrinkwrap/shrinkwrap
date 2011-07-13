@@ -1,2 +1,3 @@
 implementingClassName=org.jboss.shrinkwrap.impl.base.GenericArchiveImpl
 extension=.jar
+archiveFormat=UNKNOWN

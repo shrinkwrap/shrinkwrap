@@ -47,6 +47,7 @@ import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
+import org.jboss.shrinkwrap.spi.ArchiveFormatAssociable;
 import org.junit.After;
 import org.junit.Test;
 
@@ -94,10 +95,23 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
     * @return A new Archive<T> instance.
     */
    protected abstract Archive<T> createNewArchive();
+   
+   protected abstract ArchiveFormat getExpectedArchiveFormat();
 
    //-------------------------------------------------------------------------------------||
    // Tests ------------------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
+
+   @Test
+   public void testDefaultArchiveFormatIsSet() throws Exception
+   {
+      Assert.assertEquals("Unexpected default archive format", getExpectedArchiveFormat(), getDefaultArchiveFormat());
+   }
+
+   private ArchiveFormat getDefaultArchiveFormat()
+   {
+      return ((ArchiveFormatAssociable) getArchive()).getArchiveFormat();
+   }
 
    /**
     * Simple printout of the tested archive. 
@@ -554,6 +568,24 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
    }
 
    @Test
+   public void testImportArchiveAsTypeFromStringUsingDefaultFormat() throws Exception
+   {
+      String resourcePath = "/test/cl-test.jar";
+      GenericArchive archive = ShrinkWrap.create(GenericArchive.class).add(
+            new FileAsset(TestIOUtil.createFileFromResourceName("cl-test.jar")), resourcePath);
+
+      JavaArchive jar = archive.getAsType(JavaArchive.class, resourcePath).add(new StringAsset("test file content"),
+            "test.txt");
+
+      Assert.assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
+      Assert.assertNotNull("Class in JAR not imported", jar.get("test/classloader/DummyClass.class"));
+      Assert.assertNotNull("Inner Class in JAR not imported",
+            jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
+      Assert.assertNotNull("Should contain a new asset", ((ArchiveAsset) archive.get(resourcePath).getAsset())
+            .getArchive().get("test.txt"));
+   }
+
+   @Test
    public void testImportArchiveAsTypeFromArchivePath() throws Exception
    {
       String resourcePath = "/test/cl-test.jar";
@@ -561,6 +593,24 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
             new FileAsset(TestIOUtil.createFileFromResourceName("cl-test.jar")), resourcePath);
 
       JavaArchive jar = archive.getAsType(JavaArchive.class, ArchivePaths.create(resourcePath), ArchiveFormat.ZIP).add(
+            new StringAsset("test file content"), "test.txt");
+
+      Assert.assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
+      Assert.assertNotNull("Class in JAR not imported", jar.get("test/classloader/DummyClass.class"));
+      Assert.assertNotNull("Inner Class in JAR not imported",
+            jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
+      Assert.assertNotNull("Should contain an archive asset", ((ArchiveAsset) archive.get(resourcePath).getAsset())
+            .getArchive().get("test.txt"));
+   }
+   
+   @Test
+   public void testImportArchiveAsTypeFromArchivePathUsingDefaultFormat() throws Exception
+   {
+      String resourcePath = "/test/cl-test.jar";
+      GenericArchive archive = ShrinkWrap.create(GenericArchive.class).add(
+            new FileAsset(TestIOUtil.createFileFromResourceName("cl-test.jar")), resourcePath);
+
+      JavaArchive jar = archive.getAsType(JavaArchive.class, ArchivePaths.create(resourcePath)).add(
             new StringAsset("test file content"), "test.txt");
 
       Assert.assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
@@ -591,7 +641,28 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
       Assert.assertNotNull("Should contain a new asset", ((ArchiveAsset) archive.get(resourcePath).getAsset())
             .getArchive().get("test.txt"));
    }
+   
+   @Test
+   public void testImportArchiveAsTypeFromFilterUsingDefaultFormat() throws Exception
+   {
+      String resourcePath = "/test/cl-test.jar";
+      GenericArchive archive = ShrinkWrap.create(GenericArchive.class).add(
+            new FileAsset(TestIOUtil.createFileFromResourceName("cl-test.jar")), resourcePath);
 
+      Collection<JavaArchive> jars = archive.getAsType(JavaArchive.class, Filters.include(".*jar"));
+
+      Assert.assertEquals("Unexpected result found", 1, jars.size());
+
+      JavaArchive jar = jars.iterator().next().add(new StringAsset("test file content"), "test.txt");
+
+      Assert.assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
+      Assert.assertNotNull("Class in JAR not imported", jar.get("test/classloader/DummyClass.class"));
+      Assert.assertNotNull("Inner Class in JAR not imported",
+            jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
+      Assert.assertNotNull("Should contain a new asset", ((ArchiveAsset) archive.get(resourcePath).getAsset())
+            .getArchive().get("test.txt"));
+   }
+   
    @Test(expected = IllegalArgumentException.class)
    public void testImportArchiveFromStringThrowExceptionIfClassIsNull() throws Exception
    {

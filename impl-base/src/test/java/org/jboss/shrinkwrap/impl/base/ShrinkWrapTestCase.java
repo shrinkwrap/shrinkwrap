@@ -31,6 +31,7 @@ import junit.framework.TestCase;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveFactory;
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Assignable;
@@ -481,6 +482,13 @@ public class ShrinkWrapTestCase
       {
          return null;
       }
+
+      @Override
+      public <T extends Archive<T>> ArchiveFormat getArchiveFormatFromExtensionMapping(Class<T> extensionClass)
+      {
+         return null;
+      }
+
    }
 
    /**

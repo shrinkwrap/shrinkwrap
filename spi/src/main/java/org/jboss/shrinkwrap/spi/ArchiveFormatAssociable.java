@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2011, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -14,13 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api;
+package org.jboss.shrinkwrap.spi;
+
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 
 /**
- * Supported archive formats known by the base implementation
+ * Archive associable to an {@link ArchiveFormat}.
  *
- * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author Davide D'Alto
+ * @version $Revision: $
  */
-public enum ArchiveFormat {
-   UNKNOWN, ZIP, TAR, TAR_GZ;
+public interface ArchiveFormatAssociable
+{
+   ArchiveFormat getArchiveFormat();
 }

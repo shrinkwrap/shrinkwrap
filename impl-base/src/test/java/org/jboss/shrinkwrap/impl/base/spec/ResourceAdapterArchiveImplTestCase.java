@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
@@ -170,5 +171,11 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
    protected ResourceAdapterContainer<ResourceAdapterArchive> getResourceAdapterContainer()
    {
       return getArchive();
+   }
+
+   @Override
+   protected ArchiveFormat getExpectedArchiveFormat()
+   {
+      return ArchiveFormat.UNKNOWN;
    }
 }
