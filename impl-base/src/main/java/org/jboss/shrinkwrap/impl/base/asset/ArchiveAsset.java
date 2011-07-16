@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.asset;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -86,7 +87,14 @@ public class ArchiveAsset implements Asset
       if (!this.getArchive().getContent().isEmpty())
          return this.getArchive().as(this.exporter).exportAsInputStream();
       else
-         return null;
+      {
+         // Return an empty ZIP file
+         // ZipOutputStream can't create empty ZIP files - Oracle Java bug 6440786
+         byte[] emptyZip = new byte[]{ 0x50, 0x4b, 0x05, 0x06, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+                                       0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+         
+         return new ByteArrayInputStream(emptyZip);
+      }
    }
 
    /**
