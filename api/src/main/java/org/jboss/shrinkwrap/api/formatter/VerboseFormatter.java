@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2009, 2011, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -16,8 +16,13 @@
  */
 package org.jboss.shrinkwrap.api.formatter;
 
+import java.io.InputStream;
+
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.Node;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
 
 /**
  * {@link Formatter} implementation to provide an "ls -l"-esque
@@ -25,6 +30,7 @@ import org.jboss.shrinkwrap.api.Node;
  * in sorted order
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:gerhard.poul@gmail.com">Gerhard Poul</a>
  * @version $Revision: $
  */
 enum VerboseFormatter implements Formatter {
@@ -60,7 +66,7 @@ enum VerboseFormatter implements Formatter {
       Node rootNode = archive.get(ROOT);
       for (Node child : rootNode.getChildren()) 
       {
-         format(sb, child);
+         format(sb, child, "");
       }
       
       // remove the last NEWLINE
@@ -69,19 +75,50 @@ enum VerboseFormatter implements Formatter {
       return sb.toString();
    }
    
-   private void format(StringBuilder sb, Node node) 
+   private void format(StringBuilder sb, Node node, final String subArchiveContext) 
    {
-      sb.append(node.getPath().get());
-      if (node.getAsset() == null) 
-      {
-         sb.append(FormattingConstants.SLASH);
+      String nodePath = node.getPath().get();
+
+      // Check whether this is a non-null asset
+      if (node.getAsset() != null) {
+         String lcNodePath = nodePath.toLowerCase();
+         // Is this a sub-archive?
+         if (lcNodePath.endsWith(".jar") ||
+               lcNodePath.endsWith(".war") ||
+               lcNodePath.endsWith(".rar") ||
+               lcNodePath.endsWith(".sar")) {
+            InputStream nodeInputStream = node.getAsset().openStream();
+            // If a valid InputStream is returned, list its contents
+            if (nodeInputStream != null) {
+               GenericArchive nodeArchive = ShrinkWrap.create(GenericArchive.class).as(ZipImporter.class).importFrom(nodeInputStream).as(GenericArchive.class);
+               format(sb, nodeArchive.get(ROOT), subArchiveContext + nodePath);
+               // remove the last newline
+               sb.deleteCharAt(sb.length() - 1);
+               // InputStream is not closed on purpose, as that might fail a subsequent export
+            } else {
+               // If there is no valid InputStream, only output the path
+               sb.append(subArchiveContext);
+               sb.append(nodePath);
+            }
+         } else {
+            // If this is not a sub-archive, print the node path
+            sb.append(subArchiveContext);
+            sb.append(nodePath);
+         }
+      } else {
+         // If this is a null-asset, print the node path
+         sb.append(subArchiveContext);
+         sb.append(nodePath);
+         // Only print a trailing slash if this is not a root node
+         if (!nodePath.equals(ROOT))
+            sb.append(FormattingConstants.SLASH);
       }
       
       sb.append(FormattingConstants.NEWLINE);
       
       for (Node child : node.getChildren()) 
       {
-         format(sb, child);
+         format(sb, child, subArchiveContext);
       }
    }
 
