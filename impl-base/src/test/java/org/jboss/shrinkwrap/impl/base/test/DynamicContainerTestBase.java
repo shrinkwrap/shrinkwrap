@@ -1484,6 +1484,64 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             getArchive().contains(testPath2));
    }
 
+   @Test
+   @ArchiveType(LibraryContainer.class)
+   public void testAddLibrariesArchiveArrays() throws Exception
+   {
+      Archive<?> archive1 = createNewArchive();
+      Archive<?> archive2 = createNewArchive();
+      Archive<?> archive3 = createNewArchive();
+      Archive<?> archive4 = createNewArchive();
+      Archive<?>[] archiveArray1 = {archive1, archive2};
+      Archive<?>[] archiveArray2 = {archive3, archive4};
+
+      getLibraryContainer().addAsLibraries(archiveArray1, archiveArray2);
+
+      ArchivePath testPath1 = new BasicPath(getLibraryPath(), archive1.getName());
+      ArchivePath testPath2 = new BasicPath(getLibraryPath(), archive2.getName());
+      ArchivePath testPath3 = new BasicPath(getLibraryPath(), archive3.getName());
+      ArchivePath testPath4 = new BasicPath(getLibraryPath(), archive4.getName());
+      Assert.assertTrue(
+            "Archive should contain " + testPath1,
+            getArchive().contains(testPath1));
+      Assert.assertTrue(
+
+            "Archive should contain " + testPath2,
+            getArchive().contains(testPath2));
+      Assert.assertTrue(
+            "Archive should contain " + testPath3,
+            getArchive().contains(testPath3));
+      Assert.assertTrue(
+            "Archive should contain " + testPath4,
+            getArchive().contains(testPath4));
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   @ArchiveType(LibraryContainer.class)
+   public void testAddLibrariesArchiveArraysWithNullArguments() throws Exception
+   {
+      Archive<?> archive1 = createNewArchive();
+      Archive<?> archive2 = createNewArchive();
+      Archive<?> archive3 = createNewArchive();
+      Archive<?> archive4 = createNewArchive();
+      Archive<?>[] archives = {archive1, archive2, archive3, archive4};
+
+      getLibraryContainer().addAsLibraries(archives, null, null);
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   @ArchiveType(LibraryContainer.class)
+   public void testAddLibrariesArchiveArraysWithNullValues() throws Exception
+   {
+      Archive<?> archive1 = createNewArchive();
+      Archive<?> archive2 = createNewArchive();
+      Archive<?> archive3 = createNewArchive();
+      Archive<?> archive4 = createNewArchive();
+      Archive<?>[] archives = {archive1, archive2, archive3, null, archive4, null};
+
+      getLibraryContainer().addAsLibraries(archives);
+   }
+
    /**
     * Tests that a default MANIFEST.MF is generated through the addManifest method call. SHRINKWRAP-191
     * @throws Exception

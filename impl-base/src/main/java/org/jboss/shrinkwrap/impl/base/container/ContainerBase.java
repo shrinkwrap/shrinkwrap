@@ -1528,7 +1528,25 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public T addAsLibraries(final Collection<? extends Archive<?>> archives) throws IllegalArgumentException
    {
       Validate.notNull(archives, "Archives must be specified");
-      return this.addAsLibraries(archives.toArray(CAST));
+      return this.addAsLibraries(archives.toArray(new Archive<?>[archives.size()]));
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addAsLibraries(java.util.Collection)
+    */
+   @Override
+   public T addAsLibraries(final Archive<?>[]... archives) throws IllegalArgumentException
+   {
+      Validate.notNullAndNoNullValues(archives, "Archives must be specified");
+      for (Archive<?>[] archiveArray : archives)
+      {
+         for (Archive<?> archive : archiveArray)
+         {
+            this.addAsLibraries(archive);
+         }
+      }
+      return covarientReturn();
    }
 
    /**

@@ -123,7 +123,7 @@ public interface LibraryContainer<T extends Archive<T>>
     * The {@link ClassLoader} used to obtain the resource is up to
     * the implementation.  
     * 
-    * @param resource resource to add
+    * @param resourceName resource to add
     * @param target The target path within the archive in which to add the resource, relative to the {@link Archive}s library path.
     * @return This virtual archive
     * @throws IllegalArgumentException if resourceName is null
@@ -199,7 +199,7 @@ public interface LibraryContainer<T extends Archive<T>>
     * <br/>
     * The {@link File}s will be placed into the Container Library path under {@link File#getName()}.
     *  
-    * @param resourceNames {@link File} resources to add
+    * @param resources {@link File} resources to add
     * @return This virtual archive
     * @throws IllegalArgumentException if {@link File} resources are null or empty
     * @see #addAsLibrary(File)
@@ -211,7 +211,7 @@ public interface LibraryContainer<T extends Archive<T>>
     * <br/>
     * The {@link Archive}s will be placed into the Container Library path under {@link Archive#getName()}.
     *  
-    * @param archive {@link Archive} resources to add
+    * @param archives {@link Archive} resources to add
     * @return This virtual archive
     * @throws IllegalArgumentException if {@link Archive} resources are null
     * @see #addAsLibrary(Archive)
@@ -223,10 +223,23 @@ public interface LibraryContainer<T extends Archive<T>>
     * <br/>
     * The {@link Archive}s will be placed into the Container Library path under {@link Archive#getName()}.
     *  
-    * @param archive {@link Archive} resources to add
+    * @param archives {@link Archive} resources to add
     * @return This virtual archive
     * @throws IllegalArgumentException if {@link Collection} of archives is null
     * @see #addAsLibrary(Archive)
     */
    T addAsLibraries(Collection<? extends Archive<?>> archives) throws IllegalArgumentException;
+
+   /**
+    * Add multiple {@link Archive}s to this {@link Archive} as libraries to the container, returning the container itself.
+    * <br/>
+    * The {@link Archive}s will be placed into the Container Library path under {@link Archive#getName()}.
+    *
+    * @param archives {@link Archive} resources to add
+    * @return This virtual archive
+    * @throws IllegalArgumentException if {@link Collection} of archives is null
+    * @see #addAsLibrary(Archive)
+    */
+   T addAsLibraries(Archive<?>[]... archives) throws IllegalArgumentException;
+
 }
