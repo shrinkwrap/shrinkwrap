@@ -3,7 +3,7 @@
  * Copyright 2011, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -35,9 +35,9 @@ import org.sonatype.aether.util.repository.DefaultMirrorSelector;
 
 /**
  * Representation of Maven and resolver settings
- *
+ * 
  * @author <a href="mailto:kpiwko@redhat.com">Karel Piwko</a>
- *
+ * 
  */
 public class MavenDependencyResolverSettings
 {
@@ -50,9 +50,6 @@ public class MavenDependencyResolverSettings
 
    // enable usage of central
    private boolean useMavenCentral = true;
-
-   // go offline
-   private boolean offline = false;
 
    private Collection<RemoteRepository> modelRemoteRepositories = Collections.emptyList();
 
@@ -67,14 +64,14 @@ public class MavenDependencyResolverSettings
    /**
     * Gets remote repositories. Collects ones activated via pom.xml, settings.xml and
     * then mirrors are applied
-    *
+    * 
     * @return the effective list of repositories
     */
    @SuppressWarnings("unchecked")
    public List<RemoteRepository> getRemoteRepositories()
    {
       // disable repositories if working offline
-      if (offline)
+      if (isOffline())
       {
          return Collections.emptyList();
       }
@@ -137,7 +134,7 @@ public class MavenDependencyResolverSettings
 
    /**
     * Sets a list of remote repositories using a POM model
-    *
+    * 
     * @param model the POM model
     */
    public void setModelRemoteRepositories(Model model)
@@ -190,7 +187,7 @@ public class MavenDependencyResolverSettings
     */
    public boolean isOffline()
    {
-      return offline;
+      return settings.isOffline();
    }
 
    /**
@@ -198,7 +195,15 @@ public class MavenDependencyResolverSettings
     */
    public void setOffline(boolean offline)
    {
-      this.offline = offline;
+      String goOffline = SecurityActions.getProperty(MavenSettingsBuilder.ALT_MAVEN_OFFLINE);
+      if (goOffline != null)
+      {
+         this.settings.setOffline(Boolean.valueOf(goOffline));
+      }
+      else
+      {
+         this.settings.setOffline(offline);
+      }
    }
 
 }

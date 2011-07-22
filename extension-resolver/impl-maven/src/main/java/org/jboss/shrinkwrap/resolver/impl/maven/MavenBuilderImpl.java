@@ -928,6 +928,8 @@ public class MavenBuilderImpl implements MavenDependencyResolverInternal
    public MavenDependencyResolver goOffline()
    {
       settings.setOffline(true);
+      // regenerate session
+      this.session = system.getSession(settings);
       return this;
    }
 }
