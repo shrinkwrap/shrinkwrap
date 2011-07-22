@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
  * Extension that will create a ClassLoader based on a Array of Archives.
@@ -48,6 +49,11 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
     * Logger
     */
    private static final Logger log = Logger.getLogger(ShrinkWrapClassLoader.class.getName());
+   
+   /**
+    * Empty String
+    */
+   private static final String EMPTY = "";
 
    //-------------------------------------------------------------------------------------||
    // Instance Members -------------------------------------------------------------------||
@@ -128,19 +134,29 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
                   @Override
                   public InputStream getInputStream() throws IOException
                   {
+                     final ArchivePath path = convertToArchivePath(u);
+                     final Asset asset = archive.get(path).getAsset();
+
+                     // SHRINKWRAP-306
+                     if (asset == null)
+                     {
+                        // This is a directory, so return null InputStream to denote as such
+                        return null;
+                     }
+
+                     final InputStream input = asset.openStream();
                      synchronized (this)
                      {
-                        ArchivePath path = convertToArchivePath(u);
-                        InputStream input = archive.get(path).getAsset().openStream();
                         openedStreams.add(input);
-                        return input;
                      }
+                     return input;
+
                   }
 
                   private ArchivePath convertToArchivePath(URL url)
                   {
                      String path = url.getPath();
-                     path = path.replace(archive.getName(), "");
+                     path = path.replace(archive.getName(), EMPTY);
 
                      return ArchivePaths.create(path);
                   }

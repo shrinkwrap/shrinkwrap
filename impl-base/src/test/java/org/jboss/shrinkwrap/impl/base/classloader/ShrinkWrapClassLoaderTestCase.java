@@ -19,11 +19,15 @@ package org.jboss.shrinkwrap.impl.base.classloader;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.classloader.ShrinkWrapClassLoader;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
@@ -142,6 +146,33 @@ public class ShrinkWrapClassLoaderTestCase
             loadedTestClass,
             applicationClassLoaderClass);
 
+   }
+
+   /**
+    * Ensures that we can open up directory content as obtained via a {@link URL}
+    * from the {@link ShrinkWrapClassLoader} (ie. should return null, not throw
+    * an exception)
+    * 
+    * SHRINKWRAP-306
+    */
+   @Test
+   public void shouldBeAbleToOpenStreamOnDirectoryUrl() throws IOException
+   {
+      // Make a new Archive with some content in a directory
+      final String nestedResourceName = "nested/test";
+      final Asset testAsset = new StringAsset("testContent");
+      final GenericArchive archive = ShrinkWrap.create(GenericArchive.class).add(testAsset, nestedResourceName);
+      
+      // Make a CL to load the content
+      final ClassLoader swCl = new ShrinkWrapClassLoader(archive);
+
+      // Get the URL to the parent directory
+      final URL nestedResourceUrl = swCl.getResource(nestedResourceName);
+      final URL nestedResourceUpALevelUrl = new URL(nestedResourceUrl, "../");
+      
+      // openStream on the URL to the parent directory; should return null, not throw an exception
+      final InputStream in = nestedResourceUpALevelUrl.openStream();
+      Assert.assertNull("URLs pointing to a directory should openStream as null", in);
    }
 
    /**
