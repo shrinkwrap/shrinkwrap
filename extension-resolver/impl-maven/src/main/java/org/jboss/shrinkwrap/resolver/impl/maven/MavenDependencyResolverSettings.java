@@ -23,6 +23,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Repository;
@@ -41,6 +43,8 @@ import org.sonatype.aether.util.repository.DefaultMirrorSelector;
  */
 public class MavenDependencyResolverSettings
 {
+   private static final Logger log = Logger.getLogger(MavenDependencyResolverSettings.class.getName());
+
    // creates a link to Maven Central Repository
    private static final RemoteRepository MAVEN_CENTRAL = new RemoteRepository("central", "default",
          "http://repo1.maven.org/maven2");
@@ -199,6 +203,12 @@ public class MavenDependencyResolverSettings
       if (goOffline != null)
       {
          this.settings.setOffline(Boolean.valueOf(goOffline));
+         if (log.isLoggable(Level.FINER))
+         {
+            log.finer("Offline settings is set via a system property. The new offline flag value is: "
+                  + settings.isOffline());
+         }
+
       }
       else
       {
