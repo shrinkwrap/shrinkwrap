@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.api.classloader;
 
 import java.io.Closeable;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -142,7 +143,8 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
                      if (node == null)
                      {
                         // We've asked for a path that doesn't exist
-                        return null;
+                        throw new FileNotFoundException("Requested path: " + path + " does not exist in "
+                              + archive.toString());
                      }
 
                      final Asset asset = node.getAsset();

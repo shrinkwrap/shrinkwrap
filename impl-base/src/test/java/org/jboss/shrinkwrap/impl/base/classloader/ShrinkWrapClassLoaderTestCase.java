@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.impl.base.classloader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -177,13 +178,12 @@ public class ShrinkWrapClassLoaderTestCase
    
    /**
     * Ensures that we can open up an asset that doesn't exist via a {@link URL}
-    * from the {@link ShrinkWrapClassLoader} (ie. should return null, not throw
-    * an exception)
+    * from the {@link ShrinkWrapClassLoader} (ie. should throw {@link FileNotFoundException}
     * 
     * SHRINKWRAP-308
     */
-   @Test
-   public void shouldBeAbleToOpenStreamOnNonexistantAsset() throws IOException
+   @Test(expected=FileNotFoundException.class)
+   public void shouldNotBeAbleToOpenStreamOnNonexistantAsset() throws IOException
    {
       // Make a new Archive with some content in a directory
       final String nestedResourceName = "nested/test";
@@ -193,13 +193,12 @@ public class ShrinkWrapClassLoaderTestCase
       // Make a CL to load the content
       final ClassLoader swCl = new ShrinkWrapClassLoader(archive);
 
-      // Get the URL to the parent directory
+      // Get the URL to something that doesn't exist
       final URL nestedResourceUrl = swCl.getResource(nestedResourceName);
       final URL nestedResourceThatDoesntExistUrl = new URL(nestedResourceUrl, "../fake");
       
-      // openStream on the URL to the parent directory; should return null, not throw an exception
-      final InputStream in = nestedResourceThatDoesntExistUrl.openStream();
-      Assert.assertNull("URLs pointing to a resource that doesn't exist should openStream as null", in);
+      // openStream on the URL that doesn't exist should throw FNFE
+      nestedResourceThatDoesntExistUrl.openStream();
    }
 
    /**
@@ -245,7 +244,7 @@ public class ShrinkWrapClassLoaderTestCase
       // SHRINKWRAP-237: This throws IOException: Stream closed 
       IOUtil.copyWithClose(resource.openStream(), new ByteArrayOutputStream());
    }
-
+   
    //-------------------------------------------------------------------------------------||
    // Internal Helper Methods ------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
