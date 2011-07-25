@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
@@ -135,7 +136,16 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
                   public InputStream getInputStream() throws IOException
                   {
                      final ArchivePath path = convertToArchivePath(u);
-                     final Asset asset = archive.get(path).getAsset();
+                     final Node node = archive.get(path);
+                     
+                     // SHRINKWRAP-308
+                     if (node == null)
+                     {
+                        // We've asked for a path that doesn't exist
+                        return null;
+                     }
+
+                     final Asset asset = node.getAsset();
 
                      // SHRINKWRAP-306
                      if (asset == null)

@@ -174,6 +174,33 @@ public class ShrinkWrapClassLoaderTestCase
       final InputStream in = nestedResourceUpALevelUrl.openStream();
       Assert.assertNull("URLs pointing to a directory should openStream as null", in);
    }
+   
+   /**
+    * Ensures that we can open up an asset that doesn't exist via a {@link URL}
+    * from the {@link ShrinkWrapClassLoader} (ie. should return null, not throw
+    * an exception)
+    * 
+    * SHRINKWRAP-308
+    */
+   @Test
+   public void shouldBeAbleToOpenStreamOnNonexistantAsset() throws IOException
+   {
+      // Make a new Archive with some content in a directory
+      final String nestedResourceName = "nested/test";
+      final Asset testAsset = new StringAsset("testContent");
+      final GenericArchive archive = ShrinkWrap.create(GenericArchive.class).add(testAsset, nestedResourceName);
+      
+      // Make a CL to load the content
+      final ClassLoader swCl = new ShrinkWrapClassLoader(archive);
+
+      // Get the URL to the parent directory
+      final URL nestedResourceUrl = swCl.getResource(nestedResourceName);
+      final URL nestedResourceThatDoesntExistUrl = new URL(nestedResourceUrl, "../fake");
+      
+      // openStream on the URL to the parent directory; should return null, not throw an exception
+      final InputStream in = nestedResourceThatDoesntExistUrl.openStream();
+      Assert.assertNull("URLs pointing to a resource that doesn't exist should openStream as null", in);
+   }
 
    /**
     * Ensures we can load a resource by name from the {@link ShrinkWrapClassLoader}
