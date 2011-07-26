@@ -66,6 +66,16 @@ public class ExplodedExporterImpl extends AssignableBase<Archive<?>> implements 
    @Override
    public File exportExploded(final File baseDirectory)
    {
+      return exportExploded(baseDirectory, this.getArchive().getName());
+   }
+
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.exporter.ExplodedExporter#exportExploded(java.io.File, java.lang.String)
+    */
+   @Override
+   public File exportExploded(File baseDirectory, String directoryName)
+   {
       final Archive<?> archive = this.getArchive();
       Validate.notNull(archive, "No archive provided");
       Validate.notNull(baseDirectory, "No baseDirectory provided");
@@ -82,7 +92,7 @@ public class ExplodedExporterImpl extends AssignableBase<Archive<?>> implements 
       }
 
       // Get the export delegate
-      final ExplodedExporterDelegate exporterDelegate = new ExplodedExporterDelegate(archive, baseDirectory);
+      final ExplodedExporterDelegate exporterDelegate = new ExplodedExporterDelegate(archive, baseDirectory, directoryName);
 
       // Run the export and get the result
       final File explodedDirectory = exporterDelegate.export();
