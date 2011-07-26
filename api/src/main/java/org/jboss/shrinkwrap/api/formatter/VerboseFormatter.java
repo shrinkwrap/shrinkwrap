@@ -22,6 +22,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 
 /**
@@ -78,16 +79,18 @@ enum VerboseFormatter implements Formatter {
    private void format(StringBuilder sb, Node node, final String subArchiveContext) 
    {
       String nodePath = node.getPath().get();
+      Asset nodeAsset = node.getAsset();
 
       // Check whether this is a non-null asset
-      if (node.getAsset() != null) {
+      if (nodeAsset != null) {
          String lcNodePath = nodePath.toLowerCase();
-         // Is this a sub-archive?
-         if (lcNodePath.endsWith(".jar") ||
+         // Is this a sub-archive? (i.e. is this asset of type ArchiveAsset or does it have a known extension?)
+         if (nodeAsset.getClass().getName().equals("org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset") || 
+               lcNodePath.endsWith(".jar") ||
                lcNodePath.endsWith(".war") ||
                lcNodePath.endsWith(".rar") ||
                lcNodePath.endsWith(".sar")) {
-            InputStream nodeInputStream = node.getAsset().openStream();
+            InputStream nodeInputStream = nodeAsset.openStream();
             // If a valid InputStream is returned, list its contents
             if (nodeInputStream != null) {
                GenericArchive nodeArchive = ShrinkWrap.create(GenericArchive.class).as(ZipImporter.class).importFrom(nodeInputStream).as(GenericArchive.class);
