@@ -125,6 +125,37 @@ public class ExplodedExporterTestCase extends ExportTestBase
    }
 
    /**
+    * Ensure an archive can be exported to an exploded directory.
+    *
+    * @throws Exception
+    */
+   @Test
+   public void testExportExplodedChangingExplodedDirectoryName() throws Exception
+   {
+      log.info("testExportExploded");
+
+      // Get a temp directory
+      File tempDirectory = createTempDirectory("testExportExplodedChangingExplodedDirectoryName");
+
+      // Get an archive instance
+      Archive<?> archive = createArchiveWithAssets();
+
+      // Export as Exploded directory
+      File explodedDirectory = archive.as(ExplodedExporter.class).exportExploded(tempDirectory, "EXPLODED" + NAME_ARCHIVE);
+
+      // Validate the exploded directory was created
+      Assert.assertNotNull(explodedDirectory);
+
+      // Assert the directory has the correct name
+      File expectedDirectory = new File(tempDirectory, "EXPLODED" + NAME_ARCHIVE);
+      Assert.assertEquals(expectedDirectory, explodedDirectory);
+
+      // Validate entries were written out
+      assertAssetInExploded(explodedDirectory, PATH_ONE, ASSET_ONE);
+      assertAssetInExploded(explodedDirectory, PATH_TWO, ASSET_TWO);
+   }
+
+   /**
     * Ensure an archive exported to an exploded directory properly explodes nested archives.
     * 
     * @throws Exception
