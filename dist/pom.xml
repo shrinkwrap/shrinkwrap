@@ -22,11 +22,6 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.jboss.shrinkwrap.resolver</groupId>
-      <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.jboss.shrinkwrap.sip</groupId>
       <artifactId>shrinkwrap-extension-sip-impl</artifactId>
       <version>${project.version}</version>
