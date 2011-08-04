@@ -22,6 +22,7 @@ import java.util.concurrent.Executors;
 import junit.framework.TestCase;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.ConfigurationBuilder;
@@ -141,6 +142,12 @@ public class ConfigurationBuilderTestCase
 
          @Override
          public <T extends Assignable> String getExtensionFromExtensionMapping(Class<T> type)
+         {
+            return null;
+         }
+
+         @Override
+         public <T extends Archive<T>> ArchiveFormat getArchiveFormatFromExtensionMapping(Class<T> extensionClass)
          {
             return null;
          }

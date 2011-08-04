@@ -1,2 +1,3 @@
 implementingClassName=org.jboss.shrinkwrap.impl.base.spec.JavaArchiveImpl
 extension=.jar
+archiveFormat=ZIP

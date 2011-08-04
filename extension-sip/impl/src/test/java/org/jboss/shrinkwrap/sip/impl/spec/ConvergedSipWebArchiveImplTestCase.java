@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.sip.impl.spec;
 
 import java.util.UUID;
 
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -174,5 +175,11 @@ public class ConvergedSipWebArchiveImplTestCase extends DynamicConvergedSipWebCo
    public ArchivePath getWebPath()
    {
       return PATH_WEBINF;
+   }
+
+   @Override
+   protected ArchiveFormat getExpectedArchiveFormat()
+   {
+      return ArchiveFormat.ZIP;
    }
 }

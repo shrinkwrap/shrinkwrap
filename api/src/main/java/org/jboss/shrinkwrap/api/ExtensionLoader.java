@@ -63,4 +63,13 @@ public interface ExtensionLoader
     * @return the filename extension
     */
    public <T extends Assignable> String getExtensionFromExtensionMapping(Class<T> extensionClass);
+
+   /**
+    * Gets the {@link org.jboss.shrinkwrap.api.ArchiveFormat} for the given type from the extensionMapping
+    * @param extensionClass The Extension interface class
+    * @param <T> The type of Extension
+    * @return the archive format
+    */
+   public <T extends Archive<T>> ArchiveFormat getArchiveFormatFromExtensionMapping(Class<T> extensionClass);
+
 }

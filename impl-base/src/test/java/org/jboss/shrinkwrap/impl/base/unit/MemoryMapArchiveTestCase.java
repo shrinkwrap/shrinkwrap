@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.impl.base.unit;
 
 import junit.framework.Assert;
 
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveTestBase;
@@ -96,5 +97,11 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive>
    public void testConstructorRequiresExtensionLoader() throws Exception
    {
       new MemoryMapArchiveImpl("test.jar", null);
+   }
+
+   @Override
+   protected ArchiveFormat getExpectedArchiveFormat()
+   {
+      return ArchiveFormat.UNKNOWN;
    }
 }

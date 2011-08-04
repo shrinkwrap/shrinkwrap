@@ -1,2 +1,3 @@
 implementingClassName=org.jboss.shrinkwrap.impl.base.spec.WebArchiveImpl
 extension=.war
+archiveFormat=ZIP

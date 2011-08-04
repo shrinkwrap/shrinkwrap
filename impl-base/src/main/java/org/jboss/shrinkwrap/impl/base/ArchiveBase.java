@@ -45,6 +45,7 @@ import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
+import org.jboss.shrinkwrap.spi.ArchiveFormatAssociable;
 import org.jboss.shrinkwrap.spi.Configurable;
 
 /**
@@ -59,7 +60,7 @@ import org.jboss.shrinkwrap.spi.Configurable;
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, Configurable
+public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, Configurable, ArchiveFormatAssociable
 {
 
    //-------------------------------------------------------------------------------------||
@@ -113,6 +114,16 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
+   /**
+    * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.spi.ArchiveFormatAssociable#getArchiveFormat()
+    */
+   @Override
+   public ArchiveFormat getArchiveFormat()
+   {
+      return ArchiveFormat.UNKNOWN;
+   }
+   
    /**
     * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#add(java.lang.String, org.jboss.shrinkwrap.api.asset.Asset)
@@ -236,7 +247,9 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
          ArchiveAsset archiveAsset = (ArchiveAsset) asset;
          return archiveAsset.getArchive().as(type);
       }
-      throw new IllegalArgumentException("Found content does not contain a Archive, " + asset);
+
+      ArchiveFormat archiveFormat = this.configuration.getExtensionLoader().getArchiveFormatFromExtensionMapping(type);
+      return getAsType(type, path, archiveFormat);
    }
 
    /**
