@@ -176,6 +176,6 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
    @Override
    protected ArchiveFormat getExpectedArchiveFormat()
    {
-      return ArchiveFormat.UNKNOWN;
+      return ArchiveFormat.ZIP;
    }
 }
