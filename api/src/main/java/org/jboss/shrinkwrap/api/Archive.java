@@ -297,6 +297,18 @@ public interface Archive<T extends Archive<T>> extends Assignable
    Node delete(ArchivePath path) throws IllegalArgumentException;
 
    /**
+    * Removes the {@link Node} in the {@link Archive} at the {@link ArchivePath} indicated
+    * by the specified String archivePath.
+    * If the path is a directory, recursively removes all contents.  If the path does
+    * not exist, return null.
+    * 
+    * @param archivePath
+    * @return The Node removed
+    * @see #delete(ArchivePath)
+    */
+   Node delete(String archivePath) throws IllegalArgumentException;
+   
+   /**
     * Obtains all assets in this archive, along with its respective Path.
     * The returned Map will be an immutable view.
     * @return
