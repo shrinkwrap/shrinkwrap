@@ -266,7 +266,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
    public Node delete(String archivePath)
    {
       Validate.notNull(archivePath, "No path was specified");
-      return delete(new BasicPath(archivePath));
+      return delete(ArchivePaths.create(archivePath));
    }
 
    /** 

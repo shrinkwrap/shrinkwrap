@@ -342,7 +342,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    public Node delete(String archivePath)
    {
       Validate.notNull(archivePath, "No path was specified");
-      return delete(new BasicPath(archivePath));
+      return getArchive().delete(archivePath);
    }
    
    /**
