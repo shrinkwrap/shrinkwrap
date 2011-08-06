@@ -336,6 +336,17 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    
    /**
     * {@inheritDoc}
+    * @see org.jboss.shrinkwrap.api.Archive#delete(java.lang.String)
+    */
+   @Override
+   public Node delete(String archivePath)
+   {
+      Validate.notNull(archivePath, "No path was specified");
+      return getArchive().delete(archivePath);
+   }
+   
+   /**
+    * {@inheritDoc}
     * @see org.jboss.shrinkwrap.api.Archive#get(org.jboss.shrinkwrap.api.ArchivePath)
     */
    @Override

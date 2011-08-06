@@ -430,7 +430,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
     * @throws Exception
     */
    @Test
-   public void testDeleteAsset() throws Exception
+   public void testDeleteAssetWithArchivePath() throws Exception
    {
       Archive<T> archive = getArchive();
       String resource = NAME_TEST_PROPERTIES;
@@ -443,6 +443,27 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
             archive.delete(location).getAsset());
 
       Assert.assertFalse("There should no longer be an asset at: " + location.get() + " after deleted",
+            archive.contains(location));
+   }
+
+   /**
+    * Ensure deleting an asset successfully removes asset from storage
+    * @throws Exception
+    */
+   @Test
+   public void testDeleteAssetWithStringPath() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      String resource = NAME_TEST_PROPERTIES;
+      String location = "/test.properties";
+      final Asset asset = new ClassLoaderAsset(resource);
+      archive.add(asset, location);
+      Assert.assertTrue(archive.contains(location)); // Sanity check
+
+      Assert.assertEquals("Successfully deleting an Asset should return the removed Node", asset,
+            archive.delete(location).getAsset());
+
+      Assert.assertFalse("There should no longer be an asset at: " + location + " after deleted",
             archive.contains(location));
    }
 
@@ -460,21 +481,40 @@ public abstract class ArchiveTestBase<T extends Archive<T>>
    }
 
    /**
-    * Ensure deleting an asset requires a path
+    * Ensure deleting a missing asset returns correct status
     * @throws Exception
     */
    @Test
-   public void testDeleteAssetRequiresPath() throws Exception
+   public void testDeleteMissingAssetWithStringPath() throws Exception
    {
       Archive<T> archive = getArchive();
-      try
-      {
-         archive.delete(null);
-         Assert.fail("Should have throw an IllegalArgumentException");
-      }
-      catch (IllegalArgumentException expectedException)
-      {
-      }
+      String location = "/test.properties";
+
+      Assert.assertNull("Deleting a non-existent Asset should return null", archive.delete(location));
+   }
+
+   /**
+    * Ensure deleting an asset requires a path
+    * @throws Exception
+    */
+   @Test(expected=IllegalArgumentException.class)
+   public void testDeleteAssetRequiresArchivePath() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      archive.delete((ArchivePath)null);
+      Assert.fail("Should have throw an IllegalArgumentException");
+   }
+
+   /**
+    * Ensure deleting an asset requires a path
+    * @throws Exception
+    */
+   @Test(expected=IllegalArgumentException.class)
+   public void testDeleteAssetRequiresStringPath() throws Exception
+   {
+      Archive<T> archive = getArchive();
+      archive.delete((String)null);
+      Assert.fail("Should have throw an IllegalArgumentException");
    }
 
    /**
