@@ -83,7 +83,6 @@
       <!-- Resources Plugin -->
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.3</version> <!-- Required for empty dirs config to be used -->
         <configuration>
           <!-- For the importer tests, we must copy empty directories -->
           <includeEmptyDirs>true</includeEmptyDirs>
