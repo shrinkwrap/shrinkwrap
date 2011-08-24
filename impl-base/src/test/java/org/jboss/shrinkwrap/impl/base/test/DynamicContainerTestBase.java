@@ -16,6 +16,8 @@
  */
 package org.jboss.shrinkwrap.impl.base.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -26,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import junit.framework.Assert;
 
@@ -40,6 +44,7 @@ import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
@@ -1576,6 +1581,37 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       Assert.assertTrue("Archive should contain file: " + manifest,
             archive.contains(manifest));
    }
+
+   /**
+    * https://jira.jboss.org/jira/browse/SHRINKWRAP-320
+    * Empty Directory Causes FileNotFoundException
+    */
+   @Test
+   public void testAddingEmptyResourceDirectory() throws Exception
+   {
+      //final File directory = createTempDirectory("testAddingEmptyResourceDirectory");
+      final File directory = File.createTempFile("resources", null);
+      directory.delete();
+      directory.deleteOnExit();
+      File svn = new File(directory, ".svn");
+      svn.deleteOnExit();
+      svn.mkdirs();
+
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+      ShrinkWrap.create(JavaArchive.class)
+         .addAsResource(directory, "/")
+         .as(ZipExporter.class)
+	  .exportTo(out);
+
+      ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(out.toByteArray()));
+      ZipEntry entry = zis.getNextEntry();
+      Assert.assertNotNull("Missing '.svn/' Entry from Exported Archive", entry);
+      Assert.assertEquals("Zip Entry Missing Expeted Name '.svn/'", ".svn/", entry.getName());
+      Assert.assertEquals("Zip Entry '.svn/' Not A Directory", true, entry.isDirectory());
+      zis.closeEntry();
+      zis.close();
+   } 
    
    private void assertNotContainsClass(ArchivePath notExpectedPath)
    {

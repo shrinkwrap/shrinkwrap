@@ -968,8 +968,9 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
          return this.addNestedJarFileResource(resource, target, this.getResourcePath());
       }
       
+      //SHRINKWRAP-320 Empty Directory Causes FileNotFoundException
       if (files.length == 0) 
-         return  addAsResource(new FileAsset(resource), target);
+	  return addAsDirectory(new BasicPath(getResourcePath(), target));
 
       for (File file : resource.listFiles())
       {
