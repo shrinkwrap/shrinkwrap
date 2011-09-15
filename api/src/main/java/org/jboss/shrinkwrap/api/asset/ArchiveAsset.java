@@ -14,14 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.asset;
+package org.jboss.shrinkwrap.api.asset;
 
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
-import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
  * An {@link Asset} representing an {@link Archive}; a
@@ -64,8 +62,15 @@ public class ArchiveAsset implements Asset
     */
    public ArchiveAsset(final Archive<?> archive, final Class<? extends StreamExporter> exporter)
    {
-      Validate.notNull(archive, "archive must be specified");
-      Validate.notNull(exporter, "exporter must be specified");
+      if (archive == null)
+      {
+         throw new IllegalArgumentException("archive must be specified");
+      }
+      
+      if (exporter == null)
+      {
+         throw new IllegalArgumentException("exporter must be specified");
+      }
 
       this.archive = archive;
       this.exporter = exporter;
