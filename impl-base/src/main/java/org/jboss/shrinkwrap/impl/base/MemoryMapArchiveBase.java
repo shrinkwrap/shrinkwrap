@@ -30,9 +30,9 @@ import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.IllegalArchivePathException;
 import org.jboss.shrinkwrap.api.Node;
+import org.jboss.shrinkwrap.api.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
-import org.jboss.shrinkwrap.impl.base.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 
