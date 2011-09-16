@@ -14,13 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.asset;
+package org.jboss.shrinkwrap.api.asset;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
-
-import org.jboss.shrinkwrap.api.asset.Asset;
-import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
  * ClassloaderAsset
@@ -59,11 +56,19 @@ public class ClassLoaderAsset implements Asset
     */
    public ClassLoaderAsset(String resourceName, ClassLoader classLoader)
    {
-      Validate.notNull(resourceName, "ResourceName must be specified");
-      Validate.notNull(classLoader, "ClassLoader must be specified");
-      Validate
-            .notNull(classLoader.getResource(resourceName), resourceName + " not found in classloader " + classLoader);
-
+      if (resourceName == null)
+      {
+         throw new IllegalArgumentException("ResourceName must be specified");
+      }      
+      if (classLoader == null)
+      {
+         throw new IllegalArgumentException("ClassLoader must be specified");
+      }
+      if (classLoader.getResource(resourceName) == null)
+      {
+         throw new IllegalArgumentException(resourceName + " not found in classloader " + classLoader);
+      }
+     
       this.resourceName = resourceName;
       this.classLoader = classLoader;
    }
