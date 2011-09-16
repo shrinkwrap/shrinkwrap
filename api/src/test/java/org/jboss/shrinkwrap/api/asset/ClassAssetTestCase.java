@@ -14,11 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.asset;
+package org.jboss.shrinkwrap.api.asset;
 
 import java.io.InputStream;
 
-import org.jboss.shrinkwrap.api.asset.Asset;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -43,8 +42,8 @@ public class ClassAssetTestCase
       Assert.assertNotNull(io);
       Assert.assertEquals(
             "Loaded class should have the same size", 
-            TestUtils.findLengthOfStream(io), 
-            TestUtils.findLengthOfClass(clazz));
+            ApiTestUtils.findLengthOfStream(io), 
+            ApiTestUtils.findLengthOfClass(clazz));
    }
 
    /**
@@ -65,8 +64,8 @@ public class ClassAssetTestCase
       Assert.assertNotNull(io);
       Assert.assertEquals(
             "Loaded class should have the same size",
-            TestUtils.findLengthOfStream(io),
-            TestUtils.findLengthOfClass(bootstrapClass));
+            ApiTestUtils.findLengthOfStream(io),
+            ApiTestUtils.findLengthOfClass(bootstrapClass));
    }
 
    @Test

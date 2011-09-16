@@ -14,12 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.asset;
+package org.jboss.shrinkwrap.api.asset;
 
 import java.io.InputStream;
-
-import org.jboss.shrinkwrap.api.asset.Asset;
-import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
  * ClassAsset
@@ -57,7 +54,11 @@ public class ClassAsset implements Asset
    public ClassAsset(final Class<?> clazz)
    {
       // Precondition check
-      Validate.notNull(clazz, "Class must be specified");
+      if (clazz == null)
+      {
+         throw new IllegalArgumentException("Class must be specified");
+      }
+
       this.clazz = clazz;
    }
 

@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.asset;
+package org.jboss.shrinkwrap.api.asset;
 
 import java.io.InputStream;
 
 import junit.framework.Assert;
 
-import org.jboss.shrinkwrap.api.asset.Asset;
 import org.junit.Test;
 
 /**
@@ -33,9 +32,9 @@ import org.junit.Test;
  */
 public class ClassLoaderAssetTestCase
 {
-   private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
+   private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/api/asset/Test.properties";
 
-   private static final String NON_EXISTING_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/NoFileShouldBePlacedHere.properties";
+   private static final String NON_EXISTING_RESOURCE = "org/jboss/shrinkwrap/api/asset/NoFileShouldBePlacedHere.properties";
 
    @Test
    public void shouldBeAbleToReadResource() throws Exception
@@ -44,7 +43,7 @@ public class ClassLoaderAssetTestCase
       InputStream io = asset.openStream();
 
       Assert.assertNotNull(io);
-      Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true", TestUtils
+      Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true", ApiTestUtils
             .convertToString(io));
    }
 
