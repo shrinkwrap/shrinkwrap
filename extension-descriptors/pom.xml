@@ -25,7 +25,7 @@
   <properties>
   
     <!-- Versioning -->
-  	<version.org.jboss.shrinkwrap.descriptors>0.1.4</version.org.jboss.shrinkwrap.descriptors>
+  	<version.org.jboss.shrinkwrap.descriptors>1.2.0-alpha-1</version.org.jboss.shrinkwrap.descriptors>
 
   </properties>
 
@@ -48,8 +48,14 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.shrinkwrap.descriptors</groupId>
-      <artifactId>shrinkwrap-descriptors-api</artifactId>
+      <artifactId>shrinkwrap-descriptors-api-base</artifactId>
       <version>${version.org.jboss.shrinkwrap.descriptors}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+      <artifactId>shrinkwrap-descriptors-impl-base</artifactId>
+      <version>${version.org.jboss.shrinkwrap.descriptors}</version>
+      <scope>provided</scope>
     </dependency>
     <!--
 

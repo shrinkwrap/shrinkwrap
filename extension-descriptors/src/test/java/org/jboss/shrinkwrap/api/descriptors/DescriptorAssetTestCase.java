@@ -24,7 +24,6 @@ import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.descriptor.api.Descriptor;
 import org.jboss.shrinkwrap.descriptor.api.Descriptors;
-import org.jboss.shrinkwrap.descriptor.api.spec.servlet.web.WebAppDescriptor;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -51,7 +50,7 @@ public class DescriptorAssetTestCase
    public void descriptorAssetRoundtrip()
    {
       // Make the descriptor
-      final WebAppDescriptor descriptor = Descriptors.create(WebAppDescriptor.class).displayName("Test");
+      final StubDescriptor descriptor = Descriptors.create(StubDescriptor.class).displayName("Test");
 
       // Represent as an Asset
       final Asset asset = new DescriptorAsset(descriptor);
@@ -83,7 +82,7 @@ public class DescriptorAssetTestCase
       final String descriptorName = "Test";
 
       //Make a named descriptor
-      final WebAppDescriptor descriptor = Descriptors.create(WebAppDescriptor.class, descriptorName);
+      final StubDescriptor descriptor = Descriptors.create(StubDescriptor.class, descriptorName);
 
       // Represent as an Asset
       final NamedAsset asset = new DescriptorAsset(descriptor);
@@ -101,7 +100,7 @@ public class DescriptorAssetTestCase
    {
       //Load descriptor's properties
       final Properties props = new Properties();
-      final String resourceName = "META-INF/services/" + WebAppDescriptor.class.getName();
+      final String resourceName = "META-INF/services/" + StubDescriptor.class.getName();
       final ClassLoader loader = Thread.currentThread().getContextClassLoader();
       final InputStream resourceStream = loader.getResourceAsStream(resourceName);
       try {
@@ -114,7 +113,7 @@ public class DescriptorAssetTestCase
       final String defaultName = props.getProperty("defaultName");
       
       //Make a descriptor
-      final WebAppDescriptor descriptor = Descriptors.create(WebAppDescriptor.class);
+      final StubDescriptor descriptor = Descriptors.create(StubDescriptor.class);
 
       //Represent as an Asset
       final NamedAsset asset = new DescriptorAsset(descriptor);
