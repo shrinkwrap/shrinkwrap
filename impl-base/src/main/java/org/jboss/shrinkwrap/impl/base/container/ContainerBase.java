@@ -77,7 +77,6 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
    // Class Members ----------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
    
-   private static final Archive<?>[] CAST = new Archive[]{};
    private static final String DEFAULT_MANIFEST = "DefaultManifest.MF";
    private static final String DEFAULT_PACKAGE_NAME = "";
    
