@@ -1160,6 +1160,11 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
          ArchivePath location = new BasicPath(getClassesPath(), AssetUtil.getFullPathForClassResource(clazz));
          add(resource, location);
          
+         // SHRINKWRAP-335, account for classes loaded from the 
+         // Bootstrap CL (some JDK impls may return null on class.getClassLoader)
+         final ClassLoader loadingCl = clazz.getClassLoader();
+         final ClassLoader adjustedCl = loadingCl == null ? ClassLoader.getSystemClassLoader() : loadingCl;
+         
          // Get all inner classes and add them
          addPackages(
                false,
@@ -1180,7 +1185,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
                      return path.get().matches(expression);
                   };
                },
-               clazz.getClassLoader(),
+               adjustedCl,
                //Assumes a null package is a class in the default package
                clazz.getPackage() == null ? DEFAULT_PACKAGE_NAME : clazz.getPackage().getName()
          );

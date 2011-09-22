@@ -908,6 +908,25 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
       ArchivePath expectedClassPath = new BasicPath(getClassPath(), AssetUtil.getFullPathForClassResource("/test/classloader/DummyClass"));
       assertContainsClass(expectedClassPath);
    }
+   
+   /**
+    * Ensure classes from the Bootstrap CL 
+    * can be added to {@link ClassContainer}s.
+    * 
+    * SHRINKWRAP-335
+    * 
+    * @throws Exception
+    */
+   @Test
+   @ArchiveType(ClassContainer.class)
+   public void testAddClassFromBootstrapCl() throws Exception
+   {
+      final ClassContainer<T> archive = this.getClassContainer();
+      archive.addClass(String.class);
+      final ArchivePath classRoot = this.getClassPath();
+      Assert.assertTrue("Archive does not contain class added from bootstrap CL",
+            ((Archive<?>) archive).contains(ArchivePaths.create(classRoot, "/java/lang/String.class")));
+   }
 
    @Test
    @ArchiveType(ClassContainer.class)
