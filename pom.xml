@@ -182,7 +182,6 @@
     <module>dist</module>
     <module>impl-base</module>
     <module>spi</module>
-    <module>extension-descriptors</module>
     <module>extension-sip</module>
   </modules>
   
