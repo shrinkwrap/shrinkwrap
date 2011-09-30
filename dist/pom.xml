@@ -22,8 +22,8 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.jboss.shrinkwrap.sip</groupId>
-      <artifactId>shrinkwrap-extension-sip-impl</artifactId>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-impl-base</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
