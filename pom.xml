@@ -184,7 +184,6 @@
     <module>spi</module>
     <module>extension-descriptors</module>
     <module>extension-sip</module>
-    <module>extension-vfs3</module>
     <module>extension-vdf</module>
   </modules>
   
