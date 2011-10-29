@@ -95,13 +95,17 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <inherited>true</inherited>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
           <showDeprecation>false</showDeprecation>
           <showWarnings>true</showWarnings>
           <optimize>true</optimize>
           <compilerVersion>1.6</compilerVersion>
           <fork>true</fork>
+          <compilerArguments>
+            <source>1.5</source>
+            <target>1.5</target>
+          </compilerArguments>
           <argLine>-Xmx512M</argLine>
           <executable>${JAVA_HOME}/bin/javac</executable>
         </configuration>
