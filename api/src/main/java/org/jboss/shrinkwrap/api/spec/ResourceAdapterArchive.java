@@ -23,18 +23,12 @@ import org.jboss.shrinkwrap.api.container.ResourceAdapterContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
 
 /**
- * Traditional RAR (Resource Adapter Archive) structure. Used in 
- * construction of resource adapters.
+ * Traditional RAR (Resource Adapter Archive) structure. Used in construction of resource adapters.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public interface ResourceAdapterArchive
-      extends
-         Archive<ResourceAdapterArchive>,
-         ManifestContainer<ResourceAdapterArchive>,
-         LibraryContainer<ResourceAdapterArchive>,
-         ResourceContainer<ResourceAdapterArchive>,
-         ResourceAdapterContainer<ResourceAdapterArchive>
-{
+public interface ResourceAdapterArchive extends Archive<ResourceAdapterArchive>,
+    ManifestContainer<ResourceAdapterArchive>, LibraryContainer<ResourceAdapterArchive>,
+    ResourceContainer<ResourceAdapterArchive>, ResourceAdapterContainer<ResourceAdapterArchive> {
 }

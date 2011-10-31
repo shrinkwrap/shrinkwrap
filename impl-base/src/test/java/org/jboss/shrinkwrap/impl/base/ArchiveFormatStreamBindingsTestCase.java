@@ -31,41 +31,34 @@ import org.junit.Test;
  * @author Davide D'Alto
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class ArchiveFormatStreamBindingsTestCase
-{
-   @Test
-   public void testZipImporter() throws Exception
-   {
-      assertEquals(ZipImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.ZIP).getImporter());
-   }
+public class ArchiveFormatStreamBindingsTestCase {
+    @Test
+    public void testZipImporter() throws Exception {
+        assertEquals(ZipImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.ZIP).getImporter());
+    }
 
-   @Test
-   public void testZipExporter() throws Exception
-   {
-      assertEquals(ZipExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.ZIP).getExporter());
-   }
+    @Test
+    public void testZipExporter() throws Exception {
+        assertEquals(ZipExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.ZIP).getExporter());
+    }
 
-   @Test
-   public void testTarImporter() throws Exception
-   {
-      assertEquals(TarImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR).getImporter());
-   }
+    @Test
+    public void testTarImporter() throws Exception {
+        assertEquals(TarImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR).getImporter());
+    }
 
-   @Test
-   public void testTarExporter() throws Exception
-   {
-      assertEquals(TarExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR).getExporter());
-   }
+    @Test
+    public void testTarExporter() throws Exception {
+        assertEquals(TarExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR).getExporter());
+    }
 
-   @Test
-   public void testTarGzImporter() throws Exception
-   {
-      assertEquals(TarGzImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_GZ).getImporter());
-   }
+    @Test
+    public void testTarGzImporter() throws Exception {
+        assertEquals(TarGzImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_GZ).getImporter());
+    }
 
-   @Test
-   public void testTarGzExporter() throws Exception
-   {
-      assertEquals(TarGzExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_GZ).getExporter());
-   }
+    @Test
+    public void testTarGzExporter() throws Exception {
+        assertEquals(TarGzExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_GZ).getExporter());
+    }
 }

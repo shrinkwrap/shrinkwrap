@@ -34,105 +34,100 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 
 /**
- * Delegate class for asserting that TAR contents may be 
- * imported as expected
- * 
+ * Delegate class for asserting that TAR contents may be imported as expected
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class TarContentAssertionDelegate extends ContentAssertionDelegateBase
-{
+public class TarContentAssertionDelegate extends ContentAssertionDelegateBase {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(TarContentAssertionDelegate.class.getName());
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(TarContentAssertionDelegate.class.getName());
 
-   /**
-    * ClassLoader resource of a static TAR we'll use to test importing
-    */
-   private static final String EXISTING_TAR_RESOURCE = "test.tar";
+    /**
+     * ClassLoader resource of a static TAR we'll use to test importing
+     */
+    private static final String EXISTING_TAR_RESOURCE = "test.tar";
 
-   //-------------------------------------------------------------------------------------||
-   // Functional Methods -----------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Functional Methods -----------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Compare the content of the original file and what was imported.
-    * 
-    * @param importedArchive The archive used for import
-    * @param originalSource The original classpath resource file
-    */
-   public void assertContent(Archive<?> importedArchive, File originalSource) throws Exception
-   {
-      Assert.assertFalse("Should have imported something", importedArchive.getContent().isEmpty());
+    /**
+     * Compare the content of the original file and what was imported.
+     *
+     * @param importedArchive
+     *            The archive used for import
+     * @param originalSource
+     *            The original classpath resource file
+     */
+    public void assertContent(Archive<?> importedArchive, File originalSource) throws Exception {
+        Assert.assertFalse("Should have imported something", importedArchive.getContent().isEmpty());
 
-      boolean containsEmptyDir = false;
-      boolean containsEmptyNestedDir = false;
+        boolean containsEmptyDir = false;
+        boolean containsEmptyNestedDir = false;
 
-      final TarInputStream stream = new TarInputStream(new FileInputStream(originalSource));
+        final TarInputStream stream = new TarInputStream(new FileInputStream(originalSource));
 
-      TarEntry originalEntry;
-      while ((originalEntry = (stream.getNextEntry())) != null)
-      {
-         if (originalEntry.isDirectory())
-         {
-            // TAR impl doesn't report dirs with trailing slashes, so adjust 
-            final String originalEntryName = PathUtil.optionallyAppendSlash(originalEntry.getName());
-            log.info(originalEntryName);
-            
-            // Check for expected empty dirs
-            if (originalEntryName.equals(EXPECTED_EMPTY_DIR))
-            {
-               containsEmptyDir = true;
+        TarEntry originalEntry;
+        while ((originalEntry = (stream.getNextEntry())) != null) {
+            if (originalEntry.isDirectory()) {
+                // TAR impl doesn't report dirs with trailing slashes, so adjust
+                final String originalEntryName = PathUtil.optionallyAppendSlash(originalEntry.getName());
+                log.info(originalEntryName);
+
+                // Check for expected empty dirs
+                if (originalEntryName.equals(EXPECTED_EMPTY_DIR)) {
+                    containsEmptyDir = true;
+                }
+                if (originalEntryName.equals(EXPECTED_NESTED_EMPTY_DIR)) {
+                    containsEmptyNestedDir = true;
+                }
+                continue;
             }
-            if (originalEntryName.equals(EXPECTED_NESTED_EMPTY_DIR))
-            {
-               containsEmptyNestedDir = true;
+
+            // Ensure the archive contains the current entry as read from the file
+            final ArchivePath entryName = ArchivePaths.create(originalEntry.getName());
+            Assert.assertTrue("Importer should have imported " + entryName.get() + " from " + originalSource,
+                importedArchive.contains(entryName));
+
+            // Check contents
+            ByteArrayOutputStream output = new ByteArrayOutputStream(8192);
+            byte[] content = new byte[4096];
+            int readBytes;
+            while ((readBytes = stream.read(content, 0, content.length)) != -1) {
+                output.write(content, 0, readBytes);
             }
-            continue;
-         }
+            byte[] originalContent = output.toByteArray();
+            final Node node = importedArchive.get(entryName);
+            byte[] importedContent = IOUtil.asByteArray(node.getAsset().openStream());
 
-         // Ensure the archive contains the current entry as read from the file
-         final ArchivePath entryName = ArchivePaths.create(originalEntry.getName());
-         Assert.assertTrue("Importer should have imported " + entryName.get() + " from " + originalSource,
-               importedArchive.contains(entryName));
+            Assert.assertTrue(
+                "The content of " + originalSource.getName() + " should be equal to the imported content",
+                Arrays.equals(importedContent, originalContent));
+        }
 
-         // Check contents
-         ByteArrayOutputStream output = new ByteArrayOutputStream(8192);
-         byte[] content = new byte[4096];
-         int readBytes;
-         while ((readBytes = stream.read(content, 0, content.length)) != -1)
-         {
-            output.write(content, 0, readBytes);
-         }
-         byte[] originalContent = output.toByteArray();
-         final Node node  = importedArchive.get(entryName);
-         byte[] importedContent = IOUtil.asByteArray(node.getAsset().openStream());
+        // Ensure empty directories have come in cleanly
+        Assert.assertTrue("Empty directory not imported", containsEmptyDir);
+        Assert.assertTrue("Empty nested directory not imported", containsEmptyNestedDir);
+    }
 
-         Assert.assertTrue("The content of " + originalSource.getName() + " should be equal to the imported content",
-               Arrays.equals(importedContent, originalContent));
-      }
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-      // Ensure empty directories have come in cleanly
-      Assert.assertTrue("Empty directory not imported", containsEmptyDir);
-      Assert.assertTrue("Empty nested directory not imported", containsEmptyNestedDir);
-   }
-
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.ContentAssertionDelegateBase#getExistingResourceName()
-    */
-   @Override
-   protected String getExistingResourceName()
-   {
-      return EXISTING_TAR_RESOURCE;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.ContentAssertionDelegateBase#getExistingResourceName()
+     */
+    @Override
+    protected String getExistingResourceName() {
+        return EXISTING_TAR_RESOURCE;
+    }
 }

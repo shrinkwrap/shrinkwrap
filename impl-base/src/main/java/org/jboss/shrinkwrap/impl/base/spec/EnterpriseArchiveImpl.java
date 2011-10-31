@@ -30,113 +30,115 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class EnterpriseArchiveImpl 
-   extends EnterpriseContainerBase<EnterpriseArchive> 
-   implements EnterpriseArchive 
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class EnterpriseArchiveImpl extends EnterpriseContainerBase<EnterpriseArchive> implements EnterpriseArchive {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(JavaArchiveImpl.class.getName());
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(JavaArchiveImpl.class.getName());
 
-   /**
-    * Path to the manifests inside of the Archive.
-    */
-   private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
+    /**
+     * Path to the manifests inside of the Archive.
+     */
+    private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
 
-   /**
-    * Path to the resources inside of the Archive.
-    */
-   private static final ArchivePath PATH_RESOURCE = PATH_MANIFEST;
+    /**
+     * Path to the resources inside of the Archive.
+     */
+    private static final ArchivePath PATH_RESOURCE = PATH_MANIFEST;
 
-   /**
-    * Path to the application resources. 
-    */
-   private static final ArchivePath PATH_APPLICATION = PATH_MANIFEST;
-   
-   /**
-    * Path to the application libraries.
-    */
-   private static final ArchivePath PATH_LIBRARY = new BasicPath("lib");
+    /**
+     * Path to the application resources.
+     */
+    private static final ArchivePath PATH_APPLICATION = PATH_MANIFEST;
 
-   /**
-    * Path to the application modules.
-    */
-   private static final ArchivePath PATH_MODULE = new BasicPath("/");
+    /**
+     * Path to the application libraries.
+     */
+    private static final ArchivePath PATH_LIBRARY = new BasicPath("lib");
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    /**
+     * Path to the application modules.
+     */
+    private static final ArchivePath PATH_MODULE = new BasicPath("/");
 
-   /**
-    * Create a new EnterpriseArchive with any type storage engine as backing.
-    * 
-    * @param delegate The storage backing.
-    */
-   public EnterpriseArchiveImpl(final Archive<?> delegate)
-   {
-      super(EnterpriseArchive.class, delegate);
-   }
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-   
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerBase#getLibraryPath()
-    */
-   @Override
-   public ArchivePath getLibraryPath()
-   {
-      return PATH_LIBRARY;
-   }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerBase#getResourcePath()
-    */
-   @Override
-   protected ArchivePath getResourcePath()
-   {
-      return PATH_RESOURCE;
-   }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerBase#getManifestPath()
-    */
-   @Override
-   protected ArchivePath getManifestPath()
-   {
-      return PATH_MANIFEST;
-   }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.EnterpriseContainerBase#getApplicationPath()
-    */
-   @Override
-   protected ArchivePath getApplicationPath()
-   {
-      return PATH_APPLICATION;
-   }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.EnterpriseContainerBase#getModulePath()
-    */
-   @Override
-   protected ArchivePath getModulePath()
-   {
-      return PATH_MODULE;
-   }
-   
-   /**
-    * Classes are not supported by EnterpriseArchive.
-    * 
-    * @throws UnsupportedOperationException EnterpriseArchive does not support classes
-    */
-   @Override
-   protected ArchivePath getClassesPath()
-   {
-      throw new UnsupportedOperationException("EnterpriseArchive does not support classes");
-   }
+    /**
+     * Create a new EnterpriseArchive with any type storage engine as backing.
+     *
+     * @param delegate
+     *            The storage backing.
+     */
+    public EnterpriseArchiveImpl(final Archive<?> delegate) {
+        super(EnterpriseArchive.class, delegate);
+    }
+
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.declarchive.impl.base.ContainerBase#getLibraryPath()
+     */
+    @Override
+    public ArchivePath getLibraryPath() {
+        return PATH_LIBRARY;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.declarchive.impl.base.ContainerBase#getResourcePath()
+     */
+    @Override
+    protected ArchivePath getResourcePath() {
+        return PATH_RESOURCE;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.declarchive.impl.base.ContainerBase#getManifestPath()
+     */
+    @Override
+    protected ArchivePath getManifestPath() {
+        return PATH_MANIFEST;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.declarchive.impl.base.EnterpriseContainerBase#getApplicationPath()
+     */
+    @Override
+    protected ArchivePath getApplicationPath() {
+        return PATH_APPLICATION;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.declarchive.impl.base.EnterpriseContainerBase#getModulePath()
+     */
+    @Override
+    protected ArchivePath getModulePath() {
+        return PATH_MODULE;
+    }
+
+    /**
+     * Classes are not supported by EnterpriseArchive.
+     *
+     * @throws UnsupportedOperationException
+     *             EnterpriseArchive does not support classes
+     */
+    @Override
+    protected ArchivePath getClassesPath() {
+        throw new UnsupportedOperationException("EnterpriseArchive does not support classes");
+    }
 }

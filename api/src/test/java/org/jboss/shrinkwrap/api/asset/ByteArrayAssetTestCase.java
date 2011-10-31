@@ -29,72 +29,67 @@ import org.junit.Test;
  * ByteArrayAssetTestCase
  * 
  * Test Cases for the {@link ByteArrayAsset}
- *
+ * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ByteArrayAssetTestCase
-{
+public class ByteArrayAssetTestCase {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(ByteArrayAssetTestCase.class.getName());
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(ByteArrayAssetTestCase.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Tests ------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Ensures that the contents of the asset match that which was passed in, 
-    * and that the state of the asset can not be mutated from the outside
-    */
-   @Test
-   public void testRoundtripAndExternalMutationGuard() throws Exception
-   {
-      // Log
-      log.info("testRoundtrip");
+    /**
+     * Ensures that the contents of the asset match that which was passed in, and that the state of the asset can not be
+     * mutated from the outside
+     */
+    @Test
+    public void testRoundtripAndExternalMutationGuard() throws Exception {
+        // Log
+        log.info("testRoundtrip");
 
-      // Make contents
-      final int length = 10;
-      final byte[] contents = new byte[length];
-      for (int i = 0; i < length; i++)
-      {
-         contents[i] = (byte) i;
-      }
-      log.info("Inbound contents: " + Arrays.toString(contents));
+        // Make contents
+        final int length = 10;
+        final byte[] contents = new byte[length];
+        for (int i = 0; i < length; i++) {
+            contents[i] = (byte) i;
+        }
+        log.info("Inbound contents: " + Arrays.toString(contents));
 
-      // Make Asset
-      final ByteArrayAsset asset = new ByteArrayAsset(contents);
+        // Make Asset
+        final ByteArrayAsset asset = new ByteArrayAsset(contents);
 
-      // Change the contents passed in (so we ensure we protect against mutation, SHRINKWRAP-38)
-      contents[0] = 0x1;
-      log.info("Contents after change: " + Arrays.toString(contents));
+        // Change the contents passed in (so we ensure we protect against mutation, SHRINKWRAP-38)
+        contents[0] = 0x1;
+        log.info("Contents after change: " + Arrays.toString(contents));
 
-      // Get the contents back out of the asset
-      final InputStream stream = asset.openStream();
-      final ByteArrayOutputStream out = new ByteArrayOutputStream(length);
-      int read;
-      while ((read = stream.read()) != -1)
-      {
-         out.write(read);
-      }
-      byte[] roundtrip = out.toByteArray();
-      log.info("Roundtrip contents: " + Arrays.toString(roundtrip));
+        // Get the contents back out of the asset
+        final InputStream stream = asset.openStream();
+        final ByteArrayOutputStream out = new ByteArrayOutputStream(length);
+        int read;
+        while ((read = stream.read()) != -1) {
+            out.write(read);
+        }
+        byte[] roundtrip = out.toByteArray();
+        log.info("Roundtrip contents: " + Arrays.toString(roundtrip));
 
-      // Ensure the roundtrip matches the input (index number)
-      for (int i = 0; i < length; i++)
-      {
-         Assert.assertEquals("Roundtrip did not equal passed in contents", i, roundtrip[i]);
-      }
+        // Ensure the roundtrip matches the input (index number)
+        for (int i = 0; i < length; i++) {
+            Assert.assertEquals("Roundtrip did not equal passed in contents", i, roundtrip[i]);
+        }
 
-   }
+    }
 }

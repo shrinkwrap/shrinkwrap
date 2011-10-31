@@ -26,98 +26,97 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
  * JavaArchiveImpl
- * 
+ *
  * Implementation of an archive with JAR-specific support.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class JavaArchiveImpl 
-   extends ContainerBase<JavaArchive> 
-   implements JavaArchive
-{
+public class JavaArchiveImpl extends ContainerBase<JavaArchive> implements JavaArchive {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(JavaArchiveImpl.class.getName());
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(JavaArchiveImpl.class.getName());
 
-   /**
-    * Path to the manifests inside of the Archive.
-    */
-   private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
+    /**
+     * Path to the manifests inside of the Archive.
+     */
+    private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
 
-   /**
-    * Path to the resources inside of the Archive.
-    */
-   private static final ArchivePath PATH_RESOURCE = new BasicPath("/");
+    /**
+     * Path to the resources inside of the Archive.
+     */
+    private static final ArchivePath PATH_RESOURCE = new BasicPath("/");
 
-   /**
-    * Path to the classes inside of the Archive.
-    */
-   private static final ArchivePath PATH_CLASSES = new BasicPath("/");
+    /**
+     * Path to the classes inside of the Archive.
+     */
+    private static final ArchivePath PATH_CLASSES = new BasicPath("/");
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Create a new JavaArchive with any type storage engine as backing.
-    * 
-    * @param delegate The storage backing.
-    */
-   public JavaArchiveImpl(final Archive<?> delegate)
-   {
-      super(JavaArchive.class, delegate);
-   }
+    /**
+     * Create a new JavaArchive with any type storage engine as backing.
+     *
+     * @param delegate
+     *            The storage backing.
+     */
+    public JavaArchiveImpl(final Archive<?> delegate) {
+        super(JavaArchive.class, delegate);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerBase#getManifestPath()
-    */
-   @Override
-   protected ArchivePath getManifestPath()
-   {
-      return PATH_MANIFEST;
-   }
-   
-   /*
-    * (non-Javadoc)
-    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getClassesPath()
-    */
-   @Override
-   protected ArchivePath getClassesPath()
-   {
-      return PATH_CLASSES;
-   }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerBase#getResourcePath()
-    */
-   @Override
-   protected ArchivePath getResourcePath()
-   {
-      return PATH_RESOURCE;
-   }
-   
-   /**
-    * Libraries are not supported by JavaArchive.
-    * 
-    * @throws UnsupportedOperationException Libraries are not supported by JavaArchive
-    */
-   @Override
-   public ArchivePath getLibraryPath()
-   {
-      throw new UnsupportedOperationException("JavaArchive spec does not support Libraries");
-   }
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.declarchive.impl.base.ContainerBase#getManifestPath()
+     */
+    @Override
+    protected ArchivePath getManifestPath() {
+        return PATH_MANIFEST;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getClassesPath()
+     */
+    @Override
+    protected ArchivePath getClassesPath() {
+        return PATH_CLASSES;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.declarchive.impl.base.ContainerBase#getResourcePath()
+     */
+    @Override
+    protected ArchivePath getResourcePath() {
+        return PATH_RESOURCE;
+    }
+
+    /**
+     * Libraries are not supported by JavaArchive.
+     *
+     * @throws UnsupportedOperationException
+     *             Libraries are not supported by JavaArchive
+     */
+    @Override
+    public ArchivePath getLibraryPath() {
+        throw new UnsupportedOperationException("JavaArchive spec does not support Libraries");
+    }
 }

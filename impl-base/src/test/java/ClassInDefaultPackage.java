@@ -17,19 +17,17 @@
 
 /**
  * A testing class in the default package for SHRINKWRAP-143
- * 
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ClassInDefaultPackage
-{
-   //-------------------------------------------------------------------------------------||
-   // Inner Classes ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class ClassInDefaultPackage {
+    // -------------------------------------------------------------------------------------||
+    // Inner Classes ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   public static class InnerClassInDefaultPackage
-   {
+    public static class InnerClassInDefaultPackage {
 
-   }
+    }
 
 }

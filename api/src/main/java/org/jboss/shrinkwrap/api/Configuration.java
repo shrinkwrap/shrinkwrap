@@ -22,113 +22,100 @@ import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 
 /**
- * Encapsulates all configuration for a given {@link Domain}.
- * Each {@link Archive} created by the domain's {@link ArchiveFactory}
- * will consult the configuration internally.  An {@link Archive}'s
- * configuration may not be changed after construction; if a new config
- * is required it must be created under a new domain.  The default
- * configuration is defined by {@link ConfigurationBuilder}, and new
- * configurations are created via {@link ConfigurationBuilder#build()}. 
- * Note that while the {@link Configuration} is immutable, its properties
- * may have internal state that may be changed.  For true isolation, use separate
- * {@link Domain}s when creating {@link Archive}s.
- * 
+ * Encapsulates all configuration for a given {@link Domain}. Each {@link Archive} created by the domain's
+ * {@link ArchiveFactory} will consult the configuration internally. An {@link Archive}'s configuration may not be
+ * changed after construction; if a new config is required it must be created under a new domain. The default
+ * configuration is defined by {@link ConfigurationBuilder}, and new configurations are created via
+ * {@link ConfigurationBuilder#build()}. Note that while the {@link Configuration} is immutable, its properties may have
+ * internal state that may be changed. For true isolation, use separate {@link Domain}s when creating {@link Archive}s.
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
-public class Configuration
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class Configuration {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Loader mapping archive types to the appropriate underlying implementation
-    */
-   private final ExtensionLoader extensionLoader;
+    /**
+     * Loader mapping archive types to the appropriate underlying implementation
+     */
+    private final ExtensionLoader extensionLoader;
 
-   /**
-    * {@link ExecutorService} used for all asynchronous operations 
-    */
-   private final ExecutorService executorService;
+    /**
+     * {@link ExecutorService} used for all asynchronous operations
+     */
+    private final ExecutorService executorService;
 
-   /**
-    * {@link ClassLoader}s used for extension loading
-    */
-   private final Iterable<ClassLoader> classLoaders;
+    /**
+     * {@link ClassLoader}s used for extension loading
+     */
+    private final Iterable<ClassLoader> classLoaders;
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new configuration instance using properties contained in the specified
-    * {@link ConfigurationBuilder}.
-    * 
-    * @param builder Construction object encapsulating the properties to use in this configuration
-    * @throws IllegalArgumentException If the builder was not specified
-    */
-   Configuration(final ConfigurationBuilder builder) throws IllegalArgumentException
-   {
-      // Precondition checks
-      if (builder == null)
-      {
-         throw new IllegalArgumentException("builder must be specified");
-      }
+    /**
+     * Creates a new configuration instance using properties contained in the specified {@link ConfigurationBuilder}.
+     *
+     * @param builder
+     *            Construction object encapsulating the properties to use in this configuration
+     * @throws IllegalArgumentException
+     *             If the builder was not specified
+     */
+    Configuration(final ConfigurationBuilder builder) throws IllegalArgumentException {
+        // Precondition checks
+        if (builder == null) {
+            throw new IllegalArgumentException("builder must be specified");
+        }
 
-      // Let the builder set defaults
-      builder.setDefaults();
+        // Let the builder set defaults
+        builder.setDefaults();
 
-      // Set 
-      this.extensionLoader = builder.getExtensionLoader();
-      this.executorService = builder.getExecutorService();
-      // Defensive copy
-      Collection<ClassLoader> cls = new ArrayList<ClassLoader>();
-      if (builder.getClassLoaders() instanceof Collection)
-      {
-         cls = (Collection<ClassLoader>) builder.getClassLoaders();
-      }
-      else
-      {
-         for (final ClassLoader cl : builder.getClassLoaders())
-         {
-            cls.add(cl);
-         }
-      }
-      this.classLoaders = Collections.unmodifiableCollection(cls);
-   }
+        // Set
+        this.extensionLoader = builder.getExtensionLoader();
+        this.executorService = builder.getExecutorService();
+        // Defensive copy
+        Collection<ClassLoader> cls = new ArrayList<ClassLoader>();
+        if (builder.getClassLoaders() instanceof Collection) {
+            cls = (Collection<ClassLoader>) builder.getClassLoaders();
+        } else {
+            for (final ClassLoader cl : builder.getClassLoaders()) {
+                cls.add(cl);
+            }
+        }
+        this.classLoaders = Collections.unmodifiableCollection(cls);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Accessors --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||   
+    // -------------------------------------------------------------------------------------||
+    // Accessors --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * @return the extensionLoader
-    */
-   public ExtensionLoader getExtensionLoader()
-   {
-      return extensionLoader;
-   }
+    /**
+     * @return the extensionLoader
+     */
+    public ExtensionLoader getExtensionLoader() {
+        return extensionLoader;
+    }
 
-   /**
-    * @return the executorService
-    */
-   public ExecutorService getExecutorService()
-   {
-      return executorService;
-   }
+    /**
+     * @return the executorService
+     */
+    public ExecutorService getExecutorService() {
+        return executorService;
+    }
 
-   /**
-    * @return The {@link ClassLoader}s to be used in this configuration;
-    * used in extension loading and adding CL resources to the archive, etc
-    */
-   public Iterable<ClassLoader> getClassLoaders()
-   {
-      return classLoaders;
-   }
+    /**
+     * @return The {@link ClassLoader}s to be used in this configuration; used in extension loading and adding CL
+     *         resources to the archive, etc
+     */
+    public Iterable<ClassLoader> getClassLoaders() {
+        return classLoaders;
+    }
 }

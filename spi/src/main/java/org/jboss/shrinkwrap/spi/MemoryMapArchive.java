@@ -20,13 +20,12 @@ import org.jboss.shrinkwrap.api.Archive;
 
 /**
  * MemoryMapArchive
- * 
+ *
  * A pure in memory Archive backed by a Map.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public interface MemoryMapArchive extends Archive<MemoryMapArchive>
-{
+public interface MemoryMapArchive extends Archive<MemoryMapArchive> {
 
 }

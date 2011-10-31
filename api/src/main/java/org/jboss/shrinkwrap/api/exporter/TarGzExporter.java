@@ -19,18 +19,16 @@ package org.jboss.shrinkwrap.api.exporter;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * Exporter used to represent an {@link Assignable} in TAR format encoded w/
- * GZIP compression
- * 
+ * Exporter used to represent an {@link Assignable} in TAR format encoded w/ GZIP compression
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @see http://www.gnu.org/software/tar/manual/html_node/Standard.html
  * @see http://www.gzip.org/
  */
-public interface TarGzExporter extends StreamExporter
-{
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public interface TarGzExporter extends StreamExporter {
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   // Inherited from superclass
+    // Inherited from superclass
 }

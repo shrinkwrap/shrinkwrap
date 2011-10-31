@@ -23,20 +23,13 @@ import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
 
 /**
- * Traditional EAR (Java Enterprise Archive) structure. Used in 
- * construction of enterprise applications.
+ * Traditional EAR (Java Enterprise Archive) structure. Used in construction of enterprise applications.
  *
  * @see http://java.sun.com/javaee/5/docs/tutorial/doc/bnaby.html#indexterm-47
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface EnterpriseArchive
-      extends
-         Archive<EnterpriseArchive>,
-         ResourceContainer<EnterpriseArchive>,
-         ManifestContainer<EnterpriseArchive>,
-         LibraryContainer<EnterpriseArchive>,
-         EnterpriseContainer<EnterpriseArchive>
-{
+public interface EnterpriseArchive extends Archive<EnterpriseArchive>, ResourceContainer<EnterpriseArchive>,
+    ManifestContainer<EnterpriseArchive>, LibraryContainer<EnterpriseArchive>, EnterpriseContainer<EnterpriseArchive> {
 
 }

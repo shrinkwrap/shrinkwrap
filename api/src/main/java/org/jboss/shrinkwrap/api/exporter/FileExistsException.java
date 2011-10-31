@@ -19,34 +19,31 @@ package org.jboss.shrinkwrap.api.exporter;
 import java.io.File;
 
 /**
- * Thrown to denote that an export request to a particular
- * {@link File} has failed because the file specified already exists
- * and should not be overwritten. 
- * 
+ * Thrown to denote that an export request to a particular {@link File} has failed because the file specified already
+ * exists and should not be overwritten.
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class FileExistsException extends IllegalArgumentException
-{
+public class FileExistsException extends IllegalArgumentException {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * serialVersionUID
-    */
-   private static final long serialVersionUID = 1L;
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * @param s
-    */
-   public FileExistsException(final String s)
-   {
-      super(s);
-   }
+    /**
+     * @param s
+     */
+    public FileExistsException(final String s) {
+        super(s);
+    }
 }

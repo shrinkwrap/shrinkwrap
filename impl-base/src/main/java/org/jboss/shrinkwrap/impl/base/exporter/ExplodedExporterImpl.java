@@ -27,82 +27,78 @@ import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
  * ExplodedExporterImpl
- * 
- * Implementation of ExplodedExporter used to export an Archive as an exploded directory structure. 
- * 
+ *
+ * Implementation of ExplodedExporter used to export an Archive as an exploded directory structure.
+ *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ExplodedExporterImpl extends AssignableBase<Archive<?>> implements ExplodedExporter
-{
+public class ExplodedExporterImpl extends AssignableBase<Archive<?>> implements ExplodedExporter {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(ExplodedExporterImpl.class.getName());
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(ExplodedExporterImpl.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   public ExplodedExporterImpl(final Archive<?> archive)
-   {
-      super(archive);
-   }
+    public ExplodedExporterImpl(final Archive<?> archive) {
+        super(archive);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations - ExplodedExporter ----------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations - ExplodedExporter ----------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.ExplodedExporter#exportExploded(java.io.File)
-    */
-   @Override
-   public File exportExploded(final File baseDirectory)
-   {
-      return exportExploded(baseDirectory, this.getArchive().getName());
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.exporter.ExplodedExporter#exportExploded(java.io.File)
+     */
+    @Override
+    public File exportExploded(final File baseDirectory) {
+        return exportExploded(baseDirectory, this.getArchive().getName());
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.ExplodedExporter#exportExploded(java.io.File, java.lang.String)
-    */
-   @Override
-   public File exportExploded(File baseDirectory, String directoryName)
-   {
-      final Archive<?> archive = this.getArchive();
-      Validate.notNull(archive, "No archive provided");
-      Validate.notNull(baseDirectory, "No baseDirectory provided");
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.exporter.ExplodedExporter#exportExploded(java.io.File, java.lang.String)
+     */
+    @Override
+    public File exportExploded(File baseDirectory, String directoryName) {
+        final Archive<?> archive = this.getArchive();
+        Validate.notNull(archive, "No archive provided");
+        Validate.notNull(baseDirectory, "No baseDirectory provided");
 
-      // Directory must exist
-      if (!baseDirectory.exists())
-      {
-         throw new IllegalArgumentException("Parent directory does not exist");
-      }
-      // Must be a directory
-      if (!baseDirectory.isDirectory())
-      {
-         throw new IllegalArgumentException("Provided parent directory is not a valid directory");
-      }
+        // Directory must exist
+        if (!baseDirectory.exists()) {
+            throw new IllegalArgumentException("Parent directory does not exist");
+        }
+        // Must be a directory
+        if (!baseDirectory.isDirectory()) {
+            throw new IllegalArgumentException("Provided parent directory is not a valid directory");
+        }
 
-      // Get the export delegate
-      final ExplodedExporterDelegate exporterDelegate = new ExplodedExporterDelegate(archive, baseDirectory, directoryName);
+        // Get the export delegate
+        final ExplodedExporterDelegate exporterDelegate = new ExplodedExporterDelegate(archive, baseDirectory,
+            directoryName);
 
-      // Run the export and get the result
-      final File explodedDirectory = exporterDelegate.export();
+        // Run the export and get the result
+        final File explodedDirectory = exporterDelegate.export();
 
-      if (log.isLoggable(Level.FINE))
-      {
-         log.fine("Created Exploded Archive: " + explodedDirectory.getAbsolutePath());
-      }
-      // Return the exploded dir
-      return explodedDirectory;
-   }
+        if (log.isLoggable(Level.FINE)) {
+            log.fine("Created Exploded Archive: " + explodedDirectory.getAbsolutePath());
+        }
+        // Return the exploded dir
+        return explodedDirectory;
+    }
 
 }

@@ -3,7 +3,6 @@ package org.jboss.shrinkwrap.api.asset;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-
 /**
  * Implementation of a {@link Asset} having empty content.
  *
@@ -11,34 +10,33 @@ import java.io.InputStream;
  * @version $Revision: $
  */
 public enum EmptyAsset implements Asset {
-   INSTANCE;
+    INSTANCE;
 
-   /**
-    * Empty contents
-    */
-   final byte[] content = new byte[0];
-   
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    /**
+     * Empty contents
+     */
+    final byte[] content = new byte[0];
 
-   /**
-    * @see org.jboss.shrinkwrap.api.asset.Asset#openStream()
-    */
-   @Override
-   public InputStream openStream()
-   {
-      return new ByteArrayInputStream(content);
-   }
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see java.lang.Object#toString()
-    */
-   @Override
-   public String toString()
-   {
-      return "EmptyAsset";
-   }
+    /**
+     * @see org.jboss.shrinkwrap.api.asset.Asset#openStream()
+     */
+    @Override
+    public InputStream openStream() {
+        return new ByteArrayInputStream(content);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "EmptyAsset";
+    }
 
 }

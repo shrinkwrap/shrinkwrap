@@ -30,139 +30,138 @@ import org.jboss.shrinkwrap.impl.base.container.WebContainerBase;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class WebArchiveImpl extends WebContainerBase<WebArchive> implements WebArchive
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class WebArchiveImpl extends WebContainerBase<WebArchive> implements WebArchive {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(WebArchiveImpl.class.getName());
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(WebArchiveImpl.class.getName());
 
-   /**
-    * Path to the web inside of the Archive.
-    */
-   private static final ArchivePath PATH_WEB = ArchivePaths.root();
+    /**
+     * Path to the web inside of the Archive.
+     */
+    private static final ArchivePath PATH_WEB = ArchivePaths.root();
 
-   /**
-    * Path to the WEB-INF inside of the Archive.
-    */
-   private static final ArchivePath PATH_WEB_INF = ArchivePaths.create("WEB-INF");
+    /**
+     * Path to the WEB-INF inside of the Archive.
+     */
+    private static final ArchivePath PATH_WEB_INF = ArchivePaths.create("WEB-INF");
 
-   /**
-    * Path to the resources inside of the Archive.
-    */
-   private static final ArchivePath PATH_RESOURCE = ArchivePaths.create(PATH_WEB_INF, "classes");
+    /**
+     * Path to the resources inside of the Archive.
+     */
+    private static final ArchivePath PATH_RESOURCE = ArchivePaths.create(PATH_WEB_INF, "classes");
 
-   /**
-    * Path to the libraries inside of the Archive.
-    */
-   private static final ArchivePath PATH_LIBRARY = ArchivePaths.create(PATH_WEB_INF, "lib");
+    /**
+     * Path to the libraries inside of the Archive.
+     */
+    private static final ArchivePath PATH_LIBRARY = ArchivePaths.create(PATH_WEB_INF, "lib");
 
-   /**
-    * Path to the classes inside of the Archive.
-    */
-   private static final ArchivePath PATH_CLASSES = ArchivePaths.create(PATH_WEB_INF, "classes");
+    /**
+     * Path to the classes inside of the Archive.
+     */
+    private static final ArchivePath PATH_CLASSES = ArchivePaths.create(PATH_WEB_INF, "classes");
 
-   /**
-    * Path to the manifests inside of the Archive.
-    */
-   private static final ArchivePath PATH_MANIFEST = ArchivePaths.create("META-INF");
+    /**
+     * Path to the manifests inside of the Archive.
+     */
+    private static final ArchivePath PATH_MANIFEST = ArchivePaths.create("META-INF");
 
-   /**
-    * Path to web archive service providers.
-    */
-   private static final ArchivePath PATH_SERVICE_PROVIDERS = ArchivePaths.create(PATH_CLASSES, "META-INF/services");
+    /**
+     * Path to web archive service providers.
+     */
+    private static final ArchivePath PATH_SERVICE_PROVIDERS = ArchivePaths.create(PATH_CLASSES, "META-INF/services");
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Create a new WebArchive with any type storage engine as backing.
-    * 
-    * @param delegate The storage backing.
-    */
-   public WebArchiveImpl(final Archive<?> delegate)
-   {
-      super(WebArchive.class, delegate);
-   }
+    /**
+     * Create a new WebArchive with any type storage engine as backing.
+     *
+     * @param delegate
+     *            The storage backing.
+     */
+    public WebArchiveImpl(final Archive<?> delegate) {
+        super(WebArchive.class, delegate);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getManifestPath()
-    */
-   @Override
-   protected ArchivePath getManifestPath()
-   {
-      return PATH_MANIFEST;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getManifestPath()
+     */
+    @Override
+    protected ArchivePath getManifestPath() {
+        return PATH_MANIFEST;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getClassesPath()
-    */
-   @Override
-   protected ArchivePath getClassesPath()
-   {
-      return PATH_CLASSES;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getClassesPath()
+     */
+    @Override
+    protected ArchivePath getClassesPath() {
+        return PATH_CLASSES;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getResourcePath()
-    */
-   @Override
-   protected ArchivePath getResourcePath()
-   {
-      return PATH_RESOURCE;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getResourcePath()
+     */
+    @Override
+    protected ArchivePath getResourcePath() {
+        return PATH_RESOURCE;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getLibraryPath()
-    */
-   @Override
-   protected ArchivePath getLibraryPath()
-   {
-      return PATH_LIBRARY;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getLibraryPath()
+     */
+    @Override
+    protected ArchivePath getLibraryPath() {
+        return PATH_LIBRARY;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.WebContainerBase#getWebPath()
-    */
-   @Override
-   protected ArchivePath getWebPath()
-   {
-      return PATH_WEB;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.WebContainerBase#getWebPath()
+     */
+    @Override
+    protected ArchivePath getWebPath() {
+        return PATH_WEB;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.WebContainerBase#getWebInfPath()
-    */
-   @Override
-   protected ArchivePath getWebInfPath()
-   {
-      return PATH_WEB_INF;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.WebContainerBase#getWebInfPath()
+     */
+    @Override
+    protected ArchivePath getWebInfPath() {
+        return PATH_WEB_INF;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.WebContainerBase#getWebInfPath()
-    */
-   @Override
-   protected ArchivePath getServiceProvidersPath()
-   {
-      return PATH_SERVICE_PROVIDERS;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.WebContainerBase#getWebInfPath()
+     */
+    @Override
+    protected ArchivePath getServiceProvidersPath() {
+        return PATH_SERVICE_PROVIDERS;
+    }
 }

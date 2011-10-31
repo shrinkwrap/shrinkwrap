@@ -24,85 +24,71 @@ import java.security.PrivilegedExceptionAction;
 
 /**
  * SecurityActions
- * 
- * A set of privileged actions that are not to leak out
- * of this package 
+ *
+ * A set of privileged actions that are not to leak out of this package
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-final class SecurityActions
-{
+final class SecurityActions {
 
-   //-------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
 
-   /**
-    * No instantiation
-    */
-   private SecurityActions()
-   {
-      throw new UnsupportedOperationException("No instantiation");
-   }
+    /**
+     * No instantiation
+     */
+    private SecurityActions() {
+        throw new UnsupportedOperationException("No instantiation");
+    }
 
-   //-------------------------------------------------------------------------------||
-   // Utility Methods --------------------------------------------------------------||
-   //-------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
+    // Utility Methods --------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
 
-   static Constructor<?>[] getConstructors(final Class<?> clazz) 
-   {
-      return AccessController.doPrivileged(new PrivilegedAction<Constructor<?>[]>() {
-         public Constructor<?>[] run() 
-         {
-            return clazz.getConstructors();
-         }
-      });
-   }
-   
-   /**
-    * Obtains the Constructor specified from the given Class and argument types
-    * @param clazz
-    * @param argumentTypes
-    * @return
-    * @throws NoSuchMethodException
-    */
-   static Constructor<?> getConstructor(final Class<?> clazz, final Class<?>... argumentTypes)
-         throws NoSuchMethodException
-   {
-      try
-      {
-         return AccessController.doPrivileged(new PrivilegedExceptionAction<Constructor<?>>()
-         {
-            @Override
-            public Constructor<?> run() throws NoSuchMethodException
-            {
-               return clazz.getConstructor(argumentTypes);
+    static Constructor<?>[] getConstructors(final Class<?> clazz) {
+        return AccessController.doPrivileged(new PrivilegedAction<Constructor<?>[]>() {
+            public Constructor<?>[] run() {
+                return clazz.getConstructors();
             }
-         });
-      }
-      // Unwrap
-      catch (final PrivilegedActionException pae)
-      {
-         final Throwable t = pae.getCause();
-         // Rethrow
-         if (t instanceof NoSuchMethodException)
-         {
-            throw (NoSuchMethodException) t;
-         }
-         else
-         {
-            // No other checked Exception thrown by Class.getConstructor
-            try
-            {
-               throw (RuntimeException) t;
+        });
+    }
+
+    /**
+     * Obtains the Constructor specified from the given Class and argument types
+     *
+     * @param clazz
+     * @param argumentTypes
+     * @return
+     * @throws NoSuchMethodException
+     */
+    static Constructor<?> getConstructor(final Class<?> clazz, final Class<?>... argumentTypes)
+        throws NoSuchMethodException {
+        try {
+            return AccessController.doPrivileged(new PrivilegedExceptionAction<Constructor<?>>() {
+                @Override
+                public Constructor<?> run() throws NoSuchMethodException {
+                    return clazz.getConstructor(argumentTypes);
+                }
+            });
+        }
+        // Unwrap
+        catch (final PrivilegedActionException pae) {
+            final Throwable t = pae.getCause();
+            // Rethrow
+            if (t instanceof NoSuchMethodException) {
+                throw (NoSuchMethodException) t;
+            } else {
+                // No other checked Exception thrown by Class.getConstructor
+                try {
+                    throw (RuntimeException) t;
+                }
+                // Just in case we've really messed up
+                catch (final ClassCastException cce) {
+                    throw new RuntimeException("Obtained unchecked Exception; this code should never be reached", t);
+                }
             }
-            // Just in case we've really messed up
-            catch (final ClassCastException cce)
-            {
-               throw new RuntimeException("Obtained unchecked Exception; this code should never be reached", t);
-            }
-         }
-      }
-   }
+        }
+    }
 }

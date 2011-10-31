@@ -23,55 +23,53 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 
 /**
- * Base delegate class for asserting that contents in some
- * formated may be imported as expected
- * 
+ * Base delegate class for asserting that contents in some formated may be imported as expected
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public abstract class ContentAssertionDelegateBase
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-   
-   /**
-    * Name of the expected empty directory
-    */
-   protected static final String EXPECTED_EMPTY_DIR = "empty_dir/";
+public abstract class ContentAssertionDelegateBase {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Name of the expected nested directory
-    */
-   protected static final String EXPECTED_NESTED_EMPTY_DIR = "parent/empty_dir/";
-   
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    /**
+     * Name of the expected empty directory
+     */
+    protected static final String EXPECTED_EMPTY_DIR = "empty_dir/";
 
-   /**
-    * Obtains the name of the 
-    */
-   protected abstract String getExistingResourceName();
+    /**
+     * Name of the expected nested directory
+     */
+    protected static final String EXPECTED_NESTED_EMPTY_DIR = "parent/empty_dir/";
 
-   //-------------------------------------------------------------------------------------||
-   // Functional Methods -----------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Obtains the existing resource to be imported/tested
-    */
-   public final File getExistingResource() throws URISyntaxException
-   {
-      return TestIOUtil.createFileFromResourceName(this.getExistingResourceName());
-   }
+    /**
+     * Obtains the name of the
+     */
+    protected abstract String getExistingResourceName();
 
+    // -------------------------------------------------------------------------------------||
+    // Functional Methods -----------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Compare the content of the original file and what was imported.
-    * 
-    * @param importedArchive The archive used for import
-    * @param originalSource The original classpath resource file
-    */
-   public abstract void assertContent(final Archive<?> importedArchive, final File originalSource) throws Exception;
+    /**
+     * Obtains the existing resource to be imported/tested
+     */
+    public final File getExistingResource() throws URISyntaxException {
+        return TestIOUtil.createFileFromResourceName(this.getExistingResourceName());
+    }
+
+    /**
+     * Compare the content of the original file and what was imported.
+     *
+     * @param importedArchive
+     *            The archive used for import
+     * @param originalSource
+     *            The original classpath resource file
+     */
+    public abstract void assertContent(final Archive<?> importedArchive, final File originalSource) throws Exception;
 
 }

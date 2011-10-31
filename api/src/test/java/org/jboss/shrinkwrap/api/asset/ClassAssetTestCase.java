@@ -23,65 +23,52 @@ import org.junit.Test;
 
 /**
  * Test to ensure that we are able to use Classes as Resources.
- *
+ * 
  * https://jira.jboss.org/jira/browse/TMPARCH-5
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- *
+ * 
  */
-public class ClassAssetTestCase
-{
+public class ClassAssetTestCase {
 
-   @Test
-   public void shouldBeAbleToReadThisClass() throws Exception
-   {
-      Class<?> clazz = ClassAssetTestCase.class;
-      Asset asset = new ClassAsset(clazz);
-      InputStream io = asset.openStream();
+    @Test
+    public void shouldBeAbleToReadThisClass() throws Exception {
+        Class<?> clazz = ClassAssetTestCase.class;
+        Asset asset = new ClassAsset(clazz);
+        InputStream io = asset.openStream();
 
-      Assert.assertNotNull(io);
-      Assert.assertEquals(
-            "Loaded class should have the same size", 
-            ApiTestUtils.findLengthOfStream(io), 
+        Assert.assertNotNull(io);
+        Assert.assertEquals("Loaded class should have the same size", ApiTestUtils.findLengthOfStream(io),
             ApiTestUtils.findLengthOfClass(clazz));
-   }
+    }
 
-   /**
-    * https://jira.jboss.org/jira/browse/TMPARCH-19
-    * <br/><br/>
-    * A {@link Class} loaded by the Bootstrap ClassLoader will return a null {@link ClassLoader}, 
-    * should use {@link Thread} current context {@link ClassLoader} instead.
-    * 
-    * @throws Exception
-    */
-   @Test
-   public void shouldBeAbleAddBootstrapClass() throws Exception 
-   {
-      Class<?> bootstrapClass = Class.class;
-      Asset asset = new ClassAsset(bootstrapClass);
-      InputStream io = asset.openStream();
+    /**
+     * https://jira.jboss.org/jira/browse/TMPARCH-19 <br/>
+     * <br/>
+     * A {@link Class} loaded by the Bootstrap ClassLoader will return a null {@link ClassLoader}, should use
+     * {@link Thread} current context {@link ClassLoader} instead.
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void shouldBeAbleAddBootstrapClass() throws Exception {
+        Class<?> bootstrapClass = Class.class;
+        Asset asset = new ClassAsset(bootstrapClass);
+        InputStream io = asset.openStream();
 
-      Assert.assertNotNull(io);
-      Assert.assertEquals(
-            "Loaded class should have the same size",
-            ApiTestUtils.findLengthOfStream(io),
+        Assert.assertNotNull(io);
+        Assert.assertEquals("Loaded class should have the same size", ApiTestUtils.findLengthOfStream(io),
             ApiTestUtils.findLengthOfClass(bootstrapClass));
-   }
+    }
 
-   @Test
-   public void shouldThrowExceptionOnNullClass() throws Exception
-   {
-      try
-      {
-         new ClassAsset(null);
-         Assert.fail("Should have thrown IllegalArgumentException");
-      }
-      catch (Exception e)
-      {
-         Assert.assertEquals(
-               "A null clazz argument should result in a IllegalArgumentException",
-               IllegalArgumentException.class, 
-               e.getClass());
-      }
-   }
+    @Test
+    public void shouldThrowExceptionOnNullClass() throws Exception {
+        try {
+            new ClassAsset(null);
+            Assert.fail("Should have thrown IllegalArgumentException");
+        } catch (Exception e) {
+            Assert.assertEquals("A null clazz argument should result in a IllegalArgumentException",
+                IllegalArgumentException.class, e.getClass());
+        }
+    }
 }

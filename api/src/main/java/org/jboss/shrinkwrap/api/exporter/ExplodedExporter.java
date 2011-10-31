@@ -21,39 +21,45 @@ import java.io.File;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * Exporter used to export an Archive as an exploded directory structure. 
- * 
+ * Exporter used to export an Archive as an exploded directory structure.
+ *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface ExplodedExporter extends Assignable
-{
+public interface ExplodedExporter extends Assignable {
 
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Exports provided archive as an exploded directory structure.
-    * 
-    * @param archive
-    * @param parentDirectory Must be a folder
-    * @return File for exploded archive contents
-    * @throws IllegalArgumentException if the archive or parent directory not valid
-    * @throws ArchiveExportException if the export process fails
-    */
-   File exportExploded(File parentDirectory);
+    /**
+     * Exports provided archive as an exploded directory structure.
+     *
+     * @param archive
+     * @param parentDirectory
+     *            Must be a folder
+     * @return File for exploded archive contents
+     * @throws IllegalArgumentException
+     *             if the archive or parent directory not valid
+     * @throws ArchiveExportException
+     *             if the export process fails
+     */
+    File exportExploded(File parentDirectory);
 
-   /**
-    * Exports provided archive as an exploded directory structure.
-    *
-    * @param archive
-    * @param parentDirectory Must be a folder
-    * @param directoryName The exploded directory name
-    * @return File for exploded archive contents
-    * @throws IllegalArgumentException if the archive or parent directory not valid
-    * @throws ArchiveExportException if the export process fails
-    */
-   File exportExploded(File parentDirectory, String directoryName);
+    /**
+     * Exports provided archive as an exploded directory structure.
+     *
+     * @param archive
+     * @param parentDirectory
+     *            Must be a folder
+     * @param directoryName
+     *            The exploded directory name
+     * @return File for exploded archive contents
+     * @throws IllegalArgumentException
+     *             if the archive or parent directory not valid
+     * @throws ArchiveExportException
+     *             if the export process fails
+     */
+    File exportExploded(File parentDirectory, String directoryName);
 }

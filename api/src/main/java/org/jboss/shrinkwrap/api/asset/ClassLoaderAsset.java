@@ -21,66 +21,66 @@ import java.io.InputStream;
 
 /**
  * ClassloaderAsset
- * 
- * Implementation of a {@link Asset} backed by a 
- * resource located in the Classloader.
- * 
+ *
+ * Implementation of a {@link Asset} backed by a resource located in the Classloader.
+ *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  */
-public class ClassLoaderAsset implements Asset
-{
-   private String resourceName;
+public class ClassLoaderAsset implements Asset {
+    private String resourceName;
 
-   private ClassLoader classLoader;
+    private ClassLoader classLoader;
 
-   /**
-    * Load a named resource using the current threads context classloader.
-    * 
-    * @param resourceName The name of the resource to load
-    * @throws IllegalArgumentException resourceName can not be null
-    * @throws IllegalArgumentException resourceName must be found in given classloader
-    */
-   public ClassLoaderAsset(String resourceName)
-   {
-      this(resourceName, SecurityActions.getThreadContextClassLoader());
-   }
+    /**
+     * Load a named resource using the current threads context classloader.
+     *
+     * @param resourceName
+     *            The name of the resource to load
+     * @throws IllegalArgumentException
+     *             resourceName can not be null
+     * @throws IllegalArgumentException
+     *             resourceName must be found in given classloader
+     */
+    public ClassLoaderAsset(String resourceName) {
+        this(resourceName, SecurityActions.getThreadContextClassLoader());
+    }
 
-   /**
-    * Load a named resource using the given classloader.
-    * 
-    * @param resourceName The name of the resource to load
-    * @param classLoader The ClassLoader to use
-    * @throws IllegalArgumentException resourceName can not be null
-    * @throws IllegalArgumentException classloader can not be null
-    * @throws IllegalArgumentException resourceName must be found in given classloader
-    */
-   public ClassLoaderAsset(String resourceName, ClassLoader classLoader)
-   {
-      if (resourceName == null)
-      {
-         throw new IllegalArgumentException("ResourceName must be specified");
-      }      
-      if (classLoader == null)
-      {
-         throw new IllegalArgumentException("ClassLoader must be specified");
-      }
-      if (classLoader.getResource(resourceName) == null)
-      {
-         throw new IllegalArgumentException(resourceName + " not found in classloader " + classLoader);
-      }
-     
-      this.resourceName = resourceName;
-      this.classLoader = classLoader;
-   }
+    /**
+     * Load a named resource using the given classloader.
+     *
+     * @param resourceName
+     *            The name of the resource to load
+     * @param classLoader
+     *            The ClassLoader to use
+     * @throws IllegalArgumentException
+     *             resourceName can not be null
+     * @throws IllegalArgumentException
+     *             classloader can not be null
+     * @throws IllegalArgumentException
+     *             resourceName must be found in given classloader
+     */
+    public ClassLoaderAsset(String resourceName, ClassLoader classLoader) {
+        if (resourceName == null) {
+            throw new IllegalArgumentException("ResourceName must be specified");
+        }
+        if (classLoader == null) {
+            throw new IllegalArgumentException("ClassLoader must be specified");
+        }
+        if (classLoader.getResource(resourceName) == null) {
+            throw new IllegalArgumentException(resourceName + " not found in classloader " + classLoader);
+        }
 
-   /**
-    * Opens up the given resource as a stream.
-    * 
-    */
-   @Override
-   public InputStream openStream()
-   {
-      return new BufferedInputStream(classLoader.getResourceAsStream(resourceName), 8192);
-   }
+        this.resourceName = resourceName;
+        this.classLoader = classLoader;
+    }
+
+    /**
+     * Opens up the given resource as a stream.
+     *
+     */
+    @Override
+    public InputStream openStream() {
+        return new BufferedInputStream(classLoader.getResourceAsStream(resourceName), 8192);
+    }
 
 }

@@ -21,24 +21,24 @@ import org.jboss.shrinkwrap.api.Filter;
 
 /**
  * IncludeAllPaths
- * 
+ *
  * Filter that include all {@link ArchivePath}s.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class IncludeAllPaths implements Filter<ArchivePath>
-{
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class IncludeAllPaths implements Filter<ArchivePath> {
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.Filter#include(java.lang.Object)
-    */
-   @Override
-   public boolean include(ArchivePath object)
-   {
-      return true;
-   }
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.Filter#include(java.lang.Object)
+     */
+    @Override
+    public boolean include(ArchivePath object) {
+        return true;
+    }
 }

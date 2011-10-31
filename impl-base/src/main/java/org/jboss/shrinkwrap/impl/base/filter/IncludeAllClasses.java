@@ -20,24 +20,24 @@ import org.jboss.shrinkwrap.api.Filter;
 
 /**
  * IncludeAllClasses
- * 
+ *
  * Filter to include all {@link Class}s
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class IncludeAllClasses implements Filter<Class<?>>
-{
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class IncludeAllClasses implements Filter<Class<?>> {
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.Filter#include(java.lang.Object)
-    */
-   @Override
-   public boolean include(Class<?> object)
-   {
-      return true;
-   }
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.Filter#include(java.lang.Object)
+     */
+    @Override
+    public boolean include(Class<?> object) {
+        return true;
+    }
 }

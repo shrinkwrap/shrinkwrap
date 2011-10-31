@@ -17,79 +17,74 @@
 package org.jboss.shrinkwrap.api;
 
 /**
- * Encapsulates a shared {@link Configuration} to be used 
- * by all {@link Archive}s created by this {@link Domain}'s
- * {@link ArchiveFactory}.  New domains are created via
- * {@link ShrinkWrap#createDomain()} (for a default configuration isolated
- * from the {@link ShrinkWrap#getDefaultDomain()}), or 
- * {@link ShrinkWrap#createDomain(Configuration)}
- * and {@link ShrinkWrap#createDomain(ConfigurationBuilder)} (to supply an explicit
- * configuration property set). 
+ * Encapsulates a shared {@link Configuration} to be used by all {@link Archive}s created by this {@link Domain}'s
+ * {@link ArchiveFactory}. New domains are created via {@link ShrinkWrap#createDomain()} (for a default configuration
+ * isolated from the {@link ShrinkWrap#getDefaultDomain()}), or {@link ShrinkWrap#createDomain(Configuration)} and
+ * {@link ShrinkWrap#createDomain(ConfigurationBuilder)} (to supply an explicit configuration property set).
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public final class Domain
-{
+public final class Domain {
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Configuration for this Domain
-    */
-   private final Configuration configuration;
+    /**
+     * Configuration for this Domain
+     */
+    private final Configuration configuration;
 
-   /**
-    * Factory for creating archives within this {@link Domain}
-    */
-   private final ArchiveFactory archiveFactory;
+    /**
+     * Factory for creating archives within this {@link Domain}
+     */
+    private final ArchiveFactory archiveFactory;
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new instance backed by the supplied {@link Configuration}
-    * 
-    * @param configuration backing the new instance
-    * @throws IllegalArgumentException If the configuration is not supplied
-    */
-   Domain(final Configuration configuration) throws IllegalArgumentException
-   {
-      // Precondition checks
-      if (configuration == null)
-      {
-         throw new IllegalArgumentException("configuration must be specified");
-      }
+    /**
+     * Creates a new instance backed by the supplied {@link Configuration}
+     *
+     * @param configuration
+     *            backing the new instance
+     * @throws IllegalArgumentException
+     *             If the configuration is not supplied
+     */
+    Domain(final Configuration configuration) throws IllegalArgumentException {
+        // Precondition checks
+        if (configuration == null) {
+            throw new IllegalArgumentException("configuration must be specified");
+        }
 
-      // Set
-      this.configuration = configuration;
-      this.archiveFactory = new ArchiveFactory(configuration);
-   }
+        // Set
+        this.configuration = configuration;
+        this.archiveFactory = new ArchiveFactory(configuration);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Functional Methods ----------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Functional Methods ----------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Obtains the {@link Configuration} associated with this {@link Domain}
-    * @return the configuration
-    */
-   public Configuration getConfiguration()
-   {
-      return configuration;
-   }
+    /**
+     * Obtains the {@link Configuration} associated with this {@link Domain}
+     *
+     * @return the configuration
+     */
+    public Configuration getConfiguration() {
+        return configuration;
+    }
 
-   /**
-    * Obtains the {@link ArchiveFactory} for this domain.  All {@link Archive}s
-    * created from the factory will be backed by this domain's configuration.
-    * @return the archiveFactory
-    */
-   public ArchiveFactory getArchiveFactory()
-   {
-      return archiveFactory;
-   }
+    /**
+     * Obtains the {@link ArchiveFactory} for this domain. All {@link Archive}s created from the factory will be backed
+     * by this domain's configuration.
+     *
+     * @return the archiveFactory
+     */
+    public ArchiveFactory getArchiveFactory() {
+        return archiveFactory;
+    }
 
 }

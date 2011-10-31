@@ -24,45 +24,43 @@ import org.jboss.shrinkwrap.api.importer.TarGzImporter;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarGzInputStream;
 
 /**
- * Used to import existing TAR.GZ files/streams into the given {@link Archive}  
+ * Used to import existing TAR.GZ files/streams into the given {@link Archive}
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class TarGzImporterImpl extends TarImporterBase<TarGzInputStream, TarGzImporter> implements TarGzImporter
-{
+public class TarGzImporterImpl extends TarImporterBase<TarGzInputStream, TarGzImporter> implements TarGzImporter {
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   public TarGzImporterImpl(final Archive<?> archive)
-   {
-      super(archive);
-   }
+    public TarGzImporterImpl(final Archive<?> archive) {
+        super(archive);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.tar.TarImporterBase#getInputStreamForRawStream(java.io.InputStream)
-    */
-   @Override
-   TarGzInputStream getInputStreamForRawStream(final InputStream in) throws IOException
-   {
-      assert in != null : "Specified inputstream was null";
-      return new TarGzInputStream(in);
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.tar.TarImporterBase#getInputStreamForRawStream(java.io.InputStream)
+     */
+    @Override
+    TarGzInputStream getInputStreamForRawStream(final InputStream in) throws IOException {
+        assert in != null : "Specified inputstream was null";
+        return new TarGzInputStream(in);
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.tar.TarImporterBase#getActualClass()
-    */
-   @Override
-   Class<TarGzImporter> getActualClass()
-   {
-      return TarGzImporter.class;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.tar.TarImporterBase#getActualClass()
+     */
+    @Override
+    Class<TarGzImporter> getActualClass() {
+        return TarGzImporter.class;
+    }
 
 }

@@ -20,66 +20,63 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * A generic implementation of {@link Assignable} that delegates down to the Archive
- * extensions inner archive. Used by Archive extensions to simplify handling the generic extension
- * mechanism. 
+ * A generic implementation of {@link Assignable} that delegates down to the Archive extensions inner archive. Used by
+ * Archive extensions to simplify handling the generic extension mechanism.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public abstract class AssignableBase<T extends Archive<?>> implements Assignable
-{
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public abstract class AssignableBase<T extends Archive<?>> implements Assignable {
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Underlying archive
-    */
-   private final T archive;
+    /**
+     * Underlying archive
+     */
+    private final T archive;
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Constructs a new instance using the underlying specified
-    * archive, which is required
-    * @param archive
-    */
-   protected AssignableBase(final T archive)
-   {
-      // Precondition check
-      Validate.notNull(archive, "archive must be specified");
+    /**
+     * Constructs a new instance using the underlying specified archive, which is required
+     *
+     * @param archive
+     */
+    protected AssignableBase(final T archive) {
+        // Precondition check
+        Validate.notNull(archive, "archive must be specified");
 
-      // Set
-      this.archive = archive;
-   }
+        // Set
+        this.archive = archive;
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.Specializer#as(java.lang.Class)
-    */
-   @Override
-   public final <TYPE extends Assignable> TYPE as(Class<TYPE> clazz)
-   {
-      return this.getArchive().as(clazz);
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.Specializer#as(java.lang.Class)
+     */
+    @Override
+    public final <TYPE extends Assignable> TYPE as(Class<TYPE> clazz) {
+        return this.getArchive().as(clazz);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Functional Methods -----------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Functional Methods -----------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Returns the underlying archive
-    * @return
-    */
-   protected final T getArchive()
-   {
-      return archive;
-   }
+    /**
+     * Returns the underlying archive
+     *
+     * @return
+     */
+    protected final T getArchive() {
+        return archive;
+    }
 }

@@ -27,127 +27,119 @@ import org.jboss.shrinkwrap.api.Node;
 
 /**
  * AbstractExporterDelegate
- * 
- * Abstract delegate used for archive export. 
- * Provides a template for exporters for handling archive contents. 
- * 
+ *
+ * Abstract delegate used for archive export. Provides a template for exporters for handling archive contents.
+ *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public abstract class AbstractExporterDelegate<T>
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public abstract class AbstractExporterDelegate<T> {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(AbstractExporterDelegate.class.getName());
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(AbstractExporterDelegate.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /** 
-    * The archive being exported
-    */
-   private final Archive<?> archive;
+    /**
+     * The archive being exported
+     */
+    private final Archive<?> archive;
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new abstract exporter delegate for the provided {@link Archive} 
-    */
-   protected AbstractExporterDelegate(Archive<?> archive)
-   {
-      super();
-      this.archive = archive;
-   }
-   
-   /**
-    * Runs the export operation, returning the result
-    * @return
-    */
-   public final T export()
-   {
-      // Perform the actual export
-      this.doExport();
+    /**
+     * Creates a new abstract exporter delegate for the provided {@link Archive}
+     */
+    protected AbstractExporterDelegate(Archive<?> archive) {
+        super();
+        this.archive = archive;
+    }
 
-      // Return the result
-      return this.getResult();
-   }
+    /**
+     * Runs the export operation, returning the result
+     *
+     * @return
+     */
+    public final T export() {
+        // Perform the actual export
+        this.doExport();
 
-   /**
-    * Primary method providing a template for exporting the contents of an archive
-    */
-   protected void doExport()
-   {
-      // Get archive
-      final Archive<?> archive = getArchive();
-      if (log.isLoggable(Level.FINE))
-      {
-         log.fine("Exporting archive - " + archive.getName());
-      }
+        // Return the result
+        return this.getResult();
+    }
 
-      // Obtain the root
-      final Node rootNode = archive.get(ArchivePaths.root());
+    /**
+     * Primary method providing a template for exporting the contents of an archive
+     */
+    protected void doExport() {
+        // Get archive
+        final Archive<?> archive = getArchive();
+        if (log.isLoggable(Level.FINE)) {
+            log.fine("Exporting archive - " + archive.getName());
+        }
 
-      // Recursively process the root children
-      for (Node child : rootNode.getChildren())
-      {
-         processNode(child);
-      }
-   }
+        // Obtain the root
+        final Node rootNode = archive.get(ArchivePaths.root());
 
-   /**
-    * Recursive call to process all the node hierarchy
-    * @param node
-    */
-   private void processNode(final Node node)
-   {
-      processNode(node.getPath(), node);
+        // Recursively process the root children
+        for (Node child : rootNode.getChildren()) {
+            processNode(child);
+        }
+    }
 
-      Set<Node> children = node.getChildren();
-      for (Node child : children)
-      {
-         processNode(child);
-      }
-   }
+    /**
+     * Recursive call to process all the node hierarchy
+     *
+     * @param node
+     */
+    private void processNode(final Node node) {
+        processNode(node.getPath(), node);
 
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+        Set<Node> children = node.getChildren();
+        for (Node child : children) {
+            processNode(child);
+        }
+    }
 
-   /**
-    * Template method for processing a single node.
-    * 
-    * @param path
-    * @param node
-    */
-   protected abstract void processNode(ArchivePath path, Node node);
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Return the results of the export.  Should process any tasks required to finalize the export.  
-    * 
-    * @return
-    */
-   protected abstract T getResult();
+    /**
+     * Template method for processing a single node.
+     *
+     * @param path
+     * @param node
+     */
+    protected abstract void processNode(ArchivePath path, Node node);
 
-   //-------------------------------------------------------------------------------------||
-   // Internal Helper Methods ------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    /**
+     * Return the results of the export. Should process any tasks required to finalize the export.
+     *
+     * @return
+     */
+    protected abstract T getResult();
 
-   /**
-    * Return the archive being exported
-    * 
-    * @return
-    */
-   protected Archive<?> getArchive()
-   {
-      return archive;
-   }
+    // -------------------------------------------------------------------------------------||
+    // Internal Helper Methods ------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+
+    /**
+     * Return the archive being exported
+     *
+     * @return
+     */
+    protected Archive<?> getArchive() {
+        return archive;
+    }
 
 }

@@ -28,68 +28,54 @@ import org.junit.Test;
  * https://jira.jboss.org/jira/browse/TMPARCH-5
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- *
+ * 
  */
-public class ClassLoaderAssetTestCase
-{
-   private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/api/asset/Test.properties";
+public class ClassLoaderAssetTestCase {
+    private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/api/asset/Test.properties";
 
-   private static final String NON_EXISTING_RESOURCE = "org/jboss/shrinkwrap/api/asset/NoFileShouldBePlacedHere.properties";
+    private static final String NON_EXISTING_RESOURCE = "org/jboss/shrinkwrap/api/asset/NoFileShouldBePlacedHere.properties";
 
-   @Test
-   public void shouldBeAbleToReadResource() throws Exception
-   {
-      Asset asset = new ClassLoaderAsset(EXISTING_RESOURCE);
-      InputStream io = asset.openStream();
+    @Test
+    public void shouldBeAbleToReadResource() throws Exception {
+        Asset asset = new ClassLoaderAsset(EXISTING_RESOURCE);
+        InputStream io = asset.openStream();
 
-      Assert.assertNotNull(io);
-      Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true", ApiTestUtils
-            .convertToString(io));
-   }
+        Assert.assertNotNull(io);
+        Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true",
+            ApiTestUtils.convertToString(io));
+    }
 
-   @Test
-   public void shouldThrowExceptionOnNullName()
-   {
-      try
-      {
-         new ClassLoaderAsset(null);
-         Assert.fail("Should have thrown IllegalArgumentException");
-      }
-      catch (Exception e)
-      {
-         Assert.assertEquals("A null resourceName argument should result in a IllegalArgumentException",
-               IllegalArgumentException.class, e.getClass());
-      }
-   }
+    @Test
+    public void shouldThrowExceptionOnNullName() {
+        try {
+            new ClassLoaderAsset(null);
+            Assert.fail("Should have thrown IllegalArgumentException");
+        } catch (Exception e) {
+            Assert.assertEquals("A null resourceName argument should result in a IllegalArgumentException",
+                IllegalArgumentException.class, e.getClass());
+        }
+    }
 
-   @Test
-   public void shouldThrowExceptionOnNullClassloader()
-   {
-      try
-      {
-         new ClassLoaderAsset(EXISTING_RESOURCE, null);
-         Assert.fail("Should have thrown IllegalArgumentException");
-      }
-      catch (Exception e)
-      {
-         Assert.assertEquals("A null classLoader argument should result in a IllegalArgumentException",
-               IllegalArgumentException.class, e.getClass());
-      }
-   }
+    @Test
+    public void shouldThrowExceptionOnNullClassloader() {
+        try {
+            new ClassLoaderAsset(EXISTING_RESOURCE, null);
+            Assert.fail("Should have thrown IllegalArgumentException");
+        } catch (Exception e) {
+            Assert.assertEquals("A null classLoader argument should result in a IllegalArgumentException",
+                IllegalArgumentException.class, e.getClass());
+        }
+    }
 
-   @Test
-   public void shouldThrowExceptionOnMissingResource()
-   {
-      try
-      {
-         new ClassLoaderAsset(NON_EXISTING_RESOURCE);
-         Assert.fail("Should have thrown IllegalArgumentException");
-      }
-      catch (Exception e)
-      {
-         Assert.assertEquals(
-               "A resource that is not found in the classLoader should result in a IllegalArgumentException",
-               IllegalArgumentException.class, e.getClass());
-      }
-   }
+    @Test
+    public void shouldThrowExceptionOnMissingResource() {
+        try {
+            new ClassLoaderAsset(NON_EXISTING_RESOURCE);
+            Assert.fail("Should have thrown IllegalArgumentException");
+        } catch (Exception e) {
+            Assert.assertEquals(
+                "A resource that is not found in the classLoader should result in a IllegalArgumentException",
+                IllegalArgumentException.class, e.getClass());
+        }
+    }
 }

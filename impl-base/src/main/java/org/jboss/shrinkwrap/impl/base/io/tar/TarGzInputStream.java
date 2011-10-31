@@ -21,42 +21,36 @@ import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
 /**
- * The {@link TarGzInputStream} reads a UNIX TAR archive, further 
- * encoded in GZIP compresssion, as an InputStream.
- * Methods are provided to position at each successive entry in
- * the archive, and the read each entry as a normal input stream
- * using read().
- * 
+ * The {@link TarGzInputStream} reads a UNIX TAR archive, further encoded in GZIP compresssion, as an InputStream.
+ * Methods are provided to position at each successive entry in the archive, and the read each entry as a normal input
+ * stream using read().
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class TarGzInputStream extends TarInputStream
-{
+public class TarGzInputStream extends TarInputStream {
 
-   /**
-    * @param is
-    */
-   public TarGzInputStream(InputStream is) throws IOException
-   {
-      super(new GZIPInputStream(is));
-   }
+    /**
+     * @param is
+     */
+    public TarGzInputStream(InputStream is) throws IOException {
+        super(new GZIPInputStream(is));
+    }
 
-   /**
-    * @param is
-    * @param blockSize
-    */
-   public TarGzInputStream(InputStream is, int blockSize) throws IOException
-   {
-      super(new GZIPInputStream(is), blockSize);
-   }
+    /**
+     * @param is
+     * @param blockSize
+     */
+    public TarGzInputStream(InputStream is, int blockSize) throws IOException {
+        super(new GZIPInputStream(is), blockSize);
+    }
 
-   /**
-    * @param is
-    * @param blockSize
-    * @param recordSize
-    */
-   public TarGzInputStream(InputStream is, int blockSize, int recordSize) throws IOException
-   {
-      super(new GZIPInputStream(is), blockSize, recordSize);
-   }
+    /**
+     * @param is
+     * @param blockSize
+     * @param recordSize
+     */
+    public TarGzInputStream(InputStream is, int blockSize, int recordSize) throws IOException {
+        super(new GZIPInputStream(is), blockSize, recordSize);
+    }
 
 }

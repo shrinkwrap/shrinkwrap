@@ -17,25 +17,23 @@
 package org.jboss.shrinkwrap.api;
 
 /**
- * General interface for representing entities such
- * as {@link Archive}s, importers and exporters as 
- * different extension types.  The {@link Assignable} type is typically
- * the end-user view.   In effect all {@link Assignable}
- * types achieve some limited form of multiple inheritance via
- * a wrapping mechanism. 
+ * General interface for representing entities such as {@link Archive}s, importers and exporters as different extension
+ * types. The {@link Assignable} type is typically the end-user view. In effect all {@link Assignable} types achieve
+ * some limited form of multiple inheritance via a wrapping mechanism.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface Assignable
-{
-   /**
-    * Wraps an Archive in a different 'view'.
-    * @see org.jboss.shrinkwrap.impl.base.ExtensionLoader
-    * 
-    * @param <TYPE> 
-    * @param clazz Extension interface to load
-    * @return The Archive wrapped as TYPE
-    */
-   <TYPE extends Assignable> TYPE as(Class<TYPE> clazz);
+public interface Assignable {
+    /**
+     * Wraps an Archive in a different 'view'.
+     *
+     * @see org.jboss.shrinkwrap.impl.base.ExtensionLoader
+     *
+     * @param <TYPE>
+     * @param clazz
+     *            Extension interface to load
+     * @return The Archive wrapped as TYPE
+     */
+    <TYPE extends Assignable> TYPE as(Class<TYPE> clazz);
 }

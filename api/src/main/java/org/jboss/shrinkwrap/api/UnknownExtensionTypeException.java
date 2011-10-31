@@ -18,57 +18,53 @@
 package org.jboss.shrinkwrap.api;
 
 /**
- * Indicates that a default name cannot be generated for
- * a given type because no extension mapping has been configured
+ * Indicates that a default name cannot be generated for a given type because no extension mapping has been configured
  * via {@link ExtensionLoader#getExtensionFromExtensionMapping(Class)}.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class UnknownExtensionTypeException extends RuntimeException
-{
+public class UnknownExtensionTypeException extends RuntimeException {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * serialVersionUID
-    */
-   private static final long serialVersionUID = 1L;
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new instance with message indicating the missing type
-    */
-   private <T extends Assignable> UnknownExtensionTypeException(final Class<T> type)
-   {
-      super("The current configuration has no mapping for type " + type.getCanonicalName()
+    /**
+     * Creates a new instance with message indicating the missing type
+     */
+    private <T extends Assignable> UnknownExtensionTypeException(final Class<T> type) {
+        super("The current configuration has no mapping for type " + type.getCanonicalName()
             + ", unable to determine extension. You should provide extension in the services descriptor file");
-   }
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Factory ----------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Factory ----------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new {@link UnknownExtensionTypeException} for the specified type
-    *
-    * @throws IllegalArgumentException If the type is not specified
-    */
-   static <T extends Assignable> UnknownExtensionTypeException newInstance(final Class<T> type)
-         throws IllegalArgumentException
-   {
-      // Precondition checks
-      if (type == null)
-      {
-         throw new IllegalArgumentException("type must be specified");
-      }
+    /**
+     * Creates a new {@link UnknownExtensionTypeException} for the specified type
+     *
+     * @throws IllegalArgumentException
+     *             If the type is not specified
+     */
+    static <T extends Assignable> UnknownExtensionTypeException newInstance(final Class<T> type)
+        throws IllegalArgumentException {
+        // Precondition checks
+        if (type == null) {
+            throw new IllegalArgumentException("type must be specified");
+        }
 
-      // Create new
-      return new UnknownExtensionTypeException(type);
-   }
+        // Create new
+        return new UnknownExtensionTypeException(type);
+    }
 }

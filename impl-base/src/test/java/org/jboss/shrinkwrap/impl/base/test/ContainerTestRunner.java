@@ -25,82 +25,66 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.TestClass;
 
 /**
- * A JUnit running for only running the *Container tests relevant to the Archive 
- * Type under test.
+ * A JUnit running for only running the *Container tests relevant to the Archive Type under test.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ContainerTestRunner extends BlockJUnit4ClassRunner
-{
+public class ContainerTestRunner extends BlockJUnit4ClassRunner {
 
-   public ContainerTestRunner(Class<?> klass) throws InitializationError
-   {
-      super(klass);
-   }
-   
-   @Override
-   protected List<FrameworkMethod> computeTestMethods()
-   {
-      return new FilterSupportedArchiveTypes(
-            getTestClass(), 
-            super.computeTestMethods()
-      ).filter();
-   }
-   
-   private class FilterSupportedArchiveTypes {
-      
-      private List<FrameworkMethod> frameworkMethods;
-      private TestClass testClass;
-      
-      public FilterSupportedArchiveTypes(TestClass testClass, List<FrameworkMethod> frameworkMethods)
-      {
-         this.testClass = testClass;
-         this.frameworkMethods = frameworkMethods;
-      }
-      
-      /**
-       * Filter Test methods based on matching ArchiveType inheritance.
-       * 
-       * @return The Filtered List 
-       */
-      public List<FrameworkMethod> filter() {
-         ArchiveType archiveUnderTest = testClass.getJavaClass().getAnnotation(ArchiveType.class);
-         if(archiveUnderTest == null) {
-            throw new RuntimeException(
-                  "TestClass[" + testClass.getJavaClass().getName() + "] is missing " + ArchiveType.class.getName() + " annotation. " +
-                   "This describes the Type being tested.");
-         }
+    public ContainerTestRunner(Class<?> klass) throws InitializationError {
+        super(klass);
+    }
 
-         List<FrameworkMethod> testMethods = new ArrayList<FrameworkMethod>();
-         for(FrameworkMethod testMethod : frameworkMethods) 
-         {
-            ArchiveType archiveType = testMethod.getAnnotation(ArchiveType.class);
-            if(archiveType != null) 
-            {
-               if(supportsArchiveType(archiveType.value(), archiveUnderTest.value())) 
-               {
-                  testMethods.add(testMethod);
-               }
+    @Override
+    protected List<FrameworkMethod> computeTestMethods() {
+        return new FilterSupportedArchiveTypes(getTestClass(), super.computeTestMethods()).filter();
+    }
+
+    private class FilterSupportedArchiveTypes {
+
+        private List<FrameworkMethod> frameworkMethods;
+        private TestClass testClass;
+
+        public FilterSupportedArchiveTypes(TestClass testClass, List<FrameworkMethod> frameworkMethods) {
+            this.testClass = testClass;
+            this.frameworkMethods = frameworkMethods;
+        }
+
+        /**
+         * Filter Test methods based on matching ArchiveType inheritance.
+         *
+         * @return The Filtered List
+         */
+        public List<FrameworkMethod> filter() {
+            ArchiveType archiveUnderTest = testClass.getJavaClass().getAnnotation(ArchiveType.class);
+            if (archiveUnderTest == null) {
+                throw new RuntimeException("TestClass[" + testClass.getJavaClass().getName() + "] is missing "
+                    + ArchiveType.class.getName() + " annotation. " + "This describes the Type being tested.");
             }
-            else 
-            {
-               testMethods.add(testMethod);
+
+            List<FrameworkMethod> testMethods = new ArrayList<FrameworkMethod>();
+            for (FrameworkMethod testMethod : frameworkMethods) {
+                ArchiveType archiveType = testMethod.getAnnotation(ArchiveType.class);
+                if (archiveType != null) {
+                    if (supportsArchiveType(archiveType.value(), archiveUnderTest.value())) {
+                        testMethods.add(testMethod);
+                    }
+                } else {
+                    testMethods.add(testMethod);
+                }
             }
-         }
-         return testMethods;
-      }
-   }
-   
-   private boolean supportsArchiveType(Class<?> archiveType, Class<?> testCaseArchiveType) {
-      Class<?>[] supportedInterfaces = testCaseArchiveType.getInterfaces();
-      for(Class<?> supportedInterface : supportedInterfaces) 
-      {
-         if(archiveType.isAssignableFrom(supportedInterface)) 
-         {
-            return true;
-         }
-      }
-      return false;
-   }
+            return testMethods;
+        }
+    }
+
+    private boolean supportsArchiveType(Class<?> archiveType, Class<?> testCaseArchiveType) {
+        Class<?>[] supportedInterfaces = testCaseArchiveType.getInterfaces();
+        for (Class<?> supportedInterface : supportedInterfaces) {
+            if (archiveType.isAssignableFrom(supportedInterface)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

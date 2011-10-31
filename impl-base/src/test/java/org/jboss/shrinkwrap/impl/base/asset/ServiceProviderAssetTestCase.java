@@ -21,48 +21,43 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-
 /**
  * ServiceProviderAssetTestCase
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ServiceProviderAssetTestCase
-{
+public class ServiceProviderAssetTestCase {
 
-   @Test
-   public void shouldCreateServiceProviderFile() throws Exception 
-   {
-      Asset asset = new ServiceProviderAsset(TestImpl1.class, TestImpl2.class);
-      
-      byte[] expectedContent = (TestImpl1.class.getName() + "\n" + TestImpl2.class.getName() + "\n").getBytes();
-      byte[] content = IOUtil.asByteArray(asset.openStream());
-      
-      Assert.assertArrayEquals(expectedContent, content);
-   }
+    @Test
+    public void shouldCreateServiceProviderFile() throws Exception {
+        Asset asset = new ServiceProviderAsset(TestImpl1.class, TestImpl2.class);
 
-   @Test(expected = IllegalArgumentException.class)
-   public void shouldThrowExceptionOnNullArgumnet() throws Exception 
-   {
-      new ServiceProviderAsset((Class<?>[])null);
-   }
-   
-   @Test(expected = IllegalArgumentException.class)
-   public void shouldThrowExceptionOnNullArgumnetValue() throws Exception 
-   {
-      new ServiceProviderAsset((Class<?>) null);
-   }
+        byte[] expectedContent = (TestImpl1.class.getName() + "\n" + TestImpl2.class.getName() + "\n").getBytes();
+        byte[] content = IOUtil.asByteArray(asset.openStream());
 
-   private interface TestIF {
-      
-   }
-   
-   private class TestImpl1 implements TestIF {
-      
-   }
-   
-   private class TestImpl2 implements TestIF {
-      
-   }
+        Assert.assertArrayEquals(expectedContent, content);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionOnNullArgumnet() throws Exception {
+        new ServiceProviderAsset((Class<?>[]) null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionOnNullArgumnetValue() throws Exception {
+        new ServiceProviderAsset((Class<?>) null);
+    }
+
+    private interface TestIF {
+
+    }
+
+    private class TestImpl1 implements TestIF {
+
+    }
+
+    private class TestImpl2 implements TestIF {
+
+    }
 }

@@ -33,121 +33,112 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
 
-public class TarImporterImplTestCase extends StreamImporterImplTestBase<TarImporter>
-{
+public class TarImporterImplTestCase extends StreamImporterImplTestBase<TarImporter> {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(TarImporterImplTestCase.class.getName());
+    /**
+     * Logger
+     */
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(TarImporterImplTestCase.class.getName());
 
-   /**
-    * Delegate for performing TAR content assertions
-    */
-   private static final TarContentAssertionDelegate delegate = new TarContentAssertionDelegate();
+    /**
+     * Delegate for performing TAR content assertions
+     */
+    private static final TarContentAssertionDelegate delegate = new TarContentAssertionDelegate();
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getDelegate()
-    */
-   @Override
-   protected ContentAssertionDelegateBase getDelegate()
-   {
-      return delegate;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getDelegate()
+     */
+    @Override
+    protected ContentAssertionDelegateBase getDelegate() {
+        return delegate;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getImporterClass()
-    */
-   @Override
-   protected Class<TarImporter> getImporterClass()
-   {
-      return TarImporter.class;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getImporterClass()
+     */
+    @Override
+    protected Class<TarImporter> getImporterClass() {
+        return TarImporter.class;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExporterClass()
-    */
-   @Override
-   protected Class<? extends StreamExporter> getExporterClass()
-   {
-      return TarExporter.class;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExporterClass()
+     */
+    @Override
+    protected Class<? extends StreamExporter> getExporterClass() {
+        return TarExporter.class;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExceptionThrowingInputStream()
-    */
-   @Override
-   protected TarInputStream getExceptionThrowingInputStream()
-   {
-      try
-      {
-         return ExceptionThrowingTarInputStream.create();
-      }
-      catch (final IOException e)
-      {
-         throw new RuntimeException("Should not occur in test setup", e);
-      }
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExceptionThrowingInputStream()
+     */
+    @Override
+    protected TarInputStream getExceptionThrowingInputStream() {
+        try {
+            return ExceptionThrowingTarInputStream.create();
+        } catch (final IOException e) {
+            throw new RuntimeException("Should not occur in test setup", e);
+        }
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Internal Helper Members ------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Internal Helper Members ------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Test {@link TarInputStream} extension which throws errors when read
-    * in order to test exception handling of the import process
-    * 
-    * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
-    */
-   private static final class ExceptionThrowingTarInputStream extends TarInputStream
-   {
+    /**
+     * Test {@link TarInputStream} extension which throws errors when read in order to test exception handling of the
+     * import process
+     *
+     * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+     */
+    private static final class ExceptionThrowingTarInputStream extends TarInputStream {
 
-      static ExceptionThrowingTarInputStream create() throws IOException
-      {
-         final byte[] test = "Something".getBytes();
-         final InputStream in = new ByteArrayInputStream(test);
-         return new ExceptionThrowingTarInputStream(in);
-      }
+        static ExceptionThrowingTarInputStream create() throws IOException {
+            final byte[] test = "Something".getBytes();
+            final InputStream in = new ByteArrayInputStream(test);
+            return new ExceptionThrowingTarInputStream(in);
+        }
 
-      private ExceptionThrowingTarInputStream(final InputStream in) throws IOException
-      {
-         super(in);
-      }
+        private ExceptionThrowingTarInputStream(final InputStream in) throws IOException {
+            super(in);
+        }
 
-      /**
-       * Generates an exception when read
-       * @see org.jboss.shrinkwrap.impl.base.io.tar.javatar.TarInputStream#read()
-       */
-      @Override
-      public int read() throws IOException
-      {
-         throw new RuntimeException("Mock Exception, should be wrapped in the import process");
-      }
+        /**
+         * Generates an exception when read
+         *
+         * @see org.jboss.shrinkwrap.impl.base.io.tar.javatar.TarInputStream#read()
+         */
+        @Override
+        public int read() throws IOException {
+            throw new RuntimeException("Mock Exception, should be wrapped in the import process");
+        }
 
-      @Override
-      public int read(byte[] buf) throws IOException
-      {
-         return this.read();
-      }
+        @Override
+        public int read(byte[] buf) throws IOException {
+            return this.read();
+        }
 
-      @Override
-      public int read(byte[] buf, int offset, int numToRead) throws IOException
-      {
-         return this.read();
-      }
+        @Override
+        public int read(byte[] buf, int offset, int numToRead) throws IOException {
+            return this.read();
+        }
 
-   }
+    }
 }

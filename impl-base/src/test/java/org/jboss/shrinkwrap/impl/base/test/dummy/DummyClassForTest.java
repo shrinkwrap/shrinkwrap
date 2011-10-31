@@ -16,16 +16,14 @@
  */
 package org.jboss.shrinkwrap.impl.base.test.dummy;
 
-
 /**
  * DummyClassForTest
- * 
+ *
  * Empty class to test class adding
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class DummyClassForTest implements DummyInterfaceForTest
-{
+public class DummyClassForTest implements DummyInterfaceForTest {
 
 }

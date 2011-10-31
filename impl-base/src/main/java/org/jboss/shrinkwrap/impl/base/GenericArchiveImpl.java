@@ -26,66 +26,65 @@ import org.jboss.shrinkwrap.impl.base.container.ContainerBase;
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class GenericArchiveImpl extends ContainerBase<GenericArchive> implements GenericArchive
-{
+public class GenericArchiveImpl extends ContainerBase<GenericArchive> implements GenericArchive {
 
-   /**
-    * Unsupported operation
-    */
-   private static final UnsupportedOperationException UNSUPPORTED = new UnsupportedOperationException(
-         GenericArchive.class.getSimpleName() + " does not support container spec paths.");
+    /**
+     * Unsupported operation
+     */
+    private static final UnsupportedOperationException UNSUPPORTED = new UnsupportedOperationException(
+        GenericArchive.class.getSimpleName() + " does not support container spec paths.");
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new instance
-    * 
-    * @param delegate The storage backing.
-    */
-   public GenericArchiveImpl(final Archive<?> delegate)
-   {
-      super(GenericArchive.class, delegate);
-   }
+    /**
+     * Creates a new instance
+     *
+     * @param delegate
+     *            The storage backing.
+     */
+    public GenericArchiveImpl(final Archive<?> delegate) {
+        super(GenericArchive.class, delegate);
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getClassesPath()
-    */
-   @Override
-   protected ArchivePath getClassesPath()
-   {
-      throw UNSUPPORTED;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getClassesPath()
+     */
+    @Override
+    protected ArchivePath getClassesPath() {
+        throw UNSUPPORTED;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getLibraryPath()
-    */
-   @Override
-   protected ArchivePath getLibraryPath()
-   {
-      throw UNSUPPORTED;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getLibraryPath()
+     */
+    @Override
+    protected ArchivePath getLibraryPath() {
+        throw UNSUPPORTED;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getManifestPath()
-    */
-   @Override
-   protected ArchivePath getManifestPath()
-   {
-      throw UNSUPPORTED;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getManifestPath()
+     */
+    @Override
+    protected ArchivePath getManifestPath() {
+        throw UNSUPPORTED;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getResourcePath()
-    */
-   @Override
-   protected ArchivePath getResourcePath()
-   {
-      throw UNSUPPORTED;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getResourcePath()
+     */
+    @Override
+    protected ArchivePath getResourcePath() {
+        throw UNSUPPORTED;
+    }
 }

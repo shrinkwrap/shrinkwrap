@@ -18,58 +18,64 @@ package org.jboss.shrinkwrap.api;
 
 /**
  * ExtensionLoader
- * 
- * Describes a way for the {@link Archive} to load extensions.
- * If an implementation is not set in the {@link Domain}'s 
- * {@link Configuration}, {@link ServiceExtensionLoader} is set as the
- * default strategy to load extensions.
+ *
+ * Describes a way for the {@link Archive} to load extensions. If an implementation is not set in the {@link Domain}'s
+ * {@link Configuration}, {@link ServiceExtensionLoader} is set as the default strategy to load extensions.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
-public interface ExtensionLoader
-{
+public interface ExtensionLoader {
 
-   /**
-    * Load a Extension.
-    * 
-    * @param <T>
-    * @param extensionClass The Extension interface
-    * @param baseArchive The base archive to use
-    * @return a 
-    */
-   public <T extends Assignable> T load(Class<T> extensionClass, Archive<?> baseArchive);
-   
-   /**
-    * Add a Override to the normal Extension loading. 
-    * 
-    * If a specific class is found to be overridden, the class will not be loaded
-    * using the normal strategy.
-    * 
-    * @param <T> The type of Extension
-    * @param extensionClass The Extension interface class
-    * @param extensionImplClass The Extension implementation class
-    * @return this ExtensionLoader
-    */
-   public <T extends Assignable> ExtensionLoader addOverride(
-         Class<T> extensionClass, 
-         Class<? extends T> extensionImplClass);
+    /**
+     * Load a Extension.
+     *
+     * @param <T>
+     * @param extensionClass
+     *            The Extension interface
+     * @param baseArchive
+     *            The base archive to use
+     * @return a
+     */
+    <T extends Assignable> T load(Class<T> extensionClass, Archive<?> baseArchive);
 
-   /**
-    * Gets the extension for the given type from the extensionMapping
-    * @param extensionClass The Extension interface class
-    * @param <T> The type of Extension
-    * @return the filename extension
-    */
-   public <T extends Assignable> String getExtensionFromExtensionMapping(Class<T> extensionClass);
+    /**
+     * Add a Override to the normal Extension loading.
+     *
+     * If a specific class is found to be overridden, the class will not be loaded using the normal strategy.
+     *
+     * @param <T>
+     *            The type of Extension
+     * @param extensionClass
+     *            The Extension interface class
+     * @param extensionImplClass
+     *            The Extension implementation class
+     * @return this ExtensionLoader
+     */
+    <T extends Assignable> ExtensionLoader addOverride(Class<T> extensionClass,
+        Class<? extends T> extensionImplClass);
 
-   /**
-    * Gets the {@link org.jboss.shrinkwrap.api.ArchiveFormat} for the given type from the extensionMapping
-    * @param extensionClass The Extension interface class
-    * @param <T> The type of Extension
-    * @return the archive format
-    */
-   public <T extends Archive<T>> ArchiveFormat getArchiveFormatFromExtensionMapping(Class<T> extensionClass);
+    /**
+     * Gets the extension for the given type from the extensionMapping
+     *
+     * @param extensionClass
+     *            The Extension interface class
+     * @param <T>
+     *            The type of Extension
+     * @return the filename extension
+     */
+    <T extends Assignable> String getExtensionFromExtensionMapping(Class<T> extensionClass);
+
+    /**
+     * Gets the {@link org.jboss.shrinkwrap.api.ArchiveFormat} for the given type from the extensionMapping
+     *
+     * @param extensionClass
+     *            The Extension interface class
+     * @param <T>
+     *            The type of Extension
+     * @return the archive format
+     */
+    <T extends Archive<T>> ArchiveFormat getArchiveFormatFromExtensionMapping(Class<T> extensionClass);
 
 }

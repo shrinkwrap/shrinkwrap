@@ -19,64 +19,60 @@ package org.jboss.shrinkwrap.api.formatter;
 import org.jboss.shrinkwrap.api.Archive;
 
 /**
- * Available pre-configured {@link Formatter} instances
- * used in constructing a human-readable form 
- * for a specified {@link Archive}.
- * 
+ * Available pre-configured {@link Formatter} instances used in constructing a human-readable form for a specified
+ * {@link Archive}.
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
 public enum Formatters implements Formatter {
 
-   //-------------------------------------------------------------------------------------||
-   // Types ------------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-   /**
-    * {@link Formatter} implementation to provide an "ls -l"-esque
-    * output for an {@link Archive}, listing all internal contents
-    * in sorted order.
-    */
-   VERBOSE(VerboseFormatter.INSTANCE),
+    // -------------------------------------------------------------------------------------||
+    // Types ------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    /**
+     * {@link Formatter} implementation to provide an "ls -l"-esque output for an {@link Archive}, listing all internal
+     * contents in sorted order.
+     */
+    VERBOSE(VerboseFormatter.INSTANCE),
 
-   /**
-    * {@link Formatter} implementation to provide a simple, one-line
-    * description of an {@link Archive}, including its name.
-    */
-   SIMPLE(SimpleFormatter.INSTANCE);
+    /**
+     * {@link Formatter} implementation to provide a simple, one-line description of an {@link Archive}, including its
+     * name.
+     */
+    SIMPLE(SimpleFormatter.INSTANCE);
 
-   //-------------------------------------------------------------------------------------||
-   // Internal Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Internal Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Internal formatter type, used as a delegate to make {@link Formatters} itself a {@link Formatter}
-    */
-   private final Formatter formatter;
+    /**
+     * Internal formatter type, used as a delegate to make {@link Formatters} itself a {@link Formatter}
+     */
+    private final Formatter formatter;
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Constructs a new {@link Formatters} type
-    * using the specfied underlying {@link Formatter}
-    */
-   Formatters(final Formatter formatter)
-   {
-      this.formatter = formatter;
-   }
+    /**
+     * Constructs a new {@link Formatters} type using the specfied underlying {@link Formatter}
+     */
+    Formatters(final Formatter formatter) {
+        this.formatter = formatter;
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.formatter.Formatter#format(org.jboss.shrinkwrap.api.Archive)
-    */
-   @Override
-   public String format(final Archive<?> archive) throws IllegalArgumentException
-   {
-      return formatter.format(archive);
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.formatter.Formatter#format(org.jboss.shrinkwrap.api.Archive)
+     */
+    @Override
+    public String format(final Archive<?> archive) throws IllegalArgumentException {
+        return formatter.format(archive);
+    }
 }

@@ -34,112 +34,105 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarGzInputStream;
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzImporter>
-{
+public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzImporter> {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(TarGzImporterImplTestCase.class.getName());
+    /**
+     * Logger
+     */
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(TarGzImporterImplTestCase.class.getName());
 
-   /**
-    * Delegate for performing TAR.GZ content assertions
-    */
-   private static final TarGzContentAssertionDelegate delegate = new TarGzContentAssertionDelegate();
+    /**
+     * Delegate for performing TAR.GZ content assertions
+     */
+    private static final TarGzContentAssertionDelegate delegate = new TarGzContentAssertionDelegate();
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getDelegate()
-    */
-   @Override
-   protected ContentAssertionDelegateBase getDelegate()
-   {
-      return delegate;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getDelegate()
+     */
+    @Override
+    protected ContentAssertionDelegateBase getDelegate() {
+        return delegate;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getImporterClass()
-    */
-   @Override
-   protected Class<TarGzImporter> getImporterClass()
-   {
-      return TarGzImporter.class;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getImporterClass()
+     */
+    @Override
+    protected Class<TarGzImporter> getImporterClass() {
+        return TarGzImporter.class;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExporterClass()
-    */
-   @Override
-   protected Class<? extends StreamExporter> getExporterClass()
-   {
-      return TarGzExporter.class;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExporterClass()
+     */
+    @Override
+    protected Class<? extends StreamExporter> getExporterClass() {
+        return TarGzExporter.class;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExceptionThrowingInputStream()
-    */
-   @Override
-   protected TarGzInputStream getExceptionThrowingInputStream()
-   {
-      try
-      {
-         return ExceptionThrowingTarGzInputStream.create();
-      }
-      catch (final IOException e)
-      {
-         throw new RuntimeException("Should not occur in test setup", e);
-      }
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExceptionThrowingInputStream()
+     */
+    @Override
+    protected TarGzInputStream getExceptionThrowingInputStream() {
+        try {
+            return ExceptionThrowingTarGzInputStream.create();
+        } catch (final IOException e) {
+            throw new RuntimeException("Should not occur in test setup", e);
+        }
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Internal Helper Members ------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Internal Helper Members ------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Test {@link TarGzInputStream} extension which throws errors when read
-    * in order to test exception handling of the import process
-    * 
-    * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
-    */
-   private static final class ExceptionThrowingTarGzInputStream extends TarGzInputStream
-   {
+    /**
+     * Test {@link TarGzInputStream} extension which throws errors when read in order to test exception handling of the
+     * import process
+     *
+     * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+     */
+    private static final class ExceptionThrowingTarGzInputStream extends TarGzInputStream {
 
-      static ExceptionThrowingTarGzInputStream create() throws IOException
-      {
-         // First provide real GZIP content so we don't err out when initialized
-         final byte[] test = "Something".getBytes();
-         final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-         new GZIPOutputStream(stream).write(test);
-         final InputStream in = new ByteArrayInputStream(stream.toByteArray());
-         return new ExceptionThrowingTarGzInputStream(in);
-      }
+        static ExceptionThrowingTarGzInputStream create() throws IOException {
+            // First provide real GZIP content so we don't err out when initialized
+            final byte[] test = "Something".getBytes();
+            final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            new GZIPOutputStream(stream).write(test);
+            final InputStream in = new ByteArrayInputStream(stream.toByteArray());
+            return new ExceptionThrowingTarGzInputStream(in);
+        }
 
-      private ExceptionThrowingTarGzInputStream(final InputStream in) throws IOException
-      {
-         super(in);
-      }
+        private ExceptionThrowingTarGzInputStream(final InputStream in) throws IOException {
+            super(in);
+        }
 
-      /**
-       * Generates an exception when read
-       * @see org.jboss.shrinkwrap.impl.base.io.tar.javatar.TarInputStream#read()
-       */
-      @Override
-      public int read() throws IOException
-      {
-         throw new RuntimeException("Mock Exception, should be wrapped in the import process");
-      }
+        /**
+         * Generates an exception when read
+         *
+         * @see org.jboss.shrinkwrap.impl.base.io.tar.javatar.TarInputStream#read()
+         */
+        @Override
+        public int read() throws IOException {
+            throw new RuntimeException("Mock Exception, should be wrapped in the import process");
+        }
 
-   }
+    }
 }

@@ -26,38 +26,41 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * Generic importer capable of representing an {@link Assignable}
- * as an entity capable of reading from an {@link InputStream}, or
- * file type.
- * 
- * @param <I> Concrete type used in covariant return
+ * Generic importer capable of representing an {@link Assignable} as an entity capable of reading from an
+ * {@link InputStream}, or file type.
+ *
+ * @param <I>
+ *            Concrete type used in covariant return
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public interface StreamImporter<I extends StreamImporter<I>> extends Assignable
-{
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-   /**
-   * Imports provided stream as a {@link Archive}.  It remains
-   * the responsibility of the caller to close the stream.
-   * 
-   * @param stream the stream to import; should be a raw type, not wrapped
-   * in any implementation-specific encoding (ie. {@link FileInputStream} is appropriate,
-   * but {@link ZipInputStream} or {@link GZIPInputStream} is not).
-   * @return Archive of the imported stream
-   * @throws ArchiveImportException If an error occurred during the import process
-   * @throws IllegalArgumentException If no stream is specified
-   */
-   I importFrom(InputStream stream) throws ArchiveImportException;
+public interface StreamImporter<I extends StreamImporter<I>> extends Assignable {
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    /**
+     * Imports provided stream as a {@link Archive}. It remains the responsibility of the caller to close the stream.
+     *
+     * @param stream
+     *            the stream to import; should be a raw type, not wrapped in any implementation-specific encoding (ie.
+     *            {@link FileInputStream} is appropriate, but {@link ZipInputStream} or {@link GZIPInputStream} is not).
+     * @return Archive of the imported stream
+     * @throws ArchiveImportException
+     *             If an error occurred during the import process
+     * @throws IllegalArgumentException
+     *             If no stream is specified
+     */
+    I importFrom(InputStream stream) throws ArchiveImportException;
 
-   /**
-    * Imports provided File as a {@link Archive}.
-    * 
-    * @param file the file to import
-    * @return Archive of the imported Zip
-    * @throws ArchiveImportException If an error occurred during the import process
-    * @throws IllegalArgumentException If no file is specified or if the file is a directory
-    */
-   I importFrom(File file) throws ArchiveImportException;
+    /**
+     * Imports provided File as a {@link Archive}.
+     *
+     * @param file
+     *            the file to import
+     * @return Archive of the imported Zip
+     * @throws ArchiveImportException
+     *             If an error occurred during the import process
+     * @throws IllegalArgumentException
+     *             If no file is specified or if the file is a directory
+     */
+    I importFrom(File file) throws ArchiveImportException;
 }

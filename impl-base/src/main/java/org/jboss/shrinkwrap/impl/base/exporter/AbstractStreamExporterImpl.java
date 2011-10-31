@@ -33,160 +33,138 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
 /**
  * Base support for I/O Stream-based exporters
- * 
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public abstract class AbstractStreamExporterImpl extends AssignableBase<Archive<?>> implements StreamExporter
-{
+public abstract class AbstractStreamExporterImpl extends AssignableBase<Archive<?>> implements StreamExporter {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(AbstractStreamExporterImpl.class.getName());
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(AbstractStreamExporterImpl.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   public AbstractStreamExporterImpl(final Archive<?> archive)
-   {
-      super(archive);
-   }
+    public AbstractStreamExporterImpl(final Archive<?> archive) {
+        super(archive);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Functional Methods -----------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Functional Methods -----------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Obtains an {@link OuputStream} to the provided {@link File}.
-    * @param target
-    * @param overwrite Whether we may overwrite an existing file
-    * @return
-    * @throws FileExistsException If the specified file exists and the overwrite flag is false
-    * @throws IllegalArgumentException If the file target is not specified
-    */
-   protected final OutputStream getOutputStreamToFile(final File target, final boolean overwrite)
-         throws FileExistsException, IllegalArgumentException
-   {
-      // Precondition checks
-      if (target == null)
-      {
-         throw new IllegalArgumentException("Target file must be specified");
-      }
-      if (target.isDirectory())
-      {
-         throw new IllegalArgumentException("Cannot export a stream file to existing directory: "
-               + target.getAbsolutePath());
-      }
-      // If target exists and we're not allowed to overwrite it
-      if (target.exists() && !overwrite)
-      {
-         throw new FileExistsException("Target exists and we haven't been flagged to overwrite it: "
-               + target.getAbsolutePath());
-      }
+    /**
+     * Obtains an {@link OuputStream} to the provided {@link File}.
+     *
+     * @param target
+     * @param overwrite
+     *            Whether we may overwrite an existing file
+     * @return
+     * @throws FileExistsException
+     *             If the specified file exists and the overwrite flag is false
+     * @throws IllegalArgumentException
+     *             If the file target is not specified
+     */
+    protected final OutputStream getOutputStreamToFile(final File target, final boolean overwrite)
+        throws FileExistsException {
+        // Precondition checks
+        if (target == null) {
+            throw new IllegalArgumentException("Target file must be specified");
+        }
+        if (target.isDirectory()) {
+            throw new IllegalArgumentException("Cannot export a stream file to existing directory: "
+                + target.getAbsolutePath());
+        }
+        // If target exists and we're not allowed to overwrite it
+        if (target.exists() && !overwrite) {
+            throw new FileExistsException("Target exists and we haven't been flagged to overwrite it: "
+                + target.getAbsolutePath());
+        }
 
-      // Get Stream
-      final OutputStream out;
-      try
-      {
-         out = new FileOutputStream(target);
-      }
-      catch (final FileNotFoundException e)
-      {
-         throw new ArchiveExportException("File could not be created: " + target);
-      }
+        // Get Stream
+        final OutputStream out;
+        try {
+            out = new FileOutputStream(target);
+        } catch (final FileNotFoundException e) {
+            throw new ArchiveExportException("File could not be created: " + target);
+        }
 
-      // Return
-      return out;
-   }
+        // Return
+        return out;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportTo(java.io.OutputStream)
-    */
-   @Override
-   public void exportTo(final OutputStream target) throws ArchiveExportException, IllegalArgumentException
-   {
-      // Precondition checks
-      if (target == null)
-      {
-         throw new IllegalArgumentException("Target must be specified");
-      }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportTo(java.io.OutputStream)
+     */
+    @Override
+    public void exportTo(final OutputStream target) throws ArchiveExportException, IllegalArgumentException {
+        // Precondition checks
+        if (target == null) {
+            throw new IllegalArgumentException("Target must be specified");
+        }
 
-      // Get Stream
-      final InputStream in = this.exportAsInputStream();
+        // Get Stream
+        final InputStream in = this.exportAsInputStream();
 
-      try
-      {
-         // Write out
-         try
-         {
-            IOUtil.copy(in, target);
-         }
-         catch (final IOException e)
-         {
-            throw new ArchiveExportException("Error encountered in exporting archive to " + target, e);
-         }
-      }
-      finally
-      {
-         // Close
-         try
-         {
-            in.close();
-         }
-         catch (final IOException ioe)
-         {
-            // Just log
-            log.warning("Could not close " + in + ": " + ioe);
-         }
-      }
-   }
+        try {
+            // Write out
+            try {
+                IOUtil.copy(in, target);
+            } catch (final IOException e) {
+                throw new ArchiveExportException("Error encountered in exporting archive to " + target, e);
+            }
+        } finally {
+            // Close
+            try {
+                in.close();
+            } catch (final IOException ioe) {
+                // Just log
+                log.warning("Could not close " + in + ": " + ioe);
+            }
+        }
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportTo(java.io.File, boolean)
-    */
-   @Override
-   public final void exportTo(final File target, final boolean overwrite) throws ArchiveExportException,
-         FileExistsException, IllegalArgumentException
-   {
-      // Get stream and perform precondition checks
-      final OutputStream out = this.getOutputStreamToFile(target, overwrite);
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportTo(java.io.File, boolean)
+     */
+    @Override
+    public final void exportTo(final File target, final boolean overwrite) throws ArchiveExportException,
+        FileExistsException {
+        // Get stream and perform precondition checks
+        final OutputStream out = this.getOutputStreamToFile(target, overwrite);
 
-      try
-      {
-         // Write out
-         this.exportTo(out);
-      }
-      finally
-      {
-         // Close
-         try
-         {
-            out.close();
-         }
-         catch (final IOException ioe)
-         {
-            // Just log
-            log.warning("Could not close " + out + ": " + ioe);
-         }
-      }
-   }
+        try {
+            // Write out
+            this.exportTo(out);
+        } finally {
+            // Close
+            try {
+                out.close();
+            } catch (final IOException ioe) {
+                // Just log
+                log.warning("Could not close " + out + ": " + ioe);
+            }
+        }
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportTo(java.io.File)
-    */
-   @Override
-   public final void exportTo(final File target) throws ArchiveExportException, FileExistsException,
-         IllegalArgumentException
-   {
-      this.exportTo(target, false);
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportTo(java.io.File)
+     */
+    @Override
+    public final void exportTo(final File target) throws ArchiveExportException, FileExistsException {
+        this.exportTo(target, false);
+    }
 
 }

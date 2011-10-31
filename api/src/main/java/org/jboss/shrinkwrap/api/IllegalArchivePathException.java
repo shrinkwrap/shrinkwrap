@@ -19,41 +19,36 @@ package org.jboss.shrinkwrap.api;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
- * Exception thrown when trying to add a {@link Node} on and invalid path 
- * within the {@link Archive} (i.e. you are trying to add an asset to 
- * "/test.txt/somethingelse.txt" where test.txt is an {@link Asset}) 
- * 
+ * Exception thrown when trying to add a {@link Node} on and invalid path within the {@link Archive} (i.e. you are
+ * trying to add an asset to "/test.txt/somethingelse.txt" where test.txt is an {@link Asset})
+ *
  * @author <a href="mailto:german.escobarc@gmail.com">German Escobar</a>
  * @version $Revision: $
  */
-public class IllegalArchivePathException extends RuntimeException
-{
+public class IllegalArchivePathException extends RuntimeException {
 
-   private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-   /**
-    * @param message
-    */
-   public IllegalArchivePathException(String message)
-   {
-      super(message);
-   }
+    /**
+     * @param message
+     */
+    public IllegalArchivePathException(String message) {
+        super(message);
+    }
 
-   /**
-    * @param cause
-    */
-   public IllegalArchivePathException(Throwable cause)
-   {
-      super(cause);
-   }
+    /**
+     * @param cause
+     */
+    public IllegalArchivePathException(Throwable cause) {
+        super(cause);
+    }
 
-   /**
-    * @param message
-    * @param cause
-    */
-   public IllegalArchivePathException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    /**
+     * @param message
+     * @param cause
+     */
+    public IllegalArchivePathException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

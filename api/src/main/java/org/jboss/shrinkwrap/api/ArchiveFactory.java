@@ -27,188 +27,176 @@ import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 /**
- * Responsible for creating {@link Archive}s, which may be
- * presented to the caller in a designated {@link Assignable} view.
+ * Responsible for creating {@link Archive}s, which may be presented to the caller in a designated {@link Assignable}
+ * view.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
-public final class ArchiveFactory
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public final class ArchiveFactory {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Implementation class name backing {@link Archive}s to be created
-    */
-   private static final String ARCHIVE_IMPL = "org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl";
+    /**
+     * Implementation class name backing {@link Archive}s to be created
+     */
+    private static final String ARCHIVE_IMPL = "org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl";
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Configuration for all archives created from this factory
-    */
-   private final Configuration configuration;
+    /**
+     * Configuration for all archives created from this factory
+     */
+    private final Configuration configuration;
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new {@link ArchiveFactory} which will use the supplied 
-    * {@link Configuration} for each new {@link Archive} it creates.
-    * 
-    * @param configuration the {@link Configuration} to use
-    * @throws IllegalArgumentException if configuration is not supplied
-    */
-   ArchiveFactory(final Configuration configuration) throws IllegalArgumentException
-   {
-      // Precondition checks
-      assert configuration != null : "configuration must be supplied";
+    /**
+     * Creates a new {@link ArchiveFactory} which will use the supplied {@link Configuration} for each new
+     * {@link Archive} it creates.
+     *
+     * @param configuration
+     *            the {@link Configuration} to use
+     * @throws IllegalArgumentException
+     *             if configuration is not supplied
+     */
+    ArchiveFactory(final Configuration configuration) throws IllegalArgumentException {
+        // Precondition checks
+        assert configuration != null : "configuration must be supplied";
 
-      // Set
-      this.configuration = configuration;
-   }
+        // Set
+        this.configuration = configuration;
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Functional Methods -----------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Functional Methods -----------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new archive of the specified type.  The archive
-    * will be be backed by the {@link Configuration}
-    * specific to this {@link ArchiveFactory}.
-    * Generates a random name for the archive and adds proper extension based
-    * on the service descriptor properties file if extension property is present
-    * (e.g. shrinkwrap/impl-base/src/main/resources/META-INF/services/org.jboss.shrinkwrap.api.spec.JavaArchive)
-    *
-    *
-    * @param type The type of the archive e.g. {@link WebArchive}
-    * @return An {@link Assignable} archive base
-    * @throws IllegalArgumentException if type is not specified
-    * @throws UnknownExtensionTypeException If no extension mapping is found for the specified type
-    */
-   public <T extends Assignable> T create(final Class<T> type) throws IllegalArgumentException,
-         UnknownExtensionTypeException
-   {
-      // Precondition checks
-      if (type == null)
-      {
-         throw new IllegalArgumentException("Type must be specified");
-      }
+    /**
+     * Creates a new archive of the specified type. The archive will be be backed by the {@link Configuration} specific
+     * to this {@link ArchiveFactory}. Generates a random name for the archive and adds proper extension based on the
+     * service descriptor properties file if extension property is present (e.g.
+     * shrinkwrap/impl-base/src/main/resources/META-INF/services/org.jboss.shrinkwrap.api.spec.JavaArchive)
+     *
+     *
+     * @param type
+     *            The type of the archive e.g. {@link WebArchive}
+     * @return An {@link Assignable} archive base
+     * @throws IllegalArgumentException
+     *             if type is not specified
+     * @throws UnknownExtensionTypeException
+     *             If no extension mapping is found for the specified type
+     */
+    public <T extends Assignable> T create(final Class<T> type) throws IllegalArgumentException,
+        UnknownExtensionTypeException {
+        // Precondition checks
+        if (type == null) {
+            throw new IllegalArgumentException("Type must be specified");
+        }
 
-      // Get the extensionType type
-      final String extension = configuration.getExtensionLoader().getExtensionFromExtensionMapping(type);
+        // Get the extensionType type
+        final String extension = configuration.getExtensionLoader().getExtensionFromExtensionMapping(type);
 
-      // Generate a random name
-      String archiveName = UUID.randomUUID().toString();
+        // Generate a random name
+        String archiveName = UUID.randomUUID().toString();
 
-      // Delegate
-      return create(type, archiveName += extension);
-   }
+        // Delegate
+        return create(type, archiveName += extension);
+    }
 
-   /**
-    * Creates a new archive of the specified type.  The archive
-    * will be be backed by the {@link Configuration}
-    * specific to this {@link ArchiveFactory}.
-    *
-    * @param type The type of the archive e.g. {@link org.jboss.shrinkwrap.api.spec.WebArchive}
-    * @param archiveName the archiveName to use
-    * @return An {@link Assignable} view
-    * @throws IllegalArgumentException either argument is not supplied
-    */
-   public <T extends Assignable> T create(final Class<T> type, final String archiveName)
-         throws IllegalArgumentException
-   {
-      // Precondition checks
-      if (type == null)
-      {
-         throw new IllegalArgumentException("Type must be specified");
-      }
-      if (archiveName == null)
-      {
-         throw new IllegalArgumentException("ArchiveName must be specified");
-      }
+    /**
+     * Creates a new archive of the specified type. The archive will be be backed by the {@link Configuration} specific
+     * to this {@link ArchiveFactory}.
+     *
+     * @param type
+     *            The type of the archive e.g. {@link org.jboss.shrinkwrap.api.spec.WebArchive}
+     * @param archiveName
+     *            the archiveName to use
+     * @return An {@link Assignable} view
+     * @throws IllegalArgumentException
+     *             either argument is not supplied
+     */
+    public <T extends Assignable> T create(final Class<T> type, final String archiveName)
+        throws IllegalArgumentException {
+        // Precondition checks
+        if (type == null) {
+            throw new IllegalArgumentException("Type must be specified");
+        }
+        if (archiveName == null) {
+            throw new IllegalArgumentException("ArchiveName must be specified");
+        }
 
-      // Get the impl class
-      final Class<?> archiveImplClass;
-      try
-      {
-         archiveImplClass = ClassLoaderSearchUtil.findClassFromClassLoaders(ARCHIVE_IMPL,
-               this.configuration.getClassLoaders());
-      }
-      catch (final ClassNotFoundException cnfe)
-      {
-         throw new IllegalStateException("Could not find the archive implementation class " + ARCHIVE_IMPL
-               + " in any configured ClassLoader", cnfe);
-      }
-      
-      // Make a new instance
-      final Archive<?> archive = SecurityActions.newInstance(archiveImplClass, new Class<?>[]
-      {String.class, Configuration.class}, new Object[]
-      {archiveName, configuration}, Archive.class);
-      
-      // Wrap as the requested type and return
-      return archive.as(type);
-   }
+        // Get the impl class
+        final Class<?> archiveImplClass;
+        try {
+            archiveImplClass = ClassLoaderSearchUtil.findClassFromClassLoaders(ARCHIVE_IMPL,
+                this.configuration.getClassLoaders());
+        } catch (final ClassNotFoundException cnfe) {
+            throw new IllegalStateException("Could not find the archive implementation class " + ARCHIVE_IMPL
+                + " in any configured ClassLoader", cnfe);
+        }
 
-   /**
-    * Creates a new archive of the specified type as imported 
-    * from the specified {@link File}.  The file is expected to be encoded as
-    * ZIP (ie. JAR/WAR/EAR).   The name of the archive will be set to {@link File#getName()}. 
-    * The archive will be be backed by the {@link Configuration}
-    * specific to this {@link ArchiveFactory}.
-    *
-    * @param type The type of the archive e.g. {@link org.jboss.shrinkwrap.api.spec.WebArchive}
-    * @param archiveFile the archiveFile to use
-    * @return An {@link Assignable} view
-    * @throws IllegalArgumentException If either argument is not supplied, if the specified
-    * {@link File} does not exist, or is not a valid ZIP file
-    * @throws org.jboss.shrinkwrap.api.importer.ArchiveImportException If an error occurred during the import process
-    */
-   public <T extends Assignable> T createFromZipFile(final Class<T> type, final File archiveFile)
-         throws IllegalArgumentException, ArchiveImportException
-   {
-      // Precondition checks
-      if (type == null)
-      {
-         throw new IllegalArgumentException("Type must be specified");
-      }
-      if (archiveFile == null)
-      {
-         throw new IllegalArgumentException("file must be specified");
-      }
-      if (!archiveFile.exists())
-      {
-         throw new IllegalArgumentException("File for import exist: " + archiveFile.getAbsolutePath());
-      }
-      if (archiveFile.isDirectory())
-      {
-         throw new IllegalArgumentException("File for import must not be a directory: " + archiveFile.getAbsolutePath());
-      }
+        // Make a new instance
+        final Archive<?> archive = SecurityActions.newInstance(archiveImplClass, new Class<?>[] { String.class,
+            Configuration.class }, new Object[] { archiveName, configuration }, Archive.class);
 
-      // Construct ZipFile
-      final ZipFile zipFile;
-      try
-      {
-         zipFile = new ZipFile(archiveFile);
-      }
-      catch (final ZipException ze)
-      {
-         throw new IllegalArgumentException("Does not appear to be a valid ZIP file: " + archiveFile.getAbsolutePath());
-      }
-      catch (final IOException ioe)
-      {
-         throw new RuntimeException("I/O Error in importing new archive from ZIP: " + archiveFile.getAbsolutePath(),
-               ioe);
-      }
+        // Wrap as the requested type and return
+        return archive.as(type);
+    }
 
-      // Import
-      return ShrinkWrap.create(type, archiveFile.getName()).as(ZipImporter.class).importFrom(zipFile).as(type);
+    /**
+     * Creates a new archive of the specified type as imported from the specified {@link File}. The file is expected to
+     * be encoded as ZIP (ie. JAR/WAR/EAR). The name of the archive will be set to {@link File#getName()}. The archive
+     * will be be backed by the {@link Configuration} specific to this {@link ArchiveFactory}.
+     *
+     * @param type
+     *            The type of the archive e.g. {@link org.jboss.shrinkwrap.api.spec.WebArchive}
+     * @param archiveFile
+     *            the archiveFile to use
+     * @return An {@link Assignable} view
+     * @throws IllegalArgumentException
+     *             If either argument is not supplied, if the specified {@link File} does not exist, or is not a valid
+     *             ZIP file
+     * @throws org.jboss.shrinkwrap.api.importer.ArchiveImportException
+     *             If an error occurred during the import process
+     */
+    public <T extends Assignable> T createFromZipFile(final Class<T> type, final File archiveFile)
+        throws IllegalArgumentException, ArchiveImportException {
+        // Precondition checks
+        if (type == null) {
+            throw new IllegalArgumentException("Type must be specified");
+        }
+        if (archiveFile == null) {
+            throw new IllegalArgumentException("file must be specified");
+        }
+        if (!archiveFile.exists()) {
+            throw new IllegalArgumentException("File for import exist: " + archiveFile.getAbsolutePath());
+        }
+        if (archiveFile.isDirectory()) {
+            throw new IllegalArgumentException("File for import must not be a directory: "
+                + archiveFile.getAbsolutePath());
+        }
 
-   }
+        // Construct ZipFile
+        final ZipFile zipFile;
+        try {
+            zipFile = new ZipFile(archiveFile);
+        } catch (final ZipException ze) {
+            throw new IllegalArgumentException("Does not appear to be a valid ZIP file: "
+                + archiveFile.getAbsolutePath());
+        } catch (final IOException ioe) {
+            throw new RuntimeException("I/O Error in importing new archive from ZIP: " + archiveFile.getAbsolutePath(),
+                ioe);
+        }
+
+        // Import
+        return ShrinkWrap.create(type, archiveFile.getName()).as(ZipImporter.class).importFrom(zipFile).as(type);
+
+    }
 }

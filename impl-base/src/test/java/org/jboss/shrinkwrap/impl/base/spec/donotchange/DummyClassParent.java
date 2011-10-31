@@ -17,21 +17,18 @@
 package org.jboss.shrinkwrap.impl.base.spec.donotchange;
 
 /**
- * Parent of a class used in testing the addition of classes
- * to archives
- * 
+ * Parent of a class used in testing the addition of classes to archives
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class DummyClassParent
-{
+public class DummyClassParent {
 
-   //-------------------------------------------------------------------------------------||
-   // Inner Classes ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Inner Classes ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   public static class ParentInnerClass
-   {
+    public static class ParentInnerClass {
 
-   }
+    }
 }

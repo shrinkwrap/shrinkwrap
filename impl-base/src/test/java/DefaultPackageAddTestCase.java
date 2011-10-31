@@ -27,98 +27,93 @@ import org.junit.Test;
  */
 
 /**
- * Ensures that we can add classes in the default package to an archive.
- * This test is also in the default package due to compiler restrictions on
- * importing from default package.
- * 
+ * Ensures that we can add classes in the default package to an archive. This test is also in the default package due to
+ * compiler restrictions on importing from default package.
+ *
  * SHIRNKWRAP-143
- * 
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class DefaultPackageAddTestCase
-{
+public class DefaultPackageAddTestCase {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(DefaultPackageAddTestCase.class.getName());
-   
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-   
-   private ArchivePath classInDefaultPackagePath;
-   private ArchivePath innerClassInDefaultPackagePath;
-   
-   //-------------------------------------------------------------------------------------||
-   // Fixtures ---------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-   
-   @Before
-   public void setupPaths() {
-      classInDefaultPackagePath = ArchivePaths.create("/ClassInDefaultPackage.class");
-      innerClassInDefaultPackagePath = ArchivePaths.create("/ClassInDefaultPackage$InnerClassInDefaultPackage.class");
-   }
-   
-   @After
-   public void cleanupPaths() {
-      classInDefaultPackagePath = null;
-      innerClassInDefaultPackagePath = null;
-   }
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(DefaultPackageAddTestCase.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||   
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Ensures that classes from the default package may be added
-    * 
-    * SHRINKWRAP-143
-    */
-   @Test
-   public void canAddClassFromDefaultPackage() throws Exception
-   {
-      // Create an archive with Classes from the default package
-      final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "test.jar")
-            .addClass(ClassInDefaultPackage.class);
-      log.info(archive.toString(true));
+    private ArchivePath classInDefaultPackagePath;
+    private ArchivePath innerClassInDefaultPackagePath;
 
-      assertClassesWereAdded(archive);
-   }
-   
-   /**
-    * Makes sure classes in the default package, and only in the default package, are added.
-    * 
-    * SHRINKWRAP-233, SHRINKWRAP-302
-    */
-   @Test
-   public void testAddDefaultPackage() {
-      JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
-      archive.addDefaultPackage();
-      
-      assertClassesWereAdded(archive);
-      
-      /*
-       * It should have added only the following three classes:
-       * 1. /DefaultPackageAddTestCase.class
-       * 2. /ClassInDefaultPackage.class
-       * 3. /ClassInDefaultPackage$InnerClassInDefaultPackage.class
-       */ 
-      final int expectedSize = 3;
-      final int size = archive.getContent().size();
-      Assert.assertEquals("Not the expected number of assets added to the archive", expectedSize, size);
-   }
+    // -------------------------------------------------------------------------------------||
+    // Fixtures ---------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   private void assertClassesWereAdded(JavaArchive archive) {
-      Assert.assertTrue("Class in default package was not added to archive", archive
-            .contains(classInDefaultPackagePath));
-      Assert.assertTrue("Inner class in default package was not added to archive", archive
-            .contains(innerClassInDefaultPackagePath));
-   }
-   
+    @Before
+    public void setupPaths() {
+        classInDefaultPackagePath = ArchivePaths.create("/ClassInDefaultPackage.class");
+        innerClassInDefaultPackagePath = ArchivePaths.create("/ClassInDefaultPackage$InnerClassInDefaultPackage.class");
+    }
+
+    @After
+    public void cleanupPaths() {
+        classInDefaultPackagePath = null;
+        innerClassInDefaultPackagePath = null;
+    }
+
+    // -------------------------------------------------------------------------------------||
+    // Tests ------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+
+    /**
+     * Ensures that classes from the default package may be added
+     *
+     * SHRINKWRAP-143
+     */
+    @Test
+    public void canAddClassFromDefaultPackage() throws Exception {
+        // Create an archive with Classes from the default package
+        final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "test.jar").addClass(
+            ClassInDefaultPackage.class);
+        log.info(archive.toString(true));
+
+        assertClassesWereAdded(archive);
+    }
+
+    /**
+     * Makes sure classes in the default package, and only in the default package, are added.
+     *
+     * SHRINKWRAP-233, SHRINKWRAP-302
+     */
+    @Test
+    public void testAddDefaultPackage() {
+        JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
+        archive.addDefaultPackage();
+
+        assertClassesWereAdded(archive);
+
+        /*
+         * It should have added only the following three classes: 1. /DefaultPackageAddTestCase.class 2.
+         * /ClassInDefaultPackage.class 3. /ClassInDefaultPackage$InnerClassInDefaultPackage.class
+         */
+        final int expectedSize = 3;
+        final int size = archive.getContent().size();
+        Assert.assertEquals("Not the expected number of assets added to the archive", expectedSize, size);
+    }
+
+    private void assertClassesWereAdded(JavaArchive archive) {
+        Assert.assertTrue("Class in default package was not added to archive",
+            archive.contains(classInDefaultPackagePath));
+        Assert.assertTrue("Inner class in default package was not added to archive",
+            archive.contains(innerClassInDefaultPackagePath));
+    }
+
 }

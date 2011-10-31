@@ -18,22 +18,22 @@
 package org.jboss.shrinkwrap.api;
 
 /**
- * UnknownExtensionTypeExceptionDelegator
- * Delegator added to be able to reach {@link UnknownExtensionTypeException} from impl-base
+ * UnknownExtensionTypeExceptionDelegator Delegator added to be able to reach {@link UnknownExtensionTypeException} from
+ * impl-base
  *
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
-public class UnknownExtensionTypeExceptionDelegator
-{
-   /**
-    *
-    * @param type The Extension interface class
-    * @param <T> The type of extension
-    * @return an UnknownExtensionTypeException to be thrown
-    */
-   public static <T extends Assignable> UnknownExtensionTypeException newExceptionInstance(Class<T> type)
-   {
-      return UnknownExtensionTypeException.newInstance(type);
-   }
+public class UnknownExtensionTypeExceptionDelegator {
+    /**
+     *
+     * @param type
+     *            The Extension interface class
+     * @param <T>
+     *            The type of extension
+     * @return an UnknownExtensionTypeException to be thrown
+     */
+    public static <T extends Assignable> UnknownExtensionTypeException newExceptionInstance(Class<T> type) {
+        return UnknownExtensionTypeException.newInstance(type);
+    }
 }

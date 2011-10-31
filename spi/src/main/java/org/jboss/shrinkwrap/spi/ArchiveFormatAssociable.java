@@ -24,7 +24,6 @@ import org.jboss.shrinkwrap.api.ArchiveFormat;
  * @author Davide D'Alto
  * @version $Revision: $
  */
-public interface ArchiveFormatAssociable
-{
-   ArchiveFormat getArchiveFormat();
+public interface ArchiveFormatAssociable {
+    ArchiveFormat getArchiveFormat();
 }

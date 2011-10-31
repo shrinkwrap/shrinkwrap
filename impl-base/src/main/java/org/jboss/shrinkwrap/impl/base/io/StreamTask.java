@@ -20,24 +20,25 @@ import java.io.Closeable;
 
 /**
  * A I/O operation to be executed against a I/O stream in the context of a StreamTemplate
- * 
+ *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public interface StreamTask<S extends Closeable>
-{
+public interface StreamTask<S extends Closeable> {
 
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * This method execute's this StreamTask with the provided stream.
-    * 
-    * @param stream This parameter holds the stream that this StreamTask operates on to execute its task.
-    * @throws Exception This method will throw an instance of Exception if an unrecoverable error is encountered while 
-    *   performing its task.
-    */
-   void execute(S stream) throws Exception;
+    /**
+     * This method execute's this StreamTask with the provided stream.
+     *
+     * @param stream
+     *            This parameter holds the stream that this StreamTask operates on to execute its task.
+     * @throws Exception
+     *             This method will throw an instance of Exception if an unrecoverable error is encountered while
+     *             performing its task.
+     */
+    void execute(S stream) throws Exception;
 
 }

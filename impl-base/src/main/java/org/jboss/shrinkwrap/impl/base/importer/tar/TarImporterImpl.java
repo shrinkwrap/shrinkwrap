@@ -24,45 +24,43 @@ import org.jboss.shrinkwrap.api.importer.TarImporter;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream;
 
 /**
- * Used to import existing TAR files/streams into the given {@link Archive}  
+ * Used to import existing TAR files/streams into the given {@link Archive}
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class TarImporterImpl extends TarImporterBase<TarInputStream, TarImporter> implements TarImporter
-{
+public class TarImporterImpl extends TarImporterBase<TarInputStream, TarImporter> implements TarImporter {
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   public TarImporterImpl(final Archive<?> archive)
-   {
-      super(archive);
-   }
+    public TarImporterImpl(final Archive<?> archive) {
+        super(archive);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.tar.TarImporterBase#getActualClass()
-    */
-   @Override
-   Class<TarImporter> getActualClass()
-   {
-      return TarImporter.class;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.tar.TarImporterBase#getActualClass()
+     */
+    @Override
+    Class<TarImporter> getActualClass() {
+        return TarImporter.class;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.tar.TarImporterBase#getInputStreamForRawStream(java.io.InputStream)
-    */
-   @Override
-   TarInputStream getInputStreamForRawStream(final InputStream in) throws IOException
-   {
-      assert in != null : "Specified inputstream was null";
-      return new TarInputStream(in);
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.tar.TarImporterBase#getInputStreamForRawStream(java.io.InputStream)
+     */
+    @Override
+    TarInputStream getInputStreamForRawStream(final InputStream in) throws IOException {
+        assert in != null : "Specified inputstream was null";
+        return new TarInputStream(in);
+    }
 
 }

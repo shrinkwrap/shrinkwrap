@@ -28,107 +28,95 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarOutputStreamImpl;
 
 /**
  * Base implementation for exporter delegates of the TAR format
- * 
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public abstract class TarExporterDelegateBase<T extends TarOutputStreamImpl> extends StreamExporterDelegateBase<T>
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public abstract class TarExporterDelegateBase<T extends TarOutputStreamImpl> extends StreamExporterDelegateBase<T> {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(TarExporterDelegateBase.class.getName());
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(TarExporterDelegateBase.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new exporter delegate for exporting archives
-    */
-   public TarExporterDelegateBase(final Archive<?> archive)
-   {
-      super(archive);
-   }
+    /**
+     * Creates a new exporter delegate for exporting archives
+     */
+    public TarExporterDelegateBase(final Archive<?> archive) {
+        super(archive);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase#closeEntry(java.io.OutputStream)
-    */
-   @Override
-   protected final void closeEntry(final T outputStream) throws IOException
-   {
-      // Close the entry
-      outputStream.closeEntry();
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase#closeEntry(java.io.OutputStream)
+     */
+    @Override
+    protected final void closeEntry(final T outputStream) throws IOException {
+        // Close the entry
+        outputStream.closeEntry();
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase#putNextExtry(java.io.OutputStream, java.lang.String)
-    */
-   @Override
-   protected final void putNextExtry(final T outputStream, final String context) throws IOException
-   {
-      // Put
-      final TarEntry entry = new TarEntry(context);
-      outputStream.putNextEntry(entry);
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase#putNextExtry(java.io.OutputStream,
+     *      java.lang.String)
+     */
+    @Override
+    protected final void putNextExtry(final T outputStream, final String context) throws IOException {
+        // Put
+        final TarEntry entry = new TarEntry(context);
+        outputStream.putNextEntry(entry);
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase#getExportTask()
-    */
-   @Override
-   protected Callable<Void> getExportTask(final Callable<Void> wrappedTask)
-   {
-      assert wrappedTask != null : "Wrapped task must be specified";
-      return new Callable<Void>()
-      {
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase#getExportTask()
+     */
+    @Override
+    protected Callable<Void> getExportTask(final Callable<Void> wrappedTask) {
+        assert wrappedTask != null : "Wrapped task must be specified";
+        return new Callable<Void>() {
 
-         @Override
-         public Void call() throws Exception
-         {
-            try
-            {
-               // Attempt the wrapped task
-               wrappedTask.call();
+            @Override
+            public Void call() throws Exception {
+                try {
+                    // Attempt the wrapped task
+                    wrappedTask.call();
+                } catch (final Exception e) {
+
+                    // Log this and rethrow; otherwise if we go into deadlock we won't ever
+                    // be able to get the underlying cause from the Future
+                    log.log(Level.WARNING, "Exception encountered during export of archive", e);
+
+                    throw e;
+                } finally {
+
+                    try {
+                        outputStream.close();
+                    } catch (final IOException ioe) {
+                        // Ignore, but warn of danger
+                        log.log(Level.WARNING,
+                            "[SHRINKWRAP-120] Possible deadlock scenario: Got exception on closing the out stream: "
+                                + ioe.getMessage(), ioe);
+                    }
+                }
+
+                return null;
             }
-            catch (final Exception e)
-            {
-
-               // Log this and rethrow; otherwise if we go into deadlock we won't ever 
-               // be able to get the underlying cause from the Future 
-               log.log(Level.WARNING, "Exception encountered during export of archive", e);
-
-               throw e;
-            }
-            finally
-            {
-
-               try
-               {
-                  outputStream.close();
-               }
-               catch (final IOException ioe)
-               {
-                  // Ignore, but warn of danger
-                  log.log(
-                        Level.WARNING,
-                        "[SHRINKWRAP-120] Possible deadlock scenario: Got exception on closing the out stream: "
-                              + ioe.getMessage(), ioe);
-               }
-            }
-
-            return null;
-         }
-      };
-   }
+        };
+    }
 }

@@ -17,31 +17,31 @@
 package org.jboss.shrinkwrap.impl.base;
 
 /**
- * ExtensionLoadingException
- * This Unchecked Exception Class is thrown from the {@link org.jboss.shrinkwrap.impl.base.ServiceExtensionLoader}
- * when something wrong has happened that we can not recover from.
+ * ExtensionLoadingException This Unchecked Exception Class is thrown from the
+ * {@link org.jboss.shrinkwrap.impl.base.ServiceExtensionLoader} when something wrong has happened that we can not
+ * recover from.
  *
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
-public class ExtensionLoadingException extends RuntimeException
-{
-   private static final long serialVersionUID = -4895083865917512623L;
+public class ExtensionLoadingException extends RuntimeException {
+    private static final long serialVersionUID = -4895083865917512623L;
 
-   /**
-    * @param message user-friendly description of why message is thrown
-    */
-   public ExtensionLoadingException(String message)
-   {
-      super(message);
-   }
+    /**
+     * @param message
+     *            user-friendly description of why message is thrown
+     */
+    public ExtensionLoadingException(String message) {
+        super(message);
+    }
 
-   /**
-    * @param message user-friendly description of why message is thrown
-    * @param cause Underlying cause, add this when using Exception Translation / rethrowing
-    */
-   public ExtensionLoadingException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    /**
+     * @param message
+     *            user-friendly description of why message is thrown
+     * @param cause
+     *            Underlying cause, add this when using Exception Translation / rethrowing
+     */
+    public ExtensionLoadingException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

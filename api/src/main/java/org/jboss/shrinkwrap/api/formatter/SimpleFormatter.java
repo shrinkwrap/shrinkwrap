@@ -23,64 +23,58 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Node;
 
 /**
- * {@link Formatter} implementation to provide a simple, one-line
- * description of an {@link Archive}, including its name
- * 
+ * {@link Formatter} implementation to provide a simple, one-line description of an {@link Archive}, including its name
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
 enum SimpleFormatter implements Formatter {
-   INSTANCE;
+    INSTANCE;
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * String used to denote assets in the formatted message 
-    */
-   private static final String ASSETS = "assets";
+    /**
+     * String used to denote assets in the formatted message
+     */
+    private static final String ASSETS = "assets";
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @Override
-   public String format(final Archive<?> archive) throws IllegalArgumentException
-   {
-      // Precondition checks
-      if (archive == null)
-      {
-         throw new IllegalArgumentException("archive must be specified");
-      }
+    @Override
+    public String format(final Archive<?> archive) throws IllegalArgumentException {
+        // Precondition checks
+        if (archive == null) {
+            throw new IllegalArgumentException("archive must be specified");
+        }
 
-      // Format: "name: X assets"
-      return new StringBuilder().append(archive.getName()).append(FormattingConstants.COLON).append(
-            FormattingConstants.SPACE).append(this.getNumAssets(archive)).append(FormattingConstants.SPACE).append(
-            ASSETS).toString();
-   }
-   
-   /**
-    * Returns the number of assets on an {@link Archive}.
-    * 
-    * @param archive the Archive from which we are goint to obtain the 
-    *       number of assets.
-    * @return the number of assets inside the archive
-    */
-   private int getNumAssets(final Archive<?> archive) 
-   {
-      int assets = 0;
-      
-      Map<ArchivePath, Node> content = archive.getContent();
-      for (Map.Entry<ArchivePath, Node> entry : content.entrySet()) 
-      {
-         if (entry.getValue().getAsset() != null) 
-         {
-            assets++;
-         }
-      }
-      
-      return assets;
-   }
+        // Format: "name: X assets"
+        return new StringBuilder().append(archive.getName()).append(FormattingConstants.COLON)
+            .append(FormattingConstants.SPACE).append(this.getNumAssets(archive)).append(FormattingConstants.SPACE)
+            .append(ASSETS).toString();
+    }
+
+    /**
+     * Returns the number of assets on an {@link Archive}.
+     *
+     * @param archive
+     *            the Archive from which we are goint to obtain the number of assets.
+     * @return the number of assets inside the archive
+     */
+    private int getNumAssets(final Archive<?> archive) {
+        int assets = 0;
+
+        Map<ArchivePath, Node> content = archive.getContent();
+        for (Map.Entry<ArchivePath, Node> entry : content.entrySet()) {
+            if (entry.getValue().getAsset() != null) {
+                assets++;
+            }
+        }
+
+        return assets;
+    }
 
 }

@@ -20,10 +20,9 @@ import org.jboss.shrinkwrap.api.Archive;
 
 /**
  * Mock archive type for testing
- * 
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public interface MockArchive extends Archive<MockArchive>
-{
+public interface MockArchive extends Archive<MockArchive> {
 
 }

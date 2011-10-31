@@ -27,28 +27,33 @@ import org.jboss.shrinkwrap.api.Assignable;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface ExplodedImporter extends Assignable
-{
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-   /**
-    * Import a directory structure as a archive.
-    * 
-    * @param file The directory to import 
-    * @return this
-    * @throws IllegalArgumentException if file is null
-    * @throws IllegalArgumentException if file is not a directory
-    */
-   ExplodedImporter importDirectory(File file);
-   
-   /**
-    * Import a directory structure as a archive.
-    * 
-    * @param fileName The name of the directory to import
-    * @return this
-    * @throws IllegalArgumentException if file is null
-    * @throws IllegalArgumentException if file is not a directory
-    */
-   ExplodedImporter importDirectory(String fileName);
+public interface ExplodedImporter extends Assignable {
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    /**
+     * Import a directory structure as a archive.
+     *
+     * @param file
+     *            The directory to import
+     * @return this
+     * @throws IllegalArgumentException
+     *             if file is null
+     * @throws IllegalArgumentException
+     *             if file is not a directory
+     */
+    ExplodedImporter importDirectory(File file);
+
+    /**
+     * Import a directory structure as a archive.
+     *
+     * @param fileName
+     *            The name of the directory to import
+     * @return this
+     * @throws IllegalArgumentException
+     *             if file is null
+     * @throws IllegalArgumentException
+     *             if file is not a directory
+     */
+    ExplodedImporter importDirectory(String fileName);
 }

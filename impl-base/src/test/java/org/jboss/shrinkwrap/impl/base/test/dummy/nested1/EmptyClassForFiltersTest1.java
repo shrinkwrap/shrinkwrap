@@ -18,11 +18,10 @@ package org.jboss.shrinkwrap.impl.base.test.dummy.nested1;
 
 /**
  * EmptyClass used to test package filtering.
- * 
+ *
  * @author "Davide D'Alto"
  *
  */
-public class EmptyClassForFiltersTest1
-{
+public class EmptyClassForFiltersTest1 {
 
 }

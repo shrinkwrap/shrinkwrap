@@ -27,8 +27,8 @@ import org.jboss.shrinkwrap.api.importer.TarImporter;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 
 /**
- * Value object binding the {@code StreamExporter} and the {@code StreamImporter} 
- * implementations of the same archive format.
+ * Value object binding the {@code StreamExporter} and the {@code StreamImporter} implementations of the same archive
+ * format.
  *
  * @author Davide D'Alto
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
@@ -36,42 +36,37 @@ import org.jboss.shrinkwrap.api.importer.ZipImporter;
  * @see StreamImporter
  * @see StreamExporter
  */
-class ArchiveFormatStreamBindings
-{
+class ArchiveFormatStreamBindings {
 
-   private final Class<? extends StreamImporter<?>> importer;
+    private final Class<? extends StreamImporter<?>> importer;
 
-   private final Class<? extends StreamExporter> exporter;
+    private final Class<? extends StreamExporter> exporter;
 
-   ArchiveFormatStreamBindings(final ArchiveFormat format)
-   {
-      // Initialize the stream importer/exporters based upon the type passed in
-      switch (format)
-      {
-         case TAR :
-            this.importer = TarImporter.class;
-            this.exporter = TarExporter.class;
-            break;
-         case TAR_GZ :
-            this.importer = TarGzImporter.class;
-            this.exporter = TarGzExporter.class;
-            break;
-         case ZIP :
-            this.importer = ZipImporter.class;
-            this.exporter = ZipExporter.class;
-            break;
-         default :
-            throw new IllegalArgumentException("Unknown format specified: " + format);
-      }
-   }
+    ArchiveFormatStreamBindings(final ArchiveFormat format) {
+        // Initialize the stream importer/exporters based upon the type passed in
+        switch (format) {
+            case TAR:
+                this.importer = TarImporter.class;
+                this.exporter = TarExporter.class;
+                break;
+            case TAR_GZ:
+                this.importer = TarGzImporter.class;
+                this.exporter = TarGzExporter.class;
+                break;
+            case ZIP:
+                this.importer = ZipImporter.class;
+                this.exporter = ZipExporter.class;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown format specified: " + format);
+        }
+    }
 
-   public Class<? extends StreamExporter> getExporter()
-   {
-      return exporter;
-   }
+    public Class<? extends StreamExporter> getExporter() {
+        return exporter;
+    }
 
-   public Class<? extends StreamImporter<?>> getImporter()
-   {
-      return importer;
-   }
+    public Class<? extends StreamImporter<?>> getImporter() {
+        return importer;
+    }
 }

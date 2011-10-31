@@ -22,56 +22,56 @@ import org.jboss.shrinkwrap.spi.MemoryMapArchive;
 
 /**
  * MemoryMapArchiveImpl
- * 
+ *
  * A default implementation for all MemoryMap archives. Thread-safe.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  * @param <T>
  */
-public class MemoryMapArchiveImpl extends MemoryMapArchiveBase<MemoryMapArchive> implements MemoryMapArchive
-{
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class MemoryMapArchiveImpl extends MemoryMapArchiveBase<MemoryMapArchive> implements MemoryMapArchive {
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Constructor
-    *  
-    * This constructor will generate a 
-    * unique {@link Archive#getName()} per instance.
-    *  
-    * @param configuration The configuration for this archive
-    * @throws IllegalArgumentException If the configuration is not specified
-    */
-   public MemoryMapArchiveImpl(final Configuration configuration) throws IllegalArgumentException
-   {
-      super(configuration);
-   }
+    /**
+     * Constructor
+     *
+     * This constructor will generate a unique {@link Archive#getName()} per instance.
+     *
+     * @param configuration
+     *            The configuration for this archive
+     * @throws IllegalArgumentException
+     *             If the configuration is not specified
+     */
+    public MemoryMapArchiveImpl(final Configuration configuration) throws IllegalArgumentException {
+        super(configuration);
+    }
 
-   /**
-    * Constructor
-    * 
-    * This constructor will generate an {@link Archive} with the provided name.
-    *  
-    * @param archiveName
-    * @param configuration The configuration for this archive
-    * @throws IllegalArgumentException If the name or configuration is not specified
-    */
-   public MemoryMapArchiveImpl(final String archiveName, final Configuration configuration)
-         throws IllegalArgumentException
-   {
-      super(archiveName, configuration);
-   }
+    /**
+     * Constructor
+     *
+     * This constructor will generate an {@link Archive} with the provided name.
+     *
+     * @param archiveName
+     * @param configuration
+     *            The configuration for this archive
+     * @throws IllegalArgumentException
+     *             If the name or configuration is not specified
+     */
+    public MemoryMapArchiveImpl(final String archiveName, final Configuration configuration)
+        throws IllegalArgumentException {
+        super(archiveName, configuration);
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.ArchiveBase#getActualClass()
-    */
-   @Override
-   protected Class<MemoryMapArchive> getActualClass()
-   {
-      return MemoryMapArchive.class;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.ArchiveBase#getActualClass()
+     */
+    @Override
+    protected Class<MemoryMapArchive> getActualClass() {
+        return MemoryMapArchive.class;
+    }
 
 }

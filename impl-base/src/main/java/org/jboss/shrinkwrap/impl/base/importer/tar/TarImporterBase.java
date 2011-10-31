@@ -33,182 +33,161 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarEntry;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream;
 
 /**
- * Base of implementations used to import existing 
- * TAR files/streams into the given {@link Archive}  
+ * Base of implementations used to import existing TAR files/streams into the given {@link Archive}
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporter<I>>
-      extends
-         AssignableBase<Archive<?>> implements StreamImporter<I>
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporter<I>> extends
+    AssignableBase<Archive<?>> implements StreamImporter<I> {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(TarImporterBase.class.getName());
+    /**
+     * Logger
+     */
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(TarImporterBase.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   public TarImporterBase(final Archive<?> archive)
-   {
-      super(archive);
-   }
+    public TarImporterBase(final Archive<?> archive) {
+        super(archive);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Returns the actual class for this implementation
-    */
-   abstract Class<I> getActualClass();
+    /**
+     * Returns the actual class for this implementation
+     */
+    abstract Class<I> getActualClass();
 
-   /**
-    * Obtains the correct {@link InputStream} wrapper type for the specified raw
-    * data input
-    * @param in
-    * @return
-    * @throws IOException
-    */
-   abstract S getInputStreamForRawStream(InputStream in) throws IOException;
+    /**
+     * Obtains the correct {@link InputStream} wrapper type for the specified raw data input
+     *
+     * @param in
+     * @return
+     * @throws IOException
+     */
+    abstract S getInputStreamForRawStream(InputStream in) throws IOException;
 
-   //-------------------------------------------------------------------------------------||
-   // Functional Methods -----------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Functional Methods -----------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Provides covarient return
-    */
-   private I covarientReturn()
-   {
-      return this.getActualClass().cast(this);
-   }
+    /**
+     * Provides covarient return
+     */
+    private I covarientReturn() {
+        return this.getActualClass().cast(this);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.InputStream)
-    */
-   @Override
-   public I importFrom(final InputStream stream) throws ArchiveImportException
-   {
-      Validate.notNull(stream, "Stream must be specified");
-      final S tarStream;
-      try
-      {
-         tarStream = this.getInputStreamForRawStream(stream);
-      }
-      catch (final RuntimeException re)
-      {
-         throw new ArchiveImportException("Could not wrap raw input with TAR stream", re);
-      }
-      catch (final IOException e)
-      {
-         throw new ArchiveImportException("Could not wrap raw input with TAR stream", e);
-      }
-      return this.importFrom(tarStream);
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.InputStream)
+     */
+    @Override
+    public I importFrom(final InputStream stream) throws ArchiveImportException {
+        Validate.notNull(stream, "Stream must be specified");
+        final S tarStream;
+        try {
+            tarStream = this.getInputStreamForRawStream(stream);
+        } catch (final RuntimeException re) {
+            throw new ArchiveImportException("Could not wrap raw input with TAR stream", re);
+        } catch (final IOException e) {
+            throw new ArchiveImportException("Could not wrap raw input with TAR stream", e);
+        }
+        return this.importFrom(tarStream);
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.InputStream)
-    */
-   private I importFrom(final S stream) throws ArchiveImportException
-   {
-      Validate.notNull(stream, "Stream must be specified");
-      try
-      {
-         TarEntry entry;
-         while ((entry = stream.getNextEntry()) != null)
-         {
-            // Get the name
-            String entryName = entry.getName();
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.InputStream)
+     */
+    private I importFrom(final S stream) throws ArchiveImportException {
+        Validate.notNull(stream, "Stream must be specified");
+        try {
+            TarEntry entry;
+            while ((entry = stream.getNextEntry()) != null) {
+                // Get the name
+                String entryName = entry.getName();
 
-            final Archive<?> archive = this.getArchive();
+                final Archive<?> archive = this.getArchive();
 
-            // Handle directories separately
-            if (entry.isDirectory())
-            {
-               archive.addAsDirectory(entryName);
-               continue;
+                // Handle directories separately
+                if (entry.isDirectory()) {
+                    archive.addAsDirectory(entryName);
+                    continue;
+                }
+
+                ByteArrayOutputStream output = new ByteArrayOutputStream(8192);
+                byte[] content = new byte[4096];
+                int readBytes;
+                while ((readBytes = stream.read(content, 0, content.length)) != -1) {
+                    output.write(content, 0, readBytes);
+                }
+                archive.add(new ByteArrayAsset(output.toByteArray()), entryName);
             }
+        } catch (final RuntimeException re) {
+            throw new ArchiveImportException("Could not import stream", re);
+        } catch (IOException e) {
+            throw new ArchiveImportException("Could not import stream", e);
+        }
+        return this.covarientReturn();
+    }
 
-            ByteArrayOutputStream output = new ByteArrayOutputStream(8192);
-            byte[] content = new byte[4096];
-            int readBytes;
-            while ((readBytes = stream.read(content, 0, content.length)) != -1)
-            {
-               output.write(content, 0, readBytes);
-            }
-            archive.add(new ByteArrayAsset(output.toByteArray()), entryName);
-         }
-      }
-      catch (final RuntimeException re)
-      {
-         throw new ArchiveImportException("Could not import stream", re);
-      }
-      catch (IOException e)
-      {
-         throw new ArchiveImportException("Could not import stream", e);
-      }
-      return this.covarientReturn();
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.lang.Object)
+     */
+    @Override
+    public I importFrom(final File file) throws ArchiveImportException {
+        Validate.notNull(file, "File must be specified");
+        if (!file.exists()) {
+            throw new IllegalArgumentException("Specified file for import does not exist: " + file);
+        }
+        if (file.isDirectory()) {
+            throw new IllegalArgumentException("Specified file for import is a directory: " + file);
+        }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.lang.Object)
-    */
-   @Override
-   public I importFrom(final File file) throws ArchiveImportException
-   {
-      Validate.notNull(file, "File must be specified");
-      if (!file.exists())
-      {
-         throw new IllegalArgumentException("Specified file for import does not exist: " + file);
-      }
-      if (file.isDirectory())
-      {
-         throw new IllegalArgumentException("Specified file for import is a directory: " + file);
-      }
+        final S archive;
+        try {
+            archive = this.getInputStreamForFile(file);
+        } catch (final IOException e) {
+            throw new ArchiveImportException("Could not read archive file " + file, e);
+        }
 
-      final S archive;
-      try
-      {
-         archive = this.getInputStreamForFile(file);
-      }
-      catch (final IOException e)
-      {
-         throw new ArchiveImportException("Could not read archive file " + file, e);
-      }
+        return this.importFrom(archive);
 
-      return this.importFrom(archive);
+    }
 
-   }
+    // -------------------------------------------------------------------------------------||
+    // Internal Helper Methods ------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   //-------------------------------------------------------------------------------------||
-   // Internal Helper Methods ------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-
-   /**
-    * Obtains an implementation-specific stream to the specified {@link File}
-    * @param file To open a stream to, must be specified
-    * @return
-    * @throws IOException If there was a problem getting an instream to the file
-    */
-   private S getInputStreamForFile(File file) throws IOException
-   {
-      assert file != null : "File must be specified";
-      return this.getInputStreamForRawStream(new FileInputStream(file));
-   }
+    /**
+     * Obtains an implementation-specific stream to the specified {@link File}
+     *
+     * @param file
+     *            To open a stream to, must be specified
+     * @return
+     * @throws IOException
+     *             If there was a problem getting an instream to the file
+     */
+    private S getInputStreamForFile(File file) throws IOException {
+        assert file != null : "File must be specified";
+        return this.getInputStreamForRawStream(new FileInputStream(file));
+    }
 
 }

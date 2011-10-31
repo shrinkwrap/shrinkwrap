@@ -22,5 +22,5 @@ package org.jboss.shrinkwrap.api;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
 public enum ArchiveFormat {
-   UNKNOWN, ZIP, TAR, TAR_GZ;
+    UNKNOWN, ZIP, TAR, TAR_GZ;
 }

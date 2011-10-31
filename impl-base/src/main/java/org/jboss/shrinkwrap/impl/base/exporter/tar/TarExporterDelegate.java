@@ -25,45 +25,43 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarOutputStream;
 
 /**
  * Implementation of an exporter for the TAR format
- * 
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class TarExporterDelegate extends TarExporterDelegateBase<TarOutputStream>
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class TarExporterDelegate extends TarExporterDelegateBase<TarOutputStream> {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(TarExporterDelegate.class.getName());
+    /**
+     * Logger
+     */
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(TarExporterDelegate.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new exporter delegate for exporting archives as TAR
-    */
-   public TarExporterDelegate(final Archive<?> archive)
-   {
-      super(archive);
-   }
+    /**
+     * Creates a new exporter delegate for exporting archives as TAR
+     */
+    public TarExporterDelegate(final Archive<?> archive) {
+        super(archive);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase#createOutputStream(java.io.OutputStream)
-    */
-   @Override
-   protected final TarOutputStream createOutputStream(final OutputStream out) throws IOException
-   {
-      // Create and return
-      return new TarOutputStream(out);
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase#createOutputStream(java.io.OutputStream)
+     */
+    @Override
+    protected final TarOutputStream createOutputStream(final OutputStream out) throws IOException {
+        // Create and return
+        return new TarOutputStream(out);
+    }
 }

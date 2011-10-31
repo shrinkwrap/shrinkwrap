@@ -29,100 +29,84 @@ import org.junit.Test;
 
 /**
  * ServiceExtensionLoaderTestCase
- * 
+ *
  * Test to ensure the behaviour of ServiceExtensionLoader
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ServiceExtensionLoaderTestCase
-{
-   
-   @Test
-   public void shouldBeAbleToLoadExtension() throws Exception
-   {
-      Extension extension = createLoaderUsingTccl().load(Extension.class,
+public class ServiceExtensionLoaderTestCase {
+
+    @Test
+    public void shouldBeAbleToLoadExtension() throws Exception {
+        Extension extension = createLoaderUsingTccl().load(Extension.class,
             ShrinkWrap.create(JavaArchive.class, "test.jar"));
 
-      Assert.assertNotNull(extension);
+        Assert.assertNotNull(extension);
 
-      Assert.assertTrue(extension.getClass() == ExtensionImpl.class);
-   }
+        Assert.assertTrue(extension.getClass() == ExtensionImpl.class);
+    }
 
-   @Test
-   public void shouldBeAbleToOverrideExtension() throws Exception
-   {
-      Extension extension = createLoaderUsingTccl().addOverride(
-            Extension.class, ExtensionImpl2.class).load(Extension.class,
-            ShrinkWrap.create(JavaArchive.class, "test.jar"));
+    @Test
+    public void shouldBeAbleToOverrideExtension() throws Exception {
+        Extension extension = createLoaderUsingTccl().addOverride(Extension.class, ExtensionImpl2.class).load(
+            Extension.class, ShrinkWrap.create(JavaArchive.class, "test.jar"));
 
-      Assert.assertNotNull(extension);
+        Assert.assertNotNull(extension);
 
-      Assert.assertTrue(extension.getClass() == ExtensionImpl2.class);
-   }
+        Assert.assertTrue(extension.getClass() == ExtensionImpl2.class);
+    }
 
-   @Test
-   public void shouldBePlacedInCacheAfterLoad() throws Exception
-   {
-      ServiceExtensionLoader loader = createLoaderUsingTccl();
-      loader.load(Extension.class, ShrinkWrap.create(JavaArchive.class, "test.jar"));
+    @Test
+    public void shouldBePlacedInCacheAfterLoad() throws Exception {
+        ServiceExtensionLoader loader = createLoaderUsingTccl();
+        loader.load(Extension.class, ShrinkWrap.create(JavaArchive.class, "test.jar"));
 
-      Assert.assertTrue("Should be placed in cache", loader.isCached(Extension.class));
-   }
+        Assert.assertTrue("Should be placed in cache", loader.isCached(Extension.class));
+    }
 
-   @Test(expected = RuntimeException.class)
-   public void shouldThrowExceptionOnMissingExtension() throws Exception
-   {
-      createLoaderUsingTccl().load(MissingExtension.class,
-            ShrinkWrap.create(JavaArchive.class, "test.jar"));
-   }
+    @Test(expected = RuntimeException.class)
+    public void shouldThrowExceptionOnMissingExtension() throws Exception {
+        createLoaderUsingTccl().load(MissingExtension.class, ShrinkWrap.create(JavaArchive.class, "test.jar"));
+    }
 
-   @Test(expected = RuntimeException.class)
-   public void shouldThrowExceptionOnWrongImplType() throws Exception
-   {
-      createLoaderUsingTccl().load(WrongImplExtension.class,
-            ShrinkWrap.create(JavaArchive.class, "test.jar"));
-   }
+    @Test(expected = RuntimeException.class)
+    public void shouldThrowExceptionOnWrongImplType() throws Exception {
+        createLoaderUsingTccl().load(WrongImplExtension.class, ShrinkWrap.create(JavaArchive.class, "test.jar"));
+    }
 
-   public static interface WrongImplExtension extends Assignable
-   {
+    public static interface WrongImplExtension extends Assignable {
 
-   }
+    }
 
-   public static interface Extension extends Assignable
-   {
+    public static interface Extension extends Assignable {
 
-   }
+    }
 
-   public static class ExtensionImpl extends AssignableBase<Archive<?>> implements Extension
-   {
-      public ExtensionImpl(Archive<?> archive)
-      {
-         super(archive);
-      }
-   }
+    public static class ExtensionImpl extends AssignableBase<Archive<?>> implements Extension {
+        public ExtensionImpl(Archive<?> archive) {
+            super(archive);
+        }
+    }
 
-   public static class ExtensionImpl2 extends AssignableBase<Archive<?>> implements Extension
-   {
-      public ExtensionImpl2(Archive<?> archive)
-      {
-         super(archive);
-      }
-   }
+    public static class ExtensionImpl2 extends AssignableBase<Archive<?>> implements Extension {
+        public ExtensionImpl2(Archive<?> archive) {
+            super(archive);
+        }
+    }
 
-   public static interface MissingExtension extends Assignable
-   {
+    public static interface MissingExtension extends Assignable {
 
-   }
-   
-   /**
-    * Creates a new {@link ServiceExtensionLoader using the TCCL}
-    * @return
-    */
-   private ServiceExtensionLoader createLoaderUsingTccl()
-   {
-      final Collection<ClassLoader> cls = new ArrayList<ClassLoader>(1);
-      cls.add(TestSecurityActions.getThreadContextClassLoader());
-      return new ServiceExtensionLoader(cls);
-   }
+    }
+
+    /**
+     * Creates a new {@link ServiceExtensionLoader using the TCCL}
+     *
+     * @return
+     */
+    private ServiceExtensionLoader createLoaderUsingTccl() {
+        final Collection<ClassLoader> cls = new ArrayList<ClassLoader>(1);
+        cls.add(TestSecurityActions.getThreadContextClassLoader());
+        return new ServiceExtensionLoader(cls);
+    }
 }

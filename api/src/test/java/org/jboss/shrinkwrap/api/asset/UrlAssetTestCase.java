@@ -32,104 +32,89 @@ import org.junit.Test;
  * https://jira.jboss.org/jira/browse/TMPARCH-5
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- *
+ * 
  */
-public class UrlAssetTestCase
-{
-   private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/api/asset/Test.properties";
+public class UrlAssetTestCase {
+    private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/api/asset/Test.properties";
 
-   @Test
-   public void shouldBeAbleToReadURL() throws Exception
-   {
-      Asset asset = new UrlAsset(getThreadContextClassLoader().getResource(EXISTING_RESOURCE));
+    @Test
+    public void shouldBeAbleToReadURL() throws Exception {
+        Asset asset = new UrlAsset(getThreadContextClassLoader().getResource(EXISTING_RESOURCE));
 
-      InputStream io = asset.openStream();
+        InputStream io = asset.openStream();
 
-      Assert.assertNotNull(io);
-      Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true",
+        Assert.assertNotNull(io);
+        Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true",
             ApiTestUtils.convertToString(io));
-   }
+    }
 
-   @Test
-   public void shouldThrowExceptionOnNullURL() throws Exception
-   {
-      try
-      {
-         new UrlAsset(null);
-         Assert.fail("Should have thrown IllegalArgumentException");
-      }
-      catch (Exception e)
-      {
-         Assert.assertEquals("A null url argument should result in a IllegalArgumentException",
-               IllegalArgumentException.class, e.getClass());
-      }
-   }
+    @Test
+    public void shouldThrowExceptionOnNullURL() throws Exception {
+        try {
+            new UrlAsset(null);
+            Assert.fail("Should have thrown IllegalArgumentException");
+        } catch (Exception e) {
+            Assert.assertEquals("A null url argument should result in a IllegalArgumentException",
+                IllegalArgumentException.class, e.getClass());
+        }
+    }
 
-   @Test
-   public void shouldCreateDefensiveCopyOfURLOnConstruction() throws Exception
-   {
-      URL mutableURL = getThreadContextClassLoader().getResource(EXISTING_RESOURCE);
-      Asset asset = new UrlAsset(mutableURL);
+    @Test
+    public void shouldCreateDefensiveCopyOfURLOnConstruction() throws Exception {
+        URL mutableURL = getThreadContextClassLoader().getResource(EXISTING_RESOURCE);
+        Asset asset = new UrlAsset(mutableURL);
 
-      // mutate the URL - can't be sure that some malicious code or user won't do this?
-      mutateURL(mutableURL);
+        // mutate the URL - can't be sure that some malicious code or user won't do this?
+        mutateURL(mutableURL);
 
-      // now try to get a stream to read the asset
-      InputStream io = null;
+        // now try to get a stream to read the asset
+        InputStream io = null;
 
-      try
-      {
-         io = asset.openStream();
-      }
-      catch (Exception e)
-      {
-         Assert.fail("Mutated URL leaked into the UrlAsset");
-      }
+        try {
+            io = asset.openStream();
+        } catch (Exception e) {
+            Assert.fail("Mutated URL leaked into the UrlAsset");
+        }
 
-      Assert.assertNotNull(io);
-      Assert.assertEquals("Mutated URL leaked into the UrlAsset", "shrinkwrap=true", ApiTestUtils.convertToString(io));
-   }
+        Assert.assertNotNull(io);
+        Assert
+            .assertEquals("Mutated URL leaked into the UrlAsset", "shrinkwrap=true", ApiTestUtils.convertToString(io));
+    }
 
-   /*
-    * Ugly reflection needed to mutate a URL - not 100% sure how to do this other than using reflection,
-    * but seems possible that other libraries may be doing this same thing so we must protect for it.
-    */
-   private void mutateURL(URL mutableURL) throws Exception
-   {
-      Class<?>[] parameterTypes =
-      {String.class, String.class, Integer.TYPE, String.class, String.class};
-      Method m = URL.class.getDeclaredMethod("set", parameterTypes);
+    /*
+     * Ugly reflection needed to mutate a URL - not 100% sure how to do this other than using reflection, but seems
+     * possible that other libraries may be doing this same thing so we must protect for it.
+     */
+    private void mutateURL(URL mutableURL) throws Exception {
+        Class<?>[] parameterTypes = { String.class, String.class, Integer.TYPE, String.class, String.class };
+        Method m = URL.class.getDeclaredMethod("set", parameterTypes);
 
-      Object[] arguments =
-      {"file", "", -1, "/UNKNOWN_FILE", null};
-      m.setAccessible(true);
-      m.invoke(mutableURL, arguments);
-   }
-   
-   /**
-    * Obtains the Thread Context ClassLoader
-    */
-   static ClassLoader getThreadContextClassLoader()
-   {
-      return AccessController.doPrivileged(GetTcclAction.INSTANCE);
-   }
+        Object[] arguments = { "file", "", -1, "/UNKNOWN_FILE", null };
+        m.setAccessible(true);
+        m.invoke(mutableURL, arguments);
+    }
 
-   //-------------------------------------------------------------------------------||
-   // Inner Classes ----------------------------------------------------------------||
-   //-------------------------------------------------------------------------------||
+    /**
+     * Obtains the Thread Context ClassLoader
+     */
+    static ClassLoader getThreadContextClassLoader() {
+        return AccessController.doPrivileged(GetTcclAction.INSTANCE);
+    }
 
-   /**
-    * Single instance to get the TCCL
-    */
-   private enum GetTcclAction implements PrivilegedAction<ClassLoader>
-   {
-      INSTANCE;
+    // -------------------------------------------------------------------------------||
+    // Inner Classes ----------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
 
-      @Override
-      public ClassLoader run()
-      {
-         return Thread.currentThread().getContextClassLoader();
-      }
+    /**
+     * Single instance to get the TCCL
+     */
+    private enum GetTcclAction implements PrivilegedAction<ClassLoader> {
+        INSTANCE;
 
-   }
+        @Override
+        public ClassLoader run() {
+            return Thread.currentThread().getContextClassLoader();
+        }
+
+    }
 }

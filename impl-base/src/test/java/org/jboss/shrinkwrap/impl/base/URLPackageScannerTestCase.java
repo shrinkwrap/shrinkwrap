@@ -21,24 +21,19 @@ import org.junit.Test;
 /**
  * URLPackageScannerTestCase for SHRINKWRAP-90.
  *
- * Asserts parameter validation for more user friendly errors on invalid
- * parameters.
+ * Asserts parameter validation for more user friendly errors on invalid parameters.
  *
  * @author <a href="mailto:lightguard.jp@gmail.com">Jason Porter</a>
  * @version $Revision$
  */
-public class URLPackageScannerTestCase
-{
-   @Test(expected = IllegalArgumentException.class)
-   public void shouldThrowExceptionNullPackage()
-   {
-      URLPackageScanner.newInstance(true, URLPackageScannerTestCase.class.getClassLoader(),
-            new URLPackageScanner.Callback()
-            {
-               @Override
-               public void classFound(String className)
-               {
-               }
+public class URLPackageScannerTestCase {
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionNullPackage() {
+        URLPackageScanner.newInstance(true, URLPackageScannerTestCase.class.getClassLoader(),
+            new URLPackageScanner.Callback() {
+                @Override
+                public void classFound(String className) {
+                }
             }, null);
-   }
+    }
 }

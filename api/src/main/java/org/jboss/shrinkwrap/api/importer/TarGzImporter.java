@@ -19,12 +19,10 @@ package org.jboss.shrinkwrap.api.importer;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * {@link Assignable} type capable of importing TAR archive
- * content encoded in GZIP compression.
+ * {@link Assignable} type capable of importing TAR archive content encoded in GZIP compression.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public interface TarGzImporter extends StreamImporter<TarGzImporter>
-{
-   // Inherited contracts
+public interface TarGzImporter extends StreamImporter<TarGzImporter> {
+    // Inherited contracts
 }

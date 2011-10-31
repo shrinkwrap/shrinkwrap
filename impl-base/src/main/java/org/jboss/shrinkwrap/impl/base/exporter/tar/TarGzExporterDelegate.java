@@ -24,47 +24,45 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarGzOutputStream;
 
 /**
- * Implementation of an exporter for the TAR format, further encoded as GZIP.  
- * 
+ * Implementation of an exporter for the TAR format, further encoded as GZIP.
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class TarGzExporterDelegate extends TarExporterDelegateBase<TarGzOutputStream>
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class TarGzExporterDelegate extends TarExporterDelegateBase<TarGzOutputStream> {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(TarGzExporterDelegate.class.getName());
+    /**
+     * Logger
+     */
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(TarGzExporterDelegate.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new exporter delegate for exporting archives as TAR/GZ
-    */
-   public TarGzExporterDelegate(final Archive<?> archive)
-   {
-      super(archive);
-   }
+    /**
+     * Creates a new exporter delegate for exporting archives as TAR/GZ
+     */
+    public TarGzExporterDelegate(final Archive<?> archive) {
+        super(archive);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase#createOutputStream(java.io.OutputStream)
-    */
-   @Override
-   protected final TarGzOutputStream createOutputStream(final OutputStream out) throws IOException
-   {
-      // Create and return
-      return new TarGzOutputStream(out);
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase#createOutputStream(java.io.OutputStream)
+     */
+    @Override
+    protected final TarGzOutputStream createOutputStream(final OutputStream out) throws IOException {
+        // Create and return
+        return new TarGzOutputStream(out);
+    }
 }

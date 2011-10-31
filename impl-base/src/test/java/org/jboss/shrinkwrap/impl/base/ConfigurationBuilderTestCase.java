@@ -32,157 +32,139 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests to ensure the {@link ConfigurationBuilder} is working 
- * as contracted
+ * Tests to ensure the {@link ConfigurationBuilder} is working as contracted
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ConfigurationBuilderTestCase
-{
+public class ConfigurationBuilderTestCase {
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * The builder under test
-    */
-   private ConfigurationBuilder builder;
+    /**
+     * The builder under test
+     */
+    private ConfigurationBuilder builder;
 
-   //-------------------------------------------------------------------------------------||
-   // Lifecycle --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Lifecycle --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates the {@link ConfigurationBuilder} instance to be tested
-    */
-   @Before
-   public void createDefaultBuilder()
-   {
-      builder = new ConfigurationBuilder();
-   }
+    /**
+     * Creates the {@link ConfigurationBuilder} instance to be tested
+     */
+    @Before
+    public void createDefaultBuilder() {
+        builder = new ConfigurationBuilder();
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Tests ------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Ensures that a null {@link ExecutorService} is not defaulted
-    * to any value, and may remain null
-    */
-   @Test
-   public void defaultsExecutorService()
-   {
-      // Build and default
-      builder.build();
+    /**
+     * Ensures that a null {@link ExecutorService} is not defaulted to any value, and may remain null
+     */
+    @Test
+    public void defaultsExecutorService() {
+        // Build and default
+        builder.build();
 
-      // Get the defaulted service
-      final ExecutorService service = builder.getExecutorService();
+        // Get the defaulted service
+        final ExecutorService service = builder.getExecutorService();
 
-      // Test
-      Assert.assertNull("The builder should not default an " + ExecutorService.class.getSimpleName(), service);
-   }
+        // Test
+        Assert.assertNull("The builder should not default an " + ExecutorService.class.getSimpleName(), service);
+    }
 
-   /**
-    * Ensures that the {@link ExtensionLoader} is defaulted
-    * as contracted to a new instance.
-    */
-   @Test
-   public void defaultsExtensionLoader()
-   {
-      // Build and default
-      builder.build();
+    /**
+     * Ensures that the {@link ExtensionLoader} is defaulted as contracted to a new instance.
+     */
+    @Test
+    public void defaultsExtensionLoader() {
+        // Build and default
+        builder.build();
 
-      final ExtensionLoader loader = builder.getExtensionLoader();
-      Assert.assertNotNull("The builder should default an " + ExtensionLoader.class.getSimpleName(), loader);
-   }
+        final ExtensionLoader loader = builder.getExtensionLoader();
+        Assert.assertNotNull("The builder should default an " + ExtensionLoader.class.getSimpleName(), loader);
+    }
 
-   /**
-    * Ensures that building does not override a user-supplied 
-    * {@link ExecutorService}
-    */
-   @Test
-   public void allowsUserDefinedExecutorService()
-   {
-      // Define a custom ES
-      final ExecutorService service = Executors.newSingleThreadExecutor();
+    /**
+     * Ensures that building does not override a user-supplied {@link ExecutorService}
+     */
+    @Test
+    public void allowsUserDefinedExecutorService() {
+        // Define a custom ES
+        final ExecutorService service = Executors.newSingleThreadExecutor();
 
-      // Supply and build
-      builder.executorService(service).build();
+        // Supply and build
+        builder.executorService(service).build();
 
-      // Test
-      TestCase.assertEquals("Building should not override the user-supplied " + ExecutorService.class.getSimpleName(),
-            service, builder.getExecutorService());
-   }
+        // Test
+        TestCase.assertEquals(
+            "Building should not override the user-supplied " + ExecutorService.class.getSimpleName(), service,
+            builder.getExecutorService());
+    }
 
-   /**
-    * Ensures that building does not override a user-supplied 
-    * {@link ExtensionLoader}
-    */
-   @Test
-   public void allowsUserDefinedExtensionLoader()
-   {
-      // Define a custom EL
-      final ExtensionLoader loader = new ExtensionLoader()
-      {
+    /**
+     * Ensures that building does not override a user-supplied {@link ExtensionLoader}
+     */
+    @Test
+    public void allowsUserDefinedExtensionLoader() {
+        // Define a custom EL
+        final ExtensionLoader loader = new ExtensionLoader() {
 
-         @Override
-         public <T extends Assignable> T load(final Class<T> extensionClass, final Archive<?> baseArchive)
-         {
-            return null;
-         }
+            @Override
+            public <T extends Assignable> T load(final Class<T> extensionClass, final Archive<?> baseArchive) {
+                return null;
+            }
 
-         @Override
-         public <T extends Assignable> ExtensionLoader addOverride(final Class<T> extensionClass,
-               final Class<? extends T> extensionImplClass)
-         {
-            return null;
-         }
+            @Override
+            public <T extends Assignable> ExtensionLoader addOverride(final Class<T> extensionClass,
+                final Class<? extends T> extensionImplClass) {
+                return null;
+            }
 
-         @Override
-         public <T extends Assignable> String getExtensionFromExtensionMapping(Class<T> type)
-         {
-            return null;
-         }
+            @Override
+            public <T extends Assignable> String getExtensionFromExtensionMapping(Class<T> type) {
+                return null;
+            }
 
-         @Override
-         public <T extends Archive<T>> ArchiveFormat getArchiveFormatFromExtensionMapping(Class<T> extensionClass)
-         {
-            return null;
-         }
-      };
+            @Override
+            public <T extends Archive<T>> ArchiveFormat getArchiveFormatFromExtensionMapping(Class<T> extensionClass) {
+                return null;
+            }
+        };
 
-      // Supply and build
-      builder.extensionLoader(loader).build();
+        // Supply and build
+        builder.extensionLoader(loader).build();
 
-      // Test
-      TestCase.assertEquals("Building should not override the user-supplied " + ExtensionLoader.class.getSimpleName(),
-            loader, builder.getExtensionLoader());
-   }
+        // Test
+        TestCase.assertEquals(
+            "Building should not override the user-supplied " + ExtensionLoader.class.getSimpleName(), loader,
+            builder.getExtensionLoader());
+    }
 
-   /**
-    * Ensures that invoking {@link ConfigurationBuilder#build()}
-    * creates a {@link Configuration} with the same properties
-    * as in the builder
-    */
-   @Test
-   public void createsConfiguration()
-   {
-      // Create the config
-      final Configuration configuration = builder.build();
+    /**
+     * Ensures that invoking {@link ConfigurationBuilder#build()} creates a {@link Configuration} with the same
+     * properties as in the builder
+     */
+    @Test
+    public void createsConfiguration() {
+        // Create the config
+        final Configuration configuration = builder.build();
 
-      // Grab props from the builder
-      final ExecutorService service = builder.getExecutorService();
-      final ExtensionLoader loader = builder.getExtensionLoader();
+        // Grab props from the builder
+        final ExecutorService service = builder.getExecutorService();
+        final ExtensionLoader loader = builder.getExtensionLoader();
 
-      // Test that they match the props in the config
-      TestCase.assertEquals(
-            ExecutorService.class.getSimpleName() + " in the config does not match that in the builder", service,
-            configuration.getExecutorService());
-      TestCase.assertEquals(
-            ExtensionLoader.class.getSimpleName() + " in the config does not match that in the builder", loader,
-            configuration.getExtensionLoader());
-   }
+        // Test that they match the props in the config
+        TestCase.assertEquals(ExecutorService.class.getSimpleName()
+            + " in the config does not match that in the builder", service, configuration.getExecutorService());
+        TestCase.assertEquals(ExtensionLoader.class.getSimpleName()
+            + " in the config does not match that in the builder", loader, configuration.getExtensionLoader());
+    }
 
 }

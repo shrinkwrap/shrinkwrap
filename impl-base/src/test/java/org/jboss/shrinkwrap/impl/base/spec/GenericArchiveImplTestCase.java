@@ -32,131 +32,115 @@ import org.junit.After;
 import org.junit.Before;
 
 /**
- * Test case to ensure that the {@link GenericArchiveImpl}
- * is working as contracted
+ * Test case to ensure that the {@link GenericArchiveImpl} is working as contracted
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
 @ArchiveType(GenericArchive.class)
-public class GenericArchiveImplTestCase extends DynamicContainerTestBase<GenericArchive>
-{
+public class GenericArchiveImplTestCase extends DynamicContainerTestBase<GenericArchive> {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Unsupported operation
-    */
-   private static final UnsupportedOperationException UNSUPPORTED = new UnsupportedOperationException(
-         GenericArchive.class.getSimpleName() + " does not support container spec paths.");
+    /**
+     * Unsupported operation
+     */
+    private static final UnsupportedOperationException UNSUPPORTED = new UnsupportedOperationException(
+        GenericArchive.class.getSimpleName() + " does not support container spec paths.");
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   private GenericArchive archive;
+    private GenericArchive archive;
 
-   //-------------------------------------------------------------------------------------||
-   // Lifecycle Methods ------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Lifecycle Methods ------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @Before
-   public void createArchive()
-   {
-      archive = createNewArchive();
-   }
+    @Before
+    public void createArchive() {
+        archive = createNewArchive();
+    }
 
-   @After
-   public void ls()
-   {
-      System.out.println("test@jboss:/$ ls -l " + archive.getName());
-      System.out.println(archive.toString(true));
-   }
+    @After
+    public void ls() {
+        System.out.println("test@jboss:/$ ls -l " + archive.getName());
+        System.out.println(archive.toString(true));
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Impls - ArchiveTestBase ---------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Impls - ArchiveTestBase ---------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Return the archive to super class
-    */
-   @Override
-   protected GenericArchive getArchive()
-   {
-      return archive;
-   }
+    /**
+     * Return the archive to super class
+     */
+    @Override
+    protected GenericArchive getArchive() {
+        return archive;
+    }
 
-   /** 
-    * Create a new JavaArchive instance
-    */
-   @Override
-   protected GenericArchive createNewArchive()
-   {
-      return ShrinkWrap.create(GenericArchive.class);
-   }
+    /**
+     * Create a new JavaArchive instance
+     */
+    @Override
+    protected GenericArchive createNewArchive() {
+        return ShrinkWrap.create(GenericArchive.class);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Impls - ContainerTestBase ---------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Impls - ContainerTestBase ---------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @Override
-   protected ResourceContainer<GenericArchive> getResourceContainer()
-   {
-      throw UNSUPPORTED;
-   }
+    @Override
+    protected ResourceContainer<GenericArchive> getResourceContainer() {
+        throw UNSUPPORTED;
+    }
 
-   @Override
-   protected ClassContainer<GenericArchive> getClassContainer()
-   {
-      throw UNSUPPORTED;
-   }
+    @Override
+    protected ClassContainer<GenericArchive> getClassContainer() {
+        throw UNSUPPORTED;
+    }
 
-   @Override
-   protected ManifestContainer<GenericArchive> getManifestContainer()
-   {
-      throw UNSUPPORTED;
-   }
+    @Override
+    protected ManifestContainer<GenericArchive> getManifestContainer() {
+        throw UNSUPPORTED;
+    }
 
-   @Override
-   protected LibraryContainer<GenericArchive> getLibraryContainer()
-   {
-      throw UNSUPPORTED;
-   }
-   
-   @Override
-   protected ServiceProviderContainer<GenericArchive> getServiceProviderContainer()
-   {
-      throw UNSUPPORTED;
-   }
+    @Override
+    protected LibraryContainer<GenericArchive> getLibraryContainer() {
+        throw UNSUPPORTED;
+    }
 
-   @Override
-   protected ArchivePath getManifestPath()
-   {
-      throw UNSUPPORTED;
-   }
+    @Override
+    protected ServiceProviderContainer<GenericArchive> getServiceProviderContainer() {
+        throw UNSUPPORTED;
+    }
 
-   @Override
-   protected ArchivePath getResourcePath()
-   {
-      throw UNSUPPORTED;
-   }
+    @Override
+    protected ArchivePath getManifestPath() {
+        throw UNSUPPORTED;
+    }
 
-   @Override
-   protected ArchivePath getClassPath()
-   {
-      throw UNSUPPORTED;
-   }
+    @Override
+    protected ArchivePath getResourcePath() {
+        throw UNSUPPORTED;
+    }
 
-   @Override
-   protected ArchivePath getLibraryPath()
-   {
-      throw UNSUPPORTED;
-   }
+    @Override
+    protected ArchivePath getClassPath() {
+        throw UNSUPPORTED;
+    }
 
-   @Override
-   protected ArchiveFormat getExpectedArchiveFormat()
-   {
-      return ArchiveFormat.UNKNOWN;
-   }
+    @Override
+    protected ArchivePath getLibraryPath() {
+        throw UNSUPPORTED;
+    }
+
+    @Override
+    protected ArchiveFormat getExpectedArchiveFormat() {
+        return ArchiveFormat.UNKNOWN;
+    }
 }

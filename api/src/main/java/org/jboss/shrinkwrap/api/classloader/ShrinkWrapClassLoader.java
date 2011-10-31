@@ -35,169 +35,144 @@ import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
- * Extension that will create a ClassLoader based on a Array of Archives.
- * When done, call {@link ShrinkWrapClassLoader#close()} to free resources.
+ * Extension that will create a ClassLoader based on a Array of Archives. When done, call
+ * {@link ShrinkWrapClassLoader#close()} to free resources.
  *
  * @author <a href="mailto:aslak@redhat.com">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(ShrinkWrapClassLoader.class.getName());
-   
-   /**
-    * Empty String
-    */
-   private static final String EMPTY = "";
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(ShrinkWrapClassLoader.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    /**
+     * Empty String
+     */
+    private static final String EMPTY = "";
 
-   /**
-    * List of all streams opened, such that they may be closed in {@link ShrinkWrapClassLoader#close()}.
-    * Guarded by "this".
-    */
-   private final List<InputStream> openedStreams = new ArrayList<InputStream>();
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   //-------------------------------------------------------------------------------------||
-   // Constructors -----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    /**
+     * List of all streams opened, such that they may be closed in {@link ShrinkWrapClassLoader#close()}. Guarded by
+     * "this".
+     */
+    private final List<InputStream> openedStreams = new ArrayList<InputStream>();
 
-   /**
-    * Constructs a new ShrinkWrapClassLoader for the specified {@link Archive}s using the
-    * default delegation parent <code>ClassLoader</code>. The {@link Archive}s will
-    * be searched in the order specified for classes and resources after
-    * first searching in the parent class loader.
-    * 
-    * @param archives the {@link Archive}s from which to load classes and resources
-    */
-   public ShrinkWrapClassLoader(final Archive<?>... archives)
-   {
-      super(new URL[]{});
+    // -------------------------------------------------------------------------------------||
+    // Constructors -----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-      if (archives == null)
-      {
-         throw new IllegalArgumentException("Archives must be specified");
-      }
-      addArchives(archives);
-   }
+    /**
+     * Constructs a new ShrinkWrapClassLoader for the specified {@link Archive}s using the default delegation parent
+     * <code>ClassLoader</code>. The {@link Archive}s will be searched in the order specified for classes and resources
+     * after first searching in the parent class loader.
+     *
+     * @param archives
+     *            the {@link Archive}s from which to load classes and resources
+     */
+    public ShrinkWrapClassLoader(final Archive<?>... archives) {
+        super(new URL[] {});
 
-   /**
-    * Constructs a new ShrinkWrapClassLoader for the given {@link Archive}s. The {@link Archive}s will be
-    * searched in the order specified for classes and resources after first
-    * searching in the specified parent class loader. 
-    * 
-    * @param parent the parent class loader for delegation
-    * @param archives the {@link Archive}s from which to load classes and resources
-    */
-   public ShrinkWrapClassLoader(final ClassLoader parent, final Archive<?>... archives)
-   {
-      super(new URL[]{}, parent);
+        if (archives == null) {
+            throw new IllegalArgumentException("Archives must be specified");
+        }
+        addArchives(archives);
+    }
 
-      if (archives == null)
-      {
-         throw new IllegalArgumentException("Archives must be specified");
-      }
-      addArchives(archives);
-   }
+    /**
+     * Constructs a new ShrinkWrapClassLoader for the given {@link Archive}s. The {@link Archive}s will be searched in
+     * the order specified for classes and resources after first searching in the specified parent class loader.
+     *
+     * @param parent
+     *            the parent class loader for delegation
+     * @param archives
+     *            the {@link Archive}s from which to load classes and resources
+     */
+    public ShrinkWrapClassLoader(final ClassLoader parent, final Archive<?>... archives) {
+        super(new URL[] {}, parent);
 
-   private void addArchives(final Archive<?>[] archives)
-   {
-      for (final Archive<?> archive : archives)
-      {
-         addArchive(archive);
-      }
-   }
+        if (archives == null) {
+            throw new IllegalArgumentException("Archives must be specified");
+        }
+        addArchives(archives);
+    }
 
-   private void addArchive(final Archive<?> archive)
-   {
-      try
-      {
-         addURL(new URL(null, "archive:" + archive.getName() + "/", new URLStreamHandler()
-         {
-            @Override
-            protected URLConnection openConnection(final URL u) throws IOException
-            {
-               return new URLConnection(u)
-               {
-                  @Override
-                  public void connect() throws IOException
-                  {
-                  }
+    private void addArchives(final Archive<?>[] archives) {
+        for (final Archive<?> archive : archives) {
+            addArchive(archive);
+        }
+    }
 
-                  @Override
-                  public InputStream getInputStream() throws IOException
-                  {
-                     final ArchivePath path = convertToArchivePath(u);
-                     final Node node = archive.get(path);
-                     
-                     // SHRINKWRAP-308
-                     if (node == null)
-                     {
-                        // We've asked for a path that doesn't exist
-                        throw new FileNotFoundException("Requested path: " + path + " does not exist in "
-                              + archive.toString());
-                     }
+    private void addArchive(final Archive<?> archive) {
+        try {
+            addURL(new URL(null, "archive:" + archive.getName() + "/", new URLStreamHandler() {
+                @Override
+                protected URLConnection openConnection(final URL u) throws IOException {
+                    return new URLConnection(u) {
+                        @Override
+                        public void connect() throws IOException {
+                        }
 
-                     final Asset asset = node.getAsset();
+                        @Override
+                        public InputStream getInputStream() throws IOException {
+                            final ArchivePath path = convertToArchivePath(u);
+                            final Node node = archive.get(path);
 
-                     // SHRINKWRAP-306
-                     if (asset == null)
-                     {
-                        // This is a directory, so return null InputStream to denote as such
-                        return null;
-                     }
+                            // SHRINKWRAP-308
+                            if (node == null) {
+                                // We've asked for a path that doesn't exist
+                                throw new FileNotFoundException("Requested path: " + path + " does not exist in "
+                                    + archive.toString());
+                            }
 
-                     final InputStream input = asset.openStream();
-                     synchronized (this)
-                     {
-                        openedStreams.add(input);
-                     }
-                     return input;
+                            final Asset asset = node.getAsset();
 
-                  }
+                            // SHRINKWRAP-306
+                            if (asset == null) {
+                                // This is a directory, so return null InputStream to denote as such
+                                return null;
+                            }
 
-                  private ArchivePath convertToArchivePath(URL url)
-                  {
-                     String path = url.getPath();
-                     path = path.replace(archive.getName(), EMPTY);
+                            final InputStream input = asset.openStream();
+                            synchronized (this) {
+                                openedStreams.add(input);
+                            }
+                            return input;
 
-                     return ArchivePaths.create(path);
-                  }
-               };
+                        }
+
+                        private ArchivePath convertToArchivePath(URL url) {
+                            String path = url.getPath();
+                            path = path.replace(archive.getName(), EMPTY);
+
+                            return ArchivePaths.create(path);
+                        }
+                    };
+                }
+            }));
+        } catch (Exception e) {
+            throw new RuntimeException("Could not create URL for archive: " + archive.getName(), e);
+        }
+    }
+
+    public void close() throws IOException {
+        synchronized (this) {
+            for (InputStream stream : openedStreams) {
+                try {
+                    stream.close();
+                } catch (Exception e) {
+                    log.warning("Could not close opened inputstream: " + e);
+                }
             }
-         }));
-      }
-      catch (Exception e)
-      {
-         throw new RuntimeException("Could not create URL for archive: " + archive.getName(), e);
-      }
-   }
-
-   public void close() throws IOException
-   {
-      synchronized (this)
-      {
-         for (InputStream stream : openedStreams)
-         {
-            try
-            {
-               stream.close();
-            }
-            catch (Exception e)
-            {
-               log.warning("Could not close opened inputstream: " + e);
-            }
-         }
-         openedStreams.clear();
-      }
-   }
+            openedStreams.clear();
+        }
+    }
 }

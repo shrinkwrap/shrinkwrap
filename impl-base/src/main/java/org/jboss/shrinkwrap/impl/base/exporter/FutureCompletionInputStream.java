@@ -26,114 +26,104 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 
 /**
- * {@link PipedInputStream} which, when fully-read, will 
- * block upon a {@link Future} and report any exceptional
+ * {@link PipedInputStream} which, when fully-read, will block upon a {@link Future} and report any exceptional
  * circumstances to the owning Thread.
  *
- * @param <T> Response type of the {@link Future}
+ * @param <T>
+ *            Response type of the {@link Future}
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class FutureCompletionInputStream extends PipedInputStream
-{
+public class FutureCompletionInputStream extends PipedInputStream {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(FutureCompletionInputStream.class.getName());
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(FutureCompletionInputStream.class.getName());
 
-   /**
-    * Number of bytes read signaling the end has been reached
-    */
-   private static final int EOF = -1;
+    /**
+     * Number of bytes read signaling the end has been reached
+     */
+    private static final int EOF = -1;
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * The job upon which we'll block and obtain any exceptions from when we're done reading
-    */
-   private final Future<?> job;
+    /**
+     * The job upon which we'll block and obtain any exceptions from when we're done reading
+     */
+    private final Future<?> job;
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new Stream
-    */
-   public FutureCompletionInputStream(final Future<?> job)
-   {
-      super();
-      this.job = job;
-   }
+    /**
+     * Creates a new Stream
+     */
+    public FutureCompletionInputStream(final Future<?> job) {
+        super();
+        this.job = job;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see java.io.PipedInputStream#read()
-    */
-   @Override
-   public synchronized int read() throws IOException
-   {
-      final int bytesRead = super.read();
-      this.awaitOnFutureOnDone(bytesRead);
-      return bytesRead;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.io.PipedInputStream#read()
+     */
+    @Override
+    public synchronized int read() throws IOException {
+        final int bytesRead = super.read();
+        this.awaitOnFutureOnDone(bytesRead);
+        return bytesRead;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see java.io.PipedInputStream#read(byte[], int, int)
-    */
-   @Override
-   public synchronized int read(byte[] b, int off, int len) throws IOException
-   {
-      final int bytesRead = super.read(b, off, len);
-      this.awaitOnFutureOnDone(bytesRead);
-      return bytesRead;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.io.PipedInputStream#read(byte[], int, int)
+     */
+    @Override
+    public synchronized int read(byte[] b, int off, int len) throws IOException {
+        final int bytesRead = super.read(b, off, len);
+        this.awaitOnFutureOnDone(bytesRead);
+        return bytesRead;
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Internal Helper Methods ------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Internal Helper Methods ------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * If we've read the full stream, awaits on {@link FutureCompletionInputStream#job}, 
-    * reporting any exceptions
-    * wrapped in an {@link ArchiveExportException}.
-    * 
-    * @param bytesRead
-    * @throws ArchiveExportException
-    */
-   private void awaitOnFutureOnDone(final int bytesRead) throws ArchiveExportException
-   {
-      if (bytesRead == EOF)
-      {
-         try
-         {
-            // Block until the streams have been closed in the underlying job
-            job.get();
-         }
-         catch (final InterruptedException e)
-         {
-            Thread.interrupted();
-            log.log(Level.WARNING, "We've been interrupted while waiting for the export process to complete", e);
-         }
-         // Some error
-         catch (final ExecutionException ee)
-         {
-            // Unwrap and rethrow
-            final Throwable cause = ee.getCause();
-            if (cause == null)
-            {
-               throw new IllegalStateException("Cause of execution failure not specified: ", ee);
+    /**
+     * If we've read the full stream, awaits on {@link FutureCompletionInputStream#job}, reporting any exceptions
+     * wrapped in an {@link ArchiveExportException}.
+     *
+     * @param bytesRead
+     * @throws ArchiveExportException
+     */
+    private void awaitOnFutureOnDone(final int bytesRead) throws ArchiveExportException {
+        if (bytesRead == EOF) {
+            try {
+                // Block until the streams have been closed in the underlying job
+                job.get();
+            } catch (final InterruptedException e) {
+                Thread.interrupted();
+                log.log(Level.WARNING, "We've been interrupted while waiting for the export process to complete", e);
             }
-            // Wrap as our exception type and rethrow
-            throw new ArchiveExportException(cause);
-         }
-      }
-   }
+            // Some error
+            catch (final ExecutionException ee) {
+                // Unwrap and rethrow
+                final Throwable cause = ee.getCause();
+                if (cause == null) {
+                    throw new IllegalStateException("Cause of execution failure not specified: ", ee);
+                }
+                // Wrap as our exception type and rethrow
+                throw new ArchiveExportException(cause);
+            }
+        }
+    }
 }

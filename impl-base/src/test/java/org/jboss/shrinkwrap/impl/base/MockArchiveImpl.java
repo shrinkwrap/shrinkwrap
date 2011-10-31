@@ -29,77 +29,76 @@ import org.jboss.shrinkwrap.impl.base.container.ContainerBase;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class MockArchiveImpl extends ContainerBase<MockArchive> implements MockArchive
-{
+public class MockArchiveImpl extends ContainerBase<MockArchive> implements MockArchive {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(MockArchiveImpl.class.getName());
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(MockArchiveImpl.class.getName());
 
-   /**
-    * Path to the manifests inside of the Archive.
-    */
-   private static final ArchivePath PATH = ArchivePaths.root();
+    /**
+     * Path to the manifests inside of the Archive.
+     */
+    private static final ArchivePath PATH = ArchivePaths.root();
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Create a new archive with any type storage engine as backing.
-    * 
-    * @param delegate The storage backing.
-    */
-   public MockArchiveImpl(final Archive<?> delegate)
-   {
-      super(MockArchive.class, delegate);
-   }
+    /**
+     * Create a new archive with any type storage engine as backing.
+     *
+     * @param delegate
+     *            The storage backing.
+     */
+    public MockArchiveImpl(final Archive<?> delegate) {
+        super(MockArchive.class, delegate);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getManifestPath()
-    */
-   @Override
-   protected ArchivePath getManifestPath()
-   {
-      return PATH;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getManifestPath()
+     */
+    @Override
+    protected ArchivePath getManifestPath() {
+        return PATH;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getClassesPath()
-    */
-   @Override
-   protected ArchivePath getClassesPath()
-   {
-      return PATH;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getClassesPath()
+     */
+    @Override
+    protected ArchivePath getClassesPath() {
+        return PATH;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getResourcePath()
-    */
-   @Override
-   protected ArchivePath getResourcePath()
-   {
-      return PATH;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getResourcePath()
+     */
+    @Override
+    protected ArchivePath getResourcePath() {
+        return PATH;
+    }
 
-   /**
-    * Libraries are not supported by JavaArchive.
-    * 
-    * @throws UnsupportedOperationException Libraries are not supported by JavaArchive
-    */
-   @Override
-   public ArchivePath getLibraryPath()
-   {
-      throw new UnsupportedOperationException("MockArchive spec does not support Libraries");
-   }
+    /**
+     * Libraries are not supported by JavaArchive.
+     *
+     * @throws UnsupportedOperationException
+     *             Libraries are not supported by JavaArchive
+     */
+    @Override
+    public ArchivePath getLibraryPath() {
+        throw new UnsupportedOperationException("MockArchive spec does not support Libraries");
+    }
 }

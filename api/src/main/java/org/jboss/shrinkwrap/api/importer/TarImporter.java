@@ -19,12 +19,10 @@ package org.jboss.shrinkwrap.api.importer;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * {@link Assignable} type capable of importing TAR archive
- * content
+ * {@link Assignable} type capable of importing TAR archive content
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public interface TarImporter extends StreamImporter<TarImporter>
-{
-   // Inherited contracts
+public interface TarImporter extends StreamImporter<TarImporter> {
+    // Inherited contracts
 }

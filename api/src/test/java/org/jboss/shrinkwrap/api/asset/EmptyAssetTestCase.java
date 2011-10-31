@@ -26,51 +26,48 @@ import org.junit.Test;
 
 /**
  * Test Cases for the {@link EmptyAsset}
- *
+ * 
  * @author <a href="mailto:dan.j.allen@gmail.com">Dan Allen</a>
  * @version $Revision: $
  */
-public class EmptyAssetTestCase
-{
+public class EmptyAssetTestCase {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(EmptyAssetTestCase.class.getName());
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(EmptyAssetTestCase.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Tests ------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Ensures that the contents of the asset is empty.
-    */
-   @Test
-   public void testRoundtrip() throws Exception
-   {
-      // Log
-      log.info("testRoundtrip");
+    /**
+     * Ensures that the contents of the asset is empty.
+     */
+    @Test
+    public void testRoundtrip() throws Exception {
+        // Log
+        log.info("testRoundtrip");
 
-      // Make Asset
-      final Asset asset = EmptyAsset.INSTANCE;
+        // Make Asset
+        final Asset asset = EmptyAsset.INSTANCE;
 
-      // Get the contents back out of the asset
-      final InputStream stream = asset.openStream();
-      final ByteArrayOutputStream out = new ByteArrayOutputStream(0);
-      int read;
-      while ((read = stream.read()) != -1)
-      {
-         out.write(read);
-      }
+        // Get the contents back out of the asset
+        final InputStream stream = asset.openStream();
+        final ByteArrayOutputStream out = new ByteArrayOutputStream(0);
+        int read;
+        while ((read = stream.read()) != -1) {
+            out.write(read);
+        }
 
-      Assert.assertEquals("Roundtrip did not produce empty contents", 0, out.toByteArray().length);
-   }
+        Assert.assertEquals("Roundtrip did not produce empty contents", 0, out.toByteArray().length);
+    }
 }

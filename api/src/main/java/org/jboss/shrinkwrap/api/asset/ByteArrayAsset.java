@@ -21,99 +21,92 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  * Implementation of an {@link Asset} backed by a byte array
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ByteArrayAsset implements Asset
-{
+public class ByteArrayAsset implements Asset {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(ByteArrayAsset.class.getName());
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(ByteArrayAsset.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Underlying content
-    */
-   private final byte[] content;
+    /**
+     * Underlying content
+     */
+    private final byte[] content;
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new {@link Asset} instance backed by the specified
-    * byte array
-    *
-    * @param content
-    * @throws IllegalArgumentException If the contents were not specified
-    */
-   public ByteArrayAsset(final byte[] content) throws IllegalArgumentException
-   {
-      // Precondition check
-      if (content == null)
-      {
-         throw new IllegalArgumentException("content must be specified");
-      }
+    /**
+     * Creates a new {@link Asset} instance backed by the specified byte array
+     *
+     * @param content
+     * @throws IllegalArgumentException
+     *             If the contents were not specified
+     */
+    public ByteArrayAsset(final byte[] content) throws IllegalArgumentException {
+        // Precondition check
+        if (content == null) {
+            throw new IllegalArgumentException("content must be specified");
+        }
 
-      // Defensive copy on set, SHRINKWRAP-38
-      final int length = content.length;
-      byte[] newArray = new byte[length];
-      System.arraycopy(content, 0, newArray, 0, length);
+        // Defensive copy on set, SHRINKWRAP-38
+        final int length = content.length;
+        byte[] newArray = new byte[length];
+        System.arraycopy(content, 0, newArray, 0, length);
 
-      // Set
-      this.content = newArray;
-      if (log.isLoggable(Level.FINER))
-      {
-         log.finer("Created " + this + " with backing byte array of size " + length + "b");
-      }
-   }
+        // Set
+        this.content = newArray;
+        if (log.isLoggable(Level.FINER)) {
+            log.finer("Created " + this + " with backing byte array of size " + length + "b");
+        }
+    }
 
-   /**
-    * Creates a new {@link Asset} instance backed by the bytes
-    * contained in the the specified {@link InputStream}
-    *
-    * @param stream
-    * @throws IllegalArgumentException If the stream is not specified
-    */
-   public ByteArrayAsset(final InputStream stream)
-   {
-      // Delegate
-      this(ByteArrayIOUtil.asByteArray(stream));
-   }
+    /**
+     * Creates a new {@link Asset} instance backed by the bytes contained in the the specified {@link InputStream}
+     *
+     * @param stream
+     * @throws IllegalArgumentException
+     *             If the stream is not specified
+     */
+    public ByteArrayAsset(final InputStream stream) {
+        // Delegate
+        this(ByteArrayIOUtil.asByteArray(stream));
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * @see org.jboss.shrinkwrap.api.asset.Asset#openStream()
-    */
-   @Override
-   public InputStream openStream()
-   {
-      return new ByteArrayInputStream(this.content);
-   }
+    /**
+     * @see org.jboss.shrinkwrap.api.asset.Asset#openStream()
+     */
+    @Override
+    public InputStream openStream() {
+        return new ByteArrayInputStream(this.content);
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see java.lang.Object#toString()
-    */
-   @Override
-   public String toString()
-   {
-      return ByteArrayAsset.class.getSimpleName() + " [content size=" + content.length + "bytes]";
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return ByteArrayAsset.class.getSimpleName() + " [content size=" + content.length + "bytes]";
+    }
 }

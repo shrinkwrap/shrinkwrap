@@ -23,71 +23,79 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
- * Defines the contract for a component capable of storing Resource adapter
- * resources. <br/>
+ * Defines the contract for a component capable of storing Resource adapter resources. <br/>
  * <br/>
- * 
+ *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  * @param <T>
  */
-public interface ResourceAdapterContainer<T extends Archive<T>>
-{
-   /**
-    * Adds the resource as ra.xml to the container, returning the container itself.
-    * <br/>
-    * The {@link ClassLoader} used to obtain the resource is up to the implementation.  
-    * 
-    * @param resourceName resource to add
-    * @return This virtual archive
-    * @throws IllegalArgumentException if resourceName is null
-    * @see #setResourceAdapterXML(Asset)
-    */
-   T setResourceAdapterXML(String resourceName) throws IllegalArgumentException;
+public interface ResourceAdapterContainer<T extends Archive<T>> {
+    /**
+     * Adds the resource as ra.xml to the container, returning the container itself. <br/>
+     * The {@link ClassLoader} used to obtain the resource is up to the implementation.
+     *
+     * @param resourceName
+     *            resource to add
+     * @return This virtual archive
+     * @throws IllegalArgumentException
+     *             if resourceName is null
+     * @see #setResourceAdapterXML(Asset)
+     */
+    T setResourceAdapterXML(String resourceName) throws IllegalArgumentException;
 
-   /**
-    * Adds the {@link File} as ra.xml to the container, returning the container itself.
-    * 
-    * @param resource {@link File} resource to add
-    * @return This virtual archive
-    * @throws IllegalArgumentException if resource is null
-    * @see #setResourceAdapterXML(Asset)
-    */
-   T setResourceAdapterXML(File resource) throws IllegalArgumentException;
+    /**
+     * Adds the {@link File} as ra.xml to the container, returning the container itself.
+     *
+     * @param resource
+     *            {@link File} resource to add
+     * @return This virtual archive
+     * @throws IllegalArgumentException
+     *             if resource is null
+     * @see #setResourceAdapterXML(Asset)
+     */
+    T setResourceAdapterXML(File resource) throws IllegalArgumentException;
 
-   /**
-    * Adds the {@link URL} as ra.xml to the container, returning the container itself.
-    * 
-    * @param resource {@link URL} resource to add
-    * @return This virtual archive
-    * @throws IllegalArgumentException if resource is null
-    * @see #setResourceAdapterXML(Asset)
-    */
-   T setResourceAdapterXML(URL resource) throws IllegalArgumentException;
+    /**
+     * Adds the {@link URL} as ra.xml to the container, returning the container itself.
+     *
+     * @param resource
+     *            {@link URL} resource to add
+     * @return This virtual archive
+     * @throws IllegalArgumentException
+     *             if resource is null
+     * @see #setResourceAdapterXML(Asset)
+     */
+    T setResourceAdapterXML(URL resource) throws IllegalArgumentException;
 
-   /**
-    * Adds the {@link Asset} as ra.xml to the container, returning the container itself.
-    * 
-    * @param resource {@link Asset} resource to add
-    * @return This virtual archive
-    * @throws IllegalArgumentException if resource is null
-    */
-   T setResourceAdapterXML(Asset resource) throws IllegalArgumentException;
+    /**
+     * Adds the {@link Asset} as ra.xml to the container, returning the container itself.
+     *
+     * @param resource
+     *            {@link Asset} resource to add
+     * @return This virtual archive
+     * @throws IllegalArgumentException
+     *             if resource is null
+     */
+    T setResourceAdapterXML(Asset resource) throws IllegalArgumentException;
 
-   /**
-    * Adds the resource inside the package as ra.xml to the container, returning the container itself.
-    * <br/><br/>
-    * The {@link ClassLoader} used to obtain the resource is up to
-    * the implementation.
-    * 
-    * @param resourcePackage The package of the resources
-    * @param resourceName The name of the resource inside resourcePackage
-    * @return This virtual archive
-    * @throws IllegalArgumentException if resourcePackage is null
-    * @throws IllegalArgumentException if resourceName is null
-    * @see #setResourceAdapterXML(String) 
-    */
-   T setResourceAdapterXML(Package resourcePackage, String resourceName) throws IllegalArgumentException;
-   
+    /**
+     * Adds the resource inside the package as ra.xml to the container, returning the container itself. <br/>
+     * <br/>
+     * The {@link ClassLoader} used to obtain the resource is up to the implementation.
+     *
+     * @param resourcePackage
+     *            The package of the resources
+     * @param resourceName
+     *            The name of the resource inside resourcePackage
+     * @return This virtual archive
+     * @throws IllegalArgumentException
+     *             if resourcePackage is null
+     * @throws IllegalArgumentException
+     *             if resourceName is null
+     * @see #setResourceAdapterXML(String)
+     */
+    T setResourceAdapterXML(Package resourcePackage, String resourceName) throws IllegalArgumentException;
+
 }

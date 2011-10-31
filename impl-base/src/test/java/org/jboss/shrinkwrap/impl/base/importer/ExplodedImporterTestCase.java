@@ -36,82 +36,70 @@ import org.junit.Test;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ExplodedImporterTestCase
-{
+public class ExplodedImporterTestCase {
 
-   private static final String EXISTING_DIRECTORY_RESOURCE = "exploded_import_test";
-   
-   private static final String EXISTING_FILE_RESOURCE = "exploded_import_test/Test.properties";
-   
-   /**
-    * Name of the empty directory
-    */
-   private static final String EMPTY_DIR_NAME = "empty_dir";
-   
-   /**
-    * Name of a parent directory
-    */
-   private static final String PARENT_DIR_NAME = "parent";
-   
-   /**
-    * Creates the empty directories for this test, as Git cannot store empty dirs in SCM
-    * @throws IOException
-    * @throws URISyntaxException
-    */
-   @BeforeClass
-   public static void makeEmptyDirectories() throws IOException, URISyntaxException
-   {
-      final File root = new File(ExplodedImporterTestCase.class.getProtectionDomain().getCodeSource().getLocation()
+    private static final String EXISTING_DIRECTORY_RESOURCE = "exploded_import_test";
+
+    private static final String EXISTING_FILE_RESOURCE = "exploded_import_test/Test.properties";
+
+    /**
+     * Name of the empty directory
+     */
+    private static final String EMPTY_DIR_NAME = "empty_dir";
+
+    /**
+     * Name of a parent directory
+     */
+    private static final String PARENT_DIR_NAME = "parent";
+
+    /**
+     * Creates the empty directories for this test, as Git cannot store empty dirs in SCM
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @BeforeClass
+    public static void makeEmptyDirectories() throws IOException, URISyntaxException {
+        final File root = new File(ExplodedImporterTestCase.class.getProtectionDomain().getCodeSource().getLocation()
             .toURI());
-      final File exlodedImportTest = new File(root, EXISTING_DIRECTORY_RESOURCE);
-      Assert.assertTrue("Import test folder does not exist: " + exlodedImportTest.getAbsolutePath(), exlodedImportTest.exists());
-      final File empty = new File(exlodedImportTest, EMPTY_DIR_NAME);
-      Assert.assertTrue("Could not create the empty directory", empty.mkdir());
-      final File parent = new File(exlodedImportTest, PARENT_DIR_NAME);
-      final File parentEmpty = new File(parent, EMPTY_DIR_NAME);
-      Assert.assertTrue("Could not create the parent empty directory", parentEmpty.mkdirs());
-      parentEmpty.deleteOnExit();
-      empty.deleteOnExit();
-   }
-   
-   @Test
-   public void shouldBeAbleToImportADriectory() throws Exception {
-      
-      Archive<?> archive = ShrinkWrap.create(ExplodedImporter.class, "test.jar")
-                              .importDirectory(
-                                    SecurityActions.getThreadContextClassLoader()
-                                       .getResource(EXISTING_DIRECTORY_RESOURCE).toURI().getPath()
-                              )
-                              .as(JavaArchive.class);
-      Logger.getLogger(ExplodedImporterTestCase.class.getName()).info(archive.toString(true));
-      Assert.assertTrue(
-            "Root files should be imported",
-            archive.contains(new BasicPath("/Test.properties")));      
-      
-      Assert.assertTrue(
-            "Nested files should be imported",
-            archive.contains(new BasicPath("/META-INF/MANIFEST.FM")));      
+        final File exlodedImportTest = new File(root, EXISTING_DIRECTORY_RESOURCE);
+        Assert.assertTrue("Import test folder does not exist: " + exlodedImportTest.getAbsolutePath(),
+            exlodedImportTest.exists());
+        final File empty = new File(exlodedImportTest, EMPTY_DIR_NAME);
+        Assert.assertTrue("Could not create the empty directory", empty.mkdir());
+        final File parent = new File(exlodedImportTest, PARENT_DIR_NAME);
+        final File parentEmpty = new File(parent, EMPTY_DIR_NAME);
+        Assert.assertTrue("Could not create the parent empty directory", parentEmpty.mkdirs());
+        parentEmpty.deleteOnExit();
+        empty.deleteOnExit();
+    }
 
-      Assert.assertTrue(
-            "Nested files should be imported",
+    @Test
+    public void shouldBeAbleToImportADriectory() throws Exception {
+
+        Archive<?> archive = ShrinkWrap
+            .create(ExplodedImporter.class, "test.jar")
+            .importDirectory(
+                SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE).toURI()
+                    .getPath()).as(JavaArchive.class);
+        Logger.getLogger(ExplodedImporterTestCase.class.getName()).info(archive.toString(true));
+        Assert.assertTrue("Root files should be imported", archive.contains(new BasicPath("/Test.properties")));
+
+        Assert.assertTrue("Nested files should be imported", archive.contains(new BasicPath("/META-INF/MANIFEST.FM")));
+
+        Assert.assertTrue("Nested files should be imported",
             archive.contains(new BasicPath("/org/jboss/Test.properties")));
-      
-      Assert.assertTrue(
-            "Empty directories should be imported",
-            archive.contains(new BasicPath("/empty_dir")));
-      
-      Assert.assertTrue(
-            "Nested empty directories should be imported",
-            archive.contains(new BasicPath("/parent/empty_dir"))); 
-   }
-   
-   @Test(expected = IllegalArgumentException.class)
-   public void shouldThrowExceptionIfImportingAFile() throws Exception {
-    
-      ShrinkWrap.create(ExplodedImporter.class, "test.jar")
-                  .importDirectory(
-                        SecurityActions.getThreadContextClassLoader()
-                           .getResource(EXISTING_FILE_RESOURCE).toURI().getPath()
-                  );
-   }
+
+        Assert.assertTrue("Empty directories should be imported", archive.contains(new BasicPath("/empty_dir")));
+
+        Assert.assertTrue("Nested empty directories should be imported",
+            archive.contains(new BasicPath("/parent/empty_dir")));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionIfImportingAFile() throws Exception {
+
+        ShrinkWrap.create(ExplodedImporter.class, "test.jar").importDirectory(
+            SecurityActions.getThreadContextClassLoader().getResource(EXISTING_FILE_RESOURCE).toURI().getPath());
+    }
 }

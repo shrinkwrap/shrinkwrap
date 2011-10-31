@@ -20,47 +20,45 @@ import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 
 /**
- * Ensures that the {@link Formatters.VERBOSE} is functioning
- * as expected
- * 
+ * Ensures that the {@link Formatters.VERBOSE} is functioning as expected
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class VerboseFormatterTestCase extends FormatterTestBase
-{
+public class VerboseFormatterTestCase extends FormatterTestBase {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   private static final String EXPECTED_OUTPUT = NAME_ARCHIVE
-      + ":\n/org/\n/org/jboss/\n/org/jboss/shrinkwrap/\n/org/jboss/shrinkwrap/impl/\n/org/jboss/shrinkwrap/impl/base/\n"
-      + "/org/jboss/shrinkwrap/impl/base/formatter/\n/org/jboss/shrinkwrap/impl/base/formatter/FormatterTestBase.class\n"
-      + "/org/jboss/shrinkwrap/impl/base/test/\n/org/jboss/shrinkwrap/impl/base/test/ArchiveTestBase.class\n"
-      /* ArchiveTestBase contains an anonymous innerclass which must be accounted for. */
-      + "/org/jboss/shrinkwrap/impl/base/test/ArchiveTestBase$1.class";
+    private static final String EXPECTED_OUTPUT = NAME_ARCHIVE
+        + ":\n/org/\n/org/jboss/\n/org/jboss/shrinkwrap/\n/org/jboss/shrinkwrap/impl/\n/org/jboss/shrinkwrap/impl/base/\n"
+        + "/org/jboss/shrinkwrap/impl/base/formatter/\n/org/jboss/shrinkwrap/impl/base/formatter/FormatterTestBase.class\n"
+        + "/org/jboss/shrinkwrap/impl/base/test/\n/org/jboss/shrinkwrap/impl/base/test/ArchiveTestBase.class\n"
+        /* ArchiveTestBase contains an anonymous innerclass which must be accounted for. */
+        + "/org/jboss/shrinkwrap/impl/base/test/ArchiveTestBase$1.class";
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.formatter.FormatterTestBase#getFormatter()
-    */
-   @Override
-   Formatter getFormatter()
-   {
-      return Formatters.VERBOSE;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.formatter.FormatterTestBase#getFormatter()
+     */
+    @Override
+    Formatter getFormatter() {
+        return Formatters.VERBOSE;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.formatter.FormatterTestBase#getExpectedOutput()
-    */
-   @Override
-   String getExpectedOutput()
-   {
-      return EXPECTED_OUTPUT;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.formatter.FormatterTestBase#getExpectedOutput()
+     */
+    @Override
+    String getExpectedOutput() {
+        return EXPECTED_OUTPUT;
+    }
 }

@@ -21,20 +21,18 @@ import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.Configuration;
 
 /**
- * {@link Assignable} view representing an entity backed by
- * {@link Configuration}.
+ * {@link Assignable} view representing an entity backed by {@link Configuration}.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public interface Configurable extends Assignable
-{
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public interface Configurable extends Assignable {
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Obtains the {@link Configuration} associated with this {@link Archive}
-    */
-   Configuration getConfiguration();
+    /**
+     * Obtains the {@link Configuration} associated with this {@link Archive}
+     */
+    Configuration getConfiguration();
 }

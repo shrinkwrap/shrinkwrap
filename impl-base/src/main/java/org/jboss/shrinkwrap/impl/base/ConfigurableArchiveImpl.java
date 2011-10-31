@@ -24,46 +24,43 @@ import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.spi.Configurable;
 
 /**
- * {@link Assignable} implementation view of an {@link ConfigurableArchive}. 
- * Provides access to the internal {@link Configuration} of an 
- * {@link Archive}.
- * 
+ * {@link Assignable} implementation view of an {@link ConfigurableArchive}. Provides access to the internal
+ * {@link Configuration} of an {@link Archive}.
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ConfigurableArchiveImpl extends AssignableBase<ArchiveBase<?>> implements Configurable
-{
+public class ConfigurableArchiveImpl extends AssignableBase<ArchiveBase<?>> implements Configurable {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(ConfigurableArchiveImpl.class.getName());
+    /**
+     * Logger
+     */
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(ConfigurableArchiveImpl.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   public ConfigurableArchiveImpl(final ArchiveBase<?> archive)
-   {
-      super(archive);
-   }
+    public ConfigurableArchiveImpl(final ArchiveBase<?> archive) {
+        super(archive);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.spi.Configurable#getConfiguration()
-    */
-   @Override
-   public Configuration getConfiguration()
-   {
-      return this.getArchive().getConfiguration();
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.spi.Configurable#getConfiguration()
+     */
+    @Override
+    public Configuration getConfiguration() {
+        return this.getArchive().getConfiguration();
+    }
 }

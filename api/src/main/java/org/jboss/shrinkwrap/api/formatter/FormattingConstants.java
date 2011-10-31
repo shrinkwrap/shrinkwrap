@@ -18,29 +18,28 @@ package org.jboss.shrinkwrap.api.formatter;
 
 /**
  * Constants used in the default {@link Formatter} implementations
- * 
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-interface FormattingConstants
-{
-   /**
-    * Newline character
-    */
-   char NEWLINE = '\n';
+interface FormattingConstants {
+    /**
+     * Newline character
+     */
+    char NEWLINE = '\n';
 
-   /**
-    * Colon character
-    */
-   char COLON = ':';
-   
-   /**
-    * Space character
-    */
-   char SPACE = ' ';
+    /**
+     * Colon character
+     */
+    char COLON = ':';
 
-   /**
-    * Slash character.
-    */
-   char SLASH = '/';
+    /**
+     * Space character
+     */
+    char SPACE = ' ';
+
+    /**
+     * Slash character.
+     */
+    char SLASH = '/';
 }

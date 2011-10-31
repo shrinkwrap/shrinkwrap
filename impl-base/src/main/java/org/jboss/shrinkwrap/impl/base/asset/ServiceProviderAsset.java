@@ -28,33 +28,34 @@ import org.jboss.shrinkwrap.impl.base.Validate;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ServiceProviderAsset implements Asset
-{
-   private Class<?>[] providerImpls;
+public class ServiceProviderAsset implements Asset {
+    private Class<?>[] providerImpls;
 
-   /**
-    * Creates a newline separated text file off the providerImpls class names.
-    * 
-    * @param providerImpls The Classes to use
-    * @throws IllegalArgumentException if providerImpls is null or contain null values
-    */
-   public ServiceProviderAsset(Class<?>... providerImpls)
-   {
-      Validate.notNullAndNoNullValues(providerImpls, "ProviderImpls must be specified and can not contain null values");
-      this.providerImpls = providerImpls;
-   }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.Asset#openStream()
-    */
-   @Override
-   public InputStream openStream()
-   {
-      StringBuilder content = new StringBuilder();
-      for(Class<?> providerImpl : providerImpls)
-      {
-         content.append(providerImpl.getName()).append('\n');
-      }
-      return new ByteArrayInputStream(content.toString().getBytes());
-   }
+    /**
+     * Creates a newline separated text file off the providerImpls class names.
+     *
+     * @param providerImpls
+     *            The Classes to use
+     * @throws IllegalArgumentException
+     *             if providerImpls is null or contain null values
+     */
+    public ServiceProviderAsset(Class<?>... providerImpls) {
+        Validate.notNullAndNoNullValues(providerImpls,
+            "ProviderImpls must be specified and can not contain null values");
+        this.providerImpls = providerImpls;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.Asset#openStream()
+     */
+    @Override
+    public InputStream openStream() {
+        StringBuilder content = new StringBuilder();
+        for (Class<?> providerImpl : providerImpls) {
+            content.append(providerImpl.getName()).append('\n');
+        }
+        return new ByteArrayInputStream(content.toString().getBytes());
+    }
 }

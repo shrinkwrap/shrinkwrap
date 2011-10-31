@@ -22,49 +22,38 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Test;
 
-
 /**
  * AssetUtilTest
- * 
+ *
  * Test case to ensure the correctness of the AssetUtil.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class AssetUtilTestCase
-{
-   private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
+public class AssetUtilTestCase {
+    private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
 
-   @Test
-   public void shouldBeAbleToGetPathForClassloaderResource() throws Exception 
-   {
-      ArchivePath foundResourcePath = AssetUtil.getPathForClassloaderResource(EXISTING_RESOURCE);
-      
-      Assert.assertEquals(
-            "The classloader resource path should not contain the file name",
-            new BasicPath("org/jboss/shrinkwrap/impl/base/asset"),
-            foundResourcePath);
-   }
+    @Test
+    public void shouldBeAbleToGetPathForClassloaderResource() throws Exception {
+        ArchivePath foundResourcePath = AssetUtil.getPathForClassloaderResource(EXISTING_RESOURCE);
 
-   @Test
-   public void shouldBeAbleToGetNameForClassloaderResource() throws Exception 
-   {
-      String foundResourceName = AssetUtil.getNameForClassloaderResource(EXISTING_RESOURCE);
-      
-      Assert.assertEquals(
-            "The classloader resource name should not contain the path",
-            "Test.properties",
+        Assert.assertEquals("The classloader resource path should not contain the file name", new BasicPath(
+            "org/jboss/shrinkwrap/impl/base/asset"), foundResourcePath);
+    }
+
+    @Test
+    public void shouldBeAbleToGetNameForClassloaderResource() throws Exception {
+        String foundResourceName = AssetUtil.getNameForClassloaderResource(EXISTING_RESOURCE);
+
+        Assert.assertEquals("The classloader resource name should not contain the path", "Test.properties",
             foundResourceName);
-   }
-   
-   @Test
-   public void shouldBeAbleToGetFullPathForClassResoruce() throws Exception 
-   {
-      ArchivePath foundClassResourcePath = AssetUtil.getFullPathForClassResource(this.getClass());
-      
-      Assert.assertEquals(
-            "The class resource should have a / delimiter and a .class extension",
-            new BasicPath("/org/jboss/shrinkwrap/impl/base/asset/AssetUtilTestCase.class"),
-            foundClassResourcePath);
-   }
+    }
+
+    @Test
+    public void shouldBeAbleToGetFullPathForClassResoruce() throws Exception {
+        ArchivePath foundClassResourcePath = AssetUtil.getFullPathForClassResource(this.getClass());
+
+        Assert.assertEquals("The class resource should have a / delimiter and a .class extension", new BasicPath(
+            "/org/jboss/shrinkwrap/impl/base/asset/AssetUtilTestCase.class"), foundClassResourcePath);
+    }
 }

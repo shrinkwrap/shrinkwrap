@@ -21,43 +21,37 @@ import java.security.PrivilegedAction;
 
 /**
  * SecurityActions
- * 
- * A set of privileged actions that are not to leak out
- * of this package 
+ *
+ * A set of privileged actions that are not to leak out of this package
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-final class SecurityActions
-{
+final class SecurityActions {
 
-   //-------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
 
-   /**
-    * No external instantiation
-    */
-   private SecurityActions()
-   {
+    /**
+     * No external instantiation
+     */
+    private SecurityActions() {
 
-   }
+    }
 
-   //-------------------------------------------------------------------------------||
-   // Utility Methods --------------------------------------------------------------||
-   //-------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
+    // Utility Methods --------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
 
-   /**
-    * Obtains the Thread Context ClassLoader
-    */
-   static ClassLoader getThreadContextClassLoader()
-   {
-      return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>()
-      {
-         public ClassLoader run()
-         {
-            return Thread.currentThread().getContextClassLoader();
-         }
-      });
-   }
+    /**
+     * Obtains the Thread Context ClassLoader
+     */
+    static ClassLoader getThreadContextClassLoader() {
+        return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+            public ClassLoader run() {
+                return Thread.currentThread().getContextClassLoader();
+            }
+        });
+    }
 }

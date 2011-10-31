@@ -23,25 +23,20 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Node;
 
 /**
- * Represents byte-based content.
- * Typically stored within a {@link Node} inside of an {@link Archive}
- * under a context {@link ArchivePath}.  May be added
- * directly to all {@link Archive} types. 
- * 
+ * Represents byte-based content. Typically stored within a {@link Node} inside of an {@link Archive} under a context
+ * {@link ArchivePath}. May be added directly to all {@link Archive} types.
+ *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public interface Asset
-{
-   /**
-    * Get a input stream for the resource content.
-    * The caller is responsible for closing the stream. 
-    * If this returns null, this denotes that the {@link Asset}
-    * is to be viewed as a logical path (placeholder/directory) 
-    * only with no backing content.
-    * 
-    * @return A new open {@link InputStream} for each call, or null if this
-    * type simply represents a logical path within an {@link Archive}
-    */
-   InputStream openStream();
+public interface Asset {
+    /**
+     * Get a input stream for the resource content. The caller is responsible for closing the stream. If this returns
+     * null, this denotes that the {@link Asset} is to be viewed as a logical path (placeholder/directory) only with no
+     * backing content.
+     *
+     * @return A new open {@link InputStream} for each call, or null if this type simply represents a logical path
+     *         within an {@link Archive}
+     */
+    InputStream openStream();
 }

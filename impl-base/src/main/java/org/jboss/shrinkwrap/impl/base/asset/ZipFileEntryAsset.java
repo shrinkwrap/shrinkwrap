@@ -24,42 +24,37 @@ import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
- * Holds a reference to the ZipFile and the ZipEntry this
- * Asset represents for lazy loading.
- * 
+ * Holds a reference to the ZipFile and the ZipEntry this Asset represents for lazy loading.
+ *
  * Used by the ZipImporter.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ZipFileEntryAsset implements Asset
-{
-   private ZipFile file;
-   private ZipEntry entry;
-   
-   public ZipFileEntryAsset(ZipFile file, ZipEntry entry)
-   {
-      Validate.notNull(file, "File must be specified");
-      Validate.notNull(entry, "Entry must be specified");
-      
-      this.file = file;
-      this.entry = entry;
-   }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.api.Asset#getStream()
-    */
-   @Override
-   // TODO: create AssetStreamException ?
-   public InputStream openStream()
-   {
-      try 
-      {
-         return file.getInputStream(entry);
-      }
-      catch (Exception e) 
-      {
-         throw new RuntimeException("Could not open zip file stream", e); 
-      }
-   }
+public class ZipFileEntryAsset implements Asset {
+    private ZipFile file;
+    private ZipEntry entry;
+
+    public ZipFileEntryAsset(ZipFile file, ZipEntry entry) {
+        Validate.notNull(file, "File must be specified");
+        Validate.notNull(entry, "Entry must be specified");
+
+        this.file = file;
+        this.entry = entry;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.declarchive.api.Asset#getStream()
+     */
+    @Override
+    // TODO: create AssetStreamException ?
+    public InputStream openStream() {
+        try {
+            return file.getInputStream(entry);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not open zip file stream", e);
+        }
+    }
 }

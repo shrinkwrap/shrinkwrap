@@ -23,78 +23,78 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 /**
  * BasicPathTestCase
  *
- * Tests to ensure that the {@link BasicPath}
- * implementation creates Paths as expected 
- * from various specified contexts 
+ * Tests to ensure that the {@link BasicPath} implementation creates Paths as expected from various specified contexts
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class BasicPathTestCase extends PathsTestBase
-{
+public class BasicPathTestCase extends PathsTestBase {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(BasicPathTestCase.class.getName());
+    /**
+     * Logger
+     */
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(BasicPathTestCase.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(java.lang.String)
-    */
-   @Override
-   ArchivePath createPath(final String context)
-   {
-      return new BasicPath(context);
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(java.lang.String)
+     */
+    @Override
+    ArchivePath createPath(final String context) {
+        return new BasicPath(context);
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.ArchivePath)
-    */
-   @Override
-   ArchivePath createPath(ArchivePath base, ArchivePath context)
-   {
-      return new BasicPath(base, context);
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(org.jboss.shrinkwrap.api.ArchivePath,
+     *      org.jboss.shrinkwrap.api.ArchivePath)
+     */
+    @Override
+    ArchivePath createPath(ArchivePath base, ArchivePath context) {
+        return new BasicPath(base, context);
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(org.jboss.shrinkwrap.api.ArchivePath, java.lang.String)
-    */
-   @Override
-   ArchivePath createPath(ArchivePath base, String context)
-   {
-      return new BasicPath(base, context);
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(org.jboss.shrinkwrap.api.ArchivePath,
+     *      java.lang.String)
+     */
+    @Override
+    ArchivePath createPath(ArchivePath base, String context) {
+        return new BasicPath(base, context);
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(java.lang.String, java.lang.String)
-    */
-   @Override
-   ArchivePath createPath(String base, String context)
-   {
-      return new BasicPath(base, context);
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(java.lang.String, java.lang.String)
+     */
+    @Override
+    ArchivePath createPath(String base, String context) {
+        return new BasicPath(base, context);
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(java.lang.String, org.jboss.shrinkwrap.api.ArchivePath)
-    */
-   @Override
-   ArchivePath createPath(final String base, final ArchivePath context)
-   {
-      return new BasicPath(base, context);
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.path.PathsTestBase#createPath(java.lang.String,
+     *      org.jboss.shrinkwrap.api.ArchivePath)
+     */
+    @Override
+    ArchivePath createPath(final String base, final ArchivePath context) {
+        return new BasicPath(base, context);
+    }
 
 }

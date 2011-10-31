@@ -25,33 +25,28 @@ import java.io.ByteArrayInputStream;
  * ByteArrayIOUtilTest
  * <p/>
  * Test Cases for the {@link org.jboss.shrinkwrap.api.asset.ByteArrayIOUtil}
- *
+ * 
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
-public class ByteArrayIOUtilTestCase
-{
+public class ByteArrayIOUtilTestCase {
 
-   @Test(expected = IllegalArgumentException.class)
-   public void shouldThrowExceptionOnNullParameter()
-   {
-      ByteArrayIOUtil.asByteArray(null);
-   }
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionOnNullParameter() {
+        ByteArrayIOUtil.asByteArray(null);
+    }
 
-   @Test
-   public void shouldReturnByteArrayWithSameContentAsPassedIntoInputStream()
-   {
-      final int length = 10;
-      final byte[] contents = new byte[length];
-      for (int i = 0; i < length; i++)
-      {
-         contents[i] = (byte) i;
-      }
-      byte[] output = ByteArrayIOUtil.asByteArray(new ByteArrayInputStream(contents));
+    @Test
+    public void shouldReturnByteArrayWithSameContentAsPassedIntoInputStream() {
+        final int length = 10;
+        final byte[] contents = new byte[length];
+        for (int i = 0; i < length; i++) {
+            contents[i] = (byte) i;
+        }
+        byte[] output = ByteArrayIOUtil.asByteArray(new ByteArrayInputStream(contents));
 
-      for (int i = 0; i < output.length; i++)
-      {
-         Assert.assertEquals("output content did not equal input content", output[i], contents[i]);
-      }
-   }
+        for (int i = 0; i < output.length; i++) {
+            Assert.assertEquals("output content did not equal input content", output[i], contents[i]);
+        }
+    }
 }

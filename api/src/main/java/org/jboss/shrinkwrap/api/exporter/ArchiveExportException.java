@@ -18,38 +18,34 @@ package org.jboss.shrinkwrap.api.exporter;
 
 /**
  * Exception thrown when an error occurs exporting an Archive.
- * 
+ *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public class ArchiveExportException extends RuntimeException
-{
+public class ArchiveExportException extends RuntimeException {
 
-   private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-   /**
-    * @param message
-    * @param cause
-    */
-   public ArchiveExportException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    /**
+     * @param message
+     * @param cause
+     */
+    public ArchiveExportException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-   /**
-    * @param message
-    */
-   public ArchiveExportException(String message)
-   {
-      super(message);
-   }
+    /**
+     * @param message
+     */
+    public ArchiveExportException(String message) {
+        super(message);
+    }
 
-   /**
-    * @param cause
-    */
-   public ArchiveExportException(Throwable cause)
-   {
-      super(cause);
-   }
+    /**
+     * @param cause
+     */
+    public ArchiveExportException(Throwable cause) {
+        super(cause);
+    }
 
 }

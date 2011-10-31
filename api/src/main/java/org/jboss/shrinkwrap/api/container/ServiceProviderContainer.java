@@ -20,33 +20,35 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
- * Defines the contract for a component capable of storing 
- * service provider related resources.
- * <br/><br/>
- * The actual path to the  service provider within the Archive 
- * is up to the implementations/specifications.
+ * Defines the contract for a component capable of storing service provider related resources. <br/>
+ * <br/>
+ * The actual path to the service provider within the Archive is up to the implementations/specifications.
  *
  * @author Davide D'Alto
  * @version $Revision: $
  * @param <T>
  */
-public interface ServiceProviderContainer<T extends Archive<T>> extends ManifestContainer<T>, ClassContainer<T>
-{
-   /**
-    * Adds a META-INF/services/ServiceInterfaceName {@link Asset} and the classes related to the service
-    * to the archive.
-    * 
-    * @param serviceInterface The Service Interface class
-    * @param serviceImpls The Service Interface Implementations
-    * @return This virtual archive
-    * @throws IllegalArgumentException if serviceInterface is null
-    * @throws IllegalArgumentException if serviceImpls is null or contain null values
-    */
-   /*
-    * TODO: The interface should have been like this:
-    * <X> T addServiceProvider(Class<X> serviceInterface, Class<? extends X>... serviceImpls) throws IllegalArgumentException;
-    * But due to how java generic works, this will cause a unsafe warning for the user. 
-    */
-   T addAsServiceProviderAndClasses(Class<?> serviceInterface, Class<?>... serviceImpls) throws IllegalArgumentException;
-   
+public interface ServiceProviderContainer<T extends Archive<T>> extends ManifestContainer<T>, ClassContainer<T> {
+    /**
+     * Adds a META-INF/services/ServiceInterfaceName {@link Asset} and the classes related to the service to the
+     * archive.
+     *
+     * @param serviceInterface
+     *            The Service Interface class
+     * @param serviceImpls
+     *            The Service Interface Implementations
+     * @return This virtual archive
+     * @throws IllegalArgumentException
+     *             if serviceInterface is null
+     * @throws IllegalArgumentException
+     *             if serviceImpls is null or contain null values
+     */
+    /*
+     * TODO: The interface should have been like this: <X> T addServiceProvider(Class<X> serviceInterface, Class<?
+     * extends X>... serviceImpls) throws IllegalArgumentException; But due to how java generic works, this will cause a
+     * unsafe warning for the user.
+     */
+    T addAsServiceProviderAndClasses(Class<?> serviceInterface, Class<?>... serviceImpls)
+        throws IllegalArgumentException;
+
 }

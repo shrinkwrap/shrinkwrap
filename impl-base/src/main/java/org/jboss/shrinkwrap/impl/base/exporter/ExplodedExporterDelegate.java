@@ -33,177 +33,158 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
 /**
  * ExplodedExporterDelegate
- * 
- * Delegate used to export an archive into an exploded directory structure.   
- * 
+ *
+ * Delegate used to export an archive into an exploded directory structure.
+ *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ExplodedExporterDelegate extends AbstractExporterDelegate<File>
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class ExplodedExporterDelegate extends AbstractExporterDelegate<File> {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(ExplodedExporterDelegate.class.getName());
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(ExplodedExporterDelegate.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Output directory to write the exploded content to.
-    */
-   private final File outputDirectory;
+    /**
+     * Output directory to write the exploded content to.
+     */
+    private final File outputDirectory;
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new exploded exporter delegate for the provided {@link Archive} 
-    */
-   public ExplodedExporterDelegate(Archive<?> archive, File baseDirectory, String directoryName)
-   {
-      super(archive);
-      this.outputDirectory = initializeOutputDirectory(baseDirectory, directoryName);
-   }
+    /**
+     * Creates a new exploded exporter delegate for the provided {@link Archive}
+     */
+    public ExplodedExporterDelegate(Archive<?> archive, File baseDirectory, String directoryName) {
+        super(archive);
+        this.outputDirectory = initializeOutputDirectory(baseDirectory, directoryName);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#processNode(ArchivePath, Node)
-    */
-   @Override
-   protected void processNode(ArchivePath path, Node node)
-   {
-      // Get path to file
-      final String assetFilePath = path.get();
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#processNode(ArchivePath, Node)
+     */
+    @Override
+    protected void processNode(ArchivePath path, Node node) {
+        // Get path to file
+        final String assetFilePath = path.get();
 
-      // Create a file for the asset
-      final File assetFile = new File(outputDirectory, assetFilePath);
+        // Create a file for the asset
+        final File assetFile = new File(outputDirectory, assetFilePath);
 
-      // Get the assets parent parent directory and make sure it exists
-      final File assetParent = assetFile.getParentFile();
-      if (!assetParent.exists())
-      {
-         if (!assetParent.mkdirs())
-         {
-            throw new ArchiveExportException("Failed to write asset.  Unable to create parent directory.");
-         }
-      }
-
-      // Handle Archive assets separately 
-      if (node != null && node.getAsset() instanceof ArchiveAsset)
-      {
-         ArchiveAsset nesteArchiveAsset = ArchiveAsset.class.cast(node.getAsset());
-         processArchiveAsset(assetParent, nesteArchiveAsset);
-         return;
-      }
-
-      // Handle directory assets separately
-      try
-      {
-         final boolean isDirectory = (node.getAsset() == null);
-         if (isDirectory)
-         {
-            // If doesn't already exist
-            if (!assetFile.exists())
-            {
-               // Attempt a create
-               if (!assetFile.mkdirs())
-               {
-                  // Some error in writing
-                  throw new ArchiveExportException("Failed to write directory: " + assetFile.getAbsolutePath());
-               }
+        // Get the assets parent parent directory and make sure it exists
+        final File assetParent = assetFile.getParentFile();
+        if (!assetParent.exists()) {
+            if (!assetParent.mkdirs()) {
+                throw new ArchiveExportException("Failed to write asset.  Unable to create parent directory.");
             }
-         }
-         // Only handle non-directory assets, otherwise the path is handled above
-         else
-         {
-            try
-            {
-               if (log.isLoggable(Level.FINE))
-               {
-                  log.fine("Writing asset " + path.get() + " to " + assetFile.getAbsolutePath());
-               }
-               // Get the asset streams
-               final InputStream assetInputStream = node.getAsset().openStream();
-               final FileOutputStream assetFileOutputStream = new FileOutputStream(assetFile);
-               final BufferedOutputStream assetBufferedOutputStream = new BufferedOutputStream(assetFileOutputStream,
-                     8192);
+        }
 
-               // Write contents
-               IOUtil.copyWithClose(assetInputStream, assetBufferedOutputStream);
+        // Handle Archive assets separately
+        if (node != null && node.getAsset() instanceof ArchiveAsset) {
+            ArchiveAsset nesteArchiveAsset = ArchiveAsset.class.cast(node.getAsset());
+            processArchiveAsset(assetParent, nesteArchiveAsset);
+            return;
+        }
+
+        // Handle directory assets separately
+        try {
+            final boolean isDirectory = (node.getAsset() == null);
+            if (isDirectory) {
+                // If doesn't already exist
+                if (!assetFile.exists()) {
+                    // Attempt a create
+                    if (!assetFile.mkdirs()) {
+                        // Some error in writing
+                        throw new ArchiveExportException("Failed to write directory: " + assetFile.getAbsolutePath());
+                    }
+                }
             }
-            catch (final Exception e)
-            {
-               // Provide a more detailed exception than the outer block
-               throw new ArchiveExportException("Failed to write asset " + path + " to " + assetFile, e);
+            // Only handle non-directory assets, otherwise the path is handled above
+            else {
+                try {
+                    if (log.isLoggable(Level.FINE)) {
+                        log.fine("Writing asset " + path.get() + " to " + assetFile.getAbsolutePath());
+                    }
+                    // Get the asset streams
+                    final InputStream assetInputStream = node.getAsset().openStream();
+                    final FileOutputStream assetFileOutputStream = new FileOutputStream(assetFile);
+                    final BufferedOutputStream assetBufferedOutputStream = new BufferedOutputStream(
+                        assetFileOutputStream, 8192);
+
+                    // Write contents
+                    IOUtil.copyWithClose(assetInputStream, assetBufferedOutputStream);
+                } catch (final Exception e) {
+                    // Provide a more detailed exception than the outer block
+                    throw new ArchiveExportException("Failed to write asset " + path + " to " + assetFile, e);
+                }
             }
-         }
-      }
-      catch (final Exception e)
-      {
-         throw new ArchiveExportException("Unexpected error encountered in export of " + node, e);
-      }
-   }
+        } catch (final Exception e) {
+            throw new ArchiveExportException("Unexpected error encountered in export of " + node, e);
+        }
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#getResult()
-    */
-   @Override
-   protected File getResult()
-   {
-      return outputDirectory;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate#getResult()
+     */
+    @Override
+    protected File getResult() {
+        return outputDirectory;
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Internal Helper Methods ------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Internal Helper Methods ------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Processes a nested archive by delegating to the ExplodedArchiveExporter
-    * @param parentDirectory
-    * @param nestedArchiveAsset
-    */
-   private void processArchiveAsset(File parentDirectory, ArchiveAsset nestedArchiveAsset)
-   {
-      // Get the nested archive
-      Archive<?> nestedArchive = nestedArchiveAsset.getArchive();
-      nestedArchive.as(ExplodedExporter.class).exportExploded(parentDirectory);
-   }
+    /**
+     * Processes a nested archive by delegating to the ExplodedArchiveExporter
+     *
+     * @param parentDirectory
+     * @param nestedArchiveAsset
+     */
+    private void processArchiveAsset(File parentDirectory, ArchiveAsset nestedArchiveAsset) {
+        // Get the nested archive
+        Archive<?> nestedArchive = nestedArchiveAsset.getArchive();
+        nestedArchive.as(ExplodedExporter.class).exportExploded(parentDirectory);
+    }
 
-   /**
-    * Initializes the output directory
-    * 
-    * @param baseDirectory
-    * @param directoryName
-    * @return
-    */
-   private File initializeOutputDirectory(File baseDirectory, String directoryName)
-   {
-      // Create output directory
-      final File outputDirectory = new File(baseDirectory, directoryName);
-      if (!outputDirectory.mkdir() && !outputDirectory.exists())
-      {
-         throw new ArchiveExportException("Unable to create archive output directory - " + outputDirectory);
-      }
-      if (outputDirectory.isFile())
-      {
-         throw new IllegalArgumentException("Unable to export exploded directory to "
-               + outputDirectory.getAbsolutePath() + ", it points to a existing file");
-      }
+    /**
+     * Initializes the output directory
+     *
+     * @param baseDirectory
+     * @param directoryName
+     * @return
+     */
+    private File initializeOutputDirectory(File baseDirectory, String directoryName) {
+        // Create output directory
+        final File outputDirectory = new File(baseDirectory, directoryName);
+        if (!outputDirectory.mkdir() && !outputDirectory.exists()) {
+            throw new ArchiveExportException("Unable to create archive output directory - " + outputDirectory);
+        }
+        if (outputDirectory.isFile()) {
+            throw new IllegalArgumentException("Unable to export exploded directory to "
+                + outputDirectory.getAbsolutePath() + ", it points to a existing file");
+        }
 
-      return outputDirectory;
-   }
+        return outputDirectory;
+    }
 
 }

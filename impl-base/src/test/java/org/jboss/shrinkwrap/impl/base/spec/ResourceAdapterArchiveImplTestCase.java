@@ -42,140 +42,123 @@ import org.junit.Before;
  * @version $Revision: $
  */
 @ArchiveType(ResourceAdapterArchive.class)
-public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterContainerTestBase<ResourceAdapterArchive>
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterContainerTestBase<ResourceAdapterArchive> {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   private static final ArchivePath PATH_RESOURCE = new BasicPath("/");
+    private static final ArchivePath PATH_RESOURCE = new BasicPath("/");
 
-   private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
+    private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
 
-   private static final ArchivePath PATH_LIBRARY = new BasicPath("/");
+    private static final ArchivePath PATH_LIBRARY = new BasicPath("/");
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   private ResourceAdapterArchive archive;
+    private ResourceAdapterArchive archive;
 
-   //-------------------------------------------------------------------------------------||
-   // Lifecycle Methods ------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Lifecycle Methods ------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @Before
-   public void createResourceAdapterArchive() throws Exception
-   {
-      archive = createNewArchive();
-   }
+    @Before
+    public void createResourceAdapterArchive() throws Exception {
+        archive = createNewArchive();
+    }
 
-   @After
-   public void ls()
-   {
-      System.out.println("test@jboss:/$ ls -l " + archive.getName());
-      System.out.println(archive.toString(true));
-   }
+    @After
+    public void ls() {
+        System.out.println("test@jboss:/$ ls -l " + archive.getName());
+        System.out.println(archive.toString(true));
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Impls - ArchiveTestBase ---------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Impls - ArchiveTestBase ---------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /** 
-    * Return the current ResourceAdapterArchive
-    */
-   @Override
-   protected ResourceAdapterArchive getArchive()
-   {
-      return archive;
-   }
+    /**
+     * Return the current ResourceAdapterArchive
+     */
+    @Override
+    protected ResourceAdapterArchive getArchive() {
+        return archive;
+    }
 
-   /**
-    * Create a new instance of a ResourceAdapterArchive
-    */
-   @Override
-   protected ResourceAdapterArchive createNewArchive()
-   {
-      return ShrinkWrap.create(ResourceAdapterArchive.class);
-   }
+    /**
+     * Create a new instance of a ResourceAdapterArchive
+     */
+    @Override
+    protected ResourceAdapterArchive createNewArchive() {
+        return ShrinkWrap.create(ResourceAdapterArchive.class);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Impls - DynamicContainerTestBase -------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Impls - DynamicContainerTestBase -------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @Override
-   protected ClassContainer<ResourceAdapterArchive> getClassContainer()
-   {
-      throw new UnsupportedOperationException("ResourceAdapterArchive do not support classes");
-   }
+    @Override
+    protected ClassContainer<ResourceAdapterArchive> getClassContainer() {
+        throw new UnsupportedOperationException("ResourceAdapterArchive do not support classes");
+    }
 
-   @Override
-   protected ArchivePath getClassPath()
-   {
-      throw new UnsupportedOperationException("ResourceAdapterArchive do not support classes");
-   }
+    @Override
+    protected ArchivePath getClassPath() {
+        throw new UnsupportedOperationException("ResourceAdapterArchive do not support classes");
+    }
 
-   @Override
-   protected LibraryContainer<ResourceAdapterArchive> getLibraryContainer()
-   {
-      return archive;
-   }
-   
-   @Override
-   protected ServiceProviderContainer<ResourceAdapterArchive> getServiceProviderContainer()
-   {
-      throw new UnsupportedOperationException("ResourceAdapterArchive do not support service provider classes");
-   }
+    @Override
+    protected LibraryContainer<ResourceAdapterArchive> getLibraryContainer() {
+        return archive;
+    }
 
-   @Override
-   protected ArchivePath getManifestPath()
-   {
-      return PATH_MANIFEST;
-   }
+    @Override
+    protected ServiceProviderContainer<ResourceAdapterArchive> getServiceProviderContainer() {
+        throw new UnsupportedOperationException("ResourceAdapterArchive do not support service provider classes");
+    }
 
-   @Override
-   protected ArchivePath getResourcePath()
-   {
-      return PATH_RESOURCE;
-   }
+    @Override
+    protected ArchivePath getManifestPath() {
+        return PATH_MANIFEST;
+    }
 
-   @Override
-   protected ArchivePath getLibraryPath()
-   {
-      return PATH_LIBRARY;
-   }
+    @Override
+    protected ArchivePath getResourcePath() {
+        return PATH_RESOURCE;
+    }
 
-   @Override
-   protected ManifestContainer<ResourceAdapterArchive> getManifestContainer()
-   {
-      return getArchive();
-   }
+    @Override
+    protected ArchivePath getLibraryPath() {
+        return PATH_LIBRARY;
+    }
 
-   @Override
-   protected ResourceContainer<ResourceAdapterArchive> getResourceContainer()
-   {
-      return getArchive();
-   }
-   
-   //-------------------------------------------------------------------------------------||
-   // Required Impls - DynamicResourceAdapterContainerTestBase ---------------------------||
-   //-------------------------------------------------------------------------------------||
+    @Override
+    protected ManifestContainer<ResourceAdapterArchive> getManifestContainer() {
+        return getArchive();
+    }
 
-   @Override
-   protected ArchivePath getResourceAdapterPath()
-   {
-      return getManifestPath();
-   }
-   
-   @Override
-   protected ResourceAdapterContainer<ResourceAdapterArchive> getResourceAdapterContainer()
-   {
-      return getArchive();
-   }
+    @Override
+    protected ResourceContainer<ResourceAdapterArchive> getResourceContainer() {
+        return getArchive();
+    }
 
-   @Override
-   protected ArchiveFormat getExpectedArchiveFormat()
-   {
-      return ArchiveFormat.ZIP;
-   }
+    // -------------------------------------------------------------------------------------||
+    // Required Impls - DynamicResourceAdapterContainerTestBase ---------------------------||
+    // -------------------------------------------------------------------------------------||
+
+    @Override
+    protected ArchivePath getResourceAdapterPath() {
+        return getManifestPath();
+    }
+
+    @Override
+    protected ResourceAdapterContainer<ResourceAdapterArchive> getResourceAdapterContainer() {
+        return getArchive();
+    }
+
+    @Override
+    protected ArchiveFormat getExpectedArchiveFormat() {
+        return ArchiveFormat.ZIP;
+    }
 }

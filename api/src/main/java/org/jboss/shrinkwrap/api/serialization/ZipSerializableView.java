@@ -22,15 +22,12 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * {@link Serializable} view of an {@link Archive} where
- * contents are encoded in ZIP format during
- * Serialization.  May be reassigned to a normal {@link Archive}
- * view via {@link Assignable#as(Class)}.
- * 
+ * {@link Serializable} view of an {@link Archive} where contents are encoded in ZIP format during Serialization. May be
+ * reassigned to a normal {@link Archive} view via {@link Assignable#as(Class)}.
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public interface ZipSerializableView extends SerializableView
-{
+public interface ZipSerializableView extends SerializableView {
 
 }

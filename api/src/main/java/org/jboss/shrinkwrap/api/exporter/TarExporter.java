@@ -20,15 +20,14 @@ import org.jboss.shrinkwrap.api.Assignable;
 
 /**
  * Exporter used to represent an {@link Assignable} in TAR format
- * 
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @see http://www.gnu.org/software/tar/manual/html_node/Standard.html
  */
-public interface TarExporter extends StreamExporter
-{
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public interface TarExporter extends StreamExporter {
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   // Inherited from superclass
+    // Inherited from superclass
 }

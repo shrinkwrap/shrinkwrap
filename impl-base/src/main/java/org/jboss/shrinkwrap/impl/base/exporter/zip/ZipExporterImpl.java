@@ -25,50 +25,48 @@ import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
 import org.jboss.shrinkwrap.impl.base.exporter.AbstractStreamExporterImpl;
 
 /**
- * Implementation of ZipExporter used to export an Archive as a Zip format. 
- * 
+ * Implementation of ZipExporter used to export an Archive as a Zip format.
+ *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipExporter
-{
+public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipExporter {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(ZipExporterImpl.class.getName());
+    /**
+     * Logger
+     */
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(ZipExporterImpl.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   public ZipExporterImpl(final Archive<?> archive)
-   {
-      super(archive);
-   }
+    public ZipExporterImpl(final Archive<?> archive) {
+        super(archive);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations - ZipExporter ---------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations - ZipExporter ---------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportAsInputStream()
-    */
-   @Override
-   public InputStream exportAsInputStream()
-   {
-      // Create export delegate
-      AbstractExporterDelegate<InputStream> exportDelegate = new JdkZipExporterDelegate(this.getArchive());
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportAsInputStream()
+     */
+    @Override
+    public InputStream exportAsInputStream() {
+        // Create export delegate
+        AbstractExporterDelegate<InputStream> exportDelegate = new JdkZipExporterDelegate(this.getArchive());
 
-      // Export and get result
-      return exportDelegate.export();
-   }
+        // Export and get result
+        return exportDelegate.export();
+    }
 }

@@ -22,26 +22,23 @@ package org.jboss.shrinkwrap.api.importer;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ArchiveImportException extends RuntimeException
-{
+public class ArchiveImportException extends RuntimeException {
 
-   private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-   /**
-    * @param message
-    * @param cause
-    */
-   public ArchiveImportException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    /**
+     * @param message
+     * @param cause
+     */
+    public ArchiveImportException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-   /**
-    * @param cause
-    */
-   public ArchiveImportException(Throwable cause)
-   {
-      super(cause);
-   }
+    /**
+     * @param cause
+     */
+    public ArchiveImportException(Throwable cause) {
+        super(cause);
+    }
 
 }

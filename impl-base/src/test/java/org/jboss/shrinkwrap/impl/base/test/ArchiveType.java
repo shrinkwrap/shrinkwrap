@@ -28,8 +28,8 @@ import java.lang.annotation.Target;
  * @version $Revision: $
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface ArchiveType {
 
-   Class<?> value();
+    Class<?> value();
 }

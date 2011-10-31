@@ -30,83 +30,81 @@ import org.junit.Test;
 
 /**
  * Base support for implementations of {@link Formatter}
- * 
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public abstract class FormatterTestBase
-{
+public abstract class FormatterTestBase {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(FormatterTestBase.class.getName());
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(FormatterTestBase.class.getName());
 
-   /**
-    * Name of the test archive
-    */
-   static final String NAME_ARCHIVE = "testArchive.jar";
+    /**
+     * Name of the test archive
+     */
+    static final String NAME_ARCHIVE = "testArchive.jar";
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Archive used in testing
-    */
-   private Archive<?> archive;
+    /**
+     * Archive used in testing
+     */
+    private Archive<?> archive;
 
-   //-------------------------------------------------------------------------------------||
-   // Lifecycle --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Lifecycle --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates the archive used in the test
-    */
-   @Before
-   public void createArchive()
-   {
-      archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).addClasses(FormatterTestBase.class,
+    /**
+     * Creates the archive used in the test
+     */
+    @Before
+    public void createArchive() {
+        archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).addClasses(FormatterTestBase.class,
             ArchiveTestBase.class);
-   }
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Tests ------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Ensures that the {@link Formatter} is functioning as 
-    * contracted given a test archive
-    */
-   @Test
-   public void testFormatter()
-   {
-      // Format
-      final String formatted = archive.toString(getFormatter());
+    /**
+     * Ensures that the {@link Formatter} is functioning as contracted given a test archive
+     */
+    @Test
+    public void testFormatter() {
+        // Format
+        final String formatted = archive.toString(getFormatter());
 
-      // Log out, just so we can see
-      log.info(formatted);
+        // Log out, just so we can see
+        log.info(formatted);
 
-      // Ensure expected form
-      TestCase.assertEquals("Formatter output did not match that expected", this.getExpectedOutput(), formatted);
-   }
+        // Ensure expected form
+        TestCase.assertEquals("Formatter output did not match that expected", this.getExpectedOutput(), formatted);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Obtains the {@link Formatter} instance to be used for this test
-    */
-   abstract Formatter getFormatter();
+    /**
+     * Obtains the {@link Formatter} instance to be used for this test
+     */
+    abstract Formatter getFormatter();
 
-   /**
-    * Obtains the output expected of the {@link Formatter} instance returned by {@link FormatterTestBase#getFormatter()}
-    * @return
-    */
-   abstract String getExpectedOutput();
+    /**
+     * Obtains the output expected of the {@link Formatter} instance returned by
+     * {@link FormatterTestBase#getFormatter()}
+     *
+     * @return
+     */
+    abstract String getExpectedOutput();
 }

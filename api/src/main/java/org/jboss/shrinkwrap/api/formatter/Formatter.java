@@ -19,19 +19,19 @@ package org.jboss.shrinkwrap.api.formatter;
 import org.jboss.shrinkwrap.api.Archive;
 
 /**
- * A type capable of formatting an {@link Archive}
- * into human-readable style.  
- * 
+ * A type capable of formatting an {@link Archive} into human-readable style.
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public interface Formatter
-{
-   /**
-    * Returns a formatted view of the specified archive
-    * @param archive
-    * @return
-    * @throws IllegalArgumentException If the archive is not specified
-    */
-   String format(Archive<?> archive) throws IllegalArgumentException;
+public interface Formatter {
+    /**
+     * Returns a formatted view of the specified archive
+     *
+     * @param archive
+     * @return
+     * @throws IllegalArgumentException
+     *             If the archive is not specified
+     */
+    String format(Archive<?> archive) throws IllegalArgumentException;
 }

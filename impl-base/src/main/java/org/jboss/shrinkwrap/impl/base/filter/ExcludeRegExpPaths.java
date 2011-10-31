@@ -22,44 +22,42 @@ import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
  * IncludeRegExpPath
- * 
+ *
  * Filter to exclude all {@link ArchivePath}s that match a given Regular Expression.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class ExcludeRegExpPaths implements Filter<ArchivePath>
-{
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class ExcludeRegExpPaths implements Filter<ArchivePath> {
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   private String expression;
-   
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-   
-   public ExcludeRegExpPaths(String expression)
-   {
-      Validate.notNull(expression, "Expression must be specified");
-      this.expression = expression;
-   }
-   
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    private String expression;
 
-   /* (non-Javadoc)
-    * @see org.jboss.shrinkwrap.api.Filter#include(java.lang.Object)
-    */
-   @Override
-   public boolean include(ArchivePath path)
-   {
-      if(path.get().matches(expression)) 
-      {
-         return false;
-      }
-      return true;
-   }
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+
+    public ExcludeRegExpPaths(String expression) {
+        Validate.notNull(expression, "Expression must be specified");
+        this.expression = expression;
+    }
+
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.Filter#include(java.lang.Object)
+     */
+    @Override
+    public boolean include(ArchivePath path) {
+        if (path.get().matches(expression)) {
+            return false;
+        }
+        return true;
+    }
 }

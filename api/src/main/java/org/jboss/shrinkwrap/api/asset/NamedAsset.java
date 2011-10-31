@@ -19,24 +19,21 @@ package org.jboss.shrinkwrap.api.asset;
 import org.jboss.shrinkwrap.api.ArchivePath;
 
 /**
- * Pluggable separation between an Asset and a default name used to add 
- * Assets into an archive without having to explicitly supply the name 
- * ({@link ArchivePath}) each time.
- * 
- * This interface is intended to be a pluggable way to specify and 
- * create many instances of Assets that use the same name in a programmatic 
- * manner, mainly to remove duplication of having to specify the same resource 
- * name repeatedly.
- * 
+ * Pluggable separation between an Asset and a default name used to add Assets into an archive without having to
+ * explicitly supply the name ({@link ArchivePath}) each time.
+ *
+ * This interface is intended to be a pluggable way to specify and create many instances of Assets that use the same
+ * name in a programmatic manner, mainly to remove duplication of having to specify the same resource name repeatedly.
+ *
  * @author <a href="mailto:chris.wash@gmail.com">Chris Wash</a>
  *
  */
-public interface NamedAsset extends Asset
-{
+public interface NamedAsset extends Asset {
 
-   /**
-    * Specifies the name (ArchivePath) for the archive
-    * @return {@link String} representation of the ArchivePath
-    */
-   String getName();
+    /**
+     * Specifies the name (ArchivePath) for the archive
+     *
+     * @return {@link String} representation of the ArchivePath
+     */
+    String getName();
 }

@@ -23,18 +23,11 @@ import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.api.container.WebContainer;
 
 /**
- * Traditional WAR (Java Web Archive) structure. Used in 
- * construction of web applications.
+ * Traditional WAR (Java Web Archive) structure. Used in construction of web applications.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface WebArchive
-      extends
-         Archive<WebArchive>,
-         LibraryContainer<WebArchive>,
-         WebContainer<WebArchive>,
-         ResourceContainer<WebArchive>,
-         ServiceProviderContainer<WebArchive>
-{
+public interface WebArchive extends Archive<WebArchive>, LibraryContainer<WebArchive>, WebContainer<WebArchive>,
+    ResourceContainer<WebArchive>, ServiceProviderContainer<WebArchive> {
 }

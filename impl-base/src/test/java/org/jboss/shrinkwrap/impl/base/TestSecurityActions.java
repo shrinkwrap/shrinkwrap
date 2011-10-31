@@ -20,55 +20,50 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 /**
- * A set of privileged actions that are not to leak out
- * of this package 
+ * A set of privileged actions that are not to leak out of this package
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-final class TestSecurityActions
-{
+final class TestSecurityActions {
 
-   //-------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
 
-   /**
-    * No instantiation
-    */
-   private TestSecurityActions()
-   {
-      throw new UnsupportedOperationException("No instantiation");
-   }
+    /**
+     * No instantiation
+     */
+    private TestSecurityActions() {
+        throw new UnsupportedOperationException("No instantiation");
+    }
 
-   //-------------------------------------------------------------------------------||
-   // Utility Methods --------------------------------------------------------------||
-   //-------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
+    // Utility Methods --------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
 
-   /**
-    * Obtains the Thread Context ClassLoader
-    */
-   static ClassLoader getThreadContextClassLoader()
-   {
-      return AccessController.doPrivileged(GetTcclAction.INSTANCE);
-   }
+    /**
+     * Obtains the Thread Context ClassLoader
+     */
+    static ClassLoader getThreadContextClassLoader() {
+        return AccessController.doPrivileged(GetTcclAction.INSTANCE);
+    }
 
-   //-------------------------------------------------------------------------------||
-   // Inner Classes ----------------------------------------------------------------||
-   //-------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
+    // Inner Classes ----------------------------------------------------------------||
+    // -------------------------------------------------------------------------------||
 
-   /**
-    * Single instance to get the TCCL
-    */
-   private enum GetTcclAction implements PrivilegedAction<ClassLoader> {
-      INSTANCE;
+    /**
+     * Single instance to get the TCCL
+     */
+    private enum GetTcclAction implements PrivilegedAction<ClassLoader> {
+        INSTANCE;
 
-      @Override
-      public ClassLoader run()
-      {
-         return Thread.currentThread().getContextClassLoader();
-      }
+        @Override
+        public ClassLoader run() {
+            return Thread.currentThread().getContextClassLoader();
+        }
 
-   }
+    }
 
 }

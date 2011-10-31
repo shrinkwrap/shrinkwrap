@@ -17,21 +17,20 @@
 package org.jboss.shrinkwrap.api;
 
 /**
- * Used to filter inputs to be added to the target {@link Archive}.
- * Used on multi-add operations such as 
- * {@link Archive#merge(Archive, Filter)}. 
+ * Used to filter inputs to be added to the target {@link Archive}. Used on multi-add operations such as
+ * {@link Archive#merge(Archive, Filter)}.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface Filter<T>
-{
+public interface Filter<T> {
 
-   /**
-    * Called per operation in a multi add operation.
-    * 
-    * @param object a object to filter on
-    * @return true if the object should be included in target
-    */
-   boolean include(T object);
+    /**
+     * Called per operation in a multi add operation.
+     *
+     * @param object
+     *            a object to filter on
+     * @return true if the object should be included in target
+     */
+    boolean include(T object);
 }

@@ -37,213 +37,202 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.junit.Test;
 
 /**
- * Base upon which tests of {@link StreamImporter}
- * implementations may build
+ * Base upon which tests of {@link StreamImporter} implementations may build
  *
- * @param <T> Type of importer under test
- * @param <I> {@link InputStream} type used in importing
+ * @param <T>
+ *            Type of importer under test
+ * @param <I>
+ *            {@link InputStream} type used in importing
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>>
-{
+public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(StreamImporterImplTestBase.class.getName());
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(StreamImporterImplTestBase.class.getName());
 
-   /**
-    * Name of an existing resource on the ClassPath
-    */
-   private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
+    /**
+     * Name of an existing resource on the ClassPath
+     */
+    private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
 
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Obtains the delegate used in asserting imported content is as expected 
-    */
-   protected abstract ContentAssertionDelegateBase getDelegate();
+    /**
+     * Obtains the delegate used in asserting imported content is as expected
+     */
+    protected abstract ContentAssertionDelegateBase getDelegate();
 
-   /**
-    * Obtains the importer type used by these tests
-    * @return
-    */
-   protected abstract Class<T> getImporterClass();
+    /**
+     * Obtains the importer type used by these tests
+     *
+     * @return
+     */
+    protected abstract Class<T> getImporterClass();
 
-   /**
-    * Exporter used for roundtrip testing import/export/import
-    * @return
-    */
-   protected abstract Class<? extends StreamExporter> getExporterClass();
+    /**
+     * Exporter used for roundtrip testing import/export/import
+     *
+     * @return
+     */
+    protected abstract Class<? extends StreamExporter> getExporterClass();
 
-   /**
-    * Obtains an {@link InputStream} used to throw an exception
-    * for testing {@link StreamImporterImplTestBase#shouldThrowExceptionOnErrorInImportFromStream()}
-    * @return
-    */
-   protected abstract InputStream getExceptionThrowingInputStream();
+    /**
+     * Obtains an {@link InputStream} used to throw an exception for testing
+     * {@link StreamImporterImplTestBase#shouldThrowExceptionOnErrorInImportFromStream()}
+     *
+     * @return
+     */
+    protected abstract InputStream getExceptionThrowingInputStream();
 
-   //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Tests ------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Ensures that we may import a file and create an archive 
-    * with matching structure
-    */
-   @Test
-   public void shouldBeAbleToImportFile() throws Exception
-   {
-      // Get the delegate
-      final ContentAssertionDelegateBase delegate = this.getDelegate();
-      assert delegate != null : "Delegate must be specified by implementations";
-      final File testFile = delegate.getExistingResource();
+    /**
+     * Ensures that we may import a file and create an archive with matching structure
+     */
+    @Test
+    public void shouldBeAbleToImportFile() throws Exception {
+        // Get the delegate
+        final ContentAssertionDelegateBase delegate = this.getDelegate();
+        assert delegate != null : "Delegate must be specified by implementations";
+        final File testFile = delegate.getExistingResource();
 
-      // Import
-      final Class<? extends StreamImporter<?>> importerClass = this.getImporterClass();
-      assert importerClass != null : "Importer class must be specified by implementations";
-      Archive<?> archive = ShrinkWrap.create(importerClass, "test.jar").importFrom(testFile).as(JavaArchive.class);
+        // Import
+        final Class<? extends StreamImporter<?>> importerClass = this.getImporterClass();
+        assert importerClass != null : "Importer class must be specified by implementations";
+        Archive<?> archive = ShrinkWrap.create(importerClass, "test.jar").importFrom(testFile).as(JavaArchive.class);
 
-      // Ensure we don't have a null archive
-      Assert.assertNotNull("Should not return a null archive", archive);
+        // Ensure we don't have a null archive
+        Assert.assertNotNull("Should not return a null archive", archive);
 
-      // Validate the contents of the imported archive match that of the file from
-      // which it was created
-      delegate.assertContent(archive, testFile);
-   }
-   
-   /**
-    * Ensures an attempt to import a directory fails w/ 
-    * {@link IllegalArgumentException}
-    */
-   @Test
-   public void shouldNotBeAbleToImportDirectory() throws Exception
-   {
-      // Get the delegate
-      final ContentAssertionDelegateBase delegate = this.getDelegate();
-      assert delegate != null : "Delegate must be specified by implementations";
-      final File testDir = delegate.getExistingResource().getParentFile();
+        // Validate the contents of the imported archive match that of the file from
+        // which it was created
+        delegate.assertContent(archive, testFile);
+    }
 
-      // Import
-      final Class<? extends StreamImporter<?>> importerClass = this.getImporterClass();
-      assert importerClass != null : "Importer class must be specified by implementations";
-      try
-      {
-         ShrinkWrap.create(importerClass, "test.jar").importFrom(testDir);
-      }
-      // Expected
-      catch (final IllegalArgumentException iae)
-      {
-         // Good
-         return;
-      }
+    /**
+     * Ensures an attempt to import a directory fails w/ {@link IllegalArgumentException}
+     */
+    @Test
+    public void shouldNotBeAbleToImportDirectory() throws Exception {
+        // Get the delegate
+        final ContentAssertionDelegateBase delegate = this.getDelegate();
+        assert delegate != null : "Delegate must be specified by implementations";
+        final File testDir = delegate.getExistingResource().getParentFile();
 
-      Assert.fail("Should have received " + IllegalArgumentException.class.getSimpleName()
+        // Import
+        final Class<? extends StreamImporter<?>> importerClass = this.getImporterClass();
+        assert importerClass != null : "Importer class must be specified by implementations";
+        try {
+            ShrinkWrap.create(importerClass, "test.jar").importFrom(testDir);
+        }
+        // Expected
+        catch (final IllegalArgumentException iae) {
+            // Good
+            return;
+        }
+
+        Assert.fail("Should have received " + IllegalArgumentException.class.getSimpleName()
             + " on attempt to import a dir");
 
-   }
+    }
 
-   /**
-    * Ensures that we may import an archive, add content to it, 
-    * export, and that the added content has been reflected
-    * to the exported view.
-    * @throws Exception
-    */
-   @Test
-   public void shouldBeAbleToImportAddAndExport() throws Exception
-   {
-      // Get the delegate
-      final ContentAssertionDelegateBase delegate = this.getDelegate();
-      assert delegate != null : "Delegate must be specified by implementations";
-      final File testFile = delegate.getExistingResource();
+    /**
+     * Ensures that we may import an archive, add content to it, export, and that the added content has been reflected
+     * to the exported view.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void shouldBeAbleToImportAddAndExport() throws Exception {
+        // Get the delegate
+        final ContentAssertionDelegateBase delegate = this.getDelegate();
+        assert delegate != null : "Delegate must be specified by implementations";
+        final File testFile = delegate.getExistingResource();
 
-      // Import from file
-      final Class<? extends StreamImporter<?>> importerClass = this.getImporterClass();
-      assert importerClass != null : "Importer class must be specified by implementations";
-      final Archive<?> archive = ShrinkWrap.create(importerClass, "test.jar").importFrom(testFile)
+        // Import from file
+        final Class<? extends StreamImporter<?>> importerClass = this.getImporterClass();
+        assert importerClass != null : "Importer class must be specified by implementations";
+        final Archive<?> archive = ShrinkWrap.create(importerClass, "test.jar").importFrom(testFile)
             .as(JavaArchive.class);
-      Assert.assertNotNull("Should not return a null archive", archive);
+        Assert.assertNotNull("Should not return a null archive", archive);
 
-      // Add a new resource
-      archive.add(new ClassLoaderAsset(EXISTING_RESOURCE), ArchivePaths.create("test.properties"));
+        // Add a new resource
+        archive.add(new ClassLoaderAsset(EXISTING_RESOURCE), ArchivePaths.create("test.properties"));
 
-      // Export
-      File tempFile = new File("target/testOutput");
-      tempFile.deleteOnExit();
-      final Class<? extends StreamExporter> exporterClass = this.getExporterClass();
-      Assert.assertNotNull("Exporter class must be specified by implementations", exporterClass);
-      final InputStream stream = archive.as(exporterClass).exportAsInputStream();
-      IOUtil.copyWithClose(stream, new FileOutputStream(tempFile));
+        // Export
+        File tempFile = new File("target/testOutput");
+        tempFile.deleteOnExit();
+        final Class<? extends StreamExporter> exporterClass = this.getExporterClass();
+        Assert.assertNotNull("Exporter class must be specified by implementations", exporterClass);
+        final InputStream stream = archive.as(exporterClass).exportAsInputStream();
+        IOUtil.copyWithClose(stream, new FileOutputStream(tempFile));
 
-      // Ensure the exported view matches that of the archive
-      delegate.assertContent(archive, tempFile);
-   }
+        // Ensure the exported view matches that of the archive
+        delegate.assertContent(archive, tempFile);
+    }
 
-   /**
-    * Ensures that we may import an archive as a stream,
-    * and the contents will be as expected
-    * @throws Exception
-    */
-   @Test
-   public void shouldBeAbleToImportInputStream() throws Exception
-   {
-      // Get the delegate
-      final ContentAssertionDelegateBase delegate = this.getDelegate();
-      assert delegate != null : "Delegate must be specified by implementations";
-      final File testFile = delegate.getExistingResource();
+    /**
+     * Ensures that we may import an archive as a stream, and the contents will be as expected
+     *
+     * @throws Exception
+     */
+    @Test
+    public void shouldBeAbleToImportInputStream() throws Exception {
+        // Get the delegate
+        final ContentAssertionDelegateBase delegate = this.getDelegate();
+        assert delegate != null : "Delegate must be specified by implementations";
+        final File testFile = delegate.getExistingResource();
 
-      // Get the input as a stream
-      InputStream stream = new FileInputStream(testFile);
+        // Get the input as a stream
+        InputStream stream = new FileInputStream(testFile);
 
-      // Get the importer
-      final Class<T> importerClass = this.getImporterClass();
-      assert importerClass != null : "Importer class must be specified by implementations";
+        // Get the importer
+        final Class<T> importerClass = this.getImporterClass();
+        assert importerClass != null : "Importer class must be specified by implementations";
 
-      // Import as a stream
-      final T importer = ShrinkWrap.create(importerClass, "test.jar");
-      final Archive<?> archive;
-      try
-      {
-         archive = importer.importFrom(stream).as(GenericArchive.class);
-      }
-      finally
-      {
-         stream.close();
-      }
-      Assert.assertNotNull("Should not return a null archive", archive);
+        // Import as a stream
+        final T importer = ShrinkWrap.create(importerClass, "test.jar");
+        final Archive<?> archive;
+        try {
+            archive = importer.importFrom(stream).as(GenericArchive.class);
+        } finally {
+            stream.close();
+        }
+        Assert.assertNotNull("Should not return a null archive", archive);
 
-      // Ensure the archive matches the file input
-      delegate.assertContent(archive, testFile);
-   }
+        // Ensure the archive matches the file input
+        delegate.assertContent(archive, testFile);
+    }
 
-   /**
-    * Ensures that an import of {@link InputStream} results in {@link ArchiveImportException}
-    * if an unexpected error occurred.
-    * @throws Exception
-    */
-   @Test(expected = ArchiveImportException.class)
-   public void shouldThrowExceptionOnErrorInImportFromStream() throws Exception
-   {
-      final InputStream exceptionIn = this.getExceptionThrowingInputStream();
+    /**
+     * Ensures that an import of {@link InputStream} results in {@link ArchiveImportException} if an unexpected error
+     * occurred.
+     *
+     * @throws Exception
+     */
+    @Test(expected = ArchiveImportException.class)
+    public void shouldThrowExceptionOnErrorInImportFromStream() throws Exception {
+        final InputStream exceptionIn = this.getExceptionThrowingInputStream();
 
-      // Get the importer
-      final Class<T> importerClass = this.getImporterClass();
-      assert importerClass != null : "Importer class must be specified by implementations";
-      final T importer = ShrinkWrap.create(importerClass, "test.jar");
-      try
-      {
-         final GenericArchive archive = importer.importFrom(exceptionIn).as(GenericArchive.class);
-         log.info("Imported: " + archive.toString(true));
-      }
-      finally
-      {
-         exceptionIn.close();
-      }
-   }
+        // Get the importer
+        final Class<T> importerClass = this.getImporterClass();
+        assert importerClass != null : "Importer class must be specified by implementations";
+        final T importer = ShrinkWrap.create(importerClass, "test.jar");
+        try {
+            final GenericArchive archive = importer.importFrom(exceptionIn).as(GenericArchive.class);
+            log.info("Imported: " + archive.toString(true));
+        } finally {
+            exceptionIn.close();
+        }
+    }
 }

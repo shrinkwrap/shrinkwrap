@@ -26,53 +26,50 @@ import org.junit.Test;
 
 /**
  * Test Cases for the {@link StringAsset}
- *
+ * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:dan.j.allen@gmail.com">Dan Allen</a>
  * @version $Revision: $
  */
-public class StringAssetTestCase
-{
+public class StringAssetTestCase {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   private static final Logger log = Logger.getLogger(StringAssetTestCase.class.getName());
+    /**
+     * Logger
+     */
+    private static final Logger log = Logger.getLogger(StringAssetTestCase.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Tests ------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Ensures that the contents of the asset match that which was passed in.
-    */
-   @Test
-   public void testRoundtrip() throws Exception
-   {
-      // Log
-      log.info("testRoundtrip");
+    /**
+     * Ensures that the contents of the asset match that which was passed in.
+     */
+    @Test
+    public void testRoundtrip() throws Exception {
+        // Log
+        log.info("testRoundtrip");
 
-      // Make contents
-      String contents = StringAsset.class.getSimpleName();
+        // Make contents
+        String contents = StringAsset.class.getSimpleName();
 
-      // Make Asset
-      final StringAsset asset = new StringAsset(contents);
+        // Make Asset
+        final StringAsset asset = new StringAsset(contents);
 
-      // Get the contents back out of the asset
-      final InputStream stream = asset.openStream();
-      final ByteArrayOutputStream out = new ByteArrayOutputStream(contents.length());
-      int read;
-      while ((read = stream.read()) != -1)
-      {
-         out.write(read);
-      }
-      String roundtrip = new String(out.toByteArray());
-      log.info("Roundtrip contents: " + roundtrip);
+        // Get the contents back out of the asset
+        final InputStream stream = asset.openStream();
+        final ByteArrayOutputStream out = new ByteArrayOutputStream(contents.length());
+        int read;
+        while ((read = stream.read()) != -1) {
+            out.write(read);
+        }
+        String roundtrip = new String(out.toByteArray());
+        log.info("Roundtrip contents: " + roundtrip);
 
-      Assert.assertEquals("Roundtrip did not equal passed in contents", contents, roundtrip);
-   }
+        Assert.assertEquals("Roundtrip did not equal passed in contents", contents, roundtrip);
+    }
 }

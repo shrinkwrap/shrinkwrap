@@ -27,49 +27,47 @@ import org.jboss.shrinkwrap.impl.base.exporter.AbstractStreamExporterImpl;
 
 /**
  * Implementation of {@link TarGzExporter} used to export an Archive as a TAR format
- * 
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class TarExporterImpl extends AbstractStreamExporterImpl implements TarExporter
-{
+public class TarExporterImpl extends AbstractStreamExporterImpl implements TarExporter {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(TarExporterImpl.class.getName());
+    /**
+     * Logger
+     */
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(TarExporterImpl.class.getName());
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Creates a new exporter for the specified archive
-    */
-   public TarExporterImpl(final Archive<?> archive)
-   {
-      super(archive);
-   }
+    /**
+     * Creates a new exporter for the specified archive
+     */
+    public TarExporterImpl(final Archive<?> archive) {
+        super(archive);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportAsInputStream()
-    */
-   @Override
-   public InputStream exportAsInputStream()
-   {
-      // Create export delegate
-      final AbstractExporterDelegate<InputStream> exportDelegate = new TarExporterDelegate(this.getArchive());
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportAsInputStream()
+     */
+    @Override
+    public InputStream exportAsInputStream() {
+        // Create export delegate
+        final AbstractExporterDelegate<InputStream> exportDelegate = new TarExporterDelegate(this.getArchive());
 
-      // Execute export
-      return exportDelegate.export();
-   }
+        // Execute export
+        return exportDelegate.export();
+    }
 }

@@ -34,7 +34,7 @@ import org.junit.Before;
 
 /**
  * WebArchiveImplTestCase
- * 
+ *
  * Test case to ensure that the WebArchive follows the War spec.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
@@ -42,157 +42,141 @@ import org.junit.Before;
  * @version $Revision: $
  */
 @ArchiveType(WebArchive.class)
-public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchive>
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchive> {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   private static final ArchivePath PATH_WEB = ArchivePaths.root();
+    private static final ArchivePath PATH_WEB = ArchivePaths.root();
 
-   private static final ArchivePath PATH_WEBINF = ArchivePaths.create("WEB-INF");
+    private static final ArchivePath PATH_WEBINF = ArchivePaths.create("WEB-INF");
 
-   private static final ArchivePath PATH_LIBRARY = ArchivePaths.create(PATH_WEBINF, "lib");
+    private static final ArchivePath PATH_LIBRARY = ArchivePaths.create(PATH_WEBINF, "lib");
 
-   private static final ArchivePath PATH_CLASSES = ArchivePaths.create(PATH_WEBINF, "classes");
+    private static final ArchivePath PATH_CLASSES = ArchivePaths.create(PATH_WEBINF, "classes");
 
-   private static final ArchivePath PATH_MANIFEST = ArchivePaths.create("META-INF");
+    private static final ArchivePath PATH_MANIFEST = ArchivePaths.create("META-INF");
 
-   private static final ArchivePath PATH_RESOURCE = ArchivePaths.create(PATH_WEBINF, "classes");
+    private static final ArchivePath PATH_RESOURCE = ArchivePaths.create(PATH_WEBINF, "classes");
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   private WebArchive archive;
+    private WebArchive archive;
 
-   //-------------------------------------------------------------------------------------||
-   // Lifecycle Methods ------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Lifecycle Methods ------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @Before
-   public void createWebArchive() throws Exception
-   {
-      archive = createNewArchive();
-   }
+    @Before
+    public void createWebArchive() throws Exception {
+        archive = createNewArchive();
+    }
 
-   @After
-   public void ls()
-   {
-      System.out.println("test@jboss:/$ ls -l " + archive.getName());
-      System.out.println(archive.toString(true));
-   }
+    @After
+    public void ls() {
+        System.out.println("test@jboss:/$ ls -l " + archive.getName());
+        System.out.println(archive.toString(true));
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Impls - ArchiveTestBase ---------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Impls - ArchiveTestBase ---------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @Override
-   protected WebArchive getArchive()
-   {
-      return archive;
-   }
+    @Override
+    protected WebArchive getArchive() {
+        return archive;
+    }
 
-   /**
-    * Create a new instance of a WebArchive
-    */
-   @Override
-   protected WebArchive createNewArchive()
-   {
-      return ShrinkWrap.create(WebArchive.class);
-   }
+    /**
+     * Create a new instance of a WebArchive
+     */
+    @Override
+    protected WebArchive createNewArchive() {
+        return ShrinkWrap.create(WebArchive.class);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Impls - DynamicContainerTestBase ------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Impls - DynamicContainerTestBase ------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @Override
-   protected ManifestContainer<WebArchive> getManifestContainer()
-   {
-      return getArchive();
-   }
+    @Override
+    protected ManifestContainer<WebArchive> getManifestContainer() {
+        return getArchive();
+    }
 
-   @Override
-   protected ServiceProviderContainer<WebArchive> getServiceProviderContainer()
-   {
-      return getArchive();
-   }
-   
-   @Override
-   protected ResourceContainer<WebArchive> getResourceContainer()
-   {
-      return getArchive();
-   }
+    @Override
+    protected ServiceProviderContainer<WebArchive> getServiceProviderContainer() {
+        return getArchive();
+    }
 
-   @Override
-   protected ClassContainer<WebArchive> getClassContainer()
-   {
-      return archive;
-   }
+    @Override
+    protected ResourceContainer<WebArchive> getResourceContainer() {
+        return getArchive();
+    }
 
-   @Override
-   protected LibraryContainer<WebArchive> getLibraryContainer()
-   {
-      return archive;
-   }
+    @Override
+    protected ClassContainer<WebArchive> getClassContainer() {
+        return archive;
+    }
 
-   @Override
-   protected ArchivePath getManifestPath()
-   {
-      return PATH_MANIFEST;
-   }
+    @Override
+    protected LibraryContainer<WebArchive> getLibraryContainer() {
+        return archive;
+    }
 
-   @Override
-   protected ArchivePath getResourcePath()
-   {
-      return PATH_RESOURCE;
-   }
+    @Override
+    protected ArchivePath getManifestPath() {
+        return PATH_MANIFEST;
+    }
 
-   @Override
-   protected ArchivePath getClassPath()
-   {
-      return PATH_CLASSES;
-   }
+    @Override
+    protected ArchivePath getResourcePath() {
+        return PATH_RESOURCE;
+    }
 
-   @Override
-   protected ArchivePath getLibraryPath()
-   {
-      return PATH_LIBRARY;
-   }
+    @Override
+    protected ArchivePath getClassPath() {
+        return PATH_CLASSES;
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Impls - DynamicWebContainerTestBase ---------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    @Override
+    protected ArchivePath getLibraryPath() {
+        return PATH_LIBRARY;
+    }
 
-   @Override
-   public WebContainer<WebArchive> getWebContainer()
-   {
-      return getArchive();
-   }
+    // -------------------------------------------------------------------------------------||
+    // Required Impls - DynamicWebContainerTestBase ---------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.test.DynamicWebContainerTestBase#getWebPath()
-    */
-   @Override
-   public ArchivePath getWebPath()
-   {
-      return PATH_WEB;
-   }
-   
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.test.DynamicWebContainerTestBase#getWebInfPath()
-    */
-   @Override
-   public ArchivePath getWebInfPath()
-   {
-      return PATH_WEBINF;
-   }
+    @Override
+    public WebContainer<WebArchive> getWebContainer() {
+        return getArchive();
+    }
 
-   @Override
-   protected ArchiveFormat getExpectedArchiveFormat()
-   {
-      return ArchiveFormat.ZIP;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.test.DynamicWebContainerTestBase#getWebPath()
+     */
+    @Override
+    public ArchivePath getWebPath() {
+        return PATH_WEB;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.test.DynamicWebContainerTestBase#getWebInfPath()
+     */
+    @Override
+    public ArchivePath getWebInfPath() {
+        return PATH_WEBINF;
+    }
+
+    @Override
+    protected ArchiveFormat getExpectedArchiveFormat() {
+        return ArchiveFormat.ZIP;
+    }
 }

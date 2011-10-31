@@ -30,85 +30,86 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public class ResourceAdapterArchiveImpl 
-   extends ResourceAdapterContainerBase<ResourceAdapterArchive> 
-   implements ResourceAdapterArchive 
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class ResourceAdapterArchiveImpl extends ResourceAdapterContainerBase<ResourceAdapterArchive> implements
+    ResourceAdapterArchive {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(ResourceAdapterArchiveImpl.class.getName());
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(ResourceAdapterArchiveImpl.class.getName());
 
-   /**
-    * Path to the manifests inside of the Archive.
-    */
-   private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
+    /**
+     * Path to the manifests inside of the Archive.
+     */
+    private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
 
-   /**
-    * Path to the resources inside of the Archive.
-    */
-   private static final ArchivePath PATH_RESOURCE = new BasicPath("/");
+    /**
+     * Path to the resources inside of the Archive.
+     */
+    private static final ArchivePath PATH_RESOURCE = new BasicPath("/");
 
-   /**
-    * Path to the application libraries.
-    */
-   private static final ArchivePath PATH_LIBRARY = new BasicPath("/");
+    /**
+     * Path to the application libraries.
+     */
+    private static final ArchivePath PATH_LIBRARY = new BasicPath("/");
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Create a new ResourceAdapterArchive with any type storage engine as backing.
-    * 
-    * @param delegate The storage backing.
-    */
-   public ResourceAdapterArchiveImpl(final Archive<?> delegate)
-   {
-      super(ResourceAdapterArchive.class, delegate);
-   }
+    /**
+     * Create a new ResourceAdapterArchive with any type storage engine as backing.
+     *
+     * @param delegate
+     *            The storage backing.
+     */
+    public ResourceAdapterArchiveImpl(final Archive<?> delegate) {
+        super(ResourceAdapterArchive.class, delegate);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-   
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerBase#getLibraryPath()
-    */
-   @Override
-   public ArchivePath getLibraryPath()
-   {
-      return PATH_LIBRARY;
-   }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerBase#getResourcePath()
-    */
-   @Override
-   protected ArchivePath getResourcePath()
-   {
-      return PATH_RESOURCE;
-   }
-   
-   /* (non-Javadoc)
-    * @see org.jboss.declarchive.impl.base.ContainerBase#getManifestPath()
-    */
-   @Override
-   protected ArchivePath getManifestPath()
-   {
-      return PATH_MANIFEST;
-   }
-   
-   /**
-    * Classes are not supported by ResourceAdapterArchive.
-    * 
-    * @throws UnsupportedOperationException ResourceAdapterArchive does not support classes
-    */
-   @Override
-   protected ArchivePath getClassesPath()
-   {
-      throw new UnsupportedOperationException("ResourceAdapterArchive does not support classes");
-   }
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.declarchive.impl.base.ContainerBase#getLibraryPath()
+     */
+    @Override
+    public ArchivePath getLibraryPath() {
+        return PATH_LIBRARY;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.declarchive.impl.base.ContainerBase#getResourcePath()
+     */
+    @Override
+    protected ArchivePath getResourcePath() {
+        return PATH_RESOURCE;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.declarchive.impl.base.ContainerBase#getManifestPath()
+     */
+    @Override
+    protected ArchivePath getManifestPath() {
+        return PATH_MANIFEST;
+    }
+
+    /**
+     * Classes are not supported by ResourceAdapterArchive.
+     *
+     * @throws UnsupportedOperationException
+     *             ResourceAdapterArchive does not support classes
+     */
+    @Override
+    protected ArchivePath getClassesPath() {
+        throw new UnsupportedOperationException("ResourceAdapterArchive does not support classes");
+    }
 }

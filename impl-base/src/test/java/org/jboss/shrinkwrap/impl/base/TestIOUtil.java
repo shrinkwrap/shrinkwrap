@@ -23,87 +23,76 @@ import java.net.URL;
 
 /**
  * IOUtil
- * 
+ *
  * Inport/export utilities for test classes
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class TestIOUtil
-{
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public class TestIOUtil {
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Internal constructor; should not be called
-    */
-   private TestIOUtil()
-   {
-      throw new UnsupportedOperationException("No instances should be created; stateless class");
-   }
+    /**
+     * Internal constructor; should not be called
+     */
+    private TestIOUtil() {
+        throw new UnsupportedOperationException("No instances should be created; stateless class");
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Functional Methods -----------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Functional Methods -----------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Recursively deletes a directory and all its contents 
-    * @param directory
-    */
-   public static void deleteDirectory(final File directory)
-   {
-      if (directory.isDirectory() && directory.exists())
-      {
-         // For each file in the directory run cleanup
-         for (File file : directory.listFiles())
-         {
-            if (file.isDirectory())
-            {
-               // A nested directory, recurse 
-               deleteDirectory(file);
+    /**
+     * Recursively deletes a directory and all its contents
+     *
+     * @param directory
+     */
+    public static void deleteDirectory(final File directory) {
+        if (directory.isDirectory() && directory.exists()) {
+            // For each file in the directory run cleanup
+            for (File file : directory.listFiles()) {
+                if (file.isDirectory()) {
+                    // A nested directory, recurse
+                    deleteDirectory(file);
+                } else {
+                    // Just a file delete it
+                    if (!file.delete()) {
+                        throw new RuntimeException("Failed to delete file: " + file);
+                    }
+                }
             }
-            else
-            {
-               // Just a file delete it
-               if (!file.delete())
-               {
-                  throw new RuntimeException("Failed to delete file: " + file);
-               }
+            // Delete the directory
+            if (!directory.delete()) {
+                throw new RuntimeException("Failed to delete directory: " + directory);
             }
-         }
-         // Delete the directory
-         if (!directory.delete())
-         {
-            throw new RuntimeException("Failed to delete directory: " + directory);
-         }
-      }
-      else
-      {
-         throw new RuntimeException("Unable to delete directory: " + directory
-               + ".  It is either not a directory or does not exist.");
-      }
-   }
-   
-   /**
-    * Given an existing resource location, create and return a File
-    * @param existingResourceLocation
-    * @return
-    * @throws URISyntaxException
-    */
-   public static File createFileFromResourceName(final String resourceName) throws URISyntaxException
-   {
-      assert resourceName != null : "Resource name must be specified";
-      final URL resourceLocation = TestSecurityActions.getThreadContextClassLoader().getResource(resourceName);
-      assert resourceLocation != null : "Resource was not found at specified location: " + resourceName;
-      return new File(resourceLocation.toURI());
-   }
-   
-   public static InputStream createInputstreamFromResourceName(final String resourceName) throws URISyntaxException
-   {
-      assert resourceName != null : "Resource name must be specified";
-      final InputStream resourceStream = TestSecurityActions.getThreadContextClassLoader().getResourceAsStream(resourceName);
-      assert resourceStream != null : "Resource was not found at specified location: " + resourceName;
-      return resourceStream;
-   }
+        } else {
+            throw new RuntimeException("Unable to delete directory: " + directory
+                + ".  It is either not a directory or does not exist.");
+        }
+    }
+
+    /**
+     * Given an existing resource location, create and return a File
+     *
+     * @param existingResourceLocation
+     * @return
+     * @throws URISyntaxException
+     */
+    public static File createFileFromResourceName(final String resourceName) throws URISyntaxException {
+        assert resourceName != null : "Resource name must be specified";
+        final URL resourceLocation = TestSecurityActions.getThreadContextClassLoader().getResource(resourceName);
+        assert resourceLocation != null : "Resource was not found at specified location: " + resourceName;
+        return new File(resourceLocation.toURI());
+    }
+
+    public static InputStream createInputstreamFromResourceName(final String resourceName) throws URISyntaxException {
+        assert resourceName != null : "Resource name must be specified";
+        final InputStream resourceStream = TestSecurityActions.getThreadContextClassLoader().getResourceAsStream(
+            resourceName);
+        assert resourceStream != null : "Resource was not found at specified location: " + resourceName;
+        return resourceStream;
+    }
 }

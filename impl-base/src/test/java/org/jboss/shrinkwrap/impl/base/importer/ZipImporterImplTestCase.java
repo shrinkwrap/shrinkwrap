@@ -40,113 +40,107 @@ import org.junit.Test;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImporter>
-{
+public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImporter> {
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Logger
-    */
-   @SuppressWarnings("unused")
-   private static final Logger log = Logger.getLogger(ZipImporterImplTestCase.class.getName());
+    /**
+     * Logger
+     */
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(ZipImporterImplTestCase.class.getName());
 
-   /**
-    * Delegate for performing ZIP content assertions
-    */
-   private static final ZipContentAssertionDelegate delegate = new ZipContentAssertionDelegate();
+    /**
+     * Delegate for performing ZIP content assertions
+     */
+    private static final ZipContentAssertionDelegate delegate = new ZipContentAssertionDelegate();
 
-   //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Tests ------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Ensures that an import of {@link ZipFile} results in {@link ArchiveImportException}
-    * if an unexpected error occurred.
-    * @throws Exception
-    */
-   @Test(expected = ArchiveImportException.class)
-   public void shouldThrowExceptionOnErrorInImportFromFile() throws Exception
-   {
-      final ContentAssertionDelegateBase delegate = this.getDelegate();
-      assert delegate != null : "Delegate must be specified by implementations";
-      final File testFile = delegate.getExistingResource();
+    /**
+     * Ensures that an import of {@link ZipFile} results in {@link ArchiveImportException} if an unexpected error
+     * occurred.
+     *
+     * @throws Exception
+     */
+    @Test(expected = ArchiveImportException.class)
+    public void shouldThrowExceptionOnErrorInImportFromFile() throws Exception {
+        final ContentAssertionDelegateBase delegate = this.getDelegate();
+        assert delegate != null : "Delegate must be specified by implementations";
+        final File testFile = delegate.getExistingResource();
 
-      ZipFile testZip = new ZipFile(testFile)
-      {
-         @Override
-         public Enumeration<? extends ZipEntry> entries()
-         {
-            throw new IllegalStateException("mock  exception");
-         }
-      };
-      ShrinkWrap.create(ZipImporter.class, "test.jar").importFrom(testZip).as(JavaArchive.class);
-   }
+        ZipFile testZip = new ZipFile(testFile) {
+            @Override
+            public Enumeration<? extends ZipEntry> entries() {
+                throw new IllegalStateException("mock  exception");
+            }
+        };
+        ShrinkWrap.create(ZipImporter.class, "test.jar").importFrom(testZip).as(JavaArchive.class);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getDelegate()
-    */
-   @Override
-   protected ContentAssertionDelegateBase getDelegate()
-   {
-      return delegate;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getDelegate()
+     */
+    @Override
+    protected ContentAssertionDelegateBase getDelegate() {
+        return delegate;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getImporterClass()
-    */
-   @Override
-   protected Class<ZipImporter> getImporterClass()
-   {
-      return ZipImporter.class;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getImporterClass()
+     */
+    @Override
+    protected Class<ZipImporter> getImporterClass() {
+        return ZipImporter.class;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExporterClass()
-    */
-   @Override
-   protected Class<? extends StreamExporter> getExporterClass()
-   {
-      return ZipExporter.class;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExporterClass()
+     */
+    @Override
+    protected Class<? extends StreamExporter> getExporterClass() {
+        return ZipExporter.class;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExceptionThrowingInputStream()
-    */
-   @Override
-   protected InputStream getExceptionThrowingInputStream()
-   {
-      return new InputStream()
-      {
-         @Override
-         public int read() throws IOException
-         {
-            throw new IOException("Mock exception");
-         }
-      };
-   }
-   
-   //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-   
-   /**
-    * SHRINKWRAP-259
-    */
-   @Test
-   public void createZipImporter()
-   {
-      final GenericArchive importer = ShrinkWrap.create(ZipImporter.class).as(GenericArchive.class);
-      Assert.assertTrue("Archive did not have expected suffix", importer.getName().endsWith(".jar"));
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getExceptionThrowingInputStream()
+     */
+    @Override
+    protected InputStream getExceptionThrowingInputStream() {
+        return new InputStream() {
+            @Override
+            public int read() throws IOException {
+                throw new IOException("Mock exception");
+            }
+        };
+    }
+
+    // -------------------------------------------------------------------------------------||
+    // Tests ------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+
+    /**
+     * SHRINKWRAP-259
+     */
+    @Test
+    public void createZipImporter() {
+        final GenericArchive importer = ShrinkWrap.create(ZipImporter.class).as(GenericArchive.class);
+        Assert.assertTrue("Archive did not have expected suffix", importer.getName().endsWith(".jar"));
+    }
 }

@@ -19,15 +19,14 @@ package org.jboss.shrinkwrap.api.exporter;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * Exporter used to represent an {@link Assignable} in ZIP format. 
- * 
+ * Exporter used to represent an {@link Assignable} in ZIP format.
+ *
  * @see http://www.pkware.com/documents/casestudies/APPNOTE.TXT
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public interface ZipExporter extends StreamExporter
-{
+public interface ZipExporter extends StreamExporter {
 
 }

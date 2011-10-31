@@ -1,5 +1,5 @@
 /*
- * JBoss, Home of Professional Open Source	
+ * JBoss, Home of Professional Open Source
  * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -28,80 +28,74 @@ import org.junit.Test;
 
 /**
  * MemoryMapArchiveTestCase
- * 
+ *
  * TestCase to ensure that the MemoryMapArchive works as expected.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive>
-{
-   private MemoryMapArchive archive;
+public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive> {
+    private MemoryMapArchive archive;
 
-   /**
-    * Create a new Archive instance per Test.
-    * 
-    * @throws Exception
-    */
-   @Before
-   public void createArchive() throws Exception
-   {
-      archive = createNewArchive();
-      archive.toString(false);
-   }
+    /**
+     * Create a new Archive instance per Test.
+     *
+     * @throws Exception
+     */
+    @Before
+    public void createArchive() throws Exception {
+        archive = createNewArchive();
+        archive.toString(false);
+    }
 
-   @Override
-   protected MemoryMapArchive createNewArchive()
-   {
-      return new MemoryMapArchiveImpl(ShrinkWrap.getDefaultDomain().getConfiguration());
-   }
+    @Override
+    protected MemoryMapArchive createNewArchive() {
+        return new MemoryMapArchiveImpl(ShrinkWrap.getDefaultDomain().getConfiguration());
+    }
 
-   /**
-    * Return the created instance to the super class 
-    * so it can perform the common test cases.
-    */
-   @Override
-   protected MemoryMapArchive getArchive()
-   {
-      return archive;
-   }
+    /**
+     * Return the created instance to the super class so it can perform the common test cases.
+     */
+    @Override
+    protected MemoryMapArchive getArchive() {
+        return archive;
+    }
 
-   /**
-    * Test to ensure MemoryMap archives can be created with a name
-    * @throws Exception
-    */
-   @Test
-   public void testConstructorWithName() throws Exception
-   {
-      String name = "test.jar";
-      MemoryMapArchive tmp = new MemoryMapArchiveImpl(name, ShrinkWrap.getDefaultDomain().getConfiguration());
-      Assert.assertEquals("Should return the same name as construtor arg", name, tmp.getName());
-   }
+    /**
+     * Test to ensure MemoryMap archives can be created with a name
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testConstructorWithName() throws Exception {
+        String name = "test.jar";
+        MemoryMapArchive tmp = new MemoryMapArchiveImpl(name, ShrinkWrap.getDefaultDomain().getConfiguration());
+        Assert.assertEquals("Should return the same name as construtor arg", name, tmp.getName());
+    }
 
-   /**
-    * Test to ensure the MemoryMapArchive requires a name
-    * @throws Exception
-    */
-   @Test(expected = IllegalArgumentException.class)
-   public void testConstructorRequiresName() throws Exception
-   {
-      new MemoryMapArchiveImpl(null);
-   }
+    /**
+     * Test to ensure the MemoryMapArchive requires a name
+     *
+     * @throws Exception
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorRequiresName() throws Exception {
+        new MemoryMapArchiveImpl(null);
+    }
 
-   /**
-    * Test to ensure the MemoryMapArchive requires a name
-    * @throws Exception
-    */
-   @Test(expected = IllegalArgumentException.class)
-   public void testConstructorRequiresExtensionLoader() throws Exception
-   {
-      new MemoryMapArchiveImpl("test.jar", null);
-   }
+    /**
+     * Test to ensure the MemoryMapArchive requires a name
+     *
+     * @throws Exception
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorRequiresExtensionLoader() throws Exception {
+        new MemoryMapArchiveImpl("test.jar", null);
+    }
 
-   @Override
-   protected ArchiveFormat getExpectedArchiveFormat()
-   {
-      return ArchiveFormat.UNKNOWN;
-   }
+    @Override
+    protected ArchiveFormat getExpectedArchiveFormat() {
+        return ArchiveFormat.UNKNOWN;
+    }
 }

@@ -42,141 +42,125 @@ import org.junit.Before;
  * @version $Revision: $
  */
 @ArchiveType(EnterpriseArchive.class)
-public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTestBase<EnterpriseArchive>
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
-   private static final ArchivePath PATH_APPLICATION = new BasicPath("META-INF");
+public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTestBase<EnterpriseArchive> {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    private static final ArchivePath PATH_APPLICATION = new BasicPath("META-INF");
 
-   private static final ArchivePath PATH_LIBRARY = new BasicPath("lib");
+    private static final ArchivePath PATH_LIBRARY = new BasicPath("lib");
 
-   private static final ArchivePath PATH_MODULE = new BasicPath("/");
+    private static final ArchivePath PATH_MODULE = new BasicPath("/");
 
-   //-------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   private EnterpriseArchive archive;
+    private EnterpriseArchive archive;
 
-   //-------------------------------------------------------------------------------------||
-   // Lifecycle Methods ------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Lifecycle Methods ------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @Before
-   public void createEnterpriseArchive() throws Exception
-   {
-      archive = createNewArchive();
-   }
+    @Before
+    public void createEnterpriseArchive() throws Exception {
+        archive = createNewArchive();
+    }
 
-   @After
-   public void ls()
-   {
-      System.out.println("test@jboss:/$ ls -l " + archive.getName());
-      System.out.println(archive.toString(true));
-   }
+    @After
+    public void ls() {
+        System.out.println("test@jboss:/$ ls -l " + archive.getName());
+        System.out.println(archive.toString(true));
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Impls - ArchiveTestBase ---------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Impls - ArchiveTestBase ---------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /** 
-    * Return the current EnterpriseArchive
-    */
-   @Override
-   protected EnterpriseArchive getArchive()
-   {
-      return archive;
-   }
+    /**
+     * Return the current EnterpriseArchive
+     */
+    @Override
+    protected EnterpriseArchive getArchive() {
+        return archive;
+    }
 
-   /**
-    * Create a new instance of a EnterpriseArchive
-    */
-   @Override
-   protected EnterpriseArchive createNewArchive()
-   {
-      return ShrinkWrap.create(EnterpriseArchive.class);
-   }
+    /**
+     * Create a new instance of a EnterpriseArchive
+     */
+    @Override
+    protected EnterpriseArchive createNewArchive() {
+        return ShrinkWrap.create(EnterpriseArchive.class);
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Impls - DynamicContainerTestBase ------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Impls - DynamicContainerTestBase ------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @Override
-   protected ClassContainer<EnterpriseArchive> getClassContainer()
-   {
-      throw new UnsupportedOperationException("EnterpriseArchives do not support classes");
-   }
+    @Override
+    protected ClassContainer<EnterpriseArchive> getClassContainer() {
+        throw new UnsupportedOperationException("EnterpriseArchives do not support classes");
+    }
 
-   @Override
-   protected ArchivePath getClassPath()
-   {
-      throw new UnsupportedOperationException("EnterpriseArchives do not support classes");
-   }
+    @Override
+    protected ArchivePath getClassPath() {
+        throw new UnsupportedOperationException("EnterpriseArchives do not support classes");
+    }
 
-   @Override
-   protected ServiceProviderContainer<EnterpriseArchive> getServiceProviderContainer()
-   {
-      throw new UnsupportedOperationException("EnterpriseArchives do not support service provider classes");
-   }
-   
-   @Override
-   protected LibraryContainer<EnterpriseArchive> getLibraryContainer()
-   {
-      return archive;
-   }
+    @Override
+    protected ServiceProviderContainer<EnterpriseArchive> getServiceProviderContainer() {
+        throw new UnsupportedOperationException("EnterpriseArchives do not support service provider classes");
+    }
 
-   @Override
-   protected ArchivePath getManifestPath()
-   {
-      return PATH_APPLICATION;
-   }
+    @Override
+    protected LibraryContainer<EnterpriseArchive> getLibraryContainer() {
+        return archive;
+    }
 
-   @Override
-   protected ArchivePath getResourcePath()
-   {
-      return PATH_APPLICATION;
-   }
+    @Override
+    protected ArchivePath getManifestPath() {
+        return PATH_APPLICATION;
+    }
 
-   @Override
-   protected ArchivePath getLibraryPath()
-   {
-      return PATH_LIBRARY;
-   }
+    @Override
+    protected ArchivePath getResourcePath() {
+        return PATH_APPLICATION;
+    }
 
-   @Override
-   protected ManifestContainer<EnterpriseArchive> getManifestContainer()
-   {
-      return getArchive();
-   }
+    @Override
+    protected ArchivePath getLibraryPath() {
+        return PATH_LIBRARY;
+    }
 
-   @Override
-   protected ResourceContainer<EnterpriseArchive> getResourceContainer()
-   {
-      return getArchive();
-   }
+    @Override
+    protected ManifestContainer<EnterpriseArchive> getManifestContainer() {
+        return getArchive();
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Required Impls - DynamicEnterpriseContainerTestBase --------------------------------||
-   //-------------------------------------------------------------------------------------||
-   
-   protected ArchivePath getModulePath() {
-      return PATH_MODULE;
-   }
+    @Override
+    protected ResourceContainer<EnterpriseArchive> getResourceContainer() {
+        return getArchive();
+    }
 
-   protected ArchivePath getApplicationPath() {
-      return PATH_APPLICATION;
-   }
-   
-   @Override
-   protected EnterpriseContainer<EnterpriseArchive> getEnterpriseContainer()
-   {
-      return getArchive();
-   }
+    // -------------------------------------------------------------------------------------||
+    // Required Impls - DynamicEnterpriseContainerTestBase --------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   @Override
-   protected ArchiveFormat getExpectedArchiveFormat()
-   {
-      return ArchiveFormat.ZIP;
-   }
+    protected ArchivePath getModulePath() {
+        return PATH_MODULE;
+    }
+
+    protected ArchivePath getApplicationPath() {
+        return PATH_APPLICATION;
+    }
+
+    @Override
+    protected EnterpriseContainer<EnterpriseArchive> getEnterpriseContainer() {
+        return getArchive();
+    }
+
+    @Override
+    protected ArchiveFormat getExpectedArchiveFormat() {
+        return ArchiveFormat.ZIP;
+    }
 }

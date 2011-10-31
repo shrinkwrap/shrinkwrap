@@ -29,54 +29,44 @@ import org.junit.Test;
  * https://jira.jboss.org/jira/browse/TMPARCH-5
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- *
+ * 
  */
-public class FileAssetTestCase
-{
-   private static final String BASE_PATH = "src/test/resources/org/jboss/shrinkwrap/api/asset/";
+public class FileAssetTestCase {
+    private static final String BASE_PATH = "src/test/resources/org/jboss/shrinkwrap/api/asset/";
 
-   private static final String EXISTING_FILE = BASE_PATH + "Test.properties";
+    private static final String EXISTING_FILE = BASE_PATH + "Test.properties";
 
-   private static final String NON_EXISTING_FILE = BASE_PATH + "NoFileShouldBePlacedHere.properties";
+    private static final String NON_EXISTING_FILE = BASE_PATH + "NoFileShouldBePlacedHere.properties";
 
-   @Test
-   public void shouldBeAbleToReadFile() throws Exception
-   {
-      Asset asset = new FileAsset(new File(EXISTING_FILE));
-      InputStream io = asset.openStream();
+    @Test
+    public void shouldBeAbleToReadFile() throws Exception {
+        Asset asset = new FileAsset(new File(EXISTING_FILE));
+        InputStream io = asset.openStream();
 
-      Assert.assertNotNull(io);
-      Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true", ApiTestUtils
-            .convertToString(io));
-   }
+        Assert.assertNotNull(io);
+        Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true",
+            ApiTestUtils.convertToString(io));
+    }
 
-   @Test
-   public void shouldThrowExceptionOnNullFile() throws Exception
-   {
-      try
-      {
-         new FileAsset(null);
-         Assert.fail("Should have thrown IllegalArgumentException");
-      }
-      catch (Exception e)
-      {
-         Assert.assertEquals("A null file argument should result in a IllegalArgumentException",
-               IllegalArgumentException.class, e.getClass());
-      }
-   }
+    @Test
+    public void shouldThrowExceptionOnNullFile() throws Exception {
+        try {
+            new FileAsset(null);
+            Assert.fail("Should have thrown IllegalArgumentException");
+        } catch (Exception e) {
+            Assert.assertEquals("A null file argument should result in a IllegalArgumentException",
+                IllegalArgumentException.class, e.getClass());
+        }
+    }
 
-   @Test
-   public void shouldThrowExceptionOnMissingFile() throws Exception
-   {
-      try
-      {
-         new FileAsset(new File(NON_EXISTING_FILE));
-         Assert.fail("Should have thrown IllegalArgumentException");
-      }
-      catch (Exception e)
-      {
-         Assert.assertEquals("A non existing file should result in a IllegalArgumentException",
-               IllegalArgumentException.class, e.getClass());
-      }
-   }
+    @Test
+    public void shouldThrowExceptionOnMissingFile() throws Exception {
+        try {
+            new FileAsset(new File(NON_EXISTING_FILE));
+            Assert.fail("Should have thrown IllegalArgumentException");
+        } catch (Exception e) {
+            Assert.assertEquals("A non existing file should result in a IllegalArgumentException",
+                IllegalArgumentException.class, e.getClass());
+        }
+    }
 }

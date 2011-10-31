@@ -17,154 +17,135 @@
 package org.jboss.shrinkwrap.api;
 
 /**
- * A Factory for {@link ArchivePath} creation.   Instances 
- * using this shorthand class
- * will be created using the {@link ClassLoader} associated with
- * the default {@link Domain}'s {@link Configuration}. 
+ * A Factory for {@link ArchivePath} creation. Instances using this shorthand class will be created using the
+ * {@link ClassLoader} associated with the default {@link Domain}'s {@link Configuration}.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public final class ArchivePaths
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public final class ArchivePaths {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   private static final String PATH_IMPL = "org.jboss.shrinkwrap.impl.base.path.BasicPath";
+    private static final String PATH_IMPL = "org.jboss.shrinkwrap.impl.base.path.BasicPath";
 
-   /**
-    * Creates a new {@link ArchivePath} representing the root path (/).
-    * 
-    * @return a new root path  
-    */
-   public static ArchivePath root()
-   {
-      return RootPathWrapper.INSTANCE.getRoot();
-   }
+    /**
+     * Creates a new {@link ArchivePath} representing the root path (/).
+     *
+     * @return a new root path
+     */
+    public static ArchivePath root() {
+        return RootPathWrapper.INSTANCE.getRoot();
+    }
 
-   /**
-    * Creates a new {@link ArchivePath} with the specified context
-    * 
-    * @param context The context which this path represents.  Null or 
-    * blank represents the root.  Relative paths will be adjusted
-    * to absolute form.
-    * @return a new path 
-    */
-   public static ArchivePath create(String context)
-   {
-      return createInstance(new Class<?>[]
-      {String.class}, new Object[]
-      {context});
-   }
+    /**
+     * Creates a new {@link ArchivePath} with the specified context
+     *
+     * @param context
+     *            The context which this path represents. Null or blank represents the root. Relative paths will be
+     *            adjusted to absolute form.
+     * @return a new path
+     */
+    public static ArchivePath create(String context) {
+        return createInstance(new Class<?>[] { String.class }, new Object[] { context });
+    }
 
-   /**
-    * Creates a new {@link ArchivePath} using the specified base 
-    * and specified relative context.
-    * 
-    * @param basePath A absolute path
-    * @param context A relative path to basePath
-    * @return a new path
-    */
-   public static ArchivePath create(String basePath, String context)
-   {
-      return createInstance(new Class<?>[]
-      {String.class, String.class}, new Object[]
-      {basePath, context});
-   }
-   
-   /**
-    * Creates a new {@link ArchivePath} using the specified base 
-    * and specified relative context.
-    * 
-    * @param basePath A absolute path
-    * @param context A relative path to basePath
-    * @return a new path
-    */
-   public static ArchivePath create(final String basePath, final ArchivePath context)
-   {
-      return createInstance(new Class<?>[]
-      {String.class, ArchivePath.class}, new Object[]
-      {basePath, context});
-   }
+    /**
+     * Creates a new {@link ArchivePath} using the specified base and specified relative context.
+     *
+     * @param basePath
+     *            A absolute path
+     * @param context
+     *            A relative path to basePath
+     * @return a new path
+     */
+    public static ArchivePath create(String basePath, String context) {
+        return createInstance(new Class<?>[] { String.class, String.class }, new Object[] { basePath, context });
+    }
 
-   /**
-    * Creates a new {@link ArchivePath} using the specified base 
-    * and specified relative context.
-    * 
-    * @param basePath A absolute path
-    * @param context A relative path to basePath
-    * @return a new path
-    */
-   public static ArchivePath create(ArchivePath basePath, String context)
-   {
-      return createInstance(new Class<?>[]
-      {ArchivePath.class, String.class}, new Object[]
-      {basePath, context});
-   }
+    /**
+     * Creates a new {@link ArchivePath} using the specified base and specified relative context.
+     *
+     * @param basePath
+     *            A absolute path
+     * @param context
+     *            A relative path to basePath
+     * @return a new path
+     */
+    public static ArchivePath create(final String basePath, final ArchivePath context) {
+        return createInstance(new Class<?>[] { String.class, ArchivePath.class }, new Object[] { basePath, context });
+    }
 
-   /**
-    * Creates a new {@link ArchivePath} using the specified base 
-    * and specified relative context.
-    * 
-    * @param basePath A absolute path
-    * @param context A relative path to basePath
-    * @return a new path
-    */
-   public static ArchivePath create(ArchivePath basePath, ArchivePath context)
-   {
-      return createInstance(new Class<?>[]
-      {ArchivePath.class, ArchivePath.class}, new Object[]
-      {basePath, context});
-   }
+    /**
+     * Creates a new {@link ArchivePath} using the specified base and specified relative context.
+     *
+     * @param basePath
+     *            A absolute path
+     * @param context
+     *            A relative path to basePath
+     * @return a new path
+     */
+    public static ArchivePath create(ArchivePath basePath, String context) {
+        return createInstance(new Class<?>[] { ArchivePath.class, String.class }, new Object[] { basePath, context });
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Class Members - Internal Helpers ---------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    /**
+     * Creates a new {@link ArchivePath} using the specified base and specified relative context.
+     *
+     * @param basePath
+     *            A absolute path
+     * @param context
+     *            A relative path to basePath
+     * @return a new path
+     */
+    public static ArchivePath create(ArchivePath basePath, ArchivePath context) {
+        return createInstance(new Class<?>[] { ArchivePath.class, ArchivePath.class },
+            new Object[] { basePath, context });
+    }
 
-   private static ArchivePath createInstance(final Class<?>[] argumentTypes, final Object[] arguments)
-   {
-      // Get the impl class
-      final Class<?> archivePathImplClass;
-      try
-      {
-         archivePathImplClass = ClassLoaderSearchUtil.findClassFromClassLoaders(PATH_IMPL, ShrinkWrap
-               .getDefaultDomain().getConfiguration().getClassLoaders());
-      }
-      catch (final ClassNotFoundException cnfe)
-      {
-         throw new IllegalStateException("Could not find the archive path implementation class " + PATH_IMPL
-               + " in any configured ClassLoader", cnfe);
-      }
+    // -------------------------------------------------------------------------------------||
+    // Class Members - Internal Helpers ---------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-      // Create and return
-      return SecurityActions.newInstance(archivePathImplClass, argumentTypes, arguments, ArchivePath.class);
-   }
-   
-   /**
-    * Singleton wrapper to obtain a root {@link ArchivePath}
-    *
-    * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
-    * @version $Revision: $
-    */
-   private enum RootPathWrapper{
-      INSTANCE;
-      private ArchivePath root = create(null);
-      
-      private ArchivePath getRoot(){
-         return root;
-      }
-   }
+    private static ArchivePath createInstance(final Class<?>[] argumentTypes, final Object[] arguments) {
+        // Get the impl class
+        final Class<?> archivePathImplClass;
+        try {
+            archivePathImplClass = ClassLoaderSearchUtil.findClassFromClassLoaders(PATH_IMPL, ShrinkWrap
+                .getDefaultDomain().getConfiguration().getClassLoaders());
+        } catch (final ClassNotFoundException cnfe) {
+            throw new IllegalStateException("Could not find the archive path implementation class " + PATH_IMPL
+                + " in any configured ClassLoader", cnfe);
+        }
 
-   //-------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+        // Create and return
+        return SecurityActions.newInstance(archivePathImplClass, argumentTypes, arguments, ArchivePath.class);
+    }
 
-   /**
-    * No instantiation
-    */
-   private ArchivePaths()
-   {
-   }
+    /**
+     * Singleton wrapper to obtain a root {@link ArchivePath}
+     *
+     * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+     * @version $Revision: $
+     */
+    private enum RootPathWrapper {
+        INSTANCE;
+        private ArchivePath root = create(null);
+
+        private ArchivePath getRoot() {
+            return root;
+        }
+    }
+
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+
+    /**
+     * No instantiation
+     */
+    private ArchivePaths() {
+    }
 
 }

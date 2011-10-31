@@ -1,5 +1,5 @@
 /*
- * JBoss, Home of Professional Open Source  
+ * JBoss, Home of Professional Open Source
  * Copyright 2009, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -26,70 +26,68 @@ import org.jboss.shrinkwrap.api.importer.TarImporter;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream;
 
 /**
- * TestCase to ensure that the {@link TarExporter} correctly exports
- * archives to TAR format.
+ * TestCase to ensure that the {@link TarExporter} correctly exports archives to TAR format.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public final class TarExporterTestCase extends TarExporterTestBase<TarImporter>
-{
-   //-------------------------------------------------------------------------------------||
-   // Class Members ----------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public final class TarExporterTestCase extends TarExporterTestBase<TarImporter> {
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Extension for archives
-    */
-   private static final String EXTENSION = ".tar";
+    /**
+     * Extension for archives
+     */
+    private static final String EXTENSION = ".tar";
 
-   //-------------------------------------------------------------------------------------||
-   // Required Implementations -----------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Implementations -----------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getStreamExporter()
-    */
-   @Override
-   protected Class<? extends StreamExporter> getExporterClass()
-   {
-      return TarExporter.class;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getStreamExporter()
+     */
+    @Override
+    protected Class<? extends StreamExporter> getExporterClass() {
+        return TarExporter.class;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#getImporterClass()
-    */
-   @Override
-   protected Class<TarImporter> getImporterClass()
-   {
-      return TarImporter.class;
-   }
-   
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getArchiveExtension()
-    */
-   @Override
-   protected String getArchiveExtension()
-   {
-      return EXTENSION;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#getImporterClass()
+     */
+    @Override
+    protected Class<TarImporter> getImporterClass() {
+        return TarImporter.class;
+    }
 
-   /**
-    * {@inheritDoc}
-    * @see org.jboss.shrinkwrap.impl.base.exporter.TarExporterTestBase#getTarInputStreamFromFile(java.io.File)
-    */
-   @Override
-   protected TarInputStream getTarInputStreamFromFile(final File archive) throws IOException
-   {
-      return new TarInputStream(new FileInputStream(archive));
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getArchiveExtension()
+     */
+    @Override
+    protected String getArchiveExtension() {
+        return EXTENSION;
+    }
 
-   //-------------------------------------------------------------------------------------||
-   // Tests ------------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.impl.base.exporter.TarExporterTestBase#getTarInputStreamFromFile(java.io.File)
+     */
+    @Override
+    protected TarInputStream getTarInputStreamFromFile(final File archive) throws IOException {
+        return new TarInputStream(new FileInputStream(archive));
+    }
 
-   // Inherited
+    // -------------------------------------------------------------------------------------||
+    // Tests ------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+
+    // Inherited
 }

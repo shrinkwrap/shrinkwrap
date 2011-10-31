@@ -17,12 +17,11 @@
 package org.jboss.shrinkwrap.api;
 
 /**
- * Simple {@link Archive} extension which closes the generic context
- * as a convenience to users not requiring any spec archive type.
- * 
+ * Simple {@link Archive} extension which closes the generic context as a convenience to users not requiring any spec
+ * archive type.
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
-public interface GenericArchive extends Archive<GenericArchive>
-{
+public interface GenericArchive extends Archive<GenericArchive> {
 
 }

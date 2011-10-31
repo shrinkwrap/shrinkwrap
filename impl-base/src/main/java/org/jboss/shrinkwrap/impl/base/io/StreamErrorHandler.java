@@ -17,21 +17,20 @@
 package org.jboss.shrinkwrap.impl.base.io;
 
 /**
- * Handler for errors that occur during StreamTask processing.  
- * 
+ * Handler for errors that occur during StreamTask processing.
+ *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public interface StreamErrorHandler
-{
-   //-------------------------------------------------------------------------------------||
-   // Contracts --------------------------------------------------------------------------||
-   //-------------------------------------------------------------------------------------||
+public interface StreamErrorHandler {
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /**
-    * Handles a Throwable that was thrown during stream processing.
-    * 
-    * @param t
-    */
-   void handle(Throwable t);
+    /**
+     * Handles a Throwable that was thrown during stream processing.
+     *
+     * @param t
+     */
+    void handle(Throwable t);
 }
