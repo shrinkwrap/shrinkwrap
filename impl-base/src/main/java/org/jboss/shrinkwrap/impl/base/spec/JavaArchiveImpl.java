@@ -25,8 +25,6 @@ import org.jboss.shrinkwrap.impl.base.container.ContainerBase;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
- * JavaArchiveImpl
- *
  * Implementation of an archive with JAR-specific support.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
