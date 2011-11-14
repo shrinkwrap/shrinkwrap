@@ -50,8 +50,6 @@ import org.jboss.shrinkwrap.spi.ArchiveFormatAssociable;
 import org.jboss.shrinkwrap.spi.Configurable;
 
 /**
- * ArchiveBase
- *
  * Base implementation of {@link Archive}. Contains support for operations (typically overloaded) that are not specific
  * to any particular storage implementation, and may be delegated to other forms.
  *

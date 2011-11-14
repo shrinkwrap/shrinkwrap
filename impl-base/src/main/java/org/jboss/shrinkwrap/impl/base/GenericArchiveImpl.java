@@ -51,6 +51,18 @@ public class GenericArchiveImpl extends ContainerBase<GenericArchive> implements
     /**
      * {@inheritDoc}
      *
+     * @see Archive#shallowCopy()
+     */
+    @Override
+    public GenericArchiveImpl shallowCopy() {
+        GenericArchiveImpl newInstance = new GenericArchiveImpl(getArchive().shallowCopy());
+        ShallowCopy.shallowCopyContentTo(this, newInstance);
+        return newInstance;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getClassesPath()
      */
     @Override

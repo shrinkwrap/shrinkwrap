@@ -353,7 +353,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     Node delete(String archivePath) throws IllegalArgumentException;
 
     /**
-     * Obtains all assets in this archive, along with its respective Path. The returned Map will be an immutable view.
+     * Obtains all assets in this archive, along with their respective paths. The returned Map will be an immutable view.
      *
      * @return
      */
@@ -553,5 +553,13 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      *             if an exceptions occur when writing the archive contents.
      */
     void writeTo(OutputStream outputStream, Formatter formatter) throws IllegalArgumentException;
+
+    /**
+     * Creates a shallow copy of this {@link Archive}. Assets from this archive are made available under the same paths.
+     * However, removing old assets or adding new assets on this archive affects does not affect the new archive.
+     *
+     * @return a new archive with a copy of the pointers to the assets
+     */
+    Archive<T> shallowCopy();
 
 }

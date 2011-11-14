@@ -67,6 +67,18 @@ public class MemoryMapArchiveImpl extends MemoryMapArchiveBase<MemoryMapArchive>
     /**
      * {@inheritDoc}
      *
+     * @see Archive#shallowCopy()
+     */
+    @Override
+    public MemoryMapArchiveImpl shallowCopy() {
+        MemoryMapArchiveImpl newInstance = new MemoryMapArchiveImpl(getConfiguration());
+        ShallowCopy.shallowCopyContentTo(this, newInstance);
+        return newInstance;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.impl.base.ArchiveBase#getActualClass()
      */
     @Override
