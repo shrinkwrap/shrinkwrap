@@ -217,6 +217,12 @@
           </rules>
         </configuration>
       </plugin>
+      
+      <!-- m2e Config -->
+      <plugin>
+        <groupId>org.eclipse.m2e</groupId>
+        <artifactId>lifecycle-mapping</artifactId>
+      </plugin>
 
     </plugins>
   </build>
