@@ -353,7 +353,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     Node delete(String archivePath) throws IllegalArgumentException;
 
     /**
-     * Obtains all assets in this archive, along with its respective Path. The returned Map will be an immutable view.
+     * Obtains all assets in this archive, along with their respective paths. The returned Map will be an immutable view.
      *
      * @return
      */
