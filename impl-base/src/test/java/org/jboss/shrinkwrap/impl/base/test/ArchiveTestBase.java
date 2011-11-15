@@ -23,9 +23,10 @@ import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
+import static org.jboss.shrinkwrap.impl.base.io.IOUtil.asByteArray;
+import static org.junit.Assert.assertArrayEquals;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
@@ -51,7 +52,6 @@ import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
-import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.spi.ArchiveFormatAssociable;
 import org.junit.After;
@@ -278,8 +278,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         Node fetchedNode = getArchive().get(location);
 
-        assertTrue("Asset should be returned from path: " + location.get(),
-            compareAssetsContent(ASSET, fetchedNode.getAsset()));
+        assertArrayEquals(bytes(ASSET), bytes(fetchedNode.getAsset()));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -294,8 +293,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         Node fetchedNode = getArchive().get(location.get());
 
-        assertTrue("Asset should be returned from path: " + location.get(),
-            compareAssetsContent(ASSET, fetchedNode.getAsset()));
+        assertArrayEquals(bytes(ASSET), bytes(fetchedNode.getAsset()));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -516,11 +514,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         final Node node1 = content.get(location);
         final Node node2 = content.get(locationTwo);
 
-        assertTrue("Asset should existing in content with key: " + location.get(),
-            this.compareAssetsContent(ASSET, node1.getAsset()));
-
-        assertTrue("Asset should existing in content with key: " + locationTwo.get(),
-            this.compareAssetsContent(assetTwo, node2.getAsset()));
+        assertArrayEquals(bytes(ASSET), bytes(node1.getAsset()));
+        assertArrayEquals(bytes(assetTwo), bytes(node2.getAsset()));
     }
 
     @Test
@@ -595,11 +590,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         Node node1 = getArchive().get(location);
         Node node2 = getArchive().get(locationTwo);
 
-        assertTrue("Asset should have been added to path: " + location.get(),
-            this.compareAssetsContent(node1.getAsset(), ASSET));
-
-        assertTrue("Asset should have been added to path: " + location.get(),
-            this.compareAssetsContent(node2.getAsset(), assetTwo));
+        assertArrayEquals(bytes(ASSET), bytes(node1.getAsset()));
+        assertArrayEquals(bytes(assetTwo), bytes(node2.getAsset()));
     }
 
     @Test
@@ -621,11 +613,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         Node nodeOne = getArchive().get(expectedPath);
         Node nodeTwo = getArchive().get(expectedPathTwo);
 
-        assertTrue("Asset should have been added to path: " + expectedPath.get(),
-            this.compareAssetsContent(nodeOne.getAsset(), ASSET));
-
-        assertTrue("Asset should have been added to path: " + expectedPathTwo.getClass(),
-            this.compareAssetsContent(nodeTwo.getAsset(), assetTwo));
+        assertArrayEquals(bytes(ASSET), bytes(nodeOne.getAsset()));
+        assertArrayEquals(bytes(assetTwo), bytes(nodeTwo.getAsset()));
     }
 
     @Test
@@ -647,11 +636,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         Node nodeOne = getArchive().get(expectedPath);
         Node nodeTwo = getArchive().get(expectedPathTwo);
 
-        assertTrue("Asset should have been added to path: " + expectedPath.get(),
-            this.compareAssetsContent(nodeOne.getAsset(), ASSET));
-
-        assertTrue("Asset should have been added to path: " + expectedPathTwo.getClass(),
-            this.compareAssetsContent(nodeTwo.getAsset(), assetTwo));
+        assertArrayEquals(bytes(ASSET), bytes(nodeOne.getAsset()));
+        assertArrayEquals(bytes(assetTwo), bytes(nodeTwo.getAsset()));
     }
 
     @Test
@@ -671,8 +657,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         ArchivePath expectedPath = new BasicPath(baseLocation, locationTwo);
 
-        assertTrue("Asset should have been added to path: " + expectedPath.get(),
-            this.compareAssetsContent(getArchive().get(expectedPath).getAsset(), ASSET));
+        assertArrayEquals(bytes(ASSET), bytes(getArchive().get(expectedPath).getAsset()));
     }
 
     @Test
@@ -692,8 +677,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         ArchivePath expectedPath = new BasicPath(baseLocation, locationTwo);
 
-        assertTrue("Asset should have been added to path: " + expectedPath.get(),
-            this.compareAssetsContent(getArchive().get(expectedPath).getAsset(), ASSET));
+        assertArrayEquals(bytes(ASSET), bytes(getArchive().get(expectedPath).getAsset()));
     }
 
     @Test
@@ -709,8 +693,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         assertEquals("Should only have merged 1", 1, numberOfAssetsIn(getArchive()));
 
-        assertTrue("Asset should have been added to path: " + locationTwo.get(),
-            this.compareAssetsContent(getArchive().get(locationTwo).getAsset(), ASSET));
+        assertArrayEquals(bytes(ASSET), bytes(getArchive().get(locationTwo).getAsset()));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -808,11 +791,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         assertTrue(copyArchive.contains("location"));
     }
 
-    private boolean compareAssetsContent(Asset one, Asset two) {
-        byte[] oneData = IOUtil.asByteArray(one.openStream());
-        byte[] twoData = IOUtil.asByteArray(two.openStream());
-
-        return Arrays.equals(oneData, twoData);
+    private static byte[] bytes(Asset one) {
+        return asByteArray(one.openStream());
     }
 
     protected static int numberOfAssetsIn(Archive<?> archive) {
