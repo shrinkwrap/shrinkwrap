@@ -29,8 +29,6 @@ import org.jboss.shrinkwrap.api.container.WebContainer;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicWebContainerTestBase;
-import org.junit.After;
-import org.junit.Before;
 
 /**
  * WebArchiveImplTestCase
@@ -60,34 +58,8 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
     private static final ArchivePath PATH_RESOURCE = ArchivePaths.create(PATH_WEBINF, "classes");
 
     // -------------------------------------------------------------------------------------||
-    // Instance Members -------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    private WebArchive archive;
-
-    // -------------------------------------------------------------------------------------||
-    // Lifecycle Methods ------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    @Before
-    public void createWebArchive() throws Exception {
-        archive = createNewArchive();
-    }
-
-    @Override
-    @After
-    public void ls() {
-        ls(archive);
-    }
-
-    // -------------------------------------------------------------------------------------||
     // Required Impls - ArchiveTestBase ---------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    @Override
-    protected WebArchive getArchive() {
-        return archive;
-    }
 
     /**
      * Create a new instance of a WebArchive
@@ -118,12 +90,12 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
 
     @Override
     protected ClassContainer<WebArchive> getClassContainer() {
-        return archive;
+        return getArchive();
     }
 
     @Override
     protected LibraryContainer<WebArchive> getLibraryContainer() {
-        return archive;
+        return getArchive();
     }
 
     @Override

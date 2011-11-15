@@ -23,7 +23,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveTestBase;
 import org.jboss.shrinkwrap.spi.MemoryMapArchive;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -36,29 +35,9 @@ import org.junit.Test;
  * @version $Revision: $
  */
 public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive> {
-    private MemoryMapArchive archive;
-
-    /**
-     * Create a new Archive instance per Test.
-     *
-     * @throws Exception
-     */
-    @Before
-    public void createArchive() throws Exception {
-        archive = createNewArchive();
-    }
-
     @Override
     protected MemoryMapArchive createNewArchive() {
         return new MemoryMapArchiveImpl(ShrinkWrap.getDefaultDomain().getConfiguration());
-    }
-
-    /**
-     * Return the created instance to the super class so it can perform the common test cases.
-     */
-    @Override
-    protected MemoryMapArchive getArchive() {
-        return archive;
     }
 
     /**

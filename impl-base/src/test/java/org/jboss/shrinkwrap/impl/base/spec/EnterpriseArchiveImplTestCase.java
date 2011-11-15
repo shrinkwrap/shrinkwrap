@@ -29,8 +29,6 @@ import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicEnterpriseContainerTestBase;
-import org.junit.After;
-import org.junit.Before;
 
 /**
  * EnterpriseArchiveImplTest
@@ -53,37 +51,8 @@ public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTes
     private static final ArchivePath PATH_MODULE = new BasicPath("/");
 
     // -------------------------------------------------------------------------------------||
-    // Instance Members -------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    private EnterpriseArchive archive;
-
-    // -------------------------------------------------------------------------------------||
-    // Lifecycle Methods ------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    @Before
-    public void createEnterpriseArchive() throws Exception {
-        archive = createNewArchive();
-    }
-
-    @Override
-    @After
-    public void ls() {
-        ls(archive);
-    }
-
-    // -------------------------------------------------------------------------------------||
     // Required Impls - ArchiveTestBase ---------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    /**
-     * Return the current EnterpriseArchive
-     */
-    @Override
-    protected EnterpriseArchive getArchive() {
-        return archive;
-    }
 
     /**
      * Create a new instance of a EnterpriseArchive
@@ -114,7 +83,7 @@ public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTes
 
     @Override
     protected LibraryContainer<EnterpriseArchive> getLibraryContainer() {
-        return archive;
+        return getArchive();
     }
 
     @Override

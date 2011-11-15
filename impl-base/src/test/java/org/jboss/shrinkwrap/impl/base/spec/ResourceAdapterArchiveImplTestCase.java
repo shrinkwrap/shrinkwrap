@@ -29,8 +29,6 @@ import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicResourceAdapterContainerTestBase;
-import org.junit.After;
-import org.junit.Before;
 
 /**
  * ResourceAdapterArchiveImplTestCase
@@ -54,37 +52,8 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
     private static final ArchivePath PATH_LIBRARY = new BasicPath("/");
 
     // -------------------------------------------------------------------------------------||
-    // Instance Members -------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    private ResourceAdapterArchive archive;
-
-    // -------------------------------------------------------------------------------------||
-    // Lifecycle Methods ------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    @Before
-    public void createResourceAdapterArchive() throws Exception {
-        archive = createNewArchive();
-    }
-
-    @Override
-    @After
-    public void ls() {
-        ls(archive);
-    }
-
-    // -------------------------------------------------------------------------------------||
     // Required Impls - ArchiveTestBase ---------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    /**
-     * Return the current ResourceAdapterArchive
-     */
-    @Override
-    protected ResourceAdapterArchive getArchive() {
-        return archive;
-    }
 
     /**
      * Create a new instance of a ResourceAdapterArchive
@@ -110,7 +79,7 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
 
     @Override
     protected LibraryContainer<ResourceAdapterArchive> getLibraryContainer() {
-        return archive;
+        return getArchive();
     }
 
     @Override

@@ -59,19 +59,22 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     public static final String NAME_TEST_PROPERTIES_2 = "org/jboss/shrinkwrap/impl/base/asset/Test2.properties";
     public static final Asset ASSET_1 = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
     public static final Asset ASSET_2 = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
+    private T archive;
 
-    protected abstract T getArchive();
-    protected abstract Archive<T> createNewArchive();
+    protected abstract T createNewArchive();
     protected abstract ArchiveFormat getExpectedArchiveFormat();
 
     @After
     public void ls() {
-        ls(getArchive());
+        System.out.println("test@jboss:/$ ls -l " + (getArchive() != null ? getArchive().getName() : "<null>"));
+        System.out.println(getArchive() != null ? getArchive().toString(true) : "<null>");
     }
 
-    protected void ls(T archive) {
-        System.out.println("test@jboss:/$ ls -l " + (archive != null ? archive.getName() : "<null>"));
-        System.out.println(archive != null ? archive.toString(true) : "<null>");
+    protected final T getArchive() {
+        if (archive == null) {
+            archive = createNewArchive();
+        }
+        return archive;
     }
 
     @Test
