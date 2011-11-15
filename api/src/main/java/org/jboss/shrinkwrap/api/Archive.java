@@ -492,11 +492,9 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     String toString();
 
     /**
-     * If "true" is specified, acts as a shorthand for {@link Archive#toString(Formatter)} where the
-     * {@link Formatters#VERBOSE} is leveraged. Otherwise the {@link Formatters#SIMPLE} will be used (equivalent to
-     * {@link Archive#toString()}).
-     *
-     * @return
+     * Returns a String representation of this {@link Archive}. If "true" is specified, acts as a shorthand for
+     * {@link Archive#toString(Formatter)} where the {@link Formatters#VERBOSE} is leveraged. Otherwise the
+     * {@link Formatters#SIMPLE} will be used (equivalent to {@link Archive#toString()}).
      */
     String toString(boolean verbose);
 
