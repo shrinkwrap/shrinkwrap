@@ -43,7 +43,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.FileAsset;
 import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
@@ -62,10 +61,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     public static final Asset ASSET_2 = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
 
     protected abstract T getArchive();
-
-    // Used to test Archive.add(Archive) type addings.
     protected abstract Archive<T> createNewArchive();
-
     protected abstract ArchiveFormat getExpectedArchiveFormat();
 
     @After
@@ -144,7 +140,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureAddingAnAssetWithNameRequiresThePathAttributeAsAString() {
-        getArchive().add(EmptyAsset.INSTANCE, (String) null, "childPath");
+        getArchive().add(ASSET_1, (String) null, "childPath");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -189,7 +185,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     @Test
     public void ensureArchiveContainsWorksAsExpectedForStrings() {
-        getArchive().add(EmptyAsset.INSTANCE, "testpath");
+        getArchive().add(ASSET_1, "testpath");
 
         assertTrue(getArchive().contains("testpath"));
     }
@@ -198,7 +194,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     public void ensureArchiveContainsWorksAsExpectedForArchivePaths() {
         ArchivePath path = ArchivePaths.create("testpath");
 
-        getArchive().add(EmptyAsset.INSTANCE, path);
+        getArchive().add(ASSET_1, path);
 
         assertTrue(getArchive().contains(path));
     }
