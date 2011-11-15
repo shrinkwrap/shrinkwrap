@@ -64,6 +64,11 @@ public class MemoryMapArchiveImpl extends MemoryMapArchiveBase<MemoryMapArchive>
         super(archiveName, configuration);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see Archive#shallowCopy()
+     */
     @Override
     public MemoryMapArchiveImpl shallowCopy() {
         MemoryMapArchiveImpl newInstance = new MemoryMapArchiveImpl(getConfiguration());

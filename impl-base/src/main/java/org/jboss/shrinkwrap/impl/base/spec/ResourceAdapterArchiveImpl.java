@@ -69,6 +69,11 @@ public class ResourceAdapterArchiveImpl extends ResourceAdapterContainerBase<Res
         super(ResourceAdapterArchive.class, delegate);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see Archive#shallowCopy()
+     */
     @Override
     public ResourceAdapterArchiveImpl shallowCopy() {
         ResourceAdapterArchiveImpl newInstance = new ResourceAdapterArchiveImpl(getArchive().shallowCopy());

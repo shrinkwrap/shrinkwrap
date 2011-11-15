@@ -74,6 +74,11 @@ public class JavaArchiveImpl extends ContainerBase<JavaArchive> implements JavaA
         super(JavaArchive.class, delegate);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see Archive#shallowCopy()
+     */
     @Override
     public JavaArchiveImpl shallowCopy() {
         Archive<?> underlyingArchive = getArchive();

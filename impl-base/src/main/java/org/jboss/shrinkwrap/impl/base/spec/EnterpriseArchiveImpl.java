@@ -78,6 +78,11 @@ public class EnterpriseArchiveImpl extends EnterpriseContainerBase<EnterpriseArc
         super(EnterpriseArchive.class, delegate);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see Archive#shallowCopy()
+     */
     @Override
     public EnterpriseArchiveImpl shallowCopy() {
         EnterpriseArchiveImpl newInstance = new EnterpriseArchiveImpl(getArchive().shallowCopy());

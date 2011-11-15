@@ -92,13 +92,6 @@ public class WebArchiveImpl extends WebContainerBase<WebArchive> implements WebA
         super(WebArchive.class, delegate);
     }
 
-    @Override
-    public WebArchiveImpl shallowCopy() {
-        WebArchiveImpl newInstance = new WebArchiveImpl(getArchive().shallowCopy());
-        ShallowCopy.shallowCopyContentTo(this, newInstance);
-        return newInstance;
-    }
-
     // -------------------------------------------------------------------------------------||
     // Required Implementations -----------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
@@ -171,5 +164,17 @@ public class WebArchiveImpl extends WebContainerBase<WebArchive> implements WebA
     @Override
     protected ArchivePath getServiceProvidersPath() {
         return PATH_SERVICE_PROVIDERS;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Archive#shallowCopy()
+     */
+    @Override
+    public WebArchiveImpl shallowCopy() {
+        WebArchiveImpl newInstance = new WebArchiveImpl(getArchive().shallowCopy());
+        ShallowCopy.shallowCopyContentTo(this, newInstance);
+        return newInstance;
     }
 }

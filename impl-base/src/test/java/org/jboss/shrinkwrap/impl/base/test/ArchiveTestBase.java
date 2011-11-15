@@ -1194,11 +1194,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
             nestedNode.getAsset());
     }
 
-    /**
-     * Ensure adding an asset to the path results in successful storage.
-     */
     @Test
-    public void testShallowCopyPreservesPointers() {
+    public void ensureShallowCopyPreservesPointers() {
         Archive<T> archive = getArchive();
         Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
         archive.add(asset, "location");
@@ -1209,11 +1206,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         Assert.assertSame(copyArchive.get("location").getAsset(), archive.get("location").getAsset());
     }
 
-    /**
-     * Ensure adding an asset to the path results in successful storage.
-     */
     @Test
-    public void testShallowCopyHasASeparateCollectionOfTheSamePointers() {
+    public void ensureShallowCopyHasASeparateCollectionOfTheSamePointers() {
         Archive<T> archive = getArchive();
         Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
         archive.add(asset, "location");
