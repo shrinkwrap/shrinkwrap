@@ -946,7 +946,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath expectedPath = new BasicPath(getClassPath(),
             AssetUtil.getFullPathForClassResource(DynamicContainerTestBase.class));
 
-        Assert.assertEquals("Should only be one class added", 1, numAssets(getArchive()));
+        Assert.assertEquals("Should only be one class added", 1, numberOfAssetsIn(getArchive()));
 
         assertContainsClass(expectedPath);
     }
@@ -997,7 +997,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath expectedPath = new BasicPath(getClassPath(),
             AssetUtil.getFullPathForClassResource(DynamicContainerTestBase.class));
 
-        Assert.assertEquals("Should only be one class added", 1, numAssets(getArchive()));
+        Assert.assertEquals("Should only be one class added", 1, numberOfAssetsIn(getArchive()));
 
         assertContainsClass(expectedPath);
     }
@@ -1041,7 +1041,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath notExpectedPath2 = new BasicPath(getClassPath(),
             AssetUtil.getFullPathForClassResource(DummyClassForTest.class));
 
-        Assert.assertEquals("Should only include selected packages", 2, numAssets(getArchive()));
+        Assert.assertEquals("Should only include selected packages", 2, numberOfAssetsIn(getArchive()));
 
         assertContainsClass(expectedPath1);
         assertContainsClass(expectedPath2);
@@ -1094,7 +1094,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath expectedPath2 = new BasicPath(getClassPath(),
             AssetUtil.getFullPathForClassResource(ArchiveType.class));
 
-        Assert.assertEquals("Should only include selected classes", 2, numAssets(getArchive()));
+        Assert.assertEquals("Should only include selected classes", 2, numberOfAssetsIn(getArchive()));
 
         assertContainsClass(expectedPath);
 
