@@ -48,6 +48,13 @@ public class GenericArchiveImpl extends ContainerBase<GenericArchive> implements
         super(GenericArchive.class, delegate);
     }
 
+    @Override
+    public GenericArchiveImpl shallowCopy() {
+        GenericArchiveImpl newInstance = new GenericArchiveImpl(getArchive().shallowCopy());
+        ShallowCopy.shallowCopyContentTo(this, newInstance);
+        return newInstance;
+    }
+
     /**
      * {@inheritDoc}
      *

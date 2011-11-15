@@ -524,4 +524,12 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      */
     void writeTo(OutputStream outputStream, Formatter formatter) throws IllegalArgumentException;
 
+    /**
+     * Creates a shallow copy of this {@link Archive}. Assets from this archive are made available under the same paths.
+     * However, removing old assets or adding new assets on this archive affects does not affect the new archive.
+     *
+     * @return a new archive with a copy of the pointers to the assets
+     */
+    Archive<T> shallowCopy();
+
 }

@@ -22,6 +22,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.impl.base.ShallowCopy;
 import org.jboss.shrinkwrap.impl.base.container.WebContainerBase;
 
 /**
@@ -89,6 +90,13 @@ public class WebArchiveImpl extends WebContainerBase<WebArchive> implements WebA
      */
     public WebArchiveImpl(final Archive<?> delegate) {
         super(WebArchive.class, delegate);
+    }
+
+    @Override
+    public WebArchiveImpl shallowCopy() {
+        WebArchiveImpl newInstance = new WebArchiveImpl(getArchive().shallowCopy());
+        ShallowCopy.shallowCopyContentTo(this, newInstance);
+        return newInstance;
     }
 
     // -------------------------------------------------------------------------------------||
