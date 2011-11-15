@@ -69,15 +69,6 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     protected abstract ArchiveFormat getExpectedArchiveFormat();
 
-    @Test
-    public void testDefaultArchiveFormatIsSet() {
-        assertEquals("Unexpected default getArchive() format", getExpectedArchiveFormat(), getDefaultArchiveFormat());
-    }
-
-    private ArchiveFormat getDefaultArchiveFormat() {
-        return ((ArchiveFormatAssociable) getArchive()).getArchiveFormat();
-    }
-
     @After
     public void ls() {
         ls(getArchive());
@@ -89,12 +80,19 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     @Test
+    public void testDefaultArchiveFormatIsSet() {
+        // sanity check
+        ArchiveFormat defaultArchiveFormat = ((ArchiveFormatAssociable) getArchive()).getArchiveFormat();
+        assertEquals(getExpectedArchiveFormat(), defaultArchiveFormat);
+    }
+
+    @Test
     public void ensureAddingAnAssetToThePathResultsInSuccesfulStorage() {
         ArchivePath location = new BasicPath("/", "test.properties");
 
         getArchive().add(ASSET, location);
 
-        assertTrue("Asset should be placed on " + location.get(), getArchive().contains(location));
+        assertTrue(getArchive().contains(location));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -113,8 +111,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         getArchive().add(ASSET, location.get());
 
-        assertTrue("Asset should be placed on " + new BasicPath("/", "test.properties"),
-            getArchive().contains(location));
+        assertTrue(getArchive().contains(location));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -147,7 +144,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         ArchivePath expectedPath = new BasicPath("/", "test.properties");
 
-        assertTrue("Asset should be placed on " + expectedPath.get(), getArchive().contains(expectedPath));
+        assertTrue(getArchive().contains(expectedPath));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -195,24 +192,23 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         getArchive().addAsDirectories(path1, path2, path3);
 
-        String message = "Should be able to add directory: ";
-        TestCase.assertTrue(message + path1, getArchive().contains(path1));
-        TestCase.assertTrue(message + path2, getArchive().contains(path2));
-        TestCase.assertTrue(message + path3, getArchive().contains(path3));
+        assertTrue(getArchive().contains(path1));
+        assertTrue(getArchive().contains(path2));
+        assertTrue(getArchive().contains(path3));
     }
 
     @Test
     public void ensureArchiveContainsWorksAsExpectedForStrings() {
         String path = "testpath";
         getArchive().add(EmptyAsset.INSTANCE, path);
-        assertTrue("Archive should contain the path added", getArchive().contains(path));
+        assertTrue(getArchive().contains(path));
     }
 
     @Test
     public void ensureArchiveContainsWorksAsExpectedForArchivePaths() {
         ArchivePath path = ArchivePaths.create("testpath");
         getArchive().add(EmptyAsset.INSTANCE, path);
-        assertTrue("Archive should contain the path added", getArchive().contains(path));
+        assertTrue(getArchive().contains(path));
     }
 
     @Test
@@ -221,11 +217,10 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         getArchive().add(ASSET, location);
         assertTrue(getArchive().contains(location)); // Sanity check
 
-        assertEquals("Successfully deleting an Asset should return the removed Node", ASSET,
-            getArchive().delete(location).getAsset());
+        Node node = getArchive().delete(location);
 
-        assertFalse("There should no longer be an asset at: " + location.get() + " after deleted",
-            getArchive().contains(location));
+        assertEquals(ASSET, node.getAsset());
+        assertFalse(getArchive().contains(location));
     }
 
     @Test
@@ -234,25 +229,24 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         getArchive().add(ASSET, location);
         assertTrue(getArchive().contains(location)); // Sanity check
 
-        assertEquals("Successfully deleting an Asset should return the removed Node", ASSET,
-            getArchive().delete(location).getAsset());
+        Node node = getArchive().delete(location);
 
-        assertFalse("There should no longer be an asset at: " + location + " after deleted",
-            getArchive().contains(location));
+        assertEquals(ASSET, node.getAsset());
+        assertFalse(getArchive().contains(location));
     }
 
     @Test
     public void ensureDeletingAMissingAssetWithAnArchivePatheturnsCorrectStatus() {
         ArchivePath location = new BasicPath("/", "test.properties");
 
-        assertNull("Deleting a non-existent Asset should return null", getArchive().delete(location));
+        assertNull(getArchive().delete(location));
     }
 
     @Test
     public void ensureDeletingAMissingAssetWithAStringPathReturnsCorrectStatus() {
         String location = "/test.properties";
 
-        assertNull("Deleting a non-existent Asset should return null", getArchive().delete(location));
+        assertNull(getArchive().delete(location));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -304,12 +298,10 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         JavaArchive jar = archive.getAsType(JavaArchive.class, resourcePath, ArchiveFormat.ZIP).add(
             new StringAsset("test file content"), "test.txt");
 
-        assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
-        assertNotNull("Class in JAR not imported", jar.get("test/classloader/DummyClass.class"));
-        assertNotNull("Inner Class in JAR not imported",
-            jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
-        assertNotNull("Should contain a new asset", ((ArchiveAsset) archive.get(resourcePath).getAsset())
-            .getArchive().get("test.txt"));
+        assertEquals(resourcePath, jar.getName());
+        assertNotNull(jar.get("test/classloader/DummyClass.class"));
+        assertNotNull(jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
+        assertNotNull(((ArchiveAsset) archive.get(resourcePath).getAsset()).getArchive().get("test.txt"));
     }
 
     @Test
@@ -338,12 +330,10 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         JavaArchive jar = archive.getAsType(JavaArchive.class, ArchivePaths.create(resourcePath), ArchiveFormat.ZIP)
             .add(new StringAsset("test file content"), "test.txt");
 
-        assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
-        assertNotNull("Class in JAR not imported", jar.get("test/classloader/DummyClass.class"));
-        assertNotNull("Inner Class in JAR not imported",
-            jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
-        assertNotNull("Should contain an getArchive() asset", ((ArchiveAsset) archive.get(resourcePath).getAsset())
-            .getArchive().get("test.txt"));
+        assertEquals(resourcePath, jar.getName());
+        assertNotNull(jar.get("test/classloader/DummyClass.class"));
+        assertNotNull(jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
+        assertNotNull(((ArchiveAsset) archive.get(resourcePath).getAsset()).getArchive().get("test.txt"));
     }
 
     @Test
@@ -355,12 +345,10 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         JavaArchive jar = archive.getAsType(JavaArchive.class, ArchivePaths.create(resourcePath)).add(
             new StringAsset("test file content"), "test.txt");
 
-        assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
-        assertNotNull("Class in JAR not imported", jar.get("test/classloader/DummyClass.class"));
-        assertNotNull("Inner Class in JAR not imported",
-            jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
-        assertNotNull("Should contain an getArchive() asset", ((ArchiveAsset) archive.get(resourcePath).getAsset())
-            .getArchive().get("test.txt"));
+        assertEquals(resourcePath, jar.getName());
+        assertNotNull(jar.get("test/classloader/DummyClass.class"));
+        assertNotNull(jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
+        assertNotNull(((ArchiveAsset) archive.get(resourcePath).getAsset()).getArchive().get("test.txt"));
     }
 
     @Test
@@ -376,12 +364,10 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         JavaArchive jar = jars.iterator().next().add(new StringAsset("test file content"), "test.txt");
 
-        assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
-        assertNotNull("Class in JAR not imported", jar.get("test/classloader/DummyClass.class"));
-        assertNotNull("Inner Class in JAR not imported",
-            jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
-        assertNotNull("Should contain a new asset", ((ArchiveAsset) archive.get(resourcePath).getAsset())
-            .getArchive().get("test.txt"));
+        assertEquals(resourcePath, jar.getName());
+        assertNotNull(jar.get("test/classloader/DummyClass.class"));
+        assertNotNull(jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
+        assertNotNull(((ArchiveAsset) archive.get(resourcePath).getAsset()).getArchive().get("test.txt"));
     }
 
     @Test
@@ -396,12 +382,10 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         JavaArchive jar = jars.iterator().next().add(new StringAsset("test file content"), "test.txt");
 
-        assertEquals("JAR imported with wrong name", resourcePath, jar.getName());
-        assertNotNull("Class in JAR not imported", jar.get("test/classloader/DummyClass.class"));
-        assertNotNull("Inner Class in JAR not imported",
-            jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
-        assertNotNull("Should contain a new asset", ((ArchiveAsset) archive.get(resourcePath).getAsset())
-            .getArchive().get("test.txt"));
+        assertEquals(resourcePath, jar.getName());
+        assertNotNull(jar.get("test/classloader/DummyClass.class"));
+        assertNotNull(jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
+        assertNotNull(((ArchiveAsset) archive.get(resourcePath).getAsset()).getArchive().get("test.txt"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -525,10 +509,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         Node node1 = content.get(location);
         Node node2 = content.get(locationTwo);
 
-        assertEquals("Only 1 Asset should have been included", 1, content.size());
-        assertNull("Should not be included in content", node1);
-
-        assertNotNull("Should be included in content", node2);
+        assertEquals(1, content.size());
+        assertNull(node1);
+        assertNotNull(node2);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -543,7 +526,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureAddingAnArchiveToAPathRequiresAnArchive() {
-            getArchive().add((Archive<?>) null, ArchivePaths.root(), ZipExporter.class);
+        getArchive().add((Archive<?>) null, ArchivePaths.root(), ZipExporter.class);
     }
 
     @Test(expected = IllegalArchivePathException.class)
@@ -554,7 +537,6 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         Asset assetTwo = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
         ArchivePath locationTwo = ArchivePaths.create("/test.properties/somewhere");
         getArchive().add(assetTwo, locationTwo);
-
     }
 
     @Test(expected = IllegalArchivePathException.class)
@@ -647,7 +629,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         getArchive().merge(sourceArchive, baseLocation, Filters.include(".*test2.*"));
 
-        assertEquals("Should only have merged 1", 1, numberOfAssetsIn(getArchive()));
+        assertEquals(1, numberOfAssetsIn(getArchive()));
 
         ArchivePath expectedPath = new BasicPath(baseLocation, locationTwo);
 
@@ -667,7 +649,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         getArchive().merge(sourceArchive, baseLocation, Filters.include(".*test2.*"));
 
-        assertEquals("Should only have merged 1", 1, numberOfAssetsIn(getArchive()));
+        assertEquals(1, numberOfAssetsIn(getArchive()));
 
         ArchivePath expectedPath = new BasicPath(baseLocation, locationTwo);
 
@@ -685,7 +667,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         getArchive().merge(sourceArchive, Filters.include(".*test2.*"));
 
-        assertEquals("Should only have merged 1", 1, numberOfAssetsIn(getArchive()));
+        assertEquals(1, numberOfAssetsIn(getArchive()));
 
         assertArrayEquals(bytes(ASSET), bytes(getArchive().get(locationTwo).getAsset()));
     }
@@ -706,14 +688,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         ArchivePath expectedPath = new BasicPath(baseLocation, sourceArchive.getName());
 
         Node node = getArchive().get(expectedPath);
-        assertNotNull("Asset should have been added to path: " + expectedPath.get(), node);
-        assertTrue("An instance of ArchiveAsset should have been added to path: " + expectedPath.get(),
-            node.getAsset() instanceof ArchiveAsset);
-        ArchiveAsset archiveAsset = ArchiveAsset.class.cast(node.getAsset());
-
-        Archive<?> nestedArchive = archiveAsset.getArchive();
-        assertEquals("Nested Archive should be same getArchive() that was added", sourceArchive, nestedArchive);
-
+        assertTrue(node.getAsset() instanceof ArchiveAsset);
+        assertEquals(sourceArchive, ArchiveAsset.class.cast(node.getAsset()).getArchive());
     }
 
     @Test
@@ -732,8 +708,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         ArchivePath expectedPath = new BasicPath(archivePath, "test.properties");
 
-        assertTrue("Nested getArchive() assets should be verified through a fully qualified path",
-            getArchive().contains(expectedPath));
+        assertTrue(getArchive().contains(expectedPath));
     }
 
     @Test
@@ -760,9 +735,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         Node nestedNode = getArchive().get(expectedPath);
 
-        assertNotNull(
-            "Nested getArchive() asset should be available through partent getArchive() at " + expectedPath.get(),
-            nestedNode.getAsset());
+        assertNotNull(nestedNode.getAsset());
     }
 
     @Test
