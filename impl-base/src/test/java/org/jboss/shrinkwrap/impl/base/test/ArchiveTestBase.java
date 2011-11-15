@@ -129,7 +129,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     @Test
     public void ensureAddingAnAssetWithANameUnderAnArchiveContextResultsInSuccessfulStorage() {
-        final String name = "test.properties";
+        String name = "test.properties";
         ArchivePath location = ArchivePaths.root();
 
         getArchive().add(ASSET, location, name);
@@ -141,7 +141,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     @Test
     public void ensureAddingAnAssetWithANameUnderAStringContextResultsInSuccesfulStorage() {
-        final String name = "test.properties";
+        String name = "test.properties";
 
         getArchive().add(ASSET, "/", name);
 
@@ -172,32 +172,26 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     @Test
     public void testAddNamedAsset() {
-        final String testName = "check.properties";
-
-        final NamedAsset namedAsset = new NamedAsset() {
-
+        getArchive().add(new NamedAsset() {
             @Override
             public String getName() {
-                return testName;
+                return "check.properties";
             }
 
             @Override
             public InputStream openStream() {
                 return ASSET.openStream();
             }
+        });
 
-        };
-
-        getArchive().add(namedAsset);
-
-        assertTrue("Asset should be placed on " + testName, getArchive().contains(testName));
+        assertTrue(getArchive().contains("check.properties"));
     }
 
     @Test
     public void ensureEmptyDirectoriesMayBeAddedToTheArchive() {
-        final ArchivePath path1 = ArchivePaths.create("path/to/dir");
-        final ArchivePath path2 = ArchivePaths.create("path/to/dir2");
-        final ArchivePath path3 = ArchivePaths.create("path/to");
+        ArchivePath path1 = ArchivePaths.create("path/to/dir");
+        ArchivePath path2 = ArchivePaths.create("path/to/dir2");
+        ArchivePath path3 = ArchivePaths.create("path/to");
 
         getArchive().addAsDirectories(path1, path2, path3);
 
@@ -209,14 +203,14 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     @Test
     public void ensureArchiveContainsWorksAsExpectedForStrings() {
-        final String path = "testpath";
+        String path = "testpath";
         getArchive().add(EmptyAsset.INSTANCE, path);
         assertTrue("Archive should contain the path added", getArchive().contains(path));
     }
 
     @Test
     public void ensureArchiveContainsWorksAsExpectedForArchivePaths() {
-        final ArchivePath path = ArchivePaths.create("testpath");
+        ArchivePath path = ArchivePaths.create("testpath");
         getArchive().add(EmptyAsset.INSTANCE, path);
         assertTrue("Archive should contain the path added", getArchive().contains(path));
     }
@@ -511,8 +505,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         Map<ArchivePath, Node> content = getArchive().getContent();
 
-        final Node node1 = content.get(location);
-        final Node node2 = content.get(locationTwo);
+        Node node1 = content.get(location);
+        Node node2 = content.get(locationTwo);
 
         assertArrayEquals(bytes(ASSET), bytes(node1.getAsset()));
         assertArrayEquals(bytes(assetTwo), bytes(node2.getAsset()));
@@ -528,8 +522,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         Map<ArchivePath, Node> content = getArchive().getContent(Filters.include(".*test2.*"));
 
-        final Node node1 = content.get(location);
-        final Node node2 = content.get(locationTwo);
+        Node node1 = content.get(location);
+        Node node2 = content.get(locationTwo);
 
         assertEquals("Only 1 Asset should have been included", 1, content.size());
         assertNull("Should not be included in content", node1);
