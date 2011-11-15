@@ -46,7 +46,6 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive> 
     @Before
     public void createArchive() throws Exception {
         archive = createNewArchive();
-        archive.toString(false);
     }
 
     @Override
