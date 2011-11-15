@@ -99,15 +99,11 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
 
         getArchive().add(asset, (ArchivePath) null);
-
-        fail("Should have thrown an IllegalArgumentException");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureAddingAnAssetToThePathRequiresAnAsset() {
         getArchive().add((Asset) null, new BasicPath("/", "Test.properties"));
-
-        fail("Should have throw an IllegalArgumentException");
     }
 
     @Test
@@ -121,26 +117,16 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
             getArchive().contains(location));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void ensureAddingAnAssetToAStringPathRequiresPath() {
         Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
 
-        try {
-            getArchive().add(asset, (String) null);
-            fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
-            // success
-        }
+        getArchive().add(asset, (String) null);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void ensureAddingAnAssetToThePathStringRequiresAnAsset() {
-        try {
-            getArchive().add((Asset) null, "/Test.properties");
-            fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
-            // success
-        }
+        getArchive().add((Asset) null, "/Test.properties");
     }
 
     @Test
@@ -168,15 +154,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         assertTrue("Asset should be placed on " + expectedPath.get(), getArchive().contains(expectedPath));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void ensureAddingAnAssetWithNameRequiresThePathAttributeAsAnArchive() {
-        final String name = "test.properties";
-        final Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
-        try {
-            getArchive().add(asset, (ArchivePath) null, name);
-            fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
-        }
+        getArchive().add(new ClassLoaderAsset(NAME_TEST_PROPERTIES), (ArchivePath) null, "test.properties");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -184,26 +164,14 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         getArchive().add(EmptyAsset.INSTANCE, (String) null, "childPath");
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void ensureAddingAnAssetWithNameRequiresTheNameAttribute() {
-        final ArchivePath path = new BasicPath("/", "Test.properties");
-        final String resource = NAME_TEST_PROPERTIES;
-        try {
-            getArchive().add(new ClassLoaderAsset(resource), path, null);
-            fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
-        }
+        getArchive().add(new ClassLoaderAsset(NAME_TEST_PROPERTIES), new BasicPath("/", "Test.properties"), null);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void ensureAddingAnAssetWithNameRequiresTheAssetAttribute() {
-        final String name = "test.properties";
-        final ArchivePath path = new BasicPath("/", "Test.properties");
-        try {
-            getArchive().add(null, path, name);
-            fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
-        }
+        getArchive().add(null, new BasicPath("/", "Test.properties"), "test.properties");
     }
 
     @Test
@@ -305,13 +273,11 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     @Test(expected = IllegalArgumentException.class)
     public void ensureDeletingAnAssetRequiresAnArchivePath() {
         getArchive().delete((ArchivePath) null);
-        fail("Should have throw an IllegalArgumentException");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureDeletingAnAssetRequiresAStringPath() {
         getArchive().delete((String) null);
-        fail("Should have throw an IllegalArgumentException");
     }
 
     @Test
@@ -326,14 +292,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
             compareAssetsContent(asset, fetchedNode.getAsset()));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void ensureGetAssetRequiresAPath() {
-        try {
-            getArchive().get((ArchivePath) null);
-            fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
-            // success
-        }
+        getArchive().get((ArchivePath) null);
     }
 
     @Test
@@ -348,13 +309,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
             compareAssetsContent(asset, fetchedNode.getAsset()));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void ensureGetAssetByStringRequiresAPath() {
-        try {
-            getArchive().get((String) null);
-            fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
-        }
+        getArchive().get((String) null);
     }
 
     @Test
@@ -598,14 +555,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         assertNotNull("Should be included in content", node2);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void ensureAddingAnArchiveToAPathRequiresAnArchivePath() {
-        try {
-            getArchive().add(ShrinkWrap.create(JavaArchive.class), (ArchivePath) null, ZipExporter.class);
-            fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
-            // success
-        }
+        getArchive().add(ShrinkWrap.create(JavaArchive.class), (ArchivePath) null, ZipExporter.class);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -613,14 +565,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         getArchive().add(ShrinkWrap.create(JavaArchive.class), (String) null, ZipExporter.class);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void ensureAddingAnArchiveToAPathRequiresAnArchive() {
-        try {
             getArchive().add((Archive<?>) null, ArchivePaths.root(), ZipExporter.class);
-            fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
-            // success
-        }
     }
 
     @Test(expected = IllegalArchivePathException.class)
@@ -644,14 +591,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         getArchive().addAsDirectory("/somewhere/test.properties/test");
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void ensureMergingContentRequiresASourceArchive() {
-        try {
-            getArchive().merge(null);
-            fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
-            // success
-        }
+        getArchive().merge(null);
     }
 
     @Test
@@ -792,13 +734,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
             this.compareAssetsContent(getArchive().get(locationTwo).getAsset(), asset));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void ensureMergingContentFromAnotherArchiveRequiresAPath() {
-        try {
-            getArchive().merge(createNewArchive(), (ArchivePath) null);
-            fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
-        }
+        getArchive().merge(createNewArchive(), (ArchivePath) null);
     }
 
     @Test
