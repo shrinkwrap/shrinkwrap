@@ -79,9 +79,13 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     @After
-    public void simplePrintoutOfTheTestedArchive() {
-        System.out.println("test@jboss:/$ ls -l " + getArchive().getName());
-        System.out.println(getArchive().toString(true));
+    public void ls() {
+        ls(getArchive());
+    }
+
+    protected void ls(T archive) {
+        System.out.println("test@jboss:/$ ls -l " + (archive != null ? archive.getName() : "<null>"));
+        System.out.println(archive != null ? archive.toString(true) : "<null>");
     }
 
     @Test

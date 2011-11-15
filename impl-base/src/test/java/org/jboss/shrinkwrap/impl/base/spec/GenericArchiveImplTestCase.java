@@ -64,10 +64,10 @@ public class GenericArchiveImplTestCase extends DynamicContainerTestBase<Generic
         archive = createNewArchive();
     }
 
+    @Override
     @After
     public void ls() {
-        System.out.println("test@jboss:/$ ls -l " + archive.getName());
-        System.out.println(archive.toString(true));
+        ls(archive);
     }
 
     // -------------------------------------------------------------------------------------||
