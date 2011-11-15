@@ -51,7 +51,6 @@ import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
-import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.spi.ArchiveFormatAssociable;
@@ -809,26 +808,20 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         assertTrue(copyArchive.contains("location"));
     }
 
-    private boolean compareAssetsContent(final Asset one, final Asset two) throws IllegalArgumentException {
-        Validate.notNull(one, "Asset one must be specified");
-        Validate.notNull(two, "Asset two must be specified");
-
+    private boolean compareAssetsContent(Asset one, Asset two) {
         byte[] oneData = IOUtil.asByteArray(one.openStream());
         byte[] twoData = IOUtil.asByteArray(two.openStream());
 
         return Arrays.equals(oneData, twoData);
     }
 
-    protected static int numberOfAssetsIn(final Archive<?> archive) {
-        Validate.notNull(archive, "Archive must be specified");
-
+    protected static int numberOfAssetsIn(Archive<?> archive) {
         int assets = 0;
         for (Map.Entry<ArchivePath, Node> entry : archive.getContent().entrySet()) {
             if (entry.getValue().getAsset() != null) {
                 assets++;
             }
         }
-
         return assets;
     }
 
