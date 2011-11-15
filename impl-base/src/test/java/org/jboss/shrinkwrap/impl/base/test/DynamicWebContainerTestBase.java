@@ -89,7 +89,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
     @Test
     @ArchiveType(WebContainer.class)
     public void testSetWebXMLAsset() throws Exception {
-        getWebContainer().setWebXML(getAssetForClassResource(NAME_TEST_PROPERTIES));
+        getWebContainer().setWebXML(ASSET_1);
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), "web.xml");
         Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
@@ -152,7 +152,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
     @Test
     @ArchiveType(WebContainer.class)
     public void testAddWebResourceStringTargetAsset() throws Exception {
-        getWebContainer().addAsWebResource(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
+        getWebContainer().addAsWebResource(ASSET_1, "Test.txt");
 
         ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
         Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
@@ -188,7 +188,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
     @Test
     @ArchiveType(WebContainer.class)
     public void testAddWebResourcePathTargetAsset() throws Exception {
-        getWebContainer().addAsWebResource(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
+        getWebContainer().addAsWebResource(ASSET_1, new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
         Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
@@ -294,7 +294,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
     @Test
     @ArchiveType(WebContainer.class)
     public void testAddWebInfResourceStringTargetAsset() throws Exception {
-        getWebContainer().addAsWebInfResource(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
+        getWebContainer().addAsWebInfResource(ASSET_1, "Test.txt");
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
         Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
@@ -330,8 +330,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
     @Test
     @ArchiveType(WebContainer.class)
     public void testAddWebInfResourcePathTargetAsset() throws Exception {
-        getWebContainer()
-            .addAsWebInfResource(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
+        getWebContainer().addAsWebInfResource(ASSET_1, new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
         Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));

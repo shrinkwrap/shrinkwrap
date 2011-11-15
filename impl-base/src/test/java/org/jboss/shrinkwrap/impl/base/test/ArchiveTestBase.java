@@ -58,8 +58,8 @@ import org.junit.Test;
 public abstract class ArchiveTestBase<T extends Archive<T>> {
     public static final String NAME_TEST_PROPERTIES = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
     public static final String NAME_TEST_PROPERTIES_2 = "org/jboss/shrinkwrap/impl/base/asset/Test2.properties";
-    private static final Asset ASSET_1 = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
-    private static final Asset ASSET_2 = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
+    public static final Asset ASSET_1 = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+    public static final Asset ASSET_2 = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
 
     protected abstract T getArchive();
 
