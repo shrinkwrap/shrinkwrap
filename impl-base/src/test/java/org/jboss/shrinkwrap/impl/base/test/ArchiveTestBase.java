@@ -55,8 +55,8 @@ import org.junit.After;
 import org.junit.Test;
 
 public abstract class ArchiveTestBase<T extends Archive<T>> {
-    private static final BasicPath PATH_1 = new BasicPath("/", "test.properties");
-    private static final BasicPath PATH_2 = new BasicPath("/", "test2.properties");
+    private static final BasicPath PATH_1 = path("someFile");
+    private static final BasicPath PATH_2 = path("someOtherFile");
     public static final String NAME_TEST_PROPERTIES = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
     public static final String NAME_TEST_PROPERTIES_2 = "org/jboss/shrinkwrap/impl/base/asset/Test2.properties";
     public static final Asset ASSET_1 = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
@@ -123,14 +123,14 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     public void ensureAddingAnAssetWithANameUnderAnArchiveContextResultsInSuccessfulStorage() {
         getArchive().add(ASSET_1, ArchivePaths.root(), "test.properties");
 
-        assertTrue(getArchive().contains(new BasicPath("/", "test.properties")));
+        assertTrue(getArchive().contains(path("test.properties")));
     }
 
     @Test
     public void ensureAddingAnAssetWithANameUnderAStringContextResultsInSuccesfulStorage() {
         getArchive().add(ASSET_1, "/", "test.properties");
 
-        assertTrue(getArchive().contains(new BasicPath("/", "test.properties")));
+        assertTrue(getArchive().contains(path("test.properties")));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -451,13 +451,13 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     @Test
     public void ensureGetContentReturnsTheCorrectMapOfContentBasedOnTheGivenFilter() {
-        getArchive().add(ASSET_1, PATH_1).add(ASSET_2, PATH_2);
+        getArchive().add(ASSET_1, path("someFile")).add(ASSET_2, path("someOtherFile"));
 
-        Map<ArchivePath, Node> content = getArchive().getContent(Filters.include(".*test2.*"));
+        Map<ArchivePath, Node> content = getArchive().getContent(Filters.include(".*Other.*"));
 
         assertEquals(1, content.size());
-        assertNull(content.get(PATH_1));
-        assertNotNull(content.get(PATH_2));
+        assertNull(content.get(path("someFile")));
+        assertNotNull(content.get(path("someOtherFile")));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -477,7 +477,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     @Test(expected = IllegalArchivePathException.class)
     public void ensureThatTryingToAddAnAssetOnAnIllegalPathThrowsAnException() {
-        getArchive().add(ASSET_1, PATH_1);
+        getArchive().add(ASSET_1, new BasicPath("/", "test.properties"));
         getArchive().add(ASSET_2, ArchivePaths.create("/test.properties/somewhere"));
     }
 
@@ -494,8 +494,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     @Test
     public void ensureMergingContentFromAnotherArchiveSuccessfullyStoresAllAssets() {
-        Archive<T> sourceArchive = createNewArchive();
-        sourceArchive.add(ASSET_1, PATH_1).add(ASSET_2, PATH_2);
+        Archive<T> sourceArchive = createNewArchive().add(ASSET_1, PATH_1).add(ASSET_2, PATH_2);
 
         getArchive().merge(sourceArchive);
 
@@ -505,15 +504,12 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     @Test
     public void ensureMergingContentFromAnotherArchiveToAPathSuccessfullyStoresAllAssetsToSpecificPath() {
-        Archive<T> sourceArchive = createNewArchive();
-        sourceArchive.add(ASSET_1, PATH_1).add(ASSET_2, PATH_2);
+        Archive<T> sourceArchive = createNewArchive().add(ASSET_1, PATH_1).add(ASSET_2, PATH_2);
 
-        ArchivePath baseLocation = new BasicPath("somewhere");
+        getArchive().merge(sourceArchive, path("somewhere"));
 
-        getArchive().merge(sourceArchive, baseLocation);
-
-        ArchivePath expectedPath1 = new BasicPath(baseLocation, PATH_1);
-        ArchivePath expectedPath2 = new BasicPath(baseLocation, PATH_2);
+        ArchivePath expectedPath1 = new BasicPath(path("somewhere"), PATH_1);
+        ArchivePath expectedPath2 = new BasicPath(path("somewhere"), PATH_2);
 
         assertArrayEquals(bytes(ASSET_1), bytes(getArchive().get(expectedPath1).getAsset()));
         assertArrayEquals(bytes(ASSET_2), bytes(getArchive().get(expectedPath2).getAsset()));
@@ -521,8 +517,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     @Test
     public void ensureMergingContentFromAnotherArchiveToAStringPathSuccessfullyStoresAllAssetsToSpecificPath() {
-        Archive<T> sourceArchive = createNewArchive();
-        sourceArchive.add(ASSET_1, PATH_1).add(ASSET_2, PATH_2);
+        Archive<T> sourceArchive = createNewArchive().add(ASSET_1, PATH_1).add(ASSET_2, PATH_2);
 
         getArchive().merge(sourceArchive, "somewhere");
 
@@ -535,37 +530,32 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     @Test
     public void ensureThatTheFilterIsUsedWhenMergingOnAPath() {
-        Archive<T> sourceArchive = createNewArchive();
-        sourceArchive.add(ASSET_1, PATH_1).add(ASSET_2, PATH_2);
+        Archive<T> sourceArchive = createNewArchive().add(ASSET_1, path("someFile")).add(ASSET_2, path("someOtherFile"));
 
-        ArchivePath baseLocation = new BasicPath("somewhere");
-
-        getArchive().merge(sourceArchive, baseLocation, Filters.include(".*test2.*"));
+        getArchive().merge(sourceArchive, path("somewhere"), Filters.include(".*Other.*"));
 
         assertEquals(1, numberOfAssetsIn(getArchive()));
-        assertArrayEquals(bytes(ASSET_1), bytes(getArchive().get(new BasicPath(baseLocation, PATH_2)).getAsset()));
+        assertArrayEquals(bytes(ASSET_1), bytes(getArchive().get(new BasicPath(path("somewhere"), path("someOtherFile"))).getAsset()));
     }
 
     @Test
     public void ensureThatTheFilterIsUsedWhenMergingOnAStringPath() {
-        Archive<T> sourceArchive = createNewArchive();
-        sourceArchive.add(ASSET_1, PATH_1).add(ASSET_2, PATH_2);
+        Archive<T> sourceArchive = createNewArchive().add(ASSET_1, path("someFile")).add(ASSET_2, path("someOtherFile"));
 
-        getArchive().merge(sourceArchive, "somewhere", Filters.include(".*test2.*"));
+        getArchive().merge(sourceArchive, "somewhere", Filters.include(".*Other.*"));
 
         assertEquals(1, numberOfAssetsIn(getArchive()));
-        assertArrayEquals(bytes(ASSET_1), bytes(getArchive().get(new BasicPath("somewhere", PATH_2)).getAsset()));
+        assertArrayEquals(bytes(ASSET_1), bytes(getArchive().get(new BasicPath("somewhere", path("someOtherFile"))).getAsset()));
     }
 
     @Test
     public void ensureThatTheFilterIsUsedWhenMerging() {
-        Archive<T> sourceArchive = createNewArchive();
-        sourceArchive.add(ASSET_1, PATH_1).add(ASSET_2, PATH_2);
+        Archive<T> sourceArchive = createNewArchive().add(ASSET_1, path("someFile")).add(ASSET_2, path("someOtherFile"));
 
-        getArchive().merge(sourceArchive, Filters.include(".*test2.*"));
+        getArchive().merge(sourceArchive, Filters.include(".*Other.*"));
 
         assertEquals(1, numberOfAssetsIn(getArchive()));
-        assertArrayEquals(bytes(ASSET_1), bytes(getArchive().get(PATH_2).getAsset()));
+        assertArrayEquals(bytes(ASSET_1), bytes(getArchive().get(path("someOtherFile")).getAsset()));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -576,24 +566,20 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     @Test
     public void ensureAddingAnArchiveToAPathSuccessfullyStoresAllAssetsToSpecificPathIncludingTheArchiveName() {
         Archive<T> sourceArchive = createNewArchive();
-        ArchivePath baseLocation = new BasicPath("somewhere");
+        getArchive().add(sourceArchive, path("somewhere"), ZipExporter.class);
 
-        getArchive().add(sourceArchive, baseLocation, ZipExporter.class);
-
-        Node node = getArchive().get(new BasicPath(baseLocation, sourceArchive.getName()));
+        Node node = getArchive().get(new BasicPath(path("somewhere"), sourceArchive.getName()));
         assertTrue(node.getAsset() instanceof ArchiveAsset);
         assertEquals(sourceArchive, ArchiveAsset.class.cast(node.getAsset()).getArchive());
     }
 
     @Test
     public void ensureAnArchiveContainsAssetsFromNestedArchives() {
-        Archive<T> sourceArchive = createNewArchive();
-        sourceArchive.add(ASSET_1, PATH_1);
+        Archive<T> sourceArchive = createNewArchive().add(ASSET_1, path("test.properties"));
 
-        ArchivePath baseLocation = new BasicPath("somewhere");
-        getArchive().add(sourceArchive, baseLocation, ZipExporter.class);
+        getArchive().add(sourceArchive, path("somewhere"), ZipExporter.class);
 
-        ArchivePath archivePath = new BasicPath(baseLocation, sourceArchive.getName());
+        ArchivePath archivePath = new BasicPath(path("somewhere"), sourceArchive.getName());
         assertTrue(getArchive().contains(new BasicPath(archivePath, "test.properties")));
     }
 
@@ -607,7 +593,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         getArchive().add(nestedArchive, baseLocation, ZipExporter.class);
         nestedArchive.add(nestedNestedArchive, ArchivePaths.root(), ZipExporter.class);
-        nestedNestedArchive.add(ASSET_1, PATH_1);
+        nestedNestedArchive.add(ASSET_1, path("test.properties"));
 
         assertNotNull(getArchive().get(new BasicPath(nestedNestedArchivePath, "test.properties")).getAsset());
     }
@@ -644,6 +630,10 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
             }
         }
         return assets;
+    }
+
+    private static BasicPath path(String filename) {
+        return new BasicPath("/", filename);
     }
 
 }
