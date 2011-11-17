@@ -244,6 +244,7 @@
   <!-- Aggregate Modules -->
   <modules>
     <module>api</module>
+    <module>bom</module>
     <module>build-resources</module>
     <module>dist</module>
     <module>impl-base</module>
