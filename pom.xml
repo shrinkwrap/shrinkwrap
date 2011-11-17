@@ -245,6 +245,7 @@
     <module>api</module>
     <module>bom</module>
     <module>build-resources</module>
+    <module>depchain</module>
     <module>dist</module>
     <module>impl-base</module>
     <module>spi</module>
