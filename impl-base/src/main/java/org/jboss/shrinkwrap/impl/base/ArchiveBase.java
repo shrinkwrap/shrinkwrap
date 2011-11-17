@@ -60,7 +60,7 @@ import org.jboss.shrinkwrap.spi.Configurable;
 public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, Configurable, ArchiveFormatAssociable {
 
     // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
+    // Class Members -----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -69,7 +69,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     private static final Logger log = Logger.getLogger(ArchiveBase.class.getName());
 
     // -------------------------------------------------------------------------------------||
-    // Instance Members -------------------------------------------------------------------||
+    // Instance Members --------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -83,7 +83,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     private final Configuration configuration;
 
     // -------------------------------------------------------------------------------------||
-    // Constructor ------------------------------------------------------------------------||
+    // Constructor -------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -489,6 +489,51 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     /**
      * {@inheritDoc}
      *
+     * @see org.jboss.shrinkwrap.api.Archive#shallowCopy()
+     */
+    @Override
+    public final Archive<T> shallowCopy() {
+        // Use existing configuration
+        final Configuration configuration = this.getConfiguration();
+
+        // Create a new archive to which we'll shallow copy all assets
+        final Archive<T> from = this;
+
+        //TODO SHRINKWRAP-362
+        /*
+         * The design of this particular hack is particularly offensive:
+         *
+         * First off, we're binding this abstract parent to use a specific
+         * implementation in creating new instances.
+         *
+         * Second, there's the unchecked casting.
+         *
+         * Mostly, however, is that this "shallowCopy" issue
+         * denoted by SHRINKWRAP-353 calls into question
+         * the whole design of having ArchiveBase implement
+         * the full contract set defined by Archive.  Archive is
+         * targeted to be an end-user view; and ArchiveBase is really
+         * a set of operations for the underlying storage mechanism.  What
+         * would be much more appropriate is a contract set for Archive, and
+         * a separate contract for the underlying storage (ie. file system).
+         * To be addressed in SHRINKWRAP-362.
+         *
+         */
+        @SuppressWarnings("unchecked")
+        final Archive<T> to = Archive.class.cast(new MemoryMapArchiveImpl(configuration));
+
+        // Now loop through and add all content
+        for (final ArchivePath path : from.getContent().keySet()) {
+            to.add(from.get(path).getAsset(), path);
+        }
+
+        // Return
+        return to;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path,
      *      org.jboss.shrinkwrap.api.Filter)
      */
@@ -676,19 +721,14 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
         return configuration;
     }
 
-    // -------------------------------------------------------------------------------------||
-    // Contracts --------------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
     /**
-     * Returns the actual typed class for this instance, used in safe casting for covariant return types
-     *
+     * Exposes the actual class used in casting
      * @return
      */
     protected abstract Class<T> getActualClass();
 
     // -------------------------------------------------------------------------------------||
-    // Internal Helper Methods ------------------------------------------------------------||
+    // Internal Helper Methods -------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**

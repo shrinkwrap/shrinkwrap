@@ -58,20 +58,8 @@ public class MockArchiveImpl extends ContainerBase<MockArchive> implements MockA
     }
 
     // -------------------------------------------------------------------------------------||
-    // Required Implementations -----------------------------------------------------------||
+    // Required Implementations ------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see Archive#shallowCopy()
-     */
-    @Override
-    public MockArchiveImpl shallowCopy() {
-        MockArchiveImpl newInstance = new MockArchiveImpl(getArchive().shallowCopy());
-        ShallowCopy.shallowCopyContentTo(this, newInstance);
-        return newInstance;
-    }
 
     /**
      * {@inheritDoc}

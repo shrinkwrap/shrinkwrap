@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.ShallowCopy;
 import org.jboss.shrinkwrap.impl.base.container.ContainerBase;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
@@ -72,19 +71,6 @@ public class JavaArchiveImpl extends ContainerBase<JavaArchive> implements JavaA
      */
     public JavaArchiveImpl(final Archive<?> delegate) {
         super(JavaArchive.class, delegate);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see Archive#shallowCopy()
-     */
-    @Override
-    public JavaArchiveImpl shallowCopy() {
-        Archive<?> underlyingArchive = getArchive();
-        JavaArchiveImpl newInstance = new JavaArchiveImpl(underlyingArchive.shallowCopy());
-        ShallowCopy.shallowCopyContentTo(this, newInstance);
-        return newInstance;
     }
 
     // -------------------------------------------------------------------------------------||
