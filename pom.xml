@@ -139,7 +139,6 @@
       <!-- Release -->
       <plugin> 
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.0</version>
         <configuration>
           <autoVersionSubmodules>true</autoVersionSubmodules>
         </configuration>
