@@ -4,19 +4,14 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <!-- Parent -->
-  <parent>
-    <groupId>org.jboss.shrinkwrap</groupId>
-    <artifactId>shrinkwrap-parent</artifactId>
-    <version>1.0.0-cr-2-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
-
   <!-- Model Version -->
   <modelVersion>4.0.0</modelVersion>
 
   <!-- Artifact Configuration -->
+  <groupId>org.jboss.shrinkwrap</groupId>
   <artifactId>shrinkwrap-bom</artifactId>
+  <version>1.0.0-cr-2-SNAPSHOT</version>
+  <packaging>pom</packaging>
   <name>ShrinkWrap Bill of Materials</name>
   <description>Centralized dependencyManagement for the ShrinkWrap Project</description>
 
@@ -52,5 +47,16 @@
     </dependencies>
   
   </dependencyManagement>
+  
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.0-beta-9</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 
 </project>
