@@ -374,6 +374,22 @@ public interface ManifestContainer<T extends Archive<T>> {
     T addAsServiceProvider(Class<?> serviceInterface, Class<?>... serviceImpls) throws IllegalArgumentException;
 
     /**
+     * Adds a META-INF/services/ServiceInterfaceName {@link Asset} representing this service.
+     *
+     * @param serviceInterface
+     *            The Service Interface class name
+     * @param serviceImpls
+     *            The Service Interface Implementations class names
+     * @return This virtual archive
+     * @throws IllegalArgumentException
+     *             if serviceInterface is null
+     * @throws IllegalArgumentException
+     *             if serviceImpls is null or contain null values
+     * @see ManifestContainer#addAsServiceProvider(Class, Class...)
+     */
+    T addAsServiceProvider(String serviceInterface, String... serviceImpls);
+
+    /**
      * Adds a default generated MANIFEST.MF manifest to the current archive.
      *
      * @return This virtual archive

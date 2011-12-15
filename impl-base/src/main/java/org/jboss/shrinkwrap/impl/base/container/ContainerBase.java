@@ -857,9 +857,35 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         Validate.notNull(serviceInterface, "ServiceInterface must be specified");
         Validate.notNullAndNoNullValues(serviceImpls, "ServiceImpls must be specified and can not contain null values");
 
-        Asset asset = new ServiceProviderAsset(serviceImpls);
-        ArchivePath path = new BasicPath("services", serviceInterface.getName());
-        return addAsManifestResource(asset, path);
+        return addAsServiceProvider(serviceInterface.getName(), new ServiceProviderAsset(serviceImpls));
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addServiceProvider(java.lang.String,
+     * java.lang.String[])
+     */
+    @Override
+    public T addAsServiceProvider(String serviceInterface, String... serviceImpls) throws IllegalArgumentException {
+        Validate.notNull(serviceInterface, "ServiceInterface must be specified");
+        Validate.notNullAndNoNullValues(serviceImpls, "ServiceImpls must be specified and can not contain null values");
+
+        return addAsServiceProvider(serviceInterface, new ServiceProviderAsset(serviceImpls));
+    }
+
+    T addAsServiceProvider(String serviceInterface, ServiceProviderAsset asset)
+    {
+         return add(asset, new BasicPath(getServiceProvidersPath(), serviceInterface));
+    }
+
+    /**
+     * Returns the path to container service providers
+     *
+     * @return the path to container service providers
+     */
+    protected ArchivePath getServiceProvidersPath() {
+       return new BasicPath(getManifestPath(), "services");
     }
 
     /*

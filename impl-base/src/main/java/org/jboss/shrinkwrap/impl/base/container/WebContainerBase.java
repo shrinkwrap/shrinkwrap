@@ -29,7 +29,6 @@ import org.jboss.shrinkwrap.api.asset.UrlAsset;
 import org.jboss.shrinkwrap.api.container.WebContainer;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
-import org.jboss.shrinkwrap.impl.base.asset.ServiceProviderAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
@@ -75,13 +74,6 @@ public abstract class WebContainerBase<T extends Archive<T>> extends ContainerBa
      * @return the path to WEB-INF
      */
     protected abstract ArchivePath getWebInfPath();
-
-    /**
-     * Returns the path to web container service providers
-     *
-     * @return the path to web container service providers
-     */
-    protected abstract ArchivePath getServiceProvidersPath();
 
     /*
      * (non-Javadoc)
@@ -544,22 +536,6 @@ public abstract class WebContainerBase<T extends Archive<T>> extends ContainerBa
         final Asset resource = new ClassLoaderAsset(classloaderResourceName);
 
         return addAsWebInfResource(resource, target);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addServiceProvider(java.lang.Class,
-     * java.lang.Class<?>[])
-     */
-    @Override
-    public T addAsServiceProvider(Class<?> serviceInterface, Class<?>... serviceImpls) throws IllegalArgumentException {
-        Validate.notNull(serviceInterface, "ServiceInterface must be specified");
-        Validate.notNullAndNoNullValues(serviceImpls, "ServiceImpls must be specified and can not contain null values");
-
-        Asset asset = new ServiceProviderAsset(serviceImpls);
-        ArchivePath path = new BasicPath(getServiceProvidersPath(), serviceInterface.getName());
-        return add(asset, path);
     }
 
     /*

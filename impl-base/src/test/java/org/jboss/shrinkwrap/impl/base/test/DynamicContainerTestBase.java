@@ -16,10 +16,13 @@
  */
 package org.jboss.shrinkwrap.impl.base.test;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -37,6 +40,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Filters;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
@@ -47,6 +51,7 @@ import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -380,6 +385,55 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "services/" + DummyInterfaceForTest.class.getName());
         Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+    }
+
+    @Test
+    @ArchiveType(ManifestContainer.class)
+    public void testAddServiceProviderString() throws Exception {
+        String[] impls = {"do.not.exist.impl.Dummy1", "do.not.exist.impl.Dummy2", "do.not.exist.impl.Dummy3"};
+        String serviceInterface = "do.not.exist.api.Dummy";
+        getManifestContainer().addAsServiceProvider(serviceInterface, impls);
+
+        ArchivePath testPath = new BasicPath(getManifestPath(), "services/" + serviceInterface);
+        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+
+        assertServiceProviderContent(getArchive().get(testPath), impls);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ManifestContainer.class)
+    public void testAddServiceProviderStringInterfaceValidation() throws Exception {
+        String[] impls = {"do.not.exist.impl.Dummy1", "do.not.exist.impl.Dummy2", "do.not.exist.impl.Dummy3"};
+        getManifestContainer().addAsServiceProvider(null, impls);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ManifestContainer.class)
+    public void testAddServiceProviderStringImplementationsValidation() throws Exception {
+        getManifestContainer().addAsServiceProvider("do.not.exist.impl.Dummy1", (String[]) null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ManifestContainer.class)
+    public void testAddServiceProviderStringImplementationsValueValidation() throws Exception {
+        String[] impls = {"do.not.exist.impl.Dummy1", null};
+        getManifestContainer().addAsServiceProvider("do.not.exist.impl.Dummy", impls);
+    }
+
+    protected void assertServiceProviderContent(Node node, String[] impls) throws IOException {
+        BufferedReader reader = createReader(node.getAsset());
+        try {
+           for (String impl : impls) {
+              Assert.assertEquals("Wrong entry in service provider: " + impl, impl, reader.readLine());
+           }
+        } finally {
+           reader.close();
+        }
+    }
+
+    private BufferedReader createReader(Asset asset) {
+        InputStream openStream = asset.openStream();
+        return new BufferedReader(new InputStreamReader(openStream));
     }
 
     @Test
