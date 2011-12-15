@@ -10,7 +10,7 @@
   <!-- Artifact Configuration -->
   <groupId>org.jboss.shrinkwrap</groupId>
   <artifactId>shrinkwrap-bom</artifactId>
-  <version>1.0.0-cr-2</version>
+  <version>1.0.0-cr-3-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>ShrinkWrap Bill of Materials</name>
   <description>Centralized dependencyManagement for the ShrinkWrap Project</description> 
