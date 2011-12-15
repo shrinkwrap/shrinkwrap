@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.jboss.shrinkwrap</groupId>
     <artifactId>shrinkwrap-parent</artifactId>
-    <version>1.0.0-cr-2-SNAPSHOT</version>
+    <version>1.0.0-cr-2</version>
   </parent>
 
   <!-- Artifact Information -->
