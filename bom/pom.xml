@@ -13,8 +13,32 @@
   <version>1.0.0-cr-2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>ShrinkWrap Bill of Materials</name>
-  <description>Centralized dependencyManagement for the ShrinkWrap Project</description>
+  <description>Centralized dependencyManagement for the ShrinkWrap Project</description> 
+  <url>http://www.jboss.org/shrinkwrap</url>
 
+  <!-- Licenses -->
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <!-- SCM -->
+  <scm>
+    <connection>scm:git:git://github.com/shrinkwrap/shrinkwrap.git</connection>
+    <developerConnection>scm:git:git@github.com:shrinkwrap/shrinkwrap.git</developerConnection>
+    <url>https://github.com/shrinkwrap/shrinkwrap</url>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>jboss.org</id>
+      <name>JBoss.org Community</name>
+      <organization>JBoss.org</organization>
+      <organizationUrl>http://www.jboss.org</organizationUrl>
+    </developer>
+  </developers>
 
   <!-- Properties -->
   <properties>
