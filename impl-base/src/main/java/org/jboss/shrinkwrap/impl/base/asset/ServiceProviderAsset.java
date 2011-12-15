@@ -29,7 +29,8 @@ import org.jboss.shrinkwrap.impl.base.Validate;
  * @version $Revision: $
  */
 public class ServiceProviderAsset implements Asset {
-    private Class<?>[] providerImpls;
+
+    private final String[] providerImpls;
 
     /**
      * Creates a newline separated text file off the providerImpls class names.
@@ -40,6 +41,24 @@ public class ServiceProviderAsset implements Asset {
      *             if providerImpls is null or contain null values
      */
     public ServiceProviderAsset(Class<?>... providerImpls) {
+        Validate.notNullAndNoNullValues(providerImpls,
+            "ProviderImpls must be specified and can not contain null values");
+        String[] names = new String[providerImpls.length];
+        for (int i = 0; i < providerImpls.length; i++) {
+           names[i] = providerImpls[i].getName();
+        }
+        this.providerImpls = names;
+    }
+
+    /**
+     * Creates a newline separated text file off the providerImpls class names.
+     *
+     * @param providerImpls
+     *            The class names to use
+     * @throws IllegalArgumentException
+     *             if providerImpls is null or contain null values
+     */
+    public ServiceProviderAsset(String... providerImpls) {
         Validate.notNullAndNoNullValues(providerImpls,
             "ProviderImpls must be specified and can not contain null values");
         this.providerImpls = providerImpls;
@@ -53,8 +72,8 @@ public class ServiceProviderAsset implements Asset {
     @Override
     public InputStream openStream() {
         StringBuilder content = new StringBuilder();
-        for (Class<?> providerImpl : providerImpls) {
-            content.append(providerImpl.getName()).append('\n');
+        for (String providerImpl : providerImpls) {
+            content.append(providerImpl).append('\n');
         }
         return new ByteArrayInputStream(content.toString().getBytes());
     }

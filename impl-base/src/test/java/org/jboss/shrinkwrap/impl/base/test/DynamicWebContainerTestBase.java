@@ -22,6 +22,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.api.container.WebContainer;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -424,6 +425,48 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
         testPath = new BasicPath(webArchive.getServiceProvidersPath(), DummyInterfaceForTest.class.getName());
         Assert.assertTrue("Archive should contain " + testPath, webArchive.contains(testPath));
+    }
+
+    /**
+     * Override to handle web archive special case (service providers in WEB-INF/classes/META-INF/services)
+     *
+     * @throws Exception
+     *             if an exception occurs
+     */
+    @Test
+    @Override
+    public void testAddServiceProviderString() throws Exception {
+        String serviceInterface = "do.not.exist.api.Dummy";
+        String[] impls = {"do.not.exist.impl.Dummy1", "do.not.exist.impl.Dummy2", "do.not.exist.impl.Dummy3"};
+
+        ServiceProviderPathExposingWebArchive webArchive = new ServiceProviderPathExposingWebArchive(
+             ShrinkWrap.create(WebArchive.class));
+        webArchive.addAsServiceProvider(serviceInterface, impls);
+
+        ArchivePath testPath = new BasicPath(webArchive.getServiceProvidersPath(), "/do.not.exist.api.Dummy");
+        Assert.assertTrue("Archive should contain " + testPath, webArchive.contains(testPath));
+
+        assertServiceProviderContent(webArchive.get(testPath), impls);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @Override
+    public void testAddServiceProviderStringInterfaceValidation() throws Exception {
+        String[] impls = {"do.not.exist.impl.Dummy1", "do.not.exist.impl.Dummy2", "do.not.exist.impl.Dummy3"};
+        ShrinkWrap.create(WebArchive.class).addAsServiceProvider(null, impls);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @Override
+    public void testAddServiceProviderStringImplementationsValidation() throws Exception {
+       ShrinkWrap.create(WebArchive.class).addAsServiceProvider("do.not.exist.impl.Dummy", (String[]) null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @Override
+    public void testAddServiceProviderStringImplementationsValueValidation() throws Exception {
+        String[] impls = {"do.not.exist.impl.Dummy1", null};
+        ShrinkWrap.create(WebArchive.class).addAsServiceProvider("do.not.exist.impl.Dummy", impls);
     }
 
     /**
