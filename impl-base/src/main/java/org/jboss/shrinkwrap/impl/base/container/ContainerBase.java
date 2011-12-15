@@ -865,6 +865,22 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     /*
      * (non-Javadoc)
      *
+     * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addServiceProvider(java.lang.String,
+     * java.lang.String[])
+     */
+    @Override
+    public T addAsServiceProvider(String serviceInterface, String... serviceImpls) throws IllegalArgumentException {
+        Validate.notNull(serviceInterface, "ServiceInterface must be specified");
+        Validate.notNullAndNoNullValues(serviceImpls, "ServiceImpls must be specified and can not contain null values");
+
+        Asset asset = new ServiceProviderAsset(serviceImpls);
+        ArchivePath path = new BasicPath("services", serviceInterface);
+        return addAsManifestResource(asset, path);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see
      * org.jboss.shrinkwrap.api.container.ServiceProviderContainerContainer#addServiceProvideraddAsServiceAndClasses
      * (java.lang.Class, java.lang.Class<?>[])

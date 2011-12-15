@@ -562,6 +562,20 @@ public abstract class WebContainerBase<T extends Archive<T>> extends ContainerBa
         return add(asset, path);
     }
 
+    /* (non-Javadoc)
+    * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#addAsServiceProvider(java.lang.String, java.lang.String[])
+    */
+    @Override
+    public T addAsServiceProvider(String serviceInterface, String... serviceImpls) throws IllegalArgumentException
+    {
+        Validate.notNull(serviceInterface, "ServiceInterface must be specified");
+        Validate.notNullAndNoNullValues(serviceImpls, "ServiceImpls must be specified and can not contain null values");
+
+        Asset asset = new ServiceProviderAsset(serviceImpls);
+        ArchivePath path = new BasicPath(getServiceProvidersPath(), serviceInterface);
+        return add(asset, path);
+    }
+
     /*
      * (non-Javadoc)
      *
