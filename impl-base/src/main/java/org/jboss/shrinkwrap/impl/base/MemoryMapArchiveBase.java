@@ -16,8 +16,10 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -29,6 +31,7 @@ import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.IllegalArchivePathException;
+import org.jboss.shrinkwrap.api.Listener;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.api.asset.Asset;
@@ -61,6 +64,8 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
      * Storage for the {@link ArchiveAsset}s. Used to help get access to nested archive content.
      */
     private final Map<ArchivePath, ArchiveAsset> nestedArchives = new ConcurrentHashMap<ArchivePath, ArchiveAsset>();
+
+    private List<Listener> listeners = new ArrayList<Listener>();
 
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||
@@ -115,22 +120,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
         Validate.notNull(asset, "No asset was specified");
         Validate.notNull(path, "No path was specified");
 
-        // Check if it exists. If it doesn't, create it and add it.
-        if (!contains(path)) {
-            // Retrieve the parent
-            NodeImpl parentNode = obtainParent(path.getParent());
-
-            // Add the node to the content of the archive
-            NodeImpl node = new NodeImpl(path, asset);
-            content.put(path, node);
-
-            // Add the new node to the parent as a child
-            if (parentNode != null) {
-                parentNode.addChild(node);
-            }
-        }
-
-        return covariantReturn();
+        return addAsset(path, asset);
     }
 
     /**
@@ -185,21 +175,45 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 
         // Adjust the path to remove any trailing slash
         ArchivePath adjustedPath = new BasicPath(PathUtil.optionallyRemoveFollowingSlash(path.get()));
+        return addAsset(adjustedPath, null);
+    }
 
-        // Check if it exists. If it doesn't, create it and add it. The same with all the
-        // non-existing parents
-        if (!contains(adjustedPath)) {
-            NodeImpl node = new NodeImpl(adjustedPath);
-            content.put(adjustedPath, node);
+    private T addAsset(ArchivePath path, Asset asset) {
+       Asset listenerAsset = invokeListeners(path, asset);
 
-            // retrieve the parent and add the node as a child
-            NodeImpl parentNode = obtainParent(adjustedPath.getParent());
-            if (parentNode != null) {
-                parentNode.addChild(node);
-            }
-        }
+       // Check if it exists. If it doesn't, create it and add it.
+       if (!contains(path)) {
+          // Add the node to the content of the archive
+          NodeImpl node = new NodeImpl(path, listenerAsset);
+          content.put(path, node);
 
-        return covariantReturn();
+          // Add the new node to the parent as a child
+          NodeImpl parentNode = obtainParent(path.getParent());
+          if (parentNode != null) {
+             parentNode.addChild(node);
+          }
+       }
+       return covariantReturn();
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see org.jboss.shrinkwrap.api.Archive#addListener(org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.Listener)
+     */
+    @Override
+    public T addListeners(Listener... listeners) {
+       for (Listener listener : listeners) {
+          this.listeners.add(listener);
+       }
+       return covariantReturn();
+    }
+
+    private Asset invokeListeners(ArchivePath path, Asset asset) {
+       Asset listenerAsset = asset;
+       for (Listener listener : listeners) {
+          listenerAsset = listener.added(path, listenerAsset);
+       }
+       return listenerAsset;
     }
 
     /**

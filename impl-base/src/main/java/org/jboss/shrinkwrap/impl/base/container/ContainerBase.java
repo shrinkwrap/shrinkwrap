@@ -34,6 +34,7 @@ import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ClassLoaderSearchUtilDelegator;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
+import org.jboss.shrinkwrap.api.Listener;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
@@ -224,6 +225,19 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     public T addAsDirectory(String path) throws IllegalArgumentException {
         this.getArchive().addAsDirectory(path);
         return covarientReturn();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.Archive#addListener(org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.Listener)
+     */
+    @Override
+    public T addListeners(Listener... listeners) {
+       for (Listener listener : listeners) {
+          this.getArchive().addListeners(listener);
+       }
+       return covarientReturn();
     }
 
     /**
