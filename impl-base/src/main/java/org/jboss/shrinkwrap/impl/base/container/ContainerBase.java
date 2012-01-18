@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchiveEventHandler;
 import org.jboss.shrinkwrap.api.ArchiveFactory;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
@@ -229,6 +230,19 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     public T addAsDirectory(String path) throws IllegalArgumentException {
         this.getArchive().addAsDirectory(path);
         return covarientReturn();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.Archive#addHandlers(org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.ArchiveEventHandler)
+     */
+    @Override
+    public T addHandlers(ArchiveEventHandler... handlers) {
+       for (ArchiveEventHandler handler : handlers) {
+          this.getArchive().addHandlers(handler);
+       }
+       return covarientReturn();
     }
 
     /**
