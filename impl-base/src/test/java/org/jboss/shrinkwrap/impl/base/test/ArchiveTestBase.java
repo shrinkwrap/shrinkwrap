@@ -16,7 +16,10 @@
  */
 package org.jboss.shrinkwrap.impl.base.test;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -47,6 +50,8 @@ import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
+import org.jboss.shrinkwrap.impl.base.test.listener.ReplaceAssetListener;
+import org.jboss.shrinkwrap.impl.base.test.listener.SimpleListener;
 import org.jboss.shrinkwrap.spi.ArchiveFormatAssociable;
 import org.junit.After;
 import org.junit.Test;
@@ -363,6 +368,107 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         TestCase.assertTrue(message + path1, archive.contains(path1));
         TestCase.assertTrue(message + path2, archive.contains(path2));
         TestCase.assertTrue(message + path3, archive.contains(path3));
+    }
+
+    @Test
+    public void testListenerIsCalledWhenAddingDirectoriesWithArchivePath() throws Exception {
+        final SimpleListener simpleListener1 = new SimpleListener();
+        final SimpleListener simpleListener2 = new SimpleListener();
+        getArchive().addListeners(simpleListener1, simpleListener2);
+
+        getArchive().addAsDirectories(ArchivePaths.create("/path/to/dir1"));
+
+        Assert.assertTrue("Listener not called", simpleListener1.called);
+        Assert.assertTrue("Listener not called", simpleListener2.called);
+    }
+
+    @Test
+    public void testListenerIsCalledWhenAddingDirectoriesWithStringPath() throws Exception {
+        final SimpleListener simpleListener1 = new SimpleListener();
+        final SimpleListener simpleListener2 = new SimpleListener();
+        getArchive().addListeners(simpleListener1, simpleListener2);
+
+        getArchive().addAsDirectories("/path/to/dir1");
+
+        Assert.assertTrue("Listener not called", simpleListener1.called);
+        Assert.assertTrue("Listener not called", simpleListener2.called);
+    }
+
+    @Test
+    public void testListenerIsCalledWhenAddingAssetWithArchivePath() throws Exception {
+        final ReplaceAssetListener listener1 = new ReplaceAssetListener("unexpected");
+        final ReplaceAssetListener listener2 = new ReplaceAssetListener("EXPECTED");
+        getArchive().addListeners(listener1, listener2);
+
+        final ArchivePath path = ArchivePaths.create("/path/to/dir/test1.txt");
+        final StringAsset asset = new StringAsset("Asset content");
+        getArchive().add(asset, path);
+
+        Assert.assertEquals("Listener not called", "EXPECTED", readStringAsset(path));
+        Assert.assertEquals("Wrong asset received by listener", asset, listener1.savedAsset);
+        Assert.assertEquals("Wrong asset received by listener", listener1.returnedAsset, listener2.savedAsset);
+    }
+
+    @Test
+    public void testListenerIsCalledWhenAddingAssetWithArchivePathAndName() throws Exception {
+        final ReplaceAssetListener listener1 = new ReplaceAssetListener("unexpected");
+        final ReplaceAssetListener listener2 = new ReplaceAssetListener("EXPECTED");
+        getArchive().addListeners(listener1, listener2);
+
+        final ArchivePath path = ArchivePaths.create("/path/to/dir");
+        final StringAsset asset = new StringAsset("Original");
+        getArchive().add(asset, path, "asset.txt");
+
+        String actual = readStringAsset(ArchivePaths.create(path, "/asset.txt"));
+        Assert.assertEquals("Listener not called", "EXPECTED", actual);
+        Assert.assertEquals("Wrong asset received by listener", asset, listener1.savedAsset);
+        Assert.assertEquals("Wrong asset received by listener", listener1.returnedAsset, listener2.savedAsset);    }
+
+    @Test
+    public void testListenerIsCalledWhenAddingAssetWithtStringPathAndName() throws Exception {
+        final ReplaceAssetListener listener1 = new ReplaceAssetListener("unexpected");
+        final ReplaceAssetListener listener2 = new ReplaceAssetListener("EXPECTED");
+        getArchive().addListeners(listener1, listener2);
+
+        final ArchivePath path = ArchivePaths.create("/path/to/dir");
+        final StringAsset asset = new StringAsset("Original");
+        getArchive().add(asset, path.get(), "asset.txt");
+
+        String actual = readStringAsset(ArchivePaths.create(path, "asset.txt"));
+        Assert.assertEquals("Listener not called", "EXPECTED", actual);
+        Assert.assertEquals("Wrong asset received by listener", asset, listener1.savedAsset);
+        Assert.assertEquals("Wrong asset received by listener", listener1.returnedAsset, listener2.savedAsset);
+    }
+
+    @Test
+    public void testListenerIsCalledWhenAddingAssetWithStringPath() throws Exception {
+        final ReplaceAssetListener listener1 = new ReplaceAssetListener("unexpected");
+        final ReplaceAssetListener listener2 = new ReplaceAssetListener("EXPECTED");
+        getArchive().addListeners(listener1, listener2);
+
+        final ArchivePath path = ArchivePaths.create("/path/to/dir/test1.txt");
+        final StringAsset asset = new StringAsset("Original");
+        getArchive().add(asset, path.get());
+
+        Assert.assertEquals("Listener not called", "EXPECTED", readStringAsset(path));
+        Assert.assertEquals("Wrong asset received by listener", asset, listener1.savedAsset);
+        Assert.assertEquals("Wrong asset received by listener", listener1.returnedAsset, listener2.savedAsset);
+    }
+
+    @Test
+    public void testListenerIsCalledWhenAddingAssetWithArchivePathAndExporter() throws Exception {
+        final ReplaceAssetListener listener1 = new ReplaceAssetListener("unexpected");
+        final ReplaceAssetListener listener2 = new ReplaceAssetListener("EXPECTED");
+        getArchive().addListeners(listener1, listener2);
+
+        final ArchivePath path = ArchivePaths.create("/path/to/dir");
+        final Archive<JavaArchive> asset = ShrinkWrap
+              .create(JavaArchive.class, "asset.zip")
+              .add(new StringAsset("asset content"), "content.txt");
+        getArchive().add(asset, path, ZipExporter.class);
+
+        Assert.assertTrue("Listener not called", listener1.called);
+        Assert.assertEquals("Wrong asset received by listener", listener1.returnedAsset, listener2.savedAsset);
     }
 
     /**
@@ -1246,4 +1352,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         return assets;
     }
 
+    private String readStringAsset(final ArchivePath path) throws IOException {
+        Asset addedAsset = getArchive().get(path).getAsset();
+        return new BufferedReader(new InputStreamReader(addedAsset.openStream())).readLine();
+    }
 }
