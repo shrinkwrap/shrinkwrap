@@ -14,33 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.test.listener;
+package org.jboss.shrinkwrap.api;
 
-import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.Listener;
 import org.jboss.shrinkwrap.api.asset.Asset;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
 
-public class ReplaceAssetListener implements Listener {
+public interface Handler {
 
-   public final Asset returnedAsset;
-
-   public Asset savedAsset;
-
-   public ArchivePath savedPath;
-
-   public boolean called = false;
-
-   public ReplaceAssetListener(String assetContent) {
-      this.returnedAsset = new StringAsset(assetContent);
-   }
-
-   @Override
-   public Asset added(ArchivePath archivePath, Asset asset) {
-      this.savedAsset = asset;
-      this.savedPath = archivePath;
-      this.called = true;
-      return returnedAsset;
-   }
+    /**
+     * CallBack when a {@link Asset} is added to a specific {@link ArchivePath}.
+     *
+     * @param archivePath Where in the {@link Archive} it is being added.
+     * @param asset What is being added
+     * @return the Asset to insert into the {@link Archive}, null to not add.
+     */
+    Asset handle(ArchiveEvent event);
 
 }

@@ -14,19 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api;
+package org.jboss.shrinkwrap.impl.base.test.handler;
 
+import org.jboss.shrinkwrap.api.ArchiveEvent;
+import org.jboss.shrinkwrap.api.Handler;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
-public interface Listener {
+public class SimpleHandler implements Handler {
 
-    /**
-     * CallBack when a {@link Asset} is added to a specific {@link ArchivePath}.
-     *
-     * @param archivePath Where in the {@link Archive} it is being added.
-     * @param asset What is being added
-     * @return the Asset to insert into the {@link Archive}, null to not add.
-     */
-    Asset added(ArchivePath archivePath, Asset asset);
+   public boolean called = false;
+
+   public SimpleHandler() {
+   }
+
+   @Override
+   public Asset handle(ArchiveEvent event) {
+      called = true;
+      return event.getAsset();
+   }
 
 }

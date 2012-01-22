@@ -28,10 +28,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.ArchiveEvent;
 import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.IllegalArchivePathException;
-import org.jboss.shrinkwrap.api.Listener;
+import org.jboss.shrinkwrap.api.Handler;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.api.asset.Asset;
@@ -65,7 +66,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
      */
     private final Map<ArchivePath, ArchiveAsset> nestedArchives = new ConcurrentHashMap<ArchivePath, ArchiveAsset>();
 
-    private List<Listener> listeners = new ArrayList<Listener>();
+    private List<Handler> handlers = new ArrayList<Handler>();
 
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||
@@ -179,12 +180,12 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     }
 
     private T addAsset(ArchivePath path, Asset asset) {
-       Asset listenerAsset = invokeListeners(path, asset);
+       Asset handledAsset = invokeHandlers(path, asset);
 
        // Check if it exists. If it doesn't, create it and add it.
        if (!contains(path)) {
           // Add the node to the content of the archive
-          NodeImpl node = new NodeImpl(path, listenerAsset);
+          NodeImpl node = new NodeImpl(path, handledAsset);
           content.put(path, node);
 
           // Add the new node to the parent as a child
@@ -198,22 +199,22 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 
     /**
      * {@inheritDoc}
-     * @see org.jboss.shrinkwrap.api.Archive#addListener(org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.Listener)
+     * @see org.jboss.shrinkwrap.api.Archive#addListener(org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.Handler)
      */
     @Override
-    public T addListeners(Listener... listeners) {
-       for (Listener listener : listeners) {
-          this.listeners.add(listener);
+    public T addHandlers(Handler... handlers) {
+       for (Handler handler : handlers) {
+          this.handlers.add(handler);
        }
        return covariantReturn();
     }
 
-    private Asset invokeListeners(ArchivePath path, Asset asset) {
-       Asset listenerAsset = asset;
-       for (Listener listener : listeners) {
-          listenerAsset = listener.added(path, listenerAsset);
+    private Asset invokeHandlers(ArchivePath path, Asset asset) {
+       Asset returned = asset;
+       for (Handler handler : handlers) {
+         returned = handler.handle(new ArchiveEvent(path, returned));
        }
-       return listenerAsset;
+       return returned;
     }
 
     /**

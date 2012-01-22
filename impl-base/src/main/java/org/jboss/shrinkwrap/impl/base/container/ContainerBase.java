@@ -34,7 +34,7 @@ import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ClassLoaderSearchUtilDelegator;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
-import org.jboss.shrinkwrap.api.Listener;
+import org.jboss.shrinkwrap.api.Handler;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
@@ -230,12 +230,12 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Archive#addListener(org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.Listener)
+     * @see org.jboss.shrinkwrap.api.Archive#addHandlers(org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.Handler)
      */
     @Override
-    public T addListeners(Listener... listeners) {
-       for (Listener listener : listeners) {
-          this.getArchive().addListeners(listener);
+    public T addHandlers(Handler... handlers) {
+       for (Handler handler : handlers) {
+          this.getArchive().addHandlers(handler);
        }
        return covarientReturn();
     }

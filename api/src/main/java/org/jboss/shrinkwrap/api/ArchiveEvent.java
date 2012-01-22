@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright ${year}, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2012, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -14,23 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.test.listener;
+package org.jboss.shrinkwrap.api;
 
-import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.Listener;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
-public class SimpleListener implements Listener {
+/**
+ * @author Davide D'Alto
+ */
+public class ArchiveEvent {
 
-   public boolean called = false;
+   private final Asset asset;
+   private final ArchivePath path;
 
-   public SimpleListener() {
+   public ArchiveEvent(ArchivePath path, Asset asset) {
+      this.path = path;
+      this.asset = asset;
    }
 
-   @Override
-   public Asset added(ArchivePath archivePath, Asset asset) {
-      called = true;
+   public Asset getAsset() {
       return asset;
+   }
+
+   public ArchivePath getPath() {
+      return path;
    }
 
 }
