@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright ${year}, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2012, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -18,11 +18,11 @@ package org.jboss.shrinkwrap.impl.base.test.handler;
 
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchiveEvent;
-import org.jboss.shrinkwrap.api.Handler;
+import org.jboss.shrinkwrap.api.ArchiveEventHandler;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 
-public class ReplaceAssetHandler implements Handler {
+public class ReplaceAssetHandler implements ArchiveEventHandler {
 
    public final Asset returnedAsset;
 

@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright ${year}, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2012, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -18,13 +18,12 @@ package org.jboss.shrinkwrap.api;
 
 import org.jboss.shrinkwrap.api.asset.Asset;
 
-public interface Handler {
+public interface ArchiveEventHandler {
 
     /**
      * CallBack when a {@link Asset} is added to a specific {@link ArchivePath}.
      *
-     * @param archivePath Where in the {@link Archive} it is being added.
-     * @param asset What is being added
+     * @param event {@link ArchiveEvent} generated adding an {@link Asset}.
      * @return the Asset to insert into the {@link Archive}, null to not add.
      */
     Asset handle(ArchiveEvent event);

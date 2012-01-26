@@ -190,7 +190,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     * @param listener CallBack on add
     * @return This archive
     */
-    T addHandlers(Handler... handlers);
+    T addHandlers(ArchiveEventHandler... handlers);
 
     /**
      * Obtains the {@link Node} located at the specified path

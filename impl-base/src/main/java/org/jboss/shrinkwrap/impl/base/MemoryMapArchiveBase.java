@@ -32,7 +32,7 @@ import org.jboss.shrinkwrap.api.ArchiveEvent;
 import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.IllegalArchivePathException;
-import org.jboss.shrinkwrap.api.Handler;
+import org.jboss.shrinkwrap.api.ArchiveEventHandler;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.api.asset.Asset;
@@ -66,7 +66,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
      */
     private final Map<ArchivePath, ArchiveAsset> nestedArchives = new ConcurrentHashMap<ArchivePath, ArchiveAsset>();
 
-    private List<Handler> handlers = new ArrayList<Handler>();
+    private List<ArchiveEventHandler> handlers = new ArrayList<ArchiveEventHandler>();
 
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||
@@ -199,11 +199,11 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 
     /**
      * {@inheritDoc}
-     * @see org.jboss.shrinkwrap.api.Archive#addListener(org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.Handler)
+     * @see org.jboss.shrinkwrap.api.Archive#addListener(org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.ArchiveEventHandler)
      */
     @Override
-    public T addHandlers(Handler... handlers) {
-       for (Handler handler : handlers) {
+    public T addHandlers(ArchiveEventHandler... handlers) {
+       for (ArchiveEventHandler handler : handlers) {
           this.handlers.add(handler);
        }
        return covariantReturn();
@@ -211,7 +211,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 
     private Asset invokeHandlers(ArchivePath path, Asset asset) {
        Asset returned = asset;
-       for (Handler handler : handlers) {
+       for (ArchiveEventHandler handler : handlers) {
          returned = handler.handle(new ArchiveEvent(path, returned));
        }
        return returned;
