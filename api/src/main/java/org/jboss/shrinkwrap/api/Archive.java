@@ -185,6 +185,14 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     T addAsDirectories(ArchivePath... paths) throws IllegalArgumentException;
 
     /**
+    * Add an array of listeners for call back based.
+    *
+    * @param listener CallBack on add
+    * @return This archive
+    */
+    T addHandlers(ArchiveEventHandler... handlers);
+
+    /**
      * Obtains the {@link Node} located at the specified path
      *
      * @param path
