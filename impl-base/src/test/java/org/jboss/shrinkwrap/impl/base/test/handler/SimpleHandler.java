@@ -18,7 +18,6 @@ package org.jboss.shrinkwrap.impl.base.test.handler;
 
 import org.jboss.shrinkwrap.api.ArchiveEvent;
 import org.jboss.shrinkwrap.api.ArchiveEventHandler;
-import org.jboss.shrinkwrap.api.asset.Asset;
 
 public class SimpleHandler implements ArchiveEventHandler {
 
@@ -28,9 +27,8 @@ public class SimpleHandler implements ArchiveEventHandler {
    }
 
    @Override
-   public Asset handle(ArchiveEvent event) {
+   public void handle(ArchiveEvent event) {
       called = true;
-      return event.getAsset();
    }
 
 }

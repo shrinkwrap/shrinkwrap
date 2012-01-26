@@ -210,11 +210,11 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     }
 
     private Asset invokeHandlers(ArchivePath path, Asset asset) {
-       Asset returned = asset;
+       final ArchiveEvent event = new ArchiveEvent(path, asset);
        for (ArchiveEventHandler handler : handlers) {
-         returned = handler.handle(new ArchiveEvent(path, returned));
+         handler.handle(event);
        }
-       return returned;
+       return event.getHandledAsset();
     }
 
     /**

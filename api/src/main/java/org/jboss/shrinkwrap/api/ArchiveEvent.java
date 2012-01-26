@@ -24,11 +24,15 @@ import org.jboss.shrinkwrap.api.asset.Asset;
 public class ArchiveEvent {
 
    private final Asset asset;
+
    private final ArchivePath path;
+
+   private Asset handledAsset;
 
    public ArchiveEvent(ArchivePath path, Asset asset) {
       this.path = path;
       this.asset = asset;
+      this.handledAsset = asset;
    }
 
    public Asset getAsset() {
@@ -39,4 +43,11 @@ public class ArchiveEvent {
       return path;
    }
 
+   public Asset getHandledAsset() {
+      return handledAsset;
+   }
+
+   public void setHandledAsset(Asset handledAsset) {
+      this.handledAsset = handledAsset;
+   }
 }

@@ -24,8 +24,7 @@ public interface ArchiveEventHandler {
      * CallBack when a {@link Asset} is added to a specific {@link ArchivePath}.
      *
      * @param event {@link ArchiveEvent} generated adding an {@link Asset}.
-     * @return the Asset to insert into the {@link Archive}, null to not add.
      */
-    Asset handle(ArchiveEvent event);
+    void handle(ArchiveEvent event);
 
 }

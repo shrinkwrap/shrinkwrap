@@ -37,11 +37,11 @@ public class ReplaceAssetHandler implements ArchiveEventHandler {
    }
 
    @Override
-   public Asset handle(ArchiveEvent event) {
-      this.savedAsset = event.getAsset();
+   public void handle(ArchiveEvent event) {
+      this.savedAsset = event.getHandledAsset();
       this.savedPath = event.getPath();
       this.called = true;
-      return returnedAsset;
+      event.setHandledAsset(returnedAsset);
    }
 
 }
