@@ -1200,7 +1200,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
        final String sourcePath = "path1";
        final String targetPath = "path2";
        archive.add(EmptyAsset.INSTANCE, sourcePath);
-       archive.mv(sourcePath, targetPath);
+       archive.move(sourcePath, targetPath);
        
        Assert.assertEquals("The archive should have only one asset", 1, numAssets(archive));
        Assert.assertNotNull("The asset should be at the target path", archive.get(targetPath));
@@ -1211,7 +1211,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
        final Archive<JavaArchive> archive = ShrinkWrap.create(JavaArchive.class, "archive.jar");
        final String sourcePath = "non-existent-path1";
        final String targetPath = "path2";
-       archive.mv(sourcePath, targetPath);
+       archive.move(sourcePath, targetPath);
     }
 
     // -------------------------------------------------------------------------------------||

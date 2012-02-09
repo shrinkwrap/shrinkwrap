@@ -525,10 +525,10 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Archive#mv(org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.ArchivePath)
+     * @see org.jboss.shrinkwrap.api.Archive#move(org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.ArchivePath)
      */
     @Override
-    public T mv(ArchivePath source, ArchivePath target) throws IllegalArgumentException, IllegalArchivePathException {
+    public T move(ArchivePath source, ArchivePath target) throws IllegalArgumentException, IllegalArchivePathException {
         Validate.notNull(source, "The source path was not specified");
         Validate.notNull(target, "The target path was not specified");
 
@@ -545,17 +545,17 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Archive#mv(java.lang.String, java.lang.String)
+     * @see org.jboss.shrinkwrap.api.Archive#move(java.lang.String, java.lang.String)
      */
     @Override
-    public T mv(String source, String target) throws IllegalArgumentException, IllegalArchivePathException {
+    public T move(String source, String target) throws IllegalArgumentException, IllegalArchivePathException {
         Validate.notNullOrEmpty(source, "The source path was not specified");
         Validate.notNullOrEmpty(target, "The target path was not specified");
 
         final ArchivePath sourcePath = new BasicPath(source);
         final ArchivePath targetPath = new BasicPath(target);
 
-        return mv(sourcePath, targetPath);
+        return move(sourcePath, targetPath);
     }
 
     /**

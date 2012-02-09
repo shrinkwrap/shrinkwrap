@@ -497,7 +497,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * @throws IllegalArchivePathException
      *             If the source path is invalid.
      */
-    T mv(ArchivePath source, ArchivePath target) throws IllegalArgumentException, IllegalArchivePathException;
+    T move(ArchivePath source, ArchivePath target) throws IllegalArgumentException, IllegalArchivePathException;
 
     /**
      * Moves the asset under the source path to the target path.
@@ -512,7 +512,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * @throws IllegalArchivePathException
      *             If the source path is invalid.
      */
-    T mv(String source, String target) throws IllegalArgumentException, IllegalArchivePathException;
+    T move(String source, String target) throws IllegalArgumentException, IllegalArchivePathException;
 
     /**
      * Acts as a shorthand for {@link Archive#toString(Formatter)} where the {@link Formatters#SIMPLE} is leveraged.

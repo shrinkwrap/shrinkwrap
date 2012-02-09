@@ -300,22 +300,22 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Archive#mv(org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.ArchivePath)
+     * @see org.jboss.shrinkwrap.api.Archive#move(org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.ArchivePath)
      */
     @Override
-    public T mv(ArchivePath source, ArchivePath target) throws IllegalArgumentException, IllegalArchivePathException {
-       this.getArchive().mv(source, target);
+    public T move(ArchivePath source, ArchivePath target) throws IllegalArgumentException, IllegalArchivePathException {
+       this.getArchive().move(source, target);
        return covarientReturn();
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Archive#mv(java.lang.String, java.lang.String)
+     * @see org.jboss.shrinkwrap.api.Archive#move(java.lang.String, java.lang.String)
      */
     @Override
-    public T mv(String source, String target) throws IllegalArgumentException, IllegalArchivePathException {
-       this.getArchive().mv(source, target);
+    public T move(String source, String target) throws IllegalArgumentException, IllegalArchivePathException {
+       this.getArchive().move(source, target);
        return covarientReturn();
     }
 
