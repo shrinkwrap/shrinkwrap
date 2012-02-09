@@ -34,6 +34,7 @@ import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
+import org.jboss.shrinkwrap.api.IllegalArchivePathException;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ArchiveAsset;
@@ -519,6 +520,42 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
             }
         }
         return covariantReturn();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.Archive#mv(org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.ArchivePath)
+     */
+    @Override
+    public T mv(ArchivePath source, ArchivePath target) throws IllegalArgumentException, IllegalArchivePathException {
+        Validate.notNull(source, "The source path was not specified");
+        Validate.notNull(target, "The target path was not specified");
+
+        final Node nodeToMove = get(source);
+        if (null == nodeToMove) {
+           throw new IllegalArchivePathException(source.get() + " doesn't specify any node in the archive to move");
+        }
+        add(nodeToMove.getAsset(), target);
+        delete(source);
+
+        return covariantReturn();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.Archive#mv(java.lang.String, java.lang.String)
+     */
+    @Override
+    public T mv(String source, String target) throws IllegalArgumentException, IllegalArchivePathException {
+        Validate.notNullOrEmpty(source, "The source path was not specified");
+        Validate.notNullOrEmpty(target, "The target path was not specified");
+
+        final ArchivePath sourcePath = new BasicPath(source);
+        final ArchivePath targetPath = new BasicPath(target);
+
+        return mv(sourcePath, targetPath);
     }
 
     /**
