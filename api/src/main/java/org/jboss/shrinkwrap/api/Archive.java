@@ -485,6 +485,36 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     T merge(Archive<?> source, String path, Filter<ArchivePath> filter) throws IllegalArgumentException;
 
     /**
+     * Moves the asset under the source path to the target path.
+     *
+     * @param source
+     *            The context under which to remove the assets
+     * @param target
+     *            The context under which to add the moved assets
+     * @return the resulting archive with the moved assets
+     * @throws IllegalArgumentException
+     *             If any of the paths is not specified
+     * @throws IllegalArchivePathException
+     *             If the source path is invalid.
+     */
+    T mv(ArchivePath source, ArchivePath target) throws IllegalArgumentException, IllegalArchivePathException;
+
+    /**
+     * Moves the asset under the source path to the target path.
+     *
+     * @param source
+     *            The context under which to remove the assets
+     * @param target
+     *            The context under which to add the moved assets
+     * @return the resulting archive with the moved assets
+     * @throws IllegalArgumentException
+     *             If any of the paths is not specified
+     * @throws IllegalArchivePathException
+     *             If the source path is invalid.
+     */
+    T mv(String source, String target) throws IllegalArgumentException, IllegalArchivePathException;
+
+    /**
      * Acts as a shorthand for {@link Archive#toString(Formatter)} where the {@link Formatters#SIMPLE} is leveraged.
      *
      * @return

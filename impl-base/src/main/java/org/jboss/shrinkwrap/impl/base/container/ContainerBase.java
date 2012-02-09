@@ -34,6 +34,7 @@ import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ClassLoaderSearchUtilDelegator;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
+import org.jboss.shrinkwrap.api.IllegalArchivePathException;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
@@ -294,6 +295,28 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     public T merge(final Archive<?> source, final String path) throws IllegalArgumentException {
         this.getArchive().merge(source, path);
         return covarientReturn();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.Archive#mv(org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.ArchivePath)
+     */
+    @Override
+    public T mv(ArchivePath source, ArchivePath target) throws IllegalArgumentException, IllegalArchivePathException {
+       this.getArchive().mv(source, target);
+       return covarientReturn();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.Archive#mv(java.lang.String, java.lang.String)
+     */
+    @Override
+    public T mv(String source, String target) throws IllegalArgumentException, IllegalArchivePathException {
+       this.getArchive().mv(source, target);
+       return covarientReturn();
     }
 
     /**
