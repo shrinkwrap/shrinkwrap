@@ -1194,6 +1194,30 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
             nestedNode.getAsset());
     }
 
+    @Test
+    public void ensureShallowCopyPreservesPointers() {
+        Archive<T> archive = getArchive();
+        Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+        archive.add(asset, "location");
+
+        Archive<T> copyArchive = archive.shallowCopy();
+
+        Assert.assertTrue(copyArchive.contains("location"));
+        Assert.assertSame(copyArchive.get("location").getAsset(), archive.get("location").getAsset());
+    }
+
+    @Test
+    public void ensureShallowCopyHasASeparateCollectionOfTheSamePointers() {
+        Archive<T> archive = getArchive();
+        Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+        archive.add(asset, "location");
+
+        Archive<T> copyArchive = archive.shallowCopy();
+        archive.delete("location");
+
+        Assert.assertTrue(copyArchive.contains("location"));
+    }
+
     // -------------------------------------------------------------------------------------||
     // Internal Helper Methods ------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||

@@ -64,6 +64,18 @@ public class MockArchiveImpl extends ContainerBase<MockArchive> implements MockA
     /**
      * {@inheritDoc}
      *
+     * @see Archive#shallowCopy()
+     */
+    @Override
+    public MockArchiveImpl shallowCopy() {
+        MockArchiveImpl newInstance = new MockArchiveImpl(getArchive().shallowCopy());
+        ShallowCopy.shallowCopyContentTo(this, newInstance);
+        return newInstance;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#getManifestPath()
      */
     @Override

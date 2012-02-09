@@ -457,6 +457,11 @@ public class ShrinkWrapTestCase {
         }
 
         @Override
+        public Archive<JavaArchive> shallowCopy() {
+            return this;
+        }
+
+        @Override
         protected ArchivePath getClassesPath() {
             return ArchivePaths.root();
         }
