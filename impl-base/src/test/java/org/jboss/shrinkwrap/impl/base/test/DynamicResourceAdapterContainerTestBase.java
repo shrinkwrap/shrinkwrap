@@ -54,7 +54,7 @@ public abstract class DynamicResourceAdapterContainerTestBase<T extends Archive<
     @Test
     @ArchiveType(ResourceAdapterContainer.class)
     public void testSetResourceAdapterXMLAsset() throws Exception {
-        getResourceAdapterContainer().setResourceAdapterXML(getAssetForClassResource(NAME_TEST_PROPERTIES));
+        getResourceAdapterContainer().setResourceAdapterXML(ASSET_1);
 
         ArchivePath testPath = new BasicPath(getResourceAdapterPath(), "ra.xml");
         Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));

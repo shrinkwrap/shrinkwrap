@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
+import org.jboss.shrinkwrap.impl.base.ShallowCopy;
 import org.jboss.shrinkwrap.impl.base.container.EnterpriseContainerBase;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
@@ -75,6 +76,18 @@ public class EnterpriseArchiveImpl extends EnterpriseContainerBase<EnterpriseArc
      */
     public EnterpriseArchiveImpl(final Archive<?> delegate) {
         super(EnterpriseArchive.class, delegate);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Archive#shallowCopy()
+     */
+    @Override
+    public EnterpriseArchiveImpl shallowCopy() {
+        EnterpriseArchiveImpl newInstance = new EnterpriseArchiveImpl(getArchive().shallowCopy());
+        ShallowCopy.shallowCopyContentTo(this, newInstance);
+        return newInstance;
     }
 
     // -------------------------------------------------------------------------------------||

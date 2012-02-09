@@ -28,8 +28,6 @@ import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.impl.base.GenericArchiveImpl;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicContainerTestBase;
-import org.junit.After;
-import org.junit.Before;
 
 /**
  * Test case to ensure that the {@link GenericArchiveImpl} is working as contracted
@@ -50,37 +48,8 @@ public class GenericArchiveImplTestCase extends DynamicContainerTestBase<Generic
         GenericArchive.class.getSimpleName() + " does not support container spec paths.");
 
     // -------------------------------------------------------------------------------------||
-    // Instance Members -------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    private GenericArchive archive;
-
-    // -------------------------------------------------------------------------------------||
-    // Lifecycle Methods ------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    @Before
-    public void createArchive() {
-        archive = createNewArchive();
-    }
-
-    @After
-    public void ls() {
-        System.out.println("test@jboss:/$ ls -l " + archive.getName());
-        System.out.println(archive.toString(true));
-    }
-
-    // -------------------------------------------------------------------------------------||
     // Required Impls - ArchiveTestBase ---------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    /**
-     * Return the archive to super class
-     */
-    @Override
-    protected GenericArchive getArchive() {
-        return archive;
-    }
 
     /**
      * Create a new JavaArchive instance

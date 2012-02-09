@@ -28,8 +28,6 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicContainerTestBase;
-import org.junit.After;
-import org.junit.Before;
 
 /**
  * JavaArchiveImplTestCase
@@ -49,37 +47,8 @@ public class JavaArchiveImplTestCase extends DynamicContainerTestBase<JavaArchiv
     private static final ArchivePath PATH_RESOURCE = new BasicPath();
 
     // -------------------------------------------------------------------------------------||
-    // Instance Members -------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    private JavaArchive archive;
-
-    // -------------------------------------------------------------------------------------||
-    // Lifecycle Methods ------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    @Before
-    public void createArchive() {
-        archive = createNewArchive();
-    }
-
-    @After
-    public void ls() {
-        System.out.println("test@jboss:/$ ls -l " + archive.getName());
-        System.out.println(archive.toString(true));
-    }
-
-    // -------------------------------------------------------------------------------------||
     // Required Impls - ArchiveTestBase ---------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    /**
-     * Return the archive to super class
-     */
-    @Override
-    protected JavaArchive getArchive() {
-        return archive;
-    }
 
     /**
      * Create a new JavaArchive instance

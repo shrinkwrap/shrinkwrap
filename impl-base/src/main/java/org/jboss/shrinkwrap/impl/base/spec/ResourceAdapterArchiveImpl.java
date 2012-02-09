@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
+import org.jboss.shrinkwrap.impl.base.ShallowCopy;
 import org.jboss.shrinkwrap.impl.base.container.ResourceAdapterContainerBase;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
@@ -66,6 +67,18 @@ public class ResourceAdapterArchiveImpl extends ResourceAdapterContainerBase<Res
      */
     public ResourceAdapterArchiveImpl(final Archive<?> delegate) {
         super(ResourceAdapterArchive.class, delegate);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Archive#shallowCopy()
+     */
+    @Override
+    public ResourceAdapterArchiveImpl shallowCopy() {
+        ResourceAdapterArchiveImpl newInstance = new ResourceAdapterArchiveImpl(getArchive().shallowCopy());
+        ShallowCopy.shallowCopyContentTo(this, newInstance);
+        return newInstance;
     }
 
     // -------------------------------------------------------------------------------------||
