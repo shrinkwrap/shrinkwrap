@@ -26,13 +26,14 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchiveEvent;
+import org.jboss.shrinkwrap.api.ArchiveEventHandler;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.ArchiveEvent;
 import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.IllegalArchivePathException;
-import org.jboss.shrinkwrap.api.ArchiveEventHandler;
+import org.jboss.shrinkwrap.api.IllegalOverwriteException;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.api.asset.Asset;
@@ -193,6 +194,16 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
           if (parentNode != null) {
              parentNode.addChild(node);
           }
+       } else {
+           // Get the Node
+           final Node node = this.get(path);
+
+           // Only disallow if we're not dealing with a directory
+           if (node.getAsset() != null) {
+               // Path exists, throw an exception
+               throw new IllegalOverwriteException("Cannot add requested path " + path.get() + " to archive "
+                   + this.getName() + "; path already exists");
+           }
        }
        return covariantReturn();
     }

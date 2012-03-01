@@ -35,15 +35,19 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Filters;
+import org.jboss.shrinkwrap.api.IllegalOverwriteException;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
@@ -51,7 +55,6 @@ import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -1510,6 +1513,30 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         Assert.assertEquals("Zip Entry '.svn/' Not A Directory", true, entry.isDirectory());
         zis.closeEntry();
         zis.close();
+    }
+
+    /**
+     * SHRINKWRAP-329
+     */
+    @Test
+    public void addDuplicateResourceThrowsIllegalOverwriteException() {
+        // Create the new archive
+        final Archive<?> archive = createNewArchive();
+
+        // Put in an asset
+        final ArchivePath path = ArchivePaths.create("testPath");
+        archive.add(EmptyAsset.INSTANCE, path);
+
+        // Now try again with a new asset, and this should fail
+        try {
+            archive.add(new StringAsset("failContent"), path);
+        } catch (final IllegalOverwriteException ioe) {
+            // Good
+            return;
+        }
+
+        // Fail us
+        TestCase.fail("Expected " + IllegalOverwriteException.class.getName() + " not received");
     }
 
     private void assertNotContainsClass(ArchivePath notExpectedPath) {
