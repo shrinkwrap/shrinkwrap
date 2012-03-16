@@ -264,17 +264,42 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     @Override
     public Node delete(ArchivePath path) {
         Validate.notNull(path, "No path was specified");
+        ArchivePath safePath = path;
 
-        final Node node = content.get(path);
+        NodeImpl node = content.get(safePath);
         if (node == null) {
-            return null;
+            if (path.get().endsWith("/")) {
+                safePath = ArchivePaths.create(path.get().substring(0, path.get().length() - 1));
+                node = content.get(safePath);
+            }
+            if (node == null) {
+                return null;
+            }
         }
 
+        return removeNodeRecursively(node, safePath);
+    }
+
+    /**
+     * Removes the specified node and its associated children from the contents
+     * of this archive.
+     *
+     * @param node the node to remove recursively
+     * @param path the path denoting the specified node
+     * @return the removed node itself
+     */
+    private Node removeNodeRecursively(final NodeImpl node, final ArchivePath path) {
         final NodeImpl parentNode = content.get(path.getParent());
         if (parentNode != null) {
             parentNode.removeChild(node);
         }
-
+        // Recursively delete children if present
+        if (node.getChildren() != null) {
+            for (Node child : node.getChildren()) {
+                node.removeChild(child);
+                content.remove(child.getPath());
+            }
+        }
         return content.remove(path);
     }
 

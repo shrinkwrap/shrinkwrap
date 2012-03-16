@@ -1538,6 +1538,42 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         // Fail us
         TestCase.fail("Expected " + IllegalOverwriteException.class.getName() + " not received");
     }
+     
+    /**`
+     * Reproduces a bug within Archive.contains, discovered in SHRINKWRAP-348
+     */
+    @Test
+    @ArchiveType(LibraryContainer.class)
+    public void containsShouldReturnFalseWhenParentNodeHasBeenDeleted() {
+        Archive<?> archive = createNewArchive();
+        final String archivePath = "WEB-INF/classes/org/drools/guvnor/gwtutil/";
+        final String file = archivePath + "file";
+
+        archive.add(EmptyAsset.INSTANCE, ArchivePaths.create(file));
+        Assert.assertTrue(archive.contains(file));
+
+        archive.delete(ArchivePaths.create("WEB-INF/classes/org/drools/guvnor/gwtutil"));
+        Assert.assertFalse(archive.contains(ArchivePaths.create(archivePath)));
+        Assert.assertFalse(archive.contains(ArchivePaths.create(file)));
+    }
+
+    /**
+     * Reproduces the behaviour described in SHRINKWRAP-348
+     */
+    @Test
+    @ArchiveType(LibraryContainer.class)
+    public void shouldDeleteArchivePathWithTrailingSlash() {
+        Archive<?> archive = createNewArchive();
+        final String archivePath = "WEB-INF/classes/org/drools/guvnor/gwtutil/";
+        final String file = archivePath + "file";
+
+        archive.add(EmptyAsset.INSTANCE, ArchivePaths.create(file));
+        Assert.assertTrue(archive.contains(file));
+
+        archive.delete(ArchivePaths.create(archivePath));
+        Assert.assertFalse(archive.contains(ArchivePaths.create(archivePath)));
+        Assert.assertFalse(archive.contains(ArchivePaths.create(file)));
+    }
 
     private void assertNotContainsClass(ArchivePath notExpectedPath) {
         Assert.assertFalse("Located unexpected class at " + notExpectedPath.get(),
