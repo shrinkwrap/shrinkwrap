@@ -40,6 +40,7 @@ import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
@@ -1456,6 +1457,42 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         Assert.assertEquals("Zip Entry '.svn/' Not A Directory", true, entry.isDirectory());
         zis.closeEntry();
         zis.close();
+    }
+
+    /**
+     * Reproduces a bug within Archive.contains, discovered in SHRINKWRAP-348
+     */
+    @Test
+    @ArchiveType(LibraryContainer.class)
+    public void containsShouldReturnFalseWhenParentNodeHasBeenDeleted() {
+        Archive<?> archive = createNewArchive();
+        final String archivePath = "WEB-INF/classes/org/drools/guvnor/gwtutil/";
+        final String file = archivePath + "file";
+
+        archive.add(EmptyAsset.INSTANCE, ArchivePaths.create(file));
+        Assert.assertTrue(archive.contains(file));
+
+        archive.delete(ArchivePaths.create("WEB-INF/classes/org/drools/guvnor/gwtutil"));
+        Assert.assertFalse(archive.contains(ArchivePaths.create(archivePath)));
+        Assert.assertFalse(archive.contains(ArchivePaths.create(file)));
+    }
+
+    /**
+     * Reproduces the behaviour described in SHRINKWRAP-348
+     */
+    @Test
+    @ArchiveType(LibraryContainer.class)
+    public void shouldDeleteArchivePathWithTrailingSlash() {
+        Archive<?> archive = createNewArchive();
+        final String archivePath = "WEB-INF/classes/org/drools/guvnor/gwtutil/";
+        final String file = archivePath + "file";
+
+        archive.add(EmptyAsset.INSTANCE, ArchivePaths.create(file));
+        Assert.assertTrue(archive.contains(file));
+
+        archive.delete(ArchivePaths.create(archivePath));
+        Assert.assertFalse(archive.contains(ArchivePaths.create(archivePath)));
+        Assert.assertFalse(archive.contains(ArchivePaths.create(file)));
     }
 
     private void assertNotContainsClass(ArchivePath notExpectedPath) {
