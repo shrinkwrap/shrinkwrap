@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.api.classloader;
 
 import java.io.Closeable;
 import java.io.FileNotFoundException;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -40,6 +41,7 @@ import org.jboss.shrinkwrap.api.asset.Asset;
  *
  * @author <a href="mailto:aslak@redhat.com">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
     // -------------------------------------------------------------------------------------||
@@ -130,7 +132,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
                             if (node == null) {
                                 // We've asked for a path that doesn't exist
                                 throw new FileNotFoundException("Requested path: " + path + " does not exist in "
-                                    + archive.toString());
+                                        + archive.toString());
                             }
 
                             final Asset asset = node.getAsset();
@@ -145,7 +147,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
                             synchronized (this) {
                                 openedStreams.add(input);
                             }
-                            return input;
+                            return new InputStreamWrapper(input);
 
                         }
 
@@ -173,6 +175,19 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
                 }
             }
             openedStreams.clear();
+        }
+    }
+
+    private class InputStreamWrapper extends FilterInputStream {
+        private InputStreamWrapper(InputStream delegate) {
+            super(delegate);
+        }
+
+        public void close() throws IOException {
+            synchronized (this) {
+                openedStreams.remove(in);
+            }
+            super.close();
         }
     }
 }
