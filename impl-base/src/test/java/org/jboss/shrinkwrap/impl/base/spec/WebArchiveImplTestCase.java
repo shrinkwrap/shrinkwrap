@@ -16,6 +16,8 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
+import junit.framework.Assert;
+
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -26,11 +28,15 @@ import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ResourceContainer;
 import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.api.container.WebContainer;
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicWebContainerTestBase;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  * WebArchiveImplTestCase
@@ -83,6 +89,11 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
     // -------------------------------------------------------------------------------------||
     // Required Impls - ArchiveTestBase ---------------------------------------------------||
     // -------------------------------------------------------------------------------------||
+
+    @Override
+    protected Class<WebArchive> getExpectedArchiveType() {
+        return WebArchive.class;
+    }
 
     @Override
     protected WebArchive getArchive() {

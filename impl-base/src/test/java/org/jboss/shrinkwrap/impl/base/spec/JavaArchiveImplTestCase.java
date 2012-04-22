@@ -73,6 +73,10 @@ public class JavaArchiveImplTestCase extends DynamicContainerTestBase<JavaArchiv
     // Required Impls - ArchiveTestBase ---------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
+    protected Class<JavaArchive> getExpectedArchiveType() {
+        return JavaArchive.class;
+    }
+
     /**
      * Return the archive to super class
      */

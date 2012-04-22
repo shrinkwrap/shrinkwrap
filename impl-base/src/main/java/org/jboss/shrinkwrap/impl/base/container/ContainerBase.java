@@ -479,6 +479,16 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     /**
      * {@inheritDoc}
      *
+     * @see org.jboss.shrinkwrap.api.Archive#isOfType(java.lang.Class)
+     */
+    @Override
+    public boolean isOfType(Class<? extends Archive<?>> archiveType) {
+        return this.getArchive().isOfType(archiveType);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.api.Archive#getContent()
      */
     @Override

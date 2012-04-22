@@ -78,6 +78,10 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
     // Required Impls - ArchiveTestBase ---------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
+    protected Class<ResourceAdapterArchive> getExpectedArchiveType() {
+        return ResourceAdapterArchive.class;
+    }
+
     /**
      * Return the current ResourceAdapterArchive
      */

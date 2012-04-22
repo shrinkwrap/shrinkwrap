@@ -46,6 +46,7 @@ import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
@@ -54,6 +55,7 @@ import org.jboss.shrinkwrap.impl.base.test.handler.ReplaceAssetHandler;
 import org.jboss.shrinkwrap.impl.base.test.handler.SimpleHandler;
 import org.jboss.shrinkwrap.spi.ArchiveFormatAssociable;
 import org.junit.After;
+import org.junit.Assume;
 import org.junit.Test;
 
 /**
@@ -101,9 +103,17 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     protected abstract ArchiveFormat getExpectedArchiveFormat();
 
+    protected abstract Class<T> getExpectedArchiveType();
+
     // -------------------------------------------------------------------------------------||
     // Tests ------------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
+
+    @Test
+    public void shouldBeOfType() throws Exception {
+        Assume.assumeNotNull(getExpectedArchiveType()); // assume not null, e.g. MemoryMapArchive is not a type
+        Assert.assertTrue("Should be archive of type " + getExpectedArchiveType(), getArchive().isOfType(getExpectedArchiveType()));            
+    }
 
     @Test
     public void testDefaultArchiveFormatIsSet() throws Exception {

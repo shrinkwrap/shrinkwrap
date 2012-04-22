@@ -321,6 +321,14 @@ public interface Archive<T extends Archive<T>> extends Assignable {
         ArchiveFormat archiveFormat);
 
     /**
+     * Check if this Archive is of a specific type, e.g. WebArchive or EnterpriseArchive.
+     *
+     * @param archiveType The archive type to check against
+     * @return true if the default extension of the given archiveType match the extension of this archive
+     */
+    boolean isOfType(Class<? extends Archive<?>> archiveType);
+
+    /**
      * Denotes whether this archive contains a resource at the specified path
      *
      * @param path
