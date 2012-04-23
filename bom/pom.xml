@@ -61,13 +61,11 @@
         <groupId>org.jboss.shrinkwrap</groupId>
         <artifactId>shrinkwrap-spi</artifactId>
         <version>${project.version}</version>
-        <scope>runtime</scope>
       </dependency>
       <dependency>
         <groupId>org.jboss.shrinkwrap</groupId>
         <artifactId>shrinkwrap-impl-base</artifactId>
         <version>${project.version}</version>
-        <scope>runtime</scope>
       </dependency>
     </dependencies>
   
