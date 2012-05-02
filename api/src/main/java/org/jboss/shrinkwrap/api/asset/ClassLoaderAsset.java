@@ -75,6 +75,14 @@ public class ClassLoaderAsset implements Asset {
     }
 
     /**
+     * Returns the loaded resource.
+     *
+     */
+    public String getSource() {
+        return this.resourceName;
+    }
+
+    /**
      * Opens up the given resource as a stream.
      *
      */

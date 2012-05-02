@@ -71,4 +71,12 @@ public class ClassAssetTestCase {
                 IllegalArgumentException.class, e.getClass());
         }
     }
+    
+    @Test
+    public void shouldBeAbleToReturnThisClass() throws Exception {
+        final Class<?> clazz = ClassAssetTestCase.class;
+        final Asset asset = new ClassAsset(clazz);
+        
+        Assert.assertTrue(clazz.getName().equals(((ClassAsset)asset).getSource().getName()));
+    }
 }

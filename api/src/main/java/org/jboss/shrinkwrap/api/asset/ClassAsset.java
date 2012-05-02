@@ -78,6 +78,14 @@ public class ClassAsset implements Asset {
     }
 
     /**
+     * Returns the loaded class.
+     *
+     */
+    public Class<?> getSource() {
+        return clazz;
+    }
+
+    /**
      * Returns the name of the class such that it may be accessed via ClassLoader.getResource()
      *
      * @param clazz
