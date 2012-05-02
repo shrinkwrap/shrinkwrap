@@ -54,7 +54,7 @@ public class FileAsset implements Asset {
     /**
      * Opens a new FileInputStream for the given File.
      *
-     * Can throw a Runtime exception if the file has been deleted inbetween the FileResource was created and the stream
+     * Can throw a Runtime exception if the file has been deleted in between the FileResource was created and the stream
      * is opened.
      *
      * @throws RuntimeException
@@ -68,6 +68,14 @@ public class FileAsset implements Asset {
             throw new RuntimeException("Could not open file " + file, e);
         }
     }
+
+    /**
+     * Returns the loaded file.
+     *
+     */
+     public File getSource() {
+         return this.file;
+     }
 
     /**
      * {@inheritDoc}

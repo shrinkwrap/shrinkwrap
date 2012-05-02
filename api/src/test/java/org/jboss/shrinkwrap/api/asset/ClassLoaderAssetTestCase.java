@@ -78,4 +78,11 @@ public class ClassLoaderAssetTestCase {
                 IllegalArgumentException.class, e.getClass());
         }
     }
+    
+    @Test
+    public void shouldBeAbleToReturnResource() throws Exception {
+        final Asset asset = new ClassLoaderAsset(EXISTING_RESOURCE);
+        
+        Assert.assertEquals(((ClassLoaderAsset)asset).getSource(), EXISTING_RESOURCE);
+    }
 }

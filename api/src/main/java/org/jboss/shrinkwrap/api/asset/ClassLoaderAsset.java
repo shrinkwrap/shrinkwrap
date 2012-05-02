@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.api.asset;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.InputStream;
 
 /**
@@ -72,6 +73,14 @@ public class ClassLoaderAsset implements Asset {
 
         this.resourceName = resourceName;
         this.classLoader = classLoader;
+    }
+
+    /**
+     * Returns the loaded resource.
+     *
+     */
+    public String getSource() {
+        return this.resourceName;
     }
 
     /**

@@ -69,4 +69,12 @@ public class FileAssetTestCase {
                 IllegalArgumentException.class, e.getClass());
         }
     }
+    
+    @Test
+    public void shouldBeAbleToReturnFile() throws Exception {
+    	final File exitingFile = new File(EXISTING_FILE);
+    	final Asset asset = new FileAsset(exitingFile);
+    	
+        Assert.assertTrue(exitingFile.equals(((FileAsset)asset).getSource()));
+    }
 }
