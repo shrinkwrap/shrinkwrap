@@ -92,4 +92,25 @@ public class ByteArrayAssetTestCase {
         }
 
     }
+    
+    @Test
+    public void shouldBeAbleToReturnByteArray() throws Exception {
+    	// Make contents
+        final int length = 10;
+        final byte[] contents = new byte[length];
+        for (int i = 0; i < length; i++) {
+            contents[i] = (byte) i;
+        }
+
+        // Make Asset
+        final ByteArrayAsset asset = new ByteArrayAsset(contents);
+        final byte[] contentFromGetSource = asset.getSource();
+        
+        Assert.assertTrue(asset.getSource().length == contents.length);
+     
+        // Ensure the roundtrip matches the input (index number)
+        for (int i = 0; i < length; i++) {
+            Assert.assertEquals("getSource() did not equal passed in contents", i, contentFromGetSource[i]);
+        }
+    }
 }

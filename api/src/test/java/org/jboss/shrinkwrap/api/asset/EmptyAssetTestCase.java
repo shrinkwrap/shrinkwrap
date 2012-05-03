@@ -70,4 +70,13 @@ public class EmptyAssetTestCase {
 
         Assert.assertEquals("Roundtrip did not produce empty contents", 0, out.toByteArray().length);
     }
+
+    @Test
+    public void shouldBeAbleToReturnByteArray() throws Exception {
+    	// Make contents
+    	final Asset asset = EmptyAsset.INSTANCE;
+        final byte[] contentFromGetSource = ((EmptyAsset)asset).getSource();
+        
+        Assert.assertTrue(contentFromGetSource.length == 0);
+    }
 }
