@@ -67,6 +67,14 @@ public class UrlAsset implements Asset {
     }
 
     /**
+     * Returns the loaded URL.
+     *
+     */
+    public URL getSource() {
+        return url;
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @see java.lang.Object#toString()

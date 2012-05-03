@@ -68,6 +68,14 @@ public class StringAsset implements Asset {
     }
 
     /**
+     * Returns the underlying content.
+     *
+     */
+    public String getSource() {
+        return content;
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @see java.lang.Object#toString()

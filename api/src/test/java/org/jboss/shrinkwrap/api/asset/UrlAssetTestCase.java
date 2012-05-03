@@ -94,6 +94,14 @@ public class UrlAssetTestCase {
         m.invoke(mutableURL, arguments);
     }
 
+    @Test
+    public void shouldBeAbleToReturnURL() throws Exception {
+    	final URL url = getThreadContextClassLoader().getResource(EXISTING_RESOURCE);
+        final Asset asset = new UrlAsset(url);
+        
+        Assert.assertTrue(url.sameFile(((UrlAsset)asset).getSource()));
+    }
+    
     /**
      * Obtains the Thread Context ClassLoader
      */

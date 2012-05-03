@@ -101,6 +101,14 @@ public class ByteArrayAsset implements Asset {
     }
 
     /**
+     * Returns the underlying content.
+     *
+     */
+    public byte[] getSource() {
+        return content;
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @see java.lang.Object#toString()

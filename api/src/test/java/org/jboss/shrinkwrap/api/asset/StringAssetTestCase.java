@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.api.asset;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.logging.Logger;
 
 import junit.framework.Assert;
@@ -71,5 +72,13 @@ public class StringAssetTestCase {
         log.info("Roundtrip contents: " + roundtrip);
 
         Assert.assertEquals("Roundtrip did not equal passed in contents", contents, roundtrip);
+    }    
+
+    @Test
+    public void shouldBeAbleToReturnString() throws Exception {
+    	final String contents = StringAsset.class.getSimpleName();
+    	final StringAsset asset = new StringAsset(contents);
+        
+        Assert.assertTrue(contents.equals(((StringAsset)asset).getSource()));
     }
 }
