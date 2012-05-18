@@ -1,6 +1,7 @@
 package org.jboss.shrinkwrap.impl.base;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
@@ -8,6 +9,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,6 +19,17 @@ import org.junit.Test;
 public class ArchiveWriteToTestCase {
 
     private static final String TEST_ARCHIVE = "org/jboss/shrinkwrap/impl/base/importer/test.zip";
+
+    @Test
+    public void shouldBufferWritesCorrectly() throws IOException {
+        MockOutputStream outputStream = new MockOutputStream();
+        byte[] content = new byte[9202];
+        for (int i = 0; i < content.length; i++) {
+            content[i] = (i + "").getBytes()[0];
+        }
+        IOUtil.bufferedWriteWithFlush(outputStream, content);
+        Assert.assertArrayEquals("Inconsistent writes?", content, outputStream.getContents());
+    }
 
     @Test
     public void archiveWriteToShouldWriteToStream() throws Exception {
@@ -47,7 +60,7 @@ public class ArchiveWriteToTestCase {
         @Override
         public void write(final byte[] buf, final int off, final int len) {
             super.write(buf, off, len);
-            for (int i = off; i < len; i = i + 1) {
+            for (int i = off; i < off + len; i = i + 1) {
                 contents.add(buf[i]);
             }
         }

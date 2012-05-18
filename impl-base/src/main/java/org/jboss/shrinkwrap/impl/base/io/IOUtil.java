@@ -156,11 +156,11 @@ public final class IOUtil {
     public static void bufferedWriteWithFlush(final OutputStream output, final byte[] content) throws IOException {
         final int size = 4096;
         int offset = 0;
-        while (content.length - (offset + size) > size) {
-            output.write(content, offset, offset + size);
+        while (content.length - offset > size) {
+            output.write(content, offset, size);
             offset += size;
         }
-        output.write(content, offset, content.length);
+        output.write(content, offset, content.length - offset);
         output.flush();
     }
 
