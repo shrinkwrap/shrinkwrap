@@ -82,7 +82,7 @@ public class PathUtilTestCase {
     public void testPrependSlash() {
         log.info("testRemovePrecedingSlash");
         final String noPrecedingSlash = "test/something";
-        final String expected = PathUtil.SLASH + noPrecedingSlash;
+        final String expected = ArchivePath.SEPARATOR + noPrecedingSlash;
         final String result = PathUtil.optionallyPrependSlash(noPrecedingSlash);
         Assert.assertEquals("Call to prepend a slash failed", expected, result);
     }
@@ -106,7 +106,7 @@ public class PathUtilTestCase {
     public void testAppendSlash() {
         log.info("testRemovePrecedingSlash");
         final String noFollowingSlash = "test/something";
-        final String expected = noFollowingSlash + PathUtil.SLASH;
+        final String expected = noFollowingSlash + ArchivePath.SEPARATOR;
         final String result = PathUtil.optionallyAppendSlash(noFollowingSlash);
         Assert.assertEquals("Call to append a slash failed", expected, result);
     }
@@ -130,7 +130,7 @@ public class PathUtilTestCase {
     public void testAdjustToRelativeDirectoryContext() {
         log.info("testRemovePrecedingSlash");
         final String absoulteWithoutTrailingSlash = "/test/something";
-        final String expected = absoulteWithoutTrailingSlash.substring(1) + PathUtil.SLASH;
+        final String expected = absoulteWithoutTrailingSlash.substring(1) + ArchivePath.SEPARATOR;
         final String result = PathUtil.adjustToRelativeDirectoryContext(absoulteWithoutTrailingSlash);
         Assert.assertEquals("Adjusting to relative form should strip preceding slash and append a trailing one",
             expected, result);
@@ -143,7 +143,7 @@ public class PathUtilTestCase {
     public void testAdjustToAbsoluteDirectoryContext() {
         log.info("testRemovePrecedingSlash");
         final String relativeWithoutTrailingSlash = "test/something";
-        final String expected = PathUtil.SLASH + relativeWithoutTrailingSlash + PathUtil.SLASH;
+        final String expected = ArchivePath.SEPARATOR + relativeWithoutTrailingSlash + ArchivePath.SEPARATOR;
         final String result = PathUtil.adjustToAbsoluteDirectoryContext(relativeWithoutTrailingSlash);
         Assert.assertEquals("Adjusting to absolute form should prepend preceding slash and append a trailing one",
             expected, result);
@@ -157,7 +157,7 @@ public class PathUtilTestCase {
         log.info("testComposeAbsoulteContext");
         final String base = "something";
         final String context = "somethingunder";
-        final String expected = PathUtil.SLASH + base + PathUtil.SLASH + context;
+        final String expected = ArchivePath.SEPARATOR + base + ArchivePath.SEPARATOR + context;
         final String result = PathUtil.composeAbsoluteContext(base, context);
         Assert.assertEquals("Composing an absolute context from base and context did not succeed", expected, result);
     }

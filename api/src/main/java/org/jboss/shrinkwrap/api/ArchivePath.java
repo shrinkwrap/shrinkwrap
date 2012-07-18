@@ -22,9 +22,19 @@ package org.jboss.shrinkwrap.api;
  * parent contexts, unless the path is at the root.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
- * @version $Revision: $
  */
 public interface ArchivePath extends Comparable<ArchivePath> {
+
+    /**
+     * Separator character
+     */
+    char SEPARATOR = '/';
+
+    /**
+     * Separator character as a {@link String}
+     */
+    String SEPARATOR_STRING = new Character(SEPARATOR).toString();
+
     /**
      * Obtains the context which this {@link ArchivePath} represents
      *

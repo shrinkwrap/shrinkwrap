@@ -27,18 +27,12 @@ import org.jboss.shrinkwrap.api.ArchivePath;
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
- * @version $Revision: $
  */
 public final class PathUtil {
 
     // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
+    // Class Members -----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    /**
-     * Slash character
-     */
-    public static final char SLASH = '/';
 
     /**
      * Empty String
@@ -46,7 +40,7 @@ public final class PathUtil {
     public static final String EMPTY = "";
 
     // -------------------------------------------------------------------------------------||
-    // Constructor ------------------------------------------------------------------------||
+    // Constructor -------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -57,7 +51,7 @@ public final class PathUtil {
     }
 
     // -------------------------------------------------------------------------------------||
-    // Utilities --------------------------------------------------------------------------||
+    // Utilities ---------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -179,7 +173,7 @@ public final class PathUtil {
         // If the last character is not a slash
         if (!isLastCharSlash(path)) {
             // Append
-            return path + SLASH;
+            return path + ArchivePath.SEPARATOR;
         }
 
         // Return as-is
@@ -203,7 +197,7 @@ public final class PathUtil {
         // If the first character is not a slash
         if (!isFirstCharSlash(resolved)) {
             // Prepend the slash
-            return SLASH + resolved;
+            return ArchivePath.SEPARATOR + resolved;
         }
 
         // Return as-is
@@ -226,7 +220,7 @@ public final class PathUtil {
 
         // Get the last index of "/"
         final String resolvedContext = PathUtil.optionallyRemoveFollowingSlash(path.get());
-        final int lastIndex = resolvedContext.lastIndexOf(PathUtil.SLASH);
+        final int lastIndex = resolvedContext.lastIndexOf(ArchivePath.SEPARATOR);
         // If it either doesn't occur or is the root
         if (lastIndex == -1 || (lastIndex == 0 && resolvedContext.length() == 1)) {
             // No parent present, return null
@@ -239,7 +233,7 @@ public final class PathUtil {
     }
 
     // -------------------------------------------------------------------------------------||
-    // Internal Helper Methods ------------------------------------------------------------||
+    // Internal Helper Methods -------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -250,7 +244,7 @@ public final class PathUtil {
         if (path.length() == 0) {
             return false;
         }
-        return path.charAt(0) == SLASH;
+        return path.charAt(0) == ArchivePath.SEPARATOR;
     }
 
     /**
@@ -261,7 +255,7 @@ public final class PathUtil {
         if (path.length() == 0) {
             return false;
         }
-        return path.charAt(path.length() - 1) == SLASH;
+        return path.charAt(path.length() - 1) == ArchivePath.SEPARATOR;
     }
 
     /**

@@ -63,7 +63,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>2.6</version>
+          <version>2.9.1</version>
           <configuration>
             <configLocation>code-style/checkstyle.xml</configLocation>
             <logViolationsToConsole>true</logViolationsToConsole>
@@ -151,12 +151,12 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <inherited>true</inherited>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.7</source>
+          <target>1.7</target>
           <showDeprecation>false</showDeprecation>
           <showWarnings>true</showWarnings>
           <optimize>true</optimize>
-          <compilerVersion>1.6</compilerVersion>
+          <compilerVersion>1.7</compilerVersion>
           <fork>true</fork>
           <compilerArguments>
             <source>1.5</source>
@@ -205,11 +205,11 @@
               -->
             </requireMavenVersion>
             <requireJavaVersion>
-              <version>1.6.0</version> <!-- Must be JDK6 -->
+              <version>1.7.0</version> <!-- Must be JDK7 -->
             </requireJavaVersion>
             <requireProperty>
               <property>env.JAVA_HOME</property>
-              <message>"JAVA_HOME needs to be set to compile"</message>
+              <message>"JAVA_HOME needs to be set (to Java7)"</message>
             </requireProperty>
             <requireProperty>
               <property>env.JAVA5_HOME</property>
@@ -245,11 +245,13 @@
   <!-- Aggregate Modules -->
   <modules>
     <module>api</module>
+    <module>api-nio2</module>
     <module>bom</module>
     <module>build-resources</module>
     <module>depchain</module>
     <module>dist</module>
     <module>impl-base</module>
+    <module>impl-nio2</module>
     <module>spi</module>
   </modules>
   

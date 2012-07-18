@@ -93,7 +93,7 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <!-- Run in Java5; be build with a JDK6 compiler so ensure we don't use any JDK6 libs-->
+          <!-- Run in Java5; we build with a JDK7 compiler so ensure we don't use any JDK7 libs-->
           <jvm>${env.JAVA5_HOME}/bin/java</jvm>
         </configuration>
       </plugin>

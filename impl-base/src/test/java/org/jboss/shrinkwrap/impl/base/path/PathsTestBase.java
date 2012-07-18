@@ -117,7 +117,8 @@ public abstract class PathsTestBase {
 
         // Ensure expected
         final String resolved = path.get();
-        Assert.assertEquals("Null context should resolve to root path", String.valueOf(PathUtil.SLASH), resolved);
+        Assert
+            .assertEquals("Null context should resolve to root path", String.valueOf(ArchivePath.SEPARATOR), resolved);
         log.info("null argument resolves to: " + path);
     }
 
@@ -135,7 +136,7 @@ public abstract class PathsTestBase {
 
         // Ensure expected
         final String resolved = path.get();
-        final String expected = PathUtil.SLASH + relative;
+        final String expected = ArchivePath.SEPARATOR + relative;
         Assert.assertEquals("Relative paths should resolve to absolute", expected, resolved);
         log.info("\"" + relative + "\" resolves to: " + path);
     }
@@ -178,7 +179,7 @@ public abstract class PathsTestBase {
 
         // Ensure expected
         final String resolved = path.get();
-        final String expected = PathUtil.SLASH + base + PathUtil.SLASH + context;
+        final String expected = ArchivePath.SEPARATOR + base + ArchivePath.SEPARATOR + context;
         Assert.assertEquals("Context under base should resolve to relative", expected, resolved);
         log.info("\"" + context + "\" under base " + basePath + " resolves to: " + path);
     }
@@ -201,7 +202,7 @@ public abstract class PathsTestBase {
 
         // Ensure expected
         final String resolved = path.get();
-        final String expected = PathUtil.SLASH + base + PathUtil.SLASH + context;
+        final String expected = ArchivePath.SEPARATOR + base + ArchivePath.SEPARATOR + context;
         Assert.assertEquals("Context under base should resolve to relative", expected, resolved);
         log.info("\"" + context + "\" under base " + basePath + " resolves to: " + path);
     }
@@ -224,7 +225,7 @@ public abstract class PathsTestBase {
 
         // Ensure expected
         final String resolved = path.get();
-        final String expected = PathUtil.SLASH + base + context.get();
+        final String expected = ArchivePath.SEPARATOR + base + context.get();
         Assert.assertEquals("Context under base should resolve to relative", expected, resolved);
         log.info("\"" + context + "\" under base " + base + " resolves to: " + path);
     }
@@ -247,7 +248,7 @@ public abstract class PathsTestBase {
 
         // Ensure expected
         final String resolved = path.get();
-        final String expected = PathUtil.SLASH + base + PathUtil.SLASH + context;
+        final String expected = ArchivePath.SEPARATOR + base + ArchivePath.SEPARATOR + context;
         Assert.assertEquals("Context under base should resolve to relative", expected, resolved);
         log.info("\"" + context + "\" under base \"" + base + "\" resolves to: " + path);
     }
@@ -284,7 +285,7 @@ public abstract class PathsTestBase {
 
         // Create new paths
         final String context = "context";
-        final String contextWithFollowingSlash = context + PathUtil.SLASH;
+        final String contextWithFollowingSlash = context + ArchivePath.SEPARATOR;
         final ArchivePath path1 = this.createPath(context);
         final ArchivePath path2 = this.createPath(context);
         final ArchivePath pathWithFollowingSlash = this.createPath(contextWithFollowingSlash);
