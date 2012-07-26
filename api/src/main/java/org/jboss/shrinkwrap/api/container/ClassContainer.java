@@ -208,19 +208,6 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
     T deleteClass(String fullyQualifiedClassName) throws IllegalArgumentException;
 
     /**
-     * Deletes the {@link Class}, and all member (inner) @link{Class}es, with the specified fully-qualified name, loaded by the
-     * specified {@link ClassLoader}, from the {@link Archive}.
-     *
-     * @param fullyQualifiedClassName The name of the {@link Class} to be deleted
-     * @param cl The {@link ClassLoader} used to load the Class
-     * @return This archive
-     * @throws IllegalArgumentException If no class name was specified
-     * @throws IllegalArgumentException If no {@link ClassLoader} was specified
-     * @throws IllegalArgumentException If the {@link Class} could not be loaded by the target {@link ClassLoader}
-     */
-    T deleteClass(String fullyQualifiedClassName, ClassLoader cl) throws IllegalArgumentException;
-
-    /**
      * Deletes the {@link Class}es, and all member (inner) {@link Class}es from the {@link Archive}.
      *
      * @param classes The classes to be removed from the {@link Archive}
@@ -292,7 +279,7 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
      * @param filter filter out specific classes
      * @param packages All the packages to be deleted
      * @return This archive
-     * @throws IllegalArgumentException If no packages were specified
+     * @throws IllegalArgumentException If no packages were specified or if no filter was specified
      */
     T deletePackages(boolean recursive, Filter<ArchivePath> filter, Package... packages) throws IllegalArgumentException;
 
@@ -307,7 +294,7 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
      * @param filter filter out specific classes
      * @param packages All the packages to be deleted represented by a String ("my/package")
      * @return This archive
-     * @throws IllegalArgumentException If no packages were specified
+     * @throws IllegalArgumentException If no packages were specified or if no filter was specified
      */
     T deletePackages(boolean recursive, Filter<ArchivePath> filter, String... packages) throws IllegalArgumentException;
 

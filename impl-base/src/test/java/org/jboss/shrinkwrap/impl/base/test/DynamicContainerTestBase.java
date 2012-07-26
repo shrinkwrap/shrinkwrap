@@ -40,6 +40,7 @@ import junit.framework.TestCase;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.IllegalOverwriteException;
 import org.jboss.shrinkwrap.api.Node;
@@ -1178,6 +1179,391 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             getArchive().contains(notExpectedPath2));
     }
 
+    /*
+     * Adds some exemplary classes for the delete* methods to operate on.
+     */
+    private void addExemplaryClasses() {
+        getClassContainer().addPackages(true, DummyClassA.class.getPackage(), DummyClassForTest.class.getPackage());
+        getClassContainer().addDefaultPackage();
+
+        ArchivePath classPath1 = getArchivePathFromClass(DummyClassA.class);
+        ArchivePath classPath2 = getArchivePathFromClass(DummyClassForTest.class);
+        ArchivePath classPath3 = getArchivePathFromClass(EmptyClassForFiltersTest1.class);
+
+        assertContainsClass(classPath1);
+        assertContainsClass(classPath2);
+        assertContainsClass(classPath3);
+    }
+
+    /**
+     * Returns archive patch to the private inner class. Useful when checking if all inner classes were deleted from archive.
+     *
+     * @param clazz that contains inner class
+     * @param className name of the inner class within <code>clazz</code>
+     *
+     * @return archive path
+     */
+    String getPrivInnerClassPath(final Class<?> clazz, final String className) {
+        final String innerClassPath = "/" + clazz.getName().replace(".", "/");
+        final String privInnerClassPath = innerClassPath + "$" + className;
+
+        return privInnerClassPath + ".class";
+    }
+
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testDeleteClass() {
+        addExemplaryClasses();
+
+        getClassContainer().deleteClass(DummyClassA.class);
+
+        assertNotContainsClass(getArchivePathFromClass(DummyClassA.class));
+        assertNotContainsClass(getArchivePathFromClass(DummyClassA.InnerClass.class));
+        assertNotContainsClass(getPrivInnerClassPath(DummyClassA.class, "Test"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testDeleteClassNullParam() {
+        addExemplaryClasses();
+
+        getClassContainer().deleteClass((Class<?>) null);
+
+        Assert.fail("Exception expected");
+    }
+
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testDeleteClassByFqn() {
+        addExemplaryClasses();
+
+        getClassContainer().deleteClass(DummyClassA.class.getName());
+
+        assertNotContainsClass(getArchivePathFromClass(DummyClassA.class));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testDeleteClassByFqnNullParam() {
+        addExemplaryClasses();
+
+        getClassContainer().deleteClass((String) null);
+
+        Assert.fail("Exception expected");
+    }
+
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testDeleteClasses() {
+        addExemplaryClasses();
+
+        getClassContainer().deleteClasses(DummyClassA.class, DummyClassForTest.class);
+
+        assertNotContainsClass(getArchivePathFromClass(DummyClassA.class));
+        assertNotContainsClass(getArchivePathFromClass(DummyClassForTest.class));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testDeleteClassesNullParam() {
+        addExemplaryClasses();
+
+        getClassContainer().deleteClasses((Class<?>[]) null);
+
+        Assert.fail("Exception expected");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testDeleteClassesOneClassNull() {
+        addExemplaryClasses();
+
+        getClassContainer().deleteClasses(DummyClassA.class, null, DummyClassForTest.class);
+
+        Assert.fail("Exception expected");
+    }
+
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testDeleteDefaultPackage() {
+        addExemplaryClasses();
+
+        getClassContainer().deleteDefaultPackage();
+
+        // Replace with type-safe test class within default package?
+        boolean actual = getArchive().contains("ClassInDefaultPackage.class");
+
+        Assert.assertFalse("Class from default package should not be in the archive", actual);
+    }
+
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackage() {
+        addExemplaryClasses();
+
+        getClassContainer().deletePackage(DummyClassForTest.class.getPackage());
+
+        assertNotContainsClass(getArchivePathFromClass(DummyClassForTest.class));
+        assertNotContainsClass(getArchivePathFromClass(DummyInterfaceForTest.class));
+
+        // Sub package class must not be removed
+        assertContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest1.class));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackageNullParam() {
+        addExemplaryClasses();
+
+        getClassContainer().deletePackage((Package) null);
+
+        Assert.fail("Exception expected");
+    }
+
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackageAsString() {
+        addExemplaryClasses();
+
+        getClassContainer().deletePackage(DummyClassForTest.class.getPackage().getName());
+
+        assertNotContainsClass(getArchivePathFromClass(DummyClassForTest.class));
+        assertNotContainsClass(getArchivePathFromClass(DummyInterfaceForTest.class));
+
+        // Sub package class must not be removed
+        assertContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest1.class));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackageAsStringNullParam() {
+        addExemplaryClasses();
+
+        getClassContainer().deletePackage((String) null);
+
+        Assert.fail("Exception expected");
+    }
+
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesWithoutSubpackages() {
+        addExemplaryClasses();
+
+        getClassContainer().deletePackages(false, DummyClassForTest.class.getPackage(),
+                EmptyClassForFiltersTest2.class.getPackage());
+
+        assertNotContainsClass(getArchivePathFromClass(DummyClassForTest.class));
+        assertNotContainsClass(getArchivePathFromClass(DummyInterfaceForTest.class));
+        assertNotContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest2.class));
+
+        // Sub packages, if not listed, must NOT be removed
+        assertContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest1.class));
+    }
+
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesWithSubpackages() {
+        addExemplaryClasses();
+
+        getClassContainer().deletePackages(true, DummyClassForTest.class.getPackage(),
+                EmptyClassForFiltersTest2.class.getPackage());
+
+        assertNotContainsClass(getArchivePathFromClass(DummyClassForTest.class));
+        assertNotContainsClass(getArchivePathFromClass(DummyInterfaceForTest.class));
+
+        // Sub package class must also be removed
+        assertNotContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest1.class));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesNullParam() {
+        addExemplaryClasses();
+
+        // Sub package parameter doesn't matter
+        getClassContainer().deletePackages(false, (Package[]) null);
+
+        Assert.fail("Exception expected");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesOnePackageNull() {
+        addExemplaryClasses();
+
+        // Sub package parameter doesn't matter
+        getClassContainer().deletePackages(false, DummyClassForTest.class.getPackage(), null,
+                EmptyClassForFiltersTest1.class.getPackage());
+
+        Assert.fail("Exception expected");
+    }
+
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesAsStringWithoutSubpackages() {
+        addExemplaryClasses();
+
+        getClassContainer().deletePackages(false, DummyClassForTest.class.getPackage().getName(),
+                EmptyClassForFiltersTest2.class.getPackage().getName());
+
+        assertNotContainsClass(getArchivePathFromClass(DummyClassForTest.class));
+        assertNotContainsClass(getArchivePathFromClass(DummyInterfaceForTest.class));
+        assertNotContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest2.class));
+
+        // Sub packages, if not listed, must NOT be removed
+        assertContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest1.class));
+    }
+
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesAsStringWithSubpackages() {
+        addExemplaryClasses();
+
+        getClassContainer().deletePackages(true, DummyClassForTest.class.getPackage().getName(),
+                EmptyClassForFiltersTest2.class.getPackage().getName());
+
+        assertNotContainsClass(getArchivePathFromClass(DummyClassForTest.class));
+        assertNotContainsClass(getArchivePathFromClass(DummyInterfaceForTest.class));
+
+        // Sub package class must also be removed
+        assertNotContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest1.class));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesAsStringNullParam() {
+        addExemplaryClasses();
+
+        // Sub package parameter doesn't matter
+        getClassContainer().deletePackages(false, (String[]) null);
+
+        Assert.fail("Exception expected");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesAsStringOnePackageNull() {
+        addExemplaryClasses();
+
+        // Sub package parameter doesn't matter
+        getClassContainer().deletePackages(false, DummyClassForTest.class.getPackage().getName(), null,
+                EmptyClassForFiltersTest1.class.getPackage().getName());
+
+        Assert.fail("Exception expected");
+    }
+
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesFilteredWithoutSubpackages() {
+        addExemplaryClasses();
+
+        Filter<ArchivePath> filter = Filters.include(DummyClassForTest.class);
+
+        getClassContainer().deletePackages(false, filter, DummyClassForTest.class.getPackage().getName());
+
+        assertNotContainsClass(getArchivePathFromClass(DummyClassForTest.class));
+
+        // Sub packages, if not listed, must NOT be removed
+        assertContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest1.class));
+
+        // Classes from the same package not included in the filter must NOT be removed
+        assertContainsClass(getArchivePathFromClass(DummyInterfaceForTest.class));
+    }
+
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesFilteredWithSubpackages() {
+        addExemplaryClasses();
+
+        Filter<ArchivePath> filter = Filters.include(DummyClassForTest.class);
+
+        getClassContainer().deletePackages(true, filter, DummyClassForTest.class.getPackage().getName());
+
+        assertNotContainsClass(getArchivePathFromClass(DummyClassForTest.class));
+
+        // Classes from the same (or sub-) package not included in the filter must NOT be removed
+        assertContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest1.class));
+        assertContainsClass(getArchivePathFromClass(DummyInterfaceForTest.class));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesFilteredNullFilter() {
+        addExemplaryClasses();
+
+        // Sub package and package parameters don't matter
+        getClassContainer().deletePackages(false, (Filter<ArchivePath>) null, DummyClassForTest.class.getPackage());
+
+        Assert.fail("Exception expected");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesFilteredNullPackage() {
+        addExemplaryClasses();
+
+        // Sub package and filter parameters don't matter
+        getClassContainer().deletePackages(false, Filters.includeAll(), (Package) null);
+
+        Assert.fail("Exception expected");
+    }
+
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesAsStringsFilteredWithoutSubpackages() {
+        addExemplaryClasses();
+
+        Filter<ArchivePath> filter = Filters.include(DummyClassForTest.class);
+
+        getClassContainer().deletePackages(false, filter, DummyClassForTest.class.getPackage().getName());
+
+        assertNotContainsClass(getArchivePathFromClass(DummyClassForTest.class));
+
+        // Sub packages, if not listed, must NOT be removed
+        assertContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest1.class));
+
+        // Classes from the same package not included in the filter must NOT be removed
+        assertContainsClass(getArchivePathFromClass(DummyInterfaceForTest.class));
+    }
+
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesAsStringsFilteredWithSubpackages() {
+        addExemplaryClasses();
+
+        Filter<ArchivePath> filter = Filters.include(DummyClassForTest.class);
+
+        getClassContainer().deletePackages(true, filter, DummyClassForTest.class.getPackage().getName());
+
+        assertNotContainsClass(getArchivePathFromClass(DummyClassForTest.class));
+
+        // Classes from the same (or sub-) package not included in the filter must NOT be removed
+        assertContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest1.class));
+        assertContainsClass(getArchivePathFromClass(DummyInterfaceForTest.class));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesAsStringsFilteredNullFilter() {
+        addExemplaryClasses();
+
+        // Sub package and package parameters don't matter
+        getClassContainer().deletePackages(false, (Filter<ArchivePath>) null, DummyClassForTest.class.getPackage().getName());
+
+        Assert.fail("Exception expected");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testDeletePackagesAsStringsFilteredNullPackage() {
+        addExemplaryClasses();
+
+        // Sub package and filter parameters don't matter
+        getClassContainer().deletePackages(false, Filters.includeAll(), (String[]) null);
+
+        Assert.fail("Exception expected");
+    }
+
     // -------------------------------------------------------------------------------------||
     // Test Implementations - LibraryContainer ----------------------------------------------||
     // -------------------------------------------------------------------------------------||
@@ -1538,7 +1924,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         // Fail us
         TestCase.fail("Expected " + IllegalOverwriteException.class.getName() + " not received");
     }
-     
+
     /**`
      * Reproduces a bug within Archive.contains, discovered in SHRINKWRAP-348
      */
@@ -1577,6 +1963,11 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
     private void assertNotContainsClass(ArchivePath notExpectedPath) {
         Assert.assertFalse("Located unexpected class at " + notExpectedPath.get(),
+            getArchive().contains(notExpectedPath));
+    }
+
+    private void assertNotContainsClass(String notExpectedPath) {
+        Assert.assertFalse("Located unexpected class at " + notExpectedPath,
             getArchive().contains(notExpectedPath));
     }
 
@@ -1665,5 +2056,10 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         }
 
     };
+
+
+    private ArchivePath getArchivePathFromClass(Class<?> clazz) {
+        return new BasicPath(getClassPath(), AssetUtil.getFullPathForClassResource(clazz));
+    }
 
 }

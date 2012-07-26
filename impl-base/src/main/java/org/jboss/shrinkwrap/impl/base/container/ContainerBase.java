@@ -26,6 +26,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveEventHandler;
@@ -900,6 +901,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     /**
      * {@inheritDoc}
      */
+    @Override
     public T addManifest() throws IllegalArgumentException {
         return addAsManifestResource(DEFAULT_MANIFEST, ManifestContainer.DEFAULT_MANIFEST_NAME);
     }
@@ -1238,9 +1240,8 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         Validate.notNullOrEmpty(fullyQualifiedClassName, "Fully-qualified class name must be specified");
 
         // Get this archive's CLs
-        final Archive<?> archive = this.getArchive();
-        final Iterable<ClassLoader> cls = ((Configurable) archive).getConfiguration().getClassLoaders();
-        assert cls != null : "CLs of this archive is not specified:" + archive;
+        Iterable<ClassLoader> cls = getArchiveClassLoaders();
+        assert cls != null : "CLs of this archive is not specified:" + this.getArchive();
 
         // Find the class in the configured CLs
         final Class<?> classToAdd;
@@ -1284,6 +1285,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
      *
      * @see org.jboss.declarchive.api.container.ClassContainer#addClasses(java.lang.Class<?>[])
      */
+    @Override
     public T addClasses(Class<?>... classes) throws IllegalArgumentException {
         Validate.notNull(classes, "Classes must be specified");
 
@@ -1308,6 +1310,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
                  *            The added classes
                  * @return
                  */
+                @Override
                 public boolean include(ArchivePath path) {
                     ArchivePath classArchivePath = AssetUtil.getFullPathForClassResource(clazz);
                     String expression = classArchivePath.get().replace(".class", "\\$.*");
@@ -1420,8 +1423,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         Validate.notNull(packageNames, "PackageNames must be specified");
 
         // Get the CLs for this archive
-        final Iterable<ClassLoader> classLoaders = ((Configurable) this.getArchive()).getConfiguration()
-            .getClassLoaders();
+        final Iterable<ClassLoader> classLoaders = getArchiveClassLoaders();
 
         for (String packageName : packageNames) {
             for (final ClassLoader classLoader : classLoaders) {
@@ -1463,6 +1465,192 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         scanner.scanPackage();
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.container.ClassContainer#deleteClass(java.lang.Class)
+     */
+    @Override
+    public T deleteClass(Class<?> clazz) throws IllegalArgumentException {
+        Validate.notNull(clazz, "Class must be specified");
+
+        return deleteClasses(clazz);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.container.ClassContainer#deleteClass(java.lang.String)
+     */
+    @Override
+    public T deleteClass(String fullyQualifiedClassName) throws IllegalArgumentException {
+        Validate.notNull(fullyQualifiedClassName, "Class name must be specified");
+
+        ArchivePath path = new BasicPath(getClassesPath(), AssetUtil.getFullPathForClassResource(fullyQualifiedClassName));
+
+        getArchive().delete(path);
+
+        return covarientReturn();
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.container.ClassContainer#deleteClasses(java.lang.Class<?>[])
+     */
+    @Override
+    public T deleteClasses(Class<?>... classes) throws IllegalArgumentException {
+        Validate.notNullAndNoNullValues(classes, "Classes must be specified and cannot contain null values");
+
+        for (Class<?> clazz : classes) {
+            final ArchivePath path = new BasicPath(getClassesPath(), AssetUtil.getFullPathForClassResource(clazz));
+
+            // We need to remove all the inner classes as well (if present).
+            for (ArchivePath innerPath : getInnerClasses(path)) {
+                getArchive().delete(innerPath);
+            }
+
+            // Remove the class itself.
+            getArchive().delete(path);
+        }
+
+        return covarientReturn();
+    }
+
+    private Set<ArchivePath> getInnerClasses(final ArchivePath path) {
+        Map<ArchivePath, Node> content = getContent(new Filter<ArchivePath>() {
+            @Override
+            public boolean include(ArchivePath object) {
+                String expression = path.get().replace(".class", "\\$.*");
+                final boolean matches = object.get().matches(expression);
+
+                return matches;
+            }
+        });
+
+        return content.keySet();
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.container.ClassContainer#deletePackage(java.lang.Package)
+     */
+    @Override
+    public T deletePackage(Package pack) throws IllegalArgumentException {
+        Validate.notNull(pack, "Package name must be specified");
+
+        return deletePackages(false, pack);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.container.ClassContainer#deletePackage(java.lang.String)
+     */
+    @Override
+    public T deletePackage(String pack) throws IllegalArgumentException {
+        Validate.notNull(pack, "Package name must be specified");
+
+        return deletePackages(false, pack);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.container.ClassContainer#deleteDefaultPackage()
+     */
+    @Override
+    public T deleteDefaultPackage() {
+        return deletePackage(DEFAULT_PACKAGE_NAME);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.container.ClassContainer#deletePackages(boolean, java.lang.Package[])
+     */
+    @Override
+    public T deletePackages(boolean recursive, Package... packages) throws IllegalArgumentException {
+        Validate.notNullAndNoNullValues(packages, "Packages must be specified and must not contain null values");
+
+        return deletePackages(recursive, Filters.includeAll(), packages);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.container.ClassContainer#deletePackages(boolean, java.lang.String[])
+     */
+    @Override
+    public T deletePackages(boolean recursive, String... packages) throws IllegalArgumentException {
+        Validate.notNullAndNoNullValues(packages, "Packages must be specified and must not contain null values");
+
+        return deletePackages(recursive, Filters.includeAll(), packages);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.container.ClassContainer#deletePackages(boolean, org.jboss.shrinkwrap.api.Filter,
+     * java.lang.Package[])
+     */
+    @Override
+    public T deletePackages(boolean recursive, Filter<ArchivePath> filter, Package... packages) throws IllegalArgumentException {
+        Validate.notNullAndNoNullValues(packages, "Packages must be specified and cannot contain null values");
+        Validate.notNull(filter, "Filter must be specified");
+
+        String[] packagesName = new String[packages.length];
+
+        for (int i = 0; i < packages.length; i++) {
+            // Validation for not-nullity was already done
+            packagesName[i] = packages[i].getName();
+        }
+
+        return deletePackages(recursive, filter, packagesName);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.shrinkwrap.api.container.ClassContainer#deletePackages(boolean, org.jboss.shrinkwrap.api.Filter,
+     * java.lang.String[])
+     */
+    @Override
+    public T deletePackages(boolean recursive, Filter<ArchivePath> filter, String... packages) throws IllegalArgumentException {
+        Validate.notNullAndNoNullValues(packages, "Packages must be specified and cannot contain null values");
+        Validate.notNull(filter, "Filter must be specified");
+
+        for (String packageName : packages) {
+            for (ClassLoader cl : getArchiveClassLoaders()) {
+                deletePackage(recursive, filter, packageName, cl);
+            }
+        }
+
+        return covarientReturn();
+    }
+
+    private void deletePackage(boolean recursive, final Filter<ArchivePath> filter, String packageName, ClassLoader classLoader) {
+        assert filter != null : "Filter cannot be null";
+
+        final URLPackageScanner.Callback callback = new URLPackageScanner.Callback() {
+            @Override
+            public void classFound(String className) {
+                ArchivePath classNamePath = AssetUtil.getFullPathForClassResource(className);
+
+                if (!filter.include(classNamePath)) {
+                    return;
+                }
+
+                ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
+                delete(location);
+            }
+        };
+
+        final URLPackageScanner scanner = URLPackageScanner.newInstance(recursive, classLoader, callback, packageName);
+        scanner.scanPackage();
+    }
+
     // -------------------------------------------------------------------------------------||
     // Required Implementations - LibraryContainer ----------------------------------------||
     // -------------------------------------------------------------------------------------||
@@ -1479,6 +1667,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
      *
      * @see org.jboss.shrinkwrap.api.container.LibraryContainer#addAsLibrary(org.jboss.shrinkwrap.api.Archive)
      */
+    @Override
     public T addAsLibrary(final Archive<?> archive) throws IllegalArgumentException {
         Validate.notNull(archive, "Archive must be specified");
         // Libraries are JARs, so add as ZIP
@@ -1768,6 +1957,12 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         public ClassLoader run() {
             return Thread.currentThread().getContextClassLoader();
         }
+    }
 
+    private Iterable<ClassLoader> getArchiveClassLoaders() {
+        final Archive<?> archive = getArchive();
+        final Iterable<ClassLoader> cls = ((Configurable) archive).getConfiguration().getClassLoaders();
+
+        return cls;
     }
 }
