@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +34,7 @@ import org.jboss.shrinkwrap.api.serialization.ZipSerializableView;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
+import org.jboss.shrinkwrap.spi.Identifiable;
 
 /**
  * Implementation of a {@link Serializable} view of {@link Archive}s, backed by ZIP en/decoding the contents during
@@ -67,6 +69,11 @@ public class ZipSerializableViewImpl implements ZipSerializableView {
     private final String name;
 
     /**
+     * String form of the ID
+     */
+    private transient String id;
+
+    /**
      * Underlying archive. Won't be directly serialized; instead we'll encode it as ZIP and send that
      */
     private transient Archive<?> archive;
@@ -84,6 +91,7 @@ public class ZipSerializableViewImpl implements ZipSerializableView {
         Validate.notNullOrEmpty(name, "Name of archive must be specified");
         this.archive = archive;
         this.name = name;
+        this.id = archive.getId();
     }
 
     // -------------------------------------------------------------------------------------||
@@ -117,6 +125,8 @@ public class ZipSerializableViewImpl implements ZipSerializableView {
         final InputStream in = archive.as(ZipExporter.class).exportAsInputStream();
         try {
             IOUtil.copy(in, out); // Don't close the outstream
+            // Write the ID explicitly
+            out.writeObject(id);
         } finally {
             // In case we get an InputStream type that supports closing
             in.close();
@@ -165,6 +175,23 @@ public class ZipSerializableViewImpl implements ZipSerializableView {
          * order, so they'll be added *after* the archive ZIP contents. Thus we must be able to read them.
          */
         while (in.read() != -1) {
+        }
+
+        // We've now added an ID to archives, so add this into the wire protocol
+        try {
+            final String id = (String) in.readObject();
+            this.archive.as(Identifiable.class).setId(id);
+        } catch (final OptionalDataException ode) {
+            /*
+             * Swallow; this occurs when an older wire format (without notion of ID) attempts to send an archive to a
+             * new format. The new archive will have the ID assigned to it at creation time, and we'll ignore that we
+             * can't read in the remote one from this stream (as the remote one from the old version does not have an ID
+             * to send
+             */
+            if (log.isLoggable(Level.FINER)) {
+                log.finer("Detected an older version of the archive sent over the wire; no ID was sent.  "
+                    + "Ignoring and using the default ID for this archive: " + archive.toString());
+            }
         }
 
     }

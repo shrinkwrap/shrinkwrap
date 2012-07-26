@@ -59,6 +59,13 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     String getName();
 
     /**
+     * Obtains a globally-unique identifier for this {@link Archive}
+     *
+     * @return
+     */
+    String getId();
+
+    /**
      * Adds the specified asset under the specified path into the target context
      *
      * @param target
@@ -185,11 +192,12 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     T addAsDirectories(ArchivePath... paths) throws IllegalArgumentException;
 
     /**
-    * Add an array of listeners for call back based.
-    *
-    * @param listener CallBack on add
-    * @return This archive
-    */
+     * Add an array of listeners for call back based.
+     *
+     * @param listener
+     *            CallBack on add
+     * @return This archive
+     */
     T addHandlers(ArchiveEventHandler... handlers);
 
     /**
@@ -361,7 +369,8 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     Node delete(String archivePath) throws IllegalArgumentException;
 
     /**
-     * Obtains all assets in this archive, along with their respective paths. The returned Map will be an immutable view.
+     * Obtains all assets in this archive, along with their respective paths. The returned Map will be an immutable
+     * view.
      *
      * @return
      */
@@ -527,6 +536,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      *
      * @return
      */
+    @Override
     String toString();
 
     /**

@@ -236,14 +236,15 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Archive#addHandlers(org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.ArchiveEventHandler)
+     * @see org.jboss.shrinkwrap.api.Archive#addHandlers(org.jboss.shrinkwrap.api.Filter,
+     *      org.jboss.shrinkwrap.api.ArchiveEventHandler)
      */
     @Override
     public T addHandlers(ArchiveEventHandler... handlers) {
-       for (ArchiveEventHandler handler : handlers) {
-          this.getArchive().addHandlers(handler);
-       }
-       return covarientReturn();
+        for (ArchiveEventHandler handler : handlers) {
+            this.getArchive().addHandlers(handler);
+        }
+        return covarientReturn();
     }
 
     /**
@@ -319,12 +320,13 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Archive#move(org.jboss.shrinkwrap.api.ArchivePath, org.jboss.shrinkwrap.api.ArchivePath)
+     * @see org.jboss.shrinkwrap.api.Archive#move(org.jboss.shrinkwrap.api.ArchivePath,
+     *      org.jboss.shrinkwrap.api.ArchivePath)
      */
     @Override
     public T move(ArchivePath source, ArchivePath target) throws IllegalArgumentException, IllegalArchivePathException {
-       this.getArchive().move(source, target);
-       return covarientReturn();
+        this.getArchive().move(source, target);
+        return covarientReturn();
     }
 
     /**
@@ -334,8 +336,8 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
      */
     @Override
     public T move(String source, String target) throws IllegalArgumentException, IllegalArchivePathException {
-       this.getArchive().move(source, target);
-       return covarientReturn();
+        this.getArchive().move(source, target);
+        return covarientReturn();
     }
 
     /**
@@ -509,6 +511,17 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     /**
      * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.Archive#getId()
+     */
+    @Override
+    public String getId() {
+        return this.getArchive().getId();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.api.Archive#shallowCopy()
      */
     @Override
@@ -517,7 +530,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         // using the same underlying configuration
         final Class<T> actualClass = this.getActualClass();
         final Archive<?> underlyingArchive = this.getArchive();
-        final Configuration existingConfig= ((Configurable)underlyingArchive).getConfiguration();
+        final Configuration existingConfig = ((Configurable) underlyingArchive).getConfiguration();
         final Domain domain = ShrinkWrap.createDomain(existingConfig);
         final ArchiveFactory factory = domain.getArchiveFactory();
         final Archive<T> newArchive = factory.create(actualClass, this.getName());
@@ -530,6 +543,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     /**
      * {@inheritDoc}
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -539,6 +553,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     /**
      * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.api.Archive#toString(boolean)
      */
     @Override
@@ -558,6 +573,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     /**
      * {@inheritDoc}
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -567,6 +583,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     /**
      * {@inheritDoc}
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -596,6 +613,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     /**
      * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.api.container.ManifestContainer#setManifest(java.lang.String)
      */
     @Override
@@ -606,6 +624,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     /**
      * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.api.container.ManifestContainer#setManifest(java.io.File)
      */
     @Override
@@ -616,6 +635,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     /**
      * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.api.container.ManifestContainer#setManifest(java.net.URL)
      */
     @Override
@@ -626,6 +646,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     /**
      * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.api.container.ManifestContainer#setManifest(org.jboss.shrinkwrap.api.asset.Asset)
      */
     @Override
@@ -636,6 +657,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     /**
      * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.api.container.ManifestContainer#setManifest(java.lang.Package, java.lang.String)
      */
     @Override
@@ -649,6 +671,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     /**
      * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addAsManifestResource(java.lang.String)
      */
     @Override
@@ -659,6 +682,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     /**
      * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addAsManifestResource(java.io.File)
      */
     @Override
@@ -669,7 +693,9 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     /**
      * {@inheritDoc}
-     * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addAsManifestResource(java.lang.String, java.lang.String)
+     *
+     * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addAsManifestResource(java.lang.String,
+     *      java.lang.String)
      */
     @Override
     public T addAsManifestResource(String resourceName, String target) throws IllegalArgumentException {
@@ -681,6 +707,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     /**
      * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.api.container.ManifestContainer#addAsManifestResource(java.io.File, java.lang.String)
      */
     @Override
