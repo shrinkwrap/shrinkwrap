@@ -1299,7 +1299,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
             "Nested archive asset should be available through partent archive at " + expectedPath.get(),
             nestedNode.getAsset());
     }
-    
+
     @Test
     public void shouldMoveAsset() {
        final Archive<JavaArchive> archive = ShrinkWrap.create(JavaArchive.class, "archive.jar");
@@ -1307,11 +1307,11 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
        final String targetPath = "path2";
        archive.add(EmptyAsset.INSTANCE, sourcePath);
        archive.move(sourcePath, targetPath);
-       
+
        Assert.assertEquals("The archive should have only one asset", 1, numAssets(archive));
        Assert.assertNotNull("The asset should be at the target path", archive.get(targetPath));
     }
-    
+
     @Test(expected = IllegalArchivePathException.class)
     public void shouldNotMoveAssetBecauseOfInexistentPath() {
        final Archive<JavaArchive> archive = ShrinkWrap.create(JavaArchive.class, "archive.jar");
@@ -1344,8 +1344,17 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         Assert.assertTrue(copyArchive.contains("location"));
     }
 
+    @Test
+    public void testId() {
+        // Create two archives with same name and contents
+        final JavaArchive one = ShrinkWrap.create(JavaArchive.class, "archive.jar");
+        final JavaArchive two = ShrinkWrap.create(JavaArchive.class, "archive.jar");
+
+        System.out.println("ALR: " + one.getId());
+    }
+
     // -------------------------------------------------------------------------------------||
-    // Internal Helper Methods ------------------------------------------------------------||
+    // Internal Helper Methods -------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**

@@ -56,7 +56,7 @@ import org.junit.Test;
 public class SerializationTestCase {
 
     // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
+    // Class Members -----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -70,7 +70,7 @@ public class SerializationTestCase {
     private static final String NAME_PAYLOAD_ARCHIVE = "serializedArchive.jar";
 
     // -------------------------------------------------------------------------------------||
-    // Instance Members -------------------------------------------------------------------||
+    // Instance Members --------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -79,7 +79,7 @@ public class SerializationTestCase {
     private JavaArchive payload;
 
     // -------------------------------------------------------------------------------------||
-    // Lifecycle --------------------------------------------------------------------------||
+    // Lifecycle ---------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -92,7 +92,7 @@ public class SerializationTestCase {
     }
 
     // -------------------------------------------------------------------------------------||
-    // Tests ------------------------------------------------------------------------------||
+    // Tests -------------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -128,12 +128,7 @@ public class SerializationTestCase {
         log.info("After: " + roundtrip.toString(true));
 
         // Ensure contents are as expected
-        final Map<ArchivePath, Node> originalContents = payload.getContent();
-        final Map<ArchivePath, Node> roundtripContents = roundtrip.getContent();
-        Assert.assertEquals("Contents after serialization were not as expected", originalContents, roundtripContents);
-        Assert.assertEquals("Name of original archive was not as expected", NAME_PAYLOAD_ARCHIVE, payload.getName());
-        Assert.assertEquals("Name not as expected after serialization", payload.getName(), roundtrip.getName());
-
+        this.testCurrentFields(payload, roundtrip);
     }
 
     /**
@@ -147,7 +142,8 @@ public class SerializationTestCase {
     @Test
     public void zipWireProtocolCurrentToOriginal() throws Exception {
         final SerializableView currentWireFormat = this.payload.as(SerializableView.class);
-        this.testWireProtocol(currentWireFormat, ZipSerializableOriginalImpl.class);
+        final SerializableView roundtrip = this.testWireProtocol(currentWireFormat, ZipSerializableOriginalImpl.class);
+        this.testOriginalFields(payload, roundtrip.as(JavaArchive.class));
     }
 
     /**
@@ -161,11 +157,12 @@ public class SerializationTestCase {
     @Test
     public void zipWireProtocolOriginalToCurrent() throws Exception {
         final SerializableView originalWireFormat = new ZipSerializableOriginalImpl(payload);
-        this.testWireProtocol(originalWireFormat, ZipSerializableViewImpl.class);
+        final SerializableView roundtrip = this.testWireProtocol(originalWireFormat, ZipSerializableViewImpl.class);
+        this.testOriginalFields(payload, roundtrip.as(JavaArchive.class));
     }
 
     // -------------------------------------------------------------------------------------||
-    // Internal Helper Methods ------------------------------------------------------------||
+    // Internal Helper Methods -------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -175,15 +172,32 @@ public class SerializationTestCase {
      *            The object to be serialized
      * @param targetType
      *            The type we should be represented as
+     * @return The roundtrip view
      * @throws IOException
      */
-    private void testWireProtocol(final SerializableView clientObject,
+    private SerializableView testWireProtocol(final SerializableView clientObject,
         final Class<? extends SerializableView> targetType) throws IOException {
         // Roundtrip the object, now representing as the target type
         final SerializableView roundtrip = serializeAndDeserialize(clientObject, targetType);
 
         // The type of the object put through roundtrip serialization must be of the type specified
         TestCase.assertEquals(targetType, roundtrip.getClass());
+
+        // Return
+        return roundtrip;
+    }
+
+    private void testOriginalFields(final Archive<?> payload, final Archive<?> roundtrip) {
+        final Map<ArchivePath, Node> originalContents = payload.getContent();
+        final Map<ArchivePath, Node> roundtripContents = roundtrip.getContent();
+        Assert.assertEquals("Contents after serialization were not as expected", originalContents, roundtripContents);
+        Assert.assertEquals("Name of original archive was not as expected", NAME_PAYLOAD_ARCHIVE, payload.getName());
+        Assert.assertEquals("Name not as expected after serialization", payload.getName(), roundtrip.getName());
+    }
+
+    private void testCurrentFields(final Archive<?> payload, final Archive<?> roundtrip) {
+        this.testOriginalFields(payload, roundtrip);
+        Assert.assertEquals("ID not as expected after serialization", payload.getId(), roundtrip.getId());
     }
 
     /**
@@ -209,11 +223,11 @@ public class SerializationTestCase {
     }
 
     /**
-     * Roundtrip serializes/deserializes the specified {@link Invocation} and reconsitutes/redefines as the specified
-     * target type
+     * Roundtrip serializes/deserializes the specified {@link SerializableView} and reconsitutes/redefines as the
+     * specified target type
      *
      * @param archive
-     *            The original {@link ZipSerializableView} instance
+     *            The original {@link SerializableView} instance
      * @param The
      *            new type we should cast to after deserialization
      * @see http://crazybob.org/2006/01/unit-testing-serialization-evolution.html
@@ -242,7 +256,7 @@ public class SerializationTestCase {
     }
 
     // -------------------------------------------------------------------------------------||
-    // Internal Helper Classes ------------------------------------------------------------||
+    // Internal Helper Classes -------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**

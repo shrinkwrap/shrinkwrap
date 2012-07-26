@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,6 +49,7 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.spi.ArchiveFormatAssociable;
 import org.jboss.shrinkwrap.spi.Configurable;
+import org.jboss.shrinkwrap.spi.Identifiable;
 
 /**
  * Base implementation of {@link Archive}. Contains support for operations (typically overloaded) that are not specific
@@ -57,7 +59,8 @@ import org.jboss.shrinkwrap.spi.Configurable;
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
  */
-public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, Configurable, ArchiveFormatAssociable {
+public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, Configurable, ArchiveFormatAssociable,
+    Identifiable {
 
     // -------------------------------------------------------------------------------------||
     // Class Members -----------------------------------------------------------------------||
@@ -81,6 +84,11 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
      * Configuration for this archive
      */
     private final Configuration configuration;
+
+    /**
+     * Globally-unique ID for this archive
+     */
+    private String id;
 
     // -------------------------------------------------------------------------------------||
     // Constructor -------------------------------------------------------------------------||
@@ -106,6 +114,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
         // Set
         this.name = name;
         this.configuration = configuration;
+        this.setId(UUID.randomUUID().toString());
     }
 
     // -------------------------------------------------------------------------------------||
@@ -424,8 +433,25 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
      *
      * @see org.jboss.shrinkwrap.api.Archive#getName()
      */
+    @Override
     public final String getName() {
         return name;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.Archive#getId()
+     */
+    @Override
+    public String getId() {
+        return this.id.toString();
+    }
+
+    @Override
+    public void setId(final String id) throws IllegalArgumentException {
+        Validate.notNullOrEmpty(id, "ID must be specified");
+        this.id = id;
     }
 
     /**
