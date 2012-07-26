@@ -186,4 +186,129 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
      *             If no packages were specified
      */
     T addPackages(boolean recursive, Filter<ArchivePath> filter, String... packages) throws IllegalArgumentException;
+
+    /**
+     * Deletes the {@link Class}, and all member (inner) {@link Class}es from the {@link Archive}.
+     *
+     * @param class The class to be deleted from the Archive
+     * @return This archive
+     * @throws IllegalArgumentException If no class was specified
+     */
+    T deleteClass(Class<?> clazz) throws IllegalArgumentException;
+
+    /**
+     * Deletes the {@link Class}, and all member (inner) {@link Class}es, with the specified fully-qualified name, loaded by the
+     * Thread Context {@link ClassLoader}, from the {@link Archive}.
+     *
+     * @param fullyQualifiedClassName The name of the {@link Class} to be deleted
+     * @return This archive
+     * @throws IllegalArgumentException If no class name was specified
+     * @throws IllegalArgumentException If the {@link Class} could not be loaded
+     */
+    T deleteClass(String fullyQualifiedClassName) throws IllegalArgumentException;
+
+    /**
+     * Deletes the {@link Class}, and all member (inner) @link{Class}es, with the specified fully-qualified name, loaded by the
+     * specified {@link ClassLoader}, from the {@link Archive}.
+     *
+     * @param fullyQualifiedClassName The name of the {@link Class} to be deleted
+     * @param cl The {@link ClassLoader} used to load the Class
+     * @return This archive
+     * @throws IllegalArgumentException If no class name was specified
+     * @throws IllegalArgumentException If no {@link ClassLoader} was specified
+     * @throws IllegalArgumentException If the {@link Class} could not be loaded by the target {@link ClassLoader}
+     */
+    T deleteClass(String fullyQualifiedClassName, ClassLoader cl) throws IllegalArgumentException;
+
+    /**
+     * Deletes the {@link Class}es, and all member (inner) {@link Class}es from the {@link Archive}.
+     *
+     * @param classes The classes to be removed from the {@link Archive}
+     * @return This archive
+     * @throws IllegalArgumentException If no classes were specified
+     */
+    T deleteClasses(Class<?>... classes) throws IllegalArgumentException;
+
+    /**
+     * Deletes all classes in the specified {@link Package} from the {@link Archive}. <br/>
+     * SubPackages are excluded.
+     *
+     * @param pack The {@link Package} to be deleted
+     * @return This archive
+     * @throws IllegalArgumentException If no package was specified
+     * @see #deletePackages(boolean, Package...)
+     */
+    T deletePackage(Package pack) throws IllegalArgumentException;
+
+    /**
+     * Deletes all classes in the specified {@link Package} from the {@link Archive}. <br/>
+     * SubPackages are excluded.
+     *
+     * @param pack Package to be delete represented by a String ("my/package")
+     * @return This archive
+     * @throws IllegalArgumentException If no package was specified
+     * @see #deletePackages(boolean, Package...)
+     */
+    T deletePackage(String pack) throws IllegalArgumentException;
+
+    /**
+     * Deletes all classes in the default {@link Package} from the {@link Archive}. <br/>
+     * SubPackages are excluded.
+     *
+     * @return This archive
+     */
+    T deleteDefaultPackage();
+
+    /**
+     * Deletes all classes in the specified {@link Package}s from the {@link Archive}.
+     *
+     * @param recursive Should the sub packages be deleted?
+     * @param packages All the packages to be deleted
+     * @return This archive
+     * @throws IllegalArgumentException If no packages were specified
+     * @see #deletePackages(boolean, Filter, Package...)
+     */
+    T deletePackages(boolean recursive, Package... packages) throws IllegalArgumentException;
+
+    /**
+     * Delete all classes in the specified {@link Package}s from the {@link Archive}.
+     *
+     * @param recursive Should the sub packages be deleted?
+     * @param packages All the packages to be deleted represented by a String ("my/package")
+     * @return This archive
+     * @throws IllegalArgumentException If no packages were specified
+     * @see #deletePackages(boolean, Filter, Package...)
+     */
+    T deletePackages(boolean recursive, String... packages) throws IllegalArgumentException;
+
+    /**
+     * Deletes all classes accepted by the filter in the specified {@link Package}s from the {@link Archive}. <br/>
+     *
+     * The {@link ArchivePath} returned to the filter is the {@link ArchivePath} of the class, not the final location. <br/>
+     * package.MyClass = /package/MyClass.class <br/>
+     * <b>not:</b> package.MyClass = /WEB-INF/classes/package/MyClass.class <br/>
+     *
+     * @param recursive Should the sub packages be deleted?
+     * @param filter filter out specific classes
+     * @param packages All the packages to be deleted
+     * @return This archive
+     * @throws IllegalArgumentException If no packages were specified
+     */
+    T deletePackages(boolean recursive, Filter<ArchivePath> filter, Package... packages) throws IllegalArgumentException;
+
+    /**
+     * Delete all classes accepted by the filter in the specified {@link Package}s from the {@link Archive}. <br/>
+     *
+     * The {@link ArchivePath} returned to the filter is the {@link ArchivePath} of the class, not the final location. <br/>
+     * package.MyClass = /package/MyClass.class <br/>
+     * <b>not:</b> package.MyClass = /WEB-INF/classes/package/MyClass.class <br/>
+     *
+     * @param recursive Should the sub packages be deleted?
+     * @param filter filter out specific classes
+     * @param packages All the packages to be deleted represented by a String ("my/package")
+     * @return This archive
+     * @throws IllegalArgumentException If no packages were specified
+     */
+    T deletePackages(boolean recursive, Filter<ArchivePath> filter, String... packages) throws IllegalArgumentException;
+
 }
