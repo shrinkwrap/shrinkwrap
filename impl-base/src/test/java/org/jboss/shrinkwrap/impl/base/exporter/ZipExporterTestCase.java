@@ -146,16 +146,21 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
     /**
      * SHRINKWRAP-377
      */
-    @Test(expected = org.jboss.shrinkwrap.api.exporter.FileExistsException.class)
+    @Test
     public void exportShouldFailIfTargetExist() throws IOException {
-        File target = new File(".\\impl-base\\target\\test-classes\\ZipExporterTestCase.jar");
+        File target = new File(createTempDirectory("exportShouldFailIfTargetExist.jar").getAbsolutePath());
         if (target.exists()) {
             Assert.assertTrue(target.delete());
         }
         Assert.assertFalse(target.exists());
         createArchiveWithAssets().as(ZipExporter.class).exportTo(target);
         Assert.assertTrue(target.exists());
-        createArchiveWithAssets().as(ZipExporter.class).exportTo(target); // this line fails the test
+        try {
+            createArchiveWithAssets().as(ZipExporter.class).exportTo(target); // this line should throw a FileExistsException
+            Assert.fail("Expected a FileExistsException when exporting to an existing path");
+        } catch (Exception e) {
+            Assert.assertEquals(org.jboss.shrinkwrap.api.exporter.FileExistsException.class, e.getClass());
+        }
     }
 
     // -------------------------------------------------------------------------------------||
