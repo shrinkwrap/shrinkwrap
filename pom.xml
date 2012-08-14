@@ -249,6 +249,7 @@
     <module>bom</module>
     <module>build-resources</module>
     <module>depchain</module>
+    <module>depchain-java7</module>
     <module>dist</module>
     <module>impl-base</module>
     <module>impl-nio2</module>
