@@ -67,7 +67,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
      */
     private final Map<ArchivePath, ArchiveAsset> nestedArchives = new ConcurrentHashMap<ArchivePath, ArchiveAsset>();
 
-    private List<ArchiveEventHandler> handlers = new ArrayList<ArchiveEventHandler>();
+    private final List<ArchiveEventHandler> handlers = new ArrayList<ArchiveEventHandler>();
 
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||
@@ -198,12 +198,13 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
            // Get the Node
            final Node node = this.get(path);
 
-           // Only disallow if we're not dealing with a directory
-           if (node.getAsset() != null) {
-               // Path exists, throw an exception
-               throw new IllegalOverwriteException("Cannot add requested path " + path.get() + " to archive "
-                   + this.getName() + "; path already exists");
-           }
+            // Disallow if we're dealing with an existing Asset or a non-empty dir
+            final Asset currentAsset = node.getAsset();
+            if (currentAsset != null || node.getChildren().size() == 0) {
+                // Path exists, throw an exception
+                throw new IllegalOverwriteException("Cannot add requested path " + path.get() + " to archive "
+                    + this.getName() + "; path already exists");
+            }
        }
        return covariantReturn();
     }
