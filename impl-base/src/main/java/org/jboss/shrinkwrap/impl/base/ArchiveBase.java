@@ -605,7 +605,13 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
         if (null == nodeToMove) {
            throw new IllegalArchivePathException(source.get() + " doesn't specify any node in the archive to move");
         }
-        add(nodeToMove.getAsset(), target);
+        final Asset asset = nodeToMove.getAsset();
+        // Directory?
+        if (asset == null) {
+            this.addAsDirectory(target);
+        } else {
+            add(asset, target);
+        }
         delete(source);
 
         return covariantReturn();

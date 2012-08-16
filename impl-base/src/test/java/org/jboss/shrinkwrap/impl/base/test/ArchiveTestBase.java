@@ -1312,6 +1312,17 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
        Assert.assertNotNull("The asset should be at the target path", archive.get(targetPath));
     }
 
+    @Test
+    public void shouldMoveDirectory() {
+        final Archive<JavaArchive> archive = ShrinkWrap.create(JavaArchive.class, "archive.jar");
+        final String sourcePath = "path1";
+        final String targetPath = "path2";
+        archive.addAsDirectory(sourcePath);
+        archive.move(sourcePath, targetPath);
+
+        Assert.assertTrue("Directory should be at the new path", archive.get(targetPath).getAsset() == null);
+    }
+
     @Test(expected = IllegalArchivePathException.class)
     public void shouldNotMoveAssetBecauseOfInexistentPath() {
        final Archive<JavaArchive> archive = ShrinkWrap.create(JavaArchive.class, "archive.jar");
