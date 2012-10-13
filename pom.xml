@@ -172,6 +172,8 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          <!-- Needed to not break Coburtura in Oracle JDKs -->
+          <argLine>-XX:-UseSplitVerifier</argLine>
           <trimStackTrace>false</trimStackTrace>
           <printSummary>true</printSummary>
           <includes>
@@ -264,7 +266,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.3</version>
+        <version>2.5.2</version>
         <configuration>
           <formats>
             <format>html</format>
