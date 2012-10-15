@@ -94,9 +94,7 @@ public class ShrinkWrapFileSystem extends FileSystem {
      */
     @Override
     public void close() throws IOException {
-
         this.open = false;
-
     }
 
     /**

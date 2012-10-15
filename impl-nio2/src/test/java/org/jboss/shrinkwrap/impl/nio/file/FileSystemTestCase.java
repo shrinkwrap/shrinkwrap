@@ -17,9 +17,13 @@
 package org.jboss.shrinkwrap.impl.nio.file;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.FileStore;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.Set;
@@ -47,6 +51,8 @@ public class FileSystemTestCase {
 
     private FileSystem fileSystem;
 
+	private JavaArchive archive;
+
     @Before
     public void createFileSystem() throws URISyntaxException, IOException {
 
@@ -55,6 +61,7 @@ public class FileSystemTestCase {
         final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, name);
         final FileSystem fs = ShrinkWrapFileSystems.newFileSystem(archive);
         this.fileSystem = fs;
+        this.archive = archive;
     }
 
     @After
@@ -121,7 +128,6 @@ public class FileSystemTestCase {
         // By contract we must support "basic", so we'll verify just that
         Assert.assertEquals("Only support \"basic\" file att view", 1, fileAttrViews.size());
         Assert.assertTrue("By contract we must support the \"basic\" view", fileAttrViews.contains("basic"));
-
     }
 
     @Test
@@ -174,6 +180,34 @@ public class FileSystemTestCase {
         fileSystem.newWatchService();
     }
 
-    // TODO Test case for getPathMatcher
+    @Test(expected = FileSystemAlreadyExistsException.class)
+    public void fileSystemAlreadyExists() throws IllegalArgumentException, IOException {
+        // exception should be thrown, second file system for the same archive
+        ShrinkWrapFileSystems.newFileSystem(archive);
+    }
+    
+    @Test
+    public void fileSystemClosedNewIsntanceCreated() throws IllegalArgumentException, IOException {
+        this.fileSystem.close();
+        
+		Assert.assertNotNull("", ShrinkWrapFileSystems.newFileSystem(archive));
+    }
+  
+    @Test
+    public void getFileSystem() {
+    	URI uri = ShrinkWrapFileSystems.getRootUri(archive);
+    	
+    	Assert.assertEquals("getFileSystem should return same existing file system", this.fileSystem , FileSystems.getFileSystem(uri));
+    }
+    
+    @Test(expected = FileSystemNotFoundException.class)
+    public void getNotExistingFileSystem() {
+    	final String name = "test.jar";
+        final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, name);
+        
+        ShrinkWrapFileSystems.getRootUri(archive);
+    }
+    
+    // TODO Test case for getPathMatcher, but first implement it
 
 }

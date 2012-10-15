@@ -87,6 +87,18 @@ public class PathTestCase {
     }
 
     @Test
+    public void getFileNameEmptyPath() {
+    	final String empty = "";
+    	final Path path = fileSystem.getPath(empty);
+        Assert.assertEquals("Empty path should return null file name", null, path.getFileName());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getPathNullPath() {
+    	fileSystem.getPath(null);
+    }
+
+    @Test
     public void getPathRelative() {
         final String relative = "relative";
         final Path path = fileSystem.getPath(relative);
