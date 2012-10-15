@@ -26,7 +26,7 @@ import java.nio.file.attribute.FileTime;
  *
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
-class ShrinkWrapFileAttributeView implements BasicFileAttributeView {
+final class ShrinkWrapFileAttributeView implements BasicFileAttributeView {
 
     private final ShrinkWrapFileAttributes attributes;
 
