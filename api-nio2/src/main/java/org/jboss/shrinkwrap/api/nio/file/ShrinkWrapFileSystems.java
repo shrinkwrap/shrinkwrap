@@ -30,7 +30,7 @@ import org.jboss.shrinkwrap.api.Archive;
  *
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
-public class ShrinkWrapFileSystems {
+public final class ShrinkWrapFileSystems {
 
     /**
      * Protocol portion of a {@link URI} to ShrinkWrap {@link FileSystem}s
@@ -47,6 +47,10 @@ public class ShrinkWrapFileSystems {
      * Protocol suffix before ID portion of ShrinkWrap {@link URI}s
      */
     private static final String URI_PROTOCOL_SUFFIX = "://";
+
+    private ShrinkWrapFileSystems() {
+    	/* factory methods class */
+    }
 
     /**
      * Creates a new file system for the given {@link Archive}; in effect invoking this method is equal to invoking
