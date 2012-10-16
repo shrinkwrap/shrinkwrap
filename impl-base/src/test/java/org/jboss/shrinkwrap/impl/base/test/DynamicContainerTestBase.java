@@ -1855,6 +1855,12 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getLibraryContainer().addAsLibraries(archives);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    @ArchiveType(LibraryContainer.class)
+    public void testAddLibraryNotExistingResource() throws Exception {
+        getLibraryContainer().addAsLibrary("notExistingPath/notExistingJar.jar", "notExistingJar.jar");
+    }
+
     /**
      * Tests that a default MANIFEST.MF is generated through the addManifest method call. SHRINKWRAP-191
      *
