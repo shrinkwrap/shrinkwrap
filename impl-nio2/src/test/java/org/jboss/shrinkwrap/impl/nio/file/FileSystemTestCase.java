@@ -22,7 +22,6 @@ import java.net.URISyntaxException;
 import java.nio.file.FileStore;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemAlreadyExistsException;
-import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.spi.FileSystemProvider;
@@ -41,7 +40,7 @@ import org.junit.Test;
 
 /**
  * Test cases to assert the ShrinkWrap implementation of the NIO.2 {@link FileSystem} is working as contracted.
- *
+ * 
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
 public class FileSystemTestCase {
@@ -51,7 +50,7 @@ public class FileSystemTestCase {
 
     private FileSystem fileSystem;
 
-	private JavaArchive archive;
+    private JavaArchive archive;
 
     @Before
     public void createFileSystem() throws URISyntaxException, IOException {
@@ -185,29 +184,22 @@ public class FileSystemTestCase {
         // exception should be thrown, second file system for the same archive
         ShrinkWrapFileSystems.newFileSystem(archive);
     }
-    
+
     @Test
     public void fileSystemClosedNewIsntanceCreated() throws IllegalArgumentException, IOException {
         this.fileSystem.close();
-        
-		Assert.assertNotNull("", ShrinkWrapFileSystems.newFileSystem(archive));
+
+        Assert.assertNotNull("", ShrinkWrapFileSystems.newFileSystem(archive));
     }
-  
+
     @Test
     public void getFileSystem() {
-    	URI uri = ShrinkWrapFileSystems.getRootUri(archive);
-    	
-    	Assert.assertEquals("getFileSystem should return same existing file system", this.fileSystem , FileSystems.getFileSystem(uri));
+        URI uri = ShrinkWrapFileSystems.getRootUri(archive);
+
+        Assert.assertEquals("getFileSystem should return same existing file system", this.fileSystem,
+            FileSystems.getFileSystem(uri));
     }
-    
-    @Test(expected = FileSystemNotFoundException.class)
-    public void getNotExistingFileSystem() {
-    	final String name = "test.jar";
-        final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, name);
-        
-        ShrinkWrapFileSystems.getRootUri(archive);
-    }
-    
+
     // TODO Test case for getPathMatcher, but first implement it
 
 }

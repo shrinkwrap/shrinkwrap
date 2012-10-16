@@ -40,7 +40,7 @@ import org.junit.Test;
 
 /**
  * Test cases to assert the ShrinkWrap implementation of the NIO.2 {@link Path} is working as contracted.
- *
+ * 
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
 public class PathTestCase {
@@ -88,14 +88,14 @@ public class PathTestCase {
 
     @Test
     public void getFileNameEmptyPath() {
-    	final String empty = "";
-    	final Path path = fileSystem.getPath(empty);
+        final String empty = "";
+        final Path path = fileSystem.getPath(empty);
         Assert.assertEquals("Empty path should return null file name", null, path.getFileName());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void getPathNullPath() {
-    	fileSystem.getPath(null);
+        fileSystem.getPath(null);
     }
 
     @Test
@@ -615,9 +615,9 @@ public class PathTestCase {
 
     /**
      * This case outlined in {@link Path#relativize(Path)} APIDocs:
-     *
+     * 
      * For any two normalized paths p and q, where q does not have a root component,
-     *
+     * 
      * <code>  p.relativize(p.resolve(q)).equals(q) </code>
      */
     @Test
