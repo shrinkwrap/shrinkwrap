@@ -98,7 +98,6 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
         // Init
         final int spaceInBuffer = destination.remaining();
         final int numBytesRemainingInContent, numBytesToRead;
-        final byte[] bytesToCopy;
 
         // Sync up before getting at shared mutable state
         synchronized (this) {
@@ -112,17 +111,12 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
             // We'll read in either the number of bytes remaining in content or the amount of space in the buffer,
             // whichever is smaller
             numBytesToRead = numBytesRemainingInContent >= spaceInBuffer ? spaceInBuffer : numBytesRemainingInContent;
-
             // Copy a sub-array of the bytes we'll put into the buffer
-            bytesToCopy = new byte[numBytesToRead];
-            System.arraycopy(this.contents, this.position, bytesToCopy, 0, numBytesToRead);
+            destination.put(this.contents, this.position, numBytesToRead);
 
             // Set the new position
             this.position += numBytesToRead;
         }
-
-        // Put the contents into the buffer
-        destination.put(bytesToCopy);
 
         // Return the number of bytes read
         return numBytesToRead;
