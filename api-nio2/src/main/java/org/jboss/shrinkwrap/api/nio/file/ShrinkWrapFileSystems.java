@@ -49,7 +49,7 @@ public final class ShrinkWrapFileSystems {
     private static final String URI_PROTOCOL_SUFFIX = "://";
 
     private ShrinkWrapFileSystems() {
-    	/* factory methods class */
+        throw new UnsupportedOperationException("Class with only static methods");
     }
 
     /**

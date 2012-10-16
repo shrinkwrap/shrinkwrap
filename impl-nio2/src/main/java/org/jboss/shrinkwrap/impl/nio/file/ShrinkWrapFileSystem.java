@@ -224,7 +224,7 @@ public class ShrinkWrapFileSystem extends FileSystem {
         this.checkClosed();
 
         // TODO Is there some matcher we can reuse?
-        return null;
+        throw new UnsupportedOperationException("ShrinkWrap archives do not support Path Matcher operations");
     }
 
     /**
