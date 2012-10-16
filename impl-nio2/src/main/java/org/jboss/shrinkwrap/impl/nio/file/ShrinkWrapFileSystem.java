@@ -45,14 +45,14 @@ import org.jboss.shrinkwrap.api.ArchivePaths;
 public class ShrinkWrapFileSystem extends FileSystem {
 
     /**
-     * Provider which created this {@link ShrinkWrapFileSystem}
-     */
-    private final ShrinkWrapFileSystemProvider provider;
-
-    /**
      * Contracted name of the {@link BasicFileAttributeView}
      */
     static final String FILE_ATTR_VIEW_BASIC = "basic";
+
+    /**
+     * Provider which created this {@link ShrinkWrapFileSystem}
+     */
+    private final ShrinkWrapFileSystemProvider provider;
 
     /**
      * Underlying {@link Archive}
@@ -203,7 +203,8 @@ public class ShrinkWrapFileSystem extends FileSystem {
     private String merge(final String first, final String[] more) {
         assert first != null : "first must be specified";
         assert more != null : "more must be specified";
-        final StringBuffer merged = new StringBuffer();
+
+        final StringBuilder merged = new StringBuilder();
         merged.append(first);
         for (int i = 0; i < more.length; i++) {
             merged.append(ArchivePath.SEPARATOR);

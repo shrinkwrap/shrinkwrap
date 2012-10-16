@@ -609,6 +609,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
     private void copy(final InputStream in, final SeekableByteChannel out) throws IOException {
         assert in != null : "InStream must be specified";
         assert out != null : "Channel must be specified";
+
         final byte[] backingBuffer = new byte[1024 * 4];
         final ByteBuffer byteBuffer = ByteBuffer.wrap(backingBuffer);
         int bytesRead = 0;
