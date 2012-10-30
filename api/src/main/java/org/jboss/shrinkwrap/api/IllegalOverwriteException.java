@@ -18,7 +18,7 @@ package org.jboss.shrinkwrap.api;
 
 /**
  * Exception thrown when trying to add an {@code Asset} into an archive under an {@code ArchivePath} which is already
- * taken.
+ * taken by a directory.
  *
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */

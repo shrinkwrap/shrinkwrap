@@ -625,11 +625,17 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath targetPath2 = new BasicPath("META-INF");
 
         getResourceContainer().addAsResource(NAME_TEST_PROPERTIES, targetPath);
-        getResourceContainer().addAsResource(NAME_TEST_PROPERTIES, targetPath2);
+
+        boolean gotExpectedException = false;
+        try {
+            getResourceContainer().addAsResource(NAME_TEST_PROPERTIES, targetPath2);
+        } catch (final IllegalOverwriteException ioe) {
+            gotExpectedException = true;
+        }
 
         ArchivePath testPath = new BasicPath(getResourcePath(), "META-INF/Test.txt");
-
         Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assert.assertTrue(gotExpectedException);
     }
 
     @Test
@@ -1906,10 +1912,10 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     }
 
     /**
-     * SHRINKWRAP-329
+     * SHRINKWRAP-329 SHRINKWRAP-389
      */
     @Test
-    public void addDuplicateResourceThrowsIllegalOverwriteException() {
+    public void addDuplicateResourceMakesOverwrite() throws IOException {
         // Create the new archive
         final Archive<?> archive = createNewArchive();
 
@@ -1917,16 +1923,13 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         final ArchivePath path = ArchivePaths.create("testPath");
         archive.add(EmptyAsset.INSTANCE, path);
 
-        // Now try again with a new asset, and this should fail
-        try {
-            archive.add(new StringAsset("failContent"), path);
-        } catch (final IllegalOverwriteException ioe) {
-            // Good
-            return;
-        }
+        // Now try again with a new asset, and this should replace the old content
+        final String content = "newContent";
+        archive.add(new StringAsset(content), path);
 
-        // Fail us
-        TestCase.fail("Expected " + IllegalOverwriteException.class.getName() + " not received");
+        final String contentFound = new BufferedReader(new InputStreamReader(archive.get(path).getAsset().openStream()))
+            .readLine();
+        Assert.assertEquals(content, contentFound);
     }
 
     /**

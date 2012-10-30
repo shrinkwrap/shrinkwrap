@@ -181,32 +181,29 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     }
 
     private T addAsset(ArchivePath path, Asset asset) {
-       Asset handledAsset = invokeHandlers(path, asset);
+        Asset handledAsset = invokeHandlers(path, asset);
 
-       // Check if it exists. If it doesn't, create it and add it.
-       if (!contains(path)) {
-          // Add the node to the content of the archive
-          NodeImpl node = new NodeImpl(path, handledAsset);
-          content.put(path, node);
-
-          // Add the new node to the parent as a child
-          NodeImpl parentNode = obtainParent(path.getParent());
-          if (parentNode != null) {
-             parentNode.addChild(node);
-          }
-       } else {
-           // Get the Node
-           final Node node = this.get(path);
-
-            // Disallow if we're dealing with an existing Asset or a non-empty dir
-            final Asset currentAsset = node.getAsset();
-            if (currentAsset != null || node.getChildren().size() == 0) {
-                // Path exists, throw an exception
-                throw new IllegalOverwriteException("Cannot add requested path " + path.get() + " to archive "
-                    + this.getName() + "; path already exists");
+        // Disallow if we're dealing with a non-empty dir
+        if (contains(path) && asset != null) {
+            final Node node = this.get(path);
+            if (node.getAsset() == null) {
+                // Path exists as a dir, throw an exception
+                throw new IllegalOverwriteException("Cannot add requested asset " + asset + " to path " + path.get()
+                    + " to archive " + this.getName() + "; path already exists as directory");
             }
-       }
-       return covariantReturn();
+        }
+
+        // Add the node to the content of the archive
+        NodeImpl node = new NodeImpl(path, handledAsset);
+        content.put(path, node);
+
+        // Add the new node to the parent as a child
+        NodeImpl parentNode = obtainParent(path.getParent());
+        if (parentNode != null) {
+            parentNode.addChild(node);
+        }
+
+        return covariantReturn();
     }
 
     /**

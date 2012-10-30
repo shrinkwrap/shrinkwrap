@@ -52,7 +52,6 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.IllegalOverwriteException;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.nio.file.MemoryNamedAsset;
@@ -263,10 +262,8 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
             || options.contains(StandardOpenOption.WRITE)) {
 
             // Plug channel as Asset into the archive
-            try {
-                archive.add(channel);
-            } catch (final IllegalOverwriteException ioe) {
 
+            if (archive.contains(channel.getName())) {
                 // Appending?
                 if (options.contains(StandardOpenOption.APPEND)) {
                     // Read in the existing content
@@ -281,6 +278,8 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
                     // Exception translate
                     throw new FileAlreadyExistsException(archivePath.get());
                 }
+            } else {
+                archive.add(channel);
             }
 
             // Return the channel
