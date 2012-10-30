@@ -16,19 +16,31 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * A Factory for {@link ArchivePath} creation. Instances using this shorthand class will be created using the
  * {@link ClassLoader} associated with the default {@link Domain}'s {@link Configuration}.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- * @version $Revision: $
+ * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
 public final class ArchivePaths {
-    // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
 
     private static final String PATH_IMPL = "org.jboss.shrinkwrap.impl.base.path.BasicPath";
+
+    private static final Class<?> archivePathImplClass;
+    static {
+        final Collection<ClassLoader> searchClassLoaders = new ArrayList<ClassLoader>();
+        searchClassLoaders.add(ArchivePaths.class.getClassLoader());
+        try {
+            archivePathImplClass = ClassLoaderSearchUtil.findClassFromClassLoaders(PATH_IMPL, searchClassLoaders);
+        } catch (final ClassNotFoundException cnfe) {
+            throw new IllegalStateException("Could not find the archive path implementation class " + PATH_IMPL
+                + " in any configured ClassLoader", cnfe);
+        }
+    }
 
     /**
      * Creates a new {@link ArchivePath} representing the root path (/).
@@ -109,16 +121,6 @@ public final class ArchivePaths {
     // -------------------------------------------------------------------------------------||
 
     private static ArchivePath createInstance(final Class<?>[] argumentTypes, final Object[] arguments) {
-        // Get the impl class
-        final Class<?> archivePathImplClass;
-        try {
-            archivePathImplClass = ClassLoaderSearchUtil.findClassFromClassLoaders(PATH_IMPL, ShrinkWrap
-                .getDefaultDomain().getConfiguration().getClassLoaders());
-        } catch (final ClassNotFoundException cnfe) {
-            throw new IllegalStateException("Could not find the archive path implementation class " + PATH_IMPL
-                + " in any configured ClassLoader", cnfe);
-        }
-
         // Create and return
         return SecurityActions.newInstance(archivePathImplClass, argumentTypes, arguments, ArchivePath.class);
     }
@@ -131,7 +133,7 @@ public final class ArchivePaths {
      */
     private enum RootPathWrapper {
         INSTANCE;
-        private ArchivePath root = create(null);
+        private final ArchivePath root = create(null);
 
         private ArchivePath getRoot() {
             return root;
