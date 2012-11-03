@@ -181,29 +181,42 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     }
 
     private T addAsset(ArchivePath path, Asset asset) {
-        Asset handledAsset = invokeHandlers(path, asset);
+        final Asset handledAsset = invokeHandlers(path, asset);
 
         // Disallow if we're dealing with a non-empty dir
-        if (contains(path) && asset != null) {
-            final Node node = this.get(path);
-            if (node.getAsset() == null) {
-                // Path exists as a dir, throw an exception
-                throw new IllegalOverwriteException("Cannot add requested asset " + asset + " to path " + path.get()
-                    + " to archive " + this.getName() + "; path already exists as directory");
+        if (contains(path)) {
+            if (asset != null) {
+                // we're adding a file
+                final Node node = this.get(path);
+                if (node.getAsset() == null) {
+                    // Path exists as a dir, throw an exception
+                    throw new IllegalOverwriteException("Cannot add requested asset " + asset + " to path "
+                        + path.get() + " to archive " + this.getName() + "; path already exists as directory");
+                } else {
+                    // path exists as a file, overwrite
+                    addNewNode(path, handledAsset);
+                }
             }
-        }
 
-        // Add the node to the content of the archive
-        NodeImpl node = new NodeImpl(path, handledAsset);
-        content.put(path, node);
-
-        // Add the new node to the parent as a child
-        NodeImpl parentNode = obtainParent(path.getParent());
-        if (parentNode != null) {
-            parentNode.addChild(node);
+            // we're adding dir, it exists, do nothing
+        } else {
+            // Path does not exists, add new node
+            addNewNode(path, handledAsset);
         }
 
         return covariantReturn();
+    }
+
+    private void addNewNode(ArchivePath path, Asset handledAsset) {
+        // Add the node to the content of the archive
+        final NodeImpl newNode = new NodeImpl(path, handledAsset);
+        content.put(path, newNode);
+
+        // Add the new node to the parent as a child
+        final NodeImpl parentNode = obtainParent(path.getParent());
+        if (parentNode != null) {
+            parentNode.addChild(newNode);
+        }
     }
 
     /**

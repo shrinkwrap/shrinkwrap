@@ -1205,7 +1205,50 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         } catch (IllegalArgumentException expectedException) {
         }
     }
+    
+    /**
+     * Tests merging of two archives containing directories with same names.
+     */
+    @Test
+    public void testMergeWithDirectories() {
+        Archive<?> archive = getArchive();
+        Archive<T> sourceArchive = createNewArchive();
 
+        ArchivePath location = new BasicPath("/dir/", "test.properties");
+        ArchivePath locationTwo = new BasicPath("/dir/", "test2.properties");
+
+        Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+        Asset assetTwo = new ClassLoaderAsset(NAME_TEST_PROPERTIES_2);
+
+        sourceArchive.add(assetTwo, locationTwo);
+
+        archive.add(asset, location);
+
+        archive.merge(sourceArchive);
+
+        Assert.assertTrue("Archive should contain given element", archive.contains("/dir/test.properties"));
+        Assert.assertTrue("Archive should contain given element", archive.contains("/dir/test2.properties"));
+
+        // content might be valid, but asset might not be in Node tree
+        Assert.assertEquals("Archive children count is invalid", 2, countChildren(archive));
+    }
+
+    private int countChildren(final Archive<?> archive) {
+        final Node node = archive.get("/");
+        return countChildren(node);
+    }
+
+    private int countChildren(final Node node) {
+        int count = 0;
+        for (final Node child : node.getChildren()) {
+            if (child.getAsset() != null) {
+                count++;
+            }
+            count += countChildren(child);
+        }
+        return count;
+    }
+    
     /**
      * Ensure adding an archive to a path successfully stores all assets to specific path including the archive name
      *
