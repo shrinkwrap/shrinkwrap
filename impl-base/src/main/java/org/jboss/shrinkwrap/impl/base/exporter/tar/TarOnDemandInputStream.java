@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2012, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -16,36 +16,30 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter.tar;
 
-import java.io.InputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.Node;
-import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
+import org.jboss.shrinkwrap.impl.base.io.tar.TarOutputStream;
 
 /**
- * Implementation of an exporter for the TAR format
+ * Tar on demand input stream.
  *
- * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>
  */
-class TarExporterDelegate extends AbstractExporterDelegate<InputStream> {
+class TarOnDemandInputStream extends TarOnDemandInputStreamBase<TarOutputStream> {
 
     /**
-     * Creates a new exporter delegate for exporting archives as TAR
+     * Creates stream directly from archive.
+     *
+     * @param archive
      */
-    TarExporterDelegate(final Archive<?> archive) {
+    TarOnDemandInputStream(final Archive<?> archive) {
         super(archive);
     }
 
     @Override
-    protected void processNode(final ArchivePath path, final Node node) {
-        // do nothing
+    protected TarOutputStream createOutputStream(final OutputStream outputStream) throws IOException {
+        return new TarOutputStream(outputStream);
     }
-
-    @Override
-    protected InputStream getResult() {
-        return new TarOnDemandInputStream(getArchive());
-    }
-
 }

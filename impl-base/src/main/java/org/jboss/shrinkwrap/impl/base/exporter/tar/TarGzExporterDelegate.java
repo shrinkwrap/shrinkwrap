@@ -16,53 +16,32 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter.tar;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.logging.Logger;
+import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.impl.base.io.tar.TarGzOutputStream;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.Node;
+import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
 
 /**
  * Implementation of an exporter for the TAR format, further encoded as GZIP.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
- * @version $Revision: $
+ * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>
  */
-public class TarGzExporterDelegate extends TarExporterDelegateBase<TarGzOutputStream> {
-    // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
+class TarGzExporterDelegate extends AbstractExporterDelegate<InputStream> {
 
-    /**
-     * Logger
-     */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(TarGzExporterDelegate.class.getName());
-
-    // -------------------------------------------------------------------------------------||
-    // Constructor ------------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    /**
-     * Creates a new exporter delegate for exporting archives as TAR/GZ
-     */
-    public TarGzExporterDelegate(final Archive<?> archive) {
+    TarGzExporterDelegate(final Archive<?> archive) {
         super(archive);
     }
 
-    // -------------------------------------------------------------------------------------||
-    // Required Implementations -----------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterDelegateBase#createOutputStream(java.io.OutputStream)
-     */
     @Override
-    protected final TarGzOutputStream createOutputStream(final OutputStream out) throws IOException {
-        // Create and return
-        return new TarGzOutputStream(out);
+    protected void processNode(final ArchivePath path, final Node node) {
+        // do nothing
+    }
+
+    @Override
+    protected InputStream getResult() {
+        return new TarGzOnDemandInputStream(getArchive());
     }
 }

@@ -17,7 +17,6 @@
 package org.jboss.shrinkwrap.impl.base.exporter.tar;
 
 import java.io.InputStream;
-import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.exporter.TarGzExporter;
@@ -28,22 +27,9 @@ import org.jboss.shrinkwrap.impl.base.exporter.AbstractStreamExporterImpl;
  * Implementation of {@link TarGzExporter} used to export an Archive as a TAR format encoded in GZIP.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>
  */
 public class TarGzExporterImpl extends AbstractStreamExporterImpl implements TarGzExporter {
-
-    // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    /**
-     * Logger
-     */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(TarGzExporterImpl.class.getName());
-
-    // -------------------------------------------------------------------------------------||
-    // Constructor ------------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
 
     /**
      * Creates a new exporter for the specified archive
@@ -51,10 +37,6 @@ public class TarGzExporterImpl extends AbstractStreamExporterImpl implements Tar
     public TarGzExporterImpl(final Archive<?> archive) {
         super(archive);
     }
-
-    // -------------------------------------------------------------------------------------||
-    // Required Implementations -----------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
 
     /**
      * {@inheritDoc}
