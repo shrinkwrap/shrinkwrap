@@ -49,16 +49,6 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
     private final Iterator<Node> nodesIterator;
 
     /**
-     * Creates stream directly from archive.
-     *
-     * @param archive
-     */
-    public AbstractOnDemandInputStream(final Archive<?> archive) {
-        final Collection<Node> nodes = archive.getContent().values();
-        this.nodesIterator = nodes.iterator();
-    }
-
-    /**
      * Created by abstract method.
      */
     protected T outputStream;
@@ -88,6 +78,16 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
      */
     private ArchivePath currentPath = null;
 
+    /**
+     * Creates stream directly from archive.
+     *
+     * @param archive
+     */
+    public AbstractOnDemandInputStream(final Archive<?> archive) {
+        final Collection<Node> nodes = archive.getContent().values();
+        this.nodesIterator = nodes.iterator();
+    }
+
     @Override
     public int read() throws IOException {
 
@@ -108,9 +108,7 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
                 } catch (final Throwable t) {
                     throw new ArchiveExportException("Failed to write asset to output: " + currentPath.get(), t);
                 }
-            }
-
-            if (currentNodeStream == null && nodesIterator.hasNext()) {
+            } else if (nodesIterator.hasNext()) {
                 // current node was processed completely, process next one
                 final Node currentNode = nodesIterator.next();
 

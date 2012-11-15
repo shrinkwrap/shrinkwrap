@@ -24,7 +24,7 @@ import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
 import org.jboss.shrinkwrap.impl.base.exporter.AbstractStreamExporterImpl;
 
 /**
- * Implementation of ZipExporter used to export an Archive as a Zip format.
+ * Implementation of ZipExporter used to export an Archive as a ZIP format.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
@@ -45,7 +45,7 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
     @Override
     public InputStream exportAsInputStream() {
         // Create export delegate
-        AbstractExporterDelegate<InputStream> exportDelegate = new ZipExporterDelegate(this.getArchive());
+        final AbstractExporterDelegate<InputStream> exportDelegate = new ZipExporterDelegate(this.getArchive());
 
         // Export and get result
         return exportDelegate.export();
