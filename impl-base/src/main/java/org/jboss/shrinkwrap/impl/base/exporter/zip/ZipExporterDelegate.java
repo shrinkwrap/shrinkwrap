@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2012, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -14,28 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.impl.base.exporter.tar;
-
-import java.io.InputStream;
+package org.jboss.shrinkwrap.impl.base.exporter.zip;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
 
+import java.util.zip.ZipOutputStream;
+
+import java.io.InputStream;
+
 /**
- * Implementation of an exporter for the TAR format
+ * Implementation of a ZIP exporter. Cannot handle archives with no content (as there'd be no
+ * {@link java.util.zip.ZipEntry} s to write to the {@link ZipOutputStream}
  *
- * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>
  */
-class TarExporterDelegate extends AbstractExporterDelegate<InputStream> {
+class ZipExporterDelegate extends AbstractExporterDelegate<InputStream> {
 
-    /**
-     * Creates a new exporter delegate for exporting archives as TAR
-     */
-    TarExporterDelegate(final Archive<?> archive) {
+    protected ZipExporterDelegate(final Archive<?> archive) {
         super(archive);
+
+        // Precondition check
+        if (archive.getContent().isEmpty()) {
+            throw new IllegalArgumentException(
+                "[SHRINKWRAP-93] Cannot use this JDK-based implementation to export as ZIP an archive with no content: "
+                    + archive.toString());
+        }
     }
 
     @Override
@@ -45,7 +51,6 @@ class TarExporterDelegate extends AbstractExporterDelegate<InputStream> {
 
     @Override
     protected InputStream getResult() {
-        return new TarOnDemandInputStream(getArchive());
+        return new ZipOnDemandInputStream(getArchive());
     }
-
 }

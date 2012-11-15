@@ -37,8 +37,6 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.ConfigurationBuilder;
-import org.jboss.shrinkwrap.api.Domain;
 import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
@@ -124,47 +122,6 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         final FileOutputStream out = new FileOutputStream(serialized);
         IOUtil.copyWithClose(exportStream, out);
         ensureInExpectedForm(serialized);
-    }
-
-    /**
-     * Ensures that the export write task uses the {@link ExecutorService} that we've configured, and leaves it running
-     * (does not shut it down)
-     *
-     * @throws Exception
-     */
-    @Test
-    public void exportUsesOurExecutorService() throws Exception {
-        // Make a custom ES
-        final CountingExecutorService service = new CountingExecutorService();
-
-        // Create a custom configuration
-        final Domain domain = ShrinkWrap.createDomain(new ConfigurationBuilder().executorService(service).build());
-
-        // Make an archive using the new configuration
-        final Archive<?> archive = domain.getArchiveFactory().create(JavaArchive.class, "test.jar")
-            .addClass(StreamExporterTestBase.class);
-
-        // Fully export by reading all content (export is on-demand)
-        final InputStream content = this.exportAsInputStream(archive);
-        final OutputStream sink = new OutputStream() {
-
-            @Override
-            public void write(int b) throws IOException {
-                // NOOP
-            }
-        };
-        IOUtil.copyWithClose(content, sink);
-
-        // Ensure the ES was used (one job was submitted to it)
-        Assert.assertEquals("Custom " + ExecutorService.class.getSimpleName() + " was not used by export process", 1,
-            service.counter);
-
-        // Ensure the ES was not shut down by the export process
-        Assert.assertFalse("Export should not shut down a user-supplied " + ExecutorService.class.getName(),
-            service.isShutdown());
-
-        // Shut down the ES (clean up)
-        service.shutdown();
     }
 
     /**

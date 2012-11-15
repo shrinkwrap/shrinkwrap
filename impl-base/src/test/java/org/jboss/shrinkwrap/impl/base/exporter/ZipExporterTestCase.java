@@ -30,7 +30,6 @@ import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.exporter.zip.JdkZipExporterDelegate;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 import org.junit.Assert;

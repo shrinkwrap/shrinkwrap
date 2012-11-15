@@ -17,7 +17,6 @@
 package org.jboss.shrinkwrap.impl.base.exporter.zip;
 
 import java.io.InputStream;
-import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -30,31 +29,13 @@ import org.jboss.shrinkwrap.impl.base.exporter.AbstractStreamExporterImpl;
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
- * @version $Revision: $
+ * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>
  */
 public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipExporter {
-
-    // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    /**
-     * Logger
-     */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(ZipExporterImpl.class.getName());
-
-    // -------------------------------------------------------------------------------------||
-    // Constructor ------------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
 
     public ZipExporterImpl(final Archive<?> archive) {
         super(archive);
     }
-
-    // -------------------------------------------------------------------------------------||
-    // Required Implementations - ZipExporter ---------------------------------------------||
-    // -------------------------------------------------------------------------------------||
 
     /**
      * {@inheritDoc}
@@ -64,7 +45,7 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
     @Override
     public InputStream exportAsInputStream() {
         // Create export delegate
-        AbstractExporterDelegate<InputStream> exportDelegate = new JdkZipExporterDelegate(this.getArchive());
+        AbstractExporterDelegate<InputStream> exportDelegate = new ZipExporterDelegate(this.getArchive());
 
         // Export and get result
         return exportDelegate.export();

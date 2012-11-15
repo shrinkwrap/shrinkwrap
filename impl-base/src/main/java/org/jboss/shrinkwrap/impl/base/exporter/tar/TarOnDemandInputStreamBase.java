@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2012, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -16,36 +16,37 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter.tar;
 
-import java.io.InputStream;
+import java.io.IOException;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.Node;
-import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
+import org.jboss.shrinkwrap.impl.base.exporter.AbstractOnDemandInputStream;
+import org.jboss.shrinkwrap.impl.base.io.tar.TarEntry;
+import org.jboss.shrinkwrap.impl.base.io.tar.TarOutputStreamImpl;
 
 /**
- * Implementation of an exporter for the TAR format
+ * Base for Tar related on-demand InputStreams.
  *
- * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>
  */
-class TarExporterDelegate extends AbstractExporterDelegate<InputStream> {
+abstract class TarOnDemandInputStreamBase<T extends TarOutputStreamImpl> extends AbstractOnDemandInputStream<T> {
 
     /**
-     * Creates a new exporter delegate for exporting archives as TAR
+     * Creates stream directly from archive.
+     *
+     * @param archive
      */
-    TarExporterDelegate(final Archive<?> archive) {
+    TarOnDemandInputStreamBase(final Archive<?> archive) {
         super(archive);
     }
 
     @Override
-    protected void processNode(final ArchivePath path, final Node node) {
-        // do nothing
+    protected void closeEntry(final TarOutputStreamImpl outputStream) throws IOException {
+        outputStream.closeEntry();
     }
 
     @Override
-    protected InputStream getResult() {
-        return new TarOnDemandInputStream(getArchive());
+    protected void putNextEntry(final TarOutputStreamImpl outputStream, final String context) throws IOException {
+        final TarEntry entry = new TarEntry(context);
+        outputStream.putNextEntry(entry);
     }
-
 }

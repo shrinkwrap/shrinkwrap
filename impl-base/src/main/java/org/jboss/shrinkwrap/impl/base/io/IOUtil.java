@@ -145,7 +145,7 @@ public final class IOUtil {
     /**
      * Copies the specified number of bytes from an InputStream to an OutputStream. It is the responsibility of the
      * caller to close the streams passed in when done, though the {@link OutputStream} will be fully flushed.
-     * 
+     *
      * @param input
      * @param output
      * @param len
