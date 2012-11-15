@@ -143,6 +143,32 @@ public final class IOUtil {
     }
 
     /**
+     * Copies the specified number of bytes from an InputStream to an OutputStream. It is the responsibility of the
+     * caller to close the streams passed in when done, though the {@link OutputStream} will be fully flushed.
+     * 
+     * @param input
+     * @param output
+     * @param len
+     *            the number of bytes to copy
+     * @return number of bytes copied
+     * @throws IOException
+     *             If a problem occurred during any I/O operations
+     */
+    public static int copy(InputStream input, OutputStream output, int len) throws IOException {
+        final byte[] buffer = new byte[len];
+        final int read = input.read(buffer);
+
+        if(read == -1) {
+            return read;
+        }
+
+        output.write(buffer, 0, read);
+        output.flush();
+
+        return read;
+    }
+
+    /**
      * Writing the specified contents to the specified OutputStream using an internal buffer. Flushing the stream when
      * completed. Caller is responsible for opening and closing the specified stream.
      *

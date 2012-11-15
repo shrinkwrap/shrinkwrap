@@ -60,7 +60,7 @@ public abstract class AbstractStreamExporterImpl extends AssignableBase<Archive<
     // -------------------------------------------------------------------------------------||
 
     /**
-     * Obtains an {@link OuputStream} to the provided {@link File}.
+     * Obtains an {@link OutputStream} to the provided {@link File}.
      *
      * @param target
      * @param overwrite
