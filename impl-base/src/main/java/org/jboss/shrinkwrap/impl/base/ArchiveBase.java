@@ -550,7 +550,10 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
         // Now loop through and add all content
         for (final ArchivePath path : from.getContent().keySet()) {
-            to.add(from.get(path).getAsset(), path);
+            Asset asset = from.get(path).getAsset();
+            if (asset != null) {
+                to.add(asset, path);
+            }
         }
 
         // Return

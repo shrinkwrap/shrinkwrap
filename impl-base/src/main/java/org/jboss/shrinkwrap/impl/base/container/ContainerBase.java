@@ -536,7 +536,10 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         final Archive<T> newArchive = factory.create(actualClass, this.getName());
         final Map<ArchivePath, Node> contents = underlyingArchive.getContent();
         for (final ArchivePath path : contents.keySet()) {
-            newArchive.add(contents.get(path).getAsset(), path);
+            Asset asset = contents.get(path).getAsset();
+            if (asset != null) {
+                newArchive.add(asset, path);
+            }
         }
         return newArchive;
     }

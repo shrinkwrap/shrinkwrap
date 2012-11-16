@@ -1397,6 +1397,20 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         Assert.assertTrue(copyArchive.contains("location"));
     }
+    
+    @Test
+    public void ensureShallowCopyOperatesOnNestedAssets() {
+        Archive<T> archive = getArchive();
+        Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
+        archive.add(asset, "location/sublocation");
+
+        Archive<T> copyArchive = archive.shallowCopy();
+
+        Assert.assertTrue(copyArchive.contains("location"));
+        Assert.assertTrue(copyArchive.contains("location/sublocation"));
+        Assert.assertSame(copyArchive.get("location/sublocation").getAsset(), archive.get("location/sublocation")
+            .getAsset());
+    }
 
     @Test
     public void testId() {
