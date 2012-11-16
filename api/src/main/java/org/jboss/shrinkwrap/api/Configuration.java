@@ -49,7 +49,9 @@ public class Configuration {
 
     /**
      * {@link ExecutorService} used for all asynchronous operations
+     * @deprecated No longer used by the implementation, will be removed in SW 2.0
      */
+    @Deprecated
     private final ExecutorService executorService;
 
     /**
@@ -106,7 +108,9 @@ public class Configuration {
 
     /**
      * @return the executorService
+     * @deprecated No longer used by the implementation, will be removed in SW 2.0
      */
+    @Deprecated
     public ExecutorService getExecutorService() {
         return executorService;
     }
