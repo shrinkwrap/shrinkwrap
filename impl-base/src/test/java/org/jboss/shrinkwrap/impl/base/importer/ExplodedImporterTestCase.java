@@ -22,6 +22,7 @@ import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -75,7 +76,7 @@ public class ExplodedImporterTestCase {
     }
 
     @Test
-    public void shouldBeAbleToImportADriectory() throws Exception {
+    public void shouldBeAbleToImportADirectory() throws Exception {
 
         Archive<?> archive = ShrinkWrap
             .create(ExplodedImporter.class, "test.jar")
@@ -102,4 +103,37 @@ public class ExplodedImporterTestCase {
         ShrinkWrap.create(ExplodedImporter.class, "test.jar").importDirectory(
             SecurityActions.getThreadContextClassLoader().getResource(EXISTING_FILE_RESOURCE).toURI().getPath());
     }
+    
+    @Test
+    public void shouldBeAbleToImportADirectoryWithIncludeFilter() throws Exception {
+        String fileName = SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE).toURI().getPath();
+        
+        Archive<?> archive = ShrinkWrap
+            .create(ExplodedImporter.class, "test.jar")
+            .importDirectory(fileName, Filters.include(".*META-INF.*"))
+            .as(JavaArchive.class);
+        
+        Logger.getLogger(ExplodedImporterTestCase.class.getName()).info(archive.toString(true));
+
+        Assert.assertEquals("Archive should contains only 2 paths", 2, archive.getContent().size());
+        Assert.assertTrue("Nested files should be imported", archive.contains(new BasicPath("/META-INF/MANIFEST.FM")));
+    }
+    
+    @Test
+    public void shouldBeAbleToImportADirectoryWithExcludeFilter() throws Exception {
+        String fileName = SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE).toURI().getPath();
+        
+        Archive<?> archive = ShrinkWrap
+            .create(ExplodedImporter.class, "test.jar")
+            .importDirectory(fileName, Filters.exclude(".*META-INF.*"))
+            .as(JavaArchive.class);
+        
+        Logger.getLogger(ExplodedImporterTestCase.class.getName()).info(archive.toString(true));
+        
+        Assert.assertTrue("Root files should be imported", archive.contains(new BasicPath("/Test.properties")));
+        Assert.assertTrue("Nested files should be imported", archive.contains(new BasicPath("/org/jboss/Test.properties")));
+        Assert.assertTrue("Empty directories should be imported", archive.contains(new BasicPath("/empty_dir")));
+        Assert.assertTrue("Nested empty directories should be imported", archive.contains(new BasicPath("/parent/empty_dir")));
+    }
+    
 }

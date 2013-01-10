@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.Filter;
+import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.asset.FileAsset;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
@@ -68,8 +70,18 @@ public class ExplodedImporterImpl extends AssignableBase<Archive<?>> implements 
      */
     @Override
     public ExplodedImporter importDirectory(String fileName) {
+        return importDirectory(fileName, Filters.includeAll());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.importer.ExplodedImporter#importDirectory(java.lang.String, org.jboss.shrinkwrap.api.Filter)
+     */
+    @Override
+    public ExplodedImporter importDirectory(String fileName, Filter<ArchivePath> filter) {
         Validate.notNull(fileName, "FileName must be specified");
-        return importDirectory(new File(fileName));
+        return importDirectory(new File(fileName), filter);
     }
 
     /**
@@ -79,27 +91,40 @@ public class ExplodedImporterImpl extends AssignableBase<Archive<?>> implements 
      */
     @Override
     public ExplodedImporter importDirectory(File file) {
-        Validate.notNull(file, "FileName must be specified");
+        return importDirectory(file, Filters.includeAll());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.importer.ExplodedImporter#importDirectory(java.io.File, org.jboss.shrinkwrap.api.Filter)
+     */
+    @Override
+    public ExplodedImporter importDirectory(File file, Filter<ArchivePath> filter) {
+        Validate.notNull(file, "File must be specified");
+        Validate.notNull(filter, "Filter must be specified");
         if (!file.isDirectory()) {
             throw new IllegalArgumentException("Given file is not a directory " + file.getAbsolutePath());
         }
 
-        doImport(file, file.listFiles());
+        doImport(file, file.listFiles(), filter);
         return this;
     }
 
-    private void doImport(File root, File[] files) {
+    private void doImport(File root, File[] files, Filter<ArchivePath> filter) {
         for (File file : files) {
             if (log.isLoggable(Level.FINER)) {
                 log.finer("Importing: " + file.getAbsolutePath());
             }
             final Archive<?> archive = this.getArchive();
             final ArchivePath path = calculatePath(root, file);
-            if (file.isDirectory()) {
-                archive.addAsDirectory(path);
-                doImport(root, file.listFiles());
-            } else {
-                archive.add(new FileAsset(file), path);
+            if( filter.include(path) ) {
+                if (file.isDirectory()) {
+                    archive.addAsDirectory(path);
+                    doImport(root, file.listFiles(), filter);
+                } else {
+                    archive.add(new FileAsset(file), path);
+                }
             }
         }
     }

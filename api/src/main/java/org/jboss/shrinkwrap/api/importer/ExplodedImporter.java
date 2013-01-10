@@ -19,7 +19,9 @@ package org.jboss.shrinkwrap.api.importer;
 import java.io.File;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Assignable;
+import org.jboss.shrinkwrap.api.Filter;
 
 /**
  * Importer used to import Exploded directory structures into a {@link Archive}
@@ -47,6 +49,21 @@ public interface ExplodedImporter extends Assignable {
     /**
      * Import a directory structure as a archive.
      *
+     * @param file
+     *            The directory to import
+     * @param filter
+     *            The filter control which files or directories will be imported
+     * @return this
+     * @throws IllegalArgumentException
+     *             if file is null
+     * @throws IllegalArgumentException
+     *             if file is not a directory
+     */
+    ExplodedImporter importDirectory(File file, Filter<ArchivePath> filter);
+
+    /**
+     * Import a directory structure as a archive.
+     *
      * @param fileName
      *            The name of the directory to import
      * @return this
@@ -56,4 +73,20 @@ public interface ExplodedImporter extends Assignable {
      *             if file is not a directory
      */
     ExplodedImporter importDirectory(String fileName);
+
+    /**
+     * Import a directory structure as a archive.
+     *
+     * @param fileName
+     *            The name of the directory to import
+     * @param filter
+     *            The filter control which files or directories will be imported
+     * @return this
+     * @throws IllegalArgumentException
+     *             if file is null
+     * @throws IllegalArgumentException
+     *             if file is not a directory
+     */
+    ExplodedImporter importDirectory(String fileName, Filter<ArchivePath> filter);
+
 }
