@@ -136,4 +136,11 @@ public class ExplodedImporterTestCase {
         Assert.assertTrue("Nested empty directories should be imported", archive.contains(new BasicPath("/parent/empty_dir")));
     }
     
+    @Test // SHRINKWRAP-392
+    public void shouldHaveEmptyDefaultExtension() {
+        ExplodedImporter explodedImporter = ShrinkWrap.create(ExplodedImporter.class);
+        String explodedImporterArchiveName = explodedImporter.as(JavaArchive.class).getName();
+        Assert.assertFalse(explodedImporterArchiveName.contains("."));
+    }
+    
 }
