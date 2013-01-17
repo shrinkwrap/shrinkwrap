@@ -139,7 +139,7 @@ public class ExplodedImporterTestCase {
     @Test // SHRINKWRAP-392
     public void shouldHaveEmptyDefaultExtension() {
         ExplodedImporter explodedImporter = ShrinkWrap.create(ExplodedImporter.class);
-        String explodedImporterArchiveName = explodedImporter.as(Archive.class).getName();
+        String explodedImporterArchiveName = explodedImporter.as(JavaArchive.class).getName();
         Assert.assertFalse(explodedImporterArchiveName.contains("."));
     }
     
