@@ -17,7 +17,7 @@
     <!-- Artifact Information  -->
   <groupId>org.jboss.shrinkwrap</groupId>
   <artifactId>shrinkwrap-parent</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>ShrinkWrap Aggregator and Build Parent</name>
   <url>http://www.jboss.org</url>
