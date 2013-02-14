@@ -26,6 +26,7 @@ import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.attribute.FileStoreAttributeView;
 import java.util.logging.Logger;
 
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.nio.file.ShrinkWrapFileSystems;
@@ -77,8 +78,7 @@ public class FileStoreTestCase {
         archive.addClass(classToAdd);
 
         // Get size of the class
-        final String pathToClass = new StringBuilder(classToAdd.getName().replace('.', File.separatorChar)).append(
-            ".class").toString();
+        final String pathToClass = classToAdd.getName().replace('.', ArchivePath.SEPARATOR) + ".class";
         final InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(pathToClass);
         long thisClassFileSize = 0L;
         final byte[] buffer = new byte[8 * 1024];
