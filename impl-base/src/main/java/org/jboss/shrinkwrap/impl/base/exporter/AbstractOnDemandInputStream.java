@@ -168,7 +168,7 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
      */
     private void doCopy() throws IOException {
         int copied = IOUtil.copy(currentNodeStream, outputStream, BUFFER_LENGTH);
-        if (copied < BUFFER_LENGTH || copied == -1) {
+        if (copied == -1) {
             currentNodeStream.close();
             currentNodeStream = null;
             endAsset();
@@ -197,7 +197,7 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
     /**
      * Creates the real {@link OutputStream} to which we'll write, wrapping the provided target.
      *
-     * @param out
+     * @param outputStream
      * @return
      * @throws IOException
      *             If an error occurred in creating the stream

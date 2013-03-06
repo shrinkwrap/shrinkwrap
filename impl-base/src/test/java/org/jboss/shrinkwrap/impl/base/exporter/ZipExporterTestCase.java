@@ -26,10 +26,13 @@ import java.util.zip.ZipFile;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.FileAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 import org.junit.Assert;
@@ -41,6 +44,7 @@ import org.junit.Test;
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>
  * @version $Revision: $
  */
 public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporter> {
@@ -97,7 +101,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#getAssetFromExportedFile(java.io.File,
+     * @see org.jboss.shrinkwrap.impl.base.exporter.StreamExporterTestBase#getContentsFromExportedFile(java.io.File,
      *      org.jboss.shrinkwrap.api.ArchivePath)
      */
     @Override
@@ -130,7 +134,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
     // -------------------------------------------------------------------------------------||
 
     /**
-     * Test to ensure that the {@link JdkZipExporterDelegate} does not accept an empty archive as input
+     * Test to ensure that the {@link ZipExporterDelegate} does not accept an empty archive as input
      *
      * SHRINKWRAP-93
      *
@@ -162,6 +166,30 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
         } catch (Exception e) {
             Assert.assertEquals(org.jboss.shrinkwrap.api.exporter.FileExistsException.class, e.getClass());
         }
+    }
+
+    /**
+     * Archive -> WAR -> Archive -> WAR. SHRINKWRAP-444
+     */
+    @Test
+    public void testExportImportExport() {
+        // given
+        final String fileName1 = "target\\testABC.war";
+        final String fileName2 = "target\\testABC2.war";
+        final WebArchive webArchive = ShrinkWrap.create(WebArchive.class).add(
+            new FileAsset(new File(
+                "src\\test\\resources\\org\\jboss\\shrinkwrap\\impl\\base\\exporter\\hsqldb-1.8.0.10.jar")),
+            "/WEB-INF/lib/hsqldb-1.8.0.10.jar");
+        webArchive.as(ZipExporter.class).exportTo(new File(fileName1), true);
+
+        // when
+        final WebArchive webArchive2 = ShrinkWrap.createFromZipFile(WebArchive.class, new File(fileName1));
+        webArchive2.as(ZipExporter.class).exportTo(new File(fileName2), true);
+
+        // then compare sizes
+        final File resultFile1 = new File(fileName1);
+        final File resultFile2 = new File(fileName2);
+        Assert.assertEquals(resultFile1.length(), resultFile2.length());
     }
 
     // -------------------------------------------------------------------------------------||
@@ -219,5 +247,4 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
         Assert.assertNotNull("Expected path not found in ZIP: " + path, entry);
         return entry;
     }
-
 }
