@@ -29,11 +29,10 @@ import org.jboss.shrinkwrap.impl.base.Validate;
  * Used by the ZipImporter.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- * @version $Revision: $
  */
 public class ZipFileEntryAsset implements Asset {
-    private ZipFile file;
-    private ZipEntry entry;
+    private final ZipFile file;
+    private final ZipEntry entry;
 
     public ZipFileEntryAsset(ZipFile file, ZipEntry entry) {
         Validate.notNull(file, "File must be specified");
