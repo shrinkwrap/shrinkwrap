@@ -134,7 +134,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
     // -------------------------------------------------------------------------------------||
 
     /**
-     * Test to ensure that the {@link ZipExporterDelegate} does not accept an empty archive as input
+     * Test to ensure that the {@link ZipExporter} does not accept an empty archive as input
      *
      * SHRINKWRAP-93
      *
@@ -173,23 +173,24 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
      */
     @Test
     public void testExportImportExport() {
-        // given
-        final String fileName1 = "target\\testABC.war";
-        final String fileName2 = "target\\testABC2.war";
-        final WebArchive webArchive = ShrinkWrap.create(WebArchive.class).add(
-            new FileAsset(new File(
-                "src\\test\\resources\\org\\jboss\\shrinkwrap\\impl\\base\\exporter\\hsqldb-1.8.0.10.jar")),
-            "/WEB-INF/lib/hsqldb-1.8.0.10.jar");
-        webArchive.as(ZipExporter.class).exportTo(new File(fileName1), true);
+        // Preconditions
+        final File target = new File("target");
+        final File testClasses = new File(target, "test-classes");
+        final File hsqldbJar = new File(testClasses, "hsqldb.jar");
+        Assert.assertTrue("test JAR must exist to run this test", hsqldbJar.exists() && !hsqldbJar.isDirectory());
+
+        final File file1 = new File(target, "testExportImportExport1.war");
+        final File file2 = new File(target, "testExportImportExport2.war");
+        final WebArchive webArchive = ShrinkWrap.create(WebArchive.class).add(new FileAsset(hsqldbJar),
+            "/WEB-INF/lib/hsqldb.jar");
+        webArchive.as(ZipExporter.class).exportTo(file1, true);
 
         // when
-        final WebArchive webArchive2 = ShrinkWrap.createFromZipFile(WebArchive.class, new File(fileName1));
-        webArchive2.as(ZipExporter.class).exportTo(new File(fileName2), true);
+        final WebArchive webArchive2 = ShrinkWrap.createFromZipFile(WebArchive.class, file1);
+        webArchive2.as(ZipExporter.class).exportTo(file2, true);
 
         // then compare sizes
-        final File resultFile1 = new File(fileName1);
-        final File resultFile2 = new File(fileName2);
-        Assert.assertEquals(resultFile1.length(), resultFile2.length());
+        Assert.assertEquals(file1.length(), file2.length());
     }
 
     // -------------------------------------------------------------------------------------||
