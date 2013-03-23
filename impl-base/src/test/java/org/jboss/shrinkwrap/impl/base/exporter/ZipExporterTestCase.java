@@ -16,23 +16,27 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter;
 
+import static org.mockito.Mockito.mock;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.FileAsset;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.impl.base.exporter.zip.ZipExporterImpl;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 import org.junit.Assert;
@@ -191,6 +195,118 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
 
         // then compare sizes
         Assert.assertEquals(file1.length(), file2.length());
+    }
+
+    /**
+     * Export uncompressed zip
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testUncompressedExport() throws Exception {
+        // Get an archive instance
+        final Archive<?> archive = createArchiveWithAssets();
+
+        // Export as InputStream
+        final InputStream exportStream = archive.as(ZipExporter.class).compressionDisabled().exportAsInputStream();
+
+        // Validate
+        final File tempDirectory = createTempDirectory("testUncompressedExport");
+        final File serialized = new File(tempDirectory, archive.getName());
+        final FileOutputStream out = new FileOutputStream(serialized);
+        IOUtil.copyWithClose(exportStream, out);
+        ensureInExpectedForm(serialized);
+    }
+
+    /**
+     * Export uncompressed -> Import -> Export compressed
+     */
+    @Test
+    public void testExportUncompressedImportExport() {
+        // Preconditions
+        final long uncompressedArchiveSize = 707212L;
+        final long compressedArchiveSize = 668292L;
+
+        final File target = new File("target");
+        final File testClasses = new File(target, "test-classes");
+        final File hsqldbJar = new File(testClasses, "hsqldb.jar");
+        Assert.assertTrue("test JAR must exist to run this test", hsqldbJar.exists() && !hsqldbJar.isDirectory());
+
+        final File file1 = new File(target, "testExportImportExport1.war");
+        final File file2 = new File(target, "testExportImportExport2.war");
+        final WebArchive webArchive = ShrinkWrap.create(WebArchive.class).add(new FileAsset(hsqldbJar),
+            "/WEB-INF/lib/hsqldb.jar");
+
+        // when
+        webArchive.as(ZipExporter.class).compressionDisabled().exportTo(file1, true);
+        final WebArchive webArchive2 = ShrinkWrap.createFromZipFile(WebArchive.class, file1);
+        webArchive2.as(ZipExporter.class).exportTo(file2, true);
+
+        // then check sizes
+        Assert.assertEquals(uncompressedArchiveSize, file1.length());
+        Assert.assertEquals(compressedArchiveSize, file2.length());
+    }
+
+    /**
+     * Method level test for compression enabling method
+     */
+    @Test
+    public void testCompressionEnabledByArgument() {
+        // given
+        final Archive<?> archive = mock(Archive.class);
+        final boolean compression = true;
+
+        // when
+        final ZipExporter zipExporter = new ZipExporterImpl(archive).compressionEnabled(compression);
+
+        // then
+        Assert.assertEquals(compression, zipExporter.isCompressionEnabled());
+    }
+
+    /**
+     * Method level test for compression enabling method
+     */
+    @Test
+    public void testCompressionEnabled() {
+        // given
+        final Archive<?> archive = mock(Archive.class);
+
+        // when
+        final ZipExporter zipExporter = new ZipExporterImpl(archive).compressionEnabled();
+
+        // then
+        Assert.assertEquals(true, zipExporter.isCompressionEnabled());
+    }
+
+    /**
+     * Method level test for compression enabling method
+     */
+    @Test
+    public void testCompressionDisabled() {
+        // given
+        final Archive<?> archive = mock(Archive.class);
+
+        // when
+        final ZipExporter zipExporter = new ZipExporterImpl(archive).compressionDisabled();
+
+        // then
+        Assert.assertEquals(false, zipExporter.isCompressionEnabled());
+    }
+
+    /**
+     * Method level test for compression enabling method
+     */
+    @Test
+    public void testCompressionDisabledByArgument() {
+        // given
+        final Archive<?> archive = mock(Archive.class);
+        final boolean compression = false;
+
+        // when
+        final ZipExporter zipExporter = new ZipExporterImpl(archive).compressionEnabled(compression);
+
+        // then
+        Assert.assertEquals(compression, zipExporter.isCompressionEnabled());
     }
 
     // -------------------------------------------------------------------------------------||
