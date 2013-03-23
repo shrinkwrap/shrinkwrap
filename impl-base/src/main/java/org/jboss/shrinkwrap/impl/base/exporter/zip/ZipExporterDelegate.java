@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2012, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2013, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -16,14 +16,13 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter.zip;
 
+import java.io.InputStream;
+import java.util.zip.ZipOutputStream;
+
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
-
-import java.util.zip.ZipOutputStream;
-
-import java.io.InputStream;
 
 /**
  * Implementation of a ZIP exporter. Cannot handle archives with no content (as there'd be no
@@ -33,7 +32,13 @@ import java.io.InputStream;
  */
 class ZipExporterDelegate extends AbstractExporterDelegate<InputStream> {
 
+    private final boolean uncompressed;
+
     protected ZipExporterDelegate(final Archive<?> archive) {
+        this(archive, false);
+    }
+
+    protected ZipExporterDelegate(final Archive<?> archive, boolean uncompressed) {
         super(archive);
 
         // Precondition check
@@ -42,6 +47,8 @@ class ZipExporterDelegate extends AbstractExporterDelegate<InputStream> {
                 "[SHRINKWRAP-93] Cannot use this JDK-based implementation to export as ZIP an archive with no content: "
                     + archive.toString());
         }
+
+        this.uncompressed = uncompressed;
     }
 
     @Override
@@ -51,6 +58,6 @@ class ZipExporterDelegate extends AbstractExporterDelegate<InputStream> {
 
     @Override
     protected InputStream getResult() {
-        return new ZipOnDemandInputStream(getArchive());
+        return new ZipOnDemandInputStream(getArchive(), uncompressed);
     }
 }

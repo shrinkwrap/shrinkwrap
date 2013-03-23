@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2012, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2013, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -31,18 +31,31 @@ import org.jboss.shrinkwrap.impl.base.exporter.AbstractOnDemandInputStream;
  */
 class ZipOnDemandInputStream extends AbstractOnDemandInputStream<ZipOutputStream> {
 
+    private final boolean uncompressed;
+
     /**
      * Creates stream directly from archive.
      *
      * @param archive
      */
     ZipOnDemandInputStream(final Archive<?> archive) {
+        this(archive, false);
+    }
+
+    ZipOnDemandInputStream(final Archive<?> archive, boolean uncompressed) {
         super(archive);
+        this.uncompressed = uncompressed;
     }
 
     @Override
     protected ZipOutputStream createOutputStream(final OutputStream outputStream) {
-        return new ZipOutputStream(outputStream);
+        final ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
+
+        if (uncompressed) {
+            zipOutputStream.setLevel(ZipOutputStream.STORED);
+        }
+
+        return zipOutputStream;
     }
 
     @Override

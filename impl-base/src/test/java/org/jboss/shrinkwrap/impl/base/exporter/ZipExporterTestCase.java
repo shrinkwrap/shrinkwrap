@@ -18,11 +18,13 @@ package org.jboss.shrinkwrap.impl.base.exporter;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
@@ -191,6 +193,56 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
 
         // then compare sizes
         Assert.assertEquals(file1.length(), file2.length());
+    }
+
+    /**
+     * Export uncompressed zip
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testUncompressedExport() throws Exception {
+        // Get an archive instance
+        final Archive<?> archive = createArchiveWithAssets();
+
+        // Export as InputStream
+        final InputStream exportStream = archive.as(ZipExporter.class).uncompressed().exportAsInputStream();
+
+        // Validate
+        final File tempDirectory = createTempDirectory("testUncompressedExport");
+        final File serialized = new File(tempDirectory, archive.getName());
+        final FileOutputStream out = new FileOutputStream(serialized);
+        IOUtil.copyWithClose(exportStream, out);
+        ensureInExpectedForm(serialized);
+    }
+
+    /**
+     * Export uncompressed -> Import -> Export compressed
+     */
+    @Test
+    public void testExportUncompressedImportExport() {
+        // Preconditions
+        final long uncompressedArchiveSize = 707212L;
+        final long compressedArchiveSize = 668292L;
+
+        final File target = new File("target");
+        final File testClasses = new File(target, "test-classes");
+        final File hsqldbJar = new File(testClasses, "hsqldb.jar");
+        Assert.assertTrue("test JAR must exist to run this test", hsqldbJar.exists() && !hsqldbJar.isDirectory());
+
+        final File file1 = new File(target, "testExportImportExport1.war");
+        final File file2 = new File(target, "testExportImportExport2.war");
+        final WebArchive webArchive = ShrinkWrap.create(WebArchive.class).add(new FileAsset(hsqldbJar),
+            "/WEB-INF/lib/hsqldb.jar");
+
+        // when
+        webArchive.as(ZipExporter.class).uncompressed().exportTo(file1, true);
+        final WebArchive webArchive2 = ShrinkWrap.createFromZipFile(WebArchive.class, file1);
+        webArchive2.as(ZipExporter.class).exportTo(file2, true);
+
+        // then check sizes
+        Assert.assertEquals(uncompressedArchiveSize, file1.length());
+        Assert.assertEquals(compressedArchiveSize, file2.length());
     }
 
     // -------------------------------------------------------------------------------------||
