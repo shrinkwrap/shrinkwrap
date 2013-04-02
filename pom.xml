@@ -162,8 +162,6 @@
             <source>1.5</source>
             <target>1.5</target>
           </compilerArguments>
-          <argLine>-Xmx512M</argLine>
-          <executable>${JAVA_HOME}/bin/javac</executable>
         </configuration>
       </plugin>
 

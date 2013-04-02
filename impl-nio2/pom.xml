@@ -74,8 +74,6 @@
             <source>1.7</source>
             <target>1.7</target>
           </compilerArguments>
-          <argLine>-Xmx512M</argLine>
-          <executable>${env.JAVA7_HOME}/bin/javac</executable>
         </configuration>
       </plugin>
       
