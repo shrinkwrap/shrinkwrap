@@ -541,7 +541,8 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         if (!(path instanceof ShrinkWrapPath)) {
             throw new IllegalArgumentException("Only " + ShrinkWrapPath.class.getSimpleName() + " is supported");
         }
-        return type.cast(new ShrinkWrapFileAttributeView(new ShrinkWrapFileAttributes((ShrinkWrapPath) path)));
+        return type.cast(new ShrinkWrapFileAttributeView(new ShrinkWrapFileAttributes((ShrinkWrapPath) path,
+                getArchive(path))));
     }
 
     /**
@@ -570,7 +571,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         if (!((ShrinkWrapFileSystem) swPath.getFileSystem()).getArchive().contains(path.toString())) {
             throw new NoSuchFileException(path.toString());
         }
-        final A attributes = type.cast(new ShrinkWrapFileAttributes((ShrinkWrapPath) path));
+        final A attributes = type.cast(new ShrinkWrapFileAttributes((ShrinkWrapPath) path, getArchive(path)));
         return attributes;
     }
 

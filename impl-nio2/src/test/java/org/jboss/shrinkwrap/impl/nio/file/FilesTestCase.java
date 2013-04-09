@@ -493,8 +493,8 @@ public class FilesTestCase {
 
     @Test
     public void isDirectoryTrue() throws IOException {
-        this.getArchive().add(EmptyAsset.INSTANCE, "path/");
-        Assert.assertTrue(Files.isDirectory(fs.getPath("path/"), (LinkOption) null));
+        this.getArchive().addAsDirectories("path");
+        Assert.assertTrue(Files.isDirectory(fs.getPath("path"), (LinkOption) null));
     }
 
     @Test
@@ -734,6 +734,13 @@ public class FilesTestCase {
         final byte[] bytes = Files.readAllBytes(fs.getPath(path));
         final String roundtrip = new String(bytes);
         Assert.assertEquals("Contents not read as expected from the readAllBytes", contents, roundtrip);
+    }
+
+    @Test
+    public void createdDirectoryIsADirectory() throws Exception {
+        Path dirPath = fs.getPath("dir");
+        Files.createDirectory(dirPath);
+        Assert.assertTrue("Created directory was not a directory", Files.isDirectory(dirPath));
     }
 
     /**

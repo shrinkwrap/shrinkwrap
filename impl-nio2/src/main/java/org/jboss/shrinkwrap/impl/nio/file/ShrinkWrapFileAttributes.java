@@ -23,6 +23,8 @@ import java.nio.file.attribute.FileTime;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
@@ -33,10 +35,13 @@ import org.jboss.shrinkwrap.api.asset.Asset;
 final class ShrinkWrapFileAttributes implements BasicFileAttributes {
 
     private final ShrinkWrapPath path;
+    private final Archive<?> archive;
 
-    ShrinkWrapFileAttributes(final ShrinkWrapPath path) {
+    ShrinkWrapFileAttributes(final ShrinkWrapPath path, Archive<?> archive) {
         assert path != null : "Path must be specified";
+        assert archive != null : "Archive must be specified";
         this.path = path;
+        this.archive = archive;
     }
 
     /**
@@ -83,7 +88,9 @@ final class ShrinkWrapFileAttributes implements BasicFileAttributes {
      */
     @Override
     public boolean isDirectory() {
-        return this.path.toString().endsWith(ArchivePath.SEPARATOR_STRING);
+        final ArchivePath archivePath = ArchivePaths.create(path.toString());
+        Node node = archive.get(archivePath);
+        return node.getAsset() == null;
     }
 
     /**
