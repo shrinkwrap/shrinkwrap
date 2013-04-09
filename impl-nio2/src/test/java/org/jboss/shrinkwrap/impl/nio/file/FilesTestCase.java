@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,14 +33,17 @@ import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
 import java.util.Iterator;
 import java.util.logging.Logger;
@@ -493,8 +497,8 @@ public class FilesTestCase {
 
     @Test
     public void isDirectoryTrue() throws IOException {
-        this.getArchive().add(EmptyAsset.INSTANCE, "path/");
-        Assert.assertTrue(Files.isDirectory(fs.getPath("path/"), (LinkOption) null));
+        this.getArchive().addAsDirectories("path");
+        Assert.assertTrue(Files.isDirectory(fs.getPath("path"), (LinkOption) null));
     }
 
     @Test
@@ -670,7 +674,7 @@ public class FilesTestCase {
     public void newDirectoryStream() throws IOException {
         final String dirs = "a/b/c/d/e";
         this.getArchive().addAsDirectories(dirs);
-        final DirectoryStream<Path> stream = Files.newDirectoryStream(fs.getPath(dirs));
+        final DirectoryStream<Path> stream = Files.newDirectoryStream(fs.getPath("/"));
         final Iterator<Path> paths = stream.iterator();
         int counter = 0;
         while (paths.hasNext()) {
@@ -678,7 +682,7 @@ public class FilesTestCase {
             final Path path = paths.next();
             Assert.assertTrue(this.getArchive().contains(path.toString()));
         }
-        Assert.assertEquals(5, counter);
+        Assert.assertEquals(1, counter);
     }
 
     @Test
@@ -734,6 +738,55 @@ public class FilesTestCase {
         final byte[] bytes = Files.readAllBytes(fs.getPath(path));
         final String roundtrip = new String(bytes);
         Assert.assertEquals("Contents not read as expected from the readAllBytes", contents, roundtrip);
+    }
+
+    @Test
+    public void createdDirectoryIsADirectory() throws Exception {
+        Path dirPath = fs.getPath("dir");
+        Files.createDirectory(dirPath);
+        Assert.assertTrue("Created directory was not a directory", Files.isDirectory(dirPath));
+    }
+
+    @Test
+    public void createdDirectoryCanBeStreamed() throws Exception {
+        System.out.println(Files.newDirectoryStream(new File("D:\\ws\\e420\\shrinkwrap\\impl-nio2\\target").toPath())
+                .iterator().next());
+
+        Path dirPath = fs.getPath("dir");
+        Files.createDirectory(dirPath);
+        Files.createFile(dirPath.resolve("file"));
+        DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath);
+        Iterator<Path> it = stream.iterator();
+        Assert.assertEquals("/dir/file", it.next().toString());
+        Assert.assertFalse("No further elements expected in stream", it.hasNext());
+    }
+
+    @Test
+    public void directoryStreamDoesNotContainSubfolders() throws Exception {
+        System.out.println(Files.newDirectoryStream(new File("D:\\ws\\e420\\shrinkwrap\\impl-nio2\\target").toPath())
+                .iterator().next());
+
+        Files.createDirectories(fs.getPath("dir/subdir"));
+        DirectoryStream<Path> stream = Files.newDirectoryStream(fs.getPath("/"));
+        Iterator<Path> it = stream.iterator();
+        Assert.assertEquals("/dir", it.next().toString());
+        Assert.assertFalse("No further elements expected in stream", it.hasNext());
+    }
+
+    @Test
+    public void createdDirectoryCanBeWalked() throws Exception {
+        Path dirPath = fs.getPath("dir");
+        Files.createDirectory(dirPath);
+        Files.createFile(dirPath.resolve("file"));
+        final int[] visitFileCalled = new int[1];
+        Files.walkFileTree(dirPath, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                visitFileCalled[0]++;
+                return super.visitFile(file, attrs);
+            }
+        });
+        Assert.assertEquals(1, visitFileCalled[0]);
     }
 
     /**
