@@ -38,20 +38,29 @@ class ShrinkWrapDirectoryStream implements DirectoryStream<Path> {
 
     private final DirectoryStream.Filter<? super Path> filter;
 
+    private final Path startingPath;
+
     /**
-     * Creates a new instance backing the specified {@link ShrinkWrapFileSystem}, which is required. An optional
-     * {@link DirectoryStream.Filter} may be specified as well.
+     * Creates a new instance starting from startingPath with is required backing the specified
+     * {@link ShrinkWrapFileSystem}, which is required. An optional {@link DirectoryStream.Filter} may be
+     * specified as well.
      *
+     * @param startingPath
      * @param fs
      * @param filter
      * @throws IllegalArgumentException
      *             If the fs is not specified
      */
-    ShrinkWrapDirectoryStream(final ShrinkWrapFileSystem fs, final DirectoryStream.Filter<? super Path> filter)
+    ShrinkWrapDirectoryStream(final Path startingPath, final ShrinkWrapFileSystem fs,
+            final DirectoryStream.Filter<? super Path> filter)
         throws IllegalArgumentException {
         if (fs == null) {
             throw new IllegalArgumentException("File system must be specified");
         }
+        if (startingPath == null) {
+            throw new IllegalArgumentException("Starting path must be specified");
+        }
+        this.startingPath = startingPath.toAbsolutePath();
         this.fs = fs;
         this.filter = filter;
     }
@@ -80,6 +89,10 @@ class ShrinkWrapDirectoryStream implements DirectoryStream<Path> {
         final Collection<ArchivePath> archivePaths = content.keySet();
         for (final ArchivePath path : archivePaths) {
             final Path newPath = new ShrinkWrapPath(path, fs);
+
+            if (!newPath.getParent().equals(startingPath)) {
+                continue;
+            }
 
             // If we have a filter, and it rejects this path
             try {

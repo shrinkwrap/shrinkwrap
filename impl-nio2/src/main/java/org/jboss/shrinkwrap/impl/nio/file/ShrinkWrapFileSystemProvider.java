@@ -324,7 +324,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         if (!(fs instanceof ShrinkWrapFileSystem)) {
             throw new IllegalArgumentException("Expected ShrinkWrap File System for Path: " + dir.toString());
         }
-        return new ShrinkWrapDirectoryStream((ShrinkWrapFileSystem) fs, filter);
+        return new ShrinkWrapDirectoryStream(dir, (ShrinkWrapFileSystem) fs, filter);
     }
 
     /**
