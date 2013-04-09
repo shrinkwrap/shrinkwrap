@@ -136,11 +136,17 @@ public class FileAttributesTestCase {
     }
 
     private ShrinkWrapFileAttributes getAttributes(final String pathName, boolean create) {
+        String attributesFor = pathName;
         if (create) {
-            archive.add(EmptyAsset.INSTANCE, pathName);
+            if (pathName.endsWith("/")) {
+                attributesFor = pathName.substring(0, pathName.length() - 1);
+                archive.addAsDirectory(attributesFor);
+            } else {
+                archive.add(EmptyAsset.INSTANCE, pathName);
+            }
         }
         try {
-            return Files.readAttributes(this.fs.getPath(pathName), ShrinkWrapFileAttributes.class, (LinkOption) null);
+            return Files.readAttributes(this.fs.getPath(attributesFor), ShrinkWrapFileAttributes.class, (LinkOption) null);
         } catch (final IOException ioe) {
             throw new RuntimeException(ioe);
         }
