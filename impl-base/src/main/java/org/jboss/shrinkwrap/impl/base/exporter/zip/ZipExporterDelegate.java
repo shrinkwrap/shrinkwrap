@@ -32,13 +32,13 @@ import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
  */
 class ZipExporterDelegate extends AbstractExporterDelegate<InputStream> {
 
-    private final boolean uncompressed;
+    private final boolean compressed;
 
     protected ZipExporterDelegate(final Archive<?> archive) {
-        this(archive, false);
+        this(archive, true);
     }
 
-    protected ZipExporterDelegate(final Archive<?> archive, boolean uncompressed) {
+    protected ZipExporterDelegate(final Archive<?> archive, boolean compressed) {
         super(archive);
 
         // Precondition check
@@ -48,7 +48,7 @@ class ZipExporterDelegate extends AbstractExporterDelegate<InputStream> {
                     + archive.toString());
         }
 
-        this.uncompressed = uncompressed;
+        this.compressed = compressed;
     }
 
     @Override
@@ -58,6 +58,6 @@ class ZipExporterDelegate extends AbstractExporterDelegate<InputStream> {
 
     @Override
     protected InputStream getResult() {
-        return new ZipOnDemandInputStream(getArchive(), uncompressed);
+        return new ZipOnDemandInputStream(getArchive(), compressed);
     }
 }

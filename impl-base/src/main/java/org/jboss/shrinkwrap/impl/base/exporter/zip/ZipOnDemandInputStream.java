@@ -31,7 +31,7 @@ import org.jboss.shrinkwrap.impl.base.exporter.AbstractOnDemandInputStream;
  */
 class ZipOnDemandInputStream extends AbstractOnDemandInputStream<ZipOutputStream> {
 
-    private final boolean uncompressed;
+    private final boolean compressed;
 
     /**
      * Creates stream directly from archive.
@@ -39,19 +39,19 @@ class ZipOnDemandInputStream extends AbstractOnDemandInputStream<ZipOutputStream
      * @param archive
      */
     ZipOnDemandInputStream(final Archive<?> archive) {
-        this(archive, false);
+        this(archive, true);
     }
 
-    ZipOnDemandInputStream(final Archive<?> archive, boolean uncompressed) {
+    ZipOnDemandInputStream(final Archive<?> archive, boolean compressed) {
         super(archive);
-        this.uncompressed = uncompressed;
+        this.compressed = compressed;
     }
 
     @Override
     protected ZipOutputStream createOutputStream(final OutputStream outputStream) {
         final ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
 
-        if (uncompressed) {
+        if (!compressed) {
             zipOutputStream.setLevel(ZipOutputStream.STORED);
         }
 

@@ -34,7 +34,7 @@ import org.jboss.shrinkwrap.impl.base.exporter.AbstractStreamExporterImpl;
  */
 public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipExporter {
 
-    private boolean uncompressed = false;
+    private boolean compressed = true;
 
     public ZipExporterImpl(final Archive<?> archive) {
         super(archive);
@@ -49,15 +49,30 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
     public InputStream exportAsInputStream() {
         // Create export delegate
         final AbstractExporterDelegate<InputStream> exportDelegate = new ZipExporterDelegate(this.getArchive(),
-            uncompressed);
+            compressed);
 
         // Export and get result
         return exportDelegate.export();
     }
 
     @Override
-    public StreamExporter uncompressed() {
-        this.uncompressed = true;
+    public ZipExporter compressionEnabled(final boolean enabled) {
+        this.compressed = enabled;
         return this;
+    }
+
+    @Override
+    public ZipExporter compressionEnabled() {
+        return this.compressionEnabled(true);
+    }
+
+    @Override
+    public ZipExporter compressionDisabled() {
+        return this.compressionEnabled(false);
+    }
+
+    @Override
+    public boolean isCompressionEnabled() {
+        return this.compressed;
     }
 }

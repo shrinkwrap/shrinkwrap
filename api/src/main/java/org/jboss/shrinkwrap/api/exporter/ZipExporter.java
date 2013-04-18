@@ -31,7 +31,24 @@ import org.jboss.shrinkwrap.api.Assignable;
 public interface ZipExporter extends StreamExporter {
 
     /**
+     * @param enabled
+     *            enable compression of content in ZIP format. True by default.
+     * @return exporter with set given compression setting.
+     */
+    ZipExporter compressionEnabled(boolean enabled);
+
+    /**
+     * @return exporter of compressed content in ZIP format.
+     */
+    ZipExporter compressionEnabled();
+
+    /**
      * @return exporter of uncompressed content in ZIP format.
      */
-    StreamExporter uncompressed();
+    ZipExporter compressionDisabled();
+
+    /**
+     * @return true if compression is enabled.
+     */
+    boolean isCompressionEnabled();
 }
