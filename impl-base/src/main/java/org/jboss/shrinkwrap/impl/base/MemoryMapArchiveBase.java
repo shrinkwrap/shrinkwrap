@@ -19,9 +19,11 @@ package org.jboss.shrinkwrap.impl.base;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -306,7 +308,11 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
         }
         // Recursively delete children if present
         if (node.getChildren() != null) {
-            for (Node child : node.getChildren()) {
+            final Set<Node> children = node.getChildren();
+
+            // can't remove from collection inside of the iteration
+            final Set<Node> childrenCopy = new HashSet<Node>(children);
+            for (Node child : childrenCopy) {
                 node.removeChild(child);
                 content.remove(child.getPath());
             }
