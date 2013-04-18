@@ -586,6 +586,26 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     /**
+     * Delete directory which contains children.
+     */
+    @Test
+    public void testDeletePathWithChildren() {
+        // given
+        final Archive<T> archive = getArchive();
+        final String dirName = "dir";
+        archive.addAsDirectories(dirName);
+        archive.add(new StringAsset("asset"), dirName, "abc.txt").add(new StringAsset("asset"), dirName, "cde.txt");
+        archive.add(new StringAsset("other"), "other.txt");
+
+        // when
+        archive.delete("dir");
+
+        // then
+        Assert.assertFalse(archive.contains(dirName));
+        Assert.assertEquals(1, archive.getContent().size());
+    }
+
+    /**
      * Ensure an asset can be retrieved by its path
      *
      * @throws Exception
