@@ -176,7 +176,7 @@ public final class ArchiveFactory {
             throw new IllegalArgumentException("file must be specified");
         }
         if (!archiveFile.exists()) {
-            throw new IllegalArgumentException("File for import exist: " + archiveFile.getAbsolutePath());
+            throw new IllegalArgumentException("File for import does not exist: " + archiveFile.getAbsolutePath());
         }
         if (archiveFile.isDirectory()) {
             throw new IllegalArgumentException("File for import must not be a directory: "
