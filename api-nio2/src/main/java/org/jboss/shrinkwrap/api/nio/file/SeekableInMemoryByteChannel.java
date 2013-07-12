@@ -104,8 +104,8 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
             numBytesRemainingInContent = this.contents.length - this.position;
 
             // Set position was greater than the size? Just return.
-            if (numBytesRemainingInContent < 0) {
-                return 0;
+            if (numBytesRemainingInContent <= 0) {
+                return -1;
             }
 
             // We'll read in either the number of bytes remaining in content or the amount of space in the buffer,
