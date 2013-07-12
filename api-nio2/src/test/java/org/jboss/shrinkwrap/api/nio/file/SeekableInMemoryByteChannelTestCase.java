@@ -152,7 +152,7 @@ public class SeekableInMemoryByteChannelTestCase {
         this.channel.write(smallerBuffer);
         // Read a byte from a position past the size
         final int numBytesRead = this.channel.position(this.channel.size() + 3).read(ByteBuffer.wrap(new byte[1]));
-        Assert.assertEquals("Read on position > size should report 0 bytes read", 0, numBytesRead);
+        Assert.assertEquals("Read on position > size should return -1", -1, numBytesRead);
     }
 
     @Test
