@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2011, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -14,14 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api;
+package org.jboss.shrinkwrap.api.exporter;
+
+import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * Supported archive formats known by the base implementation
+ * Exporter used to represent an {@link Assignable} in TAR format encoded w/ BZip2 compression
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:ts@bee.kz">Tair Sabirgaliev</a>
+ * @see http://www.gnu.org/software/tar/manual/html_node/Standard.html
+ * @see http://www.bzip.org/
  */
-public enum ArchiveFormat {
-    UNKNOWN, ZIP, TAR, TAR_GZ, TAR_BZ;
+public interface TarBzExporter extends StreamExporter {
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+
+    // Inherited from superclass
 }

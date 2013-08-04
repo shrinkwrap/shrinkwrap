@@ -42,7 +42,7 @@
       <artifactId>shrinkwrap-spi</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    
     <!--
     shrinkwrap-api test jar
     -->
