@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.AccessMode;
 import java.nio.file.CopyOption;
@@ -233,6 +234,18 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
 
         // Return
         return path;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.nio.file.spi.FileSystemProvider#newFileChannel(java.nio.file.Path, java.util.Set,
+     *      java.nio.file.attribute.FileAttribute<?>[])
+     */
+    @Override
+    public FileChannel newFileChannel(Path path, Set<? extends OpenOption> options,
+            FileAttribute<?>... attrs) throws IOException {
+        return new ShrinkWrapFileChannel(newByteChannel(path, options, attrs));
     }
 
     /**
