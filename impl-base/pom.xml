@@ -42,6 +42,15 @@
       <artifactId>shrinkwrap-spi</artifactId>
       <version>${project.version}</version>
     </dependency>
+    
+    <!-- 
+    Other
+     -->
+	<dependency>
+	  <groupId>org.apache.commons</groupId>
+	  <artifactId>commons-compress</artifactId>
+	  <version>1.5</version>
+	</dependency>
 
     <!--
     shrinkwrap-api test jar
