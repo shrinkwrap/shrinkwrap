@@ -20,12 +20,11 @@ import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.exporter.TarExporter;
-import org.jboss.shrinkwrap.api.exporter.TarGzExporter;
 import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
 import org.jboss.shrinkwrap.impl.base.exporter.AbstractStreamExporterImpl;
 
 /**
- * Implementation of {@link TarGzExporter} used to export an Archive as a TAR format.
+ * Implementation of {@link TarExporter} used to export an Archive as a TAR format.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>

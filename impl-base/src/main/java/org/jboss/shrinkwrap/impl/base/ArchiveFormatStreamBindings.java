@@ -18,10 +18,12 @@ package org.jboss.shrinkwrap.impl.base;
 
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
+import org.jboss.shrinkwrap.api.exporter.TarBzExporter;
 import org.jboss.shrinkwrap.api.exporter.TarExporter;
 import org.jboss.shrinkwrap.api.exporter.TarGzExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.importer.StreamImporter;
+import org.jboss.shrinkwrap.api.importer.TarBzImporter;
 import org.jboss.shrinkwrap.api.importer.TarGzImporter;
 import org.jboss.shrinkwrap.api.importer.TarImporter;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
@@ -32,6 +34,7 @@ import org.jboss.shrinkwrap.api.importer.ZipImporter;
  *
  * @author Davide D'Alto
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:ts@bee.kz">Tair Sabirgaliev</a>
  * @version $Revision: $
  * @see StreamImporter
  * @see StreamExporter
@@ -52,6 +55,10 @@ class ArchiveFormatStreamBindings {
             case TAR_GZ:
                 this.importer = TarGzImporter.class;
                 this.exporter = TarGzExporter.class;
+                break;
+            case TAR_BZ:
+                this.importer = TarBzImporter.class;
+                this.exporter = TarBzExporter.class;
                 break;
             case ZIP:
                 this.importer = ZipImporter.class;

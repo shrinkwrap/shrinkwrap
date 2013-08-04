@@ -20,7 +20,8 @@ package org.jboss.shrinkwrap.api;
  * Supported archive formats known by the base implementation
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:ts@bee.kz">Tair Sabirgaliev</a>
  */
 public enum ArchiveFormat {
-    UNKNOWN, ZIP, TAR, TAR_GZ;
+    UNKNOWN, ZIP, TAR, TAR_GZ, TAR_BZ;
 }
