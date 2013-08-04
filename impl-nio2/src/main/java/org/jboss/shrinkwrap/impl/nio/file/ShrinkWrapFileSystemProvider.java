@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.AccessMode;
 import java.nio.file.CopyOption;
@@ -54,6 +55,7 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.nio.file.InMemoryFileChannel;
 import org.jboss.shrinkwrap.api.nio.file.MemoryNamedAsset;
 import org.jboss.shrinkwrap.api.nio.file.SeekableInMemoryByteChannel;
 
@@ -233,6 +235,18 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
 
         // Return
         return path;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.nio.file.spi.FileSystemProvider#newFileChannel(java.nio.file.Path, java.util.Set,
+     *      java.nio.file.attribute.FileAttribute<?>[])
+     */
+    @Override
+    public FileChannel newFileChannel(Path path, Set<? extends OpenOption> options,
+            FileAttribute<?>... attrs) throws IOException {
+        return new InMemoryFileChannel(newByteChannel(path, options, attrs));
     }
 
     /**
