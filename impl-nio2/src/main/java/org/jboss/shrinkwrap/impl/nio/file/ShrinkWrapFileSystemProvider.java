@@ -55,7 +55,6 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
-import org.jboss.shrinkwrap.api.nio.file.InMemoryFileChannel;
 import org.jboss.shrinkwrap.api.nio.file.MemoryNamedAsset;
 import org.jboss.shrinkwrap.api.nio.file.SeekableInMemoryByteChannel;
 
@@ -246,7 +245,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
     @Override
     public FileChannel newFileChannel(Path path, Set<? extends OpenOption> options,
             FileAttribute<?>... attrs) throws IOException {
-        return new InMemoryFileChannel(newByteChannel(path, options, attrs));
+        return new ShrinkWrapFileChannel(newByteChannel(path, options, attrs));
     }
 
     /**
