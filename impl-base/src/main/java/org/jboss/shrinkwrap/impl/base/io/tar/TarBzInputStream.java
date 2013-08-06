@@ -19,7 +19,7 @@ package org.jboss.shrinkwrap.impl.base.io.tar;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.jboss.shrinkwrap.impl.base.io.tar.bzip.BZip2CompressorInputStream;
 
 /**
  * The {@link TarBzInputStream} reads a UNIX TAR archive, further encoded in GZIP compresssion, as an InputStream.

@@ -20,11 +20,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.TarBzExporter;
 import org.jboss.shrinkwrap.api.importer.TarBzImporter;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream;
+import org.jboss.shrinkwrap.impl.base.io.tar.bzip.BZip2CompressorInputStream;
 
 /**
  * TestCase to ensure that the {@link TarBzExporter} correctly exports archives to TAR.BZ2 format.

@@ -20,7 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
+import org.jboss.shrinkwrap.impl.base.io.tar.bzip.BZip2CompressorOutputStream;
 
 // we extend TarOutputStream to have the same type,
 // BUT, we don't use ANY methods. It's all about

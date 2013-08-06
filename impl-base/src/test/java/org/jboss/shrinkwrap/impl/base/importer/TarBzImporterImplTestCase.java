@@ -22,12 +22,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.TarBzExporter;
 import org.jboss.shrinkwrap.api.importer.TarBzImporter;
 import org.jboss.shrinkwrap.impl.base.importer.tar.TarBzImporterImpl;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarBzInputStream;
+import org.jboss.shrinkwrap.impl.base.io.tar.bzip.BZip2CompressorOutputStream;
 
 /**
  * TestCase to verify the {@link TarBzImporterImpl} functionality.
