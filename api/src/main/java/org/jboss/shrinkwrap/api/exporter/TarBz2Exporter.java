@@ -14,16 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api.importer;
+package org.jboss.shrinkwrap.api.exporter;
 
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * {@link Assignable} type capable of importing TAR archive content encoded in BZip2 compression.
+ * Exporter used to represent an {@link Assignable} in TAR format encoded w/ BZip2 compression
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:ts@bee.kz">Tair Sabirgaliev</a>
+ * @see http://www.gnu.org/software/tar/manual/html_node/Standard.html
+ * @see http://www.bzip.org/
  */
-public interface TarBzImporter extends StreamImporter<TarBzImporter> {
+public interface TarBz2Exporter extends StreamExporter {
+    // -------------------------------------------------------------------------------------||
+    // Contracts --------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
+    // Inherited from superclass
 }

@@ -30,14 +30,14 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarEntry;
  * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>
  * @author <a href="mailto:ts@bee.kz">Tair Sabirgaliev</a>
  */
-class TarBzOnDemandInputStream extends AbstractOnDemandInputStream<TarBzOutputStream> {
+class TarBz2OnDemandInputStream extends AbstractOnDemandInputStream<TarBzOutputStream> {
 
     /**
      * Creates stream directly from archive.
      *
      * @param archive
      */
-    TarBzOnDemandInputStream(Archive<?> archive) {
+    TarBz2OnDemandInputStream(Archive<?> archive) {
         super(archive);
     }
 

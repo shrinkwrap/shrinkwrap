@@ -16,34 +16,42 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter.tar;
 
+import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.exporter.TarBz2Exporter;
+import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
+import org.jboss.shrinkwrap.impl.base.exporter.AbstractStreamExporterImpl;
+
 import java.io.InputStream;
 
-import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.Node;
-import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
-
 /**
- * Implementation of an exporter for the TAR format, further encoded as BZip2.
+ * Implementation of {@link TarBz2Exporter} used to export an Archive as a TAR format encoded in BZip2.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>
  * @author <a href="mailto:ts@bee.kz">Tair Sabirgaliev</a>
  */
-class TarBzExporterDelegate extends
-        AbstractExporterDelegate<InputStream> {
+public class TarBz2ExporterImpl extends AbstractStreamExporterImpl implements
+        TarBz2Exporter {
 
-    TarBzExporterDelegate(Archive<?> archive) {
+    /**
+     * Creates a new exporter for the specified archive
+     */
+    public TarBz2ExporterImpl(final Archive<?> archive) {
         super(archive);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.exporter.StreamExporter#exportAsInputStream()
+     */
     @Override
-    protected void processNode(ArchivePath path, Node node) {
-        // do nothing
+    public InputStream exportAsInputStream() {
+        // Create export delegate
+        final AbstractExporterDelegate<InputStream> exportDelegate = new TarBz2ExporterDelegate(this.getArchive());
+
+        // Execute export
+        return exportDelegate.export();
     }
 
-    @Override
-    protected InputStream getResult() {
-        return new TarBzOnDemandInputStream(getArchive());
-    }
 }

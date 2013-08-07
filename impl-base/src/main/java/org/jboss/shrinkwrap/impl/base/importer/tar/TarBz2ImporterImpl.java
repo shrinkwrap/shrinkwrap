@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.importer.TarBzImporter;
+import org.jboss.shrinkwrap.api.importer.TarBz2Importer;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarBzInputStream;
 
 /**
@@ -29,13 +29,13 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarBzInputStream;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:ts@bee.kz">Tair Sabirgaliev</a>
  */
-public class TarBzImporterImpl extends TarImporterBase<TarBzInputStream, TarBzImporter> implements TarBzImporter {
+public class TarBz2ImporterImpl extends TarImporterBase<TarBzInputStream, TarBz2Importer> implements TarBz2Importer {
 
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
-    public TarBzImporterImpl(final Archive<?> archive) {
+    public TarBz2ImporterImpl(final Archive<?> archive) {
         super(archive);
     }
 
@@ -60,8 +60,8 @@ public class TarBzImporterImpl extends TarImporterBase<TarBzInputStream, TarBzIm
      * @see org.jboss.shrinkwrap.impl.base.importer.tar.TarImporterBase#getActualClass()
      */
     @Override
-    Class<TarBzImporter> getActualClass() {
-        return TarBzImporter.class;
+    Class<TarBz2Importer> getActualClass() {
+        return TarBz2Importer.class;
     }
 
 }

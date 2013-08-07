@@ -16,26 +16,25 @@
  */
 package org.jboss.shrinkwrap.impl.base.importer;
 
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
+import org.jboss.shrinkwrap.api.exporter.TarBz2Exporter;
+import org.jboss.shrinkwrap.api.importer.TarBz2Importer;
+import org.jboss.shrinkwrap.impl.base.io.tar.TarBzInputStream;
+import org.jboss.shrinkwrap.impl.base.io.tar.bzip.BZip2CompressorOutputStream;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
-import org.jboss.shrinkwrap.api.exporter.StreamExporter;
-import org.jboss.shrinkwrap.api.exporter.TarBzExporter;
-import org.jboss.shrinkwrap.api.importer.TarBzImporter;
-import org.jboss.shrinkwrap.impl.base.importer.tar.TarBzImporterImpl;
-import org.jboss.shrinkwrap.impl.base.io.tar.TarBzInputStream;
-import org.jboss.shrinkwrap.impl.base.io.tar.bzip.BZip2CompressorOutputStream;
-
 /**
- * TestCase to verify the {@link TarBzImporterImpl} functionality.
+ * TestCase to verify the {@link org.jboss.shrinkwrap.impl.base.importer.tar.TarBz2ImporterImpl} functionality.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:ts@bee.kz">Tair Sabirgaliev</a>
  */
-public class TarBzImporterImplTestCase extends StreamImporterImplTestBase<TarBzImporter> {
+public class TarBz2ImporterImplTestCase extends StreamImporterImplTestBase<TarBz2Importer> {
 
     // -------------------------------------------------------------------------------------||
     // Class Members ----------------------------------------------------------------------||
@@ -45,12 +44,12 @@ public class TarBzImporterImplTestCase extends StreamImporterImplTestBase<TarBzI
      * Logger
      */
     @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(TarBzImporterImplTestCase.class.getName());
+    private static final Logger log = Logger.getLogger(TarBz2ImporterImplTestCase.class.getName());
 
     /**
      * Delegate for performing TAR.BZ2 content assertions
      */
-    private static final TarBzContentAssertionDelegate delegate = new TarBzContentAssertionDelegate();
+    private static final TarBz2ContentAssertionDelegate delegate = new TarBz2ContentAssertionDelegate();
 
     // -------------------------------------------------------------------------------------||
     // Required Implementations -----------------------------------------------------------||
@@ -72,8 +71,8 @@ public class TarBzImporterImplTestCase extends StreamImporterImplTestBase<TarBzI
      * @see org.jboss.shrinkwrap.impl.base.importer.StreamImporterImplTestBase#getImporterClass()
      */
     @Override
-    protected Class<TarBzImporter> getImporterClass() {
-        return TarBzImporter.class;
+    protected Class<TarBz2Importer> getImporterClass() {
+        return TarBz2Importer.class;
     }
 
     /**
@@ -83,7 +82,7 @@ public class TarBzImporterImplTestCase extends StreamImporterImplTestBase<TarBzI
      */
     @Override
     protected Class<? extends StreamExporter> getExporterClass() {
-        return TarBzExporter.class;
+        return TarBz2Exporter.class;
     }
 
     /**

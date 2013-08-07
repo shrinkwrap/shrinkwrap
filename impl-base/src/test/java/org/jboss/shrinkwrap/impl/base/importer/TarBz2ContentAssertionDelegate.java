@@ -39,7 +39,7 @@ import org.jboss.shrinkwrap.impl.base.path.PathUtil;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:ts@bee.kz">Tair Sabirgaliev</a>
  */
-public class TarBzContentAssertionDelegate extends ContentAssertionDelegateBase {
+public class TarBz2ContentAssertionDelegate extends ContentAssertionDelegateBase {
 
     // -------------------------------------------------------------------------------------||
     // Class Members ----------------------------------------------------------------------||
@@ -48,7 +48,7 @@ public class TarBzContentAssertionDelegate extends ContentAssertionDelegateBase 
     /**
      * Logger
      */
-    private static final Logger log = Logger.getLogger(TarBzContentAssertionDelegate.class.getName());
+    private static final Logger log = Logger.getLogger(TarBz2ContentAssertionDelegate.class.getName());
 
     /**
      * ClassLoader resource of a static TAR.BZ2 we'll use to test importing

@@ -19,11 +19,11 @@ package org.jboss.shrinkwrap.impl.base;
 import static junit.framework.Assert.assertEquals;
 
 import org.jboss.shrinkwrap.api.ArchiveFormat;
-import org.jboss.shrinkwrap.api.exporter.TarBzExporter;
+import org.jboss.shrinkwrap.api.exporter.TarBz2Exporter;
 import org.jboss.shrinkwrap.api.exporter.TarExporter;
 import org.jboss.shrinkwrap.api.exporter.TarGzExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
-import org.jboss.shrinkwrap.api.importer.TarBzImporter;
+import org.jboss.shrinkwrap.api.importer.TarBz2Importer;
 import org.jboss.shrinkwrap.api.importer.TarGzImporter;
 import org.jboss.shrinkwrap.api.importer.TarImporter;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
@@ -66,12 +66,12 @@ public class ArchiveFormatStreamBindingsTestCase {
     }
 
     @Test
-    public void testTarBzImporter() throws Exception {
-        assertEquals(TarBzImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_BZ).getImporter());
+    public void testTarBz2Importer() throws Exception {
+        assertEquals(TarBz2Importer.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_BZ).getImporter());
     }
 
     @Test
-    public void testTarBzExporter() throws Exception {
-        assertEquals(TarBzExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_BZ).getExporter());
+    public void testTarBz2Exporter() throws Exception {
+        assertEquals(TarBz2Exporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_BZ).getExporter());
     }
 }
