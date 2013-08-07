@@ -21,6 +21,10 @@ package org.jboss.shrinkwrap.impl.base.io.tar.bzip;
 /**
  * A simple class the hold and calculate the CRC for sanity checking of the
  * data.
+ *
+ * <p><em>Forked from <a href="http://commons.apache.org/proper/commons-compress/">
+ * Apache Commons-Compress</a> with possible changes</em></p>
+ *
  * @NotThreadSafe
  */
 class CRC {

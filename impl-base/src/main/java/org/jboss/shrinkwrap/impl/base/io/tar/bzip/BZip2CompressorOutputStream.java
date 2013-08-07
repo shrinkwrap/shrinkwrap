@@ -120,9 +120,13 @@ import java.io.OutputStream;
  * <p>
  * TODO: Update to BZip2 1.0.1
  * </p>
+ *
+ * <p><em>Forked from <a href="http://commons.apache.org/proper/commons-compress/">
+ * Apache Commons-Compress</a> with possible changes</em></p>
+ *
  * @NotThreadSafe
  */
-public class BZip2CompressorOutputStream extends CompressorOutputStream
+public class BZip2CompressorOutputStream extends OutputStream
     implements BZip2Constants {
 
     /**

@@ -21,6 +21,10 @@ package org.jboss.shrinkwrap.impl.base.io.tar.bzip;
 
 /**
  * Random numbers for both the compress and decompress BZip2 classes.
+ *
+ * <p><em>Forked from <a href="http://commons.apache.org/proper/commons-compress/">
+ * Apache Commons-Compress</a> with possible changes</em></p>
+ *
  */
 final class Rand {
 

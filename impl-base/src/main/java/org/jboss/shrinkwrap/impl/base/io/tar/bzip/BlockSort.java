@@ -75,6 +75,10 @@ import java.util.BitSet;
  *   Strings</a></li>
  * </ul>
  *
+ *
+ * <p><em>Forked from <a href="http://commons.apache.org/proper/commons-compress/">
+ * Apache Commons-Compress</a> with possible changes</em></p>
+ *
  * @NotThreadSafe
  */
 class BlockSort {
