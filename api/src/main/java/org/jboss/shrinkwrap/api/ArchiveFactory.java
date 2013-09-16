@@ -173,7 +173,7 @@ public final class ArchiveFactory {
             throw new IllegalArgumentException("Type must be specified");
         }
         if (archiveFile == null) {
-            throw new IllegalArgumentException("file must be specified");
+            throw new IllegalArgumentException("File must be specified");
         }
         if (!archiveFile.exists()) {
             throw new IllegalArgumentException("File for import does not exist: " + archiveFile.getAbsolutePath());
