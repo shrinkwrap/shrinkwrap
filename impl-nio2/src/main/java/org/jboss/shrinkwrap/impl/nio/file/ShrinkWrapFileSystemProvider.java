@@ -146,6 +146,10 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
                     + ENV_KEY_ARCHIVE + ": " + archiveArg);
             }
         }
+        // If archive could not be found in the environment, IllegalArgumentException
+        if (archive == null) {
+            throw new IllegalArgumentException("archive must be specified in the environment under key " + ENV_KEY_ARCHIVE);
+        }
 
         // Lock for compound operations on createdFileSystems
         createNewFsLock.lock();

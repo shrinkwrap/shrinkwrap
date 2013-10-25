@@ -18,10 +18,13 @@ package org.jboss.shrinkwrap.impl.nio.file;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.FileSystems;
+import java.util.HashMap;
 
 import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.nio.file.ShrinkWrapFileSystems;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -67,6 +70,13 @@ public class ShrinkWrapFileSystemsTestCase {
         final ShrinkWrapFileSystem fs = (ShrinkWrapFileSystem) ShrinkWrapFileSystems.newFileSystem(archive);
         Assert.assertNotNull("Did not obtain a new File System as expected", fs);
         Assert.assertTrue("Backing archive was not as expected", archive == fs.getArchive());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void noArchiveInEnvShouldResultInIAE() throws Exception {
+        FileSystems.newFileSystem(
+            ShrinkWrapFileSystems.getRootUri(
+                    ShrinkWrap.create(JavaArchive.class)), new HashMap());
     }
 
 }
