@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -615,6 +616,15 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
         } else {
             add(asset, target);
         }
+
+        // move children
+        final Set<Node> nodeToMoveChildren = nodeToMove.getChildren();
+        for (final Node child : nodeToMoveChildren) {
+            final String childName = child.getPath().get().replaceFirst(child.getPath().getParent().get(), "");
+            final ArchivePath childTargetPath = ArchivePaths.create(target, childName);
+            move(child.getPath(), childTargetPath);
+        }
+
         delete(source);
 
         return covariantReturn();
