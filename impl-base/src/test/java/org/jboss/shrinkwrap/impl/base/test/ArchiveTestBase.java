@@ -1386,6 +1386,30 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         Assert.assertTrue("Directory should be at the new path", archive.get(targetPath).getAsset() == null);
     }
 
+    @Test
+    public void shouldMoveNotEmptyDirectory() {
+        final Archive<JavaArchive> archive = ShrinkWrap.create(JavaArchive.class, "archive.jar");
+        final String sourcePath = "path1";
+        final String targetPath = "path2";
+
+        final String childDirName = "childDir";
+        final String childDirPath = sourcePath + "/" + childDirName;
+        final String childDirTargetPath = targetPath + "/" + childDirName;
+
+        final String childFileName = "file1";
+        final String childFilePath = childDirPath + "/" + childFileName;
+        final String childFileTargetPath = childDirTargetPath + "/" + childFileName;
+
+        archive.addAsDirectory(sourcePath);
+        archive.addAsDirectory(childDirName);
+        archive.add(EmptyAsset.INSTANCE, childFilePath);
+        archive.move(sourcePath, targetPath);
+
+        Assert.assertTrue("Directory should be at the new path", archive.get(targetPath).getAsset() == null);
+        Assert.assertTrue("Child dir should be at the new path", archive.get(childDirTargetPath).getAsset() == null);
+        Assert.assertTrue("Child asset should be at the new path", archive.get(childFileTargetPath).getAsset() != null);
+    }
+
     @Test(expected = IllegalArchivePathException.class)
     public void shouldNotMoveAssetBecauseOfInexistentPath() {
        final Archive<JavaArchive> archive = ShrinkWrap.create(JavaArchive.class, "archive.jar");
