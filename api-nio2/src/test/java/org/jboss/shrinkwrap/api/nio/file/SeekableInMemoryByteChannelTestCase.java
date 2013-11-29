@@ -241,7 +241,7 @@ public class SeekableInMemoryByteChannelTestCase {
         Assert.assertEquals("Channel should report unchanged size after truncate to bigger value", oldSize,
             this.channel.size());
         // Correct position, beyond size?
-        Assert.assertEquals("Channel should report adjusted position after truncate to bigger value", newSize,
+        Assert.assertEquals("Channel should report unchanged position after truncate to bigger value", oldSize,
             this.channel.position());
     }
 
