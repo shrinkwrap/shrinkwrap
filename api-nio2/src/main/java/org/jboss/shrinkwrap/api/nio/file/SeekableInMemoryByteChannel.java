@@ -255,11 +255,11 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
                 // Set the new array as our contents
                 this.contents = newContents;
             }
-            // If we've been given a size greater than we are
-            if (newSize > currentSize) {
-                // Reset the position only
-                this.position = newSize;
-            }
+
+            // If we've been given a size greater than or equal to us then do nothing
+            // if (newSize >= currentSize) {
+            // // do nothing
+            // }
         }
 
         // Return this reference
