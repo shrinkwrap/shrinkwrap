@@ -57,7 +57,9 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Test cases to assert the ShrinkWrap implementation of the NIO.2 {@link FileSystem} is working as expected via the
@@ -69,6 +71,9 @@ public class FilesTestCase {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(FilesTestCase.class.getName());
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     /**
      * {@link FileSystem} under test
@@ -756,6 +761,39 @@ public class FilesTestCase {
         Iterator<Path> it = stream.iterator();
         Assert.assertEquals("/dir/file", it.next().toString());
         Assert.assertFalse("No further elements expected in stream", it.hasNext());
+    }
+
+    @Test
+    public void createdDirectoryStreamThrowsExceptionWhenIsClosed() throws Throwable {
+        // given
+        Path dirPath = fs.getPath("dir");
+        Files.createDirectory(dirPath);
+        Files.createFile(dirPath.resolve("file"));
+        DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath);
+
+        // when
+        stream.close();
+
+        // then
+        expectedException.expect(IllegalStateException.class);
+        Iterator<Path> it = stream.iterator();
+
+    }
+
+    @Test
+    public void createdDirectoryStreamThrowsExceptionWhenIteratorWasReturnedBefore() throws Exception {
+        // given
+        Path dirPath = fs.getPath("dir");
+        Files.createDirectory(dirPath);
+        Files.createFile(dirPath.resolve("file"));
+        DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath);
+
+        // when
+        Iterator<Path> it = stream.iterator();
+
+        // then
+        expectedException.expect(IllegalStateException.class);
+        stream.iterator();
     }
 
     @Test
