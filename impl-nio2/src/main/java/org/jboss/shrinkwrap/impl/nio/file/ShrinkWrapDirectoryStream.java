@@ -43,7 +43,7 @@ class ShrinkWrapDirectoryStream implements DirectoryStream<Path> {
     private boolean closed = false;
 
     private boolean iteratorReturned = false;
-    
+
     /**
      * Creates a new instance starting from startingPath with is required backing the specified
      * {@link ShrinkWrapFileSystem}, which is required. An optional {@link DirectoryStream.Filter} may be
