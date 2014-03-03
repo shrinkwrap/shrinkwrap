@@ -296,6 +296,10 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
         if (asset == null) {
             return null;
         }
+        // If we already have an archive asset, just return it as-is; don't reimport
+        if (asset.getClass() == ArchiveAsset.class) {
+            return ArchiveAsset.class.cast(asset).getArchive().as(type);
+        }
 
         InputStream stream = null;
         try {

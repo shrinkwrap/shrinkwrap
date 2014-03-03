@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.TarExporter;
 import org.jboss.shrinkwrap.api.importer.TarImporter;
@@ -36,7 +37,7 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream;
 public class TarImporterImplTestCase extends StreamImporterImplTestBase<TarImporter> {
 
     // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
+    // Class Members -----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -51,7 +52,7 @@ public class TarImporterImplTestCase extends StreamImporterImplTestBase<TarImpor
     private static final TarContentAssertionDelegate delegate = new TarContentAssertionDelegate();
 
     // -------------------------------------------------------------------------------------||
-    // Required Implementations -----------------------------------------------------------||
+    // Required Implementations ------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -98,8 +99,17 @@ public class TarImporterImplTestCase extends StreamImporterImplTestBase<TarImpor
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @return
+     */
+    @Override
+    protected ArchiveFormat getArchiveFormat(){
+        return ArchiveFormat.TAR;
+    }
+
     // -------------------------------------------------------------------------------------||
-    // Internal Helper Members ------------------------------------------------------------||
+    // Internal Helper Members -------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**

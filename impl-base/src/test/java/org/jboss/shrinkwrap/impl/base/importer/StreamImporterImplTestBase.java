@@ -16,39 +16,39 @@
  */
 package org.jboss.shrinkwrap.impl.base.importer;
 
+import junit.framework.Assert;
+import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchiveFormat;
+import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.GenericArchive;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
+import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
+import org.jboss.shrinkwrap.api.importer.StreamImporter;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.impl.base.io.IOUtil;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
-import junit.framework.Assert;
-
-import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.GenericArchive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
-import org.jboss.shrinkwrap.api.exporter.StreamExporter;
-import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
-import org.jboss.shrinkwrap.api.importer.StreamImporter;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.io.IOUtil;
-import org.junit.Test;
-
 /**
  * Base upon which tests of {@link StreamImporter} implementations may build
  *
  * @param <T>
  *            Type of importer under test
- * @param <I>
- *            {@link InputStream} type used in importing
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  */
 public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
 
     // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
+    // Class Members -----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -62,7 +62,7 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
     private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/impl/base/asset/Test.properties";
 
     // -------------------------------------------------------------------------------------||
-    // Contracts --------------------------------------------------------------------------||
+    // Contracts ---------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -92,8 +92,14 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
      */
     protected abstract InputStream getExceptionThrowingInputStream();
 
+    /**
+     * Obtains the {@link org.jboss.shrinkwrap.api.ArchiveFormat} to be used
+     * @return
+     */
+    protected abstract ArchiveFormat getArchiveFormat();
+
     // -------------------------------------------------------------------------------------||
-    // Tests ------------------------------------------------------------------------------||
+    // Tests -------------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -234,5 +240,31 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
         } finally {
             exceptionIn.close();
         }
+    }
+
+    /**
+     * SHRINKWRAP-474
+     */
+    @Test
+    public void canRoundTrip() {
+
+        // Define a path/name for the archive and the file it contains
+        final String embeddedArchiveName = "lib.jar";
+        final String emptyFileName = "empty.file";
+
+        // Create an archive which contains another archive in the lib dir
+        final JavaArchive embeddedArchive = ShrinkWrap.create(JavaArchive.class, embeddedArchiveName)
+                .add(EmptyAsset.INSTANCE, emptyFileName);
+        final WebArchive outerArchive = ShrinkWrap.create(WebArchive.class).addAsLibraries(embeddedArchive);
+
+        // Now pull the embedded archive back out
+        final JavaArchive roundtrip = outerArchive.getAsType(JavaArchive.class,
+                ArchivePaths.create("WEB-INF/lib", embeddedArchiveName),
+                this.getArchiveFormat());
+
+        Assert.assertTrue("roundtrip could not be obtained", roundtrip != null);
+        Assert.assertTrue(
+                "contents of embedded archive are not intact after roundtrip",
+                roundtrip.contains(emptyFileName));
     }
 }

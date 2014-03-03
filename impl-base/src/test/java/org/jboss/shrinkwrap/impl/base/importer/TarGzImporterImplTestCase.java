@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.TarGzExporter;
 import org.jboss.shrinkwrap.api.importer.TarGzImporter;
@@ -37,7 +38,7 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarGzInputStream;
 public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzImporter> {
 
     // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
+    // Class Members -----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -52,7 +53,7 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
     private static final TarGzContentAssertionDelegate delegate = new TarGzContentAssertionDelegate();
 
     // -------------------------------------------------------------------------------------||
-    // Required Implementations -----------------------------------------------------------||
+    // Required Implementations ------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -99,8 +100,17 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @return
+     */
+    @Override
+    protected ArchiveFormat getArchiveFormat(){
+        return ArchiveFormat.TAR_GZ;
+    }
+
     // -------------------------------------------------------------------------------------||
-    // Internal Helper Members ------------------------------------------------------------||
+    // Internal Helper Members -------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**

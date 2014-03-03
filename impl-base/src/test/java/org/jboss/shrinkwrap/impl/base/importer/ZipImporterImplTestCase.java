@@ -16,6 +16,20 @@
  */
 package org.jboss.shrinkwrap.impl.base.importer;
 
+import org.jboss.shrinkwrap.api.ArchiveFormat;
+import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.GenericArchive;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,16 +37,6 @@ import java.util.Enumeration;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import org.jboss.shrinkwrap.api.GenericArchive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.exporter.StreamExporter;
-import org.jboss.shrinkwrap.api.exporter.ZipExporter;
-import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
-import org.jboss.shrinkwrap.api.importer.ZipImporter;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * TestCase to verify the ZipImporter functionality.
@@ -43,7 +47,7 @@ import org.junit.Test;
 public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImporter> {
 
     // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
+    // Class Members -----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -58,7 +62,7 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
     private static final ZipContentAssertionDelegate delegate = new ZipContentAssertionDelegate();
 
     // -------------------------------------------------------------------------------------||
-    // Tests ------------------------------------------------------------------------------||
+    // Tests -------------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -76,14 +80,14 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
         ZipFile testZip = new ZipFile(testFile) {
             @Override
             public Enumeration<? extends ZipEntry> entries() {
-                throw new IllegalStateException("mock  exception");
+                throw new IllegalStateException("mock exception");
             }
         };
         ShrinkWrap.create(ZipImporter.class, "test.jar").importFrom(testZip).as(JavaArchive.class);
     }
 
     // -------------------------------------------------------------------------------------||
-    // Required Implementations -----------------------------------------------------------||
+    // Required Implementations ------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -131,8 +135,18 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
         };
     }
 
+
+    /**
+     * {@inheritDoc}
+     * @return
+     */
+    @Override
+    protected ArchiveFormat getArchiveFormat(){
+        return ArchiveFormat.ZIP;
+    }
+
     // -------------------------------------------------------------------------------------||
-    // Tests ------------------------------------------------------------------------------||
+    // Tests -------------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**

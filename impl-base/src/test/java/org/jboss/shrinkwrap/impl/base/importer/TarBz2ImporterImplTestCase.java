@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.importer;
 
+import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.TarBz2Exporter;
 import org.jboss.shrinkwrap.api.importer.TarBz2Importer;
@@ -37,7 +38,7 @@ import java.util.logging.Logger;
 public class TarBz2ImporterImplTestCase extends StreamImporterImplTestBase<TarBz2Importer> {
 
     // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
+    // Class Members -----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -52,7 +53,7 @@ public class TarBz2ImporterImplTestCase extends StreamImporterImplTestBase<TarBz
     private static final TarBz2ContentAssertionDelegate delegate = new TarBz2ContentAssertionDelegate();
 
     // -------------------------------------------------------------------------------------||
-    // Required Implementations -----------------------------------------------------------||
+    // Required Implementations ------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -99,8 +100,17 @@ public class TarBz2ImporterImplTestCase extends StreamImporterImplTestBase<TarBz
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @return
+     */
+    @Override
+    protected ArchiveFormat getArchiveFormat(){
+        return ArchiveFormat.TAR_BZ;
+    }
+
     // -------------------------------------------------------------------------------------||
-    // Internal Helper Members ------------------------------------------------------------||
+    // Internal Helper Members -------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
