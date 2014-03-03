@@ -286,7 +286,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      *            The Type to return the Archive as
      * @param path
      *            The location of the Archive
-     * @param archive
+     * @param archiveFormat
      *            The archive format
      * @return The found Archive as given type or null if none found at the given path
      * @see Archive#add(Archive, ArchivePath, Class)
@@ -302,7 +302,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      *            The Type to return the Archive as
      * @param path
      *            The location of the Archive
-     * @param archive
+     * @param archiveFormat
      *            The archive format
      * @return The found Archive as given type or null if none found at given {@link ArchivePath}
      * @see Archive#add(Archive, ArchivePath, Class)
@@ -318,10 +318,10 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      *            The Type to return the Archive as
      * @param filter
      *            Filter to match result
-     * @param archive
+     * @param archiveFormat
      *            The archive format
      * @return A {@link Collection} of found Archives matching given filter or empty {@link Collection} if non found.
-     * @see Archive#getAsType(Class, ArchivePath, ArchiveFormatStreamBindings)
+     * @see Archive#getAsType(Class, ArchivePath, ArchiveFormat)
      * @see Archive#add(Archive, ArchivePath, Class)
      * @see Archive#add(Archive, String, Class)
      */
