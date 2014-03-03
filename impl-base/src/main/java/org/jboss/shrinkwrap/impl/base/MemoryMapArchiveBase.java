@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveEvent;
@@ -62,12 +63,12 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     /**
      * Storage for the {@link Node}s.
      */
-    private final Map<ArchivePath, NodeImpl> content = new ConcurrentHashMap<ArchivePath, NodeImpl>();
+    private final ConcurrentMap<ArchivePath, NodeImpl> content = new ConcurrentHashMap<ArchivePath, NodeImpl>();
 
     /**
      * Storage for the {@link ArchiveAsset}s. Used to help get access to nested archive content.
      */
-    private final Map<ArchivePath, ArchiveAsset> nestedArchives = new ConcurrentHashMap<ArchivePath, ArchiveAsset>();
+    private final ConcurrentMap<ArchivePath, ArchiveAsset> nestedArchives = new ConcurrentHashMap<ArchivePath, ArchiveAsset>();
 
     private final List<ArchiveEventHandler> handlers = new ArrayList<ArchiveEventHandler>();
 
@@ -306,6 +307,10 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
         if (parentNode != null) {
             parentNode.removeChild(node);
         }
+
+        // Remove from nested archives if present
+        nestedArchives.remove(path);
+
         // Recursively delete children if present
         if (node.getChildren() != null) {
             final Set<Node> children = node.getChildren();

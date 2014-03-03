@@ -22,9 +22,11 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.api.container.WebContainer;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -405,6 +407,24 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), "String.class");
         Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+    }
+
+    /**
+     * SHRINKWRAP-476
+     */
+    @Test
+    @ArchiveType(WebContainer.class)
+    public void canDeleteEmbeddedArchiveAddedAsLibrary(){
+        String name = "test.jar";
+        WebArchive war = ShrinkWrap.create(WebArchive.class)
+                .addAsLibraries(
+                        ShrinkWrap.create(JavaArchive.class, name)
+                                .add(EmptyAsset.INSTANCE, "some"));
+
+        ArchivePath path = ArchivePaths.create("WEB-INF/lib", name);
+        Assert.assertTrue(war.contains(path));
+        war.delete(path);
+        Assert.assertFalse("Path should have been deleted", war.contains(path));
     }
 
     /**
