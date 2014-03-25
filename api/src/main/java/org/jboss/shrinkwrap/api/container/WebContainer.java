@@ -32,7 +32,7 @@ import org.jboss.shrinkwrap.api.asset.Asset;
  * @version $Revision: $
  * @param <T>
  */
-public interface WebContainer<T extends Archive<T>> {
+public interface WebContainer<T extends Archive<T>> extends CDIBeanContainer<T> {
     // -------------------------------------------------------------------------------------||
     // Contracts --------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||

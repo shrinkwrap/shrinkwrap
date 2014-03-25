@@ -19,6 +19,7 @@ package org.jboss.shrinkwrap.impl.base.spec;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.container.CDIBeanContainer;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.EnterpriseContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -118,6 +119,11 @@ public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTes
     }
 
     @Override
+    protected CDIBeanContainer<EnterpriseArchive> getCDIBeanArchiveContainer() {
+        throw new UnsupportedOperationException("EnterpriseArchives do not support CDI bean containers");
+    }
+
+    @Override
     protected ArchivePath getManifestPath() {
         return PATH_APPLICATION;
     }
@@ -130,6 +136,11 @@ public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTes
     @Override
     protected ArchivePath getLibraryPath() {
         return PATH_LIBRARY;
+    }
+
+    @Override
+    protected ArchivePath getBeansXmlPath() {
+        throw new UnsupportedOperationException("EnterpriseArchives do not support CDI bean containers");
     }
 
     @Override

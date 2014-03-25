@@ -49,6 +49,7 @@ import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.container.CDIBeanContainer;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
@@ -107,6 +108,10 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     protected abstract ArchivePath getLibraryPath();
 
     protected abstract LibraryContainer<T> getLibraryContainer();
+
+    protected abstract CDIBeanContainer<T> getCDIBeanArchiveContainer();
+
+    protected abstract ArchivePath getBeansXmlPath();
 
     protected URL getURLForClassResource(String name) {
         return SecurityActions.getThreadContextClassLoader().getResource(name);
@@ -1998,6 +2003,16 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         Assert.assertFalse(archive.contains(ArchivePaths.create(file)));
     }
 
+    @Test
+    @ArchiveType(CDIBeanContainer.class)
+    public void testSetBeansXmlPath() throws Exception {
+        getCDIBeanArchiveContainer().setBeansXML();
+
+        ArchivePath expectedPath = new BasicPath(getBeansXmlPath(), "beans.xml");
+        Assert.assertTrue("Archive should contain " + expectedPath, getArchive().contains(expectedPath));
+    }
+
+    
     private void assertNotContainsClass(ArchivePath notExpectedPath) {
         Assert.assertFalse("Located unexpected class at " + notExpectedPath.get(),
             getArchive().contains(notExpectedPath));

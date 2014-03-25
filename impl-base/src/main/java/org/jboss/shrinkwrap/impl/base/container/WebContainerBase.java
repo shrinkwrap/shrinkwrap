@@ -24,6 +24,7 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.FileAsset;
 import org.jboss.shrinkwrap.api.asset.UrlAsset;
 import org.jboss.shrinkwrap.api.container.WebContainer;
@@ -592,4 +593,31 @@ public abstract class WebContainerBase<T extends Archive<T>> extends ContainerBa
         addClass(serviceInterface);
         return addClasses(serviceImpls);
     }
+
+    @Override
+    public T setBeansXML() {
+        return setBeansXML(EmptyAsset.INSTANCE);
+    }
+
+    @Override
+    public T setBeansXML(File resource) throws IllegalArgumentException {
+        return setBeansXML(new FileAsset(resource));
+    }
+
+    @Override
+    public T setBeansXML(String resourceName) throws IllegalArgumentException {
+        return setBeansXML(new ClassLoaderAsset(resourceName));
+    }
+
+    @Override
+    public T setBeansXML(URL resource) throws IllegalArgumentException {
+        return setBeansXML(new UrlAsset(resource));
+    }
+
+    @Override
+    public T setBeansXML(Asset resource) throws IllegalArgumentException {
+        Validate.notNull(resource, "Resource should be specified");
+        return addAsWebInfResource(resource, ArchivePaths.create("beans.xml"));
+    }
+
 }

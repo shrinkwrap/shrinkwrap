@@ -20,6 +20,7 @@ import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.container.CDIBeanContainer;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
@@ -120,6 +121,11 @@ public class GenericArchiveImplTestCase extends DynamicContainerTestBase<Generic
     }
 
     @Override
+    protected CDIBeanContainer<GenericArchive> getCDIBeanArchiveContainer() {
+        throw UNSUPPORTED;
+    }
+
+    @Override
     protected ArchivePath getManifestPath() {
         throw UNSUPPORTED;
     }
@@ -136,6 +142,11 @@ public class GenericArchiveImplTestCase extends DynamicContainerTestBase<Generic
 
     @Override
     protected ArchivePath getLibraryPath() {
+        throw UNSUPPORTED;
+    }
+
+    @Override
+    protected ArchivePath getBeansXmlPath() {
         throw UNSUPPORTED;
     }
 

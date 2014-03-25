@@ -46,9 +46,11 @@ import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.asset.ClassAsset;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.FileAsset;
 import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.api.asset.UrlAsset;
+import org.jboss.shrinkwrap.api.container.CDIBeanContainer;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
@@ -57,6 +59,7 @@ import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
+import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
 import org.jboss.shrinkwrap.impl.base.ArchiveBase;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
 import org.jboss.shrinkwrap.impl.base.URLPackageScanner;
@@ -79,7 +82,7 @@ import org.jboss.shrinkwrap.spi.Configurable;
  */
 public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase<Archive<?>> implements Archive<T>,
     ManifestContainer<T>, ServiceProviderContainer<T>, ResourceContainer<T>, ClassContainer<T>, LibraryContainer<T>,
-    ArchiveFormatAssociable {
+    CDIBeanContainer<T>, ArchiveFormatAssociable {
     // -------------------------------------------------------------------------------------||
     // Class Members ----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
@@ -1995,4 +1998,31 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
         return cls;
     }
+
+    @Override
+    public T setBeansXML() {
+        return setBeansXML(EmptyAsset.INSTANCE);
+    }
+
+    @Override
+    public T setBeansXML(File resource) throws IllegalArgumentException {
+        return setBeansXML(new FileAsset(resource));
+    }
+
+    @Override
+    public T setBeansXML(String resourceName) throws IllegalArgumentException {
+        return setBeansXML(new ClassLoaderAsset(resourceName));
+    }
+
+    @Override
+    public T setBeansXML(URL resource) throws IllegalArgumentException {
+        return setBeansXML(new UrlAsset(resource));
+    }
+
+    @Override
+    public T setBeansXML(Asset resource) throws IllegalArgumentException {
+        Validate.notNull(resource, "Resource should be specified");
+        return addAsManifestResource(resource, ArchivePaths.create("beans.xml"));
+    }
+
 }

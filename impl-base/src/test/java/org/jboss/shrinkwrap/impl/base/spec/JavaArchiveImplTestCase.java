@@ -19,6 +19,7 @@ package org.jboss.shrinkwrap.impl.base.spec;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.container.CDIBeanContainer;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
@@ -119,6 +120,11 @@ public class JavaArchiveImplTestCase extends DynamicContainerTestBase<JavaArchiv
     }
 
     @Override
+    protected CDIBeanContainer<JavaArchive> getCDIBeanArchiveContainer() {
+        return getArchive();
+    }
+
+    @Override
     protected ArchivePath getManifestPath() {
         return PATH_MANIFEST;
     }
@@ -138,9 +144,14 @@ public class JavaArchiveImplTestCase extends DynamicContainerTestBase<JavaArchiv
         throw new UnsupportedOperationException("JavaArchive does not support libraries");
     }
 
+
     @Override
     protected ArchiveFormat getExpectedArchiveFormat() {
         return ArchiveFormat.ZIP;
     }
 
+    @Override
+    protected ArchivePath getBeansXmlPath() {
+        return PATH_MANIFEST;
+    }
 }

@@ -20,6 +20,7 @@ import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.container.CDIBeanContainer;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
@@ -127,6 +128,11 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
     }
 
     @Override
+    protected CDIBeanContainer<WebArchive> getCDIBeanArchiveContainer() {
+        return getArchive();
+    }
+
+    @Override
     protected ArchivePath getManifestPath() {
         return PATH_MANIFEST;
     }
@@ -144,6 +150,11 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
     @Override
     protected ArchivePath getLibraryPath() {
         return PATH_LIBRARY;
+    }
+
+    @Override
+    protected ArchivePath getBeansXmlPath() {
+        return PATH_WEBINF;
     }
 
     // -------------------------------------------------------------------------------------||
