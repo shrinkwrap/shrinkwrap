@@ -19,6 +19,7 @@ package org.jboss.shrinkwrap.impl.base.importer;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
@@ -141,7 +142,7 @@ public class ExplodedImporterImpl extends AssignableBase<Archive<?>> implements 
     private ArchivePath calculatePath(File root, File child) {
         String rootPath = unifyPath(root.getPath());
         String childPath = unifyPath(child.getPath());
-        String archiveChildPath = childPath.replaceFirst(rootPath, "");
+        String archiveChildPath = childPath.replaceFirst(Pattern.quote(rootPath), "");
         return new BasicPath(archiveChildPath);
     }
 
