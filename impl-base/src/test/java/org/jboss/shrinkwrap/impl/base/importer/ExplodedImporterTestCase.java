@@ -24,8 +24,11 @@ import java.util.logging.Logger;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -142,5 +145,44 @@ public class ExplodedImporterTestCase {
         String explodedImporterArchiveName = explodedImporter.as(JavaArchive.class).getName();
         Assert.assertFalse(explodedImporterArchiveName.contains("."));
     }
-    
+
+    @Test // SHRINKWRAP-453
+    public void shouldImportDirectory() throws Exception {
+        shouldImportDirectory("arbitraryDirectory");
+    }
+
+    @Test // SHRINKWRAP-453
+    public void shouldImportDirectoryWithNameThatCouldCauseRegexPatternSyntaxException() throws Exception {
+        shouldImportDirectory("[deploymentExportPath");
+    }
+
+    @Test // SHRINKWRAP-453
+    public void shouldImportDirectoryWithBracketsInPath() throws Exception {
+        shouldImportDirectory("[deploymentExportPath]");
+    }
+
+    // SHRINKWRAP-453
+    public void shouldImportDirectory(final String subdirectory) throws Exception {
+        String fileName = SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE).toURI().getPath();
+        final File importDirectory = new File(fileName, subdirectory);
+        if (!importDirectory.exists()) {
+            Assert.assertTrue("Unable to create test folder: " + importDirectory.getAbsolutePath(), importDirectory.mkdir());
+        }
+        Assert.assertTrue("Import test folder does not exist: " + importDirectory.getAbsolutePath(), importDirectory.exists());
+        importDirectory.deleteOnExit();
+
+        ShrinkWrap.create(WebArchive.class, "test.war")
+                .addClass(ExplodedImporter.class)
+                .setWebXML(new StringAsset("<web-app></web-app>"))
+                .as(ExplodedExporter.class).exportExploded(importDirectory);
+
+        // test import of exploded directory
+        WebArchive war = ShrinkWrap.create(WebArchive.class, "SHRINKWRAP-453.war")
+                .as(ExplodedImporter.class).importDirectory(importDirectory)
+                .as(WebArchive.class);
+        Assert.assertTrue("Expected imported web archive to be present at web archive root", war.contains("/test.war"));
+        Assert.assertTrue("Expected imported web archive to include web.xml", war.contains("/test.war/WEB-INF/web.xml"));
+    }
+
+
 }
