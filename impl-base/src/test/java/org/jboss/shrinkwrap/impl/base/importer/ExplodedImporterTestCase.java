@@ -162,7 +162,7 @@ public class ExplodedImporterTestCase {
     }
 
     // SHRINKWRAP-453
-    public void shouldImportDirectory(final String subdirectory) throws Exception {
+    private void shouldImportDirectory(final String subdirectory) throws Exception {
         String fileName = SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE).toURI().getPath();
         final File importDirectory = new File(fileName, subdirectory);
         if (!importDirectory.exists()) {
