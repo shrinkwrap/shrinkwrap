@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.NamedAsset;
+import org.jboss.shrinkwrap.api.asset.TargetArchiveAwareAsset;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
@@ -138,6 +139,22 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      *             If the target is invalid.
      */
     T add(Asset asset, String target) throws IllegalArgumentException;
+
+    /**
+     * Adds the specified resource under the context determined by
+     * the asset itself dependending on the archive.
+     * <p>That means that a beans.xml should automatically get sorted
+     * into META-INF for JavaArchives and into WEB-INF for WebArchives.
+     *
+     * @param asset
+     * @return
+     * @throws IllegalArgumentException
+     *             If asset is not specified or a target archive path
+     *             cannot be determined.
+     * @throws IllegalArchivePathException
+     *             If the target is invalid.
+     */
+    T add(TargetArchiveAwareAsset asset) throws IllegalArgumentException;
 
     /**
      * Adds the specified directory.

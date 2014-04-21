@@ -22,6 +22,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.DescriptiveAsset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
 import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
@@ -409,6 +410,25 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
         Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
     }
 
+    @Test
+    @ArchiveType(WebContainer.class)
+    public void testAddBeansXmlDescriptiveAsset() throws Exception {
+        getArchive().add(new DescriptiveAsset("beans.xml"));
+
+        ArchivePath testPath = new BasicPath(getWebInfPath(), "beans.xml");
+        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assert.assertEquals(-1, getArchive().get(testPath).getAsset().openStream().read());
+    }
+
+    @Test
+    @ArchiveType(WebContainer.class)
+    public void testAddFacesConfigDescriptiveAsset() throws Exception {
+        getArchive().add(new DescriptiveAsset("faces-config.xml"));
+
+        ArchivePath testPath = new BasicPath(getWebInfPath(), "faces-config.xml");
+        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+    }
+    
     /**
      * SHRINKWRAP-476
      */

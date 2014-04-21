@@ -21,6 +21,7 @@ import junit.framework.Assert;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.asset.DescriptiveAsset;
 import org.jboss.shrinkwrap.api.container.EnterpriseContainer;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -375,5 +376,15 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
         ArchivePath expectedPath2 = new BasicPath(getModulePath(), archive2.getName());
         Assert.assertTrue("Archive should contain " + expectedPath1, getArchive().contains(expectedPath1));
         Assert.assertTrue("Archive should contain " + expectedPath2, getArchive().contains(expectedPath2));
+    }
+
+    @Test
+    @ArchiveType(EnterpriseContainer.class)
+    public void testAddApplicationXmlDescriptiveAsset() throws Exception {
+        getArchive().add(new DescriptiveAsset("application.xml"));
+
+        ArchivePath testPath = new BasicPath(getManifestPath(), "application.xml");
+        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assert.assertEquals(-1, getArchive().get(testPath).getAsset().openStream().read());
     }
 }

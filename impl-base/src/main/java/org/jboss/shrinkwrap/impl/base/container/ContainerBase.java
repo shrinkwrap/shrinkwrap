@@ -48,6 +48,7 @@ import org.jboss.shrinkwrap.api.asset.ClassAsset;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.api.asset.FileAsset;
 import org.jboss.shrinkwrap.api.asset.NamedAsset;
+import org.jboss.shrinkwrap.api.asset.TargetArchiveAwareAsset;
 import org.jboss.shrinkwrap.api.asset.UrlAsset;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
@@ -350,6 +351,22 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         this.getArchive().add(asset, name);
         return covarientReturn();
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.asset.TargetArchiveAwareAsset)
+     */
+    @Override
+    public T add(TargetArchiveAwareAsset asset) {
+        Validate.notNull(asset, "No asset was was specified");
+
+        Node node = AssetUtil.arrangeAsset(asset, this);
+
+        add(node.getAsset(), node.getPath());
+        return covarientReturn();
+    }
+
 
     /**
      * {@inheritDoc}
