@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2013, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -19,6 +19,7 @@ package org.jboss.shrinkwrap.impl.base.exporter.zip;
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.impl.base.exporter.AbstractExporterDelegate;
 import org.jboss.shrinkwrap.impl.base.exporter.AbstractStreamExporterImpl;
@@ -33,6 +34,8 @@ import org.jboss.shrinkwrap.impl.base.exporter.AbstractStreamExporterImpl;
  */
 public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipExporter {
 
+    private boolean compressed = true;
+
     public ZipExporterImpl(final Archive<?> archive) {
         super(archive);
     }
@@ -45,9 +48,31 @@ public class ZipExporterImpl extends AbstractStreamExporterImpl implements ZipEx
     @Override
     public InputStream exportAsInputStream() {
         // Create export delegate
-        final AbstractExporterDelegate<InputStream> exportDelegate = new ZipExporterDelegate(this.getArchive());
+        final AbstractExporterDelegate<InputStream> exportDelegate = new ZipExporterDelegate(this.getArchive(),
+            compressed);
 
         // Export and get result
         return exportDelegate.export();
+    }
+
+    @Override
+    public ZipExporter compressionEnabled(final boolean enabled) {
+        this.compressed = enabled;
+        return this;
+    }
+
+    @Override
+    public ZipExporter compressionEnabled() {
+        return this.compressionEnabled(true);
+    }
+
+    @Override
+    public ZipExporter compressionDisabled() {
+        return this.compressionEnabled(false);
+    }
+
+    @Override
+    public boolean isCompressionEnabled() {
+        return this.compressed;
     }
 }

@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2009, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2013, Red Hat Middleware LLC, and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -25,8 +25,30 @@ import org.jboss.shrinkwrap.api.Assignable;
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
+ * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>
  * @version $Revision: $
  */
 public interface ZipExporter extends StreamExporter {
 
+    /**
+     * @param enabled
+     *            enable compression of content in ZIP format. True by default.
+     * @return exporter with set given compression setting.
+     */
+    ZipExporter compressionEnabled(boolean enabled);
+
+    /**
+     * @return exporter of compressed content in ZIP format.
+     */
+    ZipExporter compressionEnabled();
+
+    /**
+     * @return exporter of uncompressed content in ZIP format.
+     */
+    ZipExporter compressionDisabled();
+
+    /**
+     * @return true if compression is enabled.
+     */
+    boolean isCompressionEnabled();
 }
