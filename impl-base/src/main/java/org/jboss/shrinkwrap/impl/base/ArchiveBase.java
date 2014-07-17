@@ -39,6 +39,7 @@ import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.IllegalArchivePathException;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.UnknownExtensionTypeException;
 import org.jboss.shrinkwrap.api.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.NamedAsset;
@@ -340,6 +341,21 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
             archives.add(getAsType(type, path, archiveFormat));
         }
         return archives;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.Archive#isOfType(java.lang.Class)
+     */
+    @Override
+    public boolean isOfType(Class<? extends Archive<?>> archiveType) {
+        try {
+            String extension = this.configuration.getExtensionLoader().getExtensionFromExtensionMapping(archiveType);
+            return getName().endsWith(extension);
+        } catch (UnknownExtensionTypeException e) {
+            return false;
+        }
     }
 
     /**

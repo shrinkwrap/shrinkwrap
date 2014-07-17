@@ -74,6 +74,11 @@ public class GenericArchiveImplTestCase extends DynamicContainerTestBase<Generic
     // Required Impls - ArchiveTestBase ---------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
+    @Override
+    protected Class<GenericArchive> getExpectedArchiveType() {
+        return GenericArchive.class;
+    }
+
     /**
      * Return the archive to super class
      */

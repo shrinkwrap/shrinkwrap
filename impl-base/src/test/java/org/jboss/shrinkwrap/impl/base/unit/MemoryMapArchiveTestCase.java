@@ -38,6 +38,11 @@ import org.junit.Test;
 public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive> {
     private MemoryMapArchive archive;
 
+    @Override
+    protected Class<MemoryMapArchive> getExpectedArchiveType() {
+        return null;
+    }
+
     /**
      * Create a new Archive instance per Test.
      *

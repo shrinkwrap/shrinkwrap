@@ -77,6 +77,11 @@ public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTes
     // Required Impls - ArchiveTestBase ---------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
+    @Override
+    protected Class<EnterpriseArchive> getExpectedArchiveType() {
+        return EnterpriseArchive.class;
+    }
+
     /**
      * Return the current EnterpriseArchive
      */
