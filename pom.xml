@@ -28,7 +28,7 @@
 
     <!-- Versioning -->
     <version.junit_junit>4.8.2</version.junit_junit>
-    <version.org.apache.maven.plugins_maven-site-plugin>3.0-beta-3</version.org.apache.maven.plugins_maven-site-plugin>
+    <version.org.apache.maven.plugins_maven-site-plugin>3.4</version.org.apache.maven.plugins_maven-site-plugin>
 
   </properties>
   
