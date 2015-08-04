@@ -298,6 +298,12 @@ public class ServiceExtensionLoader implements ExtensionLoader {
             properties.load(extensionStream);
         } catch (IOException e) {
             throw new RuntimeException("Could not open stream for extensionURL " + extensionStream, e);
+        } finally {
+            if (extensionStream != null) {
+                try {
+                    extensionStream.close();
+                } catch (IOException ignored) {}
+            }
         }
         String implementingClassName = (String) properties.get("implementingClassName");
         if (implementingClassName == null) {
