@@ -87,9 +87,20 @@ public class ExplodedExporterImpl extends AssignableBase<Archive<?>> implements 
             throw new IllegalArgumentException("Provided parent directory is not a valid directory");
         }
 
+        return export(archive, new File(baseDirectory, directoryName));
+    }
+
+    @Override
+    public File exportExplodedInto(File directory) {
+        final Archive<?> archive = this.getArchive();
+        Validate.notNull(archive, "No archive provided");
+
+        return export(archive, directory);
+    }
+
+    private File export(final Archive<?> archive, File outputDirectory) {
         // Get the export delegate
-        final ExplodedExporterDelegate exporterDelegate = new ExplodedExporterDelegate(archive, baseDirectory,
-            directoryName);
+        final ExplodedExporterDelegate exporterDelegate = new ExplodedExporterDelegate(archive, outputDirectory);
 
         // Run the export and get the result
         final File explodedDirectory = exporterDelegate.export();
@@ -100,5 +111,4 @@ public class ExplodedExporterImpl extends AssignableBase<Archive<?>> implements 
         // Return the exploded dir
         return explodedDirectory;
     }
-
 }

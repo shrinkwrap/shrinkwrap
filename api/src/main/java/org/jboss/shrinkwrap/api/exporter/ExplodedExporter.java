@@ -36,7 +36,6 @@ public interface ExplodedExporter extends Assignable {
     /**
      * Exports provided archive as an exploded directory structure.
      *
-     * @param archive
      * @param parentDirectory
      *            Must be a folder
      * @return File for exploded archive contents
@@ -50,7 +49,6 @@ public interface ExplodedExporter extends Assignable {
     /**
      * Exports provided archive as an exploded directory structure.
      *
-     * @param archive
      * @param parentDirectory
      *            Must be a folder
      * @param directoryName
@@ -62,4 +60,18 @@ public interface ExplodedExporter extends Assignable {
      *             if the export process fails
      */
     File exportExploded(File parentDirectory, String directoryName);
+
+    /**
+     * Exports provided archive as an exploded directory structure
+     * into the given directory.
+     *
+     * @param directory
+     *            Must be a folder
+     * @return File for exploded archive contents
+     * @throws IllegalArgumentException
+     *             if the archive or parent directory not valid
+     * @throws ArchiveExportException
+     *             if the export process fails
+     */
+    File exportExplodedInto(File directory);
 }
