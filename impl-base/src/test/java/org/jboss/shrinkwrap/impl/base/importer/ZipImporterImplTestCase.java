@@ -16,20 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.importer;
 
-import org.jboss.shrinkwrap.api.ArchiveFormat;
-import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.GenericArchive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.exporter.StreamExporter;
-import org.jboss.shrinkwrap.api.exporter.ZipExporter;
-import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
-import org.jboss.shrinkwrap.api.importer.ZipImporter;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +23,17 @@ import java.util.Enumeration;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import org.jboss.shrinkwrap.api.ArchiveFormat;
+import org.jboss.shrinkwrap.api.GenericArchive;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.exporter.StreamExporter;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * TestCase to verify the ZipImporter functionality.
