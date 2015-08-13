@@ -345,6 +345,16 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     /**
      * {@inheritDoc}
      *
+     * @see org.jboss.shrinkwrap.api.Archive#filter(Filter)
+     */
+    @Override
+    public T filter(Filter<ArchivePath> filter) {
+        return this.shallowCopy(filter).as(getActualClass());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.ArchivePath,
      *      java.lang.Class)
      */
@@ -524,6 +534,17 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
      */
     @Override
     public final Archive<T> shallowCopy() {
+        return this.shallowCopy(Filters.includeAll());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.Archive#shallowCopy(Filter)
+     */
+    @Override
+    public final Archive<T> shallowCopy(Filter<ArchivePath> filter) {
+        Validate.notNull(filter, "Filter must be specified");
         // Use existing configuration
         final Configuration configuration = this.getConfiguration();
 
@@ -557,6 +578,9 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
         for (final ArchivePath path : from.getContent().keySet()) {
             Asset asset = from.get(path).getAsset();
             if (asset != null) {
+                if(!filter.include(path)) {
+                    continue;
+                }
                 to.add(asset, path);
             }
         }

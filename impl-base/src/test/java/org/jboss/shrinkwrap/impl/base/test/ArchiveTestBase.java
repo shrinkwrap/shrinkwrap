@@ -24,9 +24,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
@@ -45,6 +42,7 @@ import org.jboss.shrinkwrap.api.asset.FileAsset;
 import org.jboss.shrinkwrap.api.asset.NamedAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.Validate;
@@ -54,7 +52,9 @@ import org.jboss.shrinkwrap.impl.base.test.handler.ReplaceAssetHandler;
 import org.jboss.shrinkwrap.impl.base.test.handler.SimpleHandler;
 import org.jboss.shrinkwrap.spi.ArchiveFormatAssociable;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
+
 
 /**
  * ArchiveTestBase
@@ -365,9 +365,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         // Test
         final String message = "Should be able to add directory: ";
-        TestCase.assertTrue(message + path1, archive.contains(path1));
-        TestCase.assertTrue(message + path2, archive.contains(path2));
-        TestCase.assertTrue(message + path3, archive.contains(path3));
+        Assert.assertTrue(message + path1, archive.contains(path1));
+        Assert.assertTrue(message + path2, archive.contains(path2));
+        Assert.assertTrue(message + path3, archive.contains(path3));
     }
 
     @Test
@@ -778,6 +778,19 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
             jar.get("test/classloader/DummyClass$DummyInnerClass.class"));
         Assert.assertNotNull("Should contain a new asset", ((ArchiveAsset) archive.get(resourcePath).getAsset())
             .getArchive().get("test.txt"));
+    }
+
+    @Test
+    public void testFilter() throws Exception {
+
+        String resourcePath = "/test/cl-test.jar";
+        GenericArchive archive = ShrinkWrap.create(ZipImporter.class).importFrom(
+            TestIOUtil.createFileFromResourceName("cl-test.jar")).as(GenericArchive.class);
+
+        GenericArchive filtered = archive.filter(Filters.include(".*MANIFEST\\.MF"));
+        // Check that only META-INF/MANIFEST.MF exist in Archive
+        Assert.assertEquals(2, filtered.getContent().size());
+        Assert.assertTrue(filtered.contains(ArchivePaths.create("META-INF/MANIFEST.MF")));
     }
 
     @Test(expected = IllegalArgumentException.class)

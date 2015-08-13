@@ -27,6 +27,10 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.Filter;
+import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
@@ -96,7 +100,18 @@ public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipIm
      */
     @Override
     public ZipImporter importFrom(final InputStream stream) throws ArchiveImportException {
+        return importFrom(stream, Filters.includeAll());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.InputStream, Filter)
+     */
+    @Override
+    public ZipImporter importFrom(InputStream stream, Filter<ArchivePath> filter) throws ArchiveImportException {
         Validate.notNull(stream, "Stream must be specified");
+        Validate.notNull(filter, "Filter must be specified");
 
         try {
             // Wrap in ZipInputStream if we haven't been given one
@@ -106,6 +121,11 @@ public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipIm
             while ((entry = zipStream.getNextEntry()) != null) {
                 // Get the name
                 final String entryName = entry.getName();
+
+                if(!filter.include(ArchivePaths.create(entryName))) {
+                    zipStream.closeEntry();
+                    continue;
+                }
 
                 // Get the archive
                 final Archive<?> archive = this.getArchive();
@@ -132,12 +152,24 @@ public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipIm
      *
      * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.File)
      */
+    @Override
     public ZipImporter importFrom(final File file) throws ArchiveImportException {
+        return importFrom(file, Filters.includeAll());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.File, Filter)
+     */
+    @Override
+    public ZipImporter importFrom(File file, Filter<ArchivePath> filter) throws ArchiveImportException {
         Validate.notNull(file, "File must be specified");
         if (file.isDirectory()) {
             throw new IllegalArgumentException("File to import as ZIP must not be a directory: "
                 + file.getAbsolutePath());
         }
+        Validate.notNull(filter, "Filter must be specified");
 
         final ZipFile zipFile;
         try {
@@ -147,7 +179,7 @@ public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipIm
         }
 
         // Delegate
-        return this.importFrom(zipFile);
+        return this.importFrom(zipFile, filter);
     }
 
     /**
@@ -157,6 +189,10 @@ public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipIm
      */
     @Override
     public ZipImporter importFrom(final ZipFile file) throws ArchiveImportException {
+        return importFrom(file, Filters.includeAll());
+    }
+
+    private ZipImporter importFrom(final ZipFile file, Filter<ArchivePath> filter) throws ArchiveImportException {
         Validate.notNull(file, "File must be specified");
 
         try {
@@ -166,7 +202,9 @@ public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipIm
 
                 // Get the entry (path) name
                 final String entryName = entry.getName();
-
+                if(!filter.include(ArchivePaths.create(entryName))) {
+                    continue;
+                }
                 // Get the archive
                 final Archive<?> archive = this.getArchive();
 

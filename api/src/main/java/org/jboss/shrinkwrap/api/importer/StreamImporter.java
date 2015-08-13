@@ -23,7 +23,9 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipInputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Assignable;
+import org.jboss.shrinkwrap.api.Filter;
 
 /**
  * Generic importer capable of representing an {@link Assignable} as an entity capable of reading from an
@@ -52,15 +54,46 @@ public interface StreamImporter<I extends StreamImporter<I>> extends Assignable 
     I importFrom(InputStream stream) throws ArchiveImportException;
 
     /**
+     * Imports provided stream as a {@link Archive}. It remains the responsibility of the caller to close the stream.
+     *
+     * @param stream
+     *            the stream to import; should be a raw type, not wrapped in any implementation-specific encoding (ie.
+     *            {@link FileInputStream} is appropriate, but {@link ZipInputStream} or {@link GZIPInputStream} is not).
+     * @param filter
+     *            Filter to match result
+     * @return Archive of the imported stream
+     * @throws ArchiveImportException
+     *             If an error occurred during the import process
+     * @throws IllegalArgumentException
+     *             If no stream is specified
+     */
+    I importFrom(InputStream stream, Filter<ArchivePath> filter) throws ArchiveImportException;
+
+    /**
      * Imports provided File as a {@link Archive}.
      *
      * @param file
      *            the file to import
-     * @return Archive of the imported Zip
+     * @return Archive of the imported file
      * @throws ArchiveImportException
      *             If an error occurred during the import process
      * @throws IllegalArgumentException
      *             If no file is specified or if the file is a directory
      */
     I importFrom(File file) throws ArchiveImportException;
+
+    /**
+     * Imports provided File as a {@link Archive}.
+     *
+     * @param file
+     *            the file to import
+     * @param filter
+     *            Filter to match result
+     * @return Archive of the imported file
+     * @throws ArchiveImportException
+     *             If an error occurred during the import process
+     * @throws IllegalArgumentException
+     *             If no file is specified or if the file is a directory
+     */
+    I importFrom(File file, Filter<ArchivePath> filter) throws ArchiveImportException;
 }

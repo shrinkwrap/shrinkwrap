@@ -19,7 +19,9 @@ package org.jboss.shrinkwrap.impl.base.importer;
 import junit.framework.Assert;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
@@ -126,6 +128,30 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
     }
 
     /**
+     * Ensures that we may import a file and create an archive with matching structure with filter
+     */
+    @Test
+    public void shouldBeAbleToImportFileWithFilter() throws Exception {
+        // Get the delegate
+        final ContentAssertionDelegateBase delegate = this.getDelegate();
+        assert delegate != null : "Delegate must be specified by implementations";
+        final File testFile = delegate.getExistingResource();
+
+        // Import
+        final Class<? extends StreamImporter<?>> importerClass = this.getImporterClass();
+        assert importerClass != null : "Importer class must be specified by implementations";
+        Archive<?> archive = ShrinkWrap.create(importerClass, "test.jar")
+                .importFrom(testFile, Filters.include(".*MANIFEST\\.MF")).as(JavaArchive.class);
+
+        // Ensure we don't have a null archive
+        Assert.assertNotNull("Should not return a null archive", archive);
+
+        // Validate the contents of the imported only contain filtered content
+        Assert.assertEquals(2, archive.getContent().size());
+        Assert.assertTrue(archive.contains(ArchivePaths.create("META-INF/MANIFEST.MF")));
+    }
+
+    /**
      * Ensures an attempt to import a directory fails w/ {@link IllegalArgumentException}
      */
     @Test
@@ -218,6 +244,40 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
 
         // Ensure the archive matches the file input
         delegate.assertContent(archive, testFile);
+    }
+
+    /**
+     * Ensures that we may import an archive as a stream, and the contents will be as expected with filter
+     *
+     * @throws Exception
+     */
+    @Test
+    public void shouldBeAbleToImportInputStreamWithFilter() throws Exception {
+        // Get the delegate
+        final ContentAssertionDelegateBase delegate = this.getDelegate();
+        assert delegate != null : "Delegate must be specified by implementations";
+        final File testFile = delegate.getExistingResource();
+
+        // Get the input as a stream
+        InputStream stream = new FileInputStream(testFile);
+
+        // Get the importer
+        final Class<T> importerClass = this.getImporterClass();
+        assert importerClass != null : "Importer class must be specified by implementations";
+
+        // Import as a stream
+        final T importer = ShrinkWrap.create(importerClass, "test.jar");
+        final Archive<?> archive;
+        try {
+            archive = importer.importFrom(stream, Filters.include(".*MANIFEST\\.MF")).as(GenericArchive.class);
+        } finally {
+            stream.close();
+        }
+        Assert.assertNotNull("Should not return a null archive", archive);
+
+        // Validate the contents of the imported only contain filtered content
+        Assert.assertEquals(2, archive.getContent().size());
+        Assert.assertTrue(archive.contains(ArchivePaths.create("META-INF/MANIFEST.MF")));
     }
 
     /**

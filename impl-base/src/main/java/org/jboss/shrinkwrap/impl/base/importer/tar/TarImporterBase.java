@@ -24,6 +24,10 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.Filter;
+import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.importer.StreamImporter;
@@ -97,7 +101,18 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
      */
     @Override
     public I importFrom(final InputStream stream) throws ArchiveImportException {
+        return importFrom(stream, Filters.includeAll());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.InputStream, Filter)
+     */
+    @Override
+    public I importFrom(final InputStream stream, Filter<ArchivePath> filter) throws ArchiveImportException {
         Validate.notNull(stream, "Stream must be specified");
+        Validate.notNull(filter, "Filter must be specified");
         final S tarStream;
         try {
             tarStream = this.getInputStreamForRawStream(stream);
@@ -106,21 +121,19 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
         } catch (final IOException e) {
             throw new ArchiveImportException("Could not wrap raw input with TAR stream", e);
         }
-        return this.importFrom(tarStream);
+        return this.importFrom(tarStream, filter);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.InputStream)
-     */
-    private I importFrom(final S stream) throws ArchiveImportException {
+    private I importFrom(final S stream, Filter<ArchivePath> filter) throws ArchiveImportException {
         Validate.notNull(stream, "Stream must be specified");
         try {
             TarEntry entry;
             while ((entry = stream.getNextEntry()) != null) {
                 // Get the name
                 String entryName = entry.getName();
+                if(!filter.include(ArchivePaths.create(entryName))) {
+                    continue;
+                }
 
                 final Archive<?> archive = this.getArchive();
 
@@ -149,10 +162,20 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.lang.Object)
+     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.File)
      */
     @Override
     public I importFrom(final File file) throws ArchiveImportException {
+        return importFrom(file, Filters.includeAll());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.importer.StreamImporter#importFrom(java.io.File, Filter)
+     */
+    @Override
+    public I importFrom(final File file, Filter<ArchivePath> filter) throws ArchiveImportException {
         Validate.notNull(file, "File must be specified");
         if (!file.exists()) {
             throw new IllegalArgumentException("Specified file for import does not exist: " + file);
@@ -168,7 +191,7 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
             throw new ArchiveImportException("Could not read archive file " + file, e);
         }
 
-        return this.importFrom(archive);
+        return this.importFrom(archive, filter);
 
     }
 
