@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import java.util.Collection;
 import java.util.regex.Pattern;
 
 import javax.annotation.processing.Filer;
@@ -38,6 +39,10 @@ public final class Filters {
     private static final String IMPL_CLASS_NAME_INCLUDE_REGEXP_PATHS = "org.jboss.shrinkwrap.impl.base.filter.IncludeRegExpPaths";
 
     private static final String IMPL_CLASS_NAME_EXCLUDE_REGEXP_PATHS = "org.jboss.shrinkwrap.impl.base.filter.ExcludeRegExpPaths";
+
+    private static final String IMPL_CLASS_NAME_INCLUDE_PATHS = "org.jboss.shrinkwrap.impl.base.filter.IncludePaths";
+
+    private static final String IMPL_CLASS_NAME_EXCLUDE_PATHS = "org.jboss.shrinkwrap.impl.base.filter.ExcludePaths";
 
     /**
      * {@link Filter} that includes all {@link ArchivePath}s.
@@ -72,6 +77,54 @@ public final class Filters {
     public static Filter<ArchivePath> exclude(final String regexp) {
         return getFilterInstance(IMPL_CLASS_NAME_EXCLUDE_REGEXP_PATHS, new Class<?>[] { String.class },
             new Object[] { regexp });
+    }
+
+    /**
+     * {@link Filer} that include all {@link ArchivePath}s that match the given List of paths..
+     *
+     * @param paths
+     *            The paths to included
+     * @return A Path list based include {@link Filter}
+     */
+    public static Filter<ArchivePath> includePaths(final String... paths) {
+        return getFilterInstance(IMPL_CLASS_NAME_INCLUDE_PATHS, new Class<?>[] { String[].class },
+            new Object[] { paths });
+    }
+
+    /**
+     * {@link Filer} that include all {@link ArchivePath}s that match the given List of paths..
+     *
+     * @param paths
+     *            The paths to included
+     * @return A Path list based include {@link Filter}
+     */
+    public static Filter<ArchivePath> includePaths(final Collection<String> paths) {
+        return getFilterInstance(IMPL_CLASS_NAME_INCLUDE_PATHS, new Class<?>[] { Collection.class },
+            new Object[] { paths });
+    }
+
+    /**
+     * {@link Filter} that exclude all {@link ArchivePath}s that match the given List of paths.
+     *
+     * @param paths
+     *            The paths to exclude
+     * @return A Path list based exclude {@link Filter}
+     */
+    public static Filter<ArchivePath> excludePaths(final String... paths) {
+        return getFilterInstance(IMPL_CLASS_NAME_EXCLUDE_PATHS, new Class<?>[] { String[].class },
+            new Object[] { paths });
+    }
+
+    /**
+     * {@link Filter} that exclude all {@link ArchivePath}s that match the given List of paths.
+     *
+     * @param paths
+     *            The paths to exclude
+     * @return A Path list based exclude {@link Filter}
+     */
+    public static Filter<ArchivePath> excludePaths(final Collection<String> paths) {
+        return getFilterInstance(IMPL_CLASS_NAME_EXCLUDE_PATHS, new Class<?>[] { Collection.class },
+            new Object[] { paths });
     }
 
     /**
