@@ -385,6 +385,17 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     Map<ArchivePath, Node> getContent(Filter<ArchivePath> filter);
 
     /**
+     * Obtains all assets matching given filter in this archive as a new Archive.<br/>
+     * <br/>
+     * This is an alias for shallowCopy(Filter).
+     *
+     * @see org.jboss.shrinkwrap.api.Archive#shallowCopy(Filter)
+     * @param filter
+     * @return
+     */
+    T filter(Filter<ArchivePath> filter);
+
+    /**
      * Add an archive under a specific context and maintain the archive name as context path.
      *
      * @param path
@@ -580,4 +591,12 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      */
     Archive<T> shallowCopy();
 
+    /**
+     * Creates a shallow copy of this {@link Archive} based on given filter.Assets from this archive are made available
+     * under the same paths. However, removing old assets or adding new assets on this archive affects does not affect
+     * the new archive.
+     *
+     * @return a new archive with a copy of the pointers to the assets
+     */
+    Archive<T> shallowCopy(Filter<ArchivePath> filter);
 }
