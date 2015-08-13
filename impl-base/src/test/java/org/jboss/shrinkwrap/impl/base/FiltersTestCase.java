@@ -63,6 +63,44 @@ public class FiltersTestCase {
         Assert.assertEquals("Should only contain webinf", ArchivePaths.create("/WEB-INF/"), filteredPaths.get(0));
     }
 
+    @Test
+    public void shouldIncludePathsStringArray() throws Exception {
+        List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/A"), ArchivePaths.create("/B/"), ArchivePaths.create("/C/"));
+        List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.includePaths("A", "B/"));
+
+        Assert.assertEquals("Should contain two", 2, filteredPaths.size());
+        Assert.assertEquals("Should contain A", ArchivePaths.create("/A"), filteredPaths.get(0));
+        Assert.assertEquals("Should contain B", ArchivePaths.create("/B"), filteredPaths.get(1));
+    }
+
+    @Test
+    public void shouldIncludePathsCollection() throws Exception {
+        List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/A"), ArchivePaths.create("/B/"), ArchivePaths.create("/C/"));
+        List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.includePaths(Arrays.asList("A", "B/")));
+
+        Assert.assertEquals("Should contain two", 2, filteredPaths.size());
+        Assert.assertEquals("Should contain A", ArchivePaths.create("/A"), filteredPaths.get(0));
+        Assert.assertEquals("Should contain B", ArchivePaths.create("/B"), filteredPaths.get(1));
+    }
+
+    @Test
+    public void shouldExcludePathsStringArray() throws Exception {
+        List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/A"), ArchivePaths.create("/B/"), ArchivePaths.create("/C/"));
+        List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.excludePaths("/A", "/B/"));
+
+        Assert.assertEquals("Should only contain one", 1, filteredPaths.size());
+        Assert.assertEquals("Should only contain C", ArchivePaths.create("/C"), filteredPaths.get(0));
+    }
+
+    @Test
+    public void shouldExcludePathsCollection() throws Exception {
+        List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/A"), ArchivePaths.create("/B/"), ArchivePaths.create("/C/"));
+        List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.excludePaths(Arrays.asList("/A", "/B/")));
+
+        Assert.assertEquals("Should only contain one", 1, filteredPaths.size());
+        Assert.assertEquals("Should only contain C", ArchivePaths.create("/C"), filteredPaths.get(0));
+    }
+
     private <T> List<T> executeFilter(Class<T> clazz, List<T> items, Filter<T> filter) {
         List<T> result = new ArrayList<T>();
         for (T item : items) {
