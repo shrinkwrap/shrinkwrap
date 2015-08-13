@@ -66,9 +66,11 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File> {
     /**
      * Creates a new exploded exporter delegate for the provided {@link Archive}
      */
-    public ExplodedExporterDelegate(Archive<?> archive, File baseDirectory, String directoryName) {
+    public ExplodedExporterDelegate(Archive<?> archive, File outputDirectory) {
         super(archive);
-        this.outputDirectory = initializeOutputDirectory(baseDirectory, directoryName);
+        this.outputDirectory = outputDirectory;
+
+        validateOutputDirectory(outputDirectory);
     }
 
     // -------------------------------------------------------------------------------------||
@@ -173,9 +175,8 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File> {
      * @param directoryName
      * @return
      */
-    private File initializeOutputDirectory(File baseDirectory, String directoryName) {
+    private File validateOutputDirectory(File outputDirectory) {
         // Create output directory
-        final File outputDirectory = new File(baseDirectory, directoryName);
         if (!outputDirectory.mkdir() && !outputDirectory.exists()) {
             throw new ArchiveExportException("Unable to create archive output directory - " + outputDirectory);
         }

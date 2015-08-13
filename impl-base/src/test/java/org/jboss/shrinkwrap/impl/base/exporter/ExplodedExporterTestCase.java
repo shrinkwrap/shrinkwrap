@@ -190,6 +190,30 @@ public class ExplodedExporterTestCase extends ExportTestBase {
         assertAssetInExploded(explodedDirectory, new BasicPath(nestedArchivePathTwo, PATH_TWO), ASSET_TWO);
     }
 
+    @Test
+    public void testExportExplodedIntoDirectory() throws Exception {
+        log.info("testExportExplodedIntoDirectory");
+
+        // Get a temp directory
+        File tempDirectory = createTempDirectory("testExportExploded");
+
+        // Get an archive instance
+        Archive<?> archive = createArchiveWithAssets();
+
+        // Export as Exploded directory
+        File explodedDirectory = archive.as(ExplodedExporter.class).exportExplodedInto(tempDirectory);
+
+        // Validate the exploded directory was created
+        Assert.assertNotNull(explodedDirectory);
+
+        // Validate the exploded directory was created in same directory
+        Assert.assertEquals(tempDirectory, explodedDirectory);
+
+        // Validate entries were written out
+        assertAssetInExploded(explodedDirectory, PATH_ONE, ASSET_ONE);
+        assertAssetInExploded(explodedDirectory, PATH_TWO, ASSET_TWO);
+    }
+
     /**
      * Ensure an baseDirectory is required to export.
      *
