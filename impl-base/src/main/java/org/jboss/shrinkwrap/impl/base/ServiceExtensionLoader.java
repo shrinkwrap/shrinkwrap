@@ -243,11 +243,11 @@ public class ServiceExtensionLoader implements ExtensionLoader {
      * @return
      */
     private <T extends Assignable> ExtensionWrapper loadExtensionMapping(Class<T> extensionClass) {
-        final InputStream extensionStream = findExtensionImpl(extensionClass);
-
-        ExtensionWrapper extensionWrapper = loadExtensionWrapper(extensionStream, extensionClass);
-        this.extensionMappings.put(extensionClass, extensionWrapper);
-        return extensionWrapper;
+        try (final InputStream extensionStream = findExtensionImpl(extensionClass)) {
+            ExtensionWrapper extensionWrapper = loadExtensionWrapper(extensionStream, extensionClass);
+            this.extensionMappings.put(extensionClass, extensionWrapper);
+            return extensionWrapper;
+        }
     }
 
     /**
