@@ -17,7 +17,7 @@
 package org.jboss.shrinkwrap.impl.base;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -49,7 +49,7 @@ public class NodeImpl implements Node {
     /**
      * The children nodes.
      */
-    private Set<Node> children = Collections.synchronizedSet(new HashSet<Node>());
+    private Set<Node> children = Collections.synchronizedSet(new LinkedHashSet<Node>());
 
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||
