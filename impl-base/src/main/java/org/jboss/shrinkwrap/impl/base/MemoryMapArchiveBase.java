@@ -18,15 +18,13 @@ package org.jboss.shrinkwrap.impl.base;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveEvent;
@@ -63,12 +61,12 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     /**
      * Storage for the {@link Node}s.
      */
-    private final ConcurrentMap<ArchivePath, NodeImpl> content = new ConcurrentHashMap<ArchivePath, NodeImpl>();
+    private final Map<ArchivePath, NodeImpl> content = Collections.synchronizedMap(new LinkedHashMap<ArchivePath, NodeImpl>());
 
     /**
      * Storage for the {@link ArchiveAsset}s. Used to help get access to nested archive content.
      */
-    private final ConcurrentMap<ArchivePath, ArchiveAsset> nestedArchives = new ConcurrentHashMap<ArchivePath, ArchiveAsset>();
+    private final Map<ArchivePath, ArchiveAsset> nestedArchives = Collections.synchronizedMap(new LinkedHashMap<ArchivePath, ArchiveAsset>());
 
     private final List<ArchiveEventHandler> handlers = new ArrayList<ArchiveEventHandler>();
 
@@ -358,7 +356,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
      */
     @Override
     public Map<ArchivePath, Node> getContent() {
-        Map<ArchivePath, Node> ret = new HashMap<ArchivePath, Node>();
+        Map<ArchivePath, Node> ret = new LinkedHashMap<ArchivePath, Node>();
         for (Map.Entry<ArchivePath, NodeImpl> item : content.entrySet()) {
             if (!item.getKey().equals(new BasicPath("/"))) {
                 ret.put(item.getKey(), item.getValue());
@@ -377,7 +375,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     public Map<ArchivePath, Node> getContent(Filter<ArchivePath> filter) {
         Validate.notNull(filter, "Filter must be specified");
 
-        Map<ArchivePath, Node> filteredContent = new HashMap<ArchivePath, Node>();
+        Map<ArchivePath, Node> filteredContent = new LinkedHashMap<ArchivePath, Node>();
         for (Map.Entry<ArchivePath, NodeImpl> contentEntry : content.entrySet()) {
             if (filter.include(contentEntry.getKey())) {
                 if (!contentEntry.getKey().equals(new BasicPath("/"))) {
