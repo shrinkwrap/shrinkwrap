@@ -1,8 +1,10 @@
 package org.jboss.shrinkwrap.impl.base;
 
+import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 
@@ -61,7 +63,6 @@ public class PreserveOrderOfEntriesTestCase {
         }
 
         ArrayList<String> expectedOrder = new ArrayList<String>();
-        ArrayList<String> actualOrder = new ArrayList<String>();
 
         // Create an archive with resources
         JavaArchive archive = ShrinkWrap.create(JavaArchive.class, testJar.getName());
@@ -71,20 +72,39 @@ public class PreserveOrderOfEntriesTestCase {
             expectedOrder.add(name);
             archive.addAsResource(new StringAsset("content"), name);
         }
+
+        assertEquals(expectedOrder, getPaths(archive));
+
         archive.as(ZipExporter.class).exportTo(testJar, true);
 
         assertTrue(testJar.exists());
 
-
+        // Verify Zip entries are in the right order.
+        ArrayList<String> actualOrder = new ArrayList<String>();
         ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(testJar));
         ZipEntry nextEntry = zipInputStream.getNextEntry();
         while( nextEntry!=null ) {
             actualOrder.add(nextEntry.getName());
             nextEntry = zipInputStream.getNextEntry();
         }
-
         assertEquals(expectedOrder, actualOrder);
+
+        // Verify imported archive stays in the right order.
+        JavaArchive archive2 = ShrinkWrap.create(JavaArchive.class, testJar.getName());
+        archive2.as(ZipImporter.class).importFrom(testJar);
+        assertEquals(expectedOrder, getPaths(archive2));
+
         testJar.delete();
+    }
+
+    private ArrayList<String> getPaths(JavaArchive archive2) {
+        ArrayList<String> rc = new ArrayList<String>();
+        for (ArchivePath path : archive2.getContent().keySet()) {
+            String file = path.get();
+            file = file.substring(1); // to strip the leading /
+            rc.add(file);
+        }
+        return rc;
     }
 
 
