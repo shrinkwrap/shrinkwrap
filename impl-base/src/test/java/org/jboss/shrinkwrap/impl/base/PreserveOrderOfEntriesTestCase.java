@@ -10,11 +10,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /*
  * JBoss, Home of Professional Open Source
@@ -55,15 +56,17 @@ public class PreserveOrderOfEntriesTestCase {
         File testJar = new File(target, "test.jar");
         testJar.delete();
 
+        if( testJar.exists() ) {
+            throw new Exception("Test setup failed");
+        }
+
         ArrayList<String> expectedOrder = new ArrayList<String>();
         ArrayList<String> actualOrder = new ArrayList<String>();
-
-        assertFalse(testJar.exists());
 
         // Create an archive with resources
         JavaArchive archive = ShrinkWrap.create(JavaArchive.class, testJar.getName());
         Random random = new Random(0);
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 5; i++) {
             String name = "f" + Long.toHexString(random.nextLong());
             expectedOrder.add(name);
             archive.addAsResource(new StringAsset("content"), name);
