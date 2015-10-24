@@ -88,17 +88,6 @@
         </plugin>
       
         <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.2.1</version>
-          <configuration>
-            <finalName>shrinkwrap-${project.version}</finalName>
-            <descriptors>
-              <descriptor>dist.xml</descriptor>
-            </descriptors>
-          </configuration>
-        </plugin>
-        
-        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
           <version>${version.org.apache.maven.plugins_maven-site-plugin}</version>
