@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.impl.base.exporter.tar;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.impl.base.exporter.AbstractOnDemandInputStream;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarEntry;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarGzOutputStream;
@@ -51,7 +52,7 @@ class TarGzOnDemandInputStream extends AbstractOnDemandInputStream<TarGzOutputSt
     }
 
     @Override
-    protected void putNextEntry(final TarGzOutputStream outputStream, final String context) throws IOException {
+    protected void putNextEntry(final TarGzOutputStream outputStream, final String context, final Asset asset) throws IOException {
         final TarEntry entry = new TarEntry(context);
         outputStream.putNextEntry(entry);
     }
