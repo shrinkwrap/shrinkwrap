@@ -22,6 +22,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.impl.base.exporter.AbstractOnDemandInputStream;
 
 /**
@@ -51,7 +52,7 @@ class ZipOnDemandInputStream extends AbstractOnDemandInputStream<ZipOutputStream
     }
 
     @Override
-    protected void putNextEntry(final ZipOutputStream outputStream, final String context) throws IOException {
+    protected void putNextEntry(final ZipOutputStream outputStream, final String context, final Asset asset) throws IOException {
         outputStream.putNextEntry(new ZipEntry(context));
     }
 }

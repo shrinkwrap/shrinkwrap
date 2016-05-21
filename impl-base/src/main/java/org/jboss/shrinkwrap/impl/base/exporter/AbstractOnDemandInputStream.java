@@ -27,6 +27,7 @@ import java.util.Iterator;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Node;
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.exporter.ArchiveExportException;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
@@ -120,10 +121,10 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
 
                 if (isDirectory) {
                     resolvedPath = PathUtil.optionallyAppendSlash(resolvedPath);
-                    startAsset(resolvedPath);
+                    startAsset(resolvedPath, currentNode.getAsset());
                     endAsset();
                 } else {
-                    startAsset(resolvedPath);
+                    startAsset(resolvedPath, currentNode.getAsset());
 
                     try {
                         currentNodeStream = currentNode.getAsset().openStream();
@@ -181,8 +182,8 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
      * @param path
      * @throws IOException
      */
-    private void startAsset(final String path) throws IOException {
-        putNextEntry(outputStream, path);
+    private void startAsset(final String path, final Asset asset) throws IOException {
+        putNextEntry(outputStream, path, asset);
     }
 
     /**
@@ -212,7 +213,7 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
      * @throws IOException
      *             If an error occurred writing the entry
      */
-    protected abstract void putNextEntry(final T outputStream, final String context) throws IOException;
+    protected abstract void putNextEntry(final T outputStream, final String context, final Asset asset) throws IOException;
 
     /**
      * Closes the current entry context for the specified {@link OutputStream}.
