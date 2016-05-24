@@ -33,14 +33,29 @@ import java.io.InputStream;
  */
 class ZipExporterDelegate extends AbstractExporterDelegate<InputStream> {
 
+    private boolean compressed;
+
     protected ZipExporterDelegate(final Archive<?> archive) {
         super(archive);
+        compressed = true;
 
         // Precondition check
         if (archive.getContent().isEmpty()) {
             throw new IllegalArgumentException(
                 "[SHRINKWRAP-93] Cannot use this JDK-based implementation to export as ZIP an archive with no content: "
                     + archive.toString());
+        }
+    }
+
+    protected ZipExporterDelegate(final Archive<?> archive, final boolean compressed) {
+        super(archive);
+        this.compressed = compressed;
+
+        // Precondition check
+        if (archive.getContent().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "[SHRINKWRAP-93] Cannot use this JDK-based implementation to export as ZIP an archive with no content: "
+                            + archive.toString());
         }
     }
 
@@ -51,6 +66,6 @@ class ZipExporterDelegate extends AbstractExporterDelegate<InputStream> {
 
     @Override
     protected InputStream getResult() {
-        return new ZipOnDemandInputStream(getArchive());
+        return new ZipOnDemandInputStream(getArchive(), compressed);
     }
 }
