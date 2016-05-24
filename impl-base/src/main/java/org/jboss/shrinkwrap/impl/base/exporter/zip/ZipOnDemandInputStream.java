@@ -16,8 +16,11 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter.zip;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -32,18 +35,40 @@ import org.jboss.shrinkwrap.impl.base.exporter.AbstractOnDemandInputStream;
  */
 class ZipOnDemandInputStream extends AbstractOnDemandInputStream<ZipOutputStream> {
 
+
+    private boolean compressed;
+    private static long SYSTIME = System.currentTimeMillis();
+
     /**
-     * Creates stream directly from archive.
+     * Creates stream directly from archive with compression.
      *
      * @param archive
      */
     ZipOnDemandInputStream(final Archive<?> archive) {
         super(archive);
+        compressed = true;
+    }
+
+    /**
+     * Creates stream directly from archive.
+     *
+     * @param archive
+     * @param compressed
+     */
+    ZipOnDemandInputStream(final Archive<?> archive, final boolean compressed) {
+        super(archive);
+        this.compressed = compressed;
     }
 
     @Override
     protected ZipOutputStream createOutputStream(final OutputStream outputStream) {
-        return new ZipOutputStream(outputStream);
+        ZipOutputStream zos = new ZipOutputStream(outputStream);
+
+        if (!compressed) {
+            zos.setLevel(ZipOutputStream.STORED);
+        }
+
+        return zos;
     }
 
     @Override
@@ -53,6 +78,40 @@ class ZipOnDemandInputStream extends AbstractOnDemandInputStream<ZipOutputStream
 
     @Override
     protected void putNextEntry(final ZipOutputStream outputStream, final String context, final Asset asset) throws IOException {
-        outputStream.putNextEntry(new ZipEntry(context));
+
+        ZipEntry zipEntry = new ZipEntry(context);
+
+        if (!compressed) {
+            zipEntry.setMethod(ZipEntry.STORED);
+            zipEntry.setTime(SYSTIME);
+
+            long contentSize = 0;
+            long crc = 0;
+
+            // If it is not a directory
+            if (asset != null) {
+
+                // Calculates the CRC
+                CRC32 crc32 = new CRC32();
+
+                byte[] buf = new byte[1024];
+                int len;
+                try (InputStream is = new BufferedInputStream(asset.openStream())) {
+                    while ((len = is.read(buf, 0, buf.length)) != -1) {
+                        crc32.update(buf, 0, len);
+
+                        // Updates the size of the file
+                        contentSize += len;
+                    }
+                }
+                // Gets calculated value
+                crc = crc32.getValue();
+            }
+
+            zipEntry.setCrc(crc);
+            zipEntry.setSize(contentSize);
+        }
+
+        outputStream.putNextEntry(zipEntry);
     }
 }
