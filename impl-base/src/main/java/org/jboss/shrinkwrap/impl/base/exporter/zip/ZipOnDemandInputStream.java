@@ -96,12 +96,18 @@ class ZipOnDemandInputStream extends AbstractOnDemandInputStream<ZipOutputStream
 
                 byte[] buf = new byte[1024];
                 int len;
-                try (InputStream is = new BufferedInputStream(asset.openStream())) {
+                InputStream is = null;
+                try {
+                    is = new BufferedInputStream(asset.openStream());
                     while ((len = is.read(buf, 0, buf.length)) != -1) {
                         crc32.update(buf, 0, len);
 
                         // Updates the size of the file
                         contentSize += len;
+                    }
+                } finally {
+                    if (is != null) {
+                        is.close();
                     }
                 }
                 // Gets calculated value
