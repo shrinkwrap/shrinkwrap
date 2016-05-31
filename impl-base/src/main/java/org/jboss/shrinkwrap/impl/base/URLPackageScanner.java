@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -31,6 +32,9 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+
+import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
 
 /**
  * Implementation of scanner which can scan a {@link URLClassLoader}
@@ -58,22 +62,23 @@ public class URLPackageScanner {
 
     private final ClassLoader classLoader;
 
+    private String prefix;
+
+
     // private final Set<String> classes = new HashSet<String>();
     private Callback callback;
 
     /**
      * Factory method to create an instance of URLPackageScanner.
      *
-     * @param addRecursively
-     *            flag to add child packages
-     * @param classLoader
-     *            class loader that will have classes added
-     * @param pkg
-     *            Package that will be scanned
+     * @param addRecursively flag to add child packages
+     * @param classLoader    class loader that will have classes added
+     * @param callback       Callback to invoke when a matching class is found
+     * @param packageName    Package that will be scanned
      * @return new instance of URLPackageScanner
      */
     public static URLPackageScanner newInstance(boolean addRecursively, final ClassLoader classLoader,
-        final Callback callback, final String packageName) {
+                                                final Callback callback, final String packageName) {
         Validate.notNull(packageName, "Package name must be specified");
         Validate.notNull(addRecursively, "AddRecursively must be specified");
         Validate.notNull(classLoader, "ClassLoader must be specified");
@@ -85,15 +90,12 @@ public class URLPackageScanner {
     /**
      * Factory method to create an instance of URLPackageScanner in the default package
      *
-     * @param pkg
-     *            Package that will be scanned
-     * @param addRecursively
-     *            flag to add child packages
-     * @param classLoader
-     *            class loader that will have classes added
+     * @param addRecursively flag to add child packages
+     * @param classLoader    Class loader that will have classes added
+     * @param callback       Callback to invoke when a matching class is found
      * @return new instance of URLPackageScanner
      */
-    public static URLPackageScanner newInstance(boolean addRecursively, ClassLoader classLoader, Callback callback) {
+    public static URLPackageScanner newInstance(boolean addRecursively, ClassLoader classLoader, Callback callback) throws IOException {
         Validate.notNull(addRecursively, "AddRecursively must be specified");
         Validate.notNull(classLoader, "ClassLoader must be specified");
         Validate.notNull(callback, "Callback must be specified");
@@ -107,6 +109,12 @@ public class URLPackageScanner {
         this.addRecursively = addRecursively;
         this.classLoader = classLoader;
         this.callback = callback;
+        try {
+            this.prefix = ( classLoader.getResources("WEB-INF").hasMoreElements() ? "WEB-INF/classes/" : "" );
+        } catch (IOException e) {
+            // ignorable
+            this.prefix = "";
+        }
     }
 
     public void scanPackage() {
@@ -140,10 +148,10 @@ public class URLPackageScanner {
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
                 String name = entry.getName();
-                if (name.startsWith(packageNamePath) && name.endsWith(".class")
-                    && (addRecursively || !name.substring(packageNamePath.length() + 1).contains("/"))) {
-                    String className = name.replace("/", ".").substring(0, name.length() - ".class".length());
-                    foundClass(className);
+                if (name.startsWith(prefix + packageNamePath) && name.endsWith(".class")
+                        && (addRecursively || !name.substring((prefix + packageNamePath).length() + 1).contains("/"))) {
+                    String className = name.replace("/", ".").substring(prefix.length(), name.length() - ".class".length());
+                    foundClass(className, name );
                 }
             }
         } catch (ZipException e) {
@@ -167,19 +175,21 @@ public class URLPackageScanner {
         for (File child : file.listFiles()) {
             if (!child.isDirectory() && child.getName().endsWith(".class")) {
                 final String packagePrefix = packageName.length() > 0 ? packageName + "." : packageName;
-                foundClass(packagePrefix + child.getName().substring(0, child.getName().lastIndexOf(".class")));
+                String className = packagePrefix + child.getName().substring(0, child.getName().lastIndexOf(".class"));
+                foundClass(className, prefix + className.replace( '.', '/' ) + ".class" );
             } else if (child.isDirectory() && addRecursively) {
                 handle(child, packageName + "." + child.getName());
             }
         }
     }
 
-    private void foundClass(String className) {
-        callback.classFound(className);
+    private void foundClass(String className, String path) {
+        callback.classFound( className, new ClassLoaderAsset( path, classLoader) );
     }
 
     private List<URL> loadResources(String name) throws IOException {
-        return Collections.list(classLoader.getResources(name));
+        ArrayList<URL> resources = Collections.list(classLoader.getResources(prefix + name));
+        return resources;
     }
 
     /**
@@ -192,9 +202,8 @@ public class URLPackageScanner {
         /**
          * Called for each found class.
          *
-         * @param className
-         *            The name of the found class
+         * @param className The name of the found class
          */
-        void classFound(String className);
+        void classFound(String className, Asset asset);
     }
 }
