@@ -16,6 +16,9 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
+import java.io.IOException;
+
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.junit.Test;
 
 /**
@@ -32,7 +35,7 @@ public class URLPackageScannerTestCase {
         URLPackageScanner.newInstance(true, URLPackageScannerTestCase.class.getClassLoader(),
             new URLPackageScanner.Callback() {
                 @Override
-                public void classFound(String className) {
+                public void classFound(String className, Asset asset) {
                 }
             }, null);
     }
