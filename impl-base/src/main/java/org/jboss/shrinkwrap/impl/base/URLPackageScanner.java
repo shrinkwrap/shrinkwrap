@@ -54,6 +54,8 @@ public class URLPackageScanner {
      */
     private static final String NAME_EMPTY_PACKAGE = "";
 
+    private static final String SUFFIX_CLASS = ".class";
+
     private final String packageName;
 
     private final String packageNamePath;
@@ -132,9 +134,9 @@ public class URLPackageScanner {
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
                 String name = entry.getName();
-                if (name.startsWith(prefix + packageNamePath) && name.endsWith(".class")
+                if (name.startsWith(prefix + packageNamePath) && name.endsWith(SUFFIX_CLASS)
                         && (addRecursively || !name.substring((prefix + packageNamePath).length() + 1).contains("/"))) {
-                    String className = name.replace("/", ".").substring(prefix.length(), name.length() - ".class".length());
+                    String className = name.replace("/", ".").substring(prefix.length(), name.length() - SUFFIX_CLASS.length());
                     foundClass(className, name );
                 }
             }
@@ -157,10 +159,10 @@ public class URLPackageScanner {
 
     private void handle(File file, String packageName) throws ClassNotFoundException {
         for (File child : file.listFiles()) {
-            if (!child.isDirectory() && child.getName().endsWith(".class")) {
+            if (!child.isDirectory() && child.getName().endsWith(SUFFIX_CLASS)) {
                 final String packagePrefix = packageName.length() > 0 ? packageName + "." : packageName;
-                String className = packagePrefix + child.getName().substring(0, child.getName().lastIndexOf(".class"));
-                foundClass(className, prefix + className.replace( '.', '/' ) + ".class" );
+                String className = packagePrefix + child.getName().substring(0, child.getName().lastIndexOf(SUFFIX_CLASS));
+                foundClass(className, prefix + className.replace( '.', '/' ) + SUFFIX_CLASS );
             } else if (child.isDirectory() && addRecursively) {
                 handle(child, packageName + "." + child.getName());
             }
