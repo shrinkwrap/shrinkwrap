@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.impl.base.container;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -1505,12 +1506,12 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
         final URLPackageScanner.Callback callback = new URLPackageScanner.Callback() {
             @Override
-            public void classFound(String className) {
+            public void classFound(String className, Asset asset) {
                 ArchivePath classNamePath = AssetUtil.getFullPathForClassResource(className);
                 if (!filter.include(classNamePath)) {
                     return;
                 }
-                Asset asset = new ClassLoaderAsset(classNamePath.get().substring(1), classLoader);
+                //Asset asset = new ClassLoaderAsset(classNamePath.get().substring(1), classLoader);
                 ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
                 add(asset, location);
             }
@@ -1689,7 +1690,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
         final URLPackageScanner.Callback callback = new URLPackageScanner.Callback() {
             @Override
-            public void classFound(String className) {
+            public void classFound(String className, Asset asset) {
                 ArchivePath classNamePath = AssetUtil.getFullPathForClassResource(className);
 
                 if (!filter.include(classNamePath)) {
