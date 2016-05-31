@@ -87,22 +87,6 @@ public class URLPackageScanner {
         return new URLPackageScanner(packageName, addRecursively, classLoader, callback);
     }
 
-    /**
-     * Factory method to create an instance of URLPackageScanner in the default package
-     *
-     * @param addRecursively flag to add child packages
-     * @param classLoader    Class loader that will have classes added
-     * @param callback       Callback to invoke when a matching class is found
-     * @return new instance of URLPackageScanner
-     */
-    public static URLPackageScanner newInstance(boolean addRecursively, ClassLoader classLoader, Callback callback) throws IOException {
-        Validate.notNull(addRecursively, "AddRecursively must be specified");
-        Validate.notNull(classLoader, "ClassLoader must be specified");
-        Validate.notNull(callback, "Callback must be specified");
-
-        return new URLPackageScanner(NAME_EMPTY_PACKAGE, addRecursively, classLoader, callback);
-    }
-
     private URLPackageScanner(String packageName, boolean addRecursively, ClassLoader classLoader, Callback callback) {
         this.packageName = packageName;
         this.packageNamePath = packageName.replace(".", "/");
