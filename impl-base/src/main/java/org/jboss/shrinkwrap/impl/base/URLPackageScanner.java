@@ -49,11 +49,6 @@ public class URLPackageScanner {
 
     private static final Logger log = Logger.getLogger(URLPackageScanner.class.getName());
 
-    /**
-     * Name of the empty package
-     */
-    private static final String NAME_EMPTY_PACKAGE = "";
-
     private static final String SUFFIX_CLASS = ".class";
 
     private final String packageName;
