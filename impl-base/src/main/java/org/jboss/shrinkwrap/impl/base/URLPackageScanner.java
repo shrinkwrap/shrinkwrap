@@ -90,12 +90,7 @@ public class URLPackageScanner {
         this.addRecursively = addRecursively;
         this.classLoader = classLoader;
         this.callback = callback;
-        try {
-            this.prefix = ( classLoader.getResources("WEB-INF").hasMoreElements() ? "WEB-INF/classes/" : "" );
-        } catch (IOException e) {
-            // ignorable
-            this.prefix = "";
-        }
+        this.prefix = "";
     }
 
     public void scanPackage() {
@@ -170,6 +165,12 @@ public class URLPackageScanner {
 
     private List<URL> loadResources(String name) throws IOException {
         ArrayList<URL> resources = Collections.list(classLoader.getResources(prefix + name));
+
+        if (resources.size() == 0) {
+            prefix = "WEB-INF/classes/";
+            resources = Collections.list(classLoader.getResources(prefix + name));
+        }
+
         return resources;
     }
 
