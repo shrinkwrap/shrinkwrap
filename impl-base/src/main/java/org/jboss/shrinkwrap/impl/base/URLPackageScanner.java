@@ -51,6 +51,8 @@ public class URLPackageScanner {
 
     private static final String SUFFIX_CLASS = ".class";
 
+    private static final String WEB_INF_CLASSES_DIR = "WEB-INF/classes/";
+
     private final String packageName;
 
     private final String packageNamePath;
@@ -167,8 +169,15 @@ public class URLPackageScanner {
         ArrayList<URL> resources = Collections.list(classLoader.getResources(prefix + name));
 
         if (resources.size() == 0) {
-            prefix = "WEB-INF/classes/";
+            prefix = WEB_INF_CLASSES_DIR;
             resources = Collections.list(classLoader.getResources(prefix + name));
+        } else {
+            for (URL url : resources) {
+                if (url.toString().contains(WEB_INF_CLASSES_DIR)) {
+                    prefix = WEB_INF_CLASSES_DIR;
+                    break;
+                }
+            }
         }
 
         return resources;
