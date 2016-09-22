@@ -65,7 +65,7 @@ public class ZipFileEntryAsset implements Asset {
         private final ZipFile file;
         private final InputStream is;
 
-        public InputStreamWrapper(final ZipFile file, final InputStream is) {
+        private InputStreamWrapper(final ZipFile file, final InputStream is) {
             this.file = file;
             this.is = is;
         }
@@ -81,7 +81,7 @@ public class ZipFileEntryAsset implements Asset {
                 try {
                     this.is.close();
                 } finally {
-                    file.close();
+                    this.file.close();
                 }
             } finally {
                 super.close();
