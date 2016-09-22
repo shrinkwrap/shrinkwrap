@@ -183,28 +183,15 @@ public final class ArchiveFactory {
                 + archiveFile.getAbsolutePath());
         }
 
-        // Construct ZipFile
-        ZipFile zipFile = null;
         try {
-            zipFile = new ZipFile(archiveFile);
             // Import
-            return ShrinkWrap.create(type, archiveFile.getName()).as(ZipImporter.class).importFrom(zipFile).as(type);
+            return ShrinkWrap.create(type, archiveFile.getName()).as(ZipImporter.class).importFrom(new ZipFile(archiveFile)).as(type);
         } catch (final ZipException ze) {
             throw new IllegalArgumentException("Does not appear to be a valid ZIP file: "
                 + archiveFile.getAbsolutePath());
         } catch (final IOException ioe) {
             throw new RuntimeException("I/O Error in importing new archive from ZIP: " + archiveFile.getAbsolutePath(),
                 ioe);
-        }finally {
-            if(null != zipFile){
-                try {
-                    zipFile.close();
-                } catch (final IOException e) {
-                    //no-op
-                }
-            }
         }
-
-
     }
 }

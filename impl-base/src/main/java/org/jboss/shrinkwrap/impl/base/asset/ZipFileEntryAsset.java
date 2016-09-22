@@ -16,6 +16,8 @@
  */
 package org.jboss.shrinkwrap.impl.base.asset;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -31,10 +33,10 @@ import org.jboss.shrinkwrap.impl.base.Validate;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  */
 public class ZipFileEntryAsset implements Asset {
-    private final ZipFile file;
+    private final File file;
     private final ZipEntry entry;
 
-    public ZipFileEntryAsset(ZipFile file, ZipEntry entry) {
+    public ZipFileEntryAsset(final File file, final ZipEntry entry) {
         Validate.notNull(file, "File must be specified");
         Validate.notNull(entry, "Entry must be specified");
 
@@ -51,8 +53,8 @@ public class ZipFileEntryAsset implements Asset {
     // TODO: create AssetStreamException ?
     public InputStream openStream() {
         try {
-            return file.getInputStream(entry);
-        } catch (Exception e) {
+            return new ZipFile(file).getInputStream(entry);
+        } catch (final Exception e) {
             throw new RuntimeException("Could not open zip file stream", e);
         }
     }

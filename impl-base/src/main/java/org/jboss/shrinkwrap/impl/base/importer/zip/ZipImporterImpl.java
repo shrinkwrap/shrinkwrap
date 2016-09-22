@@ -214,10 +214,16 @@ public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipIm
                     continue;
                 }
 
-                archive.add(new ZipFileEntryAsset(file, entry), new BasicPath(entryName));
+                archive.add(new ZipFileEntryAsset(new File(file.getName()), entry), new BasicPath(entryName));
             }
         } catch (Exception e) {
             throw new ArchiveImportException("Could not import file", e);
+        } finally {
+            try {
+                file.close();
+            } catch (IOException e) {
+                //no-op
+            }
         }
         return this;
     }
