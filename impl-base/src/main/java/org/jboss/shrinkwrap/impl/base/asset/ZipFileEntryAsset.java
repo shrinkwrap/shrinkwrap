@@ -53,9 +53,39 @@ public class ZipFileEntryAsset implements Asset {
     // TODO: create AssetStreamException ?
     public InputStream openStream() {
         try {
-            return new ZipFile(file).getInputStream(entry);
+            final ZipFile file = new ZipFile(this.file);
+            return new InputStreamWrapper(file, file.getInputStream(entry));
         } catch (final Exception e) {
             throw new RuntimeException("Could not open zip file stream", e);
+        }
+    }
+
+    private static class InputStreamWrapper extends InputStream {
+
+        private final ZipFile file;
+        private final InputStream is;
+
+        public InputStreamWrapper(final ZipFile file, final InputStream is) {
+            this.file = file;
+            this.is = is;
+        }
+
+        @Override
+        public int read() throws IOException {
+            return this.is.read();
+        }
+
+        @Override
+        public void close() throws IOException {
+            try {
+                try {
+                    this.is.close();
+                } finally {
+                    file.close();
+                }
+            } finally {
+                super.close();
+            }
         }
     }
 }
