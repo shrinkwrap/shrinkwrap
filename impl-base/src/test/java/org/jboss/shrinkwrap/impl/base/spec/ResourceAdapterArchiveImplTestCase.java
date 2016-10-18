@@ -19,6 +19,7 @@ package org.jboss.shrinkwrap.impl.base.spec;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.container.CDIBeanContainer;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.api.container.ManifestContainer;
@@ -119,6 +120,11 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
     }
 
     @Override
+    protected CDIBeanContainer<ResourceAdapterArchive> getCDIBeanArchiveContainer() {
+        return getArchive();
+    }
+
+    @Override
     protected ArchivePath getManifestPath() {
         return PATH_MANIFEST;
     }
@@ -142,7 +148,12 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
     protected ResourceContainer<ResourceAdapterArchive> getResourceContainer() {
         return getArchive();
     }
-
+    
+    @Override
+    protected ArchivePath getBeansXmlPath() {
+        return PATH_MANIFEST;
+    }
+    
     // -------------------------------------------------------------------------------------||
     // Required Impls - DynamicResourceAdapterContainerTestBase ---------------------------||
     // -------------------------------------------------------------------------------------||

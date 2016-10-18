@@ -31,7 +31,7 @@ import org.jboss.shrinkwrap.api.asset.Asset;
  * @version $Revision: $
  * @param <T>
  */
-public interface ResourceAdapterContainer<T extends Archive<T>> {
+public interface ResourceAdapterContainer<T extends Archive<T>> extends CDIBeanContainer<T> {
     /**
      * Adds the resource as ra.xml to the container, returning the container itself. <br/>
      * The {@link ClassLoader} used to obtain the resource is up to the implementation.

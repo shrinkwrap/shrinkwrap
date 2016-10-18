@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.api.spec;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.container.CDIBeanContainer;
 import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 
 /**
@@ -27,5 +28,5 @@ import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public interface JavaArchive extends Archive<JavaArchive>, ServiceProviderContainer<JavaArchive> {
+public interface JavaArchive extends Archive<JavaArchive>, ServiceProviderContainer<JavaArchive>, CDIBeanContainer<JavaArchive> {
 }
