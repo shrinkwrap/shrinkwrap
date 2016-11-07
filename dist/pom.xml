@@ -23,7 +23,7 @@
 
     <dependency>
       <groupId>org.jboss.shrinkwrap</groupId>
-      <artifactId>shrinkwrap-impl-nio2</artifactId>
+      <artifactId>shrinkwrap-impl-base</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
