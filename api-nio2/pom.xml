@@ -66,6 +66,7 @@
           <fork>true</fork>
         </configuration>
       </plugin>
+8
       
       <!-- Checkstyle -->
       <plugin>

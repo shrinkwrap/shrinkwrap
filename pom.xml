@@ -138,13 +138,17 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <inherited>true</inherited>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.8</source>
+          <target>1.8</target>
           <showDeprecation>false</showDeprecation>
           <showWarnings>true</showWarnings>
           <optimize>true</optimize>
-          <compilerVersion>1.7</compilerVersion>
+          <compilerVersion>1.8</compilerVersion>
           <fork>true</fork>
+          <compilerArguments>
+            <source>1.8</source>
+            <target>1.8</target>
+          </compilerArguments>
         </configuration>
       </plugin>
 
@@ -153,8 +157,6 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
-          <!-- Needed to not break Cobertura in Oracle JDKs -->
-          <argLine>-XX:-UseSplitVerifier</argLine>
           <trimStackTrace>false</trimStackTrace>
           <printSummary>true</printSummary>
           <includes>
@@ -162,6 +164,7 @@
             <include>**/*TestSuite.java</include>
           </includes>
           <forkMode>always</forkMode>
+          <jvm>${env.JAVA_HOME}/bin/java</jvm>
         </configuration>
       </plugin>
 
@@ -187,15 +190,11 @@
               -->
             </requireMavenVersion>
             <requireJavaVersion>
-              <version>1.7.0</version> <!-- Must be JDK7 -->
+              <version>1.8.0</version> <!-- Must be JDK8 -->
             </requireJavaVersion>
             <requireProperty>
               <property>env.JAVA_HOME</property>
-              <message>"JAVA_HOME needs to be set (to Java7)"</message>
-            </requireProperty>
-            <requireProperty>
-              <property>env.JAVA5_HOME</property>
-              <message>"JAVA5_HOME needs to be set to run some tests in the JRE5 runtime"</message>
+              <message>"JAVA_HOME needs to be set (to Java8)"</message>
             </requireProperty>
           </rules>
         </configuration>

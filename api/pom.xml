@@ -55,15 +55,6 @@
         </executions>
       </plugin>
       
-      <!-- Surefire -->
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <!-- Run in Java5; we build with a JDK7 compiler so ensure we don't use any JDK7 libs-->
-          <jvm>${env.JAVA5_HOME}/bin/java</jvm>
-        </configuration>
-      </plugin>
-      
       <!-- Checkstyle -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
