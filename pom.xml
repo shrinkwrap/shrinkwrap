@@ -39,8 +39,8 @@
 
   <!-- Issues -->
   <issueManagement>
-    <system>jira</system>
-    <url>http://jira.jboss.com/jira/browse/SHRINKWRAP</url>
+    <system>github</system>
+    <url>https://github.com/shrinkwrap/shrinkwrap/issues</url>
   </issueManagement>
 
   <!-- Licenses -->
