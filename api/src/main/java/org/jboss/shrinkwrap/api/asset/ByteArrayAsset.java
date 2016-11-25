@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.api.asset;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

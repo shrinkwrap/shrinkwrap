@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.api.asset;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.InputStream;
 
 /**
