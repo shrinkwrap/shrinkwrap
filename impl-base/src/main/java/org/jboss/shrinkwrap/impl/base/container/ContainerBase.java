@@ -1511,7 +1511,6 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
                 if (!filter.include(classNamePath)) {
                     return;
                 }
-                //Asset asset = new ClassLoaderAsset(classNamePath.get().substring(1), classLoader);
                 ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
                 add(asset, location);
             }
