@@ -203,7 +203,7 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
      * @throws IOException
      *             If an error occurred in creating the stream
      */
-    protected abstract T createOutputStream(final OutputStream outputStream) throws IOException;
+    protected abstract T createOutputStream(OutputStream outputStream) throws IOException;
 
     /**
      * Writes the next entry (demarcates a new file/folder is to be written).
@@ -213,12 +213,12 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
      * @throws IOException
      *             If an error occurred writing the entry
      */
-    protected abstract void putNextEntry(final T outputStream, final String context, final Asset asset) throws IOException;
+    protected abstract void putNextEntry(T outputStream, String context, Asset asset) throws IOException;
 
     /**
      * Closes the current entry context for the specified {@link OutputStream}.
      *
      * @param outputStream
      */
-    protected abstract void closeEntry(final T outputStream) throws IOException;
+    protected abstract void closeEntry(T outputStream) throws IOException;
 }

@@ -566,8 +566,7 @@ public abstract class WebContainerBase<T extends Archive<T>> extends ContainerBa
     * @see org.jboss.shrinkwrap.impl.base.container.ContainerBase#addAsServiceProvider(java.lang.String, java.lang.String[])
     */
     @Override
-    public T addAsServiceProvider(String serviceInterface, String... serviceImpls) throws IllegalArgumentException
-    {
+    public T addAsServiceProvider(String serviceInterface, String... serviceImpls) throws IllegalArgumentException {
         Validate.notNull(serviceInterface, "ServiceInterface must be specified");
         Validate.notNullAndNoNullValues(serviceImpls, "ServiceImpls must be specified and can not contain null values");
 

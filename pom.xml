@@ -8,7 +8,7 @@
   <parent>
     <groupId>org.jboss</groupId>
     <artifactId>jboss-parent</artifactId>
-    <version>19</version>
+    <version>22</version>
   </parent>
 
   <!-- Model Information -->
@@ -160,7 +160,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
-          <!-- Needed to not break Coburtura in Oracle JDKs -->
+          <!-- Needed to not break Cobertura in Oracle JDKs -->
           <argLine>-XX:-UseSplitVerifier</argLine>
           <trimStackTrace>false</trimStackTrace>
           <printSummary>true</printSummary>

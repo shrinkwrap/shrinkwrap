@@ -243,8 +243,7 @@ public class TarOutputStreamImpl extends FilterOutputStream {
                 wOffset += aLen;
                 numToWrite -= aLen;
                 this.assemLen = 0;
-            } else // ( (this.assemLen + numToWrite ) < this.recordBuf.length )
-            {
+            } else { // ( (this.assemLen + numToWrite ) < this.recordBuf.length )
                 System.arraycopy(wBuf, wOffset, this.assemBuf, this.assemLen, numToWrite);
                 wOffset += numToWrite;
                 this.assemLen += numToWrite;
