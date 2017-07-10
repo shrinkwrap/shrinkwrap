@@ -119,9 +119,10 @@ public class URLPackageScanner {
     }
 
     private void handleArchiveByFile(File file) throws IOException, ClassNotFoundException {
+        ZipFile zip = null;
         try {
             log.fine("archive: " + file);
-            ZipFile zip = new ZipFile(file);
+            zip = new ZipFile(file);
             Enumeration<? extends ZipEntry> entries = zip.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
@@ -134,6 +135,14 @@ public class URLPackageScanner {
             }
         } catch (ZipException e) {
             throw new RuntimeException("Error handling file " + file, e);
+        } finally {
+            if (zip != null) {
+                try {
+                    zip.close();
+                } catch (IOException ioe) {
+                    log.log(Level.WARNING, "could not close ZipFile for: " + file.getAbsolutePath(), ioe);
+                }
+            }
         }
     }
 
