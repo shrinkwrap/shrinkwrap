@@ -8,7 +8,7 @@
   <parent>
     <groupId>org.jboss</groupId>
     <artifactId>jboss-parent</artifactId>
-    <version>22</version>
+    <version>19</version>
   </parent>
 
   <!-- Model Information -->
@@ -25,14 +25,8 @@
   
   <!-- Properties -->
   <properties>
-
-    <!-- Versioning -->
     <version.junit_junit>4.8.2</version.junit_junit>
     <version.org.apache.maven.plugins_maven-site-plugin>3.4</version.org.apache.maven.plugins_maven-site-plugin>
-    
-    <!-- jboss-parent override -->
-    <maven.compiler.target>1.6</maven.compiler.target>
-    <maven.compiler.source>1.6</maven.compiler.source>
   </properties>
   
   <!-- SCM -->
@@ -144,17 +138,13 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <inherited>true</inherited>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.5</source>
+          <target>1.5</target>
           <showDeprecation>false</showDeprecation>
           <showWarnings>true</showWarnings>
           <optimize>true</optimize>
           <compilerVersion>1.7</compilerVersion>
           <fork>true</fork>
-          <compilerArguments>
-            <source>1.5</source>
-            <target>1.5</target>
-          </compilerArguments>
         </configuration>
       </plugin>
 
@@ -177,8 +167,7 @@
 
       <!-- Enforce Maven Environment -->
       <plugin>
-        <artifactId>maven-enforcer-plugin
-                      </artifactId>
+        <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
           <execution>
             <id>enforce-maven-environment</id>

@@ -64,10 +64,6 @@
           <optimize>true</optimize>
           <compilerVersion>1.7</compilerVersion>
           <fork>true</fork>
-          <compilerArguments>
-            <source>1.7</source>
-            <target>1.7</target>
-          </compilerArguments>
         </configuration>
       </plugin>
       
