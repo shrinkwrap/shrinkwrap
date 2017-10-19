@@ -124,15 +124,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
                         @Override
                         public InputStream getInputStream() throws IOException {
                             final ArchivePath path = convertToArchivePath(u);
-                            final Node node = archive.get(path);
-
-                            // SHRINKWRAP-308
-                            if (node == null) {
-                                // We've asked for a path that doesn't exist
-                                throw new FileNotFoundException("Requested path: " + path + " does not exist in "
-                                    + archive.toString());
-                            }
-
+                            final Node node = node(archive, path);
                             final Asset asset = node.getAsset();
 
                             // SHRINKWRAP-306
@@ -147,6 +139,21 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
                             }
                             return input;
 
+                        }
+
+                        private Node node(final Archive<?> archive, final ArchivePath path) throws FileNotFoundException
+                        {
+                           Node node = archive.get(path);
+                           if (node != null)
+                              return node;
+
+                           node = archive.get(ArchivePaths.create("WEB-INF/classes", path));
+                           if (node != null)
+                              return node;
+
+                           // SHRINKWRAP-308 We've asked for a path that doesn't exist
+                           throw new FileNotFoundException("Requested path: " + path + " does not exist in "
+                                 + archive.toString());
                         }
 
                         private ArchivePath convertToArchivePath(URL url) {

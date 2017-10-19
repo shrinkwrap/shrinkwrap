@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -31,6 +32,7 @@ import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.classloader.ShrinkWrapClassLoader;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.junit.After;
 import org.junit.Assert;
@@ -218,6 +220,27 @@ public class ShrinkWrapClassLoaderTestCase {
         // SHRINKWRAP-237: This throws IOException: Stream closed
         IOUtil.copyWithClose(resource.openStream(), new ByteArrayOutputStream());
     }
+
+    /**
+     * SHRINKWRAP-369 ShrinkWrapClassLoader does not find service provider in WAR
+     */
+    @Test
+    public void shouldBeAbleToFindServiceProviderInWAR() throws Exception {
+       final WebArchive archive = ShrinkWrap.create(WebArchive.class).addAsServiceProvider(Cloneable.class, String.class);
+       final ShrinkWrapClassLoader cl = new ShrinkWrapClassLoader((ClassLoader) null, archive);
+       final Enumeration<URL> found = cl.findResources("META-INF/services/java.lang.Cloneable");
+
+       Assert.assertTrue("Service provider not found in WAR", found.hasMoreElements());
+     }
+
+    @Test
+    public void shouldBeAbleToFindServiceProviderInWARWithSlash() throws Exception {
+       final WebArchive archive = ShrinkWrap.create(WebArchive.class).addAsServiceProvider(Cloneable.class, String.class);
+       final ShrinkWrapClassLoader cl = new ShrinkWrapClassLoader((ClassLoader) null, archive);
+       final Enumeration<URL> found = cl.findResources("/META-INF/services/java.lang.Cloneable");
+
+       Assert.assertTrue("Service provider not found in WAR", found.hasMoreElements());
+     }
 
     // -------------------------------------------------------------------------------------||
     // Internal Helper Methods ------------------------------------------------------------||
