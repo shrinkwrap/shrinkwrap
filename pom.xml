@@ -20,7 +20,7 @@
   <version>2.0.0-alpha-X-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>ShrinkWrap Aggregator and Build Parent</name>
-  <url>http://www.jboss.org</url>
+  <url>http://arquillian.org/modules/shrinkwrap-shrinkwrap/</url>
   <description>ShrinkWrap Aggregator</description>
   
   <!-- Properties -->
