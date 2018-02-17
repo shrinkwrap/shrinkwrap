@@ -25,12 +25,14 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.classloader.ShrinkWrapClassLoader;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.junit.After;
 import org.junit.Assert;
@@ -86,7 +88,7 @@ public class ShrinkWrapClassLoaderTestCase {
      */
     @Before
     public void createClassLoader() {
-        shrinkWrapClassLoader = new ShrinkWrapClassLoader((ClassLoader) null, archive);
+        shrinkWrapClassLoader = new ShrinkWrapClassLoader((ClassLoader)null , archive);
     }
 
     /**
@@ -127,6 +129,40 @@ public class ShrinkWrapClassLoaderTestCase {
 
         Assert.assertNotSame("Class Loaded from the CL should not be the same as the one on the appCL",
             loadedTestClass, applicationClassLoaderClass);
+
+    }
+
+    /**
+     * Ensures we can load a Class instance from the {@link ShrinkWrapClassLoader} in a web archive
+     */
+    @Test
+    public void shouldBeAbleToLoadClassFromWebArchive() throws ClassNotFoundException {
+
+        /**
+         * Web Archive to be read via a {@link ShrinkWrapClassLoaderTestCase#shrinkWrapClassLoader}.
+         * Places classes under WEB-INF/classes, so with this different root needs the CL to respect that
+         * and know what to do
+         */
+        final WebArchive webArchive = ShrinkWrap.create(WebArchive.class).addClass(
+                applicationClassLoaderClass);
+        final ClassLoader webArchiveClassLoader = new ShrinkWrapClassLoader((ClassLoader) null,
+                "WEB-INF/classes", webArchive);
+
+        // Load the test class from the CL
+        final Class<?> loadedTestClass = Class.forName(applicationClassLoaderClass.getName(), false,
+                webArchiveClassLoader);
+
+        final ClassLoader loadedTestClassClassLoader = loadedTestClass.getClassLoader();
+        log.info("Got " + loadedTestClass + " from " + loadedTestClassClassLoader);
+
+        // Assertions
+        Assert.assertNotNull("Test class could not be found via the ClassLoader", loadedTestClass);
+
+        Assert.assertSame("Test class should have been loaded via the web archive ClassLoader", webArchiveClassLoader,
+                loadedTestClassClassLoader);
+
+        Assert.assertNotSame("Class Loaded from the CL should not be the same as the one on the appCL",
+                loadedTestClass, applicationClassLoaderClass);
 
     }
 
