@@ -41,6 +41,11 @@ public final class Domain {
      */
     private final ArchiveFactory archiveFactory;
 
+    /**
+     * Factory for creating filters within this {@link Domain}
+     */
+    private final FilterFactory filterFactory;
+
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
@@ -62,6 +67,7 @@ public final class Domain {
         // Set
         this.configuration = configuration;
         this.archiveFactory = new ArchiveFactory(configuration);
+        this.filterFactory = new FilterFactory(configuration);
     }
 
     // -------------------------------------------------------------------------------------||
@@ -85,6 +91,16 @@ public final class Domain {
      */
     public ArchiveFactory getArchiveFactory() {
         return archiveFactory;
+    }
+
+    /**
+     * Obtains the {@link FilterFactory} for this domain. All {@link Filter}s created from the factory will be backed
+     * by this domain's configuration.
+     *
+     * @return the filterFactory
+     */
+    public FilterFactory getFilterFactory() {
+        return filterFactory;
     }
 
 }

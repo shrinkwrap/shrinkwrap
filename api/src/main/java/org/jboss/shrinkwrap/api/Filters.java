@@ -34,16 +34,6 @@ public final class Filters {
     // Class Members ----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
-    private static final String IMPL_CLASS_NAME_INCLUDE_ALL_PATHS = "org.jboss.shrinkwrap.impl.base.filter.IncludeAllPaths";
-
-    private static final String IMPL_CLASS_NAME_INCLUDE_REGEXP_PATHS = "org.jboss.shrinkwrap.impl.base.filter.IncludeRegExpPaths";
-
-    private static final String IMPL_CLASS_NAME_EXCLUDE_REGEXP_PATHS = "org.jboss.shrinkwrap.impl.base.filter.ExcludeRegExpPaths";
-
-    private static final String IMPL_CLASS_NAME_INCLUDE_PATHS = "org.jboss.shrinkwrap.impl.base.filter.IncludePaths";
-
-    private static final String IMPL_CLASS_NAME_EXCLUDE_PATHS = "org.jboss.shrinkwrap.impl.base.filter.ExcludePaths";
-
     /**
      * {@link Filter} that includes all {@link ArchivePath}s.
      *
@@ -52,7 +42,7 @@ public final class Filters {
      * @return A {@link Filter} that always return true
      */
     public static Filter<ArchivePath> includeAll() {
-        return getFilterInstance(IMPL_CLASS_NAME_INCLUDE_ALL_PATHS, new Class<?>[] {}, new Object[] {});
+        return ShrinkWrap.getDefaultDomain().getFilterFactory().includeAll();
     }
 
     /**
@@ -63,8 +53,7 @@ public final class Filters {
      * @return A Regular Expression based include {@link Filter}
      */
     public static Filter<ArchivePath> include(String regexp) {
-        return getFilterInstance(IMPL_CLASS_NAME_INCLUDE_REGEXP_PATHS, new Class<?>[] { String.class },
-            new Object[] { regexp });
+        return ShrinkWrap.getDefaultDomain().getFilterFactory().include(regexp);
     }
 
     /**
@@ -75,8 +64,7 @@ public final class Filters {
      * @return A Regular Expression based exclude {@link Filter}
      */
     public static Filter<ArchivePath> exclude(final String regexp) {
-        return getFilterInstance(IMPL_CLASS_NAME_EXCLUDE_REGEXP_PATHS, new Class<?>[] { String.class },
-            new Object[] { regexp });
+        return ShrinkWrap.getDefaultDomain().getFilterFactory().exclude(regexp);
     }
 
     /**
@@ -87,8 +75,7 @@ public final class Filters {
      * @return A Path list based include {@link Filter}
      */
     public static Filter<ArchivePath> includePaths(final String... paths) {
-        return getFilterInstance(IMPL_CLASS_NAME_INCLUDE_PATHS, new Class<?>[] { String[].class },
-            new Object[] { paths });
+        return ShrinkWrap.getDefaultDomain().getFilterFactory().includePaths(paths);
     }
 
     /**
@@ -99,8 +86,7 @@ public final class Filters {
      * @return A Path list based include {@link Filter}
      */
     public static Filter<ArchivePath> includePaths(final Collection<String> paths) {
-        return getFilterInstance(IMPL_CLASS_NAME_INCLUDE_PATHS, new Class<?>[] { Collection.class },
-            new Object[] { paths });
+        return ShrinkWrap.getDefaultDomain().getFilterFactory().includePaths(paths);
     }
 
     /**
@@ -111,8 +97,7 @@ public final class Filters {
      * @return A Path list based exclude {@link Filter}
      */
     public static Filter<ArchivePath> excludePaths(final String... paths) {
-        return getFilterInstance(IMPL_CLASS_NAME_EXCLUDE_PATHS, new Class<?>[] { String[].class },
-            new Object[] { paths });
+        return ShrinkWrap.getDefaultDomain().getFilterFactory().excludePaths(paths);
     }
 
     /**
@@ -123,8 +108,7 @@ public final class Filters {
      * @return A Path list based exclude {@link Filter}
      */
     public static Filter<ArchivePath> excludePaths(final Collection<String> paths) {
-        return getFilterInstance(IMPL_CLASS_NAME_EXCLUDE_PATHS, new Class<?>[] { Collection.class },
-            new Object[] { paths });
+        return ShrinkWrap.getDefaultDomain().getFilterFactory().excludePaths(paths);
     }
 
     /**
@@ -135,7 +119,7 @@ public final class Filters {
      * @return
      */
     public static Filter<ArchivePath> exclude(Package... packages) {
-        return createRegExpFilter(IMPL_CLASS_NAME_EXCLUDE_REGEXP_PATHS, packages);
+        return ShrinkWrap.getDefaultDomain().getFilterFactory().exclude(packages);
     }
 
     /**
@@ -146,19 +130,7 @@ public final class Filters {
      * @return
      */
     public static Filter<ArchivePath> include(Package... packages) {
-        return createRegExpFilter(IMPL_CLASS_NAME_INCLUDE_REGEXP_PATHS, packages);
-    }
-
-    private static Filter<ArchivePath> createRegExpFilter(String filterClassName, Package... packages) {
-        StringBuilder classExpression = new StringBuilder();
-        for (Package pack : packages) {
-            classExpression.append("|");
-            classExpression.append("(.*" + pack.getName().replaceAll("\\.", "\\.") + ".*)");
-        }
-        classExpression.deleteCharAt(0);
-
-        return getFilterInstance(filterClassName, new Class<?>[] { String.class },
-            new Object[] { classExpression.toString() });
+        return ShrinkWrap.getDefaultDomain().getFilterFactory().include(packages);
     }
 
     /**
@@ -169,7 +141,7 @@ public final class Filters {
      * @return
      */
     public static Filter<ArchivePath> include(Class<?>... classes) {
-        return createRegExpFilter(IMPL_CLASS_NAME_INCLUDE_REGEXP_PATHS, classes);
+        return ShrinkWrap.getDefaultDomain().getFilterFactory().include(classes);
     }
 
     /**
@@ -180,50 +152,7 @@ public final class Filters {
      * @return
      */
     public static Filter<ArchivePath> exclude(Class<?>... classes) {
-        return createRegExpFilter(IMPL_CLASS_NAME_EXCLUDE_REGEXP_PATHS, classes);
-    }
-
-    private static Filter<ArchivePath> createRegExpFilter(String regExpFilterImplName, Class<?>... classes) {
-        StringBuilder classExpression = new StringBuilder();
-        for (Class<?> clazz : classes) {
-            classExpression.append("|");
-            classExpression.append("(.*" + clazz.getName().replaceAll("\\.", "\\.") + "\\.class)");
-        }
-        classExpression.deleteCharAt(0);
-
-        return getFilterInstance(regExpFilterImplName, new Class<?>[] { String.class },
-            new Object[] { classExpression.toString() });
-    }
-
-    /**
-     * Creates a new {@link Filter} instance using the given impl class name, constructor arguments and type
-     *
-     * @param filterClassName
-     * @param ctorTypes
-     * @param ctorArguments
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    private static Filter<ArchivePath> getFilterInstance(final String filterClassName, final Class<?>[] ctorTypes,
-        final Object[] ctorArguments) {
-        // Precondition checks
-        assert filterClassName != null && filterClassName.length() > 0 : "Filter class name must be specified";
-        assert ctorTypes != null : "Construction types must be specified";
-        assert ctorArguments != null : "Construction arguments must be specified";
-        assert ctorTypes.length == ctorArguments.length : "The number of ctor arguments and their types must match";
-
-        // Find the filter impl class in the configured CLs
-        final Class<Filter<ArchivePath>> filterClass;
-        try {
-            filterClass = (Class<Filter<ArchivePath>>) ClassLoaderSearchUtil.findClassFromClassLoaders(filterClassName,
-                ShrinkWrap.getDefaultDomain().getConfiguration().getClassLoaders());
-        } catch (final ClassNotFoundException cnfe) {
-            throw new IllegalStateException("Could not find filter implementation class " + filterClassName
-                + " in any of the configured CLs", cnfe);
-        }
-
-        // Make the new instance
-        return SecurityActions.newInstance(filterClass, ctorTypes, ctorArguments, Filter.class);
+        return ShrinkWrap.getDefaultDomain().getFilterFactory().exclude(classes);
     }
 
     // -------------------------------------------------------------------------------------||
