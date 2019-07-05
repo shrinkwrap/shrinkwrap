@@ -18,7 +18,6 @@ package org.jboss.shrinkwrap.api.asset;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.logging.Logger;
 
 import junit.framework.Assert;
