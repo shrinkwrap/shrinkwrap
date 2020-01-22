@@ -1409,18 +1409,23 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         final String childDirPath = sourcePath + "/" + childDirName;
         final String childDirTargetPath = targetPath + "/" + childDirName;
 
-        final String childFileName = "file1";
-        final String childFilePath = childDirPath + "/" + childFileName;
-        final String childFileTargetPath = childDirTargetPath + "/" + childFileName;
+        final String childFileName1 = "file1";
+        final String childFilePath1 = childDirPath + "/" + childFileName1;
+        final String childFileTargetPath1 = childDirTargetPath + "/" + childFileName1;
+        final String childFileName2 = "file2";
+        final String childFilePath2 = childDirPath + "/" + childFileName2;
+        final String childFileTargetPath2 = childDirTargetPath + "/" + childFileName2;
 
         archive.addAsDirectory(sourcePath);
-        archive.addAsDirectory(childDirName);
-        archive.add(EmptyAsset.INSTANCE, childFilePath);
+        archive.addAsDirectory(childDirPath);
+        archive.add(EmptyAsset.INSTANCE, childFilePath1);
+        archive.add(EmptyAsset.INSTANCE, childFilePath2);
         archive.move(sourcePath, targetPath);
 
         Assert.assertTrue("Directory should be at the new path", archive.get(targetPath).getAsset() == null);
         Assert.assertTrue("Child dir should be at the new path", archive.get(childDirTargetPath).getAsset() == null);
-        Assert.assertTrue("Child asset should be at the new path", archive.get(childFileTargetPath).getAsset() != null);
+        Assert.assertTrue("Child asset1 should be at the new path", archive.get(childFileTargetPath1).getAsset() != null);
+        Assert.assertTrue("Child asset2 should be at the new path", archive.get(childFileTargetPath2).getAsset() != null);
     }
 
     @Test(expected = IllegalArchivePathException.class)
