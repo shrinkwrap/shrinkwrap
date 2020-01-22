@@ -16,6 +16,19 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
@@ -39,18 +52,6 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.spi.ArchiveFormatAssociable;
 import org.jboss.shrinkwrap.spi.Configurable;
 import org.jboss.shrinkwrap.spi.Identifiable;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Base implementation of {@link Archive}. Contains support for operations (typically overloaded) that are not specific
@@ -653,8 +654,10 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
         }
 
         // move children
-        final Set<Node> nodeToMoveChildren = nodeToMove.getChildren();
-        for (final Node child : nodeToMoveChildren) {
+
+        // can't remove from collection inside of the iteration
+        final Set<Node> nodeToMoveChildrenCopy = new HashSet<Node>(nodeToMove.getChildren());
+        for (final Node child : nodeToMoveChildrenCopy) {
             final String childName = child.getPath().get().replaceFirst(child.getPath().getParent().get(), "");
             final ArchivePath childTargetPath = ArchivePaths.create(target, childName);
             move(child.getPath(), childTargetPath);
