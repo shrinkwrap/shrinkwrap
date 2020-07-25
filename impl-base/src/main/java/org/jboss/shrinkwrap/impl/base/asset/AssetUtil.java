@@ -16,8 +16,14 @@
  */
 package org.jboss.shrinkwrap.impl.base.asset;
 
+import java.util.Iterator;
+import java.util.ServiceLoader;
+import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.Node;
+import org.jboss.shrinkwrap.api.asset.TargetArchiveAwareAsset;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
+import org.jboss.shrinkwrap.spi.TargetArchiveAwareAssetArranger;
 
 /**
  * AssetUtil
@@ -141,4 +147,33 @@ public final class AssetUtil {
         String classFullPath = classResourceDelimiter + EXTENSION_CLASS;
         return new BasicPath(classFullPath);
     }
+
+    /**
+     * Determines the node where the specified asset has to be arranged into the
+     * specified archive. Therefore it uses all available implementations of
+     * {@link TargetArchiveAwareAssetArranger}.
+     * @param asset The asset for which the target node should be determined.
+     * @param archive The archive to which the asset should be added.
+     * @return The node having the target path and asset that can be added
+     * to the archive.
+     * @see TargetArchiveAwareAsset
+     * @see TargetArchiveAwareAssetArranger
+     */
+    public static Node arrangeAsset(TargetArchiveAwareAsset asset, Archive<?> archive) {
+        Node node = null;
+        Iterator<TargetArchiveAwareAssetArranger> arrangerIterator
+                = ServiceLoader.load(TargetArchiveAwareAssetArranger.class).iterator();
+
+        while (node == null && arrangerIterator.hasNext()) {
+            node = arrangerIterator.next().arrange(asset, archive);
+        }
+
+        if (node == null) {
+            throw new RuntimeException("Could not determine ArchivePath for asset " + asset.getName());
+        } else if (node.getChildren() != null && !node.getChildren().isEmpty()) {
+            throw new RuntimeException("Converted asset has children!");
+        }
+        return node;
+    }
+
 }
