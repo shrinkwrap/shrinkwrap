@@ -57,7 +57,6 @@ public class ServiceExtensionLoader implements ExtensionLoader {
     /**
      * Logger
      */
-    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(ServiceExtensionLoader.class.getName());
 
     // -------------------------------------------------------------------------------------||
@@ -244,10 +243,21 @@ public class ServiceExtensionLoader implements ExtensionLoader {
      */
     private <T extends Assignable> ExtensionWrapper loadExtensionMapping(Class<T> extensionClass) {
         final InputStream extensionStream = findExtensionImpl(extensionClass);
-
-        ExtensionWrapper extensionWrapper = loadExtensionWrapper(extensionStream, extensionClass);
-        this.extensionMappings.put(extensionClass, extensionWrapper);
-        return extensionWrapper;
+        try {
+            ExtensionWrapper extensionWrapper = loadExtensionWrapper(extensionStream, extensionClass);
+            this.extensionMappings.put(extensionClass, extensionWrapper);
+            return extensionWrapper;
+        } finally {
+            if (extensionStream != null) {
+                try {
+                    extensionStream.close();
+                } catch (IOException ignore) {
+                     if (log.isLoggable(Level.FINER)) {
+                         log.finer("Could not close stream due to: " + ignore.getMessage() + "; ignoring");
+                     }
+                }
+            }            
+        }
     }
 
     /**
