@@ -86,6 +86,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     private static final String DEFAULT_MANIFEST = "DefaultManifest.MF";
     private static final String DEFAULT_PACKAGE_NAME = "";
+    private static final String PROTOCOL_JRT = "jrt";
 
     // -------------------------------------------------------------------------------------||
     // Instance Members -------------------------------------------------------------------||
@@ -800,20 +801,21 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         final Iterable<ClassLoader> classLoaders = ((Configurable) this.getArchive()).getConfiguration()
             .getClassLoaders();
 
+        final String path = resource.getPath();
+        String adjustedPath = path;
+        final int indexOfExclamationPoint = path.indexOf('!' + File.separator);
+        if(indexOfExclamationPoint!=-1){
+            adjustedPath = path.substring(indexOfExclamationPoint + 2, path.length());
+        }
+
         for (final ClassLoader classLoader : classLoaders) {
-            final InputStream in = classLoader.getResourceAsStream(resourceAdjustedPath(resource));
+            final InputStream in = classLoader.getResourceAsStream(adjustedPath);
             if (in != null) {
                 final Asset asset = new ByteArrayAsset(in);
                 return add(asset, base, target.get());
             }
         }
-        throw new IllegalArgumentException(resource.getPath() + " was not found in any available ClassLoaders");
-    }
-
-    private String resourceAdjustedPath(final File resource) {
-        final String path = resource.getPath();
-        final String adjustedPath = path.substring(path.indexOf("!" + File.separator) + 2, path.length());
-        return adjustedPath.replace(File.separator, "/");
+        throw new IllegalArgumentException(adjustedPath + " was not found in any available ClassLoaders");
     }
 
     /*
@@ -1989,7 +1991,12 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         final URL resourceUrl = AccessController.doPrivileged(GetTcclAction.INSTANCE).getResource(resourceName);
         Validate.notNull(resourceUrl, resourceName + " doesn't exist or can't be accessed");
 
-        String resourcePath = AccessController.doPrivileged(GetTcclAction.INSTANCE).getResource(resourceName).getFile();
+        String resourcePath = resourceUrl.getFile();
+        if (resourceUrl.getProtocol().startsWith(PROTOCOL_JRT)) {
+            resourcePath = resourcePath.substring(
+                    resourcePath.indexOf('/', resourcePath.indexOf('/') + 1) + 1,
+                    resourcePath.length());
+        }
         try {
             // Have to URL decode the string as the ClassLoader.getResource(String) returns an URL encoded URL
             resourcePath = URLDecoder.decode(resourcePath, "UTF-8");
