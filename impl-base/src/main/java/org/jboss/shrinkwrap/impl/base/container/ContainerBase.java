@@ -559,12 +559,18 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         final Map<ArchivePath, Node> contents = underlyingArchive.getContent();
         for (final ArchivePath path : contents.keySet()) {
             Asset asset = contents.get(path).getAsset();
+
             if (asset != null) {
                 if(!filter.include(path)) {
                     continue;
                 }
                 newArchive.add(asset, path);
+            } else {
+                if(filter.include(path)) {
+                    newArchive.addAsDirectory(path);
+                }
             }
+
         }
         return newArchive;
     }
