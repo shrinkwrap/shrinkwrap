@@ -592,9 +592,12 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     Archive<T> shallowCopy();
 
     /**
-     * Creates a shallow copy of this {@link Archive} based on given filter.Assets from this archive are made available
-     * under the same paths. However, removing old assets or adding new assets on this archive affects does not affect
-     * the new archive.
+     * Creates a shallow copy of this {@link Archive} based on given filter.
+     * Assets from this archive are made available
+     * under the same paths. However, removing old assets or
+     * adding new assets on this archive affects does not affect
+     * the new archive. This allows for filtering of both directory-based
+     * and {@link Asset}-based paths.
      *
      * @return a new archive with a copy of the pointers to the assets
      */
