@@ -8,7 +8,7 @@
   <parent>
     <groupId>org.jboss</groupId>
     <artifactId>jboss-parent</artifactId>
-    <version>19</version>
+    <version>39</version>
   </parent>
 
   <!-- Model Information -->
@@ -61,7 +61,6 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>2.9.1</version>
           <configuration>
             <configLocation>code-style/checkstyle.xml</configLocation>
             <logViolationsToConsole>true</logViolationsToConsole>
