@@ -25,7 +25,7 @@
   
   <!-- Properties -->
   <properties>
-    <version.junit_junit>4.8.2</version.junit_junit>
+    <version.junit_junit>4.13.2</version.junit_junit>
     <version.org.apache.maven.plugins_maven-site-plugin>3.4</version.org.apache.maven.plugins_maven-site-plugin>
   </properties>
   
