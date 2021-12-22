@@ -65,7 +65,11 @@ public class UrlAssetTestCase {
         Asset asset = new UrlAsset(mutableURL);
 
         // mutate the URL - can't be sure that some malicious code or user won't do this?
-        mutateURL(mutableURL);
+        try {
+            mutateURL(mutableURL);
+        } catch (final UnsupportedOperationForThisJREException e) {
+            // We're all good; this URL can't be mutated in this JDK so ignore it and let the test finish
+        }
 
         // now try to get a stream to read the asset
         InputStream io = null;
@@ -85,13 +89,31 @@ public class UrlAssetTestCase {
      * Ugly reflection needed to mutate a URL - not 100% sure how to do this other than using reflection, but seems
      * possible that other libraries may be doing this same thing so we must protect for it.
      */
-    private void mutateURL(URL mutableURL) throws Exception {
+    private void mutateURL(final URL mutableURL) throws Exception {
         Class<?>[] parameterTypes = { String.class, String.class, Integer.TYPE, String.class, String.class };
-        Method m = URL.class.getDeclaredMethod("set", parameterTypes);
+        final Method m;
+        try {
+            m = URL.class.getDeclaredMethod("set", parameterTypes);
+        } catch (final NoSuchMethodException nsme) {
+            // This is OK; we're in a JDK that cannot mutate URLs. Throw this so the test can recognize that.
+            throw new UnsupportedOperationForThisJREException(nsme);
+        }
 
         Object[] arguments = { "file", "", -1, "/UNKNOWN_FILE", null };
         m.setAccessible(true);
         m.invoke(mutableURL, arguments);
+    }
+
+    /**
+     * Indicates that an operation is unsupported for this JRE.
+     * <p>
+     * Used because we want to protect against mutable URLs in JDK8, JDK11. But
+     * JDK 17 removes the "set" method, thus making URLs immutable
+     */
+    private static class UnsupportedOperationForThisJREException extends Exception {
+        UnsupportedOperationForThisJREException(final NoSuchMethodException nsme) {
+            super(nsme);
+        }
     }
 
     @Test
