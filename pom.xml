@@ -145,10 +145,6 @@
           <optimize>true</optimize>
           <compilerVersion>1.8</compilerVersion>
           <fork>true</fork>
-          <compilerArguments>
-            <source>1.8</source>
-            <target>1.8</target>
-          </compilerArguments>
         </configuration>
       </plugin>
 
@@ -164,7 +160,6 @@
             <include>**/*TestSuite.java</include>
           </includes>
           <forkMode>always</forkMode>
-          <jvm>${env.JAVA_HOME}/bin/java</jvm>
         </configuration>
       </plugin>
 
@@ -190,12 +185,8 @@
               -->
             </requireMavenVersion>
             <requireJavaVersion>
-              <version>1.8.0</version> <!-- Must be JDK8 -->
+              <version>(1.8.0,)</version> <!-- Must be JDK8+ -->
             </requireJavaVersion>
-            <requireProperty>
-              <property>env.JAVA_HOME</property>
-              <message>"JAVA_HOME needs to be set (to Java8)"</message>
-            </requireProperty>
           </rules>
         </configuration>
       </plugin>
