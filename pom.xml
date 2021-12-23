@@ -26,7 +26,6 @@
   <!-- Properties -->
   <properties>
     <version.junit_junit>4.13.2</version.junit_junit>
-    <version.org.apache.maven.plugins_maven-site-plugin>3.4</version.org.apache.maven.plugins_maven-site-plugin>
   </properties>
   
   <!-- SCM -->
@@ -83,12 +82,7 @@
             </dependency>
           </dependencies>
         </plugin>
-      
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>${version.org.apache.maven.plugins_maven-site-plugin}</version>
-        </plugin>
+
         
        <!-- So m2e doesn't throw errors for features it doesn't support in the 
         POM -->
