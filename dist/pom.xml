@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.jboss.shrinkwrap</groupId>
     <artifactId>shrinkwrap-parent</artifactId>
-    <version>1.2.7-SNAPSHOT</version>
+    <version>2.0.0-alpha-X-SNAPSHOT</version>
   </parent>
 
   <!-- Artifact Information -->
@@ -23,7 +23,7 @@
 
     <dependency>
       <groupId>org.jboss.shrinkwrap</groupId>
-      <artifactId>shrinkwrap-impl-nio2</artifactId>
+      <artifactId>shrinkwrap-impl-base</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

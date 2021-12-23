@@ -40,7 +40,7 @@ public interface ManifestContainer<T extends Archive<T>> {
     // -------------------------------------------------------------------------------------||
 
     /**
-     * Adds the resource as MANIFEST.FM to the container, returning the container itself. <br/>
+     * Adds the resource as MANIFEST.MF to the container, returning the container itself. <br/>
      * The {@link ClassLoader} used to obtain the resource is up to the implementation.
      *
      * @param resourceName
@@ -53,7 +53,7 @@ public interface ManifestContainer<T extends Archive<T>> {
     T setManifest(String resourceName) throws IllegalArgumentException;
 
     /**
-     * Adds the {@link File} as MANIFEST.FM to the container, returning the container itself.
+     * Adds the {@link File} as MANIFEST.MF to the container, returning the container itself.
      *
      * @param resource
      *            {@link File} resource to add
@@ -65,7 +65,7 @@ public interface ManifestContainer<T extends Archive<T>> {
     T setManifest(File resource) throws IllegalArgumentException;
 
     /**
-     * Adds the {@link URL} as MANIFEST.FM to the container, returning the container itself.
+     * Adds the {@link URL} as MANIFEST.MF to the container, returning the container itself.
      *
      * @param resource
      *            {@link URL} resource to add
@@ -77,7 +77,7 @@ public interface ManifestContainer<T extends Archive<T>> {
     T setManifest(URL resource) throws IllegalArgumentException;
 
     /**
-     * Adds the {@link Asset} as MANIFEST.FM to the container, returning the container itself.
+     * Adds the {@link Asset} as MANIFEST.MF to the container, returning the container itself.
      *
      * @param resource
      *            {@link File} resource to add

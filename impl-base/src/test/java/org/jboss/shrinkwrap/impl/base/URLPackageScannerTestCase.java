@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
-import java.io.IOException;
-
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.junit.Test;
 

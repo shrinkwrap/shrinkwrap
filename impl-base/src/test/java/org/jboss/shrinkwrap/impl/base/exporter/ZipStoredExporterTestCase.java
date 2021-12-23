@@ -26,7 +26,6 @@ import org.jboss.shrinkwrap.api.exporter.ZipStoredExporter;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
-import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 import org.junit.Assert;
 import org.junit.Test;
