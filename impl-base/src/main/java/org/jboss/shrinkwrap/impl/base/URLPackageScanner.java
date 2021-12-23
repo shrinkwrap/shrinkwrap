@@ -118,18 +118,17 @@ public class URLPackageScanner {
         }
     }
 
-    private void handleArchiveByFile(File file) throws IOException, ClassNotFoundException {
-        try {
-            log.fine("archive: " + file);
-            ZipFile zip = new ZipFile(file);
-            Enumeration<? extends ZipEntry> entries = zip.entries();
+    private void handleArchiveByFile(File file) throws IOException {
+        log.fine("archive: " + file);
+        try (ZipFile zip = new ZipFile(file)) {
+            final Enumeration<? extends ZipEntry> entries = zip.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
                 String name = entry.getName();
                 if (name.startsWith(prefix + packageNamePath) && name.endsWith(SUFFIX_CLASS)
                         && (addRecursively || !name.substring((prefix + packageNamePath).length() + 1).contains("/"))) {
                     String className = name.replace("/", ".").substring(prefix.length(), name.length() - SUFFIX_CLASS.length());
-                    foundClass(className, name );
+                    foundClass(className, name);
                 }
             }
         } catch (ZipException e) {
@@ -154,7 +153,7 @@ public class URLPackageScanner {
             if (!child.isDirectory() && child.getName().endsWith(SUFFIX_CLASS)) {
                 final String packagePrefix = packageName.length() > 0 ? packageName + "." : packageName;
                 String className = packagePrefix + child.getName().substring(0, child.getName().lastIndexOf(SUFFIX_CLASS));
-                foundClass(className, prefix + className.replace( '.', '/' ) + SUFFIX_CLASS );
+                foundClass(className, prefix + className.replace('.', '/') + SUFFIX_CLASS);
             } else if (child.isDirectory() && addRecursively) {
                 handle(child, packageName + "." + child.getName());
             }
@@ -162,7 +161,7 @@ public class URLPackageScanner {
     }
 
     private void foundClass(String className, String path) {
-        callback.classFound( className, new ClassLoaderAsset( path, classLoader) );
+        callback.classFound(className, new ClassLoaderAsset(path, classLoader));
     }
 
     private List<URL> loadResources(String name) throws IOException {
