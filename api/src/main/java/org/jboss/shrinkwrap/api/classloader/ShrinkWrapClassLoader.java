@@ -57,7 +57,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
     private static final String EMPTY = "";
 
     // -------------------------------------------------------------------------------------||
-    // Instance Members -------------------------------------------------------------------||
+    // Instance Members --------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
@@ -66,14 +66,19 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
      */
     private final List<InputStream> openedStreams = new ArrayList<InputStream>();
 
+    /**
+     * Location of the
+     */
+    private final ArchivePath classPrefix;
+
     // -------------------------------------------------------------------------------------||
-    // Constructors -----------------------------------------------------------------------||
+    // Constructors ------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
     /**
      * Constructs a new ShrinkWrapClassLoader for the specified {@link Archive}s using the default delegation parent
      * <code>ClassLoader</code>. The {@link Archive}s will be searched in the order specified for classes and resources
-     * after first searching in the parent class loader.
+     * after first searching in the parent class loader.  Will assume classes are stored relative to the root of the archive.
      *
      * @param archives
      *            the {@link Archive}s from which to load classes and resources
@@ -85,6 +90,21 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
             throw new IllegalArgumentException("Archives must be specified");
         }
         addArchives(archives);
+        this.classPrefix = ArchivePaths.root();
+    }
+
+    /**
+     * Constructs a new ShrinkWrapClassLoader for the given {@link Archive}s. The {@link Archive}s will be searched in
+     * the order specified for classes and resources after first searching in the specified parent class loader.
+     * Will assume classes are stored relative to the root of the archive.
+     *
+     * @param parent
+     *            the parent class loader for delegation
+     * @param archives
+     *            the {@link Archive}s from which to load classes and resources
+     */
+    public ShrinkWrapClassLoader(final ClassLoader parent, final Archive<?>... archives) {
+        this(parent, null, archives);
     }
 
     /**
@@ -93,16 +113,20 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
      *
      * @param parent
      *            the parent class loader for delegation
+     * @param classPrefix The location under which classes are located in the archive.  For instance,
+     * {@link org.jboss.shrinkwrap.api.spec.WebArchive} types store their classes under WEB-INF/classes.  If
+     *                    null, assumes the root
      * @param archives
      *            the {@link Archive}s from which to load classes and resources
      */
-    public ShrinkWrapClassLoader(final ClassLoader parent, final Archive<?>... archives) {
-        super(new URL[] {}, parent);
+    public ShrinkWrapClassLoader(final ClassLoader parent, final String classPrefix, final Archive<?>... archives) {
+        super(new URL[]{}, parent);
 
         if (archives == null) {
             throw new IllegalArgumentException("Archives must be specified");
         }
         addArchives(archives);
+        this.classPrefix = classPrefix == null ? ArchivePaths.root() : ArchivePaths.create(classPrefix);
     }
 
     private void addArchives(final Archive<?>[] archives) {
@@ -123,7 +147,9 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
 
                         @Override
                         public InputStream getInputStream() throws IOException {
-                            final ArchivePath path = convertToArchivePath(u);
+                            final ArchivePath rawPath = convertToArchivePath(u);
+                            final ArchivePath path = ArchivePaths.create(
+                                    ShrinkWrapClassLoader.this.classPrefix,rawPath);
                             final Node node = archive.get(path);
 
                             // SHRINKWRAP-308

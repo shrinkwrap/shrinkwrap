@@ -36,7 +36,7 @@ class ExtensionWrapper {
 
     final Class<? extends Assignable> extension;
 
-    public ExtensionWrapper(String implementingClassName, Map<String, String> properties,
+    ExtensionWrapper(String implementingClassName, Map<String, String> properties,
         Class<? extends Assignable> extension) {
         this.properties = properties;
         this.implementingClassName = implementingClassName;
@@ -52,7 +52,7 @@ class ExtensionWrapper {
      * @throws RuntimeException
      *             if the property is not found
      */
-    public String getProperty(String key) {
+    String getProperty(String key) {
         String value = properties.get(key);
         if (value == null) {
             throw new RuntimeException("No property value found for key " + key);

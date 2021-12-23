@@ -57,7 +57,7 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
     // Constructor ------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
-    public TarImporterBase(final Archive<?> archive) {
+    TarImporterBase(final Archive<?> archive) {
         super(archive);
     }
 

@@ -10,7 +10,7 @@
   <!-- Artifact Configuration -->
   <groupId>org.jboss.shrinkwrap</groupId>
   <artifactId>shrinkwrap-bom</artifactId>
-  <version>1.2.7-SNAPSHOT</version>
+  <version>2.0.0-alpha-X-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>ShrinkWrap Bill of Materials</name>
   <description>Centralized dependencyManagement for the ShrinkWrap Project</description> 
@@ -68,16 +68,6 @@
         <artifactId>shrinkwrap-impl-base</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.jboss.shrinkwrap</groupId>
-        <artifactId>shrinkwrap-api-nio2</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.shrinkwrap</groupId>
-        <artifactId>shrinkwrap-impl-nio2</artifactId>
-        <version>${project.version}</version>
-      </dependency>
 
       <dependency>
         <groupId>org.jboss.shrinkwrap</groupId>
@@ -86,12 +76,6 @@
         <type>pom</type>
       </dependency>
 
-      <dependency>
-        <groupId>org.jboss.shrinkwrap</groupId>
-        <artifactId>shrinkwrap-depchain-java7</artifactId>
-        <version>${project.version}</version>
-        <type>pom</type>
-      </dependency>
     </dependencies>
   
   </dependencyManagement>
@@ -101,7 +85,6 @@
       <plugins>
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.1</version>
           <configuration>
             <pushChanges>false</pushChanges>
             <localCheckout>true</localCheckout>

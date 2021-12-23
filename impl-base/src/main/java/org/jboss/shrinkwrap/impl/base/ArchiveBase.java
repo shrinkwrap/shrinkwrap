@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -577,12 +578,19 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
         // Now loop through and add all content
         for (final ArchivePath path : from.getContent().keySet()) {
             Asset asset = from.get(path).getAsset();
-            if (asset != null) {
-                if(!filter.include(path)) {
-                    continue;
-                }
+
+            if (!filter.include(path)) {
+                continue;
+            }
+
+            if (asset == null) {
+                to.addAsDirectory(path);
+                System.out.println("\tDIRECTORY: " + path);
+            } else {
+                System.out.println("\tASSET: " + path);
                 to.add(asset, path);
             }
+
         }
 
         // Return
@@ -646,8 +654,10 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
         }
 
         // move children
-        final Set<Node> nodeToMoveChildren = nodeToMove.getChildren();
-        for (final Node child : nodeToMoveChildren) {
+
+        // can't remove from collection inside of the iteration
+        final Set<Node> nodeToMoveChildrenCopy = new HashSet<Node>(nodeToMove.getChildren());
+        for (final Node child : nodeToMoveChildrenCopy) {
             final String childName = child.getPath().get().replaceFirst(child.getPath().getParent().get(), "");
             final ArchivePath childTargetPath = ArchivePaths.create(target, childName);
             move(child.getPath(), childTargetPath);

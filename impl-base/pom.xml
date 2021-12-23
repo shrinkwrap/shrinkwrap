@@ -8,7 +8,7 @@
   <parent>
     <groupId>org.jboss.shrinkwrap</groupId>
     <artifactId>shrinkwrap-parent</artifactId>
-    <version>1.2.7-SNAPSHOT</version>
+    <version>2.0.0-alpha-X-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -58,6 +58,11 @@
     External Projects
      -->
     <dependency>
+      <groupId>com.sun.activation</groupId>
+      <artifactId>javax.activation</artifactId>
+      <version>1.2.0</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
@@ -88,16 +93,7 @@
           <includeEmptyDirs>true</includeEmptyDirs>
         </configuration>
       </plugin>
-      
-      <!-- Surefire -->
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <!-- Run in Java5; we build with a JDK7 compiler so ensure we don't use any JDK7 libs-->
-          <jvm>${env.JAVA5_HOME}/bin/java</jvm>
-        </configuration>
-      </plugin>
-      
+
       <!-- Checkstyle -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -127,7 +123,6 @@
                   <goal>test</goal>
                 </goals>
                 <configuration>
-                  <jvm>${env.JAVA5_HOME}/bin/java</jvm>
                   <includes>
                     <include>**/*StressTest.java</include>
                   </includes>
