@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  win: circleci/windows@2.2.0
+
 jobs:
   build-and-test:
     parameters:
@@ -25,6 +28,12 @@ jobs:
           path: ~/test-results
       - store_artifacts:
           path: ~/test-results/junit
+  
+  build-and-test-on-windows:
+    executor: win/default
+    steps:
+      - checkout
+      - run: Write-Host 'Hello, Windows'
 
 workflows:
   shrinkwrap:
@@ -34,3 +43,4 @@ workflows:
           matrix:
             parameters:
               jdk-version: ["8.0", "11.0", "17.0"]
+      - build-and-test-on-windows
