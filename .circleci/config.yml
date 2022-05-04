@@ -12,6 +12,8 @@ jobs:
       - image: cimg/openjdk:<< parameters.jdk-version >>
     steps:
       - checkout
+      - restore_cache:
+          key: circleci-shrinkwrap-{{ checksum "pom.xml" }}
       - run:
           name: Build
           command: mvn -B -DskipTests clean package
@@ -37,6 +39,8 @@ jobs:
     executor: win/default
     steps:
       - checkout
+      - restore_cache:
+          key: circleci-shrinkwrap-windows-{{ checksum "pom.xml" }}
       - run:
           name: Build
           command: ./mvnw.cmd -B -DskipTests clean package
