@@ -28,6 +28,10 @@ jobs:
           path: ~/test-results
       - store_artifacts:
           path: ~/test-results/junit
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: circleci-shrinkwrap-{{ checksum "pom.xml" }}
   
   build-and-test-on-windows:
     executor: win/default
@@ -39,6 +43,10 @@ jobs:
       - run:
           name: Test
           command: ./mvnw.cmd test
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: circleci-shrinkwrap-windows-{{ checksum "pom.xml" }}
 
 workflows:
   shrinkwrap:
