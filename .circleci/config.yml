@@ -33,7 +33,12 @@ jobs:
     executor: win/default
     steps:
       - checkout
-      - run: Write-Host 'Hello, Windows'
+      - run:
+          name: Build
+          command: mvnw.cmd -B -DskipTests clean package
+      - run:
+          name: Test
+          command: mvnw.cmd test
 
 workflows:
   shrinkwrap:
