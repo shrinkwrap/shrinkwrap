@@ -1,4 +1,4 @@
-= Shrinkwrap
+# Shrinkwrap
 
 ShrinkWrap is a library to create archives from Java, which powers the [Arquillian]([url](https://github.com/arquillian)) 
 deployment mechanism. Arquillian in turn is a library.
