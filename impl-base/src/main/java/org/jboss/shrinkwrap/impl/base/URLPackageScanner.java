@@ -155,7 +155,8 @@ public class URLPackageScanner {
                 String className = packagePrefix + child.getName().substring(0, child.getName().lastIndexOf(SUFFIX_CLASS));
                 foundClass(className, prefix + className.replace('.', '/') + SUFFIX_CLASS);
             } else if (child.isDirectory() && addRecursively) {
-                handle(child, packageName + "." + child.getName());
+                final String nextPackageName = packageName.length() > 0 ? packageName + "." + child.getName() : child.getName();
+                handle(child, nextPackageName);
             }
         }
     }
