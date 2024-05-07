@@ -19,8 +19,6 @@ package org.jboss.shrinkwrap.impl.base;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import junit.framework.TestCase;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.Assignable;
@@ -103,7 +101,7 @@ public class ConfigurationBuilderTestCase {
         builder.executorService(service).build();
 
         // Test
-        TestCase.assertEquals(
+        Assert.assertEquals(
             "Building should not override the user-supplied " + ExecutorService.class.getSimpleName(), service,
             builder.getExecutorService());
     }
@@ -142,7 +140,7 @@ public class ConfigurationBuilderTestCase {
         builder.extensionLoader(loader).build();
 
         // Test
-        TestCase.assertEquals(
+        Assert.assertEquals(
             "Building should not override the user-supplied " + ExtensionLoader.class.getSimpleName(), loader,
             builder.getExtensionLoader());
     }
@@ -161,9 +159,9 @@ public class ConfigurationBuilderTestCase {
         final ExtensionLoader loader = builder.getExtensionLoader();
 
         // Test that they match the props in the config
-        TestCase.assertEquals(ExecutorService.class.getSimpleName()
+        Assert.assertEquals(ExecutorService.class.getSimpleName()
             + " in the config does not match that in the builder", service, configuration.getExecutorService());
-        TestCase.assertEquals(ExtensionLoader.class.getSimpleName()
+        Assert.assertEquals(ExtensionLoader.class.getSimpleName()
             + " in the config does not match that in the builder", loader, configuration.getExtensionLoader());
     }
 

@@ -34,8 +34,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
@@ -1959,7 +1958,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         }
 
         // Fail us
-        TestCase.fail("Expected " + IllegalOverwriteException.class.getName() + " not received");
+        Assert.fail("Expected " + IllegalOverwriteException.class.getName() + " not received");
     }
 
     /**

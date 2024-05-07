@@ -16,7 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.exporter.TarBz2Exporter;

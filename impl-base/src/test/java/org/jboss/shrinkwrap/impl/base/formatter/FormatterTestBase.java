@@ -18,13 +18,12 @@ package org.jboss.shrinkwrap.impl.base.formatter;
 
 import java.util.logging.Logger;
 
-import junit.framework.TestCase;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveTestBase;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -88,7 +87,7 @@ public abstract class FormatterTestBase {
         log.info(formatted);
 
         // Ensure expected form
-        TestCase.assertEquals("Formatter output did not match that expected", this.getExpectedOutput(), formatted);
+        Assert.assertEquals("Formatter output did not match that expected", this.getExpectedOutput(), formatted);
     }
 
     // -------------------------------------------------------------------------------------||

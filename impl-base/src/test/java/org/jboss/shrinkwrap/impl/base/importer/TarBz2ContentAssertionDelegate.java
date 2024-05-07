@@ -22,7 +22,7 @@ import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;

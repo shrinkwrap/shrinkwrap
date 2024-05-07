@@ -1,6 +1,6 @@
 package org.jboss.shrinkwrap.impl.base.spec;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;

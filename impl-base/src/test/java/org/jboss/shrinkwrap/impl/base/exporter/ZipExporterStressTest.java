@@ -24,14 +24,13 @@ import java.math.RoundingMode;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import junit.framework.TestCase;
-
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -107,7 +106,7 @@ public class ZipExporterStressTest {
 
         // Ensure we've just exported a ZIP larger than our available memory (proving we've buffered the encoding
         // process)
-        TestCase.assertTrue("Test setup failed; we should be writing out more bytes than we have free memory",
+        Assert.assertTrue("Test setup failed; we should be writing out more bytes than we have free memory",
             out.bytesWritten > beforeExportFreeMemBytes);
         log.info("Final ZIP export was: " + this.megaBytesFromBytes(out.bytesWritten) + " MB");
         final long afterExportFreeMemBytes = totalFreeMemory(runtime);

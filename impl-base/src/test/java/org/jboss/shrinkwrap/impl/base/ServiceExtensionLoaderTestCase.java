@@ -19,7 +19,7 @@ package org.jboss.shrinkwrap.impl.base;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;

@@ -20,7 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 

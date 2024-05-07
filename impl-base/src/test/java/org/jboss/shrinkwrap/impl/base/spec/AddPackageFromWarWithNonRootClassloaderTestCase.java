@@ -5,7 +5,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
