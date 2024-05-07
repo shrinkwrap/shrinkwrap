@@ -67,7 +67,7 @@ public class ArchiveWriteToTestCase {
     }
 
     private class MockOutputStream extends PrintStream {
-        ArrayList<Byte> contents = new ArrayList<Byte>();
+        ArrayList<Byte> contents = new ArrayList<>();
 
         public MockOutputStream() {
             super(System.out);

@@ -97,7 +97,7 @@ public class URLPackageScanner {
 
     public void scanPackage() {
         try {
-            Set<String> paths = new HashSet<String>();
+            Set<String> paths = new HashSet<>();
 
             for (URL url : loadResources(packageNamePath)) {
                 String urlPath = url.getFile();

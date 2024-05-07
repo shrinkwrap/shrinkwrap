@@ -49,7 +49,7 @@ public class NodeImpl implements Node {
     /**
      * The children nodes.
      */
-    private Set<Node> children = Collections.synchronizedSet(new LinkedHashSet<Node>());
+    private Set<Node> children = Collections.synchronizedSet(new LinkedHashSet<>());
 
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||

@@ -48,13 +48,8 @@ public final class IOUtil {
     /**
      * Default Error Handler
      */
-    private static final StreamErrorHandler DEFAULT_ERROR_HANDLER = new StreamErrorHandler() {
-
-        @Override
-        public void handle(Throwable t) {
-            throw new RuntimeException(t);
-        }
-
+    private static final StreamErrorHandler DEFAULT_ERROR_HANDLER = t -> {
+        throw new RuntimeException(t);
     };
 
     /**

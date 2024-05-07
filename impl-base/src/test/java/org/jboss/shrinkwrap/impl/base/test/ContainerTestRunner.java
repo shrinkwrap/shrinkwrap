@@ -63,7 +63,7 @@ public class ContainerTestRunner extends BlockJUnit4ClassRunner {
                     + ArchiveType.class.getName() + " annotation. " + "This describes the Type being tested.");
             }
 
-            List<FrameworkMethod> testMethods = new ArrayList<FrameworkMethod>();
+            List<FrameworkMethod> testMethods = new ArrayList<>();
             for (FrameworkMethod testMethod : frameworkMethods) {
                 ArchiveType archiveType = testMethod.getAnnotation(ArchiveType.class);
                 if (archiveType != null) {

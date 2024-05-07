@@ -61,14 +61,14 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     /**
      * Storage for the {@link Node}s.
      */
-    private final Map<ArchivePath, NodeImpl> content = Collections.synchronizedMap(new LinkedHashMap<ArchivePath, NodeImpl>());
+    private final Map<ArchivePath, NodeImpl> content = Collections.synchronizedMap(new LinkedHashMap<>());
 
     /**
      * Storage for the {@link ArchiveAsset}s. Used to help get access to nested archive content.
      */
-    private final Map<ArchivePath, ArchiveAsset> nestedArchives = Collections.synchronizedMap(new LinkedHashMap<ArchivePath, ArchiveAsset>());
+    private final Map<ArchivePath, ArchiveAsset> nestedArchives = Collections.synchronizedMap(new LinkedHashMap<>());
 
-    private final List<ArchiveEventHandler> handlers = new ArrayList<ArchiveEventHandler>();
+    private final List<ArchiveEventHandler> handlers = new ArrayList<>();
 
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||
@@ -314,7 +314,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
             final Set<Node> children = node.getChildren();
 
             // can't remove from collection inside of the iteration
-            final Set<Node> childrenCopy = new HashSet<Node>(children);
+            final Set<Node> childrenCopy = new HashSet<>(children);
             for (Node child : childrenCopy) {
                 node.removeChild(child);
                 content.remove(child.getPath());
@@ -356,7 +356,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
      */
     @Override
     public Map<ArchivePath, Node> getContent() {
-        Map<ArchivePath, Node> ret = new LinkedHashMap<ArchivePath, Node>();
+        Map<ArchivePath, Node> ret = new LinkedHashMap<>();
         for (Map.Entry<ArchivePath, NodeImpl> item : content.entrySet()) {
             if (!item.getKey().equals(new BasicPath("/"))) {
                 ret.put(item.getKey(), item.getValue());
@@ -375,7 +375,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     public Map<ArchivePath, Node> getContent(Filter<ArchivePath> filter) {
         Validate.notNull(filter, "Filter must be specified");
 
-        Map<ArchivePath, Node> filteredContent = new LinkedHashMap<ArchivePath, Node>();
+        Map<ArchivePath, Node> filteredContent = new LinkedHashMap<>();
         for (Map.Entry<ArchivePath, NodeImpl> contentEntry : content.entrySet()) {
             if (filter.include(contentEntry.getKey())) {
                 if (!contentEntry.getKey().equals(new BasicPath("/"))) {

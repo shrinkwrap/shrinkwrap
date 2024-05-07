@@ -174,7 +174,7 @@ public class ConfigurationBuilder {
                 log.finer("User has not defined an explicit " + ClassLoader.class.getSimpleName()
                     + "; defaulting to the TCCL: " + tccl);
             }
-            final Collection<ClassLoader> tcclCollection = new ArrayList<ClassLoader>(1);
+            final Collection<ClassLoader> tcclCollection = new ArrayList<>(1);
             // Adjust for the bootstrap CL, which may be denoted as null in some JVM impls
             if (tccl != null) {
                 tcclCollection.add(tccl);
@@ -186,7 +186,7 @@ public class ConfigurationBuilder {
 
         // Adjust the CLs to be sure of no duplicate or null references (which may indicate
         // the bootstrap CL, so get to the system CL)
-        final Collection<ClassLoader> adjustedCls = new HashSet<ClassLoader>();
+        final Collection<ClassLoader> adjustedCls = new HashSet<>();
         for (ClassLoader cl : this.classLoaders) {
 
             // Adjust for null references

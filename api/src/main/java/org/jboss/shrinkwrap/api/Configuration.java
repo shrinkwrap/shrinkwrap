@@ -84,7 +84,7 @@ public class Configuration {
         this.extensionLoader = builder.getExtensionLoader();
         this.executorService = builder.getExecutorService();
         // Defensive copy
-        Collection<ClassLoader> cls = new ArrayList<ClassLoader>();
+        Collection<ClassLoader> cls = new ArrayList<>();
         if (builder.getClassLoaders() instanceof Collection) {
             cls = (Collection<ClassLoader>) builder.getClassLoaders();
         } else {

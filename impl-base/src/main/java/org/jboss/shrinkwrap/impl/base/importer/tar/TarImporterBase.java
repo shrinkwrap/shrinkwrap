@@ -116,10 +116,8 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
         final S tarStream;
         try {
             tarStream = this.getInputStreamForRawStream(stream);
-        } catch (final RuntimeException re) {
-            throw new ArchiveImportException("Could not wrap raw input with TAR stream", re);
-        } catch (final IOException e) {
-            throw new ArchiveImportException("Could not wrap raw input with TAR stream", e);
+        } catch (final RuntimeException | IOException exception) {
+            throw new ArchiveImportException("Could not wrap raw input with TAR stream", exception);
         }
         return this.importFrom(tarStream, filter);
     }
@@ -151,10 +149,8 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
                 }
                 archive.add(new ByteArrayAsset(output.toByteArray()), entryName);
             }
-        } catch (final RuntimeException re) {
-            throw new ArchiveImportException("Could not import stream", re);
-        } catch (IOException e) {
-            throw new ArchiveImportException("Could not import stream", e);
+        } catch (final RuntimeException | IOException exception) {
+            throw new ArchiveImportException("Could not import stream", exception);
         }
         return this.covarientReturn();
     }
