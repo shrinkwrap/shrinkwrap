@@ -207,7 +207,7 @@ public final class Filters {
     private static Filter<ArchivePath> getFilterInstance(final String filterClassName, final Class<?>[] ctorTypes,
         final Object[] ctorArguments) {
         // Precondition checks
-        assert filterClassName != null && filterClassName.length() > 0 : "Filter class name must be specified";
+        assert filterClassName != null && !filterClassName.isEmpty() : "Filter class name must be specified";
         assert ctorTypes != null : "Construction types must be specified";
         assert ctorArguments != null : "Construction arguments must be specified";
         assert ctorTypes.length == ctorArguments.length : "The number of ctor arguments and their types must match";

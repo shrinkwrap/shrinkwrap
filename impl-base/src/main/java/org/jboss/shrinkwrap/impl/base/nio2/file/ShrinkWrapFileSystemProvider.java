@@ -217,7 +217,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         // ID exists? We're referencing a previously-opened archive?
         final String id = uri.getHost();
         ShrinkWrapFileSystem fs = null;
-        if (id != null && id.length() > 0) {
+        if (id != null && !id.isEmpty()) {
             fs = this.createdFileSystems.get(id);
         }
 
@@ -464,7 +464,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
             // Directory
             if (asset == null) {
                 // Not empty
-                if (node.getChildren().size() > 0) {
+                if (!node.getChildren().isEmpty()) {
                     throw new DirectoryNotEmptyException("Cannot move to non-empty directory: " + target.toString());
                 }
             }
