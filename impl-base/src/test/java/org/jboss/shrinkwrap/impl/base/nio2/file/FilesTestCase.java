@@ -28,6 +28,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileAlreadyExistsException;
@@ -235,7 +236,7 @@ public class FilesTestCase {
     @Test
     public void copyFromInputStreamToPath() throws IOException {
         final String contents = "Hello, testing content writing!";
-        final byte[] bytes = contents.getBytes("UTF-8");
+        final byte[] bytes = contents.getBytes(StandardCharsets.UTF_8);
         final InputStream in = new ByteArrayInputStream(bytes);
         final String pathName = "content";
         final Path path = fs.getPath(pathName);
@@ -248,7 +249,7 @@ public class FilesTestCase {
 
     @Test
     public void copyFromInputStreamToExistingPath() throws IOException {
-        final InputStream in = new ByteArrayInputStream("test".getBytes("UTF-8"));
+        final InputStream in = new ByteArrayInputStream("test".getBytes(StandardCharsets.UTF_8));
         final String pathName = "content";
         final Path path = fs.getPath(pathName);
         // Add some dummy asset to the archive
@@ -259,7 +260,7 @@ public class FilesTestCase {
 
     @Test
     public void copyFromInputStreamToExistingDirectory() throws IOException {
-        final InputStream in = new ByteArrayInputStream("test".getBytes("UTF-8"));
+        final InputStream in = new ByteArrayInputStream("test".getBytes(StandardCharsets.UTF_8));
         final String pathName = "directory";
         final Path path = fs.getPath(pathName);
         // Add some directory to the archive
@@ -270,7 +271,7 @@ public class FilesTestCase {
 
     @Test
     public void copyFromInputStreamToExistingNonEmptyDirectoryWithReplaceExistingOption() throws IOException {
-        final InputStream in = new ByteArrayInputStream("test".getBytes("UTF-8"));
+        final InputStream in = new ByteArrayInputStream("test".getBytes(StandardCharsets.UTF_8));
         final String dir = "/directory";
         final String subdir = dir + "/subdir";
         final Path dirPath = fs.getPath(dir);
@@ -284,7 +285,7 @@ public class FilesTestCase {
     @Test
     public void copyFromInputStreamToExistingPathWithOverwriteOption() throws IOException {
         final String contents = "Hello, testing content writing!";
-        final byte[] bytes = contents.getBytes("UTF-8");
+        final byte[] bytes = contents.getBytes(StandardCharsets.UTF_8);
         final InputStream in = new ByteArrayInputStream(bytes);
         final String pathName = "content";
         final Path path = fs.getPath(pathName);
@@ -308,7 +309,7 @@ public class FilesTestCase {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         final long bytesCopied = Files.copy(fs.getPath(path), out);
         // Get out the content
-        final String roundtrip = new String(out.toByteArray(), "UTF-8");
+        final String roundtrip = new String(out.toByteArray(), StandardCharsets.UTF_8);
         Assert.assertEquals("Contents after copy were not as expected", contents, roundtrip);
         Assert.assertEquals(contents.length(), bytesCopied);
     }
@@ -334,7 +335,7 @@ public class FilesTestCase {
         final Archive<?> archive = this.getArchive();
         archive.add(new StringAsset(initialContent), pathName);
         // Write in append mode
-        Files.write(path, appendContent.getBytes("UTF-8"), StandardOpenOption.APPEND);
+        Files.write(path, appendContent.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
         final String newContents = new BufferedReader(new InputStreamReader(archive.get(pathName).getAsset()
             .openStream())).readLine();
         Assert.assertEquals("New contents was not appended as expected", initialContent + appendContent, newContents);
