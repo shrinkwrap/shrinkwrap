@@ -65,7 +65,7 @@ public class URLPackageScanner {
 
 
     // private final Set<String> classes = new HashSet<String>();
-    private Callback callback;
+    private final Callback callback;
 
     /**
      * Factory method to create an instance of URLPackageScanner.

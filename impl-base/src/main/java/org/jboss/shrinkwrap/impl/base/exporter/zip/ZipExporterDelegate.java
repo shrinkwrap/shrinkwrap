@@ -33,7 +33,7 @@ import java.io.InputStream;
  */
 class ZipExporterDelegate extends AbstractExporterDelegate<InputStream> {
 
-    private boolean compressed;
+    private final boolean compressed;
 
     protected ZipExporterDelegate(final Archive<?> archive) {
         super(archive);
