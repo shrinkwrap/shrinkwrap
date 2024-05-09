@@ -19,12 +19,11 @@ package org.jboss.shrinkwrap.api.nio2.file;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
-import org.jboss.shrinkwrap.api.nio2.file.SeekableInMemoryByteChannel;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,8 +42,6 @@ public class SeekableInMemoryByteChannelTestCase {
     private static final String CONTENTS_SMALLER_BUFFER = "Andrew Lee Rubinger";
     private static final String CONTENTS_BIGGER_BUFFER = "Andrew Lee Rubinger, JBoss by Red Hat";
 
-    private static final String UTF8 = "UTF-8";
-
     /**
      * Instance under test
      */
@@ -56,12 +53,8 @@ public class SeekableInMemoryByteChannelTestCase {
     @Before
     public void init() {
         this.channel = new SeekableInMemoryByteChannel();
-        try {
-            smallerBuffer = ByteBuffer.wrap(CONTENTS_SMALLER_BUFFER.getBytes(UTF8));
-            biggerBuffer = ByteBuffer.wrap(CONTENTS_BIGGER_BUFFER.getBytes(UTF8));
-        } catch (final UnsupportedEncodingException uee) {
-            throw new RuntimeException(uee);
-        }
+        smallerBuffer = ByteBuffer.wrap(CONTENTS_SMALLER_BUFFER.getBytes(StandardCharsets.UTF_8));
+        biggerBuffer = ByteBuffer.wrap(CONTENTS_BIGGER_BUFFER.getBytes(StandardCharsets.UTF_8));
     }
 
     @After
@@ -122,7 +115,7 @@ public class SeekableInMemoryByteChannelTestCase {
         // Read 2 bytes from the new position
         final int numBytesRead = this.channel.position(newPosition).read(ByteBuffer.wrap(contents));
         final String expected = "dr";
-        final String contentsRead = new String(contents, UTF8);
+        final String contentsRead = new String(contents, StandardCharsets.UTF_8);
         Assert.assertEquals("Read should report correct number of bytes read", contents.length, numBytesRead);
         Assert.assertEquals("Channel should respect explicit position during reads", expected, contentsRead);
     }
@@ -160,12 +153,12 @@ public class SeekableInMemoryByteChannelTestCase {
     public void write() throws IOException {
         this.channel.write(smallerBuffer);
         final int newPosition = 2;
-        final int numBytesWritten = this.channel.position(newPosition).write(ByteBuffer.wrap("DR".getBytes(UTF8)));
+        final int numBytesWritten = this.channel.position(newPosition).write(ByteBuffer.wrap("DR".getBytes(StandardCharsets.UTF_8)));
         // Read 3 bytes from the new position
         final byte[] contents = new byte[3];
         this.channel.position(newPosition).read(ByteBuffer.wrap(contents));
         final String expected = "DRe";
-        final String read = new String(contents, UTF8);
+        final String read = new String(contents, StandardCharsets.UTF_8);
         Assert.assertEquals("Write should report correct number of bytes written", 2, numBytesWritten);
         Assert.assertEquals("Channel should respect explicit position during writes", expected, read);
     }

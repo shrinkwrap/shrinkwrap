@@ -19,6 +19,7 @@ package org.jboss.shrinkwrap.api.asset;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * ApiTestUtils
@@ -46,7 +47,7 @@ class ApiTestUtils {
         }
         out.close();
         in.close();
-        return new String(out.toByteArray(), "UTF-8");
+        return new String(out.toByteArray(), StandardCharsets.UTF_8);
     }
 
     /**
