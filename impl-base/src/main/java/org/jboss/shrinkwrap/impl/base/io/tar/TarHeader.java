@@ -22,7 +22,7 @@ package org.jboss.shrinkwrap.impl.base.io.tar;
  * @author Timothy Gerard Endres, <time@gjt.org>
  */
 
-public class TarHeader extends Object implements Cloneable {
+public class TarHeader implements Cloneable {
     /**
      * The length of the name field in a header buffer.
      */
