@@ -251,11 +251,11 @@ public class ShrinkWrapPath implements Path {
         final List<String> tokens = tokenize(this);
         final int tokenCount = tokens.size();
         if (beginIndex >= tokenCount) {
-            throw new IllegalArgumentException("Invalid begin index " + endIndex + " for " + this.toString()
+            throw new IllegalArgumentException("Invalid begin index " + endIndex + " for " + this
                 + "; must be between 0 and " + tokenCount + " exclusive");
         }
         if (endIndex > tokenCount) {
-            throw new IllegalArgumentException("Invalid end index " + endIndex + " for " + this.toString()
+            throw new IllegalArgumentException("Invalid end index " + endIndex + " for " + this
                 + "; must be between 0 and " + tokenCount + " inclusive");
         }
         final StringBuilder newPathBuilder = new StringBuilder();
@@ -418,7 +418,7 @@ public class ShrinkWrapPath implements Path {
         if (!this.path.endsWith(ArchivePath.SEPARATOR_STRING)) {
             sb.append(ArchivePath.SEPARATOR);
         }
-        sb.append(other.toString());
+        sb.append(other);
         final Path newPath = new ShrinkWrapPath(sb.toString(), this.fileSystem);
         return newPath;
     }
@@ -495,7 +495,7 @@ public class ShrinkWrapPath implements Path {
     public URI toUri() {
         final URI root = ShrinkWrapFileSystems.getRootUri(this.fileSystem.getArchive());
         // Compose a new URI location, stripping out the extra "/" root
-        final String location = root.toString() + this.toString().substring(1);
+        final String location = root + this.toString().substring(1);
         final URI uri = URI.create(location);
         return uri;
     }
@@ -528,7 +528,7 @@ public class ShrinkWrapPath implements Path {
     public Path toRealPath(final LinkOption... options) throws IOException {
         // All links are "real" (no symlinks) and absolute, so just return this (if exists)
         if (!this.fileSystem.getArchive().contains(this.path)) {
-            throw new FileNotFoundException("Path points to a nonexistant file or directory: " + this.toString());
+            throw new FileNotFoundException("Path points to a nonexistant file or directory: " + this);
         }
         return this;
     }
