@@ -165,9 +165,7 @@ public class ZipSerializableOriginalImpl implements ZipSerializableView {
          * the future we may add state which needs to be part of the serialization protocol, and things need to stay in
          * order, so they'll be added *after* the archive ZIP contents. Thus we must be able to read them.
          */
-        while (in.read() != -1) {
-            ;
-        }
+        while (in.read() != -1) { }
 
     }
 
