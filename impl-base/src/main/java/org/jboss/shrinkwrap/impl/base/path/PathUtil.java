@@ -241,7 +241,7 @@ public final class PathUtil {
      */
     private static boolean isFirstCharSlash(final String path) {
         assertSpecified(path);
-        if (path.length() == 0) {
+        if (path.isEmpty()) {
             return false;
         }
         return path.charAt(0) == ArchivePath.SEPARATOR;
@@ -252,7 +252,7 @@ public final class PathUtil {
      */
     private static boolean isLastCharSlash(final String path) {
         assertSpecified(path);
-        if (path.length() == 0) {
+        if (path.isEmpty()) {
             return false;
         }
         return path.charAt(path.length() - 1) == ArchivePath.SEPARATOR;

@@ -155,7 +155,7 @@ public final class ShrinkWrap {
         if (type == null) {
             throw new IllegalArgumentException("Type must be specified");
         }
-        if (archiveName == null || archiveName.length() == 0) {
+        if (archiveName == null || archiveName.isEmpty()) {
             throw new IllegalArgumentException("ArchiveName must be specified");
         }
 

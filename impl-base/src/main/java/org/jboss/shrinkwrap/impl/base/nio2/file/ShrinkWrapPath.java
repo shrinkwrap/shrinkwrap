@@ -141,7 +141,7 @@ public class ShrinkWrapPath implements Path {
     @Override
     public Path getFileName() {
         // Root and empty String has no file name
-        if (path.length() == 0 || path.equals(ArchivePaths.root().get())) {
+        if (path.isEmpty() || path.equals(ArchivePaths.root().get())) {
             return null;
         } else {
             final List<String> tokens = tokenize(this);
@@ -198,7 +198,7 @@ public class ShrinkWrapPath implements Path {
             context = context.substring(1);
         }
         // Root
-        if (context.length() == 0) {
+        if (context.isEmpty()) {
             return 0;
         }
         // Else count names by using the separator
@@ -409,7 +409,7 @@ public class ShrinkWrapPath implements Path {
             return other;
         }
 
-        if (other.toString().length() == 0) {
+        if (other.toString().isEmpty()) {
             return this;
         }
 
