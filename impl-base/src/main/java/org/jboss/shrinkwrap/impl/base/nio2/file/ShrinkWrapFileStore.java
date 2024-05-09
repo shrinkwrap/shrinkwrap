@@ -123,7 +123,7 @@ public class ShrinkWrapFileStore extends FileStore {
                 }
             } catch (final IOException ioe) {
                 throw new RuntimeException("Could not count size of archive " + this.archive.getName() + " at "
-                    + asset.toString(), ioe);
+                    + asset, ioe);
             }
 
         }
@@ -199,7 +199,7 @@ public class ShrinkWrapFileStore extends FileStore {
      */
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + " for: " + archive.toString();
+        return this.getClass().getSimpleName() + " for: " + archive;
     }
 
 }

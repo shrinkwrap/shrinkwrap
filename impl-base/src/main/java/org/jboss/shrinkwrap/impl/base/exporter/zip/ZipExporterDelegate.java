@@ -43,7 +43,7 @@ class ZipExporterDelegate extends AbstractExporterDelegate<InputStream> {
         if (archive.getContent().isEmpty()) {
             throw new IllegalArgumentException(
                 "[SHRINKWRAP-93] Cannot use this JDK-based implementation to export as ZIP an archive with no content: "
-                    + archive.toString());
+                    + archive);
         }
     }
 
@@ -55,7 +55,7 @@ class ZipExporterDelegate extends AbstractExporterDelegate<InputStream> {
         if (archive.getContent().isEmpty()) {
             throw new IllegalArgumentException(
                     "[SHRINKWRAP-93] Cannot use this JDK-based implementation to export as ZIP an archive with no content: "
-                            + archive.toString());
+                            + archive);
         }
     }
 

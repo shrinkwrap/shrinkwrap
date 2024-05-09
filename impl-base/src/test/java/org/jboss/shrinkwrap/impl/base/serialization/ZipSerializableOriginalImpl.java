@@ -144,7 +144,7 @@ public class ZipSerializableOriginalImpl implements ZipSerializableView {
 
         // Log
         if (log.isLoggable(Level.FINER)) {
-            log.finer("Read in archive: " + archive.toString());
+            log.finer("Read in archive: " + archive);
         }
 
         /*

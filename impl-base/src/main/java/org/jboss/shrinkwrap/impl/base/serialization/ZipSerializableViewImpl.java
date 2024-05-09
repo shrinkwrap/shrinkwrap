@@ -153,7 +153,7 @@ public class ZipSerializableViewImpl implements ZipSerializableView {
 
         // Log
         if (log.isLoggable(Level.FINER)) {
-            log.finer("Read in archive: " + archive.toString());
+            log.finer("Read in archive: " + archive);
         }
 
         /*
@@ -186,7 +186,7 @@ public class ZipSerializableViewImpl implements ZipSerializableView {
              */
             if (log.isLoggable(Level.FINER)) {
                 log.finer("Detected an older version of the archive sent over the wire; no ID was sent.  "
-                    + "Ignoring and using the default ID for this archive: " + archive.toString());
+                    + "Ignoring and using the default ID for this archive: " + archive);
             }
         }
 
