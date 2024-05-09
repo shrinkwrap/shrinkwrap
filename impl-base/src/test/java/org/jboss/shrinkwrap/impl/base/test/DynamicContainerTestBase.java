@@ -2070,7 +2070,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             return usedForInnerClasses;
         }
 
-    };
+    }
 
     private ArchivePath getArchivePathFromClass(Class<?> clazz) {
         return new BasicPath(getClassPath(), AssetUtil.getFullPathForClassResource(clazz));

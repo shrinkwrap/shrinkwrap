@@ -75,11 +75,11 @@ public class ServiceExtensionLoaderTestCase {
         createLoaderUsingTccl().load(WrongImplExtension.class, ShrinkWrap.create(JavaArchive.class, "test.jar"));
     }
 
-    public static interface WrongImplExtension extends Assignable {
+    public interface WrongImplExtension extends Assignable {
 
     }
 
-    public static interface Extension extends Assignable {
+    public interface Extension extends Assignable {
 
     }
 
@@ -95,7 +95,7 @@ public class ServiceExtensionLoaderTestCase {
         }
     }
 
-    public static interface MissingExtension extends Assignable {
+    public interface MissingExtension extends Assignable {
 
     }
 

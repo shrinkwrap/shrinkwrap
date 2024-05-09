@@ -162,7 +162,7 @@ public class ZipSerializableOriginalImpl implements ZipSerializableView {
          * order, so they'll be added *after* the archive ZIP contents. Thus we must be able to read them.
          */
         while (in.read() != -1) {
-            ;
+            
         }
 
     }
