@@ -71,7 +71,7 @@ public class ZipSerializableViewImpl implements ZipSerializableView {
     /**
      * String form of the ID
      */
-    private transient String id;
+    private final transient String id;
 
     /**
      * Underlying archive. Won't be directly serialized; instead we'll encode it as ZIP and send that

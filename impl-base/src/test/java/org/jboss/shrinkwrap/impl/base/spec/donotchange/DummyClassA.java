@@ -27,7 +27,7 @@ public class DummyClassA extends DummyClassParent {
     // Anonymous Inner Classes ------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
     @SuppressWarnings("unused")
-    private Test test = new Test() {
+    private final Test test = new Test() {
     };
 
     // -------------------------------------------------------------------------------------||

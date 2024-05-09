@@ -36,8 +36,8 @@ import org.jboss.shrinkwrap.impl.base.exporter.AbstractOnDemandInputStream;
 class ZipOnDemandInputStream extends AbstractOnDemandInputStream<ZipOutputStream> {
 
 
-    private boolean compressed;
-    private static long SYSTIME = System.currentTimeMillis();
+    private final boolean compressed;
+    private static final long SYSTIME = System.currentTimeMillis();
 
     /**
      * Creates stream directly from archive with compression.

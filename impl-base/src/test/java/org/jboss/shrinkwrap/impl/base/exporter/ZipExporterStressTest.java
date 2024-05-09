@@ -55,7 +55,7 @@ public class ZipExporterStressTest {
     /**
      * 2^20
      */
-    private static BigDecimal MEGA = new BigDecimal(1024 * 1024);
+    private static final BigDecimal MEGA = new BigDecimal(1024 * 1024);
 
     // -------------------------------------------------------------------------------------||
     // Tests ------------------------------------------------------------------------------||
@@ -146,7 +146,7 @@ public class ZipExporterStressTest {
         /**
          * Dummy megabyte
          */
-        private static int MEGA = 1024 * 1024;
+        private static final int MEGA = 1024 * 1024;
 
         private static final Random random = new Random();
 

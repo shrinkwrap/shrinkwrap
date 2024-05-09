@@ -27,9 +27,9 @@ import java.io.InputStream;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  */
 public class ClassLoaderAsset implements Asset {
-    private String resourceName;
+    private final String resourceName;
 
-    private ClassLoader classLoader;
+    private final ClassLoader classLoader;
 
     /**
      * Load a named resource using the current threads context classloader.
