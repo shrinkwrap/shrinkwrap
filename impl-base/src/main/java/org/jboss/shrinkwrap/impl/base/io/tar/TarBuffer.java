@@ -31,7 +31,7 @@ import java.io.OutputStream;
  * @see TarArchive
  */
 
-public class TarBuffer extends Object {
+public class TarBuffer {
     public static final int DEFAULT_RCDSIZE = (512);
     public static final int DEFAULT_BLKSIZE = (DEFAULT_RCDSIZE * 20);
 
