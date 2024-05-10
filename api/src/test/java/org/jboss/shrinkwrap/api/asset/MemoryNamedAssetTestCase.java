@@ -120,7 +120,7 @@ public class MemoryNamedAssetTestCase {
             }
 
             @Override
-            public Path toRealPath(LinkOption... options) throws IOException {
+            public Path toRealPath(LinkOption... options) {
                 return null;
             }
 
@@ -175,12 +175,12 @@ public class MemoryNamedAssetTestCase {
             }
 
             @Override
-            public WatchKey register(WatchService watcher, Kind<?>[] events, Modifier... modifiers) throws IOException {
+            public WatchKey register(WatchService watcher, Kind<?>[] events, Modifier... modifiers) {
                 return null;
             }
 
             @Override
-            public WatchKey register(WatchService watcher, Kind<?>... events) throws IOException {
+            public WatchKey register(WatchService watcher, Kind<?>... events) {
                 return null;
             }
 

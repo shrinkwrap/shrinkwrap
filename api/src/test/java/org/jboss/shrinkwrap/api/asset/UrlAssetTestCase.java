@@ -49,7 +49,7 @@ public class UrlAssetTestCase {
     }
 
     @Test
-    public void shouldThrowExceptionOnNullURL() throws Exception {
+    public void shouldThrowExceptionOnNullURL() {
         try {
             new UrlAsset(null);
             Assert.fail("Should have thrown IllegalArgumentException");
@@ -117,7 +117,7 @@ public class UrlAssetTestCase {
     }
 
     @Test
-    public void shouldBeAbleToReturnURL() throws Exception {
+    public void shouldBeAbleToReturnURL() {
     	final URL url = getThreadContextClassLoader().getResource(EXISTING_RESOURCE);
         final Asset asset = new UrlAsset(url);
         

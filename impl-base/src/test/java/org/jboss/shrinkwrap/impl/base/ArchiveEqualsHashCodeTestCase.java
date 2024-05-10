@@ -90,7 +90,7 @@ public class ArchiveEqualsHashCodeTestCase {
     }
 
     @Test
-    public void archiveEqualsShouldReturnFalseWhenArchivesNamesAreNotEqual() throws Exception {
+    public void archiveEqualsShouldReturnFalseWhenArchivesNamesAreNotEqual() {
 
         final String archiveName = "test.war";
         final String archiveName2 = "test.jar";

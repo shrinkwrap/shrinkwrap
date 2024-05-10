@@ -64,7 +64,7 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
     // -------------------------------------------------------------------------------------||
 
     @Before
-    public void createResourceAdapterArchive() throws Exception {
+    public void createResourceAdapterArchive() {
         archive = createNewArchive();
     }
 

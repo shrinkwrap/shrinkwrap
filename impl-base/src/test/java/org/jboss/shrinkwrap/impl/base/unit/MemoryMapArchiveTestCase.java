@@ -41,10 +41,9 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive> 
     /**
      * Create a new Archive instance per Test.
      *
-     * @throws Exception
      */
     @Before
-    public void createArchive() throws Exception {
+    public void createArchive() {
         archive = createNewArchive();
         archive.toString(false);
     }
@@ -65,10 +64,9 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive> 
     /**
      * Test to ensure MemoryMap archives can be created with a name
      *
-     * @throws Exception
      */
     @Test
-    public void testConstructorWithName() throws Exception {
+    public void testConstructorWithName() {
         String name = "test.jar";
         MemoryMapArchive tmp = new MemoryMapArchiveImpl(name, ShrinkWrap.getDefaultDomain().getConfiguration());
         Assert.assertEquals("Should return the same name as construtor arg", name, tmp.getName());
@@ -77,20 +75,18 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive> 
     /**
      * Test to ensure the MemoryMapArchive requires a name
      *
-     * @throws Exception
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorRequiresName() throws Exception {
+    public void testConstructorRequiresName() {
         new MemoryMapArchiveImpl(null);
     }
 
     /**
      * Test to ensure the MemoryMapArchive requires a name
      *
-     * @throws Exception
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorRequiresExtensionLoader() throws Exception {
+    public void testConstructorRequiresExtensionLoader() {
         new MemoryMapArchiveImpl("test.jar", null);
     }
 

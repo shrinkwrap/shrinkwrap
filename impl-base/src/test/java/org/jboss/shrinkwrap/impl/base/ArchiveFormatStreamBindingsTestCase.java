@@ -36,42 +36,42 @@ import org.junit.Test;
  */
 public class ArchiveFormatStreamBindingsTestCase {
     @Test
-    public void testZipImporter() throws Exception {
+    public void testZipImporter() {
         assertEquals(ZipImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.ZIP).getImporter());
     }
 
     @Test
-    public void testZipExporter() throws Exception {
+    public void testZipExporter() {
         assertEquals(ZipExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.ZIP).getExporter());
     }
 
     @Test
-    public void testTarImporter() throws Exception {
+    public void testTarImporter() {
         assertEquals(TarImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR).getImporter());
     }
 
     @Test
-    public void testTarExporter() throws Exception {
+    public void testTarExporter() {
         assertEquals(TarExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR).getExporter());
     }
 
     @Test
-    public void testTarGzImporter() throws Exception {
+    public void testTarGzImporter() {
         assertEquals(TarGzImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_GZ).getImporter());
     }
 
     @Test
-    public void testTarGzExporter() throws Exception {
+    public void testTarGzExporter() {
         assertEquals(TarGzExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_GZ).getExporter());
     }
 
     @Test
-    public void testTarBz2Importer() throws Exception {
+    public void testTarBz2Importer() {
         assertEquals(TarBz2Importer.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_BZ).getImporter());
     }
 
     @Test
-    public void testTarBz2Exporter() throws Exception {
+    public void testTarBz2Exporter() {
         assertEquals(TarBz2Exporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_BZ).getExporter());
     }
 }

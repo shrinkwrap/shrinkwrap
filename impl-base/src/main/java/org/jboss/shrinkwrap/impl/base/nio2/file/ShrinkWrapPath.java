@@ -551,7 +551,7 @@ public class ShrinkWrapPath implements Path {
      *      java.nio.file.WatchEvent.Modifier[])
      */
     @Override
-    public WatchKey register(WatchService watcher, Kind<?>[] events, Modifier... modifiers) throws IOException {
+    public WatchKey register(WatchService watcher, Kind<?>[] events, Modifier... modifiers) {
         throw new UnsupportedOperationException("ShrinkWrap Paths do not support registration with a watch service.");
     }
 
@@ -561,7 +561,7 @@ public class ShrinkWrapPath implements Path {
      * @see java.nio.file.Path#register(java.nio.file.WatchService, java.nio.file.WatchEvent.Kind<?>[])
      */
     @Override
-    public WatchKey register(WatchService watcher, Kind<?>... events) throws IOException {
+    public WatchKey register(WatchService watcher, Kind<?>... events) {
         return this.register(watcher, events, (Modifier) null);
     }
 

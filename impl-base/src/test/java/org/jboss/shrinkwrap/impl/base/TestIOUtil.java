@@ -88,7 +88,7 @@ public class TestIOUtil {
         return new File(resourceLocation.toURI());
     }
 
-    public static InputStream createInputstreamFromResourceName(final String resourceName) throws URISyntaxException {
+    public static InputStream createInputstreamFromResourceName(final String resourceName) {
         assert resourceName != null : "Resource name must be specified";
         final InputStream resourceStream = TestSecurityActions.getThreadContextClassLoader().getResourceAsStream(
             resourceName);

@@ -70,7 +70,7 @@ public class MemoryAssetTestCase {
     }
 
     @Test
-    public void isOpenTrue() throws IOException {
+    public void isOpenTrue() {
         Assert.assertTrue("Channel should report open before it's closed", this.asset.isOpen());
     }
 

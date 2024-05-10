@@ -521,7 +521,7 @@ public class TarEntry extends Object implements Cloneable {
      * @param file
      *            The file from which to get the header information.
      */
-    public void getFileTarHeader(TarHeader hdr, File file) throws InvalidHeaderException {
+    public void getFileTarHeader(TarHeader hdr, File file) {
         this.file = file;
 
         String name = file.getPath();

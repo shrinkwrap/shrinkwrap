@@ -106,7 +106,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
      * @see java.nio.file.spi.FileSystemProvider#newFileSystem(java.net.URI, java.util.Map)
      */
     @Override
-    public FileSystem newFileSystem(final URI uri, final Map<String, ?> env) throws IOException {
+    public FileSystem newFileSystem(final URI uri, final Map<String, ?> env) {
 
         // Precondition checks
         if (uri == null) {
@@ -335,8 +335,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
      *      java.nio.file.DirectoryStream.Filter)
      */
     @Override
-    public DirectoryStream<Path> newDirectoryStream(final Path dir, final Filter<? super Path> filter)
-        throws IOException {
+    public DirectoryStream<Path> newDirectoryStream(final Path dir, final Filter<? super Path> filter) {
         final FileSystem fs = dir.getFileSystem();
         if (!(fs instanceof ShrinkWrapFileSystem)) {
             throw new IllegalArgumentException("Expected ShrinkWrap File System for Path: " + dir.toString());
@@ -428,7 +427,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
      * java.nio.file.CopyOption[])
      */
     @Override
-    public void copy(Path source, Path target, CopyOption... options) throws IOException {
+    public void copy(Path source, Path target, CopyOption... options) {
         // TODO Auto-generated method stub
 
     }
@@ -484,7 +483,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
      * @see java.nio.file.spi.FileSystemProvider#isSameFile(java.nio.file.Path, java.nio.file.Path)
      */
     @Override
-    public boolean isSameFile(final Path path1, final Path path2) throws IOException {
+    public boolean isSameFile(final Path path1, final Path path2) {
 
         // Only equal if pointing to same FS
         final FileSystem fs1 = path1.getFileSystem();
@@ -505,7 +504,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
      * @see java.nio.file.spi.FileSystemProvider#isHidden(java.nio.file.Path)
      */
     @Override
-    public boolean isHidden(final Path path) throws IOException {
+    public boolean isHidden(final Path path) {
         // No paths are hidden
         return false;
     }
@@ -516,7 +515,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
      * @see java.nio.file.spi.FileSystemProvider#getFileStore(java.nio.file.Path)
      */
     @Override
-    public FileStore getFileStore(final Path path) throws IOException {
+    public FileStore getFileStore(final Path path) {
         final FileStore fileStore = path.getFileSystem().getFileStores().iterator().next();
         return fileStore;
     }
@@ -599,8 +598,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
      *      java.nio.file.LinkOption[])
      */
     @Override
-    public Map<String, Object> readAttributes(final Path path, final String attributes, final LinkOption... options)
-        throws IOException {
+    public Map<String, Object> readAttributes(final Path path, final String attributes, final LinkOption... options) {
         throw new UnsupportedOperationException("ShrinkWrap File Systems do not support attributes");
     }
 
@@ -611,8 +609,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
      *      java.nio.file.LinkOption[])
      */
     @Override
-    public void setAttribute(final Path path, final String attribute, final Object value, final LinkOption... options)
-        throws IOException {
+    public void setAttribute(final Path path, final String attribute, final Object value, final LinkOption... options) {
         throw new UnsupportedOperationException("ShrinkWrap File Systems do not support attributes");
     }
 

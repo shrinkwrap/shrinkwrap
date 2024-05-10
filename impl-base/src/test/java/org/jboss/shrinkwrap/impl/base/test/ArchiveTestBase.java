@@ -106,7 +106,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     // -------------------------------------------------------------------------------------||
 
     @Test
-    public void testDefaultArchiveFormatIsSet() throws Exception {
+    public void testDefaultArchiveFormatIsSet() {
         Assert.assertEquals("Unexpected default archive format", getExpectedArchiveFormat(), getDefaultArchiveFormat());
     }
 
@@ -127,10 +127,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an asset to the path results in successful storage.
      *
-     * @throws Exception
      */
     @Test
-    public void testAddAssetToPath() throws Exception {
+    public void testAddAssetToPath() {
         Archive<T> archive = getArchive();
         Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
         ArchivePath location = new BasicPath("/", "test.properties");
@@ -143,10 +142,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an asset to the path requires path.
      *
-     * @throws Exception
      */
     @Test
-    public void testAddRequiresPath() throws Exception {
+    public void testAddRequiresPath() {
         Archive<T> archive = getArchive();
         Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
 
@@ -160,10 +158,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an asset to the path requires an asset.
      *
-     * @throws Exception
      */
     @Test
-    public void testAddRequiresAssets() throws Exception {
+    public void testAddRequiresAssets() {
         Archive<T> archive = getArchive();
         try {
             archive.add((Asset) null, new BasicPath("/", "Test.properties"));
@@ -175,10 +172,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an asset to a string path results in successful storage.
      *
-     * @throws Exception
      */
     @Test
-    public void testAddWithStringPath() throws Exception {
+    public void testAddWithStringPath() {
         Archive<T> archive = getArchive();
         Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
         ArchivePath location = new BasicPath("/", "test.properties");
@@ -192,10 +188,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an asset to a string path requires path.
      *
-     * @throws Exception
      */
     @Test
-    public void testAddWithStringPathRequiresPath() throws Exception {
+    public void testAddWithStringPathRequiresPath() {
         Archive<T> archive = getArchive();
         Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
 
@@ -209,10 +204,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an asset to the path string requires an asset.
      *
-     * @throws Exception
      */
     @Test
-    public void testAddWithStringPathRequiresAssets() throws Exception {
+    public void testAddWithStringPathRequiresAssets() {
         Archive<T> archive = getArchive();
         try {
             archive.add((Asset) null, "/Test.properties");
@@ -224,10 +218,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an asset with a name under an {@link ArchivePath} context results in successful storage
      *
-     * @throws Exception
      */
     @Test
-    public void testAddAssetWithArchivePathAndName() throws Exception {
+    public void testAddAssetWithArchivePathAndName() {
         Archive<T> archive = getArchive();
         final String name = "test.properties";
         final Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
@@ -243,10 +236,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an asset with a name under an {@link String} context results in successful storage
      *
-     * @throws Exception
      */
     @Test
-    public void testAddAssetWithStringPathAndName() throws Exception {
+    public void testAddAssetWithStringPathAndName() {
         Archive<T> archive = getArchive();
         final String name = "test.properties";
         final Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
@@ -261,10 +253,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an asset with name requires the path attribute as an {@link ArchivePath}.
      *
-     * @throws Exception
      */
     @Test
-    public void testAddAssetWithNameRequiresArchivePath() throws Exception {
+    public void testAddAssetWithNameRequiresArchivePath() {
         Archive<T> archive = getArchive();
         final String name = "test.properties";
         final Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
@@ -278,10 +269,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an asset with name requires the path attribute as a String
      *
-     * @throws Exception
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAddAssetWithNameRequiresStringPath() throws Exception {
+    public void testAddAssetWithNameRequiresStringPath() {
         final Archive<T> archive = getArchive();
         archive.add(EmptyAsset.INSTANCE, (String) null, "childPath");
     }
@@ -289,10 +279,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an asset with name requires the name attribute
      *
-     * @throws Exception
      */
     @Test
-    public void testAddAssetWithNameRequiresName() throws Exception {
+    public void testAddAssetWithNameRequiresName() {
         Archive<T> archive = getArchive();
         final ArchivePath path = new BasicPath("/", "Test.properties");
         final String resource = NAME_TEST_PROPERTIES;
@@ -306,10 +295,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an asset with name requires the asset attribute
      *
-     * @throws Exception
      */
     @Test
-    public void testAddAssetWithNameRequiresAsset() throws Exception {
+    public void testAddAssetWithNameRequiresAsset() {
         Archive<T> archive = getArchive();
         final String name = "test.properties";
         final ArchivePath path = new BasicPath("/", "Test.properties");
@@ -321,7 +309,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     @Test
-    public void testAddNamedAsset() throws Exception {
+    public void testAddNamedAsset() {
         Archive<T> archive = getArchive();
         final String testName = "check.properties";
         final Asset testAsset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
@@ -349,10 +337,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Tests that empty directories may be added to the archive
      *
-     * @throws Exception
      */
     @Test
-    public void testAddEmptyDirectories() throws Exception {
+    public void testAddEmptyDirectories() {
         Archive<T> archive = getArchive();
 
         // Get Paths to add
@@ -371,7 +358,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     @Test
-    public void testHandlerIsCalledWhenAddingDirectoriesWithArchivePath() throws Exception {
+    public void testHandlerIsCalledWhenAddingDirectoriesWithArchivePath() {
         final SimpleHandler simpleHandler1 = new SimpleHandler();
         final SimpleHandler simpleHandler2 = new SimpleHandler();
         getArchive().addHandlers(simpleHandler1, simpleHandler2);
@@ -383,7 +370,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     @Test
-    public void testHandlerIsCalledWhenAddingDirectoriesWithStringPath() throws Exception {
+    public void testHandlerIsCalledWhenAddingDirectoriesWithStringPath() {
         final SimpleHandler simpleHandler1 = new SimpleHandler();
         final SimpleHandler simpleHandler2 = new SimpleHandler();
         getArchive().addHandlers(simpleHandler1, simpleHandler2);
@@ -456,7 +443,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     @Test
-    public void testHandlerIsCalledWhenAddingAssetWithArchivePathAndExporter() throws Exception {
+    public void testHandlerIsCalledWhenAddingAssetWithArchivePathAndExporter() {
         final ReplaceAssetHandler handler1 = new ReplaceAssetHandler("unexpected");
         final ReplaceAssetHandler handler2 = new ReplaceAssetHandler("EXPECTED");
         getArchive().addHandlers(handler1, handler2);
@@ -496,10 +483,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure deleting an asset successfully removes asset from storage
      *
-     * @throws Exception
      */
     @Test
-    public void testDeleteAssetWithArchivePath() throws Exception {
+    public void testDeleteAssetWithArchivePath() {
         Archive<T> archive = getArchive();
         String resource = NAME_TEST_PROPERTIES;
         ArchivePath location = new BasicPath("/", "test.properties");
@@ -517,10 +503,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure deleting an asset successfully removes asset from storage
      *
-     * @throws Exception
      */
     @Test
-    public void testDeleteAssetWithStringPath() throws Exception {
+    public void testDeleteAssetWithStringPath() {
         Archive<T> archive = getArchive();
         String resource = NAME_TEST_PROPERTIES;
         String location = "/test.properties";
@@ -538,10 +523,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure deleting a missing asset returns correct status
      *
-     * @throws Exception
      */
     @Test
-    public void testDeleteMissingAsset() throws Exception {
+    public void testDeleteMissingAsset() {
         Archive<T> archive = getArchive();
         ArchivePath location = new BasicPath("/", "test.properties");
 
@@ -551,10 +535,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure deleting a missing asset returns correct status
      *
-     * @throws Exception
      */
     @Test
-    public void testDeleteMissingAssetWithStringPath() throws Exception {
+    public void testDeleteMissingAssetWithStringPath() {
         Archive<T> archive = getArchive();
         String location = "/test.properties";
 
@@ -564,10 +547,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure deleting an asset requires a path
      *
-     * @throws Exception
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testDeleteAssetRequiresArchivePath() throws Exception {
+    public void testDeleteAssetRequiresArchivePath() {
         Archive<T> archive = getArchive();
         archive.delete((ArchivePath) null);
         Assert.fail("Should have throw an IllegalArgumentException");
@@ -576,10 +558,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure deleting an asset requires a path
      *
-     * @throws Exception
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testDeleteAssetRequiresStringPath() throws Exception {
+    public void testDeleteAssetRequiresStringPath() {
         Archive<T> archive = getArchive();
         archive.delete((String) null);
         Assert.fail("Should have throw an IllegalArgumentException");
@@ -608,10 +589,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure an asset can be retrieved by its path
      *
-     * @throws Exception
      */
     @Test
-    public void testGetAsset() throws Exception {
+    public void testGetAsset() {
         Archive<T> archive = getArchive();
         ArchivePath location = new BasicPath("/", "test.properties");
         Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
@@ -626,10 +606,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure get asset requires a path
      *
-     * @throws Exception
      */
     @Test
-    public void testGetAssetRequiresPath() throws Exception {
+    public void testGetAssetRequiresPath() {
         Archive<T> archive = getArchive();
         try {
             archive.get((ArchivePath) null);
@@ -641,10 +620,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure an asset can be retrieved by a string path
      *
-     * @throws Exception
      */
     @Test
-    public void testGetAssetWithString() throws Exception {
+    public void testGetAssetWithString() {
         Archive<T> archive = getArchive();
         ArchivePath location = new BasicPath("/", "test.properties");
         Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
@@ -659,10 +637,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure get asset by string requires a path
      *
-     * @throws Exception
      */
     @Test
-    public void testGetAssetWithStringRequiresPath() throws Exception {
+    public void testGetAssetWithStringRequiresPath() {
         Archive<T> archive = getArchive();
         try {
             archive.get((String) null);
@@ -794,60 +771,59 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testImportArchiveFromStringThrowExceptionIfClassIsNull() throws Exception {
+    public void testImportArchiveFromStringThrowExceptionIfClassIsNull() {
         ShrinkWrap.create(GenericArchive.class).getAsType((Class<GenericArchive>) null, "/path", ArchiveFormat.ZIP);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testImportArchiveFromStringThrowExceptionIfPathIsNull() throws Exception {
+    public void testImportArchiveFromStringThrowExceptionIfPathIsNull() {
         ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, (String) null, ArchiveFormat.ZIP);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testImportArchiveFromStringThrowExceptionIfFormatIsNull() throws Exception {
+    public void testImportArchiveFromStringThrowExceptionIfFormatIsNull() {
         ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, "/path", null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testImportArchiveFromArchivePathThrowExceptionIfClassIsNull() throws Exception {
+    public void testImportArchiveFromArchivePathThrowExceptionIfClassIsNull() {
         ShrinkWrap.create(GenericArchive.class).getAsType((Class<GenericArchive>) null, ArchivePaths.create("/path"),
             ArchiveFormat.ZIP);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testImportArchiveFromArchivePathThrowExceptionIfPathIsNull() throws Exception {
+    public void testImportArchiveFromArchivePathThrowExceptionIfPathIsNull() {
         ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, (ArchivePath) null, ArchiveFormat.ZIP);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testImportArchiveFromArchivePathThrowExceptionIfFormatIsNull() throws Exception {
+    public void testImportArchiveFromArchivePathThrowExceptionIfFormatIsNull() {
         ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, ArchivePaths.create("/path"), null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testImportArchiveFromFilterThrowExceptionIfClassIsNull() throws Exception {
+    public void testImportArchiveFromFilterThrowExceptionIfClassIsNull() {
         ShrinkWrap.create(GenericArchive.class).getAsType((Class<JavaArchive>) null, Filters.includeAll(),
             ArchiveFormat.ZIP);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testImportArchiveFromFilterThrowExceptionIfPathIsNull() throws Exception {
+    public void testImportArchiveFromFilterThrowExceptionIfPathIsNull() {
         ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, (Filter<ArchivePath>) null,
             ArchiveFormat.ZIP);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testImportArchiveFromFilterThrowExceptionIfFormatIsNull() throws Exception {
+    public void testImportArchiveFromFilterThrowExceptionIfFormatIsNull() {
         ShrinkWrap.create(GenericArchive.class).getAsType(JavaArchive.class, Filters.includeAll(), null);
     }
 
     /**
      * Ensure we can get a added Archive as a specific type
      *
-     * @throws Exception
      */
     @Test
-    public void testGetAsTypeString() throws Exception {
+    public void testGetAsTypeString() {
         Archive<?> archive = getArchive();
         GenericArchive child = ShrinkWrap.create(GenericArchive.class);
         archive.add(child, "/", ZipExporter.class);
@@ -860,10 +836,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure we can get a added Archive as a specific type
      *
-     * @throws Exception
      */
     @Test
-    public void testGetAsTypeArchivePath() throws Exception {
+    public void testGetAsTypeArchivePath() {
         Archive<?> archive = getArchive();
         GenericArchive child = ShrinkWrap.create(GenericArchive.class);
         archive.add(child, "/", ZipExporter.class);
@@ -876,10 +851,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure we can get a added Archive as a specific type
      *
-     * @throws Exception
      */
     @Test
-    public void testGetAsTypeWithFilter() throws Exception {
+    public void testGetAsTypeWithFilter() {
         GenericArchive child1 = ShrinkWrap.create(GenericArchive.class);
         GenericArchive child2 = ShrinkWrap.create(GenericArchive.class);
         // Create one not to be found by filter.
@@ -904,10 +878,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure get content returns the correct map of content
      *
-     * @throws Exception
      */
     @Test
-    public void testToGetContent() throws Exception {
+    public void testToGetContent() {
         Archive<T> archive = getArchive();
         ArchivePath location = new BasicPath("/", "test.properties");
         ArchivePath locationTwo = new BasicPath("/", "test2.properties");
@@ -931,10 +904,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure get content returns the correct map of content based on the given filter
      *
-     * @throws Exception
      */
     @Test
-    public void testToGetContentFiltered() throws Exception {
+    public void testToGetContentFiltered() {
         Archive<T> archive = getArchive();
         ArchivePath location = new BasicPath("/", "test.properties");
         ArchivePath locationTwo = new BasicPath("/", "test2.properties");
@@ -957,10 +929,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an archive to a path requires a path
      *
-     * @throws Exception
      */
     @Test
-    public void testAddArchiveToPathRequireArchivePath() throws Exception {
+    public void testAddArchiveToPathRequireArchivePath() {
         Archive<T> archive = getArchive();
         try {
             archive.add(ShrinkWrap.create(JavaArchive.class), (ArchivePath) null, ZipExporter.class);
@@ -972,10 +943,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an archive to a path requires a path
      *
-     * @throws Exception
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAddArchiveToPathRequireStringPath() throws Exception {
+    public void testAddArchiveToPathRequireStringPath() {
         Archive<T> archive = getArchive();
         archive.add(ShrinkWrap.create(JavaArchive.class), (String) null, ZipExporter.class);
     }
@@ -983,10 +953,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an archive to a path requires an archive
      *
-     * @throws Exception
      */
     @Test
-    public void testAddArchiveToPathRequireArchive() throws Exception {
+    public void testAddArchiveToPathRequireArchive() {
         Archive<T> archive = getArchive();
         try {
             archive.add((Archive<?>) null, ArchivePaths.root(), ZipExporter.class);
@@ -998,10 +967,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure that trying to add an asset on an illegal path throws an Exception
      *
-     * @throws Exception
      */
     @Test(expected = IllegalArchivePathException.class)
-    public void shouldNotBeAbleToAddAssetOnIllegalPath() throws Exception {
+    public void shouldNotBeAbleToAddAssetOnIllegalPath() {
         Archive<T> archive = getArchive();
 
         // add an asset
@@ -1019,10 +987,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure that trying to add a directory on an illegal path throws an Exception
      *
-     * @throws Exception
      */
     @Test(expected = IllegalArchivePathException.class)
-    public void shouldNotBeAbleToAddDirectoryOnIllegalPath() throws Exception {
+    public void shouldNotBeAbleToAddDirectoryOnIllegalPath() {
         Archive<T> archive = getArchive();
 
         // add an asset
@@ -1038,10 +1005,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure merging content requires a source archive
      *
-     * @throws Exception
      */
     @Test
-    public void testMergeRequiresSource() throws Exception {
+    public void testMergeRequiresSource() {
         Archive<T> archive = getArchive();
         try {
             archive.merge(null);
@@ -1053,10 +1019,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure merging content from another archive successfully stores all assets
      *
-     * @throws Exception
      */
     @Test
-    public void testMerge() throws Exception {
+    public void testMerge() {
         Archive<T> archive = getArchive();
         Archive<T> sourceArchive = createNewArchive();
         ArchivePath location = new BasicPath("/", "test.properties");
@@ -1081,10 +1046,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure merging content from another archive to a path successfully stores all assets to specific path
      *
-     * @throws Exception
      */
     @Test
-    public void testMergeToPath() throws Exception {
+    public void testMergeToPath() {
         Archive<T> archive = getArchive();
         Archive<T> sourceArchive = createNewArchive();
         ArchivePath location = new BasicPath("/", "test.properties");
@@ -1114,10 +1078,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure merging content from another archive to a path successfully stores all assets to specific path
      *
-     * @throws Exception
      */
     @Test
-    public void testMergeToStringPath() throws Exception {
+    public void testMergeToStringPath() {
         Archive<T> archive = getArchive();
         Archive<T> sourceArchive = createNewArchive();
         ArchivePath location = new BasicPath("/", "test.properties");
@@ -1147,10 +1110,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure that the filter is used when merging.
      *
-     * @throws Exception
      */
     @Test
-    public void testMergeToPathWithFilter() throws Exception {
+    public void testMergeToPathWithFilter() {
         Archive<?> archive = getArchive();
         Archive<T> sourceArchive = createNewArchive();
         ArchivePath location = new BasicPath("/", "test.properties");
@@ -1175,10 +1137,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure that the filter is used when merging.
      *
-     * @throws Exception
      */
     @Test
-    public void testMergeToStringPathWithFilter() throws Exception {
+    public void testMergeToStringPathWithFilter() {
         Archive<?> archive = getArchive();
         Archive<T> sourceArchive = createNewArchive();
         ArchivePath location = new BasicPath("/", "test.properties");
@@ -1203,10 +1164,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure that the filter is used when merging.
      *
-     * @throws Exception
      */
     @Test
-    public void testMergeWithFilter() throws Exception {
+    public void testMergeWithFilter() {
         Archive<?> archive = getArchive();
         Archive<T> sourceArchive = createNewArchive();
         ArchivePath location = new BasicPath("/", "test.properties");
@@ -1227,10 +1187,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure merging content from another archive requires a path
      *
-     * @throws Exception
      */
     @Test
-    public void testMergeToPathRequiresPath() throws Exception {
+    public void testMergeToPathRequiresPath() {
         Archive<T> archive = getArchive();
         try {
             archive.merge(createNewArchive(), (ArchivePath) null);
@@ -1285,10 +1244,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure adding an archive to a path successfully stores all assets to specific path including the archive name
      *
-     * @throws Exception
      */
     @Test
-    public void testAddArchiveToPath() throws Exception {
+    public void testAddArchiveToPath() {
         Archive<T> archive = getArchive();
         Archive<T> sourceArchive = createNewArchive();
 
@@ -1312,10 +1270,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure an archive contains assets from nested archives.
      *
-     * @throws Exception
      */
     @Test
-    public void testNestedArchiveContains() throws Exception {
+    public void testNestedArchiveContains() {
         Archive<T> archive = getArchive();
 
         Archive<T> sourceArchive = createNewArchive();
@@ -1341,10 +1298,9 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     /**
      * Ensure assets from a nested archive are accessible from parent archives.
      *
-     * @throws Exception
      */
     @Test
-    public void testNestedArchiveGet() throws Exception {
+    public void testNestedArchiveGet() {
         Archive<T> archive = getArchive();
 
         Archive<T> nestedArchive = createNewArchive();

@@ -16,7 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.nio2.file;
 
-import java.io.IOException;
 import java.nio.file.ClosedFileSystemException;
 import java.nio.file.FileStore;
 import java.nio.file.FileSystem;
@@ -93,7 +92,7 @@ public class ShrinkWrapFileSystem extends FileSystem {
      * @see java.nio.file.FileSystem#close()
      */
     @Override
-    public void close() throws IOException {
+    public void close() {
         this.open = false;
     }
 
@@ -244,7 +243,7 @@ public class ShrinkWrapFileSystem extends FileSystem {
      * @see java.nio.file.FileSystem#newWatchService()
      */
     @Override
-    public WatchService newWatchService() throws IOException {
+    public WatchService newWatchService() {
         throw new UnsupportedOperationException("ShrinkWrap archives do not support a "
             + WatchService.class.getSimpleName() + ".");
     }

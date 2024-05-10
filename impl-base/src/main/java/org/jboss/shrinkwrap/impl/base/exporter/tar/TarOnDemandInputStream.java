@@ -16,7 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.exporter.tar;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -39,7 +38,7 @@ class TarOnDemandInputStream extends TarOnDemandInputStreamBase<TarOutputStream>
     }
 
     @Override
-    protected TarOutputStream createOutputStream(final OutputStream outputStream) throws IOException {
+    protected TarOutputStream createOutputStream(final OutputStream outputStream) {
         return new TarOutputStream(outputStream);
     }
 }

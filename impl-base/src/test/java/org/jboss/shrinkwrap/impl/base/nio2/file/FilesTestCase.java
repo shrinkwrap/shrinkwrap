@@ -216,7 +216,7 @@ public class FilesTestCase {
     }
 
     @Test
-    public void createDirectoryRecursiveProhibited() throws IOException {
+    public void createDirectoryRecursiveProhibited() {
         final String dirName = "/newDirectory/child";
         final Path dir = fs.getPath(dirName);
 
@@ -449,7 +449,7 @@ public class FilesTestCase {
     }
 
     @Test
-    public void existsFalse() throws IOException {
+    public void existsFalse() {
         final String pathString = "fileWhichDoesNotExist";
         final Path path = fs.getPath(pathString);
         final boolean exists = Files.exists(path);
@@ -457,7 +457,7 @@ public class FilesTestCase {
     }
 
     @Test
-    public void existsTrue() throws IOException {
+    public void existsTrue() {
         final Archive<?> archive = this.getArchive();
         final String pathString = "file";
         archive.add(EmptyAsset.INSTANCE, pathString);
@@ -472,7 +472,7 @@ public class FilesTestCase {
     }
 
     @Test
-    public void getFileAttributeView() throws IOException {
+    public void getFileAttributeView() {
         Assert.assertTrue(Files.getFileAttributeView(fs.getPath("file"), BasicFileAttributeView.class,
             (LinkOption) null) instanceof ShrinkWrapFileAttributeView);
     }
@@ -500,19 +500,19 @@ public class FilesTestCase {
     }
 
     @Test
-    public void isDirectoryTrue() throws IOException {
+    public void isDirectoryTrue() {
         this.getArchive().addAsDirectories("path");
         Assert.assertTrue(Files.isDirectory(fs.getPath("path"), (LinkOption) null));
     }
 
     @Test
-    public void isDirectoryFalse() throws IOException {
+    public void isDirectoryFalse() {
         Assert.assertFalse(Files.isDirectory(fs.getPath("path"), (LinkOption) null));
     }
 
     @Test
     // All paths are executable
-    public void isExecutable() throws IOException {
+    public void isExecutable() {
         final String path = "path";
         this.getArchive().add(EmptyAsset.INSTANCE, path);
         Assert.assertTrue(Files.isExecutable(fs.getPath(path)));
@@ -528,7 +528,7 @@ public class FilesTestCase {
 
     @Test
     // All paths are readable
-    public void isReadable() throws IOException {
+    public void isReadable() {
         final String path = "path";
         this.getArchive().add(EmptyAsset.INSTANCE, path);
         Assert.assertTrue(Files.isReadable(fs.getPath(path)));
@@ -536,27 +536,27 @@ public class FilesTestCase {
 
     @Test
     // No nonexistant paths are executable
-    public void isExecutableNonexistant() throws IOException {
+    public void isExecutableNonexistant() {
         final String path = "path";
         Assert.assertFalse(Files.isExecutable(fs.getPath(path)));
     }
 
     @Test
     // No nonexistant paths are readable
-    public void isReadableNonexistant() throws IOException {
+    public void isReadableNonexistant() {
         final String path = "path";
         Assert.assertFalse(Files.isReadable(fs.getPath(path)));
     }
 
     @Test
-    public void isRegularFile() throws IOException {
+    public void isRegularFile() {
         final String path = "path";
         this.getArchive().add(EmptyAsset.INSTANCE, path);
         Assert.assertTrue(Files.isRegularFile(fs.getPath(path)));
     }
 
     @Test
-    public void isRegularFileFalse() throws IOException {
+    public void isRegularFileFalse() {
         final String path = "path/";
         Assert.assertFalse(Files.isRegularFile(fs.getPath(path)));
     }
@@ -576,7 +576,7 @@ public class FilesTestCase {
     }
 
     @Test
-    public void isSymbolicLink() throws IOException {
+    public void isSymbolicLink() {
         final String path = "path";
         // No symlinks
         Assert.assertFalse(Files.isSymbolicLink(fs.getPath(path)));
@@ -584,7 +584,7 @@ public class FilesTestCase {
 
     @Test
     // All paths are writable
-    public void isWritable() throws IOException {
+    public void isWritable() {
         final String path = "path";
         this.getArchive().add(EmptyAsset.INSTANCE, path);
         Assert.assertTrue(Files.isWritable(fs.getPath(path)));
@@ -592,7 +592,7 @@ public class FilesTestCase {
 
     @Test
     // No nonexistant paths are writable
-    public void isWritableNonexistant() throws IOException {
+    public void isWritableNonexistant() {
         final String path = "path";
         Assert.assertFalse(Files.isWritable(fs.getPath(path)));
     }
@@ -715,12 +715,12 @@ public class FilesTestCase {
     }
 
     @Test
-    public void notExistsTrue() throws IOException {
+    public void notExistsTrue() {
         Assert.assertTrue(Files.notExists(fs.getPath("fake"), LinkOption.NOFOLLOW_LINKS));
     }
 
     @Test
-    public void notExistsFalse() throws IOException {
+    public void notExistsFalse() {
         this.getArchive().add(EmptyAsset.INSTANCE, "path");
         Assert.assertFalse(Files.notExists(fs.getPath("path"), LinkOption.NOFOLLOW_LINKS));
     }
