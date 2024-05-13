@@ -58,10 +58,12 @@ public class MemoryNamedAssetTestCase {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void nameViaStringNull() throws IOException {
+    public void nameViaStringNull() {
         try (final MemoryNamedAsset asset = new MemoryNamedAsset((String) null)) {
-        } catch (final IOException e) {
-            throw e;
+            // The initialization is expected to fail with IAE for null
+            Assert.fail("Should have thrown IllegalArgumentException");
+        } catch (final IOException ignored) {
+            // IOException due to try-with-resources, test will fail as it is not the expected exception
         }
     }
 
@@ -96,10 +98,12 @@ public class MemoryNamedAssetTestCase {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void nameViaArchivePathNull() throws IOException {
+    public void nameViaArchivePathNull() {
         try (final MemoryNamedAsset asset = new MemoryNamedAsset((ArchivePath) null)) {
-        } catch (final IOException e) {
-            throw e;
+            // The initialization is expected to fail with IAE for null
+            Assert.fail("Should have thrown IllegalArgumentException");
+        } catch (final IOException ignored) {
+            // IOException due to try-with-resources, test will fail as it is not the expected exception
         }
     }
 
@@ -256,10 +260,12 @@ public class MemoryNamedAssetTestCase {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void nameViaPathNull() throws IOException {
+    public void nameViaPathNull() {
         try (final MemoryNamedAsset asset = new MemoryNamedAsset((Path) null)) {
-        } catch (final IOException e) {
-            throw e;
+            // The initialization is expected to fail with IAE for null
+            Assert.fail("Should have thrown IllegalArgumentException");
+        } catch (final IOException ignored) {
+            // IOException due to try-with-resources, test will fail as it is not the expected exception
         }
     }
 

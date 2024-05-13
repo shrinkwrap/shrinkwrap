@@ -151,7 +151,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         try {
             archive.add(asset, (ArchivePath) null);
             Assert.fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
+        } catch (IllegalArgumentException ignored) {
+            // IAE is expected, passing test
         }
     }
 
@@ -165,7 +166,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         try {
             archive.add((Asset) null, new BasicPath("/", "Test.properties"));
             Assert.fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
+        } catch (IllegalArgumentException ignored) {
+            // IAE is expected, passing test
         }
     }
 
@@ -197,7 +199,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         try {
             archive.add(asset, (String) null);
             Assert.fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
+        } catch (IllegalArgumentException ignored) {
+            // IAE is expected, passing test
         }
     }
 
@@ -211,7 +214,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         try {
             archive.add((Asset) null, "/Test.properties");
             Assert.fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
+        } catch (IllegalArgumentException ignored) {
+            // IAE is expected, passing test
         }
     }
 
@@ -262,7 +266,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         try {
             archive.add(asset, (ArchivePath) null, name);
             Assert.fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
+        } catch (IllegalArgumentException ignored) {
+            // IAE is expected, passing test
         }
     }
 
@@ -288,7 +293,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         try {
             archive.add(new ClassLoaderAsset(resource), path, null);
             Assert.fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
+        } catch (IllegalArgumentException ignored) {
+            // IAE is expected, passing test
         }
     }
 
@@ -304,7 +310,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         try {
             archive.add(null, path, name);
             Assert.fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
+        } catch (IllegalArgumentException ignored) {
+            // IAE is expected, passing test
         }
     }
 
@@ -613,7 +620,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         try {
             archive.get((ArchivePath) null);
             Assert.fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
+        } catch (IllegalArgumentException ignored) {
+            // IAE is expected, passing test
         }
     }
 
@@ -644,7 +652,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         try {
             archive.get((String) null);
             Assert.fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
+        } catch (IllegalArgumentException ignored) {
+            // IAE is expected, passing test
         }
     }
 
@@ -936,7 +945,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         try {
             archive.add(ShrinkWrap.create(JavaArchive.class), (ArchivePath) null, ZipExporter.class);
             Assert.fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
+        } catch (IllegalArgumentException ignored) {
+            // IAE is expected, passing test
         }
     }
 
@@ -960,7 +970,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         try {
             archive.add((Archive<?>) null, ArchivePaths.root(), ZipExporter.class);
             Assert.fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
+        } catch (IllegalArgumentException ignored) {
+            // IAE is expected, passing test
         }
     }
 
@@ -1012,7 +1023,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         try {
             archive.merge(null);
             Assert.fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
+        } catch (IllegalArgumentException ignored) {
+            // IAE is expected, passing test
         }
     }
 
@@ -1194,7 +1206,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         try {
             archive.merge(createNewArchive(), (ArchivePath) null);
             Assert.fail("Should have throw an IllegalArgumentException");
-        } catch (IllegalArgumentException expectedException) {
+        } catch (IllegalArgumentException ignored) {
+            // IAE is expected, passing test
         }
     }
     
