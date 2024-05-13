@@ -61,9 +61,9 @@ class ByteArrayIOUtil {
         } finally {
             try {
                 in.close();
-            } catch (final IOException ignore) {
+            } catch (final IOException exception) {
                 if (log.isLoggable(Level.FINER)) {
-                    log.finer("Could not close stream due to: " + ignore.getMessage() + "; ignoring");
+                    log.finer("Could not close stream due to: " + exception.getMessage() + "; ignoring");
                 }
             }
             // We don't need to close the outstream, it's a byte array out
