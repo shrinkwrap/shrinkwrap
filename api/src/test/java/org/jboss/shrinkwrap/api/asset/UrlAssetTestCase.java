@@ -22,7 +22,7 @@ import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 

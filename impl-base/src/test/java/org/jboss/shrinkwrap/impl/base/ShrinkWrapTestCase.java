@@ -26,8 +26,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveFactory;
@@ -100,14 +99,14 @@ public class ShrinkWrapTestCase {
         final Domain domain2 = ShrinkWrap.createDomain();
 
         // Ensure they exist
-        TestCase.assertNotNull("Domain should exist", domain1);
-        TestCase.assertNotNull("Domain should exist", domain2);
+        Assert.assertNotNull("Domain should exist", domain1);
+        Assert.assertNotNull("Domain should exist", domain2);
 
         // Ensure they're not equal
-        TestCase.assertNotSame("Creation of domains should return new instances", domain1, domain2);
+        Assert.assertNotSame("Creation of domains should return new instances", domain1, domain2);
 
         // Ensure the underlying configs are not equal
-        TestCase.assertNotSame("Creation of domains should have unique / isolated configurations",
+        Assert.assertNotSame("Creation of domains should have unique / isolated configurations",
             domain1.getConfiguration(), domain2.getConfiguration());
     }
 
@@ -125,9 +124,9 @@ public class ShrinkWrapTestCase {
             .extensionLoader(loader).build());
 
         // Test
-        TestCase.assertEquals(ExecutorService.class.getSimpleName() + " specified was not contained in resultant "
+        Assert.assertEquals(ExecutorService.class.getSimpleName() + " specified was not contained in resultant "
             + Domain.class.getSimpleName(), service, domain.getConfiguration().getExecutorService());
-        TestCase.assertEquals(ExtensionLoader.class.getSimpleName() + " specified was not contained in resultant "
+        Assert.assertEquals(ExtensionLoader.class.getSimpleName() + " specified was not contained in resultant "
             + Domain.class.getSimpleName(), loader, domain.getConfiguration().getExtensionLoader());
 
     }
@@ -146,9 +145,9 @@ public class ShrinkWrapTestCase {
             .extensionLoader(loader));
 
         // Test
-        TestCase.assertEquals(ExecutorService.class.getSimpleName() + " specified was not contained in resultant "
+        Assert.assertEquals(ExecutorService.class.getSimpleName() + " specified was not contained in resultant "
             + Domain.class.getSimpleName(), service, domain.getConfiguration().getExecutorService());
-        TestCase.assertEquals(ExtensionLoader.class.getSimpleName() + " specified was not contained in resultant "
+        Assert.assertEquals(ExtensionLoader.class.getSimpleName() + " specified was not contained in resultant "
             + Domain.class.getSimpleName(), loader, domain.getConfiguration().getExtensionLoader());
 
     }
@@ -241,11 +240,11 @@ public class ShrinkWrapTestCase {
         final Domain domain2 = ShrinkWrap.getDefaultDomain();
 
         // Ensure they exist
-        TestCase.assertNotNull("Domain should exist", domain1);
-        TestCase.assertNotNull("Domain should exist", domain2);
+        Assert.assertNotNull("Domain should exist", domain1);
+        Assert.assertNotNull("Domain should exist", domain2);
 
         // Ensure they're not equal
-        TestCase.assertSame(
+        Assert.assertSame(
             "Obtaining the default domain should always return the same instance (idempotent operation)", domain1,
             domain2);
 

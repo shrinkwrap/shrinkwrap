@@ -29,7 +29,7 @@ import java.nio.file.WatchService;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.junit.Test;

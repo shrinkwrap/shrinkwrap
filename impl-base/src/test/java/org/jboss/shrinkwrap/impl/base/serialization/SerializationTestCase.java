@@ -32,8 +32,6 @@ import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import junit.framework.TestCase;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Node;
@@ -181,7 +179,7 @@ public class SerializationTestCase {
         final SerializableView roundtrip = serializeAndDeserialize(clientObject, targetType);
 
         // The type of the object put through roundtrip serialization must be of the type specified
-        TestCase.assertEquals(targetType, roundtrip.getClass());
+        Assert.assertEquals(targetType, roundtrip.getClass());
 
         // Return
         return roundtrip;

@@ -2,8 +2,6 @@ package org.jboss.shrinkwrap.impl.base.path;
 
 import java.util.logging.Logger;
 
-import junit.framework.TestCase;
-
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.junit.Assert;
@@ -181,13 +179,13 @@ public class PathUtilTestCase {
         final ArchivePath contextWithFollowingSlash = new BasicPath(subpath, contextWithFollowingSlashString);
 
         // Test
-        TestCase.assertEquals("The parent of the context path should be equal to the initial subpath", subpath,
+        Assert.assertEquals("The parent of the context path should be equal to the initial subpath", subpath,
             PathUtil.getParent(context));
-        TestCase.assertEquals(
+        Assert.assertEquals(
             "The parent of the context path with a following slash should be equal to the initial subpath", subpath,
             PathUtil.getParent(contextWithFollowingSlash));
-        TestCase.assertEquals("The parent of the subpath should be the root", root, PathUtil.getParent(subpath));
-        TestCase.assertNull("The parent of the root should be null", PathUtil.getParent(root));
+        Assert.assertEquals("The parent of the subpath should be the root", root, PathUtil.getParent(subpath));
+        Assert.assertNull("The parent of the root should be null", PathUtil.getParent(root));
     }
 
 }

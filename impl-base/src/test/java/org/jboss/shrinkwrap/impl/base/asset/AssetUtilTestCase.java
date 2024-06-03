@@ -16,7 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base.asset;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
