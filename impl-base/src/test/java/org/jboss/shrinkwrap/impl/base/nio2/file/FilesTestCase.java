@@ -111,7 +111,7 @@ public class FilesTestCase {
     }
 
     @Test
-    public void deleteNonexistant() throws IOException {
+    public void deleteNonexistant() {
 
         final Archive<?> archive = this.getArchive();
         final String pathString = "nonexistant";
@@ -121,15 +121,8 @@ public class FilesTestCase {
 
         // Attempt delete
         final Path path = fs.getPath(pathString);
-        boolean gotException = false;
-        try {
-            Files.delete(path);
-        } catch (final NoSuchFileException nsfe) {
-            gotException = true;
-        }
-        Assert.assertTrue(
-            "Request to remove nonexistant path should have thrown " + NoSuchFileException.class.getSimpleName(),
-            gotException);
+        Assert.assertThrows("Request to remove nonexistant path should have thrown " + NoSuchFileException.class.getSimpleName(),
+                NoSuchFileException.class, () -> Files.delete(path));
     }
 
     @Test
@@ -178,7 +171,7 @@ public class FilesTestCase {
     }
 
     @Test
-    public void deleteUnemptyDirectory() throws IOException {
+    public void deleteUnemptyDirectory() {
 
         final String directoryName = "/directory";
         final String subDirectoryName = directoryName + "/subdir";
@@ -190,13 +183,7 @@ public class FilesTestCase {
 
         // Attempt delete
         final Path path = fs.getPath(directoryName);
-        boolean gotException = false;
-        try {
-            Files.delete(path);
-        } catch (final DirectoryNotEmptyException dnee) {
-            gotException = true;
-        }
-        Assert.assertTrue("Should not be able to delete non-empty directory", gotException);
+        Assert.assertThrows("Should not be able to delete non-empty directory", DirectoryNotEmptyException.class, () -> Files.delete(path));
     }
 
     @Test
@@ -216,7 +203,7 @@ public class FilesTestCase {
     }
 
     @Test
-    public void createDirectoryRecursiveProhibited() throws IOException {
+    public void createDirectoryRecursiveProhibited() {
         final String dirName = "/newDirectory/child";
         final Path dir = fs.getPath(dirName);
 
@@ -225,15 +212,8 @@ public class FilesTestCase {
         Assert.assertFalse(archive.contains(dirName));
 
         // Attempt create
-        boolean gotException = false;
-        try {
-            Files.createDirectory(dir, (FileAttribute<?>) null);
-        }
-        // Just check for IOException, expected to be thrown via the NIO.2 API (wouldn't be *my* choice)
-        catch (final IOException ioe) {
-            gotException = true;
-        }
-        Assert.assertTrue("Should not be able to create directory unless parents are first present", gotException);
+        Assert.assertThrows("Should not be able to create directory unless parents are first present",
+                IOException.class, () -> Files.createDirectory(dir, (FileAttribute<?>) null));
     }
 
     @Test
@@ -274,13 +254,7 @@ public class FilesTestCase {
         // Add some dummy asset to the archive
         this.getArchive().add(EmptyAsset.INSTANCE, pathName);
         // Now try to copy to the same path as the dummy asset
-        boolean gotException = false;
-        try {
-            Files.copy(in, path);
-        } catch (final FileAlreadyExistsException faee) {
-            gotException = true;
-        }
-        Assert.assertTrue("Overwrite of existing path should fail", gotException);
+        Assert.assertThrows("Overwrite of existing path should fail", FileAlreadyExistsException.class, () -> Files.copy(in, path));
     }
 
     @Test
@@ -291,13 +265,7 @@ public class FilesTestCase {
         // Add some directory to the archive
         this.getArchive().addAsDirectories(pathName);
         // Now try to copy to the same path as the dir
-        boolean gotException = false;
-        try {
-            Files.copy(in, path);
-        } catch (final FileAlreadyExistsException faee) {
-            gotException = true;
-        }
-        Assert.assertTrue("Overwrite of existing directory should fail", gotException);
+        Assert.assertThrows("Overwrite of existing directory should fail", FileAlreadyExistsException.class, () -> Files.copy(in, path));
     }
 
     @Test
@@ -309,13 +277,8 @@ public class FilesTestCase {
         // Add some nested directory to the archive
         this.getArchive().addAsDirectories(subdir);
         // Now try to copy to a nonempty dir
-        boolean gotException = false;
-        try {
-            Files.copy(in, dirPath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (final DirectoryNotEmptyException dnee) {
-            gotException = true;
-        }
-        Assert.assertTrue("Overwrite of existing non-empty dir should fail, even with replace option", gotException);
+        Assert.assertThrows("Overwrite of existing non-empty dir should fail, even with replace option",
+                DirectoryNotEmptyException.class, () -> Files.copy(in, dirPath, StandardCopyOption.REPLACE_EXISTING));
     }
 
     @Test
@@ -351,19 +314,14 @@ public class FilesTestCase {
     }
 
     @Test
-    public void copyFromDirectoryPathToOutputStream() throws IOException {
+    public void copyFromDirectoryPathToOutputStream() {
         // Populate the archive w/ content
         final String path = "dirPath";
         this.getArchive().addAsDirectories(path);
         // Attempt to copy the dir
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        boolean gotException = false;
-        try {
-            Files.copy(fs.getPath(path), out);
-        } catch (final IllegalArgumentException iae) {
-            gotException = true;
-        }
-        Assert.assertTrue("Call to copy a directory contents to an outstream should not succeed", gotException);
+        Assert.assertThrows("Call to copy a directory contents to an output stream should not succeed",
+                IllegalArgumentException.class, () -> Files.copy(fs.getPath(path), out));
     }
 
     @Test
@@ -391,49 +349,34 @@ public class FilesTestCase {
     }
 
     @Test
-    public void createFileWhenFileAlreadyExists() throws IOException {
+    public void createFileWhenFileAlreadyExists() {
         final String pathName = "fileToCreate";
         this.getArchive().add(EmptyAsset.INSTANCE, pathName);
         final Path path = fs.getPath(pathName);
-        boolean gotException = false;
-        try {
-            Files.createFile(path, (FileAttribute<?>) null);
-        } catch (final FileAlreadyExistsException faee) {
-            gotException = true;
-        }
-        Assert.assertTrue("create new file should fail if path already exists", gotException);
+        Assert.assertThrows("Create new file should fail if path already exists",
+                FileAlreadyExistsException.class, () -> Files.createFile(path, (FileAttribute<?>) null));
     }
 
     @Test
-    public void createLink() throws IOException {
+    public void createLink() {
         final String linkToCreateString = "linkToCreate";
         final String existingPathString = "existingPath";
         this.getArchive().add(EmptyAsset.INSTANCE, existingPathString);
         final Path linkToCreatePath = fs.getPath(linkToCreateString);
         final Path existingPath = fs.getPath(existingPathString);
-        boolean gotException = false;
-        try {
-            Files.createLink(linkToCreatePath, existingPath);
-        } catch (final UnsupportedOperationException ooe) {
-            gotException = true;
-        }
-        Assert.assertTrue("We should not support creation of links", gotException);
+        Assert.assertThrows("We should not support creation of links",
+                UnsupportedOperationException.class, () -> Files.createLink(linkToCreatePath, existingPath));
     }
 
     @Test
-    public void createSymbolicLink() throws IOException {
+    public void createSymbolicLink() {
         final String symbolicLinkToCreateString = "linkToCreate";
         final String existingPathString = "existingPath";
         this.getArchive().add(EmptyAsset.INSTANCE, existingPathString);
         final Path symbolicLinkToCreatePath = fs.getPath(symbolicLinkToCreateString);
         final Path existingPath = fs.getPath(existingPathString);
-        boolean gotException = false;
-        try {
-            Files.createSymbolicLink(symbolicLinkToCreatePath, existingPath);
-        } catch (final UnsupportedOperationException ooe) {
-            gotException = true;
-        }
-        Assert.assertTrue("We should not support creation of synbolic links", gotException);
+        Assert.assertThrows("We should not support creation of symbolic links",
+                UnsupportedOperationException.class, () -> Files.createSymbolicLink(symbolicLinkToCreatePath, existingPath));
     }
 
     // This will fail until we establish relative Paths
@@ -449,7 +392,7 @@ public class FilesTestCase {
     }
 
     @Test
-    public void existsFalse() throws IOException {
+    public void existsFalse() {
         final String pathString = "fileWhichDoesNotExist";
         final Path path = fs.getPath(pathString);
         final boolean exists = Files.exists(path);
@@ -457,7 +400,7 @@ public class FilesTestCase {
     }
 
     @Test
-    public void existsTrue() throws IOException {
+    public void existsTrue() {
         final Archive<?> archive = this.getArchive();
         final String pathString = "file";
         archive.add(EmptyAsset.INSTANCE, pathString);
@@ -472,7 +415,7 @@ public class FilesTestCase {
     }
 
     @Test
-    public void getFileAttributeView() throws IOException {
+    public void getFileAttributeView() {
         Assert.assertTrue(Files.getFileAttributeView(fs.getPath("file"), BasicFileAttributeView.class,
             (LinkOption) null) instanceof ShrinkWrapFileAttributeView);
     }
@@ -500,19 +443,19 @@ public class FilesTestCase {
     }
 
     @Test
-    public void isDirectoryTrue() throws IOException {
+    public void isDirectoryTrue() {
         this.getArchive().addAsDirectories("path");
         Assert.assertTrue(Files.isDirectory(fs.getPath("path"), (LinkOption) null));
     }
 
     @Test
-    public void isDirectoryFalse() throws IOException {
+    public void isDirectoryFalse() {
         Assert.assertFalse(Files.isDirectory(fs.getPath("path"), (LinkOption) null));
     }
 
     @Test
     // All paths are executable
-    public void isExecutable() throws IOException {
+    public void isExecutable() {
         final String path = "path";
         this.getArchive().add(EmptyAsset.INSTANCE, path);
         Assert.assertTrue(Files.isExecutable(fs.getPath(path)));
@@ -528,7 +471,7 @@ public class FilesTestCase {
 
     @Test
     // All paths are readable
-    public void isReadable() throws IOException {
+    public void isReadable() {
         final String path = "path";
         this.getArchive().add(EmptyAsset.INSTANCE, path);
         Assert.assertTrue(Files.isReadable(fs.getPath(path)));
@@ -536,27 +479,27 @@ public class FilesTestCase {
 
     @Test
     // No nonexistant paths are executable
-    public void isExecutableNonexistant() throws IOException {
+    public void isExecutableNonexistant() {
         final String path = "path";
         Assert.assertFalse(Files.isExecutable(fs.getPath(path)));
     }
 
     @Test
     // No nonexistant paths are readable
-    public void isReadableNonexistant() throws IOException {
+    public void isReadableNonexistant() {
         final String path = "path";
         Assert.assertFalse(Files.isReadable(fs.getPath(path)));
     }
 
     @Test
-    public void isRegularFile() throws IOException {
+    public void isRegularFile() {
         final String path = "path";
         this.getArchive().add(EmptyAsset.INSTANCE, path);
         Assert.assertTrue(Files.isRegularFile(fs.getPath(path)));
     }
 
     @Test
-    public void isRegularFileFalse() throws IOException {
+    public void isRegularFileFalse() {
         final String path = "path/";
         Assert.assertFalse(Files.isRegularFile(fs.getPath(path)));
     }
@@ -576,7 +519,7 @@ public class FilesTestCase {
     }
 
     @Test
-    public void isSymbolicLink() throws IOException {
+    public void isSymbolicLink() {
         final String path = "path";
         // No symlinks
         Assert.assertFalse(Files.isSymbolicLink(fs.getPath(path)));
@@ -584,7 +527,7 @@ public class FilesTestCase {
 
     @Test
     // All paths are writable
-    public void isWritable() throws IOException {
+    public void isWritable() {
         final String path = "path";
         this.getArchive().add(EmptyAsset.INSTANCE, path);
         Assert.assertTrue(Files.isWritable(fs.getPath(path)));
@@ -592,7 +535,7 @@ public class FilesTestCase {
 
     @Test
     // No nonexistant paths are writable
-    public void isWritableNonexistant() throws IOException {
+    public void isWritableNonexistant() {
         final String path = "path";
         Assert.assertFalse(Files.isWritable(fs.getPath(path)));
     }
@@ -715,12 +658,12 @@ public class FilesTestCase {
     }
 
     @Test
-    public void notExistsTrue() throws IOException {
+    public void notExistsTrue() {
         Assert.assertTrue(Files.notExists(fs.getPath("fake"), LinkOption.NOFOLLOW_LINKS));
     }
 
     @Test
-    public void notExistsFalse() throws IOException {
+    public void notExistsFalse() {
         this.getArchive().add(EmptyAsset.INSTANCE, "path");
         Assert.assertFalse(Files.notExists(fs.getPath("path"), LinkOption.NOFOLLOW_LINKS));
     }
