@@ -19,8 +19,7 @@
         <!-- Checks for imports                              -->
         <module name="AvoidStarImport"/>
         <module name="RedundantImport"/>
-        <!-- Disabled until checkstyle can recognize imports which are used only by javadoc -->
-        <!--<module name="UnusedImports"/>-->
+        <module name="UnusedImports"/>
 
         <!-- Modifier Checks                                    -->
         <module name="ModifierOrder"/>
