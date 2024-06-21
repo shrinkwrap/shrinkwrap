@@ -38,7 +38,7 @@ import org.junit.Test;
 public class ServiceExtensionLoaderTestCase {
 
     @Test
-    public void shouldBeAbleToLoadExtension() throws Exception {
+    public void shouldBeAbleToLoadExtension() {
         Extension extension = createLoaderUsingTccl().load(Extension.class,
             ShrinkWrap.create(JavaArchive.class, "test.jar"));
 
@@ -48,7 +48,7 @@ public class ServiceExtensionLoaderTestCase {
     }
 
     @Test
-    public void shouldBeAbleToOverrideExtension() throws Exception {
+    public void shouldBeAbleToOverrideExtension() {
         Extension extension = createLoaderUsingTccl().addOverride(Extension.class, ExtensionImpl2.class).load(
             Extension.class, ShrinkWrap.create(JavaArchive.class, "test.jar"));
 
@@ -58,7 +58,7 @@ public class ServiceExtensionLoaderTestCase {
     }
 
     @Test
-    public void shouldBePlacedInCacheAfterLoad() throws Exception {
+    public void shouldBePlacedInCacheAfterLoad() {
         ServiceExtensionLoader loader = createLoaderUsingTccl();
         loader.load(Extension.class, ShrinkWrap.create(JavaArchive.class, "test.jar"));
 
@@ -66,12 +66,12 @@ public class ServiceExtensionLoaderTestCase {
     }
 
     @Test(expected = RuntimeException.class)
-    public void shouldThrowExceptionOnMissingExtension() throws Exception {
+    public void shouldThrowExceptionOnMissingExtension() {
         createLoaderUsingTccl().load(MissingExtension.class, ShrinkWrap.create(JavaArchive.class, "test.jar"));
     }
 
     @Test(expected = RuntimeException.class)
-    public void shouldThrowExceptionOnWrongImplType() throws Exception {
+    public void shouldThrowExceptionOnWrongImplType() {
         createLoaderUsingTccl().load(WrongImplExtension.class, ShrinkWrap.create(JavaArchive.class, "test.jar"));
     }
 

@@ -16,7 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.importer.tar;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -58,7 +57,7 @@ public class TarImporterImpl extends TarImporterBase<TarInputStream, TarImporter
      * @see org.jboss.shrinkwrap.impl.base.importer.tar.TarImporterBase#getInputStreamForRawStream(java.io.InputStream)
      */
     @Override
-    TarInputStream getInputStreamForRawStream(final InputStream in) throws IOException {
+    TarInputStream getInputStreamForRawStream(final InputStream in) {
         assert in != null : "Specified inputstream was null";
         return new TarInputStream(in);
     }

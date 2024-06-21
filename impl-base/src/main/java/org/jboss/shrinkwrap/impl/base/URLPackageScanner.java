@@ -148,7 +148,7 @@ public class URLPackageScanner {
         }
     }
 
-    private void handle(File file, String packageName) throws ClassNotFoundException {
+    private void handle(File file, String packageName) {
         for (File child : file.listFiles()) {
             if (!child.isDirectory() && child.getName().endsWith(SUFFIX_CLASS)) {
                 final String packagePrefix = packageName.length() > 0 ? packageName + "." : packageName;

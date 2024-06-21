@@ -169,7 +169,7 @@ public class FileStoreTestCase {
     }
 
     @Test
-    public void getFileStoreAttributeView() throws IOException {
+    public void getFileStoreAttributeView() {
         Assert.assertNull(this.fileStore.getFileStoreAttributeView(FileStoreAttributeView.class));
     }
 

@@ -126,7 +126,7 @@ public class TarImporterImplTestCase extends StreamImporterImplTestBase<TarImpor
             return new ExceptionThrowingTarInputStream(in);
         }
 
-        private ExceptionThrowingTarInputStream(final InputStream in) throws IOException {
+        private ExceptionThrowingTarInputStream(final InputStream in) {
             super(in);
         }
 
@@ -136,17 +136,17 @@ public class TarImporterImplTestCase extends StreamImporterImplTestBase<TarImpor
          * @see org.jboss.shrinkwrap.impl.base.io.tar.javatar.TarInputStream#read()
          */
         @Override
-        public int read() throws IOException {
+        public int read() {
             throw new RuntimeException("Mock Exception, should be wrapped in the import process");
         }
 
         @Override
-        public int read(byte[] buf) throws IOException {
+        public int read(byte[] buf) {
             return this.read();
         }
 
         @Override
-        public int read(byte[] buf, int offset, int numToRead) throws IOException {
+        public int read(byte[] buf, int offset, int numToRead) {
             return this.read();
         }
 

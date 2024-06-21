@@ -17,7 +17,6 @@
 package org.jboss.shrinkwrap.impl.base.importer;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
@@ -59,11 +58,10 @@ public class ExplodedImporterTestCase {
     /**
      * Creates the empty directories for this test, as Git cannot store empty dirs in SCM
      *
-     * @throws IOException
      * @throws URISyntaxException
      */
     @BeforeClass
-    public static void makeEmptyDirectories() throws IOException, URISyntaxException {
+    public static void makeEmptyDirectories() throws URISyntaxException {
         final File root = new File(ExplodedImporterTestCase.class.getProtectionDomain().getCodeSource().getLocation()
             .toURI());
         final File exlodedImportTest = new File(root, EXISTING_DIRECTORY_RESOURCE);

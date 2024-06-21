@@ -18,7 +18,6 @@ package org.jboss.shrinkwrap.impl.base.nio2.file;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.FileStore;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemAlreadyExistsException;
@@ -53,7 +52,7 @@ public class FileSystemTestCase {
     private JavaArchive archive;
 
     @Before
-    public void createFileSystem() throws URISyntaxException, IOException {
+    public void createFileSystem() throws IOException {
 
         // Setup and mount the archive
         final String name = "test.jar";

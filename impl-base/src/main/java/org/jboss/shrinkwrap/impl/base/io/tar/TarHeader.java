@@ -253,7 +253,7 @@ public class TarHeader extends Object implements Cloneable {
      *            The number of header bytes to parse.
      * @return The long value of the octal string.
      */
-    public static long parseOctal(byte[] header, int offset, int length) throws InvalidHeaderException {
+    public static long parseOctal(byte[] header, int offset, int length) {
         long result = 0;
         boolean stillPadding = true;
 
@@ -328,7 +328,7 @@ public class TarHeader extends Object implements Cloneable {
      *            The number of header bytes to parse.
      * @return The header's entry name.
      */
-    public static StringBuffer parseName(byte[] header, int offset, int length) throws InvalidHeaderException {
+    public static StringBuffer parseName(byte[] header, int offset, int length) {
         StringBuffer result = new StringBuffer(length);
 
         int end = offset + length;

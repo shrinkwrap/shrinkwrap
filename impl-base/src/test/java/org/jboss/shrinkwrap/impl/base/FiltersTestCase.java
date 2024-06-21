@@ -36,7 +36,7 @@ import org.junit.Test;
 public class FiltersTestCase {
 
     @Test
-    public void shouldIncludeAll() throws Exception {
+    public void shouldIncludeAll() {
         List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/META-INF/"), ArchivePaths.create("/WEB-INF/"));
         List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.includeAll());
 
@@ -44,7 +44,7 @@ public class FiltersTestCase {
     }
 
     @Test
-    public void shouldIncludePathRegExp() throws Exception {
+    public void shouldIncludePathRegExp() {
         List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/META-INF/"), ArchivePaths.create("/WEB-INF/"));
         List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.include(".*META-INF.*"));
 
@@ -54,7 +54,7 @@ public class FiltersTestCase {
     }
 
     @Test
-    public void shouldExcludePathRegExp() throws Exception {
+    public void shouldExcludePathRegExp() {
         List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/META-INF/"), ArchivePaths.create("/WEB-INF/"));
         List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.exclude(".*META-INF.*"));
 
@@ -64,7 +64,7 @@ public class FiltersTestCase {
     }
 
     @Test
-    public void shouldIncludePathsStringArray() throws Exception {
+    public void shouldIncludePathsStringArray() {
         List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/A"), ArchivePaths.create("/B/"), ArchivePaths.create("/C/"));
         List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.includePaths("A", "B/"));
 
@@ -74,7 +74,7 @@ public class FiltersTestCase {
     }
 
     @Test
-    public void shouldIncludePathsCollection() throws Exception {
+    public void shouldIncludePathsCollection() {
         List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/A"), ArchivePaths.create("/B/"), ArchivePaths.create("/C/"));
         List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.includePaths(Arrays.asList("A", "B/")));
 
@@ -84,7 +84,7 @@ public class FiltersTestCase {
     }
 
     @Test
-    public void shouldExcludePathsStringArray() throws Exception {
+    public void shouldExcludePathsStringArray() {
         List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/A"), ArchivePaths.create("/B/"), ArchivePaths.create("/C/"));
         List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.excludePaths("/A", "/B/"));
 
@@ -93,7 +93,7 @@ public class FiltersTestCase {
     }
 
     @Test
-    public void shouldExcludePathsCollection() throws Exception {
+    public void shouldExcludePathsCollection() {
         List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/A"), ArchivePaths.create("/B/"), ArchivePaths.create("/C/"));
         List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.excludePaths(Arrays.asList("/A", "/B/")));
 

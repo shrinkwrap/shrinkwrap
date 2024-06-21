@@ -137,10 +137,9 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
      *
      * SHRINKWRAP-93
      *
-     * @throws Exception
      */
     @Test(expected = IllegalArgumentException.class)
-    public void exportEmptyArchiveAsZip() throws Exception {
+    public void exportEmptyArchiveAsZip() {
         // Attempt to export an empty archive, should fail
         ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).as(ZipExporter.class).exportAsInputStream();
     }
@@ -238,10 +237,9 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
      * @param path
      * @return
      * @throws IllegalArgumentException
-     * @throws IOException
      */
     private ZipEntry getEntryFromZip(final ZipFile expectedZip, final ArchivePath path)
-        throws IllegalArgumentException, IOException {
+        throws IllegalArgumentException {
         final String entryPath = PathUtil.optionallyRemovePrecedingSlash(path.get());
         final ZipEntry entry = expectedZip.getEntry(entryPath);
         Assert.assertNotNull("Expected path not found in ZIP: " + path, entry);

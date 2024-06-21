@@ -19,7 +19,6 @@ package org.jboss.shrinkwrap.impl.base.nio2.file;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -51,7 +50,7 @@ public class PathTestCase {
     private ShrinkWrapFileSystem fileSystem;
 
     @Before
-    public void createFileSystem() throws URISyntaxException, IOException {
+    public void createFileSystem() throws IOException {
 
         // Setup and mount the archive
         final String name = "test.jar";
@@ -61,7 +60,7 @@ public class PathTestCase {
     }
 
     @After
-    public void closeFs() throws IOException {
+    public void closeFs() {
         this.fileSystem.close();
     }
 
@@ -688,7 +687,7 @@ public class PathTestCase {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void compareToNull() throws IOException {
+    public void compareToNull() {
         fileSystem.getPath("/toplevel/a").compareTo(null);
     }
 }

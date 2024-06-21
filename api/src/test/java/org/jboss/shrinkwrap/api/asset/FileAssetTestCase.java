@@ -49,7 +49,7 @@ public class FileAssetTestCase {
     }
 
     @Test
-    public void shouldThrowExceptionOnNullFile() throws Exception {
+    public void shouldThrowExceptionOnNullFile() {
         try {
             new FileAsset(null);
             Assert.fail("Should have thrown IllegalArgumentException");
@@ -60,7 +60,7 @@ public class FileAssetTestCase {
     }
 
     @Test
-    public void shouldThrowExceptionOnMissingFile() throws Exception {
+    public void shouldThrowExceptionOnMissingFile() {
         try {
             new FileAsset(new File(NON_EXISTING_FILE));
             Assert.fail("Should have thrown IllegalArgumentException");
@@ -71,7 +71,7 @@ public class FileAssetTestCase {
     }
     
     @Test
-    public void shouldBeAbleToReturnFile() throws Exception {
+    public void shouldBeAbleToReturnFile() {
     	final File exitingFile = new File(EXISTING_FILE);
     	final Asset asset = new FileAsset(exitingFile);
     	

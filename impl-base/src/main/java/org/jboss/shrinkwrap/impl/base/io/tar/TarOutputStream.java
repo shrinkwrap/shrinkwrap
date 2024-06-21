@@ -32,7 +32,7 @@ public class TarOutputStream extends TarOutputStreamImpl {
 
     private TarEntry currentEntry = null;
 
-    public TarOutputStream(OutputStream out) throws IOException {
+    public TarOutputStream(OutputStream out) {
         super(null);
         this.tos = new TarOutputStreamImpl(out);
         this.bos = new ByteArrayOutputStream();

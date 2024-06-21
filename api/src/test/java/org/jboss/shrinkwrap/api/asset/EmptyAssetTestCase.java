@@ -72,7 +72,7 @@ public class EmptyAssetTestCase {
     }
 
     @Test
-    public void shouldBeAbleToReturnByteArray() throws Exception {
+    public void shouldBeAbleToReturnByteArray() {
     	// Make contents
     	final Asset asset = EmptyAsset.INSTANCE;
         final byte[] contentFromGetSource = ((EmptyAsset)asset).getSource();

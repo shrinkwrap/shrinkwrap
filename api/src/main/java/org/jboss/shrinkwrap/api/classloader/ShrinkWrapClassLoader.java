@@ -139,10 +139,10 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
         try {
             addURL(new URL(null, "archive:" + archive.getName() + "/", new URLStreamHandler() {
                 @Override
-                protected URLConnection openConnection(final URL u) throws IOException {
+                protected URLConnection openConnection(final URL u) {
                     return new URLConnection(u) {
                         @Override
-                        public void connect() throws IOException {
+                        public void connect() {
                         }
 
                         @Override
@@ -195,7 +195,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
         }
     }
 
-    public void close() throws IOException {
+    public void close() {
         synchronized (this) {
             for (InputStream stream : openedStreams) {
                 try {

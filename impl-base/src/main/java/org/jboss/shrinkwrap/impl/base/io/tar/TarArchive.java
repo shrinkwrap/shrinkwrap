@@ -468,7 +468,7 @@ public class TarArchive extends Object {
                                 asciiTrans = true;
                             }
                         }
-                    } catch (MimeTypeParseException ex) {
+                    } catch (MimeTypeParseException ignored) {
                     }
 
                     if (this.debug) {

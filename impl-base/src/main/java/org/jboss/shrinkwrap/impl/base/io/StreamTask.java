@@ -35,10 +35,7 @@ public interface StreamTask<S extends Closeable> {
      *
      * @param stream
      *            This parameter holds the stream that this StreamTask operates on to execute its task.
-     * @throws Exception
-     *             This method will throw an instance of Exception if an unrecoverable error is encountered while
-     *             performing its task.
      */
-    void execute(S stream) throws Exception;
+    void execute(S stream);
 
 }

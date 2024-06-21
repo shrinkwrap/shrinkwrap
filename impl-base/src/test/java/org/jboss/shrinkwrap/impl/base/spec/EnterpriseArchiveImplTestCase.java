@@ -63,7 +63,7 @@ public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTes
     // -------------------------------------------------------------------------------------||
 
     @Before
-    public void createEnterpriseArchive() throws Exception {
+    public void createEnterpriseArchive() {
         archive = createNewArchive();
     }
 

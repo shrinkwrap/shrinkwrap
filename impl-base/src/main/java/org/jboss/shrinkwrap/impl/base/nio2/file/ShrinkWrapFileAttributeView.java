@@ -16,7 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.nio2.file;
 
-import java.io.IOException;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
@@ -51,7 +50,7 @@ final class ShrinkWrapFileAttributeView implements BasicFileAttributeView {
      * @see java.nio.file.attribute.BasicFileAttributeView#readAttributes()
      */
     @Override
-    public BasicFileAttributes readAttributes() throws IOException {
+    public BasicFileAttributes readAttributes() {
         return attributes;
     }
 
@@ -62,7 +61,7 @@ final class ShrinkWrapFileAttributeView implements BasicFileAttributeView {
      *      java.nio.file.attribute.FileTime, java.nio.file.attribute.FileTime)
      */
     @Override
-    public void setTimes(FileTime lastModifiedTime, FileTime lastAccessTime, FileTime createTime) throws IOException {
+    public void setTimes(FileTime lastModifiedTime, FileTime lastAccessTime, FileTime createTime) {
         throw new UnsupportedOperationException("ShrinkWrap does not support times");
     }
 

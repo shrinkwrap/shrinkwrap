@@ -79,7 +79,7 @@ public class DefaultPackageAddTestCase {
      * SHRINKWRAP-143
      */
     @Test
-    public void canAddClassFromDefaultPackage() throws Exception {
+    public void canAddClassFromDefaultPackage() {
         // Create an archive with Classes from the default package
         final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "test.jar").addClass(
             ClassInDefaultPackage.class);

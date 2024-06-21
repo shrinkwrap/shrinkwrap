@@ -80,7 +80,7 @@ public class ClassLoaderAssetTestCase {
     }
     
     @Test
-    public void shouldBeAbleToReturnResource() throws Exception {
+    public void shouldBeAbleToReturnResource() {
         final Asset asset = new ClassLoaderAsset(EXISTING_RESOURCE);
         
         Assert.assertEquals(((ClassLoaderAsset)asset).getSource(), EXISTING_RESOURCE);

@@ -30,7 +30,7 @@ import org.junit.Test;
 public class ServiceProviderAssetTestCase {
 
     @Test
-    public void shouldCreateServiceProviderFile() throws Exception {
+    public void shouldCreateServiceProviderFile() {
         Asset asset = new ServiceProviderAsset(TestImpl1.class, TestImpl2.class);
 
         byte[] expectedContent = (TestImpl1.class.getName() + "\n" + TestImpl2.class.getName() + "\n").getBytes();
@@ -40,12 +40,12 @@ public class ServiceProviderAssetTestCase {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowExceptionOnNullArgumnet() throws Exception {
+    public void shouldThrowExceptionOnNullArgumnet() {
         new ServiceProviderAsset((Class<?>[]) null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowExceptionOnNullArgumnetValue() throws Exception {
+    public void shouldThrowExceptionOnNullArgumnetValue() {
         new ServiceProviderAsset((Class<?>) null);
     }
 

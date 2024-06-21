@@ -17,7 +17,6 @@
 package org.jboss.shrinkwrap.impl.base.nio2.file;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.LinkOption;
@@ -40,7 +39,7 @@ class MockPath implements Path {
     }
 
     @Override
-    public Path toRealPath(LinkOption... options) throws IOException {
+    public Path toRealPath(LinkOption... options) {
         return null;
     }
 
@@ -95,12 +94,12 @@ class MockPath implements Path {
     }
 
     @Override
-    public WatchKey register(WatchService watcher, Kind<?>[] events, Modifier... modifiers) throws IOException {
+    public WatchKey register(WatchService watcher, Kind<?>[] events, Modifier... modifiers) {
         return null;
     }
 
     @Override
-    public WatchKey register(WatchService watcher, Kind<?>... events) throws IOException {
+    public WatchKey register(WatchService watcher, Kind<?>... events) {
         return null;
     }
 

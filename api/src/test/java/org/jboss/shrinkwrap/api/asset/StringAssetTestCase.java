@@ -74,7 +74,7 @@ public class StringAssetTestCase {
     }    
 
     @Test
-    public void shouldBeAbleToReturnString() throws Exception {
+    public void shouldBeAbleToReturnString() {
     	final String contents = StringAsset.class.getSimpleName();
     	final StringAsset asset = new StringAsset(contents);
         
