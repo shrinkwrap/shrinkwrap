@@ -64,7 +64,7 @@ class ClassLoaderSearchUtil {
     static Class<?> findClassFromClassLoaders(final String className, final Iterable<ClassLoader> classLoaders)
         throws ClassNotFoundException, IllegalArgumentException {
         // Precondition checks
-        assert className != null && className.length() > 0 : "Class Name must be specified";
+        assert className != null && !className.isEmpty() : "Class Name must be specified";
         assert classLoaders != null : "ClassLoaders as search path must be specified";
 
         // Find the class by searching through the CLs in order

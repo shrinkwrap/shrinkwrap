@@ -28,7 +28,7 @@ import java.io.InputStream;
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  */
 public class FileAsset implements Asset {
-    private File file;
+    private final File file;
 
     /**
      * Load the specified File.

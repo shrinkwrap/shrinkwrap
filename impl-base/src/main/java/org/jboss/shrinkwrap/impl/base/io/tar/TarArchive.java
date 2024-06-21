@@ -50,7 +50,7 @@ import javax.activation.MimeTypeParseException;
  * @see TarEntry
  */
 
-public class TarArchive extends Object {
+public class TarArchive {
     protected boolean verbose;
     protected boolean debug;
     protected boolean keepOldFiles;

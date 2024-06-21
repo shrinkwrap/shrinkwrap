@@ -110,7 +110,7 @@ import java.util.Date;
  * @author Timothy Gerard Endres, <time@gjt.org>
  */
 
-public class TarEntry extends Object implements Cloneable {
+public class TarEntry implements Cloneable {
     /**
      * If this entry represents a File, this references it.
      */

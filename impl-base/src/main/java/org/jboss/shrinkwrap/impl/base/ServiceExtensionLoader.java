@@ -64,8 +64,8 @@ public class ServiceExtensionLoader implements ExtensionLoader {
     // Instance Members -------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
-    private Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
-    private Map<Class<?>, ExtensionWrapper> extensionMappings = new HashMap<Class<?>, ExtensionWrapper>();
+    private final Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
+    private final Map<Class<?>, ExtensionWrapper> extensionMappings = new HashMap<Class<?>, ExtensionWrapper>();
 
     /**
      * ClassLoader used for loading extensions

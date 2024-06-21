@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,11 +57,6 @@ public final class IOUtil {
         }
 
     };
-
-    /**
-     * Name of UTF-8 Charset
-     */
-    private static final String CHARSET_UTF8 = "UTF-8";
 
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||
@@ -104,7 +100,7 @@ public final class IOUtil {
         String line;
 
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in, CHARSET_UTF8));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             while ((line = reader.readLine()) != null) {
                 buffer.append(line).append(Character.LINE_SEPARATOR);
             }

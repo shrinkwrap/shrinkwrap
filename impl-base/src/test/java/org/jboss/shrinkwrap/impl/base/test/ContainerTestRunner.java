@@ -43,8 +43,8 @@ public class ContainerTestRunner extends BlockJUnit4ClassRunner {
 
     private class FilterSupportedArchiveTypes {
 
-        private List<FrameworkMethod> frameworkMethods;
-        private TestClass testClass;
+        private final List<FrameworkMethod> frameworkMethods;
+        private final TestClass testClass;
 
         public FilterSupportedArchiveTypes(TestClass testClass, List<FrameworkMethod> frameworkMethods) {
             this.testClass = testClass;

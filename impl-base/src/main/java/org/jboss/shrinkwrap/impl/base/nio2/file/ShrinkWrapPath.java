@@ -141,7 +141,7 @@ public class ShrinkWrapPath implements Path {
     @Override
     public Path getFileName() {
         // Root and empty String has no file name
-        if (path.length() == 0 || path.equals(ArchivePaths.root().get())) {
+        if (path.isEmpty() || path.equals(ArchivePaths.root().get())) {
             return null;
         } else {
             final List<String> tokens = tokenize(this);
@@ -198,7 +198,7 @@ public class ShrinkWrapPath implements Path {
             context = context.substring(1);
         }
         // Root
-        if (context.length() == 0) {
+        if (context.isEmpty()) {
             return 0;
         }
         // Else count names by using the separator
@@ -251,11 +251,11 @@ public class ShrinkWrapPath implements Path {
         final List<String> tokens = tokenize(this);
         final int tokenCount = tokens.size();
         if (beginIndex >= tokenCount) {
-            throw new IllegalArgumentException("Invalid begin index " + endIndex + " for " + this.toString()
+            throw new IllegalArgumentException("Invalid begin index " + endIndex + " for " + this
                 + "; must be between 0 and " + tokenCount + " exclusive");
         }
         if (endIndex > tokenCount) {
-            throw new IllegalArgumentException("Invalid end index " + endIndex + " for " + this.toString()
+            throw new IllegalArgumentException("Invalid end index " + endIndex + " for " + this
                 + "; must be between 0 and " + tokenCount + " inclusive");
         }
         final StringBuilder newPathBuilder = new StringBuilder();
@@ -409,7 +409,7 @@ public class ShrinkWrapPath implements Path {
             return other;
         }
 
-        if (other.toString().length() == 0) {
+        if (other.toString().isEmpty()) {
             return this;
         }
 
@@ -418,7 +418,7 @@ public class ShrinkWrapPath implements Path {
         if (!this.path.endsWith(ArchivePath.SEPARATOR_STRING)) {
             sb.append(ArchivePath.SEPARATOR);
         }
-        sb.append(other.toString());
+        sb.append(other);
         final Path newPath = new ShrinkWrapPath(sb.toString(), this.fileSystem);
         return newPath;
     }
@@ -495,7 +495,7 @@ public class ShrinkWrapPath implements Path {
     public URI toUri() {
         final URI root = ShrinkWrapFileSystems.getRootUri(this.fileSystem.getArchive());
         // Compose a new URI location, stripping out the extra "/" root
-        final String location = root.toString() + this.toString().substring(1);
+        final String location = root + this.toString().substring(1);
         final URI uri = URI.create(location);
         return uri;
     }
@@ -528,7 +528,7 @@ public class ShrinkWrapPath implements Path {
     public Path toRealPath(final LinkOption... options) throws IOException {
         // All links are "real" (no symlinks) and absolute, so just return this (if exists)
         if (!this.fileSystem.getArchive().contains(this.path)) {
-            throw new FileNotFoundException("Path points to a nonexistant file or directory: " + this.toString());
+            throw new FileNotFoundException("Path points to a nonexistant file or directory: " + this);
         }
         return this;
     }

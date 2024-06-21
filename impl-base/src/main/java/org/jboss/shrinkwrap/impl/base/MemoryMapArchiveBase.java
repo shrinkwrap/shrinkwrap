@@ -85,7 +85,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
      *             If the configuration is not specified
      */
     public MemoryMapArchiveBase(final Configuration configuration) throws IllegalArgumentException {
-        this("Archive-" + UUID.randomUUID().toString() + ".jar", configuration);
+        this("Archive-" + UUID.randomUUID() + ".jar", configuration);
     }
 
     /**

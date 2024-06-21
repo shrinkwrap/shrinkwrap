@@ -42,7 +42,7 @@ public class ClassAsset implements Asset {
      */
     private static final String EXTENSION_CLASS = ".class";
 
-    private Class<?> clazz;
+    private final Class<?> clazz;
 
     /**
      * Load any class as a resource.
