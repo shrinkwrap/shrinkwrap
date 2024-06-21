@@ -64,8 +64,8 @@ public class ServiceExtensionLoader implements ExtensionLoader {
     // Instance Members -------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
-    private Map<Class<?>, Class<?>> cache = new HashMap<Class<?>, Class<?>>();
-    private Map<Class<?>, ExtensionWrapper> extensionMappings = new HashMap<Class<?>, ExtensionWrapper>();
+    private Map<Class<?>, Class<?>> cache = new HashMap<>();
+    private Map<Class<?>, ExtensionWrapper> extensionMappings = new HashMap<>();
 
     /**
      * ClassLoader used for loading extensions
@@ -303,7 +303,7 @@ public class ServiceExtensionLoader implements ExtensionLoader {
         if (implementingClassName == null) {
             throw new RuntimeException("Property implementingClassName is not present in " + extensionStream);
         }
-        final Map<String, String> map = new HashMap<String, String>(properties.size());
+        final Map<String, String> map = new HashMap<>(properties.size());
         final Enumeration<Object> keys = properties.keys();
         while (keys.hasMoreElements()) {
             final String key = (String) keys.nextElement();

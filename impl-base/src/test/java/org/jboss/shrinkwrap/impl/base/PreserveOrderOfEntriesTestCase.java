@@ -61,7 +61,7 @@ public class PreserveOrderOfEntriesTestCase {
             throw new Exception("Test setup failed");
         }
 
-        ArrayList<String> expectedOrder = new ArrayList<String>();
+        ArrayList<String> expectedOrder = new ArrayList<>();
 
         // Create an archive with resources
         JavaArchive archive = ShrinkWrap.create(JavaArchive.class, testJar.getName());
@@ -79,7 +79,7 @@ public class PreserveOrderOfEntriesTestCase {
         assertTrue(testJar.exists());
 
         // Verify Zip entries are in the right order.
-        ArrayList<String> actualOrder = new ArrayList<String>();
+        ArrayList<String> actualOrder = new ArrayList<>();
         ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(testJar));
         ZipEntry nextEntry = zipInputStream.getNextEntry();
         while( nextEntry!=null ) {
@@ -97,7 +97,7 @@ public class PreserveOrderOfEntriesTestCase {
     }
 
     private ArrayList<String> getPaths(JavaArchive archive2) {
-        ArrayList<String> rc = new ArrayList<String>();
+        ArrayList<String> rc = new ArrayList<>();
         for (ArchivePath path : archive2.getContent().keySet()) {
             String file = path.get();
             file = file.substring(1); // to strip the leading /

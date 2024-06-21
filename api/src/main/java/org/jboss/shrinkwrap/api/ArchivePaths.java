@@ -32,7 +32,7 @@ public final class ArchivePaths {
 
     private static final Class<?> archivePathImplClass;
     static {
-        final Collection<ClassLoader> searchClassLoaders = new ArrayList<ClassLoader>();
+        final Collection<ClassLoader> searchClassLoaders = new ArrayList<>();
         searchClassLoaders.add(ArchivePaths.class.getClassLoader());
         try {
             archivePathImplClass = ClassLoaderSearchUtil.findClassFromClassLoaders(PATH_IMPL, searchClassLoaders);

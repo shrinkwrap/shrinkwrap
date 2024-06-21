@@ -114,12 +114,8 @@ public class ZipSerializableOriginalImpl implements ZipSerializableView {
         out.defaultWriteObject();
 
         // Write as ZIP
-        final InputStream in = archive.as(ZipExporter.class).exportAsInputStream();
-        try {
+        try (InputStream in = archive.as(ZipExporter.class).exportAsInputStream()) {
             IOUtil.copy(in, out); // Don't close the outstream
-        } finally {
-            // In case we get an InputStream type that supports closing
-            in.close();
         }
 
         // Log

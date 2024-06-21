@@ -384,12 +384,9 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         // Directory?
         if (isDirectory) {
             // Check empty?
-            if (!archive.getContent(new org.jboss.shrinkwrap.api.Filter<ArchivePath>() {
-                @Override
-                public boolean include(final ArchivePath path) {
-                    final String filterPathString = path.get();
-                    return filterPathString.startsWith(pathString) && !filterPathString.equals(pathString);
-                }
+            if (!archive.getContent(archivePath -> {
+                final String filterPathString = archivePath.get();
+                return filterPathString.startsWith(pathString) && !filterPathString.equals(pathString);
             }).isEmpty()) {
                 throw new DirectoryNotEmptyException(pathString);
             }

@@ -620,9 +620,7 @@ public class TarArchive extends Object {
             if (recurse) {
                 TarEntry[] list = entry.getDirectoryEntries();
 
-                for (int i = 0; i < list.length; ++i) {
-                    TarEntry dirEntry = list[i];
-
+                for (TarEntry dirEntry : list) {
                     if (unixArchiveFormat) {
                         dirEntry.setUnixTarFormat();
                     }

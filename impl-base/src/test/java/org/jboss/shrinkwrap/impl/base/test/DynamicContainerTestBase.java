@@ -424,13 +424,10 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     }
 
     protected void assertServiceProviderContent(Node node, String[] impls) throws IOException {
-        BufferedReader reader = createReader(node.getAsset());
-        try {
+        try (BufferedReader reader = createReader(node.getAsset())) {
             for (String impl : impls) {
                 Assert.assertEquals("Wrong entry in service provider: " + impl, impl, reader.readLine());
             }
-        } finally {
-            reader.close();
         }
     }
 
@@ -1794,7 +1791,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     public void testAddLibrariesArchiveCollection() throws Exception {
         Archive<?> archive = createNewArchive();
         Archive<?> archive2 = createNewArchive();
-        final Collection<Archive<?>> archives = new ArrayList<Archive<?>>();
+        final Collection<Archive<?>> archives = new ArrayList<>();
         archives.add(archive);
         archives.add(archive2);
 

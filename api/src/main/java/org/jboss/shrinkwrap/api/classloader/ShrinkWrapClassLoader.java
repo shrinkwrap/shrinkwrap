@@ -64,7 +64,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
      * List of all streams opened, such that they may be closed in {@link ShrinkWrapClassLoader#close()}. Guarded by
      * "this".
      */
-    private final List<InputStream> openedStreams = new ArrayList<InputStream>();
+    private final List<InputStream> openedStreams = new ArrayList<>();
 
     /**
      * Location of the

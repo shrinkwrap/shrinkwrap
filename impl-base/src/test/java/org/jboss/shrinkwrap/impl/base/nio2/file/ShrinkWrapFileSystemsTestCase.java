@@ -76,7 +76,7 @@ public class ShrinkWrapFileSystemsTestCase {
     public void noArchiveInEnvShouldResultInIAE() throws Exception {
         FileSystems.newFileSystem(
             ShrinkWrapFileSystems.getRootUri(
-                    ShrinkWrap.create(JavaArchive.class)), new HashMap());
+                    ShrinkWrap.create(JavaArchive.class)), new HashMap<>());
     }
 
 }

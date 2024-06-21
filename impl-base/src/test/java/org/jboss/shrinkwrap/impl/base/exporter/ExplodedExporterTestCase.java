@@ -268,13 +268,8 @@ public class ExplodedExporterTestCase extends ExportTestBase {
     public void testExportExplodedThrowsExceptionOnAssetWrite() throws Exception {
         log.info("testExportExplodedThrowsExceptionOnAssetWrite");
         Archive<?> archive = createArchiveWithAssets();
-        archive.add(new Asset() {
-
-            @Override
-            public InputStream openStream() {
-                throw new RuntimeException("Mock Exception getting Stream");
-            }
-
+        archive.add(() -> {
+            throw new RuntimeException("Mock Exception getting Stream");
         }, new BasicPath("badAsset"));
         final File directory = createTempDirectory("testExportExplodedThrowsExceptionOnAssetWrite");
 

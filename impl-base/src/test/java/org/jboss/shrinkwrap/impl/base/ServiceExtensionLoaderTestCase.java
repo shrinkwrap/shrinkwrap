@@ -105,7 +105,7 @@ public class ServiceExtensionLoaderTestCase {
      * @return
      */
     private ServiceExtensionLoader createLoaderUsingTccl() {
-        final Collection<ClassLoader> cls = new ArrayList<ClassLoader>(1);
+        final Collection<ClassLoader> cls = new ArrayList<>(1);
         cls.add(TestSecurityActions.getThreadContextClassLoader());
         return new ServiceExtensionLoader(cls);
     }

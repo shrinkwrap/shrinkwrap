@@ -1511,17 +1511,14 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         // precondition checks
         Validate.notNull(packageName, "Package doesn't exist");
 
-        final URLPackageScanner.Callback callback = new URLPackageScanner.Callback() {
-            @Override
-            public void classFound(String className, Asset asset) {
-                ArchivePath classNamePath = AssetUtil.getFullPathForClassResource(className);
-                if (!filter.include(classNamePath)) {
-                    return;
-                }
-                //Asset asset = new ClassLoaderAsset(classNamePath.get().substring(1), classLoader);
-                ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
-                add(asset, location);
+        final URLPackageScanner.Callback callback = (className, asset) -> {
+            ArchivePath classNamePath = AssetUtil.getFullPathForClassResource(className);
+            if (!filter.include(classNamePath)) {
+                return;
             }
+            //Asset asset = new ClassLoaderAsset(classNamePath.get().substring(1), classLoader);
+            ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
+            add(asset, location);
         };
         final URLPackageScanner scanner = URLPackageScanner.newInstance(recursive, classLoader, callback, packageName);
         scanner.scanPackage();
@@ -1580,14 +1577,11 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     }
 
     private Set<ArchivePath> getInnerClasses(final ArchivePath path) {
-        Map<ArchivePath, Node> content = getContent(new Filter<ArchivePath>() {
-            @Override
-            public boolean include(ArchivePath object) {
-                String expression = path.get().replace(".class", "\\$.*");
-                final boolean matches = object.get().matches(expression);
+        Map<ArchivePath, Node> content = getContent(object -> {
+            String expression = path.get().replace(".class", "\\$.*");
+            final boolean matches = object.get().matches(expression);
 
-                return matches;
-            }
+            return matches;
         });
 
         return content.keySet();
@@ -1695,18 +1689,15 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     private void deletePackage(boolean recursive, final Filter<ArchivePath> filter, String packageName, ClassLoader classLoader) {
         assert filter != null : "Filter cannot be null";
 
-        final URLPackageScanner.Callback callback = new URLPackageScanner.Callback() {
-            @Override
-            public void classFound(String className, Asset asset) {
-                ArchivePath classNamePath = AssetUtil.getFullPathForClassResource(className);
+        final URLPackageScanner.Callback callback = (className, asset) -> {
+            ArchivePath classNamePath = AssetUtil.getFullPathForClassResource(className);
 
-                if (!filter.include(classNamePath)) {
-                    return;
-                }
-
-                ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
-                delete(location);
+            if (!filter.include(classNamePath)) {
+                return;
             }
+
+            ArchivePath location = new BasicPath(getClassesPath(), classNamePath);
+            delete(location);
         };
 
         final URLPackageScanner scanner = URLPackageScanner.newInstance(recursive, classLoader, callback, packageName);

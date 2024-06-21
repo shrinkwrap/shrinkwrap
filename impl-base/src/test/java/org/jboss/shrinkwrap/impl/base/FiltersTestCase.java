@@ -102,7 +102,7 @@ public class FiltersTestCase {
     }
 
     private <T> List<T> executeFilter(Class<T> clazz, List<T> items, Filter<T> filter) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         for (T item : items) {
             if (filter.include(item)) {
                 result.add(item);

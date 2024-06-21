@@ -171,7 +171,7 @@ public class ShrinkWrapTestCase {
         }
 
         // Define the ClassLoaders to search to use our new custom archive impl
-        final List<ClassLoader> classLoaders = new ArrayList<ClassLoader>();
+        final List<ClassLoader> classLoaders = new ArrayList<>();
         classLoaders.add(TestSecurityActions.getThreadContextClassLoader());
         classLoaders.add(new URLClassLoader(new URL[] {}) {
             @Override

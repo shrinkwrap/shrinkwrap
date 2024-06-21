@@ -155,12 +155,7 @@ public class FileStoreTestCase {
     @Test
     public void supportsOtherFileAttributeViewType() {
         Assert.assertEquals("ShrinkWrap file store should not support other file attribute views", false,
-            this.fileStore.supportsFileAttributeView(new FileAttributeView() {
-                @Override
-                public String name() {
-                    return "mock";
-                }
-            }.getClass()));
+            this.fileStore.supportsFileAttributeView(((FileAttributeView) () -> "mock").getClass()));
     }
 
     @Test(expected = UnsupportedOperationException.class)

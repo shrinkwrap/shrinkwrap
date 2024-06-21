@@ -16,7 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
-import org.jboss.shrinkwrap.api.asset.Asset;
 import org.junit.Test;
 
 /**
@@ -31,10 +30,6 @@ public class URLPackageScannerTestCase {
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionNullPackage() {
         URLPackageScanner.newInstance(true, URLPackageScannerTestCase.class.getClassLoader(),
-            new URLPackageScanner.Callback() {
-                @Override
-                public void classFound(String className, Asset asset) {
-                }
-            }, null);
+                (className, asset) -> {}, null);
     }
 }
