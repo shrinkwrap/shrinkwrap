@@ -20,14 +20,6 @@
   <name>ShrinkWrap API</name>
   <description>Client View of the ShrinkWrap Project</description>
 
-
-  <!-- Properties -->
-  <properties>
-
-    <!-- Versioning -->
-
-  </properties>
-
   <!-- Dependencies -->
   <dependencies>
   
@@ -75,7 +67,7 @@
           <docletArtifact>
             <groupId>org.jboss.apiviz</groupId>
             <artifactId>apiviz</artifactId>
-            <version>1.3.2.GA</version>
+            <version>${version.org.jboss.apiviz}</version>
           </docletArtifact>
           <useStandardDocletOptions>true</useStandardDocletOptions>
           <charset>UTF-8</charset>

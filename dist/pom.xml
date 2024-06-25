@@ -14,10 +14,8 @@
   <packaging>pom</packaging>
   <name>ShrinkWrap Distribution</name>
 
-  <!-- 
-  
+  <!--
   Declare dependencies such that this module runs LAST in the Aggregator
-  
    -->
   <dependencies>
 

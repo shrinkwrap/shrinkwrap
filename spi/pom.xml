@@ -20,12 +20,6 @@
   <name>ShrinkWrap SPI</name>
   <description>Generic Service Provider Contract of the ShrinkWrap Project</description>
 
-
-  <!-- Properties -->
-  <properties>
-
-  </properties>
-
   <!-- Dependencies -->
   <dependencies>
   
