@@ -43,12 +43,9 @@ public interface ServiceProviderContainer<T extends Archive<T>> extends Manifest
      * @throws IllegalArgumentException
      *             if serviceImpls is null or contain null values
      */
-    /*
-     * TODO: The interface should have been like this: <X> T addServiceProvider(Class<X> serviceInterface, Class<?
-     * extends X>... serviceImpls) throws IllegalArgumentException; But due to how java generic works, this will cause a
-     * unsafe warning for the user.
-     */
     T addAsServiceProviderAndClasses(Class<?> serviceInterface, Class<?>... serviceImpls)
         throws IllegalArgumentException;
-
+    // TODO: The interface should have been like this: <X> T addServiceProvider(Class<X> serviceInterface, Class<?
+    // extends X>... serviceImpls) throws IllegalArgumentException; But due to how java generic works, this will cause a
+    // unsafe warning for the user.
 }
