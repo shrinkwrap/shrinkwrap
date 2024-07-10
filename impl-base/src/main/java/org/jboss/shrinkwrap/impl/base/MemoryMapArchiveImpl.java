@@ -22,12 +22,11 @@ import org.jboss.shrinkwrap.spi.MemoryMapArchive;
 
 /**
  * MemoryMapArchiveImpl
- *
+ * <p>
  * A default implementation for all MemoryMap archives. Thread-safe.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
  * @version $Revision: $
- * @param <T>
  */
 public class MemoryMapArchiveImpl extends MemoryMapArchiveBase<MemoryMapArchive> implements MemoryMapArchive {
     // -------------------------------------------------------------------------------------||
@@ -36,7 +35,7 @@ public class MemoryMapArchiveImpl extends MemoryMapArchiveBase<MemoryMapArchive>
 
     /**
      * Constructor
-     *
+     * <p>
      * This constructor will generate a unique {@link Archive#getName()} per instance.
      *
      * @param configuration
@@ -50,10 +49,11 @@ public class MemoryMapArchiveImpl extends MemoryMapArchiveBase<MemoryMapArchive>
 
     /**
      * Constructor
-     *
+     * <p>
      * This constructor will generate an {@link Archive} with the provided name.
      *
      * @param archiveName
+     *            The name of the archive. Must not be {@code null} or empty.
      * @param configuration
      *            The configuration for this archive
      * @throws IllegalArgumentException

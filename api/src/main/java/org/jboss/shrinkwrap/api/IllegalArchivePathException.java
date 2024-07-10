@@ -31,6 +31,7 @@ public class IllegalArchivePathException extends RuntimeException {
 
     /**
      * @param message
+     *            The detail message.
      */
     public IllegalArchivePathException(String message) {
         super(message);
@@ -38,6 +39,7 @@ public class IllegalArchivePathException extends RuntimeException {
 
     /**
      * @param cause
+     *            The cause of the exception.
      */
     public IllegalArchivePathException(Throwable cause) {
         super(cause);
@@ -45,7 +47,9 @@ public class IllegalArchivePathException extends RuntimeException {
 
     /**
      * @param message
+     *            The detail message.
      * @param cause
+     *            The cause of the exception.
      */
     public IllegalArchivePathException(String message, Throwable cause) {
         super(message, cause);

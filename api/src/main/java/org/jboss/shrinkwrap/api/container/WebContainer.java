@@ -82,7 +82,7 @@ public interface WebContainer<T extends Archive<T>> {
      * @return This virtual archive
      * @throws IllegalArgumentException
      *             if resource is null
-     * @see # addAsWebResource(Asset, ArchivePath)
+     * @see #addAsWebResource(Asset, ArchivePath)
      */
     T setWebXML(Asset resource) throws IllegalArgumentException;
 

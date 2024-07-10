@@ -24,7 +24,7 @@ import java.io.OutputStream;
 /**
  * The TarInputStream reads a UNIX tar archive as an InputStream. methods are provided to position at each successive
  * entry in the archive, and the read each entry as a normal input stream using read().
- *
+ * <p>
  * Kerry Menzel <kmenzel@cfl.rr.com> Contributed the code to support file sizes greater than 2GB (longs versus ints).
  *
  *
@@ -82,10 +82,10 @@ public class TarInputStream extends FilterInputStream {
     }
 
     /**
-     * Sets the debugging flag.
+     * Sets the entry factory.
      *
-     * @param debugF
-     *            True to turn on debugging.
+     * @param factory
+     *            The EntryFactory to set.
      */
     public void setEntryFactory(EntryFactory factory) {
         this.eFactory = factory;
@@ -94,7 +94,7 @@ public class TarInputStream extends FilterInputStream {
     /**
      * Sets the debugging flag in this stream's TarBuffer.
      *
-     * @param debugF
+     * @param debug
      *            True to turn on debugging.
      */
     public void setBufferDebug(boolean debug) {
@@ -186,7 +186,7 @@ public class TarInputStream extends FilterInputStream {
      * Get the number of bytes into the current TarEntry. This method returns the number of bytes that have been read
      * from the current TarEntry's data.
      *
-     * @returns The current entry offset.
+     * @return The current entry offset.
      */
 
     public long getEntryPosition() {
@@ -198,7 +198,7 @@ public class TarInputStream extends FilterInputStream {
      * tar uses, so it represents the actual position in input stream, as opposed to the place where the tar archive
      * parsing is.
      *
-     * @returns The current file pointer.
+     * @return The current file pointer.
      */
 
     public long getStreamPosition() {
@@ -280,7 +280,7 @@ public class TarInputStream extends FilterInputStream {
 
     /**
      * Reads a byte from the current tar archive entry.
-     *
+     * <p>
      * This method simply calls read( byte[], int, int ).
      *
      * @return The byte read, or -1 at EOF.
@@ -296,7 +296,7 @@ public class TarInputStream extends FilterInputStream {
 
     /**
      * Reads bytes from the current tar archive entry.
-     *
+     * <p>
      * This method simply calls read( byte[], int, int ).
      *
      * @param buf
@@ -309,7 +309,7 @@ public class TarInputStream extends FilterInputStream {
 
     /**
      * Reads bytes from the current tar archive entry.
-     *
+     * <p>
      * This method is aware of the boundaries of the current entry in the archive and will deal with them as if they
      * were this stream's start and EOF.
      *

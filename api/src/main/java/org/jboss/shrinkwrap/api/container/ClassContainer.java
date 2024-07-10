@@ -37,7 +37,7 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
     /**
      * Adds the {@link Class}, and all member (inner) {@link Class}es to the {@link Archive}.
      *
-     * @param class The class to add to the Archive
+     * @param clazz The class to add to the Archive
      * @return This archive
      * @throws IllegalArgumentException
      *             If no class were specified
@@ -190,7 +190,7 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
     /**
      * Deletes the {@link Class}, and all member (inner) {@link Class}es from the {@link Archive}.
      *
-     * @param class The class to be deleted from the Archive
+     * @param clazz The class to be deleted from the Archive
      * @return This archive
      * @throws IllegalArgumentException If no class was specified
      */

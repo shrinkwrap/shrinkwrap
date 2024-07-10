@@ -34,7 +34,7 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
  * WebContainerBase
- *
+ * <p>
  * Abstract class that helps implement the WebContainer. Used by specs that extends the WebContainer.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

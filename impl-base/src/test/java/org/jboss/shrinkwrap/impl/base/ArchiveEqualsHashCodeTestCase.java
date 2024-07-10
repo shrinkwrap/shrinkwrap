@@ -28,7 +28,7 @@ import org.junit.Test;
 
 /**
  * Tests that verify {@link Archive} implement the semantics of equals and hashCode correctly.
- *
+ * <p>
  * SHRINKWRAP-181
  *
  * @author <a href="mailto:chris.wash@gmail.com">Chris Wash</a>

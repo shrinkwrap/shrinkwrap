@@ -21,7 +21,7 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 
 /**
  * PathUtil
- *
+ * <p>
  * A series of internal-only path utilities for adjusting relative forms, removing double-slashes, etc. Used in
  * correcting inputs in the creation of new Paths
  *
@@ -55,7 +55,7 @@ public final class PathUtil {
     // -------------------------------------------------------------------------------------||
 
     /**
-     * Composes an absolute context from a given base and actual context relative to the base, returning the result. ie.
+     * Composes an absolute context from a given base and actual context relative to the base, returning the result. i.e.
      * base of "base" and context of "context" will result in form "/base/context".
      */
     public static String composeAbsoluteContext(final String base, final String context) {
@@ -74,12 +74,13 @@ public final class PathUtil {
 
     /**
      * Adjusts the specified path to relative form:
-     *
+     * <p>
      * 1) Removes, if present, a preceding slash 2) Adds, if not present, a trailing slash
-     *
+     * <p>
      * Null arguments are returned as-is
      *
      * @param path
+     *            The path to be adjusted to relative form
      */
     public static String adjustToRelativeDirectoryContext(final String path) {
         // Return nulls
@@ -98,12 +99,13 @@ public final class PathUtil {
 
     /**
      * Adjusts the specified path to absolute form:
-     *
+     * <p>
      * 1) Adds, if not present, a preceding slash 2) Adds, if not present, a trailing slash
-     *
+     * <p>
      * Null arguments are returned as-is
      *
      * @param path
+     *            The path to be adjusted to absolute form
      */
     public static String adjustToAbsoluteDirectoryContext(String path) {
         // Return nulls
@@ -124,7 +126,8 @@ public final class PathUtil {
      * Removes, if present, the absolute slash preceding the specified path, and returns the adjusted result.
      *
      * @param path
-     * @return
+     *            The path from which the preceding slash should be removed
+     * @return The path with the preceding slash removed, if it was present
      */
     public static String optionallyRemovePrecedingSlash(final String path) {
         // Precondition check
@@ -144,7 +147,8 @@ public final class PathUtil {
      * Removes, if present, the absolute slash following the specified path, and returns the adjusted result.
      *
      * @param path
-     * @return
+     *            The path from which the following slash should be removed
+     * @return The path with the following slash removed, if it was present
      */
     public static String optionallyRemoveFollowingSlash(final String path) {
         // Precondition check
@@ -164,7 +168,8 @@ public final class PathUtil {
      * Adds, if not already present, the absolute slash following the specified path, and returns the adjusted result.
      *
      * @param path
-     * @return
+     *            The path to which the trailing slash should be added
+     * @return The path with the trailing slash added, if it was not present
      */
     public static String optionallyAppendSlash(final String path) {
         // Precondition check
@@ -185,7 +190,8 @@ public final class PathUtil {
      * If the argument is null, adjusts to an empty String before processing.
      *
      * @param path
-     * @return
+     *            The path to which the preceding slash should be added
+     * @return The path with the preceding slash added, if it was not present
      */
     public static String optionallyPrependSlash(final String path) {
         // Adjust null
@@ -209,10 +215,10 @@ public final class PathUtil {
      * "/my". Each call will result in a new object reference, though subsequent calls upon the same Path will be equal
      * by value.
      *
-     * @return
-     *
      * @param path
      *            The path whose parent context we should return
+     * @return The parent path of the specified path, or {@code null} if no parent exists
+
      */
     static ArchivePath getParent(final ArchivePath path) {
         // Precondition checks
@@ -237,7 +243,7 @@ public final class PathUtil {
     // -------------------------------------------------------------------------------------||
 
     /**
-     * Returns whether or not the first character in the specified String is a slash
+     * Returns whether the first character in the specified String is a slash
      */
     private static boolean isFirstCharSlash(final String path) {
         assertSpecified(path);
@@ -248,7 +254,7 @@ public final class PathUtil {
     }
 
     /**
-     * Returns whether or not the last character in the specified String is a slash
+     * Returns whether the last character in the specified String is a slash
      */
     private static boolean isLastCharSlash(final String path) {
         assertSpecified(path);
@@ -262,6 +268,7 @@ public final class PathUtil {
      * Ensures the path is specified
      *
      * @param path
+     *            The path to check
      */
     private static void assertSpecified(final String path) {
         // Precondition check

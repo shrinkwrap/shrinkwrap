@@ -28,6 +28,7 @@ public class IllegalOverwriteException extends RuntimeException {
 
     /**
      * @param message
+     *            The detail message.
      */
     public IllegalOverwriteException(final String message) {
         super(message);
@@ -35,6 +36,7 @@ public class IllegalOverwriteException extends RuntimeException {
 
     /**
      * @param cause
+     *            The cause of the exception.
      */
     public IllegalOverwriteException(final Throwable cause) {
         super(cause);
@@ -42,7 +44,9 @@ public class IllegalOverwriteException extends RuntimeException {
 
     /**
      * @param message
+     *            The detail message.
      * @param cause
+     *            The cause of the exception.
      */
     public IllegalOverwriteException(final String message, final Throwable cause) {
         super(message, cause);

@@ -31,6 +31,7 @@ public interface StreamErrorHandler {
      * Handles a Throwable that was thrown during stream processing.
      *
      * @param t
+     *          The {@link Throwable} to be handled.
      */
     void handle(Throwable t);
 }

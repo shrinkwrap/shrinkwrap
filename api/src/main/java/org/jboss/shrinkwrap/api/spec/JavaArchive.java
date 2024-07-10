@@ -22,7 +22,7 @@ import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 /**
  * Traditional JAR (Java Archive) structure. Used in construction of libraries and applications.
  *
- * @see http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html
+ * @see <a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html">http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html</a>
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $

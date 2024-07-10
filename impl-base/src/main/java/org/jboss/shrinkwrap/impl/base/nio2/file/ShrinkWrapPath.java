@@ -66,7 +66,9 @@ public class ShrinkWrapPath implements Path {
      * Constructs a new instance using the specified (required) canonical form and backing {@link ShrinkWrapFileSystem}
      *
      * @param path
+     *        The canonical form of the path.
      * @param fileSystem
+     *        The backing {@link ShrinkWrapFileSystem}.
      * @throws IllegalArgumentException
      *             If the path or file system is not specified
      */
@@ -85,8 +87,9 @@ public class ShrinkWrapPath implements Path {
      * Constructs a new instance using the specified (required) path and backing {@link ShrinkWrapFileSystem}
      *
      * @param path
-     *            to be evaluated using {@link ArchivePath#get()}
+     *             The path to be evaluated using {@link ArchivePath#get()}
      * @param fileSystem
+     *             The backing {@link ShrinkWrapFileSystem}.
      * @throws IllegalArgumentException
      *             If the path or file system is not specified
      * @throws IllegalArgumentException
@@ -211,9 +214,12 @@ public class ShrinkWrapPath implements Path {
      * specified offset
      *
      * @param string
+     *             The {@link String} in which to count occurrences of the character.
      * @param c
+     *             The character to count within the string.
      * @param offset
-     * @return
+     *             The offset from which to start counting occurrences of the character.
+     * @return The number of occurrences of the specified character in the string starting from the given offset.
      */
     private int countOccurrences(final String string, char c, int offset) {
         assert string != null : "String must be specified";
@@ -547,8 +553,7 @@ public class ShrinkWrapPath implements Path {
     /**
      * {@inheritDoc}
      *
-     * @see java.nio.file.Path#register(java.nio.file.WatchService, java.nio.file.WatchEvent.Kind<?>[],
-     *      java.nio.file.WatchEvent.Modifier[])
+     * @see java.nio.file.Path#register(WatchService, Kind[], Modifier...)
      */
     @Override
     public WatchKey register(WatchService watcher, Kind<?>[] events, Modifier... modifiers) {
@@ -558,7 +563,7 @@ public class ShrinkWrapPath implements Path {
     /**
      * {@inheritDoc}
      *
-     * @see java.nio.file.Path#register(java.nio.file.WatchService, java.nio.file.WatchEvent.Kind<?>[])
+     * @see java.nio.file.Path#register(WatchService, Kind[])
      */
     @Override
     public WatchKey register(WatchService watcher, Kind<?>... events) {
@@ -615,7 +620,8 @@ public class ShrinkWrapPath implements Path {
      * Creates a new {@link ShrinkWrapPath} instance from the specified input {@link String}
      *
      * @param path
-     * @return
+     *             The string representation of the path.
+     * @return A new {@link ShrinkWrapPath} instance created from the specified string.
      */
     private Path fromString(final String path) {
         if (path == null) {
@@ -627,8 +633,6 @@ public class ShrinkWrapPath implements Path {
 
     /**
      * Returns the components of this path in order from root out
-     *
-     * @return
      */
     private static List<String> tokenize(final ShrinkWrapPath path) {
         final StringTokenizer tokenizer = new StringTokenizer(path.toString(), ArchivePath.SEPARATOR_STRING);
@@ -643,7 +647,10 @@ public class ShrinkWrapPath implements Path {
      * Normalizes the tokenized view of the path
      *
      * @param path
-     * @return
+     *             The tokenized list of path elements. Must not be {@code null}.
+     * @param absolute
+     *             A boolean indicating if the path is absolute.
+     * @return A string representing the normalized path.
      */
     private static String normalize(final List<String> path, boolean absolute) {
         assert path != null : "path must be specified";
@@ -684,11 +691,17 @@ public class ShrinkWrapPath implements Path {
      * Relativizes the paths recursively
      *
      * @param thisOriginal
+     *             The original {@link ShrinkWrapPath} from which the relative path is calculated.
      * @param thisCurrent
+     *             The current {@link Path} being processed in the original path.
      * @param otherOriginal
+     *             The original {@link Path} to which the relative path is calculated.
      * @param otherCurrent
+     *             The current {@link Path} being processed in the target path.
      * @param backupCount
-     * @return
+     *             The number of parent directory references needed to backtrack to the common root.
+     * @return A {@link ShrinkWrapPath} representing the relative path from the original path to the target path.
+
      */
     private static ShrinkWrapPath relativizeCommonRoot(final ShrinkWrapPath thisOriginal, final Path thisCurrent,
         final Path otherOriginal, Path otherCurrent, final int backupCount) {

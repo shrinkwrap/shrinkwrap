@@ -27,7 +27,7 @@ import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 
 /**
  * IncludePaths
- *
+ * <p>
  * Filter to exclude all {@link ArchivePath}s that match the given List of paths.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

@@ -18,7 +18,7 @@ package org.jboss.shrinkwrap.impl.base.test.dummy;
 
 /**
  * DummyInterfaceForTest
- *
+ * <p>
  * Empty class to test class adding
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

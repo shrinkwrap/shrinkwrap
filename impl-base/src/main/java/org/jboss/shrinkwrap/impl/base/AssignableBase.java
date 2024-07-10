@@ -44,6 +44,7 @@ public abstract class AssignableBase<T extends Archive<?>> implements Assignable
      * Constructs a new instance using the underlying specified archive, which is required
      *
      * @param archive
+     *            The archive to be used by this instance. This must not be {@code null}.
      */
     protected AssignableBase(final T archive) {
         // Precondition check
@@ -60,7 +61,7 @@ public abstract class AssignableBase<T extends Archive<?>> implements Assignable
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Specializer#as(java.lang.Class)
+     * @see org.jboss.shrinkwrap.api.Assignable#as(java.lang.Class)
      */
     @Override
     public final <TYPE extends Assignable> TYPE as(Class<TYPE> clazz) {
@@ -73,8 +74,6 @@ public abstract class AssignableBase<T extends Archive<?>> implements Assignable
 
     /**
      * Returns the underlying archive
-     *
-     * @return
      */
     protected final T getArchive() {
         return archive;

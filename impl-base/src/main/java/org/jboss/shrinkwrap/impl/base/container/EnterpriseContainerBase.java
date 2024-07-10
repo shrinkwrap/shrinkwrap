@@ -34,7 +34,7 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
  * EnterpriseContainerSupport
- *
+ * <p>
  * Abstract class that helps implement the EnterpriseContainer. Used by specs that extends the EnterpriseContainer.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
@@ -386,7 +386,7 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>> extends Cont
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addAsModules(org.jboss.shrinkwrap.api.Archive<?>[])
+     * @see org.jboss.shrinkwrap.api.container.EnterpriseContainer#addAsModules(org.jboss.shrinkwrap.api.Archive[])
      */
     @Override
     public T addAsModules(final Archive<?>... archives) throws IllegalArgumentException {

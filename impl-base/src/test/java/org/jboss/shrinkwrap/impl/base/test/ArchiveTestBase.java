@@ -58,7 +58,7 @@ import org.junit.Test;
 
 /**
  * ArchiveTestBase
- *
+ * <p>
  * Base test for all Archive service providers to help ensure consistency between implementations.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
@@ -828,7 +828,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     /**
-     * Ensure we can get a added Archive as a specific type
+     * Ensure we can get an added Archive as a specific type
      *
      */
     @Test
@@ -843,7 +843,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     /**
-     * Ensure we can get a added Archive as a specific type
+     * Ensure we can get an added Archive as a specific type
      *
      */
     @Test
@@ -858,7 +858,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     /**
-     * Ensure we can get a added Archive as a specific type
+     * Ensure we can get an added Archive as a specific type
      *
      */
     @Test

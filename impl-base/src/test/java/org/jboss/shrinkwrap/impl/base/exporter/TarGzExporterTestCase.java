@@ -49,7 +49,7 @@ public final class TarGzExporterTestCase extends TarExporterTestBase<TarGzImport
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getStreamExporter()
+     * @see ExportTestBase#getExporterClass()
      */
     @Override
     protected Class<? extends StreamExporter> getExporterClass() {

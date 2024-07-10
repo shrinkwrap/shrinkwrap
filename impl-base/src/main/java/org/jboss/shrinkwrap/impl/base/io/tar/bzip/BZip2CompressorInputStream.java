@@ -361,10 +361,8 @@ public class BZip2CompressorInputStream extends InputStream implements BZip2Cons
             this.storedBlockCRC = bsGetInt();
             this.blockRandomised = bsR(1) == 1;
 
-            /**
-             * Allocate data here instead in constructor, so we do not allocate
-             * it if the input file is empty.
-             */
+            // Allocate data here instead in constructor, so we do not allocate
+            // it if the input file is empty.
             if (this.data == null) {
                 this.data = new Data(this.blockSize100k);
             }
@@ -1045,7 +1043,7 @@ public class BZip2CompressorInputStream extends InputStream implements BZip2Cons
 
         /**
          * Initializes the {@link #tt} array.
-         *
+         * <p>
          * This method is called when the required length of the array is known.
          * I don't initialize it at construction time to avoid unneccessary
          * memory allocation when compressing small files.

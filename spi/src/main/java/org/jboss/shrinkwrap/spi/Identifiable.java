@@ -28,15 +28,13 @@ public interface Identifiable extends Assignable {
 
     /**
      * Obtains a globally-unique identifier
-     *
-     * @return
      */
     String getId();
 
     /**
      * Sets the globally-unique identifier
      *
-     * @param id
+     * @param id The ID to be set
      * @throws IllegalArgumentException
      *             If the ID is not specified
      */

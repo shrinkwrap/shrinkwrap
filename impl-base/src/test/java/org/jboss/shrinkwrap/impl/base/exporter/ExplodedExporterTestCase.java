@@ -41,7 +41,7 @@ import org.junit.Test;
 
 /**
  * ExplodedExporterTestCase
- *
+ * <p>
  * TestCase to ensure that the {@link ExplodedExporter} correctly exports archive.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
@@ -275,7 +275,8 @@ public class ExplodedExporterTestCase extends ExportTestBase {
     }
 
     /**
-     * https://jira.jboss.org/jira/browse/SHRINKWRAP-84 <br/>
+     * <a href="https://issues.redhat.com/browse/SHRINKWRAP-84">SHRINKWRAP-84</a>
+     * <br/>
      * Should be able to use a existing directory as parent directory for ExplodedExports
      */
     @Test
@@ -299,8 +300,8 @@ public class ExplodedExporterTestCase extends ExportTestBase {
     }
 
     /**
-     * https://jira.jboss.org/jira/browse/SHRINKWRAP-86 Ensure an IllegalArgumentException is thrown when output
-     * directory is a file
+     * <a href="https://issues.redhat.com/browse/SHRINKWRAP-86">SHRINKWRAP-86</a>
+     * Ensure an IllegalArgumentException is thrown when output directory is a file
      */
     @Test(expected = IllegalArgumentException.class)
     public void testExportExplodedOutpuDirIsAFile() throws Exception {
@@ -337,7 +338,6 @@ public class ExplodedExporterTestCase extends ExportTestBase {
      * Assert an asset is actually in the exploded directory
      *
      * @throws FileNotFoundException
-     * @throws IOException
      * @throws IllegalArgumentException
      */
     private void assertAssetInExploded(File explodedDirectory, ArchivePath path, Asset asset)

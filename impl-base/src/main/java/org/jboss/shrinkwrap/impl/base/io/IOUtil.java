@@ -72,6 +72,7 @@ public final class IOUtil {
      * Obtains the contents of the specified stream as a byte array
      *
      * @param in
+     *            The input stream to be read
      * @throws IllegalArgumentException
      *             If the stream was not specified
      * @return the byte[] for the given InputStream
@@ -84,6 +85,7 @@ public final class IOUtil {
      * Obtains the contents of the specified stream as a String in UTF-8 charset.
      *
      * @param in
+     *            The input stream to be read
      * @throws IllegalArgumentException
      *             If the stream was not specified
      */
@@ -119,7 +121,9 @@ public final class IOUtil {
      * streams passed in when done, though the {@link OutputStream} will be fully flushed.
      *
      * @param input
+     *            The input stream from which to read the data
      * @param output
+     *            The output stream to which the data will be written
      * @throws IOException
      *             If a problem occurred during any I/O operations
      */
@@ -138,7 +142,9 @@ public final class IOUtil {
      * caller to close the streams passed in when done, though the {@link OutputStream} will be fully flushed.
      *
      * @param input
+     *            The input stream from which to read the data
      * @param output
+     *            The output stream to which the data will be written
      * @param len
      *            the number of bytes to copy
      * @return number of bytes copied
@@ -168,7 +174,7 @@ public final class IOUtil {
      * @param content
      *            The content to write to the specified stream
      * @throws IOException
-     *             If a problem occured during any I/O operations
+     *             If a problem occurred during any I/O operations
      */
     public static void bufferedWriteWithFlush(final OutputStream output, final byte[] content) throws IOException {
         final int size = 4096;
@@ -185,7 +191,9 @@ public final class IOUtil {
      * Copies the contents from an InputStream to an OutputStream and closes both streams.
      *
      * @param input
+     *            The input stream from which to read the data
      * @param output
+     *            The output stream to which the data will be written
      * @throws IOException
      *             If a problem occurred during any I/O operations during the copy, but on closing the streams these
      *             will be ignored and logged at {@link Level#FINER}
@@ -215,7 +223,9 @@ public final class IOUtil {
      * Helper method to run a specified task and automatically handle the closing of the stream.
      *
      * @param stream
+     *            The stream to be closed after the task is executed
      * @param task
+     *            The task to be executed
      */
     public static <S extends Closeable> void closeOnComplete(S stream, StreamTask<S> task) {
         closeOnComplete(stream, task, DEFAULT_ERROR_HANDLER);
@@ -225,8 +235,14 @@ public final class IOUtil {
      * Helper method to run a specified task and automatically handle the closing of the stream.
      *
      * @param <S>
+     *            The type of the stream
+     * @param stream
+     *            The stream to be closed after the task is executed
      * @param task
+     *            The task to be executed
      * @param errorHandler
+     *            The error handler to handle any errors that occur during the execution of the task
+
      */
     public static <S extends Closeable> void closeOnComplete(S stream, StreamTask<S> task,
         StreamErrorHandler errorHandler) {

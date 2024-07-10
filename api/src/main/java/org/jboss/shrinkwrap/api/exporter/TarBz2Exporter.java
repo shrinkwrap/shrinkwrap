@@ -23,8 +23,8 @@ import org.jboss.shrinkwrap.api.Assignable;
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:ts@bee.kz">Tair Sabirgaliev</a>
- * @see http://www.gnu.org/software/tar/manual/html_node/Standard.html
- * @see http://www.bzip.org/
+ * @see <a href="http://www.gnu.org/software/tar/manual/html_node/Standard.html">GNU Tar Manual</a>
+ * @see <a href="http://www.bzip.org/">BZip2</a>
  */
 public interface TarBz2Exporter extends StreamExporter {
     // -------------------------------------------------------------------------------------||

@@ -54,7 +54,10 @@ public class ArchiveAsset implements Asset {
      * {@link StreamExporter} to represent the archive as an {@link InputStream} in {@link Asset#openStream()}.
      *
      * @param archive
+     *            The {@link Archive} to wrap. Must not be {@code null}.
      * @param exporter
+     *            The {@link StreamExporter} class used to export the archive as an {@link InputStream}.
+     *            Must not be {@code null}.
      * @throws IllegalArgumentException
      *             If either argument is not specified
      */
@@ -88,8 +91,6 @@ public class ArchiveAsset implements Asset {
 
     /**
      * Returns the archive this asset represents
-     *
-     * @return
      */
     public Archive<?> getArchive() {
         return archive;

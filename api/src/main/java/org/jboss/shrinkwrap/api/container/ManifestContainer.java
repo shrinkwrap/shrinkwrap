@@ -353,7 +353,7 @@ public interface ManifestContainer<T extends Archive<T>> {
 
     /**
      * Adds a META-INF/services/ServiceInterfaceName {@link Asset} representing this service.
-     *
+     * <p>
      * Warning: this method does not add the specified classes to the archive.
      *
      * @param serviceInterface

@@ -22,8 +22,8 @@ import org.jboss.shrinkwrap.api.Assignable;
  * Exporter used to represent an {@link Assignable} in TAR format encoded w/ GZIP compression
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
- * @see http://www.gnu.org/software/tar/manual/html_node/Standard.html
- * @see http://www.gzip.org/
+ * @see <a href="http://www.gnu.org/software/tar/manual/html_node/Standard.html">TAR Manual</a>
+ * @see <a href="http://www.gzip.org/">GZIP</a>
  */
 public interface TarGzExporter extends StreamExporter {
     // -------------------------------------------------------------------------------------||

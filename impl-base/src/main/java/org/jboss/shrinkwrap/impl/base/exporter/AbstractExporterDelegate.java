@@ -27,7 +27,7 @@ import org.jboss.shrinkwrap.api.Node;
 
 /**
  * AbstractExporterDelegate
- *
+ * <p>
  * Abstract delegate used for archive export. Provides a template for exporters for handling archive contents.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
@@ -67,7 +67,7 @@ public abstract class AbstractExporterDelegate<T> {
     /**
      * Runs the export operation, returning the result
      *
-     * @return
+     * @return The result of the export operation
      */
     public final T export() {
         // Perform the actual export
@@ -100,6 +100,7 @@ public abstract class AbstractExporterDelegate<T> {
      * Recursive call to process all the node hierarchy
      *
      * @param node
+     *          The node to process
      */
     private void processNode(final Node node) {
         processNode(node.getPath(), node);
@@ -118,14 +119,16 @@ public abstract class AbstractExporterDelegate<T> {
      * Template method for processing a single node.
      *
      * @param path
+     *              The path of the node
      * @param node
+     *              The node to process
      */
     protected abstract void processNode(ArchivePath path, Node node);
 
     /**
      * Return the results of the export. Should process any tasks required to finalize the export.
      *
-     * @return
+     * @return The results of the export
      */
     protected abstract T getResult();
 
@@ -136,7 +139,7 @@ public abstract class AbstractExporterDelegate<T> {
     /**
      * Return the archive being exported
      *
-     * @return
+     * @return The archive being exported
      */
     protected Archive<?> getArchive() {
         return archive;

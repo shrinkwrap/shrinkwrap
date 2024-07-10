@@ -36,10 +36,10 @@ import javax.activation.MimeTypeParseException;
  * only of the header record, and are followed by entries for the directory's contents. File entries consist of a header
  * record followed by the number of records needed to contain the file's contents. All entries are written on record
  * boundaries. Records are 512 bytes long.
- *
+ * <p>
  * TarArchives are instantiated in either read or write mode, based upon whether they are instantiated with an
  * InputStream or an OutputStream. Once instantiated TarArchives read/write mode can not be changed.
- *
+ * <p>
  * There is currently no support for random access to tar archives. However, it seems that subclassing TarArchive, and
  * using the TarBuffer.getCurrentRecordNum() and TarBuffer.getCurrentBlockNum() methods, this would be rather trvial.
  *
@@ -520,7 +520,7 @@ public class TarArchive {
      * and finally call closeEntry() for entries that are files. For directories, it will call putNextEntry(), and then,
      * if the recurse flag is true, process each entry that is a child of the directory.
      *
-     * @param entry
+     * @param oldEntry
      *            The TarEntry representing the entry to write to the archive.
      * @param recurse
      *            If true, process the children of directory entries.

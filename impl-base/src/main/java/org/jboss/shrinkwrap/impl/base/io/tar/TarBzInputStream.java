@@ -33,6 +33,7 @@ public class TarBzInputStream extends TarInputStream {
 
     /**
      * @param is
+     *             The {@link InputStream} to read from.
      */
     public TarBzInputStream(InputStream is) throws IOException {
         super(new BZip2CompressorInputStream(is));
@@ -40,7 +41,9 @@ public class TarBzInputStream extends TarInputStream {
 
     /**
      * @param is
+     *             The {@link InputStream} to read from.
      * @param blockSize
+     *             The block size for the BZIP2 decompressor.
      */
     public TarBzInputStream(InputStream is, int blockSize) throws IOException {
         super(new BZip2CompressorInputStream(is), blockSize);
@@ -48,8 +51,11 @@ public class TarBzInputStream extends TarInputStream {
 
     /**
      * @param is
+     *             The {@link InputStream} to read from.
      * @param blockSize
+     *             The block size for the BZIP2 decompressor.
      * @param recordSize
+     *             The record size for the TAR input stream.
      */
     public TarBzInputStream(InputStream is, int blockSize, int recordSize) throws IOException {
         super(new BZip2CompressorInputStream(is), blockSize, recordSize);

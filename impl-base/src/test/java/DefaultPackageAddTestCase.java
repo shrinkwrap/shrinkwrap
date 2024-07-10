@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * Ensures that we can add classes in the default package to an archive. This test is also in the default package due to
  * compiler restrictions on importing from default package.
- *
+ * <p>
  * SHIRNKWRAP-143
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
@@ -75,7 +75,7 @@ public class DefaultPackageAddTestCase {
 
     /**
      * Ensures that classes from the default package may be added
-     *
+     * <p>
      * SHRINKWRAP-143
      */
     @Test
@@ -90,7 +90,7 @@ public class DefaultPackageAddTestCase {
 
     /**
      * Makes sure classes in the default package, and only in the default package, are added.
-     *
+     * <p>
      * SHRINKWRAP-233, SHRINKWRAP-302
      */
     @Test

@@ -46,7 +46,7 @@ public final class Filters {
 
     /**
      * {@link Filter} that includes all {@link ArchivePath}s.
-     *
+     * <p>
      * Only meant to be used internally.
      *
      * @return A {@link Filter} that always return true
@@ -132,7 +132,7 @@ public final class Filters {
      *
      * @param packages
      *            To be included
-     * @return
+     * @return The filter for the specified packages
      */
     public static Filter<ArchivePath> exclude(Package... packages) {
         return createRegExpFilter(IMPL_CLASS_NAME_EXCLUDE_REGEXP_PATHS, packages);
@@ -143,7 +143,7 @@ public final class Filters {
      *
      * @param packages
      *            To be excluded
-     * @return
+     * @return The filter for the specified packages
      */
     public static Filter<ArchivePath> include(Package... packages) {
         return createRegExpFilter(IMPL_CLASS_NAME_INCLUDE_REGEXP_PATHS, packages);
@@ -166,7 +166,7 @@ public final class Filters {
      *
      * @param classes
      *            To be included
-     * @return
+     * @return The filter for the specified classes
      */
     public static Filter<ArchivePath> include(Class<?>... classes) {
         return createRegExpFilter(IMPL_CLASS_NAME_INCLUDE_REGEXP_PATHS, classes);
@@ -177,7 +177,7 @@ public final class Filters {
      *
      * @param classes
      *            To be excluded
-     * @return
+     * @return The filter for the specified classes
      */
     public static Filter<ArchivePath> exclude(Class<?>... classes) {
         return createRegExpFilter(IMPL_CLASS_NAME_EXCLUDE_REGEXP_PATHS, classes);
@@ -199,9 +199,12 @@ public final class Filters {
      * Creates a new {@link Filter} instance using the given impl class name, constructor arguments and type
      *
      * @param filterClassName
+     *            The name of the filter class
      * @param ctorTypes
+     *            The types of the constructor arguments
      * @param ctorArguments
-     * @return
+     *            The constructor arguments
+     * @return The new filter instance
      */
     @SuppressWarnings("unchecked")
     private static Filter<ArchivePath> getFilterInstance(final String filterClassName, final Class<?>[] ctorTypes,
