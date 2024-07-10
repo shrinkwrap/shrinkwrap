@@ -196,8 +196,11 @@ public class ShrinkWrapFileSystem extends FileSystem {
      * Merges the path context with a varargs String sub-contexts, returning the result
      *
      * @param first
+     *             The base path to which the additional sub-contexts will be appended. Must not be {@code null}.
      * @param more
-     * @return
+     *             An array of additional sub-paths to be appended to the base path. Must not be {@code null}.
+     * @return A {@link String} representing the merged path, consisting of the base path followed by each of the
+     *         additional sub-paths, separated by the path separator.
      */
     private String merge(final String first, final String[] more) {
         assert first != null : "first must be specified";

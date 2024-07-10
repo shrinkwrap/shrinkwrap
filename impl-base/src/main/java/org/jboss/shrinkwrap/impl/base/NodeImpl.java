@@ -57,7 +57,7 @@ public class NodeImpl implements Node {
 
     /**
      * Constructor
-     *
+     * <p>
      * This constructor will create a directory Node with the specified path.
      *
      * @param path
@@ -69,7 +69,7 @@ public class NodeImpl implements Node {
 
     /**
      * Constructor
-     *
+     * <p>
      * This constructor will create an asset Node with the specified path.
      *
      * @param path

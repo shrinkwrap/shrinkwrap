@@ -75,6 +75,7 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
      * Ensures the contents of the specified {@link File} are as expected
      *
      * @param file
+     *             The {@link File} to be validated.
      * @throws IOException
      *             If an I/O error occurred
      */
@@ -85,15 +86,16 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
      * nothing is found at the specified path
      *
      * @param file
+     *             The {@link File} from which to retrieve the {@link Asset}.
      * @param path
-     * @return
+     *             The {@link ArchivePath} specifying the location of the {@link Asset}.
+     * @return An {@link InputStream} representing the contents of the {@link Asset} at the specified path, or null if
+     *         nothing is found.
      */
     protected abstract InputStream getContentsFromExportedFile(File file, ArchivePath path) throws IOException;
 
     /**
      * Obtains the type of {@link StreamImporter} used for this test
-     *
-     * @return
      */
     protected abstract Class<T> getImporterClass();
 
@@ -103,8 +105,6 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
 
     /**
      * Test to make sue an archive can be exported and all contents are correctly located.
-     *
-     * @throws Exception
      */
     @Test
     public void testExport() throws Exception {
@@ -126,8 +126,6 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
 
     /**
      * Test to ensure that the export process accepts an archive with only directories, no assets.
-     *
-     * @throws Exception
      */
     @Test
     public void testExportArchiveWithOnlyDirectories() throws IOException {
@@ -148,8 +146,6 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
 
     /**
      * Test to make sure an archive can be exported to file and all contents are correctly located.
-     *
-     * @throws Exception
      */
     @Test
     public void testExportToFile() throws IOException {
@@ -171,8 +167,6 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
 
     /**
      * Ensures that we get an {@link IllegalArgumentException} if we attempt to export to a directory
-     *
-     * @throws IOException
      */
     @Test
     public void testExportToDirectoryFails() throws IOException {
@@ -190,8 +184,6 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
 
     /**
      * Test to make sure an archive can be exported to a {@link OutputStream} and all contents are correctly located.
-     *
-     * @throws Exception
      */
     @Test
     public void testExportToOutStream() throws IOException {
@@ -214,8 +206,6 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
 
     /**
      * Test to make sure an archive can be exported to file and all contents are correctly located.
-     *
-     * @throws Exception
      */
     @Test
     public void testExportToExistingFileFails() throws IOException {
@@ -240,8 +230,6 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
 
     /**
      * Test to make sue an archive can be exported and nested archives are also in exported.
-     *
-     * @throws Exception
      */
     @Test
     public void testExportNested() throws Exception {
@@ -339,9 +327,13 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
     /**
      * Exports the specified archive as a {@link File}, overwriting an existing one is specified
      *
+     *
      * @param archive
+     *             The {@link Archive} to be exported.
      * @param file
+     *             The {@link File} to which the archive will be exported.
      * @param overwrite
+     *             A boolean indicating whether to overwrite the file if it already exists.
      */
     private void exportAsFile(final Archive<?> archive, final File file, final boolean overwrite) {
         // Precondition checks
@@ -358,6 +350,9 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
      * Exports the specified archive to an {@link OutputStream}
      *
      * @param archive
+     *             The {@link Archive} to be exported.
+     * @param out
+     *             The {@link OutputStream} to which the archive will be exported.
      */
     private void exportToOutputStream(final Archive<?> archive, final OutputStream out) {
         assert archive != null : "archive must be specified";

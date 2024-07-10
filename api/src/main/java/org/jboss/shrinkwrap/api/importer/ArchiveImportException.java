@@ -28,7 +28,9 @@ public class ArchiveImportException extends RuntimeException {
 
     /**
      * @param message
+     *            The detail message.
      * @param cause
+     *            The cause of the exception.
      */
     public ArchiveImportException(String message, Throwable cause) {
         super(message, cause);
@@ -36,6 +38,7 @@ public class ArchiveImportException extends RuntimeException {
 
     /**
      * @param cause
+     *            The cause of the exception.
      */
     public ArchiveImportException(Throwable cause) {
         super(cause);

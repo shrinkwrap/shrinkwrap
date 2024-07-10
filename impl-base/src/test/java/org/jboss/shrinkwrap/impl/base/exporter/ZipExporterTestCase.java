@@ -135,7 +135,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
 
     /**
      * Test to ensure that the {@link ZipExporter} does not accept an empty archive as input
-     *
+     * <p>
      * SHRINKWRAP-93
      *
      */
@@ -196,6 +196,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
      * Ensures that the specified {@link ZipFile} contains entries in the expected form
      *
      * @param expectedZip
+     *             The {@link ZipFile} to be validated.
      * @throws IOException
      */
     private void ensureZipFileInExpectedForm(final ZipFile expectedZip) throws IOException {
@@ -231,8 +232,10 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
      * Obtains the entry from the specified ZIP file at the specified Path, ensuring it exists along the way
      *
      * @param expectedZip
+     *             The {@link ZipFile} from which to retrieve the entry.
      * @param path
-     * @return
+     *             The {@link ArchivePath} specifying the location of the entry in the ZIP file.
+     * @return The {@link ZipEntry} found at the specified path.
      * @throws IllegalArgumentException
      */
     private ZipEntry getEntryFromZip(final ZipFile expectedZip, final ArchivePath path)

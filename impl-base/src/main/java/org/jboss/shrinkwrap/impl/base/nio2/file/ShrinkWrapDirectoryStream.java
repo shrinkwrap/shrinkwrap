@@ -50,8 +50,11 @@ class ShrinkWrapDirectoryStream implements DirectoryStream<Path> {
      * specified as well.
      *
      * @param startingPath
+     *             The initial path from which to start the directory stream
      * @param fs
+     *             The {@link ShrinkWrapFileSystem} that provides access to the archive's content
      * @param filter
+     *             An optional {@link DirectoryStream.Filter} to filter the paths returned by this stream
      * @throws IllegalArgumentException
      *             If the fs is not specified
      */

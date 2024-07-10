@@ -45,7 +45,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Ensures that serialization of Archives is possible via the {@link SerializableView}s.
- *
+ * <p>
  * SHRINKWRAP-178
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
@@ -114,8 +114,11 @@ public class SerializationTestCase {
      * the roundtrip are as expected.
      *
      * @param <S>
+     *           The type of {@link SerializableView}
      * @param serializableView
+     *           The class of the serializable view to test
      * @throws Exception
+     *           If an error occurs during serialization or deserialization
      */
     private <S extends SerializableView> void testSerializableView(final Class<S> serializableView) throws Exception {
         // Define the initial archive
@@ -132,10 +135,11 @@ public class SerializationTestCase {
     /**
      * Ensures that the current serialization protocol is compatible with the version initially released. We accomplish
      * this by mocking {@link ZipSerializableOriginalImpl} and redefining its class name via
-     * {@link SerializationTestCase#serializeAndDeserialize(ZipSerializableView, Class)}, which uses the
+     * {@link SerializationTestCase#serializeAndDeserialize(SerializableView, Class)}, which uses the
      * {@link SpoofingObjectOutputStream}.
      *
      * @throws Exception
+     *             If an error occurs during the test
      */
     @Test
     public void zipWireProtocolCurrentToOriginal() throws Exception {
@@ -147,10 +151,11 @@ public class SerializationTestCase {
     /**
      * Ensures that the original serialization protocol is compatible with the current version. We accomplish this by
      * mocking {@link ZipSerializableOriginalImpl} and redefining its class name via
-     * {@link SerializationTestCase#serializeAndDeserialize(ZipSerializableView, Class)}, which uses the
+     * {@link SerializationTestCase#serializeAndDeserialize(SerializableView, Class)}, which uses the
      * {@link SpoofingObjectOutputStream}.
      *
      * @throws Exception
+     *             If an error occurs during the test
      */
     @Test
     public void zipWireProtocolOriginalToCurrent() throws Exception {
@@ -172,6 +177,7 @@ public class SerializationTestCase {
      *            The type we should be represented as
      * @return The roundtrip view
      * @throws IOException
+     *            If an I/O error occurs during serialization or deserialization
      */
     private SerializableView testWireProtocol(final SerializableView clientObject,
         final Class<? extends SerializableView> targetType) throws IOException {
@@ -202,9 +208,12 @@ public class SerializationTestCase {
      * Roundtrip serializes/deserializes the specified {@link Archive}
      *
      * @param archive
-     * @return
+     *            The original {@link SerializableView} instance
+     * @return The reconstituted {@link SerializableView} instance after serialization and deserialization
      * @throws IOException
+     *             If an I/O error occurs during serialization or deserialization
      * @throws ClassNotFoundException
+     *             If the class of a serialized object cannot be found during deserialization
      */
     private static SerializableView serializeAndDeserialize(final SerializableView archive) throws IOException, ClassNotFoundException {
         assert archive != null : "Archive must be specified";
@@ -225,11 +234,11 @@ public class SerializationTestCase {
      *
      * @param archive
      *            The original {@link SerializableView} instance
-     * @param The
+     * @param targetType
      *            new type we should cast to after deserialization
-     * @see http://crazybob.org/2006/01/unit-testing-serialization-evolution.html
-     * @see http://crazybob.org/2006/01/unit-testing-serialization-evolution_13.html
-     * @see http://www.theserverside.com/news/thread.tss?thread_id=38398
+     * @see <a href="http://crazybob.org/2006/01/unit-testing-serialization-evolution.html">Unit Testing Serialization Evolution</a>
+     * @see <a href="http://crazybob.org/2006/01/unit-testing-serialization-evolution_13.html">Unit Testing Serialization Evolution Part 2</a>
+     * @see <a href="http://www.theserverside.com/news/thread.tss?thread_id=38398">TheServerSide Discussion</a>
      * @author Bob Lee
      */
     private static <S extends SerializableView> S serializeAndDeserialize(final SerializableView archive,
@@ -258,10 +267,10 @@ public class SerializationTestCase {
 
     /**
      * SpoofingObjectOutputStream
-     *
+     * <p>
      * ObjectOutputStream which will replace a class name with one explicitly given
      *
-     * @see http://crazybob.org/2006/01/unit-testing-serialization-evolution_13.html
+     * @see <a href="http://crazybob.org/2006/01/unit-testing-serialization-evolution_13.html">Unit Testing Serialization Evolution</a>
      * @author Bob Lee
      * @version $Revision: $
      */

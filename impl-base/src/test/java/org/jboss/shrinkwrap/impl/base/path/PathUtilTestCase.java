@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * PathUtilTestCase
- *
+ * <p>
  * Test cases to ensure the path utilities are working as expected.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
@@ -159,7 +159,7 @@ public class PathUtilTestCase {
     }
 
     /**
-     * Ensures the contract of {@link PathProvider#parent()} is intact
+     * Ensures the contract of {@link PathUtil#getParent(ArchivePath)} is intact
      */
     @Test
     public void testParent() {

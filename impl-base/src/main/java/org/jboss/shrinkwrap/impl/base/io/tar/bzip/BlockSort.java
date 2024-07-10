@@ -469,7 +469,6 @@ class BlockSort {
      *        partially sorted order
      * @param block the original data
      * @param nblock size of the block
-     * @param off offset of first byte to sort in block
      */
     final void fallbackSort(int[] fmap, byte[] block, int nblock) {
         final int[] ftab = new int[257];

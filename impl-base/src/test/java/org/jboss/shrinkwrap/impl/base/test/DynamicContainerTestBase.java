@@ -130,7 +130,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     // -------------------------------------------------------------------------------------||
 
     /**
-     * https://jira.jboss.org/jira/browse/SHRINKWRAP-142
+     * <a href="https://issues.redhat.com/browse/SHRINKWRAP-142">SHRINKWRAP-142</a>
      *
      */
     @Test
@@ -152,7 +152,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     }
 
     /**
-     * https://jira.jboss.org/jira/browse/SHRINKWRAP-142
+     * <a href="https://issues.redhat.com/browse/SHRINKWRAP-142">SHRINKWRAP-142</a>
      *
      * @throws Exception
      */
@@ -166,7 +166,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     }
 
     /**
-     * https://jira.jboss.org/jira/browse/SHRINKWRAP-142
+     * <a href="https://issues.redhat.com/browse/SHRINKWRAP-142">SHRINKWRAP-142</a>
      *
      */
     @Test
@@ -179,7 +179,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     }
 
     /**
-     * https://jira.jboss.org/jira/browse/SHRINKWRAP-142
+     * <a href="https://issues.redhat.com/browse/SHRINKWRAP-142">SHRINKWRAP-142</a>
      *
      */
     @Test
@@ -890,7 +890,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
     /**
      * Ensure classes from the Bootstrap CL can be added to {@link ClassContainer}s.
-     *
+     * <p>
      * SHRINKWRAP-335
      *
      */
@@ -1852,7 +1852,8 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     }
 
     /**
-     * https://jira.jboss.org/jira/browse/SHRINKWRAP-320 Empty Directory Causes FileNotFoundException
+     * <a href="https://issues.redhat.com/browse/SHRINKWRAP-320">SHRINKWRAP-320</a>
+     * Empty Directory Causes FileNotFoundException
      */
     @Test
     public void testAddingEmptyResourceDirectory() throws Exception {

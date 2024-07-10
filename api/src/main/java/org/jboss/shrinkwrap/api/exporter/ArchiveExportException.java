@@ -28,7 +28,9 @@ public class ArchiveExportException extends RuntimeException {
 
     /**
      * @param message
+     *            The detail message.
      * @param cause
+     *            The cause of the exception.
      */
     public ArchiveExportException(String message, Throwable cause) {
         super(message, cause);
@@ -36,6 +38,7 @@ public class ArchiveExportException extends RuntimeException {
 
     /**
      * @param message
+     *            The detail message.
      */
     public ArchiveExportException(String message) {
         super(message);
@@ -43,6 +46,7 @@ public class ArchiveExportException extends RuntimeException {
 
     /**
      * @param cause
+     *            The cause of the exception.
      */
     public ArchiveExportException(Throwable cause) {
         super(cause);

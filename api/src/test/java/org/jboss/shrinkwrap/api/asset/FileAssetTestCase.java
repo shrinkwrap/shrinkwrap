@@ -24,8 +24,8 @@ import java.io.InputStream;
 
 /**
  * Test to ensure that we can use a File as a resource.
- * 
- * https://jira.jboss.org/jira/browse/TMPARCH-5
+ * <p>
+ * <a href="https://issues.redhat.com/browse/TMPARCH-5">TMPARCH-5</a>
  * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * 

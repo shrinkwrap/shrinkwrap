@@ -22,7 +22,7 @@ import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
  * IncludeRegExpPath
- *
+ * <p>
  * Filter to include all {@link ArchivePath}s that match a given Regular Expression.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

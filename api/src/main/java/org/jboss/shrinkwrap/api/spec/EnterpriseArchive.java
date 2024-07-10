@@ -25,7 +25,7 @@ import org.jboss.shrinkwrap.api.container.ResourceContainer;
 /**
  * Traditional EAR (Java Enterprise Archive) structure. Used in construction of enterprise applications.
  *
- * @see http://java.sun.com/javaee/5/docs/tutorial/doc/bnaby.html#indexterm-47
+ * @see <a href="https://javaee.github.io/tutorial/packaging001.html#BCGDJDFB">The Java EE Tutorial</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
  */

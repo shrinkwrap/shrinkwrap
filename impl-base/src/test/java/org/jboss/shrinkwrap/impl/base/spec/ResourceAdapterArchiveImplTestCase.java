@@ -34,7 +34,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 /**
  * ResourceAdapterArchiveImplTestCase
- *
+ * <p>
  * Test to ensure that ResourceAdapterArchiveImpl follow to java rar spec.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>

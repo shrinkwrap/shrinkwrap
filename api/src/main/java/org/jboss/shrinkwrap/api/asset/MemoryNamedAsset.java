@@ -32,7 +32,8 @@ public class MemoryNamedAsset extends MemoryAsset implements NamedAsset {
     /**
      * Sets the name of this {@link MemoryNamedAsset} to the specified (required) {@link String} name
      *
-     * @param path
+     * @param name
+     *             The name of this {@link MemoryNamedAsset}. Must not be {@code null}.
      * @throws IllegalArgumentException
      *             If the name is not specified
      */
@@ -48,6 +49,7 @@ public class MemoryNamedAsset extends MemoryAsset implements NamedAsset {
      * {@link Path}
      *
      * @param path
+     *             The {@link Path} whose {@link Path#toString()} will be used as the name of {@link MemoryNamedAsset}. Must not be {@code null}.
      * @throws IllegalArgumentException
      *             If the path is not specified
      */
@@ -63,6 +65,7 @@ public class MemoryNamedAsset extends MemoryAsset implements NamedAsset {
      * {@link ArchivePath}
      *
      * @param path
+     *             The {@link ArchivePath} whose {@link ArchivePath#get()} will be used as the name of this {@link MemoryNamedAsset}. Must not be {@code null}.
      * @throws IllegalArgumentException
      *             If the path is not specified
      */

@@ -37,8 +37,6 @@ public interface ArchivePath extends Comparable<ArchivePath> {
 
     /**
      * Obtains the context which this {@link ArchivePath} represents
-     *
-     * @return
      */
     String get();
 
@@ -46,8 +44,6 @@ public interface ArchivePath extends Comparable<ArchivePath> {
      * Obtains the parent of this Path, if exists, else null. For instance if the Path is "/my/path", the parent will be
      * "/my". Each call will result in a new object reference, though subsequent calls upon the same Path will be equal
      * by value.
-     *
-     * @return
      */
     ArchivePath getParent();
 }

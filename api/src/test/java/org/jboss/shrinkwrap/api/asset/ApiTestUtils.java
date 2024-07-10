@@ -88,7 +88,7 @@ class ApiTestUtils {
      * 
      * @param clazz
      *            The class to lookup
-     * @return
+     * @return The resource name for the class
      */
     static String getResourceNameForClass(Class<?> clazz) {
         String classResourceDelimiter = clazz.getName().replaceAll("\\.", "/");

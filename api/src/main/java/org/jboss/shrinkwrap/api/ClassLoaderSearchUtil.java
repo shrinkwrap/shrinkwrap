@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 /**
  * Utilities to search a series of {@link ClassLoader}s for a {@link Class} by name.
- *
+ * <p>
  * Not to be granted visibility outside of this package, unless scoped out to internals (this is not part of the public
  * user API)
  *

@@ -69,7 +69,7 @@ import org.jboss.shrinkwrap.spi.Configurable;
 
 /**
  * ContainerBase
- *
+ * <p>
  * Abstract class that helps implement the Archive, ManifestContainer, ResourceContainer, ClassContainer and
  * LibraryContainer.
  *
@@ -237,8 +237,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Archive#addHandlers(org.jboss.shrinkwrap.api.Filter,
-     *      org.jboss.shrinkwrap.api.ArchiveEventHandler)
+     * @see org.jboss.shrinkwrap.api.Archive#addHandlers(org.jboss.shrinkwrap.api.ArchiveEventHandler...)
      */
     @Override
     public T addHandlers(ArchiveEventHandler... handlers) {

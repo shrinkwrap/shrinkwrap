@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * MemoryMapArchiveTestCase
- *
+ * <p>
  * TestCase to ensure that the MemoryMapArchive works as expected.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>

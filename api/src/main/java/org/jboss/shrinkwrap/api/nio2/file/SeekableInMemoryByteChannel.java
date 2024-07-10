@@ -161,9 +161,13 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
      * with 0x00) in the case of a gap).
      *
      * @param input1
+     *         The first byte array to be concatenated
      * @param input2
+     *         The second byte array to be concatenated
      * @param position
+     *         The position at which to insert the second byte array into the result array
      * @return
+     *         A new byte array containing `input1` followed by `input2` at the specified position.
      */
     private byte[] concat(final byte[] input1, final byte[] input2, final int position) {
         // Preconition checks
@@ -268,8 +272,6 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
 
     /**
      * Obtain a copy of the contents of this {@link Channel} as an {@link InputStream}
-     *
-     * @return
      */
     public InputStream getContents() {
         final byte[] copy;

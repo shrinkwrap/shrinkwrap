@@ -113,7 +113,7 @@ public final class ShrinkWrap {
      * specific to this {@link ArchiveFactory}. Generates a random name for the archive and adds proper extension based
      * on the service descriptor properties file if extension property is present (e.g.
      * shrinkwrap/impl-base/src/main/resources/META-INF/services/org.jboss.shrinkwrap.api.spec.JavaArchive)
-     *
+     * <p>
      * Invoking this method is functionally equivalent to calling {@link ArchiveFactory#create(Class)} upon
      * {@link Domain#getArchiveFactory()} upon the domain returned by {@link ShrinkWrap#getDefaultDomain()}.
      *

@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 /**
  * ByteArrayAssetTestCase
- * 
+ * <p>
  * Test Cases for the {@link ByteArrayAsset}
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>

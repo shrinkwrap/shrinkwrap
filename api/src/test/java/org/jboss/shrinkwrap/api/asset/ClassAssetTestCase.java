@@ -23,11 +23,11 @@ import java.io.InputStream;
 
 /**
  * Test to ensure that we are able to use Classes as Resources.
- * 
- * https://jira.jboss.org/jira/browse/TMPARCH-5
- * 
+ * <p>
+ * <a href="https://issues.redhat.com/browse/TMPARCH-5">TMPARCH-5</a>
+ *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- * 
+ *
  */
 public class ClassAssetTestCase {
 
@@ -43,11 +43,11 @@ public class ClassAssetTestCase {
     }
 
     /**
-     * https://jira.jboss.org/jira/browse/TMPARCH-19 <br/>
+     * <a href="https://issues.redhat.com/browse/TMPARCH-19">TMPARCH-19</a> <br/>
      * <br/>
      * A {@link Class} loaded by the Bootstrap ClassLoader will return a null {@link ClassLoader}, should use
      * {@link Thread} current context {@link ClassLoader} instead.
-     * 
+     *
      * @throws Exception
      */
     @Test

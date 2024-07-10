@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * AssetUtilTest
- *
+ * <p>
  * Test case to ensure the correctness of the AssetUtil.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

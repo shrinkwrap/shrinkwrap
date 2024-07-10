@@ -36,7 +36,7 @@ import java.util.zip.ZipInputStream;
 /**
  * Ensures that entries added to the archives preserve the order they are
  * added in.
- *
+ * <p>
  * SHRINKWRAP-480
  *
  * @author <a href="mailto:hiram@hiramchirino.com">Hiram Chirino</a>

@@ -759,8 +759,6 @@ public class FilesTestCase {
 
     /**
      * Gets the archive associated with the filesystem
-     *
-     * @return
      */
     private Archive<?> getArchive() {
         final ShrinkWrapFileSystem swfs = (ShrinkWrapFileSystem) this.fs;

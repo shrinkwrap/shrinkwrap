@@ -45,8 +45,10 @@ public abstract class TarExporterTestBase<T extends StreamImporter<T>> extends S
      * Obtains a stream capable of reading the specified {@link File } in the appropriate format
      *
      * @param archive
-     * @return
+     *            The file to read
+     * @return A {@link TarInputStream} for reading the file
      * @throws IOException
+     *             If an I/O error occurs
      */
     protected abstract TarInputStream getTarInputStreamFromFile(final File archive) throws IOException;
 
@@ -104,8 +106,16 @@ public abstract class TarExporterTestBase<T extends StreamImporter<T>> extends S
     /**
      * Assert an asset is actually in the file
      *
-     * @throws IOException
+     * @param archive
+     *            The TAR archive file
+     * @param path
+     *            The {@link ArchivePath} of the asset within the TAR archive
+     * @param asset
+     *            The expected {@link Asset}
      * @throws IllegalArgumentException
+     *             If the path or asset is not valid
+     * @throws IOException
+     *             If an I/O error occurs
      */
     private void assertAssetInTar(final File archive, final ArchivePath path, final Asset asset)
         throws IllegalArgumentException, IOException {
@@ -120,10 +130,15 @@ public abstract class TarExporterTestBase<T extends StreamImporter<T>> extends S
      * found. We have to iterate through all entries for a matching name, as the instream does not support random
      * access.
      *
+     * @param archive
+     *            The TAR archive file
      * @param path
-     * @return
+     *            The {@link ArchivePath} of the entry to retrieve
+     * @return An {@link InputStream} to the entry if found, or null if not
      * @throws IllegalArgumentException
+     *             If the path is not valid
      * @throws IOException
+     *             If an I/O error occurs
      */
     private InputStream getEntryFromTarFile(final File archive, final ArchivePath path)
         throws IllegalArgumentException, IOException {

@@ -21,7 +21,7 @@ import org.jboss.shrinkwrap.api.Filter;
 
 /**
  * IncludeAllPaths
- *
+ * <p>
  * Filter that include all {@link ArchivePath}s.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

@@ -21,7 +21,7 @@ import org.jboss.shrinkwrap.api.Assignable;
 /**
  * Exporter used to represent an {@link Assignable} in ZIP format with STORED compression (none compression).
  *
- * @see http://www.pkware.com/documents/casestudies/APPNOTE.TXT
+ * @see <a href="http://www.pkware.com/documents/casestudies/APPNOTE.TXT">PKWARE APPNOTE</a>
  * @author <a href="mailto:asotobu@gmail.com">Alex Soto</a>
  * @version $Revision: $
  */

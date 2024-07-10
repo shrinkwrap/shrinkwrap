@@ -241,8 +241,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
     /**
      * {@inheritDoc}
      *
-     * @see java.nio.file.spi.FileSystemProvider#newFileChannel(java.nio.file.Path, java.util.Set,
-     *      java.nio.file.attribute.FileAttribute<?>[])
+     * @see java.nio.file.spi.FileSystemProvider#newFileChannel(Path, Set, FileAttribute[])
      */
     @Override
     public FileChannel newFileChannel(Path path, Set<? extends OpenOption> options,
@@ -253,8 +252,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
     /**
      * {@inheritDoc}
      *
-     * @see java.nio.file.spi.FileSystemProvider#newByteChannel(java.nio.file.Path, java.util.Set,
-     *      java.nio.file.attribute.FileAttribute<?>[])
+     * @see java.nio.file.spi.FileSystemProvider#newByteChannel(Path, Set, FileAttribute[])
      */
     @Override
     public SeekableByteChannel newByteChannel(final Path path, final Set<? extends OpenOption> options,
@@ -344,8 +342,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
     /**
      * {@inheritDoc}
      *
-     * @see java.nio.file.spi.FileSystemProvider#createDirectory(java.nio.file.Path,
-     *      java.nio.file.attribute.FileAttribute<?>[])
+     * @see java.nio.file.spi.FileSystemProvider#createDirectory(Path, FileAttribute[])
      */
     @Override
     public void createDirectory(final Path dir, final FileAttribute<?>... attrs) throws IOException {
@@ -398,7 +395,9 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
      * Obtains the underlying archive associated with the specified Path
      *
      * @param path
+     *        The {@link Path} for which the underlying archive is to be retrieved.
      * @return
+     *        The {@link Archive} associated with the specified {@link Path}.
      */
     private Archive<?> getArchive(final Path path) {
         assert path != null : "Path must be specified";
@@ -612,7 +611,9 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
      * Writes the contents of the {@link InputStream} to the {@link SeekableByteChannel}
      *
      * @param in
+     *           The {@link InputStream} from which data is to be read.
      * @param out
+     *           The {@link SeekableByteChannel} to which data is to be written.
      * @throws IOException
      */
     private void copy(final InputStream in, final SeekableByteChannel out) throws IOException {

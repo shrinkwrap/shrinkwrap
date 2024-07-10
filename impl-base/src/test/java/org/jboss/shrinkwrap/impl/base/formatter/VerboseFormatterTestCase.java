@@ -20,7 +20,7 @@ import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 
 /**
- * Ensures that the {@link Formatters.VERBOSE} is functioning as expected
+ * Ensures that the {@link Formatters#VERBOSE} is functioning as expected
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $

@@ -24,7 +24,7 @@ import java.security.PrivilegedExceptionAction;
 
 /**
  * SecurityActions
- *
+ * <p>
  * A set of privileged actions that are not to leak out of this package
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
@@ -55,8 +55,10 @@ final class SecurityActions {
      * Obtains the Constructor specified from the given Class and argument types
      *
      * @param clazz
+     *         The class from which to obtain the constructor
      * @param argumentTypes
-     * @return
+     *         The types of the constructor arguments
+     * @return The {@link Constructor} object corresponding to the requested constructor
      * @throws NoSuchMethodException
      */
     static Constructor<?> getConstructor(final Class<?> clazz, final Class<?>... argumentTypes)

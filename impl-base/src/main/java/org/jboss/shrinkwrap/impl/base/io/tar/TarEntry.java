@@ -103,7 +103,7 @@ import java.util.Date;
  *
  * Note that while the class does recognize GNU formatted headers, it does not perform proper processing of GNU
  * archives. I hope to add the GNU support someday.
- *
+ * <p>
  * Directory "size" fix contributed by: Bert Becker <becker@informatik.hu-berlin.de>
  *
  * @see TarHeader
@@ -265,7 +265,8 @@ public class TarEntry implements Cloneable {
     /**
      * Determine if the two entries are equal. Equality is determined by the header names being equal.
      *
-     * @return it Entry to be checked for equality.
+     * @param it
+     *          Entry to be checked for equality.
      * @return True if the entries are equal.
      */
     public boolean equals(TarEntry it) {
@@ -454,9 +455,6 @@ public class TarEntry implements Cloneable {
 
     /**
      * Set this entry's modification time.
-     *
-     * @param time
-     *            This entry's new modification time.
      */
     public Date getModTime() {
         return new Date(this.header.modTime * 1000);
@@ -691,12 +689,12 @@ public class TarEntry implements Cloneable {
 
     /**
      * Parse an entry's TarHeader information from a header buffer.
-     *
+     * <p>
      * Old unix-style code contributed by David Mehringer <dmehring@astro.uiuc.edu>.
      *
      * @param hdr
      *            The TarHeader to fill in from the buffer information.
-     * @param header
+     * @param headerBuf
      *            The tar entry header buffer to get information from.
      */
     public void parseTarHeader(TarHeader hdr, byte[] headerBuf) throws InvalidHeaderException {

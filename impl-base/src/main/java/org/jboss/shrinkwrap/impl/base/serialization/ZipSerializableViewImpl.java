@@ -135,7 +135,7 @@ public class ZipSerializableViewImpl implements ZipSerializableView {
     }
 
     /**
-     * Deserializes according to the custom form defined by {@link ZipSerializableImpl#writeObject(ObjectOutputStream)}
+     * Deserializes according to the custom form defined by {@link ZipSerializableViewImpl#writeObject(ObjectOutputStream)}
      */
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         // Get default form

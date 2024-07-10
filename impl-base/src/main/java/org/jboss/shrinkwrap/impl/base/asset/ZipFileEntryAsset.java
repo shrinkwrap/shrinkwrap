@@ -27,7 +27,7 @@ import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
  * Holds a reference to the ZipFile and the ZipEntry this Asset represents for lazy loading.
- *
+ * <p>
  * Used by the ZipImporter.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

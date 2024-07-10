@@ -33,7 +33,7 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 
 /**
  * ExplodedExporterDelegate
- *
+ * <p>
  * Delegate used to export an archive into an exploded directory structure.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
@@ -157,10 +157,13 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File> {
     // -------------------------------------------------------------------------------------||
 
     /**
-     * Processes a nested archive by delegating to the ExplodedArchiveExporter
+     * Processes a nested archive by delegating to the {@link ExplodedExporter} to export the archive contents
+     * into the specified parent directory.
      *
      * @param parentDirectory
+     *            The directory to which the nested archive will be exported.
      * @param nestedArchiveAsset
+     *            The nested archive asset that will be processed and exported.
      */
     private void processArchiveAsset(File parentDirectory, ArchiveAsset nestedArchiveAsset) {
         // Get the nested archive
@@ -169,11 +172,15 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File> {
     }
 
     /**
-     * Initializes the output directory
+     * Validates and initializes the output directory by creating it if it doesn't exist and ensuring it's a directory.
      *
-     * @param baseDirectory
-     * @param directoryName
-     * @return
+     * @param outputDirectory
+     *            The directory to be validated and initialized.
+     * @return The validated output directory.
+     * @throws ArchiveExportException
+     *            If the directory cannot be created.
+     * @throws IllegalArgumentException
+     *            If the output directory is an existing file.
      */
     private File validateOutputDirectory(File outputDirectory) {
         // Create output directory

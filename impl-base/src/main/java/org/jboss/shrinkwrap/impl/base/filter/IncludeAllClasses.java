@@ -20,7 +20,7 @@ import org.jboss.shrinkwrap.api.Filter;
 
 /**
  * IncludeAllClasses
- *
+ * <p>
  * Filter to include all {@link Class}s
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

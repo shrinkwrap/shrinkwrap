@@ -43,6 +43,7 @@ class ZipOnDemandInputStream extends AbstractOnDemandInputStream<ZipOutputStream
      * Creates stream directly from archive with compression.
      *
      * @param archive
+     *             The {@link Archive} to be read and compressed.
      */
     ZipOnDemandInputStream(final Archive<?> archive) {
         super(archive);
@@ -53,7 +54,9 @@ class ZipOnDemandInputStream extends AbstractOnDemandInputStream<ZipOutputStream
      * Creates stream directly from archive.
      *
      * @param archive
+     *             The {@link Archive} to be read.
      * @param compressed
+     *             Flag indicating whether the stream should be compressed.
      */
     ZipOnDemandInputStream(final Archive<?> archive, final boolean compressed) {
         super(archive);
