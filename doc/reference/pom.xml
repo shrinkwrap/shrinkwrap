@@ -42,6 +42,7 @@
                   <type>jdocbook-style</type>
                </dependency>
             </dependencies>
+
             <configuration>
                <sourceDocumentName>master.xml</sourceDocumentName>
                <formats>

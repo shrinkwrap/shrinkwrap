@@ -68,7 +68,6 @@
         <artifactId>shrinkwrap-impl-base</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>org.jboss.shrinkwrap</groupId>
         <artifactId>shrinkwrap-depchain</artifactId>

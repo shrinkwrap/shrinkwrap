@@ -20,12 +20,6 @@
   <name>ShrinkWrap Implementation Base</name>
   <description>Common Base for Implementations of the ShrinkWrap Project</description>
 
-
-  <!-- Properties -->
-  <properties>
-
-  </properties>
-
   <!-- Dependencies -->
   <dependencies>
 
@@ -60,7 +54,7 @@
     <dependency>
       <groupId>com.sun.activation</groupId>
       <artifactId>javax.activation</artifactId>
-      <version>1.2.0</version>
+      <version>${version.com.sun.activation.javax.activation}</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
