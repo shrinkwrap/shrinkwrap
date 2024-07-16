@@ -149,7 +149,7 @@ final class ShrinkWrapFileAttributes implements BasicFileAttributes {
      */
     @Override
     public Object fileKey() {
-        return this.getArchive().getId() + "/" + this.path.toString();
+        return this.getArchive().getId() + "/" + this.path;
     }
 
     private Archive<?> getArchive() {

@@ -1377,13 +1377,13 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
                     ArchivePath classArchivePath = AssetUtil.getFullPathForClassResource(clazz);
                     String expression = classArchivePath.get().replace(".class", "\\$.*");
                     return path.get().matches(expression);
-                };
+                }
             }, adjustedCl,
             // Assumes a null package is a class in the default package
                 clazz.getPackage() == null ? DEFAULT_PACKAGE_NAME : clazz.getPackage().getName());
         }
         return covarientReturn();
-    };
+    }
 
     /*
      * (non-Javadoc)
@@ -1725,7 +1725,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         Validate.notNull(archive, "Archive must be specified");
         // Libraries are JARs, so add as ZIP
         return add(archive, getLibraryPath(), ZipExporter.class);
-    };
+    }
 
     /**
      * {@inheritDoc}

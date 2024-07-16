@@ -55,7 +55,7 @@ public final class Validate {
      *             Thrown if obj is null
      */
     public static void notNullOrEmpty(final String string, final String message) throws IllegalArgumentException {
-        if (string == null || string.length() == 0) {
+        if (string == null || string.isEmpty()) {
             throw new IllegalArgumentException(message);
         }
     }

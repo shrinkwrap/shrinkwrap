@@ -65,7 +65,7 @@ public class URLPackageScanner {
 
 
     // private final Set<String> classes = new HashSet<String>();
-    private Callback callback;
+    private final Callback callback;
 
     /**
      * Factory method to create an instance of URLPackageScanner.
@@ -151,7 +151,7 @@ public class URLPackageScanner {
     private void handle(File file, String packageName) {
         for (File child : file.listFiles()) {
             if (!child.isDirectory() && child.getName().endsWith(SUFFIX_CLASS)) {
-                final String packagePrefix = packageName.length() > 0 ? packageName + "." : packageName;
+                final String packagePrefix = !packageName.isEmpty() ? packageName + "." : packageName;
                 String className = packagePrefix + child.getName().substring(0, child.getName().lastIndexOf(SUFFIX_CLASS));
                 foundClass(className, prefix + className.replace('.', '/') + SUFFIX_CLASS);
             } else if (child.isDirectory() && addRecursively) {
@@ -167,7 +167,7 @@ public class URLPackageScanner {
     private List<URL> loadResources(String name) throws IOException {
         ArrayList<URL> resources = Collections.list(classLoader.getResources(prefix + name));
 
-        if (resources.size() == 0) {
+        if (resources.isEmpty()) {
             prefix = WEB_INF_CLASSES_DIR;
             resources = Collections.list(classLoader.getResources(prefix + name));
         } else {

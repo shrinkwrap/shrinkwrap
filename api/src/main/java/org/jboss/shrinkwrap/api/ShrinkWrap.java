@@ -155,7 +155,7 @@ public final class ShrinkWrap {
         if (type == null) {
             throw new IllegalArgumentException("Type must be specified");
         }
-        if (archiveName == null || archiveName.length() == 0) {
+        if (archiveName == null || archiveName.isEmpty()) {
             throw new IllegalArgumentException("ArchiveName must be specified");
         }
 
@@ -201,7 +201,7 @@ public final class ShrinkWrap {
         /**
          * The wrapped default domain
          */
-        private transient Domain domain = ShrinkWrap.createDomain();
+        private final transient Domain domain = ShrinkWrap.createDomain();
 
         /**
          * Obtains the default domain for the system

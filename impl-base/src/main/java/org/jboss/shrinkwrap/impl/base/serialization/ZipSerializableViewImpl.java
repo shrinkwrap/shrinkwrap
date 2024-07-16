@@ -71,7 +71,7 @@ public class ZipSerializableViewImpl implements ZipSerializableView {
     /**
      * String form of the ID
      */
-    private transient String id;
+    private final transient String id;
 
     /**
      * Underlying archive. Won't be directly serialized; instead we'll encode it as ZIP and send that
@@ -153,7 +153,7 @@ public class ZipSerializableViewImpl implements ZipSerializableView {
 
         // Log
         if (log.isLoggable(Level.FINER)) {
-            log.finer("Read in archive: " + archive.toString());
+            log.finer("Read in archive: " + archive);
         }
 
         /*
@@ -186,7 +186,7 @@ public class ZipSerializableViewImpl implements ZipSerializableView {
              */
             if (log.isLoggable(Level.FINER)) {
                 log.finer("Detected an older version of the archive sent over the wire; no ID was sent.  "
-                    + "Ignoring and using the default ID for this archive: " + archive.toString());
+                    + "Ignoring and using the default ID for this archive: " + archive);
             }
         }
 

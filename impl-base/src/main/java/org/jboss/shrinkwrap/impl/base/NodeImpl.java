@@ -39,17 +39,17 @@ public class NodeImpl implements Node {
     /**
      * The path of this node inside the {@link Archive}
      */
-    private ArchivePath path;
+    private final ArchivePath path;
 
     /**
      * The asset this node holds.
      */
-    private Asset asset;
+    private final Asset asset;
 
     /**
      * The children nodes.
      */
-    private Set<Node> children = Collections.synchronizedSet(new LinkedHashSet<>());
+    private final Set<Node> children = Collections.synchronizedSet(new LinkedHashSet<>());
 
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||

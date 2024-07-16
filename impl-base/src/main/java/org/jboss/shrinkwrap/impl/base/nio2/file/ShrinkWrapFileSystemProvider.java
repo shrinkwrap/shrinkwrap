@@ -134,11 +134,11 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
                 archive = Archive.class.cast(archiveArg);
                 // Ensure the name of the archive matches the host specified in the URI
                 if (!archive.getId().equals(id)) {
-                    throw new IllegalArgumentException("Specified archive " + archive.toString()
-                        + " does not have name matching the host of specified URI: " + uri.toString());
+                    throw new IllegalArgumentException("Specified archive " + archive
+                        + " does not have name matching the host of specified URI: " + uri);
                 }
                 if (log.isLoggable(Level.FINER)) {
-                    log.finer("Found archive supplied by environment: " + archive.toString());
+                    log.finer("Found archive supplied by environment: " + archive);
                 }
             } catch (final ClassCastException cce) {
                 // User specified the wrong type, translate and rethrow
@@ -157,11 +157,10 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         // Exists?
         final ShrinkWrapFileSystem existsFs = this.createdFileSystems.get(archive.getId());
         if (existsFs != null && existsFs.isOpen()) {
-            throw new FileSystemAlreadyExistsException("File System for URI " + uri.toString() + " already exists: "
-                + existsFs.toString());
+            throw new FileSystemAlreadyExistsException("File System for URI " + uri + " already exists: " + existsFs);
         } else if (existsFs != null && !existsFs.isOpen()) {
             if (log.isLoggable(Level.FINE)) {
-                log.fine("Attempting to create a file system for URI " + uri.toString()
+                log.fine("Attempting to create a file system for URI " + uri
                     + ", and one has been made but is closed; it will be replaced by a new one.");
             }
         }
@@ -169,7 +168,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         // Make a new FileSystem
         final ShrinkWrapFileSystem newFs = new ShrinkWrapFileSystem(this, archive);
         if (log.isLoggable(Level.FINE)) {
-            log.fine("Created new filesystem: " + newFs.toString() + " for URI " + uri.toString());
+            log.fine("Created new filesystem: " + newFs + " for URI " + uri);
         }
         this.createdFileSystems.put(archive.getId(), newFs);
 
@@ -193,7 +192,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
 
         // If not already created
         if (fs == null) {
-            throw new FileSystemNotFoundException("Could not find an open file system with URI: " + uri.toString()
+            throw new FileSystemNotFoundException("Could not find an open file system with URI: " + uri
                 + "; try creating a new file system?");
         }
 
@@ -217,18 +216,17 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         // ID exists? We're referencing a previously-opened archive?
         final String id = uri.getHost();
         ShrinkWrapFileSystem fs = null;
-        if (id != null && id.length() > 0) {
+        if (id != null && !id.isEmpty()) {
             fs = this.createdFileSystems.get(id);
         }
 
         // Check that the file system exists
         if (fs == null) {
-            throw new FileSystemNotFoundException("Could not find a previously-created filesystem with URI: "
-                + uri.toString());
+            throw new FileSystemNotFoundException("Could not find a previously-created filesystem with URI: " + uri);
         }
         // Check FS is open
         if (!fs.isOpen()) {
-            throw new FileSystemNotFoundException("File System for URI: " + uri.toString()
+            throw new FileSystemNotFoundException("File System for URI: " + uri
                 + " is closed; create a new one to re-mount.");
         }
 
@@ -338,7 +336,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
     public DirectoryStream<Path> newDirectoryStream(final Path dir, final Filter<? super Path> filter) {
         final FileSystem fs = dir.getFileSystem();
         if (!(fs instanceof ShrinkWrapFileSystem)) {
-            throw new IllegalArgumentException("Expected ShrinkWrap File System for Path: " + dir.toString());
+            throw new IllegalArgumentException("Expected ShrinkWrap File System for Path: " + dir);
         }
         return new ShrinkWrapDirectoryStream(dir, (ShrinkWrapFileSystem) fs, filter);
     }
@@ -360,7 +358,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         }
         archive.addAsDirectories(dir.toString());
         if (log.isLoggable(Level.FINEST)) {
-            log.finest("Created directory " + dir.toString() + " on " + archive.toString());
+            log.finest("Created directory " + dir + " on " + archive);
         }
     }
 
@@ -392,7 +390,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         }
         archive.delete(pathString);
         if (log.isLoggable(Level.FINEST)) {
-            log.finest("Deleted " + path.toString() + " from " + archive.toString());
+            log.finest("Deleted " + path + " from " + archive);
         }
     }
 
@@ -448,7 +446,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
 
         // Source exists?
         if (!Files.exists(source, new LinkOption[] {})) {
-            throw new IllegalArgumentException("Source file doesn't exist: " + source.toString());
+            throw new IllegalArgumentException("Source file doesn't exist: " + source);
         }
 
         // If equal, NOOP
@@ -464,8 +462,8 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
             // Directory
             if (asset == null) {
                 // Not empty
-                if (node.getChildren().size() > 0) {
-                    throw new DirectoryNotEmptyException("Cannot move to non-empty directory: " + target.toString());
+                if (!node.getChildren().isEmpty()) {
+                    throw new DirectoryNotEmptyException("Cannot move to non-empty directory: " + target);
                 }
             }
         }

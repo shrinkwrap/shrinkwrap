@@ -19,9 +19,9 @@ package org.jboss.shrinkwrap.api.asset;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.nio2.file.SeekableInMemoryByteChannelTestCase;
@@ -43,8 +43,6 @@ public class MemoryAssetTestCase {
 
     private static final String CONTENTS_BUFFER = "Andrew Lee Rubinger";
 
-    private static final String UTF8 = "UTF-8";
-
     /**
      * Instance under test
      */
@@ -55,11 +53,7 @@ public class MemoryAssetTestCase {
     @Before
     public void init() {
         this.asset = new MemoryAsset();
-        try {
-            buffer = ByteBuffer.wrap(CONTENTS_BUFFER.getBytes(UTF8));
-        } catch (final UnsupportedEncodingException uee) {
-            throw new RuntimeException(uee);
-        }
+        buffer = ByteBuffer.wrap(CONTENTS_BUFFER.getBytes(StandardCharsets.UTF_8));
     }
 
     @After
@@ -84,7 +78,7 @@ public class MemoryAssetTestCase {
         Assert.assertEquals("Setting position should return the asset", this.asset, channel);
         final int numBytesRead = channel.read(ByteBuffer.wrap(contents));
         final String expected = "dr";
-        final String contentsRead = new String(contents, UTF8);
+        final String contentsRead = new String(contents, StandardCharsets.UTF_8);
         Assert.assertEquals("Read should report correct number of bytes read", contents.length, numBytesRead);
         Assert.assertEquals("Channel should respect explicit position during reads", expected, contentsRead);
     }
@@ -102,12 +96,12 @@ public class MemoryAssetTestCase {
     public void write() throws IOException {
         this.asset.write(buffer);
         final int newPosition = 2;
-        final int numBytesWritten = this.asset.position(newPosition).write(ByteBuffer.wrap("DR".getBytes(UTF8)));
+        final int numBytesWritten = this.asset.position(newPosition).write(ByteBuffer.wrap("DR".getBytes(StandardCharsets.UTF_8)));
         // Read 3 bytes from the new position
         final byte[] contents = new byte[3];
         this.asset.position(newPosition).read(ByteBuffer.wrap(contents));
         final String expected = "DRe";
-        final String read = new String(contents, UTF8);
+        final String read = new String(contents, StandardCharsets.UTF_8);
         Assert.assertEquals("Write should report correct number of bytes written", 2, numBytesWritten);
         Assert.assertEquals("Channel should respect explicit position during writes", expected, read);
     }

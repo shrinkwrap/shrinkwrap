@@ -177,8 +177,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
                               return node;
                            }
                            // SHRINKWRAP-308 We've asked for a path that doesn't exist
-                           throw new FileNotFoundException("Requested path: " + path + " does not exist in "
-                                 + archive.toString());
+                           throw new FileNotFoundException("Requested path: " + path + " does not exist in " + archive);
                         }
 
                         private ArchivePath convertToArchivePath(URL url) {

@@ -260,8 +260,7 @@ public class PathTestCase {
     public void toUri() {
         final Path path = fileSystem.getPath("/toplevel/second");
         final URI uri = path.toUri();
-        final String expected = ShrinkWrapFileSystems.PROTOCOL + "://" + fileSystem.getArchive().getId()
-            + path.toString();
+        final String expected = ShrinkWrapFileSystems.PROTOCOL + "://" + fileSystem.getArchive().getId() + path;
         Assert.assertEquals("toUri did not return form as expected", expected, uri.toString());
     }
 

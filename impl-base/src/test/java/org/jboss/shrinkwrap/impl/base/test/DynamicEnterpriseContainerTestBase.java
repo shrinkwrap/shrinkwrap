@@ -112,7 +112,7 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
     @ArchiveType(EnterpriseContainer.class)
     public void testAddApplicationURL() {
         final ArchivePath targetPath = new BasicPath("Test.properties");
-        ;
+
         getEnterpriseContainer().addAsApplicationResource(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
         ArchivePath expectedPath = new BasicPath(getApplicationPath(), targetPath);
         Assert.assertTrue("Archive should contain " + expectedPath, getArchive().contains(expectedPath));
