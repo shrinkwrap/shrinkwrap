@@ -62,7 +62,7 @@ public class ClassAssetTestCase {
     }
 
     @Test
-    public void shouldThrowExceptionOnNullClass() throws Exception {
+    public void shouldThrowExceptionOnNullClass() {
         try {
             new ClassAsset(null);
             Assert.fail("Should have thrown IllegalArgumentException");
@@ -73,7 +73,7 @@ public class ClassAssetTestCase {
     }
     
     @Test
-    public void shouldBeAbleToReturnThisClass() throws Exception {
+    public void shouldBeAbleToReturnThisClass() {
         final Class<?> clazz = ClassAssetTestCase.class;
         final Asset asset = new ClassAsset(clazz);
         

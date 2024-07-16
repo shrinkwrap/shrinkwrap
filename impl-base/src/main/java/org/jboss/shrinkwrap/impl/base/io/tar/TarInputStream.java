@@ -125,7 +125,7 @@ public class TarInputStream extends FilterInputStream {
      *
      * @return The number of available bytes for the current entry.
      */
-    public int available() throws IOException {
+    public int available() {
         return (int) (this.entrySize - this.entryOffset);
     }
 

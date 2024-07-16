@@ -134,11 +134,10 @@ public class MemoryAsset implements Asset, SeekableByteChannel {
      *
      * @param size
      * @return
-     * @throws IOException
      * @see java.nio.channels.SeekableByteChannel#truncate(long)
      */
     @Override
-    public SeekableByteChannel truncate(final long size) throws IOException {
+    public SeekableByteChannel truncate(final long size) {
         this.delegate.truncate(size);
         return this;
     }

@@ -91,7 +91,7 @@ public class ShrinkWrapFileStore extends FileStore {
      * @see java.nio.file.FileStore#getTotalSpace()
      */
     @Override
-    public long getTotalSpace() throws IOException {
+    public long getTotalSpace() {
         return this.getUsableSpace() + this.getUsedSpace();
     }
 
@@ -137,7 +137,7 @@ public class ShrinkWrapFileStore extends FileStore {
      * @see java.nio.file.FileStore#getUsableSpace()
      */
     @Override
-    public long getUsableSpace() throws IOException {
+    public long getUsableSpace() {
         return Runtime.getRuntime().freeMemory();
     }
 
@@ -147,7 +147,7 @@ public class ShrinkWrapFileStore extends FileStore {
      * @see java.nio.file.FileStore#getUnallocatedSpace()
      */
     @Override
-    public long getUnallocatedSpace() throws IOException {
+    public long getUnallocatedSpace() {
         return this.getUsableSpace();
     }
 
@@ -188,7 +188,7 @@ public class ShrinkWrapFileStore extends FileStore {
      * @see java.nio.file.FileStore#getAttribute(java.lang.String)
      */
     @Override
-    public Object getAttribute(final String attribute) throws IOException {
+    public Object getAttribute(final String attribute) {
         throw new UnsupportedOperationException(this.getClass().getSimpleName() + " does not support attributes.");
     }
 

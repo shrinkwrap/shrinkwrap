@@ -108,9 +108,9 @@ public final class IOUtil {
         } finally {
             try {
                 in.close();
-            } catch (IOException ignore) {
+            } catch (IOException exception) {
                 if (log.isLoggable(Level.FINER)) {
-                    log.finer("Could not close stream due to: " + ignore.getMessage() + "; ignoring");
+                    log.finer("Could not close stream due to: " + exception.getMessage() + "; ignoring");
                 }
             }
         }
@@ -200,16 +200,16 @@ public final class IOUtil {
         } finally {
             try {
                 input.close();
-            } catch (final IOException ignore) {
+            } catch (final IOException exception) {
                 if (log.isLoggable(Level.FINER)) {
-                    log.finer("Could not close stream due to: " + ignore.getMessage() + "; ignoring");
+                    log.finer("Could not close stream due to: " + exception.getMessage() + "; ignoring");
                 }
             }
             try {
                 output.close();
-            } catch (final IOException ignore) {
+            } catch (final IOException exception) {
                 if (log.isLoggable(Level.FINER)) {
-                    log.finer("Could not close stream due to: " + ignore.getMessage() + "; ignoring");
+                    log.finer("Could not close stream due to: " + exception.getMessage() + "; ignoring");
                 }
             }
         }
@@ -242,9 +242,9 @@ public final class IOUtil {
             if (stream != null) {
                 try {
                     stream.close();
-                } catch (final IOException ignore) {
+                } catch (final IOException exception) {
                     if (log.isLoggable(Level.FINER)) {
-                        log.finer("Could not close stream due to: " + ignore.getMessage() + "; ignoring");
+                        log.finer("Could not close stream due to: " + exception.getMessage() + "; ignoring");
                     }
                 }
             }

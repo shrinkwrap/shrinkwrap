@@ -73,7 +73,7 @@ public class PathsTestCase {
     }
 
     @Test
-    public void get() throws URISyntaxException {
+    public void get() {
         // Get a previously-opened filesystem by passing in a mounted URI
         final Path path = Paths.get(ShrinkWrapFileSystems.getRootUri(archive));
         Assert.assertTrue("Wrong Path implementation returned", path instanceof ShrinkWrapPath);
@@ -86,7 +86,7 @@ public class PathsTestCase {
     }
 
     @Test(expected = FileSystemNotFoundException.class)
-    public void getClosedFilesystem() throws URISyntaxException, IOException {
+    public void getClosedFilesystem() throws IOException {
         fs.close();
         Paths.get(ShrinkWrapFileSystems.getRootUri(archive));
     }

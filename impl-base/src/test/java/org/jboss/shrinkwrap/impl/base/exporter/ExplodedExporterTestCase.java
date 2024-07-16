@@ -217,10 +217,9 @@ public class ExplodedExporterTestCase extends ExportTestBase {
     /**
      * Ensure an baseDirectory is required to export.
      *
-     * @throws Exception
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testExportExplodedRequiresBaseDirectroy() throws Exception {
+    public void testExportExplodedRequiresBaseDirectroy() {
         log.info("testExportExplodedRequiresBaseDirectroy");
 
         ShrinkWrap.create(ExplodedExporter.class, "test.jar").exportExploded(null);
@@ -229,10 +228,9 @@ public class ExplodedExporterTestCase extends ExportTestBase {
     /**
      * Ensure an baseDirectory must exist is required to export.
      *
-     * @throws Exception
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testExportExplodedRequiresExistingDirectory() throws Exception {
+    public void testExportExplodedRequiresExistingDirectory() {
         log.info("testExportExplodedRequiresExisitingDirectroy");
 
         final File directory = this.getNonexistantDirectory();
@@ -243,7 +241,7 @@ public class ExplodedExporterTestCase extends ExportTestBase {
      * Ensure ExpolodedExporter requires a directory
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testExportExplodedRequiresValidDirectory() throws Exception {
+    public void testExportExplodedRequiresValidDirectory() {
         log.info("testExportExplodedRequiresValidDirectory");
         final File nonDirectory = new File(this.getTarget(), "tempFile.txt");
         ShrinkWrap.create(ExplodedExporter.class, "test.jar").exportExploded(nonDirectory);
@@ -281,7 +279,7 @@ public class ExplodedExporterTestCase extends ExportTestBase {
      * Should be able to use a existing directory as parent directory for ExplodedExports
      */
     @Test
-    public void testShouldBeAbleToUseExistingDirectoryAsParent() throws Exception {
+    public void testShouldBeAbleToUseExistingDirectoryAsParent() {
         Archive<?> archive = createArchiveWithAssets();
 
         File existingParentFolder = new File("target/");

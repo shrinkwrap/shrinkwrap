@@ -65,7 +65,7 @@ public class SeekableInMemoryByteChannelTestCase {
     }
 
     @After
-    public void closeChannel() throws IOException {
+    public void closeChannel() {
         if (this.channel.isOpen()) {
             this.channel.close();
         }
@@ -84,23 +84,23 @@ public class SeekableInMemoryByteChannelTestCase {
     }
 
     @Test
-    public void isOpenTrue() throws IOException {
+    public void isOpenTrue() {
         Assert.assertTrue("Channel should report open before it's closed", this.channel.isOpen());
     }
 
     @Test
-    public void isOpenFalseAfterClose() throws IOException {
+    public void isOpenFalseAfterClose() {
         this.channel.close();
         Assert.assertFalse("Channel should report not open after close", this.channel.isOpen());
     }
 
     @Test
-    public void positionInit0() throws IOException {
+    public void positionInit0() {
         Assert.assertEquals("Channel should init to position 0", 0, this.channel.position());
     }
 
     @Test
-    public void sizeInit0() throws IOException {
+    public void sizeInit0() {
         Assert.assertEquals("Channel should init to size 0", 0, this.channel.size());
     }
 
@@ -184,31 +184,31 @@ public class SeekableInMemoryByteChannelTestCase {
     }
 
     @Test
-    public void positionSetPastSize() throws IOException {
+    public void positionSetPastSize() {
         final int newPosition = 30;
         this.channel.position(newPosition);
         Assert.assertEquals("Channel should be able to be set past size", newPosition, this.channel.position());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void negativePositionProhibited() throws IOException {
+    public void negativePositionProhibited() {
         this.channel.position(-1);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void exceedMaxIntegerPositionProhibited() throws IOException {
+    public void exceedMaxIntegerPositionProhibited() {
         final long newPosition = Integer.MAX_VALUE + 1L;
         Assert.assertTrue("Didn't set up new position to be out of int bounds", newPosition > Integer.MAX_VALUE);
         this.channel.position(newPosition); // Exception expected
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void negativeTruncateProhibited() throws IOException {
+    public void negativeTruncateProhibited() {
         this.channel.truncate(-1);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void exceedMaxIntegerTruncateProhibited() throws IOException {
+    public void exceedMaxIntegerTruncateProhibited() {
         final long truncateValue = Integer.MAX_VALUE + 1L;
         Assert.assertTrue("Didn't set up new truncate to be out of int bounds", truncateValue > Integer.MAX_VALUE);
         this.channel.truncate(truncateValue); // Exception expected

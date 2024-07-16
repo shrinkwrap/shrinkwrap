@@ -67,52 +67,52 @@ public class FileAttributesTestCase {
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void getLastModifiedTime() throws IOException {
+    public void getLastModifiedTime() {
         this.getAttributes("path", true).lastModifiedTime();
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void lastAccessTime() throws IOException {
+    public void lastAccessTime() {
         this.getAttributes("path", true).lastAccessTime();
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void creationTime() throws IOException {
+    public void creationTime() {
         this.getAttributes("path", true).creationTime();
     }
 
     @Test
-    public void isRegularFile() throws IOException {
+    public void isRegularFile() {
         Assert.assertTrue(this.getAttributes("path", true).isRegularFile());
     }
 
     @Test
-    public void isRegularFileFalse() throws IOException {
+    public void isRegularFileFalse() {
         Assert.assertFalse(this.getAttributes("path/", true).isRegularFile());
     }
 
     @Test
-    public void isDirectory() throws IOException {
+    public void isDirectory() {
         Assert.assertTrue(this.getAttributes("path/", true).isDirectory());
     }
 
     @Test
-    public void isDirectoryFalse() throws IOException {
+    public void isDirectoryFalse() {
         Assert.assertFalse(this.getAttributes("path", true).isDirectory());
     }
 
     @Test
-    public void isOther() throws IOException {
+    public void isOther() {
         Assert.assertFalse(this.getAttributes("alwaysFalse", true).isOther());
     }
 
     @Test
-    public void isSymbolicLink() throws IOException {
+    public void isSymbolicLink() {
         Assert.assertFalse(this.getAttributes("alwaysFalse", true).isSymbolicLink());
     }
 
     @Test
-    public void size() throws IOException {
+    public void size() {
 
         final int size = 1024;
         final Asset kiloAsset = () -> new ByteArrayInputStream(new byte[size]);
@@ -122,7 +122,7 @@ public class FileAttributesTestCase {
     }
 
     @Test
-    public void fileKey() throws IOException {
+    public void fileKey() {
         final String path = "path";
         final String expected = this.archive.getId() + "/" + path;
         Assert.assertEquals("Filekey not as expected", expected, this.getAttributes(path, true).fileKey());

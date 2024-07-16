@@ -197,10 +197,9 @@ public final class ZipStoredExporterTestCase extends StreamExporterTestBase<ZipI
      * @param path
      * @return
      * @throws IllegalArgumentException
-     * @throws IOException
      */
     private ZipEntry getEntryFromZip(final ZipFile expectedZip, final ArchivePath path)
-            throws IllegalArgumentException, IOException {
+            throws IllegalArgumentException {
         final String entryPath = PathUtil.optionallyRemovePrecedingSlash(path.get());
         final ZipEntry entry = expectedZip.getEntry(entryPath);
         Assert.assertNotNull("Expected path not found in ZIP: " + path, entry);

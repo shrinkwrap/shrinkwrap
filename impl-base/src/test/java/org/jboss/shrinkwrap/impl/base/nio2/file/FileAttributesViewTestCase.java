@@ -59,7 +59,7 @@ public class FileAttributesViewTestCase {
     }
 
     @Test
-    public void readAttributes() throws IOException {
+    public void readAttributes() {
         ShrinkWrapFileAttributeView attributeView = getAttributesView("path");
         Assert.assertNotNull("Attribute view should not be null", attributeView);
 

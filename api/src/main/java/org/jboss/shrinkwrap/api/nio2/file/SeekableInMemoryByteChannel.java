@@ -77,7 +77,7 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
      * @see java.nio.channels.Channel#close()
      */
     @Override
-    public void close() throws IOException {
+    public void close() {
         this.open = false;
     }
 
@@ -186,7 +186,7 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
      * @see java.nio.channels.SeekableByteChannel#position()
      */
     @Override
-    public long position() throws IOException {
+    public long position() {
         synchronized (this) {
             return this.position;
         }
@@ -198,7 +198,7 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
      * @see java.nio.channels.SeekableByteChannel#position(long)
      */
     @Override
-    public SeekableByteChannel position(final long newPosition) throws IOException {
+    public SeekableByteChannel position(final long newPosition) {
         // Precondition checks
         if (newPosition > Integer.MAX_VALUE || newPosition < 0) {
             throw new IllegalArgumentException("Valid position for this channel is between 0 and " + Integer.MAX_VALUE);
@@ -215,7 +215,7 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
      * @see java.nio.channels.SeekableByteChannel#size()
      */
     @Override
-    public long size() throws IOException {
+    public long size() {
         synchronized (this) {
             return this.contents.length;
         }
@@ -227,7 +227,7 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
      * @see java.nio.channels.SeekableByteChannel#truncate(long)
      */
     @Override
-    public SeekableByteChannel truncate(final long size) throws IOException {
+    public SeekableByteChannel truncate(final long size) {
 
         // Precondition checks
         if (size < 0 || size > Integer.MAX_VALUE) {

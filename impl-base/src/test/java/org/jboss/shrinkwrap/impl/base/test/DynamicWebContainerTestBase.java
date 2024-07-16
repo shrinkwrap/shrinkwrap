@@ -54,7 +54,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testSetWebXMLResource() throws Exception {
+    public void testSetWebXMLResource() {
         getWebContainer().setWebXML(NAME_TEST_PROPERTIES);
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), "web.xml");
@@ -63,7 +63,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testSetWebXMLResourceInPackage() throws Exception {
+    public void testSetWebXMLResourceInPackage() {
         getWebContainer().setWebXML(AssetUtil.class.getPackage(), "Test.properties");
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), "web.xml");
@@ -81,7 +81,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testSetWebXMLURL() throws Exception {
+    public void testSetWebXMLURL() {
         getWebContainer().setWebXML(getURLForClassResource(NAME_TEST_PROPERTIES));
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), "web.xml");
@@ -90,7 +90,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testSetWebXMLAsset() throws Exception {
+    public void testSetWebXMLAsset() {
         getWebContainer().setWebXML(getAssetForClassResource(NAME_TEST_PROPERTIES));
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), "web.xml");
@@ -99,7 +99,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebResourceResource() throws Exception {
+    public void testAddWebResourceResource() {
         getWebContainer().addAsWebResource(NAME_TEST_PROPERTIES);
 
         ArchivePath testPath = new BasicPath(getWebPath(), "Test.properties");
@@ -117,7 +117,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebResourceURL() throws Exception {
+    public void testAddWebResourceURL() {
         ArchivePath targetPath = new BasicPath("Test.properties");
         getWebContainer().addAsWebResource(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
         ArchivePath testPath = new BasicPath(getWebPath(), targetPath);
@@ -126,7 +126,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebResourceStringTargetResource() throws Exception {
+    public void testAddWebResourceStringTargetResource() {
         getWebContainer().addAsWebResource(NAME_TEST_PROPERTIES, "Test.txt");
 
         ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
@@ -144,7 +144,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebResourceStringTargetURL() throws Exception {
+    public void testAddWebResourceStringTargetURL() {
         getWebContainer().addAsWebResource(getURLForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
 
         ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
@@ -153,7 +153,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebResourceStringTargetAsset() throws Exception {
+    public void testAddWebResourceStringTargetAsset() {
         getWebContainer().addAsWebResource(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
 
         ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
@@ -162,7 +162,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebResourcePathTargetResource() throws Exception {
+    public void testAddWebResourcePathTargetResource() {
         getWebContainer().addAsWebResource(NAME_TEST_PROPERTIES, new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
@@ -180,7 +180,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebResourcePathTargetURL() throws Exception {
+    public void testAddWebResourcePathTargetURL() {
         getWebContainer().addAsWebResource(getURLForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
@@ -189,7 +189,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebResourcePathTargetAsset() throws Exception {
+    public void testAddWebResourcePathTargetAsset() {
         getWebContainer().addAsWebResource(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getWebPath(), "Test.txt");
@@ -198,7 +198,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebResourcePackage() throws Exception {
+    public void testAddWebResourcePackage() {
         getWebContainer().addAsWebResource(AssetUtil.class.getPackage(), "Test.properties");
 
         ArchivePath testPath = new BasicPath(getWebPath(), NAME_TEST_PROPERTIES);
@@ -207,7 +207,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebResourcePackages() throws Exception {
+    public void testAddWebResourcePackages() {
         getWebContainer().addAsWebResources(AssetUtil.class.getPackage(), "Test.properties", "Test2.properties");
 
         ArchivePath testPath = new BasicPath(getWebPath(), NAME_TEST_PROPERTIES);
@@ -219,7 +219,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebResourcePackageStringTarget() throws Exception {
+    public void testAddWebResourcePackageStringTarget() {
 
         getWebContainer().addAsWebResource(AssetUtil.class.getPackage(), "Test.properties", "Test.txt");
 
@@ -229,7 +229,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebResourcePackagePathTarget() throws Exception {
+    public void testAddWebResourcePackagePathTarget() {
 
         ArchivePath targetPath = ArchivePaths.create("Test.txt");
 
@@ -241,7 +241,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebInfResourceResource() throws Exception {
+    public void testAddWebInfResourceResource() {
         getWebContainer().addAsWebInfResource(NAME_TEST_PROPERTIES);
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.properties");
@@ -259,7 +259,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebInfResourceURL() throws Exception {
+    public void testAddWebInfResourceURL() {
         ArchivePath targetPath = new BasicPath("Test.properties");
         getWebContainer().addAsWebInfResource(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
         ArchivePath testPath = new BasicPath(getWebInfPath(), targetPath);
@@ -268,7 +268,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebInfResourceStringTargetResource() throws Exception {
+    public void testAddWebInfResourceStringTargetResource() {
         getWebContainer().addAsWebInfResource(NAME_TEST_PROPERTIES, "Test.txt");
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
@@ -286,7 +286,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebInfResourceStringTargetURL() throws Exception {
+    public void testAddWebInfResourceStringTargetURL() {
         getWebContainer().addAsWebInfResource(getURLForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
@@ -295,7 +295,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebInfResourceStringTargetAsset() throws Exception {
+    public void testAddWebInfResourceStringTargetAsset() {
         getWebContainer().addAsWebInfResource(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
@@ -304,7 +304,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebInfResourcePathTargetResource() throws Exception {
+    public void testAddWebInfResourcePathTargetResource() {
         getWebContainer().addAsWebInfResource(NAME_TEST_PROPERTIES, new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
@@ -322,7 +322,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebInfResourcePathTargetURL() throws Exception {
+    public void testAddWebInfResourcePathTargetURL() {
         getWebContainer().addAsWebInfResource(getURLForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), "Test.txt");
@@ -331,7 +331,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebInfResourcePathTargetAsset() throws Exception {
+    public void testAddWebInfResourcePathTargetAsset() {
         getWebContainer()
             .addAsWebInfResource(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
 
@@ -341,7 +341,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebInfResourcePackage() throws Exception {
+    public void testAddWebInfResourcePackage() {
         getWebContainer().addAsWebInfResource(AssetUtil.class.getPackage(), "Test.properties");
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), NAME_TEST_PROPERTIES);
@@ -350,7 +350,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebInfResourcePackages() throws Exception {
+    public void testAddWebInfResourcePackages() {
         getWebContainer().addAsWebInfResources(AssetUtil.class.getPackage(), "Test.properties", "Test2.properties");
 
         ArchivePath testPath = new BasicPath(getWebInfPath(), NAME_TEST_PROPERTIES);
@@ -362,7 +362,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebInfResourcePackageStringTarget() throws Exception {
+    public void testAddWebInfResourcePackageStringTarget() {
 
         getWebContainer().addAsWebInfResource(AssetUtil.class.getPackage(), "Test.properties", "Test.txt");
 
@@ -372,7 +372,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebInfResourcePackagePathTarget() throws Exception {
+    public void testAddWebInfResourcePackagePathTarget() {
 
         ArchivePath targetPath = ArchivePaths.create("Test.txt");
 
@@ -387,7 +387,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
      */
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebStringTargetResourceFromJar() throws Exception {
+    public void testAddWebStringTargetResourceFromJar() {
         // Causing NPE
         getWebContainer().addAsWebResource("java/lang/String.class", "String.class");
 
@@ -400,7 +400,7 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
      */
     @Test
     @ArchiveType(WebContainer.class)
-    public void testAddWebInfStringTargetResourceFromJar() throws Exception {
+    public void testAddWebInfStringTargetResourceFromJar() {
         // Causing NPE
         getWebContainer().addAsWebInfResource("java/lang/String.class", "String.class");
 
@@ -429,12 +429,10 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
     /**
      * Override to handle web archive special case (service providers in WEB-INF/classes/META-INF/services)
      *
-     * @throws Exception
-     *             if an exception occurs
      */
     @Test
     @Override
-    public void testAddServiceProvider() throws Exception {
+    public void testAddServiceProvider() {
         ServiceProviderPathExposingWebArchive webArchive = new ServiceProviderPathExposingWebArchive(
             ShrinkWrap.create(WebArchive.class));
         webArchive.addAsServiceProvider(DummyInterfaceForTest.class, DummyClassForTest.class);
@@ -470,20 +468,20 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
 
     @Test(expected = IllegalArgumentException.class)
     @Override
-    public void testAddServiceProviderStringInterfaceValidation() throws Exception {
+    public void testAddServiceProviderStringInterfaceValidation() {
         String[] impls = {"do.not.exist.impl.Dummy1", "do.not.exist.impl.Dummy2", "do.not.exist.impl.Dummy3"};
         ShrinkWrap.create(WebArchive.class).addAsServiceProvider(null, impls);
     }
 
     @Test(expected = IllegalArgumentException.class)
     @Override
-    public void testAddServiceProviderStringImplementationsValidation() throws Exception {
+    public void testAddServiceProviderStringImplementationsValidation() {
        ShrinkWrap.create(WebArchive.class).addAsServiceProvider("do.not.exist.impl.Dummy", (String[]) null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     @Override
-    public void testAddServiceProviderStringImplementationsValueValidation() throws Exception {
+    public void testAddServiceProviderStringImplementationsValueValidation() {
         String[] impls = {"do.not.exist.impl.Dummy1", null};
         ShrinkWrap.create(WebArchive.class).addAsServiceProvider("do.not.exist.impl.Dummy", impls);
     }
@@ -491,13 +489,11 @@ public abstract class DynamicWebContainerTestBase<T extends Archive<T>> extends 
     /**
      * Override to handle web archive special case (service providers in WEB-INF/classes/META-INF/services)
      *
-     * @throws Exception
-     *             if an exception occurs
      */
     @Test
     @Override
     @ArchiveType(ServiceProviderContainer.class)
-    public void testAddServiceProviderWithClasses() throws Exception {
+    public void testAddServiceProviderWithClasses() {
         ServiceProviderPathExposingWebArchive webArchive = new ServiceProviderPathExposingWebArchive(
             ShrinkWrap.create(WebArchive.class));
         webArchive.addAsServiceProviderAndClasses(DummyInterfaceForTest.class, DummyClassForTest.class);

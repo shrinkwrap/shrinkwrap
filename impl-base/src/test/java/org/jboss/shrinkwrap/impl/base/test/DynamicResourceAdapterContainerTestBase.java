@@ -33,7 +33,7 @@ public abstract class DynamicResourceAdapterContainerTestBase<T extends Archive<
 
     @Test
     @ArchiveType(ResourceAdapterContainer.class)
-    public void testSetResourceAdapterXMLResource() throws Exception {
+    public void testSetResourceAdapterXMLResource() {
         getResourceAdapterContainer().setResourceAdapterXML(NAME_TEST_PROPERTIES);
 
         ArchivePath testPath = new BasicPath(getResourceAdapterPath(), "ra.xml");
@@ -42,7 +42,7 @@ public abstract class DynamicResourceAdapterContainerTestBase<T extends Archive<
 
     @Test
     @ArchiveType(ResourceAdapterContainer.class)
-    public void testSetResourceAdapterXMLResourceInPackage() throws Exception {
+    public void testSetResourceAdapterXMLResourceInPackage() {
         getResourceAdapterContainer().setResourceAdapterXML(AssetUtil.class.getPackage(), "Test.properties");
 
         ArchivePath testPath = new BasicPath(getResourceAdapterPath(), "ra.xml");
@@ -60,7 +60,7 @@ public abstract class DynamicResourceAdapterContainerTestBase<T extends Archive<
 
     @Test
     @ArchiveType(ResourceAdapterContainer.class)
-    public void testSetResourceAdapterXMLURL() throws Exception {
+    public void testSetResourceAdapterXMLURL() {
         getResourceAdapterContainer().setResourceAdapterXML(getURLForClassResource(NAME_TEST_PROPERTIES));
 
         ArchivePath testPath = new BasicPath(getResourceAdapterPath(), "ra.xml");
@@ -69,7 +69,7 @@ public abstract class DynamicResourceAdapterContainerTestBase<T extends Archive<
 
     @Test
     @ArchiveType(ResourceAdapterContainer.class)
-    public void testSetResourceAdapterXMLAsset() throws Exception {
+    public void testSetResourceAdapterXMLAsset() {
         getResourceAdapterContainer().setResourceAdapterXML(getAssetForClassResource(NAME_TEST_PROPERTIES));
 
         ArchivePath testPath = new BasicPath(getResourceAdapterPath(), "ra.xml");

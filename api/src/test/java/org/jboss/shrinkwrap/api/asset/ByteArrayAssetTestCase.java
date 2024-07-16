@@ -94,7 +94,7 @@ public class ByteArrayAssetTestCase {
     }
     
     @Test
-    public void shouldBeAbleToReturnByteArray() throws Exception {
+    public void shouldBeAbleToReturnByteArray() {
     	// Make contents
         final int length = 10;
         final byte[] contents = new byte[length];

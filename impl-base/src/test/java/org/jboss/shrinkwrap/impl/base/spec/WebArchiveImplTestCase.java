@@ -70,7 +70,7 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
     // -------------------------------------------------------------------------------------||
 
     @Before
-    public void createWebArchive() throws Exception {
+    public void createWebArchive() {
         archive = createNewArchive();
     }
 

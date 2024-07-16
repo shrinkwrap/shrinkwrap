@@ -336,7 +336,7 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         // Read in the full content (to in turn empty the underlying buffer and ensure we complete)
         final OutputStream sink = new OutputStream() {
             @Override
-            public void write(int b) throws IOException {
+            public void write(int b) {
             }
         };
         IOUtil.copyWithClose(in, sink);

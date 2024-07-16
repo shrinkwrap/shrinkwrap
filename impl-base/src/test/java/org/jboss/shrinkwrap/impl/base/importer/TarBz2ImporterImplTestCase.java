@@ -143,7 +143,7 @@ public class TarBz2ImporterImplTestCase extends StreamImporterImplTestBase<TarBz
          * @see org.jboss.shrinkwrap.impl.base.io.tar.javatar.TarInputStream#read()
          */
         @Override
-        public int read() throws IOException {
+        public int read() {
             throw new RuntimeException("Mock Exception, should be wrapped in the import process");
         }
 

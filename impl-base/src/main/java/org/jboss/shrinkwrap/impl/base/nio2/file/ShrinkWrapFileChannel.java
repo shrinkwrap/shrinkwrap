@@ -46,8 +46,7 @@ public class ShrinkWrapFileChannel extends FileChannel {
     }
 
     @Override
-    public long read(ByteBuffer[] dsts, int offset, int length)
-            throws IOException {
+    public long read(ByteBuffer[] dsts, int offset, int length) {
         throw new UnsupportedOperationException();
     }
 
@@ -57,8 +56,7 @@ public class ShrinkWrapFileChannel extends FileChannel {
     }
 
     @Override
-    public long write(ByteBuffer[] srcs, int offset, int length)
-            throws IOException {
+    public long write(ByteBuffer[] srcs, int offset, int length) {
         throw new UnsupportedOperationException();
     }
 
@@ -85,47 +83,42 @@ public class ShrinkWrapFileChannel extends FileChannel {
     }
 
     @Override
-    public void force(boolean metaData) throws IOException {
+    public void force(boolean metaData) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public long transferTo(long position, long count, WritableByteChannel target)
-            throws IOException {
+    public long transferTo(long position, long count, WritableByteChannel target) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public long transferFrom(ReadableByteChannel src, long position, long count)
-            throws IOException {
+    public long transferFrom(ReadableByteChannel src, long position, long count) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public int read(ByteBuffer dst, long position) throws IOException {
+    public int read(ByteBuffer dst, long position) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public int write(ByteBuffer src, long position) throws IOException {
+    public int write(ByteBuffer src, long position) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public MappedByteBuffer map(MapMode mode, long position, long size)
-            throws IOException {
+    public MappedByteBuffer map(MapMode mode, long position, long size) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public FileLock lock(long position, long size, boolean shared)
-            throws IOException {
+    public FileLock lock(long position, long size, boolean shared) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public FileLock tryLock(long position, long size, boolean shared)
-            throws IOException {
+    public FileLock tryLock(long position, long size, boolean shared) {
         throw new UnsupportedOperationException();
     }
 
