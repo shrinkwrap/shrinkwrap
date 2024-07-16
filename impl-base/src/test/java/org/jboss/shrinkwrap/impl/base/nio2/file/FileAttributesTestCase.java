@@ -18,7 +18,6 @@ package org.jboss.shrinkwrap.impl.base.nio2.file;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -116,13 +115,7 @@ public class FileAttributesTestCase {
     public void size() throws IOException {
 
         final int size = 1024;
-        final Asset kiloAsset = new Asset() {
-
-            @Override
-            public InputStream openStream() {
-                return new ByteArrayInputStream(new byte[size]);
-            }
-        };
+        final Asset kiloAsset = () -> new ByteArrayInputStream(new byte[size]);
         final String path = "path";
         this.archive.add(kiloAsset, path);
         Assert.assertEquals("Size not reported as expected", size, this.getAttributes(path, false).size());

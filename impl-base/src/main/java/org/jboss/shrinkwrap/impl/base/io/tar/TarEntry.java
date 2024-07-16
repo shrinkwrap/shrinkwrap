@@ -617,8 +617,8 @@ public class TarEntry extends Object implements Cloneable {
     public long computeCheckSum(byte[] buf) {
         long sum = 0;
 
-        for (int i = 0; i < buf.length; ++i) {
-            sum += 255 & buf[i];
+        for (byte b : buf) {
+            sum += 255 & b;
         }
 
         return sum;

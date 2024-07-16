@@ -206,9 +206,9 @@ public class ShrinkWrapFileSystem extends FileSystem {
 
         final StringBuilder merged = new StringBuilder();
         merged.append(first);
-        for (int i = 0; i < more.length; i++) {
+        for (String string : more) {
             merged.append(ArchivePath.SEPARATOR);
-            merged.append(more[i]);
+            merged.append(string);
         }
         return merged.toString();
 

@@ -326,12 +326,8 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
             archive.delete(PATH_ONE);
         }
 
-        archive.add(new Asset() {
-            @Override
-            public InputStream openStream() {
-                throw new RuntimeException("Mock Exception from an Asset write");
-            }
-
+        archive.add(() -> {
+            throw new RuntimeException("Mock Exception from an Asset write");
         }, PATH_ONE);
 
         // Export

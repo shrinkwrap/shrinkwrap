@@ -222,7 +222,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
         Validate.notNull(type, "Type must be specified");
         Validate.notNull(filter, "Filter must be specified");
 
-        Collection<X> archives = new ArrayList<X>();
+        Collection<X> archives = new ArrayList<>();
 
         Map<ArchivePath, Node> matches = getContent(filter);
         for (ArchivePath path : matches.keySet()) {
@@ -334,7 +334,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
         Validate.notNull(filter, "Filter must be specified");
         Validate.notNull(archiveFormat, "ArchiveFormat must be specified");
 
-        Collection<X> archives = new ArrayList<X>();
+        Collection<X> archives = new ArrayList<>();
 
         Map<ArchivePath, Node> matches = getContent(filter);
         for (ArchivePath path : matches.keySet()) {
@@ -435,7 +435,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
         Validate.notNull(paths, "paths must be specified");
 
         // Represent as array of Paths
-        final Collection<ArchivePath> pathsCollection = new ArrayList<ArchivePath>(paths.length);
+        final Collection<ArchivePath> pathsCollection = new ArrayList<>(paths.length);
         for (final String path : paths) {
             pathsCollection.add(ArchivePaths.create(path));
         }
@@ -656,7 +656,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
         // move children
 
         // can't remove from collection inside of the iteration
-        final Set<Node> nodeToMoveChildrenCopy = new HashSet<Node>(nodeToMove.getChildren());
+        final Set<Node> nodeToMoveChildrenCopy = new HashSet<>(nodeToMove.getChildren());
         for (final Node child : nodeToMoveChildrenCopy) {
             final String childName = child.getPath().get().replaceFirst(child.getPath().getParent().get(), "");
             final ArchivePath childTargetPath = ArchivePaths.create(target, childName);

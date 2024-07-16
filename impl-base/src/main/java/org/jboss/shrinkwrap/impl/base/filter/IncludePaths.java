@@ -55,7 +55,7 @@ public class IncludePaths implements Filter<ArchivePath> {
     }
 
     private Set<String> adjust(String... paths) {
-        Set<String> adjusted = new HashSet<String>();
+        Set<String> adjusted = new HashSet<>();
         for(String path : paths) {
             adjusted.add(PathUtil.optionallyPrependSlash(path));
         }
