@@ -82,7 +82,7 @@ public abstract class AbstractStreamExporterImpl extends AssignableBase<Archive<
             throw new IllegalArgumentException("Cannot export a stream file to existing directory: "
                 + target.getAbsolutePath());
         }
-        // If target exists and we're not allowed to overwrite it
+        // If target exists, and we're not allowed to overwrite it
         if (target.exists() && !overwrite) {
             throw new FileExistsException("Target exists and we haven't been flagged to overwrite it: "
                 + target.getAbsolutePath());

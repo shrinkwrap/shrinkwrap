@@ -35,7 +35,7 @@ import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
 
 /**
- * Extension that will create a ClassLoader based on a Array of Archives. When done, call
+ * Extension that will create a ClassLoader based on an Array of Archives. When done, call
  * {@link ShrinkWrapClassLoader#close()} to free resources.
  *
  * @author <a href="mailto:aslak@redhat.com">Aslak Knutsen</a>
@@ -200,7 +200,7 @@ public class ShrinkWrapClassLoader extends URLClassLoader implements Closeable {
                 try {
                     stream.close();
                 } catch (Exception e) {
-                    log.warning("Could not close opened inputstream: " + e);
+                    log.warning("Could not close opened input stream: " + e);
                 }
             }
             openedStreams.clear();

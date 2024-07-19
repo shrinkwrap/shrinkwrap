@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
 /**
- * The {@link TarGzInputStream} reads a UNIX TAR archive, further encoded in GZIP compresssion, as an InputStream.
+ * The {@link TarGzInputStream} reads a UNIX TAR archive, further encoded in GZIP compression, as an InputStream.
  * Methods are provided to position at each successive entry in the archive, and the read each entry as a normal input
  * stream using read().
  *

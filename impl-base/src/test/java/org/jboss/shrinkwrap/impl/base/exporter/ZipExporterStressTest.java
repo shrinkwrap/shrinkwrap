@@ -95,7 +95,7 @@ public class ZipExporterStressTest {
         log.info("Started w/ free memory (MB): " + this.megaBytesFromBytes(startFreeMemBytes));
         log.info("Free memory before export (MB): " + this.megaBytesFromBytes(beforeExportFreeMemBytes));
 
-        // Export; at this point we have less than 50% available memory so
+        // Export; at this point we have less than 50% available memory, so
         // we can't carry the whole archive in RAM twice; this
         // should ensure the ZIP impl uses an internal buffer
         final InputStream in = archive.as(ZipExporter.class).exportAsInputStream();

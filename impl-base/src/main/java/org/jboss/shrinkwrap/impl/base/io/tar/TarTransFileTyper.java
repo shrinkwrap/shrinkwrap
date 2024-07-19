@@ -29,7 +29,7 @@ public class TarTransFileTyper {
      * Return true if the file should be translated as ASCII.
      *
      * @param f
-     *            The file to be checked to see if it need ASCII translation.
+     *            The file to be checked to see if it needs ASCII translation.
      */
 
     public boolean isAsciiFile(File f) {
@@ -41,7 +41,7 @@ public class TarTransFileTyper {
      * during extract, so all we know is the file name.
      *
      * @param name
-     *            The name of the file to be checked to see if it need ASCII translation.
+     *            The name of the file to be checked to see if it needs ASCII translation.
      */
 
     public boolean isAsciiFile(String name) {

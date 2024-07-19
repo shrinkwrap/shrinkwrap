@@ -166,7 +166,7 @@ public class BasicPath implements ArchivePath, Comparable<ArchivePath> {
         if (this.equals(parentOfSpecified)) {
             return -1;
         }
-        // If the specified if the parent of us, we're more
+        // If the specified is the parent of us, we're more
         if (path.equals(parentOfThis)) {
             return 1;
         }

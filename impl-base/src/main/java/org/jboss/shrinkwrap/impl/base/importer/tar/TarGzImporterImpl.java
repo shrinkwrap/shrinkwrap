@@ -49,7 +49,7 @@ public class TarGzImporterImpl extends TarImporterBase<TarGzInputStream, TarGzIm
      */
     @Override
     TarGzInputStream getInputStreamForRawStream(final InputStream in) throws IOException {
-        assert in != null : "Specified inputstream was null";
+        assert in != null : "Specified input stream was null";
         return new TarGzInputStream(in);
     }
 

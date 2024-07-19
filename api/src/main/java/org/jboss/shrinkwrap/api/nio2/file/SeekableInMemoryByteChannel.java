@@ -25,7 +25,7 @@ import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SeekableByteChannel;
 
 /**
- * {@link SeekableByteChannel} implementation backed by an auto-resizing byte array; thread-safe. Can hold a maxiumum of
+ * {@link SeekableByteChannel} implementation backed by an auto-resizing byte array; thread-safe. Can hold a maximum of
  * {@link Integer#MAX_VALUE} bytes.
  *
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
@@ -38,7 +38,7 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
     private int position;
 
     /**
-     * Whether or not this {@link SeekableByteChannel} is open; volatile instead of sync is acceptable because this
+     * Whether this {@link SeekableByteChannel} is open; volatile instead of sync is acceptable because this
      * field participates in no compound computations or invariants with other instance members.
      */
     private volatile boolean open;
@@ -141,7 +141,7 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
         final byte[] readContents = new byte[totalBytes];
         source.get(readContents);
 
-        // Sync up, we're gonna access shared mutable state
+        // Sync up, we're going to access shared mutable state
         synchronized (this) {
 
             // Append the read contents to our internal contents
@@ -158,7 +158,7 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
 
     /**
      * Creates a new array which is the concatenated result of the two inputs, at the designated position (to be filled
-     * with 0x00) in the case of a gap).
+     * with 0x00) in the case of a gap.
      *
      * @param input1
      *         The first byte array to be concatenated
@@ -170,7 +170,7 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
      *         A new byte array containing `input1` followed by `input2` at the specified position.
      */
     private byte[] concat(final byte[] input1, final byte[] input2, final int position) {
-        // Preconition checks
+        // Precondition checks
         assert input1 != null : "Input 1 must be specified";
         assert input2 != null : "Input 2 must be specified";
         assert position >= 0 : "Position must be 0 or higher";

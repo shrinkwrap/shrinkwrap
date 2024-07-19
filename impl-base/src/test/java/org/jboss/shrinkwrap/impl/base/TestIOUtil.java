@@ -24,7 +24,7 @@ import java.net.URL;
 /**
  * IOUtil
  * <p>
- * Inport/export utilities for test classes
+ * Import/export utilities for test classes
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
@@ -91,7 +91,7 @@ public class TestIOUtil {
         return new File(resourceLocation.toURI());
     }
 
-    public static InputStream createInputstreamFromResourceName(final String resourceName) {
+    public static InputStream createInputStreamFromResourceName(final String resourceName) {
         assert resourceName != null : "Resource name must be specified";
         final InputStream resourceStream = TestSecurityActions.getThreadContextClassLoader().getResourceAsStream(
             resourceName);

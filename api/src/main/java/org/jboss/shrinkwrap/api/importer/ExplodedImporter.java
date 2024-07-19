@@ -34,7 +34,7 @@ public interface ExplodedImporter extends Assignable {
     // Contracts --------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
     /**
-     * Import a directory structure as a archive.
+     * Import a directory structure as an archive.
      *
      * @param file
      *            The directory to import
@@ -47,7 +47,7 @@ public interface ExplodedImporter extends Assignable {
     ExplodedImporter importDirectory(File file);
 
     /**
-     * Import a directory structure as a archive.
+     * Import a directory structure as an archive.
      *
      * @param file
      *            The directory to import
@@ -62,7 +62,7 @@ public interface ExplodedImporter extends Assignable {
     ExplodedImporter importDirectory(File file, Filter<ArchivePath> filter);
 
     /**
-     * Import a directory structure as a archive.
+     * Import a directory structure as an archive.
      *
      * @param fileName
      *            The name of the directory to import
@@ -75,7 +75,7 @@ public interface ExplodedImporter extends Assignable {
     ExplodedImporter importDirectory(String fileName);
 
     /**
-     * Import a directory structure as a archive.
+     * Import a directory structure as an archive.
      *
      * @param fileName
      *            The name of the directory to import

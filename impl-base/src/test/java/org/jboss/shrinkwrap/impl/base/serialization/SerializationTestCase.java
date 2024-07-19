@@ -229,7 +229,7 @@ public class SerializationTestCase {
     }
 
     /**
-     * Roundtrip serializes/deserializes the specified {@link SerializableView} and reconsitutes/redefines as the
+     * Roundtrip serializes/deserializes the specified {@link SerializableView} and reconstitutes/redefines as the
      * specified target type
      *
      * @param archive

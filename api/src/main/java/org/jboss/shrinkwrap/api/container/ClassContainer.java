@@ -231,7 +231,7 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
      * Deletes all classes in the specified {@link Package} from the {@link Archive}. <br/>
      * SubPackages are excluded.
      *
-     * @param pack Package to be delete represented by a String ("my/package")
+     * @param pack Package to be deleted represented by a String ("my/package")
      * @return This archive
      * @throws IllegalArgumentException If no package was specified
      * @see #deletePackages(boolean, Package...)

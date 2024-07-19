@@ -59,7 +59,7 @@ public class FileAttributesViewTestCase {
         BasicFileAttributes attributes = attributeView.readAttributes();
         // the attributes are tested in FileAttributesTestCase
         Assertions.assertInstanceOf(ShrinkWrapFileAttributes.class, attributes,
-                "Atrributes are not instance of ShrinkWrapFileAttributes");
+                "Attributes are not instance of ShrinkWrapFileAttributes");
     }
 
     @Test

@@ -655,7 +655,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
         // move children
 
-        // can't remove from collection inside of the iteration
+        // can't remove from collection inside the iteration
         final Set<Node> nodeToMoveChildrenCopy = new HashSet<>(nodeToMove.getChildren());
         for (final Node child : nodeToMoveChildrenCopy) {
             final String childName = child.getPath().get().replaceFirst(child.getPath().getParent().get(), "");

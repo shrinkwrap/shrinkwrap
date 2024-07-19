@@ -127,10 +127,10 @@ public class NodeImpl implements Node {
     }
 
     /**
-     * Removes a child from the Set of nodes. If it doesn't exists, nothing happens.
+     * Removes a child from the Set of nodes. If it doesn't exist, nothing happens.
      *
      * @param node
-     *            The Node that will be removed from the childs
+     *            The Node that will be removed from the children
      */
     public void removeChild(Node node) {
         Validate.notNull(node, "No node was specified");

@@ -49,7 +49,7 @@ public class AssetUtilTestCase {
     }
 
     @Test
-    public void shouldBeAbleToGetFullPathForClassResoruce() {
+    public void shouldBeAbleToGetFullPathForClassResource() {
         ArchivePath foundClassResourcePath = AssetUtil.getFullPathForClassResource(this.getClass());
 
         Assertions.assertEquals(new BasicPath("/org/jboss/shrinkwrap/impl/base/asset/AssetUtilTestCase.class"),

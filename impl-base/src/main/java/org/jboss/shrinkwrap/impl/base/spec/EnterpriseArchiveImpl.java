@@ -34,12 +34,12 @@ public class EnterpriseArchiveImpl extends EnterpriseContainerBase<EnterpriseArc
     // -------------------------------------------------------------------------------------||
 
     /**
-     * Path to the manifests inside of the Archive.
+     * Path to the manifests inside the Archive.
      */
     private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
 
     /**
-     * Path to the resources inside of the Archive.
+     * Path to the resources inside the Archive.
      */
     private static final ArchivePath PATH_RESOURCE = PATH_MANIFEST;
 

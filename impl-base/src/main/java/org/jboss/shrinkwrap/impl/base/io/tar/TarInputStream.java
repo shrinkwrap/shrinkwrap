@@ -52,11 +52,11 @@ public class TarInputStream extends FilterInputStream {
     protected EntryFactory eFactory;
 
     public TarInputStream(InputStream is) {
-        this(is, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE);
+        this(is, TarBuffer.DEFAULT_BLOCK_SIZE, TarBuffer.DEFAULT_RECORD_SIZE);
     }
 
     public TarInputStream(InputStream is, int blockSize) {
-        this(is, blockSize, TarBuffer.DEFAULT_RCDSIZE);
+        this(is, blockSize, TarBuffer.DEFAULT_RECORD_SIZE);
     }
 
     public TarInputStream(InputStream is, int blockSize, int recordSize) {
@@ -260,7 +260,7 @@ public class TarInputStream extends FilterInputStream {
                 }
 
                 if (this.debug) {
-                    System.err.println("TarInputStream: SET CURRENTRY '" + this.currEntry.getName() + "' size = "
+                    System.err.println("TarInputStream: SET CURRENTLY '" + this.currEntry.getName() + "' size = "
                         + this.currEntry.getSize());
                 }
 

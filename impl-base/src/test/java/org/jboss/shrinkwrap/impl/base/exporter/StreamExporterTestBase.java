@@ -256,7 +256,7 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         // Validate nested archive entries were written out
         final ArchivePath nestedArchivePath = ArchivePaths.create(NAME_NESTED_ARCHIVE + this.getArchiveExtension());
 
-        // Get inputstream for entry
+        // Get input stream for entry
         final InputStream nestedArchiveStream = this.getContentsFromExportedFile(exported, nestedArchivePath);
 
         // Write out and retrieve nested contents
@@ -274,7 +274,7 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         this.getContentsFromExportedFile(exported, nestedArchiveTwoPath);
         final InputStream nestedArchiveTwoStream = this.getContentsFromExportedFile(exported, nestedArchiveTwoPath);
 
-        // Write out and retrieve secondnested contents
+        // Write out and retrieve second nested contents
         final File nestedTwoFile = new File(tempDirectory, NAME_NESTED_ARCHIVE_2 + this.getArchiveExtension());
         final OutputStream nestedTwoOut = new FileOutputStream(nestedTwoFile);
         IOUtil.copyWithClose(nestedArchiveTwoStream, nestedTwoOut);
@@ -289,7 +289,7 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         log.info("testExportThrowsArchiveExceptionOnAssetWriteFailure");
         Archive<?> archive = createArchiveWithAssets();
 
-        // Check if a the path already contains a node so we remove it from the parent's children
+        // Check if the path already contains a node, so we remove it from the parent's children
         if (archive.contains(PATH_ONE)) {
             archive.delete(PATH_ONE);
         }

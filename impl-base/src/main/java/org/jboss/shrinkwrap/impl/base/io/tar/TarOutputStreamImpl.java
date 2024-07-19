@@ -43,11 +43,11 @@ public class TarOutputStreamImpl extends FilterOutputStream {
     protected TarBuffer buffer;
 
     public TarOutputStreamImpl(OutputStream os) {
-        this(os, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE);
+        this(os, TarBuffer.DEFAULT_BLOCK_SIZE, TarBuffer.DEFAULT_RECORD_SIZE);
     }
 
     public TarOutputStreamImpl(OutputStream os, int blockSize) {
-        this(os, blockSize, TarBuffer.DEFAULT_RCDSIZE);
+        this(os, blockSize, TarBuffer.DEFAULT_RECORD_SIZE);
     }
 
     public TarOutputStreamImpl(OutputStream os, int blockSize, int recordSize) {

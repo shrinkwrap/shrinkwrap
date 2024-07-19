@@ -113,7 +113,7 @@ public final class PathUtil {
             return path;
         }
 
-        // Add prefic slash
+        // Add prefix slash
         final String prefixedPath = optionallyPrependSlash(path);
         // Add end of context slash
         final String addedPostfix = optionallyAppendSlash(prefixedPath);

@@ -29,7 +29,7 @@ public interface Filter<T> {
      * Called per operation in a multi add operation.
      *
      * @param object
-     *            a object to filter on
+     *            An object to filter on
      * @return true if the object should be included in target
      */
     boolean include(T object);

@@ -164,7 +164,7 @@ public class ShrinkWrapClassLoaderTestCase {
 
     /**
      * Ensures that we can open up directory content as obtained via a {@link URL} from the
-     * {@link ShrinkWrapClassLoader} (ie. should return null, not throw an exception)
+     * {@link ShrinkWrapClassLoader} (i.e. should return null, not throw an exception)
      * <p>
      * SHRINKWRAP-306
      */
@@ -189,12 +189,12 @@ public class ShrinkWrapClassLoaderTestCase {
 
     /**
      * Ensures that we can open up an asset that doesn't exist via a {@link URL} from the {@link ShrinkWrapClassLoader}
-     * (ie. should throw {@link FileNotFoundException}
+     * i.e. should throw {@link FileNotFoundException}
      *
      * SHRINKWRAP-308
      */
     @Test
-    public void shouldNotBeAbleToOpenStreamOnNonexistantAsset() throws IOException {
+    public void shouldNotBeAbleToOpenStreamOnNonexistentAsset() throws IOException {
         // Make a new Archive with some content in a directory
         final String nestedResourceName = "nested/test";
         final Asset testAsset = new StringAsset("testContent");

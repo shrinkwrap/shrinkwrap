@@ -81,7 +81,7 @@ public final class AssetUtil {
     /**
      * Helper to convert from java package name to class loader package name <br/>
      * <br/>
-     * ie: javax.test + my.txt = javax/test/ + my.txt
+     * i.e.: javax.test + my.txt = javax/test/ + my.txt
      *
      * @param resourcePackage
      *            The base package
@@ -90,10 +90,10 @@ public final class AssetUtil {
      * @return {@link ClassLoader} resource location
      */
     public static String getClassLoaderResourceName(Package resourcePackage, String resourceName) {
-        String resourcePackaeName = resourcePackage.getName().replaceAll(DELIMITER_CLASS_NAME_PATH,
+        String resourcePackageName = resourcePackage.getName().replaceAll(DELIMITER_CLASS_NAME_PATH,
             DELIMITER_RESOURCE_PATH);
 
-        return resourcePackaeName + DELIMITER_RESOURCE_PATH + resourceName;
+        return resourcePackageName + DELIMITER_RESOURCE_PATH + resourceName;
     }
 
     /**

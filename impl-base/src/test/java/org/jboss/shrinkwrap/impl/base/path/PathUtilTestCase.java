@@ -125,9 +125,9 @@ public class PathUtilTestCase {
     @Test
     public void testAdjustToRelativeDirectoryContext() {
         log.info("testRemovePrecedingSlash");
-        final String absoulteWithoutTrailingSlash = "/test/something";
-        final String expected = absoulteWithoutTrailingSlash.substring(1) + ArchivePath.SEPARATOR;
-        final String result = PathUtil.adjustToRelativeDirectoryContext(absoulteWithoutTrailingSlash);
+        final String absoluteWithoutTrailingSlash = "/test/something";
+        final String expected = absoluteWithoutTrailingSlash.substring(1) + ArchivePath.SEPARATOR;
+        final String result = PathUtil.adjustToRelativeDirectoryContext(absoluteWithoutTrailingSlash);
         Assertions.assertEquals(expected, result,
                 "Adjusting to relative form should strip preceding slash and append a trailing one");
     }
@@ -146,11 +146,11 @@ public class PathUtilTestCase {
     }
 
     /**
-     * Ensures that an absolute form may be composed from a relative context and base
+     * Ensures that an absolute form may be composed of a relative context and base
      */
     @Test
-    public void testComposeAbsoulteContext() {
-        log.info("testComposeAbsoulteContext");
+    public void testComposeAbsoluteContext() {
+        log.info("testComposeAbsoluteContext");
         final String base = "something";
         final String context = "somethingunder";
         final String expected = ArchivePath.SEPARATOR + base + ArchivePath.SEPARATOR + context;

@@ -81,7 +81,7 @@ public class UrlAssetTestCase {
 
     /*
      * Ugly reflection needed to mutate a URL - not 100% sure how to do this other than using reflection, but seems
-     * possible that other libraries may be doing this same thing so we must protect for it.
+     * possible that other libraries may be doing this same thing, so we must protect for it.
      */
     private void mutateURL(final URL mutableURL) throws Exception {
         Class<?>[] parameterTypes = { String.class, String.class, Integer.TYPE, String.class, String.class };

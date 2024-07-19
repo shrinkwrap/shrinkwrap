@@ -288,7 +288,7 @@ public abstract class WebContainerBase<T extends Archive<T>> extends ContainerBa
         for (final String resourceName : resourceNames) {
             addAsWebResource(resourcePackage, resourceName);
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /*
@@ -491,7 +491,7 @@ public abstract class WebContainerBase<T extends Archive<T>> extends ContainerBa
         for (String resourceName : resourceNames) {
             addAsWebInfResource(resourcePackage, resourceName);
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**

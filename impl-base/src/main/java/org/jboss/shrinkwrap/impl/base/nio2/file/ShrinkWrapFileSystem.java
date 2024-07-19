@@ -61,7 +61,7 @@ public class ShrinkWrapFileSystem extends FileSystem {
     private final List<FileStore> fileStores;
 
     /**
-     * Whether or not this FS is open; volatile as we don't need compound operations and thus don't need full sync
+     * Whether this FS is open; volatile as we don't need compound operations and thus don't need to full sync
      */
     private volatile boolean open;
 

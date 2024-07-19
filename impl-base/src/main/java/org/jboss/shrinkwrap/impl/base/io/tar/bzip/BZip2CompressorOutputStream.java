@@ -31,33 +31,33 @@ import java.io.OutputStream;
  * </p>
  *
  * <p> You can shrink the amount of allocated memory and maybe raise
- * the compression speed by choosing a lower blocksize, which in turn
+ * the compression speed by choosing a lower block size, which in turn
  * may cause a lower compression ratio. You can avoid unnecessary
- * memory allocation by avoiding using a blocksize which is bigger
+ * memory allocation by avoiding using a block size which is bigger
  * than the size of the input.  </p>
  *
  * <p> You can compute the memory usage for compressing by the
  * following formula: </p>
  *
  * <pre>
- * &lt;code&gt;400k + (9 * blocksize)&lt;/code&gt;.
+ * &lt;code&gt;400k + (9 * block size)&lt;/code&gt;.
  * </pre>
  *
  * <p> To get the memory required for decompression by {@link
  * BZip2CompressorInputStream} use </p>
  *
  * <pre>
- * &lt;code&gt;65k + (5 * blocksize)&lt;/code&gt;.
+ * &lt;code&gt;65k + (5 * block size)&lt;/code&gt;.
  * </pre>
  *
  * <table width="100%" border="1">
  * <colgroup> <col width="33%" /> <col width="33%" /> <col width="33%" />
  * </colgroup>
  * <tr>
- * <th colspan="3">Memory usage by blocksize</th>
+ * <th colspan="3">Memory usage by block size</th>
  * </tr>
  * <tr>
- * <th align="right">Blocksize</th> <th align="right">Compression<br>
+ * <th align="right">Block size</th> <th align="right">Compression<br>
  * memory usage</th> <th align="right">Decompression<br>
  * memory usage</th>
  * </tr>
@@ -114,7 +114,7 @@ import java.io.OutputStream;
  * </p>
  *
  * <p>
- * Instances of this class are not threadsafe.
+ * Instances of this class are not thread safe.
  * </p>
  *
  * <p>
@@ -130,14 +130,14 @@ public class BZip2CompressorOutputStream extends OutputStream
     implements BZip2Constants {
 
     /**
-     * The minimum supported blocksize <tt> == 1</tt>.
+     * The minimum supported block size <tt> == 1</tt>.
      */
-    public static final int MIN_BLOCKSIZE = 1;
+    public static final int MIN_BLOCK_SIZE = 1;
 
     /**
-     * The maximum supported blocksize <tt> == 9</tt>.
+     * The maximum supported block size <tt> == 9</tt>.
      */
-    public static final int MAX_BLOCKSIZE = 9;
+    public static final int MAX_BLOCK_SIZE = 9;
 
     private static final int GREATER_ICOST = 15;
     private static final int LESSER_ICOST = 0;
@@ -299,7 +299,7 @@ public class BZip2CompressorOutputStream extends OutputStream
     private int last;
 
     /**
-     * Always: in the range 0 .. 9. The current block size is 100000 * this
+     * Always: in the range 0 to 9. The current block size is 100000 * this
      * number.
      */
     private final int blockSize100k;
@@ -328,11 +328,11 @@ public class BZip2CompressorOutputStream extends OutputStream
     private OutputStream out;
 
     /**
-     * Chooses a blocksize based on the given length of the data to compress.
+     * Chooses a block size based on the given length of the data to compress.
      *
-     * @return The blocksize, between {@link #MIN_BLOCKSIZE} and
-     *         {@link #MAX_BLOCKSIZE} both inclusive. For a negative
-     *         <tt>inputLength</tt> this method returns <tt>MAX_BLOCKSIZE</tt>
+     * @return The block size, between {@link #MIN_BLOCK_SIZE} and
+     *         {@link #MAX_BLOCK_SIZE} both inclusive. For a negative
+     *         <tt>inputLength</tt> this method returns <tt>MAX_BLOCK_SIZE</tt>
      *         always.
      *
      * @param inputLength
@@ -341,11 +341,11 @@ public class BZip2CompressorOutputStream extends OutputStream
      */
     public static int chooseBlockSize(long inputLength) {
         return (inputLength > 0) ? (int) Math
-            .min((inputLength / 132000) + 1, 9) : MAX_BLOCKSIZE;
+            .min((inputLength / 132000) + 1, 9) : MAX_BLOCK_SIZE;
     }
 
     /**
-     * Constructs a new <tt>BZip2CompressorOutputStream</tt> with a blocksize of 900k.
+     * Constructs a new <tt>BZip2CompressorOutputStream</tt> with a block size of 900k.
      *
      * @param out
      *            the destination stream.
@@ -357,11 +357,11 @@ public class BZip2CompressorOutputStream extends OutputStream
      */
     public BZip2CompressorOutputStream(final OutputStream out)
         throws IOException {
-        this(out, MAX_BLOCKSIZE);
+        this(out, MAX_BLOCK_SIZE);
     }
 
     /**
-     * Constructs a new <tt>BZip2CompressorOutputStream</tt> with specified blocksize.
+     * Constructs a new <tt>BZip2CompressorOutputStream</tt> with specified block size.
      *
      * @param out
      *            the destination stream.
@@ -375,8 +375,8 @@ public class BZip2CompressorOutputStream extends OutputStream
      * @throws NullPointerException
      *             if <code>out == null</code>.
      *
-     * @see #MIN_BLOCKSIZE
-     * @see #MAX_BLOCKSIZE
+     * @see #MIN_BLOCK_SIZE
+     * @see #MAX_BLOCK_SIZE
      */
     public BZip2CompressorOutputStream(final OutputStream out,
                                        final int blockSize)
@@ -396,7 +396,7 @@ public class BZip2CompressorOutputStream extends OutputStream
         this.out = out;
 
         /* 20 is just a paranoia constant */
-        this.allowableBlockSize = (this.blockSize100k * BZip2Constants.BASEBLOCKSIZE) - 20;
+        this.allowableBlockSize = (this.blockSize100k * BZip2Constants.BASE_BLOCK_SIZE) - 20;
         init();
     }
 
@@ -478,7 +478,7 @@ public class BZip2CompressorOutputStream extends OutputStream
     }
 
     /**
-     * Overriden to close the stream.
+     * Overridden to close the stream.
      */
     @Override
     protected void finalize() throws Throwable {
@@ -523,7 +523,7 @@ public class BZip2CompressorOutputStream extends OutputStream
 
     /**
      * Writes magic bytes like BZ on the first position of the stream
-     * and bytes indiciating the file-format, which is
+     * and bytes indicating the file-format, which is
      * huffmanised, followed by a digit indicating blockSize100k.
      * @throws IOException if the magic bytes could not been written
      */
@@ -572,11 +572,11 @@ public class BZip2CompressorOutputStream extends OutputStream
          * A 6-byte block header, the value chosen arbitrarily as 0x314159265359
          * :-). A 32 bit value does not really give a strong enough guarantee
          * that the value will not appear by chance in the compressed
-         * datastream. Worst-case probability of this event, for a 900k block,
+         * data stream. Worst-case probability of this event, for a 900k block,
          * is about 2.0e-3 for 32 bits, 1.0e-5 for 40 bits and 4.0e-8 for 48
          * bits. For a compressed file of size 100Gb -- about 100000 blocks --
          * only a 48-bit marker will do. NB: normal compression/ decompression
-         * donot rely on these statistical properties. They are only important
+         * don't rely on these statistical properties. They are only important
          * when trying to recover blocks from damaged files.
          */
         bsPutUByte(0x31);
@@ -615,7 +615,7 @@ public class BZip2CompressorOutputStream extends OutputStream
     }
 
     /**
-     * Returns the blocksize parameter specified at construction time.
+     * Returns the block size parameter specified at construction time.
      */
     public final int getBlockSize() {
         return this.blockSize100k;
@@ -1331,7 +1331,7 @@ public class BZip2CompressorOutputStream extends OutputStream
         Data(int blockSize100k) {
             super();
 
-            final int n = blockSize100k * BZip2Constants.BASEBLOCKSIZE;
+            final int n = blockSize100k * BZip2Constants.BASE_BLOCK_SIZE;
             this.block = new byte[(n + 1 + NUM_OVERSHOOT_BYTES)];
             this.fmap = new int[n];
             this.sfmap = new char[2 * n];

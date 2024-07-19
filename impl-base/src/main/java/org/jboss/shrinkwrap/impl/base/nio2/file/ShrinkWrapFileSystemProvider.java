@@ -318,7 +318,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         final InputStream in = asset.openStream();
         final SeekableByteChannel outChannel = new SeekableInMemoryByteChannel();
         this.copy(in, outChannel);
-        // Set the position to 0 so it can be read from the beginning
+        // Set the position to 0, so it can be read from the beginning
         outChannel.position(0);
         return outChannel;
 

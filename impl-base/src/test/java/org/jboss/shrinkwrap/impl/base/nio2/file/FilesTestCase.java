@@ -103,10 +103,10 @@ public class FilesTestCase {
     }
 
     @Test
-    public void deleteNonexistant() {
+    public void deleteNonexistent() {
 
         final Archive<?> archive = this.getArchive();
-        final String pathString = "nonexistant";
+        final String pathString = "nonexistent";
 
         // Ensure file doesn't exist
         Assertions.assertFalse(archive.contains(pathString));
@@ -114,7 +114,7 @@ public class FilesTestCase {
         // Attempt delete
         final Path path = fs.getPath(pathString);
         Assertions.assertThrows(NoSuchFileException.class, () -> Files.delete(path),
-                "Request to remove nonexistant path should have thrown " + NoSuchFileException.class.getSimpleName());
+                "Request to remove nonexistent path should have thrown " + NoSuchFileException.class.getSimpleName());
     }
 
     @Test
@@ -163,7 +163,7 @@ public class FilesTestCase {
     }
 
     @Test
-    public void deleteUnemptyDirectory() {
+    public void deleteNonemptyDirectory() {
 
         final String directoryName = "/directory";
         final String subDirectoryName = directoryName + "/subdir";
@@ -474,15 +474,15 @@ public class FilesTestCase {
     }
 
     @Test
-    // No nonexistant paths are executable
-    public void isExecutableNonexistant() {
+    // No nonexistent paths are executable
+    public void isExecutableNonexistent() {
         final String path = "path";
         Assertions.assertFalse(Files.isExecutable(fs.getPath(path)));
     }
 
     @Test
-    // No nonexistant paths are readable
-    public void isReadableNonexistant() {
+    // No nonexistent paths are readable
+    public void isReadableNonexistent() {
         final String path = "path";
         Assertions.assertFalse(Files.isReadable(fs.getPath(path)));
     }
@@ -530,8 +530,8 @@ public class FilesTestCase {
     }
 
     @Test
-    // No nonexistant paths are writable
-    public void isWritableNonexistant() {
+    // No nonexistent paths are writable
+    public void isWritableNonexistent() {
         final String path = "path";
         Assertions.assertFalse(Files.isWritable(fs.getPath(path)));
     }
