@@ -50,7 +50,7 @@ public class AssetUtilTestCase {
     }
 
     @Test
-    public void shouldBeAbleToGetFullPathForClassResoruce() {
+    public void shouldBeAbleToGetFullPathForClassResource() {
         ArchivePath foundClassResourcePath = AssetUtil.getFullPathForClassResource(this.getClass());
 
         Assert.assertEquals("The class resource should have a / delimiter and a .class extension", new BasicPath(

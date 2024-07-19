@@ -80,7 +80,7 @@ public final class Filters {
     }
 
     /**
-     * {@link Filer} that include all {@link ArchivePath}s that match the given List of paths..
+     * {@link Filer} that include all {@link ArchivePath}s that match the given List of paths.
      *
      * @param paths
      *            The paths to included
@@ -92,7 +92,7 @@ public final class Filters {
     }
 
     /**
-     * {@link Filer} that include all {@link ArchivePath}s that match the given List of paths..
+     * {@link Filer} that include all {@link ArchivePath}s that match the given List of paths.
      *
      * @param paths
      *            The paths to included

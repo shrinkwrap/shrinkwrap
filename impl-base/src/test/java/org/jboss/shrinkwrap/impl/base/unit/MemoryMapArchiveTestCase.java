@@ -54,7 +54,7 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive> 
     }
 
     /**
-     * Return the created instance to the super class so it can perform the common test cases.
+     * Return the created instance to the super class, so it can perform the common test cases.
      */
     @Override
     protected MemoryMapArchive getArchive() {
@@ -69,7 +69,7 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive> 
     public void testConstructorWithName() {
         String name = "test.jar";
         MemoryMapArchive tmp = new MemoryMapArchiveImpl(name, ShrinkWrap.getDefaultDomain().getConfiguration());
-        Assert.assertEquals("Should return the same name as construtor arg", name, tmp.getName());
+        Assert.assertEquals("Should return the same name as constructor arg", name, tmp.getName());
     }
 
     /**

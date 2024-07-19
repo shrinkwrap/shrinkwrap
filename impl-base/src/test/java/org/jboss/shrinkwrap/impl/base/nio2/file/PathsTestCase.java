@@ -81,7 +81,7 @@ public class PathsTestCase {
     }
 
     @Test(expected = FileSystemNotFoundException.class)
-    public void getNonexistantFilesystem() throws URISyntaxException {
+    public void getNonexistentFilesystem() throws URISyntaxException {
         Paths.get(new URI(ShrinkWrapFileSystems.PROTOCOL + "://fakeId"));
     }
 

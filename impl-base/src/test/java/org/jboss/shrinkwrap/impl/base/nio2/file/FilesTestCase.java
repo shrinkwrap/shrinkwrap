@@ -112,17 +112,17 @@ public class FilesTestCase {
     }
 
     @Test
-    public void deleteNonexistant() {
+    public void deleteNonexistent() {
 
         final Archive<?> archive = this.getArchive();
-        final String pathString = "nonexistant";
+        final String pathString = "nonexistent";
 
         // Ensure file doesn't exist
         Assert.assertFalse(archive.contains(pathString));
 
         // Attempt delete
         final Path path = fs.getPath(pathString);
-        Assert.assertThrows("Request to remove nonexistant path should have thrown " + NoSuchFileException.class.getSimpleName(),
+        Assert.assertThrows("Request to remove nonexistent path should have thrown " + NoSuchFileException.class.getSimpleName(),
                 NoSuchFileException.class, () -> Files.delete(path));
     }
 
@@ -172,7 +172,7 @@ public class FilesTestCase {
     }
 
     @Test
-    public void deleteUnemptyDirectory() {
+    public void deleteNonemptyDirectory() {
 
         final String directoryName = "/directory";
         final String subDirectoryName = directoryName + "/subdir";
@@ -479,15 +479,15 @@ public class FilesTestCase {
     }
 
     @Test
-    // No nonexistant paths are executable
-    public void isExecutableNonexistant() {
+    // No nonexistent paths are executable
+    public void isExecutableNonexistent() {
         final String path = "path";
         Assert.assertFalse(Files.isExecutable(fs.getPath(path)));
     }
 
     @Test
-    // No nonexistant paths are readable
-    public void isReadableNonexistant() {
+    // No nonexistent paths are readable
+    public void isReadableNonexistent() {
         final String path = "path";
         Assert.assertFalse(Files.isReadable(fs.getPath(path)));
     }
@@ -535,8 +535,8 @@ public class FilesTestCase {
     }
 
     @Test
-    // No nonexistant paths are writable
-    public void isWritableNonexistant() {
+    // No nonexistent paths are writable
+    public void isWritableNonexistent() {
         final String path = "path";
         Assert.assertFalse(Files.isWritable(fs.getPath(path)));
     }

@@ -39,12 +39,12 @@ public class EnterpriseArchiveImpl extends EnterpriseContainerBase<EnterpriseArc
     private static final Logger log = Logger.getLogger(JavaArchiveImpl.class.getName());
 
     /**
-     * Path to the manifests inside of the Archive.
+     * Path to the manifests inside the Archive.
      */
     private static final ArchivePath PATH_MANIFEST = new BasicPath("META-INF");
 
     /**
-     * Path to the resources inside of the Archive.
+     * Path to the resources inside the Archive.
      */
     private static final ArchivePath PATH_RESOURCE = PATH_MANIFEST;
 

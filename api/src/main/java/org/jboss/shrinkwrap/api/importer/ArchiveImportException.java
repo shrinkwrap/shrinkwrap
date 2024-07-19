@@ -17,7 +17,7 @@
 package org.jboss.shrinkwrap.api.importer;
 
 /**
- * Denotes an unexpected error was encountered while importing a Archive.
+ * Denotes an unexpected error was encountered while importing an Archive.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $

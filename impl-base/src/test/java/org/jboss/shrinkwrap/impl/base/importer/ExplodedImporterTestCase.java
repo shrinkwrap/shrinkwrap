@@ -64,12 +64,12 @@ public class ExplodedImporterTestCase {
     public static void makeEmptyDirectories() throws URISyntaxException {
         final File root = new File(ExplodedImporterTestCase.class.getProtectionDomain().getCodeSource().getLocation()
             .toURI());
-        final File exlodedImportTest = new File(root, EXISTING_DIRECTORY_RESOURCE);
-        Assert.assertTrue("Import test folder does not exist: " + exlodedImportTest.getAbsolutePath(),
-            exlodedImportTest.exists());
-        final File empty = new File(exlodedImportTest, EMPTY_DIR_NAME);
+        final File explodedImportTest = new File(root, EXISTING_DIRECTORY_RESOURCE);
+        Assert.assertTrue("Import test folder does not exist: " + explodedImportTest.getAbsolutePath(),
+            explodedImportTest.exists());
+        final File empty = new File(explodedImportTest, EMPTY_DIR_NAME);
         Assert.assertTrue("Could not create the empty directory", empty.mkdir());
-        final File parent = new File(exlodedImportTest, PARENT_DIR_NAME);
+        final File parent = new File(explodedImportTest, PARENT_DIR_NAME);
         final File parentEmpty = new File(parent, EMPTY_DIR_NAME);
         Assert.assertTrue("Could not create the parent empty directory", parentEmpty.mkdirs());
         parentEmpty.deleteOnExit();

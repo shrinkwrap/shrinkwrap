@@ -114,7 +114,7 @@ public class URLPackageScanner {
         } catch (IOException ioe) {
             log.log(Level.WARNING, "could not read: " + packageName, ioe);
         } catch (ClassNotFoundException ioe) {
-            log.log(Level.WARNING, "Class coud not be loaded in package: " + packageName, ioe);
+            log.log(Level.WARNING, "Class could not be loaded in package: " + packageName, ioe);
         }
     }
 

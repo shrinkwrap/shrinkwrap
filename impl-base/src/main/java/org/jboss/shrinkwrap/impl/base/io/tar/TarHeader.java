@@ -68,7 +68,7 @@ public class TarHeader implements Cloneable {
      */
     public static final int MODTIMELEN = 12;
     /**
-     * The length of the user name field in a header buffer.
+     * The length of the username field in a header buffer.
      */
     public static final int UNAMELEN = 32;
     /**
@@ -169,7 +169,7 @@ public class TarHeader implements Cloneable {
      */
     public StringBuffer magic;
     /**
-     * The entry's user name.
+     * The entry's username.
      */
     public StringBuffer userName;
     /**
@@ -282,7 +282,7 @@ public class TarHeader implements Cloneable {
     }
 
     /**
-     * Parse a file name from a header buffer. This is different from parseName() in that is recognizes 'ustar' names
+     * Parse a file name from a header buffer. This is different from parseName() in that is recognizing 'ustar' names
      * and will handle adding on the "prefix" field to the name.
      * <p>
      * Contributed by Dmitri Tikhonov <dxt2431@yahoo.com>
@@ -350,7 +350,7 @@ public class TarHeader implements Cloneable {
      *            The new name to place into the header buffer.
      * @return The current offset in the tar header (always TarHeader.NAMELEN).
      * @throws InvalidHeaderException
-     *             If the name will not fit in the header.
+     *             If the name does not fit in the header.
      */
     public static int getFileNameBytes(String newName, byte[] outbuf) throws InvalidHeaderException {
         if (newName.length() > 100) {

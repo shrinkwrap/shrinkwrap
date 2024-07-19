@@ -293,7 +293,7 @@ public class ShrinkWrapPath implements Path {
         final List<String> ourTokens = tokenize(this);
         final List<String> otherTokens = tokenize((ShrinkWrapPath) other);
 
-        // Inequal roots
+        // Unequal roots
         if (other.isAbsolute() && !this.isAbsolute()) {
             return false;
         }
@@ -534,7 +534,7 @@ public class ShrinkWrapPath implements Path {
     public Path toRealPath(final LinkOption... options) throws IOException {
         // All links are "real" (no symlinks) and absolute, so just return this (if exists)
         if (!this.fileSystem.getArchive().contains(this.path)) {
-            throw new FileNotFoundException("Path points to a nonexistant file or directory: " + this);
+            throw new FileNotFoundException("Path points to a nonexistent file or directory: " + this);
         }
         return this;
     }

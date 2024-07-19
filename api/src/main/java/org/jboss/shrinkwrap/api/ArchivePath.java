@@ -18,7 +18,7 @@ package org.jboss.shrinkwrap.api;
 
 /**
  * Represents a target context within an {@link Archive} under which an {@link Node} may be found. All
- * {@link ArchivePath} contexts are absolute (ie. prepended with the '/' character). {@link ArchivePath}s may have
+ * {@link ArchivePath} contexts are absolute (i.e. prepended with the '/' character). {@link ArchivePath}s may have
  * parent contexts, unless the path is at the root.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>

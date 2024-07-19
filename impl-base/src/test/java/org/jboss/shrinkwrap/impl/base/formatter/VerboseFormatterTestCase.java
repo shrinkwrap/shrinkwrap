@@ -35,7 +35,7 @@ public class VerboseFormatterTestCase extends FormatterTestBase {
         + ":\n/org/\n/org/jboss/\n/org/jboss/shrinkwrap/\n/org/jboss/shrinkwrap/impl/\n/org/jboss/shrinkwrap/impl/base/\n"
         + "/org/jboss/shrinkwrap/impl/base/formatter/\n/org/jboss/shrinkwrap/impl/base/formatter/FormatterTestBase.class\n"
         + "/org/jboss/shrinkwrap/impl/base/test/\n/org/jboss/shrinkwrap/impl/base/test/ArchiveTestBase.class\n"
-        /* ArchiveTestBase contains an anonymous innerclass which must be accounted for. */
+        /* ArchiveTestBase contains an anonymous inner class which must be accounted for. */
         + "/org/jboss/shrinkwrap/impl/base/test/ArchiveTestBase$1.class";
 
     // -------------------------------------------------------------------------------------||

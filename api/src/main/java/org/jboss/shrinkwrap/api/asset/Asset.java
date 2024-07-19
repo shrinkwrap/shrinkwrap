@@ -31,7 +31,7 @@ import org.jboss.shrinkwrap.api.Node;
  */
 public interface Asset {
     /**
-     * Get a input stream for the resource content. The caller is responsible for closing the stream.
+     * Get an input stream for the resource content. The caller is responsible for closing the stream.
      *
      * @return A new open {@link InputStream} for each call
      */

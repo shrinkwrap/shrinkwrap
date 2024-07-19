@@ -98,21 +98,21 @@ public class FileStoreTestCase {
 
     @Test
     public void totalSpace() throws IOException {
-        // We can't really test this value properly as the JVM can reallocate memory inbetween calls, so just ensure
+        // We can't really test this value properly as the JVM can reallocate memory in between calls, so just ensure
         // we're returning something sane
         Assert.assertTrue("Total space is not returning a positive integer", this.fileStore.getTotalSpace() > 0);
     }
 
     @Test
     public void usableSpace() throws IOException {
-        // We can't really test this value properly as the JVM can reallocate memory inbetween calls, so just ensure
+        // We can't really test this value properly as the JVM can reallocate memory in between calls, so just ensure
         // we're returning something sane
         Assert.assertTrue("Usable space is not returning a positive integer", this.fileStore.getUsableSpace() > 0);
     }
 
     @Test
     public void unallocatedSpace() throws IOException {
-        // We can't really test this value properly as the JVM can reallocate memory inbetween calls, so just ensure
+        // We can't really test this value properly as the JVM can reallocate memory in between calls, so just ensure
         // we're returning something sane
         Assert.assertTrue("Unallocated space is not returning a positive integer",
             this.fileStore.getUnallocatedSpace() > 0);

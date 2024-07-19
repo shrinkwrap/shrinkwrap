@@ -515,7 +515,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
     @Test
     @ArchiveType(ResourceContainer.class)
-    public void testAddResourceFileRecusively() throws Exception {
+    public void testAddResourceFileRecursively() throws Exception {
         String baseFolderPath = "org/jboss/shrinkwrap/impl/base/recursion";
         File baseFolder = getFileForClassResource(baseFolderPath);
         getResourceContainer().addAsResource(baseFolder);
@@ -525,7 +525,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
     @Test
     @ArchiveType(ResourceContainer.class)
-    public void testAddResourceFileRecusivelyWithTarget() throws Exception {
+    public void testAddResourceFileRecursivelyWithTarget() throws Exception {
         File baseFolder = getFileForClassResource("org/jboss/shrinkwrap/impl/base/recursion");
         getResourceContainer().addAsResource(baseFolder, "/new-name");
 
@@ -534,7 +534,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
     @Test
     @ArchiveType(ResourceContainer.class)
-    public void testAddResourceRecusively() throws Exception {
+    public void testAddResourceRecursively() throws Exception {
         String baseFolderPath = "org/jboss/shrinkwrap/impl/base/recursion";
         getResourceContainer().addAsResource(baseFolderPath);
 
@@ -544,7 +544,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
     @Test
     @ArchiveType(ResourceContainer.class)
-    public void testAddResourceRecusivelyWithTarget() throws Exception {
+    public void testAddResourceRecursivelyWithTarget() throws Exception {
         String baseFolderPath = "org/jboss/shrinkwrap/impl/base/recursion";
         getResourceContainer().addAsResource(baseFolderPath, "/new-name");
 
@@ -553,7 +553,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
     @Test
     @ArchiveType(ResourceContainer.class)
-    public void testAddResourceRecusivelyWithTargetPath() throws Exception {
+    public void testAddResourceRecursivelyWithTargetPath() throws Exception {
         String baseFolderPath = "org/jboss/shrinkwrap/impl/base/recursion";
         getResourceContainer().addAsResource(baseFolderPath, new BasicPath("/new-name"));
 
@@ -662,7 +662,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
     @Test
     @ArchiveType(ResourceContainer.class)
-    public void testAddResourceUrlWithTargetArchviePathRecursively() throws Exception {
+    public void testAddResourceUrlWithTargetArchivePathRecursively() throws Exception {
         String baseFolderPath = "org/jboss/shrinkwrap/impl/base/recursion";
         URL baseFolderUrl = getURLForClassResource(baseFolderPath);
         getResourceContainer().addAsResource(baseFolderUrl, new BasicPath("/new-name"));
@@ -944,8 +944,8 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         }
 
         Assert.assertTrue("Classloader not used to load inner class", myClassLoader.isUsedForInnerClasses());
-        String[] expetedResources = { "/test/classloader/DummyClass", "/test/classloader/DummyClass$DummyInnerClass" };
-        for (String expectedResource : expetedResources) {
+        String[] expectedResources = { "/test/classloader/DummyClass", "/test/classloader/DummyClass$DummyInnerClass" };
+        for (String expectedResource : expectedResources) {
             ArchivePath expectedClassPath = new BasicPath(getClassPath(),
                 AssetUtil.getFullPathForClassResource(expectedResource));
             assertContainsClass(expectedClassPath);
@@ -1049,7 +1049,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     }
 
     /**
-     * SHRINKWRAP-233: Tests adding a non existent package doesn't add any asset to the archive.
+     * SHRINKWRAP-233: Tests adding a non-existent package doesn't add any asset to the archive.
      *
      */
     @Test(expected = IllegalArgumentException.class)
@@ -1067,7 +1067,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
      */
     @Test
     @ArchiveType(ClassContainer.class)
-    public void testShouldIcludeOnlySelectedPackages() {
+    public void testShouldIncludeOnlySelectedPackages() {
         Package parent = DummyClassForTest.class.getPackage();
         Package nested1 = EmptyClassForFiltersTest1.class.getPackage();
         Package nested2 = EmptyClassForFiltersTest2.class.getPackage();
@@ -1943,7 +1943,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     }
 
     /**
-     * ` Reproduces a bug within Archive.contains, discovered in SHRINKWRAP-348
+     * ` Reproduces a bug within Archive.contains(), discovered in SHRINKWRAP-348
      */
     @Test
     @ArchiveType(LibraryContainer.class)

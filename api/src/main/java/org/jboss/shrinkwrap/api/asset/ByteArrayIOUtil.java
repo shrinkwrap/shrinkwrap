@@ -57,7 +57,7 @@ class ByteArrayIOUtil {
                 out.write(buffer, 0, read);
             }
         } catch (final IOException ioe) {
-            throw new RuntimeException("Error in obtainting bytes from " + in, ioe);
+            throw new RuntimeException("Error in obtaining bytes from " + in, ioe);
         } finally {
             try {
                 in.close();
@@ -66,7 +66,7 @@ class ByteArrayIOUtil {
                     log.finer("Could not close stream due to: " + exception.getMessage() + "; ignoring");
                 }
             }
-            // We don't need to close the outstream, it's a byte array out
+            // We don't need to close the out-stream, it's a byte array out
         }
 
         // Represent as byte array

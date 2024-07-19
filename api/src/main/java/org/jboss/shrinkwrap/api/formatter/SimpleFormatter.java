@@ -61,7 +61,7 @@ enum SimpleFormatter implements Formatter {
      * Returns the number of assets on an {@link Archive}.
      *
      * @param archive
-     *            the Archive from which we are goint to obtain the number of assets.
+     *            the Archive from which we are going to obtain the number of assets.
      * @return the number of assets inside the archive
      */
     private int getNumAssets(final Archive<?> archive) {

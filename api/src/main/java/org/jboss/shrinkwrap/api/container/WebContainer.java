@@ -282,7 +282,7 @@ public interface WebContainer<T extends Archive<T>> {
      * @param resourcePackage
      *            The package of the resources
      * @param resourceNames
-     *            The names of the resources inside resoucePackage
+     *            The names of the resources inside resourcePackage
      * @return This virtual archive
      * @throws IllegalArgumentException
      *             if resourcePackage is null
@@ -299,7 +299,7 @@ public interface WebContainer<T extends Archive<T>> {
      * @param resourcePackage
      *            The package of the resource
      * @param resourceName
-     *            The name of the resource inside resoucePackage
+     *            The name of the resource inside resourcePackage
      * @return This virtual archive
      * @throws IllegalArgumentException
      *             if resourcePackage is null
@@ -316,7 +316,7 @@ public interface WebContainer<T extends Archive<T>> {
      * @param resourcePackage
      *            The package of the resource
      * @param resourceName
-     *            The name of the resource inside resoucePackage
+     *            The name of the resource inside resourcePackage
      * @param target
      *            The target location inside the container
      * @return This virtual archive
@@ -337,7 +337,7 @@ public interface WebContainer<T extends Archive<T>> {
      * @param resourcePackage
      *            The package of the resource
      * @param resourceName
-     *            The name of the resource inside resoucePackage
+     *            The name of the resource inside resourcePackage
      * @param target
      *            The target location inside the container
      * @return This virtual archive
@@ -530,7 +530,7 @@ public interface WebContainer<T extends Archive<T>> {
      * @param resourcePackage
      *            The package of the resource
      * @param resourceName
-     *            The name of the resource inside resoucePackage
+     *            The name of the resource inside resourcePackage
      * @param target
      *            The target location inside the container
      * @return This {@link Archive}
@@ -547,7 +547,7 @@ public interface WebContainer<T extends Archive<T>> {
      * @param resourcePackage
      *            The package of the resource
      * @param resourceName
-     *            The name of the resource inside resoucePackage
+     *            The name of the resource inside resourcePackage
      * @param target
      *            The target location inside the container
      * @return This {@link Archive}

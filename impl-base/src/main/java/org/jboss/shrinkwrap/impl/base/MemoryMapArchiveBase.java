@@ -202,7 +202,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 
             // we're adding dir, it exists, do nothing
         } else {
-            // Path does not exists, add new node
+            // Path does not exist, add new node
             addNewNode(path, handledAsset);
         }
 
@@ -314,7 +314,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
         if (node.getChildren() != null) {
             final Set<Node> children = node.getChildren();
 
-            // can't remove from collection inside of the iteration
+            // can't remove from collection inside the iteration
             final Set<Node> childrenCopy = new HashSet<>(children);
             for (Node child : childrenCopy) {
                 node.removeChild(child);
@@ -480,7 +480,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     }
 
     /**
-     * Used to retrieve a {@link Node} from the content of the {@link Archive}. If the {@link Node} doesn�t exists in
+     * Used to retrieve a {@link Node} from the content of the {@link Archive}. If the {@link Node} does not exist in
      * the specified location, it is created and added to the {@link Archive}. The same happens to all its non-existing
      * parents. However, if the {@link Node} is an asset, an IllegalArchivePathException is thrown.
      *
@@ -508,7 +508,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
             return node;
         }
 
-        // If the node doesn't exists, create it. Also create all possible non-existing
+        // If the node doesn't exist, create it. Also create all possible non-existing
         // parents
         node = new NodeImpl(path);
         NodeImpl parentNode = obtainParent(path.getParent());

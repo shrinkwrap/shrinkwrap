@@ -122,7 +122,7 @@ public class TarEntry implements Cloneable {
     protected TarHeader header;
 
     /**
-     * Set to true if this is a "old-unix" format entry.
+     * Set to true if this is an "old-unix" format entry.
      */
     protected boolean unixFormat;
 
@@ -296,10 +296,10 @@ public class TarEntry implements Cloneable {
      * descendant starting with this entry's name.
      *
      * @param desc
-     *            Entry to be checked as a descendent of this.
+     *            Entry to be checked as a descendant of this.
      * @return True if entry is a descendant of this.
      */
-    public boolean isDescendent(TarEntry desc) {
+    public boolean isDescendant(TarEntry desc) {
         return desc.header.name.toString().startsWith(this.header.name.toString());
     }
 
@@ -370,19 +370,19 @@ public class TarEntry implements Cloneable {
     }
 
     /**
-     * Get this entry's user name.
+     * Get this entry's username.
      *
-     * @return This entry's user name.
+     * @return This entry's username.
      */
     public String getUserName() {
         return this.header.userName.toString();
     }
 
     /**
-     * Set this entry's user name.
+     * Set this entry's username.
      *
      * @param userName
-     *            This entry's new user name.
+     *            This entry's new username.
      */
     public void setUserName(String userName) {
         this.header.userName = new StringBuffer(userName);
@@ -421,10 +421,10 @@ public class TarEntry implements Cloneable {
     }
 
     /**
-     * Convenience method to set this entry's group and user names.
+     * Convenience method to set this entry's group and usernames.
      *
      * @param userName
-     *            This entry's new user name.
+     *            This entry's new username.
      * @param groupName
      *            This entry's new group name.
      */
@@ -489,7 +489,7 @@ public class TarEntry implements Cloneable {
     }
 
     /**
-     * Return whether or not this entry represents a directory.
+     * Return whether this entry represents a directory.
      *
      * @return True if this entry is a directory.
      */
@@ -525,7 +525,7 @@ public class TarEntry implements Cloneable {
         String name = file.getPath();
         String osname = System.getProperty("os.name");
         if (osname != null) {
-            // Strip off drive letters!
+            // Strip off-drive letters!
             // REVIEW Would a better check be "(File.separator == '\')"?
 
             // String Win32Prefix = "Windows";
@@ -628,7 +628,7 @@ public class TarEntry implements Cloneable {
      * @param outbuf
      *            The tar entry header buffer to fill in.
      * @throws InvalidHeaderException
-     *             If the name will not fit in the header.
+     *             If the name does not fit in the header.
      */
     public void writeEntryHeader(byte[] outbuf) throws InvalidHeaderException {
         int offset = 0;

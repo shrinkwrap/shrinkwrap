@@ -231,7 +231,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * Get a nested {@link Archive} as a specific type.<br/>
      * <br/>
      *
-     * The found Archives must have been added as a Archive, no import is performed.
+     * The found Archives must have been added as an Archive, no import is performed.
      *
      * @param <X>
      *            The type of archive
@@ -252,7 +252,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * Get a nested {@link Archive} as a specific type.<br/>
      * <br/>
      *
-     * The found Archives must have been added as a Archive, no import is performed.
+     * The found Archives must have been added as an Archive, no import is performed.
      *
      * @param <X>
      *            The type of archive
@@ -272,7 +272,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * Get all nested {@link Archive} matching the filter as a specific type.<br/>
      * <br/>
      *
-     * The found Archives must have been added as a Archive, no import is performed.
+     * The found Archives must have been added as an Archive, no import is performed.
      *
      * @param <X>
      *            The type of archive
@@ -576,7 +576,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
 
     /**
      * If "true" is specified, acts as a shorthand for {@link Archive#toString(Formatter)} where the
-     * {@link Formatters#VERBOSE} is leveraged. Otherwise the {@link Formatters#SIMPLE} will be used (equivalent to
+     * {@link Formatters#VERBOSE} is leveraged. Otherwise, the {@link Formatters#SIMPLE} will be used (equivalent to
      * {@link Archive#toString()}).
      *
      * @param verbose

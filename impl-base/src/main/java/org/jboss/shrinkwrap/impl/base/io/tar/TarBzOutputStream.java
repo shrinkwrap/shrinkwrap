@@ -28,7 +28,7 @@ import org.jboss.shrinkwrap.impl.base.io.tar.bzip.BZip2CompressorOutputStream;
 
 /**
  * Outputs tar.bz2 files. Added functionality that it doesn't need to know the size of an entry. If an entry has zero
- * size when it is put in the Tar, then it buffers it until it's closed and it knows the size.
+ * size when it is put in the Tar, then it buffers it until it's closed, and it knows the size.
  *
  * @author "Bay" <bayard@generationjava.com>
  * @author <a href="mailto:ts@bee.kz">Tair Sabirgaliev</a>

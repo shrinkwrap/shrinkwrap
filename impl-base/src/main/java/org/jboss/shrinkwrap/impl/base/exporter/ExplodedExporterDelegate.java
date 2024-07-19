@@ -90,7 +90,7 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File> {
         // Create a file for the asset
         final File assetFile = new File(outputDirectory, assetFilePath);
 
-        // Get the assets parent parent directory and make sure it exists
+        // Get the assets parent directory and make sure it exists
         final File assetParent = assetFile.getParentFile();
         if (!assetParent.exists()) {
             if (!assetParent.mkdirs()) {
@@ -109,9 +109,9 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File> {
         try {
             final boolean isDirectory = (node.getAsset() == null);
             if (isDirectory) {
-                // If doesn't already exist
+                // If it doesn't already exist
                 if (!assetFile.exists()) {
-                    // Attempt a create
+                    // Attempt a creation
                     if (!assetFile.mkdirs()) {
                         // Some error in writing
                         throw new ArchiveExportException("Failed to write directory: " + assetFile.getAbsolutePath());

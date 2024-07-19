@@ -279,7 +279,7 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>> extends Cont
         for (String resourceName : resourceNames) {
             addAsApplicationResource(resourcePackage, resourceName);
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /*
@@ -399,7 +399,7 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>> extends Cont
         }
 
         // Return
-        return this.covarientReturn();
+        return this.covariantReturn();
     }
 
     /**
@@ -418,7 +418,7 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>> extends Cont
         }
 
         // Return
-        return this.covarientReturn();
+        return this.covariantReturn();
     }
 
     /**
@@ -437,7 +437,7 @@ public abstract class EnterpriseContainerBase<T extends Archive<T>> extends Cont
         }
 
         // Return
-        return this.covarientReturn();
+        return this.covariantReturn();
     }
 
     /*

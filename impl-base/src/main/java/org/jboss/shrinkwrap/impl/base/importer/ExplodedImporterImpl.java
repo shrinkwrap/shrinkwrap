@@ -137,7 +137,7 @@ public class ExplodedImporterImpl extends AssignableBase<Archive<?>> implements 
      *            The Archive root folder
      * @param child
      *            The Child file
-     * @return a Path fort he child relative to root
+     * @return a Path for the child relative to root
      */
     private ArchivePath calculatePath(File root, File child) {
         String rootPath = unifyPath(root.getPath());

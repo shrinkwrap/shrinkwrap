@@ -192,7 +192,7 @@ public class ServiceExtensionLoader implements ExtensionLoader {
      *        The ExtensionType interface class
      * @return true if found
      */
-    public boolean isOverriden(Class<?> extensionClass) {
+    public boolean isOverridden(Class<?> extensionClass) {
         return isCached(extensionClass);
     }
 

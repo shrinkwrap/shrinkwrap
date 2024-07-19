@@ -23,7 +23,7 @@ import java.net.URL;
 
 /**
  * Implementation of an {@link Asset} backed by a {@link URL}. The URL may be of any backing protocol supported by the
- * runtime (ie. has a handler registered).
+ * runtime (i.e. has a handler registered).
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  *
@@ -55,7 +55,7 @@ public class UrlAsset implements Asset {
     /**
      * Open the <code>URL</code> stream.
      *
-     * @return A open stream with the content of the URL
+     * @return An open stream with the content of the URL
      */
     @Override
     public InputStream openStream() {
