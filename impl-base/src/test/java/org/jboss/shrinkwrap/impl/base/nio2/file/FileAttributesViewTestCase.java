@@ -7,7 +7,6 @@ import java.nio.file.LinkOption;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
-import java.util.logging.Logger;
 
 import org.junit.Assert;
 
@@ -25,8 +24,6 @@ import org.junit.Test;
  * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>
  */
 public class FileAttributesViewTestCase {
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(FileAttributesTestCase.class.getName());
 
     private FileSystem fs;
 

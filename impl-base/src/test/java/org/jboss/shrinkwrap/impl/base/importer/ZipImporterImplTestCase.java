@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -46,12 +45,6 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
     // -------------------------------------------------------------------------------------||
     // Class Members -----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    /**
-     * Logger
-     */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(ZipImporterImplTestCase.class.getName());
 
     /**
      * Delegate for performing ZIP content assertions

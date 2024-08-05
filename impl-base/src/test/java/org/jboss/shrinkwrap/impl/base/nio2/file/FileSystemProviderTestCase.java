@@ -21,7 +21,6 @@ import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.spi.FileSystemProvider;
-import java.util.logging.Logger;
 
 import org.junit.Assert;
 
@@ -36,9 +35,6 @@ import org.junit.Test;
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
 public class FileSystemProviderTestCase {
-
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(FileSystemProviderTestCase.class.getName());
 
     @Test(expected = IllegalArgumentException.class)
     public void nullEnvironmentMakesIllegalArgumentException() throws IOException {

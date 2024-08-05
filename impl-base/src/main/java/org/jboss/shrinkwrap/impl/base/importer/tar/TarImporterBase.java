@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
@@ -43,15 +42,6 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream;
  */
 abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporter<I>> extends
     AssignableBase<Archive<?>> implements StreamImporter<I> {
-    // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    /**
-     * Logger
-     */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(TarImporterBase.class.getName());
 
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||

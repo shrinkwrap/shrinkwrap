@@ -27,7 +27,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Logger;
 
 /**
  * TestCase to verify the {@link org.jboss.shrinkwrap.impl.base.importer.tar.TarBz2ImporterImpl} functionality.
@@ -40,12 +39,6 @@ public class TarBz2ImporterImplTestCase extends StreamImporterImplTestBase<TarBz
     // -------------------------------------------------------------------------------------||
     // Class Members -----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    /**
-     * Logger
-     */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(TarBz2ImporterImplTestCase.class.getName());
 
     /**
      * Delegate for performing TAR.BZ2 content assertions

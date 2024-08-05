@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.path;
 
-import java.util.logging.Logger;
-
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 
@@ -31,16 +29,6 @@ import org.jboss.shrinkwrap.api.ArchivePaths;
  * @version $Revision: $
  */
 public class PathsTestCase extends PathsTestBase {
-
-    // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    /**
-     * Logger
-     */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(PathsTestCase.class.getName());
 
     // -------------------------------------------------------------------------------------||
     // Required Implementations -----------------------------------------------------------||

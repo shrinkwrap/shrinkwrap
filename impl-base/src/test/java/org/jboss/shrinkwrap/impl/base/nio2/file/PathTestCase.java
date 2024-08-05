@@ -24,7 +24,6 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent.Kind;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.GenericArchive;
@@ -43,9 +42,6 @@ import org.junit.Test;
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
 public class PathTestCase {
-
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(PathTestCase.class.getName());
 
     private ShrinkWrapFileSystem fileSystem;
 

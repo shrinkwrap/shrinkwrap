@@ -25,7 +25,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -43,9 +42,6 @@ import org.junit.Test;
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
 public class FileSystemTestCase {
-
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(FileSystemTestCase.class.getName());
 
     private FileSystem fileSystem;
 
