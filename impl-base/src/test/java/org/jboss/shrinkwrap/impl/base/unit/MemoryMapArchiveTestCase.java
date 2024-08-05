@@ -16,15 +16,14 @@
  */
 package org.jboss.shrinkwrap.impl.base.unit;
 
-import org.junit.Assert;
-
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveTestBase;
 import org.jboss.shrinkwrap.spi.MemoryMapArchive;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * MemoryMapArchiveTestCase
@@ -42,7 +41,7 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive> 
      * Create a new Archive instance per Test.
      *
      */
-    @Before
+    @BeforeEach
     public void createArchive() {
         archive = createNewArchive();
         archive.toString(false);
@@ -69,25 +68,25 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive> 
     public void testConstructorWithName() {
         String name = "test.jar";
         MemoryMapArchive tmp = new MemoryMapArchiveImpl(name, ShrinkWrap.getDefaultDomain().getConfiguration());
-        Assert.assertEquals("Should return the same name as construtor arg", name, tmp.getName());
+        Assertions.assertEquals(name, tmp.getName(), "Should return the same name as construtor arg");
     }
 
     /**
      * Test to ensure the MemoryMapArchive requires a name
      *
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorRequiresName() {
-        new MemoryMapArchiveImpl(null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new MemoryMapArchiveImpl(null));
     }
 
     /**
      * Test to ensure the MemoryMapArchive requires a name
      *
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorRequiresExtensionLoader() {
-        new MemoryMapArchiveImpl("test.jar", null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new MemoryMapArchiveImpl("test.jar", null));
     }
 
     @Override

@@ -24,10 +24,10 @@ import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.StandardCharsets;
 
 import org.jboss.shrinkwrap.api.nio2.file.SeekableInMemoryByteChannelTestCase;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests to assert that the {@link MemoryAsset} is working as contracted. In many cases, the tests here will counter
@@ -46,13 +46,13 @@ public class MemoryAssetTestCase {
 
     private ByteBuffer buffer;
 
-    @Before
+    @BeforeEach
     public void init() {
         this.asset = new MemoryAsset();
         buffer = ByteBuffer.wrap(CONTENTS_BUFFER.getBytes(StandardCharsets.UTF_8));
     }
 
-    @After
+    @AfterEach
     public void closeChannel() throws IOException {
         if (this.asset.isOpen()) {
             this.asset.close();
@@ -61,7 +61,7 @@ public class MemoryAssetTestCase {
 
     @Test
     public void isOpenTrue() {
-        Assert.assertTrue("Channel should report open before it's closed", this.asset.isOpen());
+        Assertions.assertTrue(this.asset.isOpen(), "Channel should report open before it's closed");
     }
 
     @Test
@@ -71,12 +71,12 @@ public class MemoryAssetTestCase {
         final byte[] contents = new byte[2];
         // Read 2 bytes from the new position
         final SeekableByteChannel channel = this.asset.position(newPosition);
-        Assert.assertEquals("Setting position should return the asset", this.asset, channel);
+        Assertions.assertEquals(this.asset, channel, "Setting position should return the asset");
         final int numBytesRead = channel.read(ByteBuffer.wrap(contents));
         final String expected = "dr";
         final String contentsRead = new String(contents, StandardCharsets.UTF_8);
-        Assert.assertEquals("Read should report correct number of bytes read", contents.length, numBytesRead);
-        Assert.assertEquals("Channel should respect explicit position during reads", expected, contentsRead);
+        Assertions.assertEquals(contents.length, numBytesRead, "Read should report correct number of bytes read");
+        Assertions.assertEquals(expected, contentsRead, "Channel should respect explicit position during reads");
     }
 
     @Test
@@ -84,7 +84,7 @@ public class MemoryAssetTestCase {
         this.asset.write(buffer);
         final BufferedReader reader = new BufferedReader(new InputStreamReader(this.asset.openStream()));
         final String contents = reader.readLine();
-        Assert.assertEquals("Contents read were not as expected", CONTENTS_BUFFER, contents);
+        Assertions.assertEquals(CONTENTS_BUFFER, contents, "Contents read were not as expected");
 
     }
 
@@ -98,15 +98,14 @@ public class MemoryAssetTestCase {
         this.asset.position(newPosition).read(ByteBuffer.wrap(contents));
         final String expected = "DRe";
         final String read = new String(contents, StandardCharsets.UTF_8);
-        Assert.assertEquals("Write should report correct number of bytes written", 2, numBytesWritten);
-        Assert.assertEquals("Channel should respect explicit position during writes", expected, read);
+        Assertions.assertEquals(2, numBytesWritten, "Write should report correct number of bytes written");
+        Assertions.assertEquals(expected, read, "Channel should respect explicit position during writes");
     }
 
     @Test
     public void size() throws IOException {
         this.asset.write(buffer);
-        Assert.assertEquals("Channel should report correct size", this.buffer.clear().remaining(),
-            this.asset.size());
+        Assertions.assertEquals(this.buffer.clear().remaining(), this.asset.size(), "Channel should report correct size");
     }
 
     @Test
@@ -114,10 +113,10 @@ public class MemoryAssetTestCase {
         this.asset.write(buffer);
         final int newSize = (int) this.asset.size() - 3;
         final SeekableByteChannel channel = this.asset.truncate(newSize);
-        Assert.assertEquals("Truncating should return the asset", this.asset, channel);
+        Assertions.assertEquals(this.asset, channel, "Truncating should return the asset");
         // Correct size?
-        Assert.assertEquals("Channel should report correct size after truncate", newSize, this.asset.size());
+        Assertions.assertEquals(newSize, this.asset.size(), "Channel should report correct size after truncate");
         // Correct position?
-        Assert.assertEquals("Channel should report adjusted position after truncate", newSize, this.asset.position());
+        Assertions.assertEquals(newSize, this.asset.position(), "Channel should report adjusted position after truncate");
     }
 }

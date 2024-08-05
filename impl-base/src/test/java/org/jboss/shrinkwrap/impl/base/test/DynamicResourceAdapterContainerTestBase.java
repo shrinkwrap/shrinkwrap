@@ -16,14 +16,13 @@
  */
 package org.jboss.shrinkwrap.impl.base.test;
 
-import org.junit.Assert;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.container.ResourceAdapterContainer;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public abstract class DynamicResourceAdapterContainerTestBase<T extends Archive<T>> extends DynamicContainerTestBase<T> {
 
@@ -37,7 +36,7 @@ public abstract class DynamicResourceAdapterContainerTestBase<T extends Archive<
         getResourceAdapterContainer().setResourceAdapterXML(NAME_TEST_PROPERTIES);
 
         ArchivePath testPath = new BasicPath(getResourceAdapterPath(), "ra.xml");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -46,7 +45,7 @@ public abstract class DynamicResourceAdapterContainerTestBase<T extends Archive<
         getResourceAdapterContainer().setResourceAdapterXML(AssetUtil.class.getPackage(), "Test.properties");
 
         ArchivePath testPath = new BasicPath(getResourceAdapterPath(), "ra.xml");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -55,7 +54,7 @@ public abstract class DynamicResourceAdapterContainerTestBase<T extends Archive<
         getResourceAdapterContainer().setResourceAdapterXML(getFileForClassResource(NAME_TEST_PROPERTIES));
 
         ArchivePath testPath = new BasicPath(getResourceAdapterPath(), "ra.xml");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -64,7 +63,7 @@ public abstract class DynamicResourceAdapterContainerTestBase<T extends Archive<
         getResourceAdapterContainer().setResourceAdapterXML(getURLForClassResource(NAME_TEST_PROPERTIES));
 
         ArchivePath testPath = new BasicPath(getResourceAdapterPath(), "ra.xml");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -73,6 +72,6 @@ public abstract class DynamicResourceAdapterContainerTestBase<T extends Archive<
         getResourceAdapterContainer().setResourceAdapterXML(getAssetForClassResource(NAME_TEST_PROPERTIES));
 
         ArchivePath testPath = new BasicPath(getResourceAdapterPath(), "ra.xml");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 }

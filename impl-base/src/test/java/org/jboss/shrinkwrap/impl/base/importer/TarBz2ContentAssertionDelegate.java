@@ -19,10 +19,7 @@ package org.jboss.shrinkwrap.impl.base.importer;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Arrays;
 import java.util.logging.Logger;
-
-import org.junit.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
@@ -32,6 +29,7 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarBzInputStream;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarEntry;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * Delegate class for asserting that TAR.BZ2 contents may be imported as expected
@@ -68,7 +66,7 @@ public class TarBz2ContentAssertionDelegate extends ContentAssertionDelegateBase
      *            The original classpath resource file
      */
     public void assertContent(Archive<?> importedArchive, File originalSource) throws Exception {
-        Assert.assertFalse("Should have imported something", importedArchive.getContent().isEmpty());
+        Assertions.assertFalse(importedArchive.getContent().isEmpty(), "Should have imported something");
 
         boolean containsEmptyDir = false;
         boolean containsEmptyNestedDir = false;
@@ -94,8 +92,8 @@ public class TarBz2ContentAssertionDelegate extends ContentAssertionDelegateBase
 
             // Ensure the archive contains the current entry as read from the file
             final ArchivePath entryName = ArchivePaths.create(originalEntry.getName());
-            Assert.assertTrue("Importer should have imported " + entryName.get() + " from " + originalSource,
-                importedArchive.contains(entryName));
+            Assertions.assertTrue(importedArchive.contains(entryName),
+                    "Importer should have imported " + entryName.get() + " from " + originalSource);
 
             // Check contents
             ByteArrayOutputStream output = new ByteArrayOutputStream(8192);
@@ -108,14 +106,13 @@ public class TarBz2ContentAssertionDelegate extends ContentAssertionDelegateBase
             final Node node = importedArchive.get(entryName);
             byte[] importedContent = IOUtil.asByteArray(node.getAsset().openStream());
 
-            Assert.assertTrue(
-                "The content of " + originalSource.getName() + " should be equal to the imported content",
-                Arrays.equals(importedContent, originalContent));
+            Assertions.assertArrayEquals(importedContent, originalContent,
+                    "The content of " + originalSource.getName() + " should be equal to the imported content");
         }
 
         // Ensure empty directories have come in cleanly
-        Assert.assertTrue("Empty directory not imported", containsEmptyDir);
-        Assert.assertTrue("Empty nested directory not imported", containsEmptyNestedDir);
+        Assertions.assertTrue(containsEmptyDir, "Empty directory not imported");
+        Assertions.assertTrue(containsEmptyNestedDir, "Empty nested directory not imported");
     }
 
     // -------------------------------------------------------------------------------------||

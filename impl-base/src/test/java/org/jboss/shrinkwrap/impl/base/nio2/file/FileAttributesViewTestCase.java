@@ -8,15 +8,14 @@ import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 
-import org.junit.Assert;
-
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.nio2.file.ShrinkWrapFileSystems;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * ShrinkWrap implementation of {@link BasicFileAttributesView}; not all operations are supported
@@ -29,7 +28,7 @@ public class FileAttributesViewTestCase {
 
     private JavaArchive archive;
 
-    @Before
+    @BeforeEach
     public void createStore() throws IOException {
         // Setup
         final String name = "test.jar";
@@ -41,7 +40,7 @@ public class FileAttributesViewTestCase {
         this.fs = fs;
     }
 
-    @After
+    @AfterEach
     public void closeFs() throws IOException {
         this.fs.close();
     }
@@ -49,28 +48,28 @@ public class FileAttributesViewTestCase {
     @Test
     public void getShrinkwrapAttributesView() {
         BasicFileAttributeView attributeView = getAttributesView("path");
-        Assert.assertEquals("Attributes view wrong name", ShrinkWrapFileAttributeView.class.getSimpleName(),
-            attributeView.name());
-        Assert.assertTrue("Attribute view is not an instance of ShrinkWrapFileAttributeView",
-            attributeView instanceof ShrinkWrapFileAttributeView);
+        Assertions.assertEquals(ShrinkWrapFileAttributeView.class.getSimpleName(), attributeView.name(), "Attributes view wrong name");
+        Assertions.assertInstanceOf(ShrinkWrapFileAttributeView.class, attributeView,
+                "Attribute view is not an instance of ShrinkWrapFileAttributeView");
     }
 
     @Test
     public void readAttributes() {
         ShrinkWrapFileAttributeView attributeView = getAttributesView("path");
-        Assert.assertNotNull("Attribute view should not be null", attributeView);
+        Assertions.assertNotNull(attributeView, "Attribute view should not be null");
 
         BasicFileAttributes attributes = attributeView.readAttributes();
         // the attributes are tested in FileAttributesTestCase
-        Assert.assertTrue("Atrributes are not instance of ShrinkWrapFileAttributes",
-            attributes instanceof ShrinkWrapFileAttributes);
+        Assertions.assertInstanceOf(ShrinkWrapFileAttributes.class, attributes,
+                "Atrributes are not instance of ShrinkWrapFileAttributes");
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void setTimes() throws IOException {
+    @Test
+    public void setTimes() {
         BasicFileAttributeView attributeView = getAttributesView("path");
         FileTime fileTime = FileTime.fromMillis(0);
-        attributeView.setTimes(fileTime, fileTime, fileTime);
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> attributeView.setTimes(fileTime, fileTime, fileTime));
     }
 
     private ShrinkWrapFileAttributeView getAttributesView(final String pathName) {

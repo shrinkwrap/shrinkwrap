@@ -16,7 +16,9 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
-import org.junit.Test;
+import org.jboss.shrinkwrap.api.asset.Asset;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * URLPackageScannerTestCase for SHRINKWRAP-90.
@@ -27,9 +29,10 @@ import org.junit.Test;
  * @version $Revision$
  */
 public class URLPackageScannerTestCase {
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldThrowExceptionNullPackage() {
-        URLPackageScanner.newInstance(true, URLPackageScannerTestCase.class.getClassLoader(),
-                (className, asset) -> {}, null);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> URLPackageScanner.newInstance(true, URLPackageScannerTestCase.class.getClassLoader(),
+                        (className, asset) -> {}, null));
     }
 }

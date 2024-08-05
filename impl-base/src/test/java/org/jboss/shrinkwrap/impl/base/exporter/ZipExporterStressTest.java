@@ -30,8 +30,8 @@ import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Stress test to ensure that archives exported as ZIPs which have size larger than available RAM can be processed,
@@ -106,8 +106,8 @@ public class ZipExporterStressTest {
 
         // Ensure we've just exported a ZIP larger than our available memory (proving we've buffered the encoding
         // process)
-        Assert.assertTrue("Test setup failed; we should be writing out more bytes than we have free memory",
-            out.bytesWritten > beforeExportFreeMemBytes);
+        Assertions.assertTrue(out.bytesWritten > beforeExportFreeMemBytes,
+                "Test setup failed; we should be writing out more bytes than we have free memory");
         log.info("Final ZIP export was: " + this.megaBytesFromBytes(out.bytesWritten) + " MB");
         final long afterExportFreeMemBytes = totalFreeMemory(runtime);
         log.info("Free memory after export (MB): " + this.megaBytesFromBytes(afterExportFreeMemBytes));

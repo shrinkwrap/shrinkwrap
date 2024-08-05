@@ -29,8 +29,8 @@ import org.jboss.shrinkwrap.api.container.WebContainer;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicWebContainerTestBase;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * WebArchiveImplTestCase
@@ -69,12 +69,12 @@ public class WebArchiveImplTestCase extends DynamicWebContainerTestBase<WebArchi
     // Lifecycle Methods ------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
-    @Before
+    @BeforeEach
     public void createWebArchive() {
         archive = createNewArchive();
     }
 
-    @After
+    @AfterEach
     public void ls() {
         System.out.println("test@jboss:/$ ls -l " + archive.getName());
         System.out.println(archive.toString(true));

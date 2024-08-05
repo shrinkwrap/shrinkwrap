@@ -16,12 +16,11 @@
  */
 package org.jboss.shrinkwrap.api.asset;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.io.InputStream;
-
-import org.junit.Assert;
-
-import org.junit.Test;
 
 /**
  * Test to ensure that we can use a File as a resource.
@@ -43,31 +42,21 @@ public class FileAssetTestCase {
         Asset asset = new FileAsset(new File(EXISTING_FILE));
         InputStream io = asset.openStream();
 
-        Assert.assertNotNull(io);
-        Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true",
-            ApiTestUtils.convertToString(io));
+        Assertions.assertNotNull(io);
+        Assertions.assertEquals("shrinkwrap=true", ApiTestUtils.convertToString(io),
+                "Should be able to read the content of the resource");
     }
 
     @Test
     public void shouldThrowExceptionOnNullFile() {
-        try {
-            new FileAsset(null);
-            Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (Exception e) {
-            Assert.assertEquals("A null file argument should result in a IllegalArgumentException",
-                IllegalArgumentException.class, e.getClass());
-        }
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new FileAsset(null),
+                "A null file argument should result in a IllegalArgumentException");
     }
 
     @Test
     public void shouldThrowExceptionOnMissingFile() {
-        try {
-            new FileAsset(new File(NON_EXISTING_FILE));
-            Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (Exception e) {
-            Assert.assertEquals("A non existing file should result in a IllegalArgumentException",
-                IllegalArgumentException.class, e.getClass());
-        }
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new FileAsset(new File(NON_EXISTING_FILE)),
+                "A non existing file should result in a IllegalArgumentException");
     }
     
     @Test
@@ -75,6 +64,6 @@ public class FileAssetTestCase {
     	final File exitingFile = new File(EXISTING_FILE);
     	final Asset asset = new FileAsset(exitingFile);
     	
-        Assert.assertTrue(exitingFile.equals(((FileAsset)asset).getSource()));
+        Assertions.assertTrue(exitingFile.equals(((FileAsset)asset).getSource()));
     }
 }

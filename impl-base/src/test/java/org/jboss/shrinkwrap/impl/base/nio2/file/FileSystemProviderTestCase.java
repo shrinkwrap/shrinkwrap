@@ -16,18 +16,16 @@
  */
 package org.jboss.shrinkwrap.impl.base.nio2.file;
 
-import java.io.IOException;
 import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.spi.FileSystemProvider;
 
-import org.junit.Assert;
-
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.nio2.file.ShrinkWrapFileSystems;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases to assert the ShrinkWrap implementation of the NIO.2 {@link FileSystemProvider} is working as contracted.
@@ -36,9 +34,10 @@ import org.junit.Test;
  */
 public class FileSystemProviderTestCase {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void nullEnvironmentMakesIllegalArgumentException() throws IOException {
-        FileSystems.newFileSystem(URI.create(ShrinkWrapFileSystems.PROTOCOL + "://myArchive.jar"), null);
+    @Test
+    public void nullEnvironmentMakesIllegalArgumentException() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> FileSystems.newFileSystem(URI.create(ShrinkWrapFileSystems.PROTOCOL + "://myArchive.jar"), null));
     }
 
     @Test
@@ -47,7 +46,7 @@ public class FileSystemProviderTestCase {
         final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, name);
         final FileSystem fs = ShrinkWrapFileSystems.newFileSystem(archive);
 
-        Assert.assertNotNull(fs);
-        Assert.assertTrue(fs instanceof ShrinkWrapFileSystem);
+        Assertions.assertNotNull(fs);
+        Assertions.assertInstanceOf(ShrinkWrapFileSystem.class, fs);
     }
 }

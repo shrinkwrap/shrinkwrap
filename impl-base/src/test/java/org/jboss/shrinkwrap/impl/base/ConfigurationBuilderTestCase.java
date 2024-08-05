@@ -25,9 +25,9 @@ import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.ConfigurationBuilder;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests to ensure the {@link ConfigurationBuilder} is working as contracted
@@ -53,7 +53,7 @@ public class ConfigurationBuilderTestCase {
     /**
      * Creates the {@link ConfigurationBuilder} instance to be tested
      */
-    @Before
+    @BeforeEach
     public void createDefaultBuilder() {
         builder = new ConfigurationBuilder();
     }
@@ -74,7 +74,7 @@ public class ConfigurationBuilderTestCase {
         final ExecutorService service = builder.getExecutorService();
 
         // Test
-        Assert.assertNull("The builder should not default an " + ExecutorService.class.getSimpleName(), service);
+        Assertions.assertNull(service, "The builder should not default an " + ExecutorService.class.getSimpleName());
     }
 
     /**
@@ -86,7 +86,7 @@ public class ConfigurationBuilderTestCase {
         builder.build();
 
         final ExtensionLoader loader = builder.getExtensionLoader();
-        Assert.assertNotNull("The builder should default an " + ExtensionLoader.class.getSimpleName(), loader);
+        Assertions.assertNotNull(loader, "The builder should default an " + ExtensionLoader.class.getSimpleName());
     }
 
     /**
@@ -101,9 +101,8 @@ public class ConfigurationBuilderTestCase {
         builder.executorService(service).build();
 
         // Test
-        Assert.assertEquals(
-            "Building should not override the user-supplied " + ExecutorService.class.getSimpleName(), service,
-            builder.getExecutorService());
+        Assertions.assertEquals(service, builder.getExecutorService(),
+                "Building should not override the user-supplied " + ExecutorService.class.getSimpleName());
     }
 
     /**
@@ -140,9 +139,8 @@ public class ConfigurationBuilderTestCase {
         builder.extensionLoader(loader).build();
 
         // Test
-        Assert.assertEquals(
-            "Building should not override the user-supplied " + ExtensionLoader.class.getSimpleName(), loader,
-            builder.getExtensionLoader());
+        Assertions.assertEquals(loader, builder.getExtensionLoader(),
+                "Building should not override the user-supplied " + ExtensionLoader.class.getSimpleName());
     }
 
     /**
@@ -159,10 +157,10 @@ public class ConfigurationBuilderTestCase {
         final ExtensionLoader loader = builder.getExtensionLoader();
 
         // Test that they match the props in the config
-        Assert.assertEquals(ExecutorService.class.getSimpleName()
-            + " in the config does not match that in the builder", service, configuration.getExecutorService());
-        Assert.assertEquals(ExtensionLoader.class.getSimpleName()
-            + " in the config does not match that in the builder", loader, configuration.getExtensionLoader());
+        Assertions.assertEquals(service, configuration.getExecutorService(),
+                ExecutorService.class.getSimpleName() + " in the config does not match that in the builder");
+        Assertions.assertEquals(loader, configuration.getExtensionLoader(),
+                ExtensionLoader.class.getSimpleName() + " in the config does not match that in the builder");
     }
 
 }

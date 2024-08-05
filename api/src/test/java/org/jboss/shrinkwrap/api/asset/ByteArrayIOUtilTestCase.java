@@ -16,8 +16,8 @@
  */
 package org.jboss.shrinkwrap.api.asset;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 
@@ -31,9 +31,9 @@ import java.io.ByteArrayInputStream;
  */
 public class ByteArrayIOUtilTestCase {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldThrowExceptionOnNullParameter() {
-        ByteArrayIOUtil.asByteArray(null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ByteArrayIOUtil.asByteArray(null));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class ByteArrayIOUtilTestCase {
         byte[] output = ByteArrayIOUtil.asByteArray(new ByteArrayInputStream(contents));
 
         for (int i = 0; i < output.length; i++) {
-            Assert.assertEquals("output content did not equal input content", output[i], contents[i]);
+            Assertions.assertEquals(output[i], contents[i], "output content did not equal input content");
         }
     }
 }

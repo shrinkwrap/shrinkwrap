@@ -31,10 +31,10 @@ import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.nio2.file.ShrinkWrapFileSystems;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases to assert the ShrinkWrap implementation of the NIO.2 {@link FileSystem} is working as contracted.
@@ -47,7 +47,7 @@ public class FileSystemTestCase {
 
     private JavaArchive archive;
 
-    @Before
+    @BeforeEach
     public void createFileSystem() throws IOException {
 
         // Setup and mount the archive
@@ -58,7 +58,7 @@ public class FileSystemTestCase {
         this.archive = archive;
     }
 
-    @After
+    @AfterEach
     public void closeFs() throws IOException {
         this.fileSystem.close();
     }
@@ -69,38 +69,38 @@ public class FileSystemTestCase {
         int count = 0;
         for (final Path path : paths) {
             count++;
-            Assert.assertEquals("Root was not in expected form", ArchivePaths.root().get(), path.toString());
+            Assertions.assertEquals(ArchivePaths.root().get(), path.toString(), "Root was not in expected form");
         }
-        Assert.assertEquals("Should only be one root path per FS", 1, count);
+        Assertions.assertEquals(1, count, "Should only be one root path per FS");
     }
 
     @Test
     public void fileSeparator() {
         final String fileSeparator = fileSystem.getSeparator();
-        Assert.assertEquals("File separator was not as expected", ArchivePath.SEPARATOR_STRING, fileSeparator);
+        Assertions.assertEquals(ArchivePath.SEPARATOR_STRING, fileSeparator, "File separator was not as expected");
     }
 
     @Test
     public void provider() {
         final FileSystemProvider provider = fileSystem.provider();
-        Assert.assertNotNull("Provider must be linked from file system", provider);
-        Assert.assertTrue("Provider supplied is of wrong type", provider instanceof ShrinkWrapFileSystemProvider);
+        Assertions.assertNotNull(provider, "Provider must be linked from file system");
+        Assertions.assertInstanceOf(ShrinkWrapFileSystemProvider.class, provider, "Provider supplied is of wrong type");
     }
 
     @Test
     public void isReadOnly() {
-        Assert.assertFalse("ShrinkWrap File Systems are not read-only", fileSystem.isReadOnly());
+        Assertions.assertFalse(fileSystem.isReadOnly(), "ShrinkWrap File Systems are not read-only");
     }
 
     @Test
     public void isOpen() {
-        Assert.assertTrue("Should report as open", fileSystem.isOpen());
+        Assertions.assertTrue(fileSystem.isOpen(), "Should report as open");
     }
 
     @Test
     public void isOpenAfterClose() throws IOException {
         fileSystem.close();
-        Assert.assertFalse("Should report as closed", fileSystem.isOpen());
+        Assertions.assertFalse(fileSystem.isOpen(), "Should report as closed");
     }
 
     @Test
@@ -109,10 +109,10 @@ public class FileSystemTestCase {
         int count = 0;
         for (final FileStore fileStore : fileStores) {
             count++;
-            Assert.assertTrue("file store is not of correct type", fileStore instanceof ShrinkWrapFileStore);
+            Assertions.assertInstanceOf(ShrinkWrapFileStore.class, fileStore, "file store is not of correct type");
         }
 
-        Assert.assertEquals("Should only be one file store per file system", 1, count);
+        Assertions.assertEquals(1, count, "Should only be one file store per file system");
     }
 
     @Test
@@ -120,79 +120,79 @@ public class FileSystemTestCase {
 
         final Set<String> fileAttrViews = fileSystem.supportedFileAttributeViews();
         // By contract we must support "basic", so we'll verify just that
-        Assert.assertEquals("Only support \"basic\" file att view", 1, fileAttrViews.size());
-        Assert.assertTrue("By contract we must support the \"basic\" view", fileAttrViews.contains("basic"));
+        Assertions.assertEquals(1, fileAttrViews.size(), "Only support \"basic\" file att view");
+        Assertions.assertTrue(fileAttrViews.contains("basic"), "By contract we must support the \"basic\" view");
     }
 
     @Test
     public void getPathRoot() {
         final Path path = fileSystem.getPath("/");
-        Assert.assertEquals("Root path not obtained correctly", ArchivePaths.root().get(), path.toString());
+        Assertions.assertEquals(ArchivePaths.root().get(), path.toString(), "Root path not obtained correctly");
     }
 
     @Test
     public void getPathRootFromEmptyString() {
         final Path path = fileSystem.getPath("");
-        Assert.assertNull("Root path of empty string should be null", path.getRoot());
+        Assertions.assertNull(path.getRoot(), "Root path of empty string should be null");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void getPathNull() {
-        fileSystem.getPath(null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> fileSystem.getPath(null));
     }
 
     @Test
     public void getHierarchicalPath() {
         final Path path = fileSystem.getPath("toplevel", "parent", "child");
-        Assert.assertEquals("Path not obtained correctly from hierarchical input", "toplevel/parent/child",
-            path.toString());
+        Assertions.assertEquals("toplevel/parent/child", path.toString(),
+                "Path not obtained correctly from hierarchical input");
     }
 
     @Test
     public void getHierarchicalPathFromAbsolute() {
         final Path path = fileSystem.getPath("/toplevel", "parent", "child");
-        Assert.assertEquals("Path not obtained correctly from hierarchical input", "/toplevel/parent/child",
-            path.toString());
+        Assertions.assertEquals("/toplevel/parent/child", path.toString(),
+                "Path not obtained correctly from hierarchical input");
     }
 
     @Test
     public void getHierarchicalPathFromMixedInput() {
         final Path path = fileSystem.getPath("toplevel/parent", "child");
-        Assert.assertEquals("Path not obtained correctly from mixed hierarchical input", "toplevel/parent/child",
-            path.toString());
+        Assertions.assertEquals("toplevel/parent/child", path.toString(),
+                "Path not obtained correctly from mixed hierarchical input");
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     // We don't support security
     public void getUserPrincipalLookupService() {
-        fileSystem.getUserPrincipalLookupService();
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> fileSystem.getUserPrincipalLookupService());
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     // We don't support a watch service
-    public void newWatchService() throws IOException {
-        fileSystem.newWatchService();
+    public void newWatchService() {
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> fileSystem.newWatchService());
     }
 
-    @Test(expected = FileSystemAlreadyExistsException.class)
-    public void fileSystemAlreadyExists() throws IllegalArgumentException, IOException {
+    @Test
+    public void fileSystemAlreadyExists() throws IllegalArgumentException {
         // exception should be thrown, second file system for the same archive
-        ShrinkWrapFileSystems.newFileSystem(archive);
+        Assertions.assertThrows(FileSystemAlreadyExistsException.class, () -> ShrinkWrapFileSystems.newFileSystem(archive));
     }
 
     @Test
     public void fileSystemClosedNewIsntanceCreated() throws IllegalArgumentException, IOException {
         this.fileSystem.close();
 
-        Assert.assertNotNull("", ShrinkWrapFileSystems.newFileSystem(archive));
+        Assertions.assertNotNull(ShrinkWrapFileSystems.newFileSystem(archive));
     }
 
     @Test
     public void getFileSystem() {
         URI uri = ShrinkWrapFileSystems.getRootUri(archive);
 
-        Assert.assertEquals("getFileSystem should return same existing file system", this.fileSystem,
-            FileSystems.getFileSystem(uri));
+        Assertions.assertEquals(this.fileSystem, FileSystems.getFileSystem(uri),
+                "getFileSystem should return same existing file system");
     }
 
     // TODO Test case for getPathMatcher, but first implement it

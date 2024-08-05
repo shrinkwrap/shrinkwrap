@@ -31,8 +31,8 @@ import org.jboss.shrinkwrap.api.Domain;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Base class for AddPackage* tests operating with a custom classloader.
@@ -48,7 +48,7 @@ public abstract class AddPackageTestBase {
 
     private File tempFile;
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
 
         Archive<?> archive = buildArchive();
@@ -75,7 +75,7 @@ public abstract class AddPackageTestBase {
         return new URLClassLoader(new URL[]{archiveUrl}, null);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         // URLClassLoader.close() requires JDK7+
         

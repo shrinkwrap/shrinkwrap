@@ -16,11 +16,10 @@
  */
 package org.jboss.shrinkwrap.impl.base.asset;
 
-import org.junit.Assert;
-
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * AssetUtilTest
@@ -37,23 +36,23 @@ public class AssetUtilTestCase {
     public void shouldBeAbleToGetPathForClassloaderResource() {
         ArchivePath foundResourcePath = AssetUtil.getPathForClassloaderResource(EXISTING_RESOURCE);
 
-        Assert.assertEquals("The classloader resource path should not contain the file name", new BasicPath(
-            "org/jboss/shrinkwrap/impl/base/asset"), foundResourcePath);
+        Assertions.assertEquals(new BasicPath("org/jboss/shrinkwrap/impl/base/asset"), foundResourcePath,
+                "The classloader resource path should not contain the file name");
     }
 
     @Test
     public void shouldBeAbleToGetNameForClassloaderResource() {
         String foundResourceName = AssetUtil.getNameForClassloaderResource(EXISTING_RESOURCE);
 
-        Assert.assertEquals("The classloader resource name should not contain the path", "Test.properties",
-            foundResourceName);
+        Assertions.assertEquals("Test.properties", foundResourceName,
+                "The classloader resource name should not contain the path");
     }
 
     @Test
     public void shouldBeAbleToGetFullPathForClassResoruce() {
         ArchivePath foundClassResourcePath = AssetUtil.getFullPathForClassResource(this.getClass());
 
-        Assert.assertEquals("The class resource should have a / delimiter and a .class extension", new BasicPath(
-            "/org/jboss/shrinkwrap/impl/base/asset/AssetUtilTestCase.class"), foundClassResourcePath);
+        Assertions.assertEquals(new BasicPath("/org/jboss/shrinkwrap/impl/base/asset/AssetUtilTestCase.class"),
+                foundClassResourcePath, "The class resource should have a / delimiter and a .class extension");
     }
 }

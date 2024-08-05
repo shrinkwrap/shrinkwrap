@@ -16,11 +16,10 @@
  */
 package org.jboss.shrinkwrap.api.asset;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.io.InputStream;
-
-import org.junit.Assert;
-
-import org.junit.Test;
 
 /**
  * Test to ensure that we are can use a ClassLoader Resource as a resource.
@@ -40,49 +39,33 @@ public class ClassLoaderAssetTestCase {
         Asset asset = new ClassLoaderAsset(EXISTING_RESOURCE);
         InputStream io = asset.openStream();
 
-        Assert.assertNotNull(io);
-        Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true",
-            ApiTestUtils.convertToString(io));
+        Assertions.assertNotNull(io);
+        Assertions.assertEquals("shrinkwrap=true", ApiTestUtils.convertToString(io),
+                "Should be able to read the content of the resource");
     }
 
     @Test
     public void shouldThrowExceptionOnNullName() {
-        try {
-            new ClassLoaderAsset(null);
-            Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (Exception e) {
-            Assert.assertEquals("A null resourceName argument should result in a IllegalArgumentException",
-                IllegalArgumentException.class, e.getClass());
-        }
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new ClassLoaderAsset(null),
+                "A null resourceName argument should result in a IllegalArgumentException");
     }
 
     @Test
     public void shouldThrowExceptionOnNullClassloader() {
-        try {
-            new ClassLoaderAsset(EXISTING_RESOURCE, null);
-            Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (Exception e) {
-            Assert.assertEquals("A null classLoader argument should result in a IllegalArgumentException",
-                IllegalArgumentException.class, e.getClass());
-        }
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new ClassLoaderAsset(EXISTING_RESOURCE, null),
+                "A null classLoader argument should result in a IllegalArgumentException");
     }
 
     @Test
     public void shouldThrowExceptionOnMissingResource() {
-        try {
-            new ClassLoaderAsset(NON_EXISTING_RESOURCE);
-            Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (Exception e) {
-            Assert.assertEquals(
-                "A resource that is not found in the classLoader should result in a IllegalArgumentException",
-                IllegalArgumentException.class, e.getClass());
-        }
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new ClassLoaderAsset(NON_EXISTING_RESOURCE),
+                "A resource that is not found in the classLoader should result in a IllegalArgumentException");
     }
     
     @Test
     public void shouldBeAbleToReturnResource() {
         final Asset asset = new ClassLoaderAsset(EXISTING_RESOURCE);
         
-        Assert.assertEquals(((ClassLoaderAsset)asset).getSource(), EXISTING_RESOURCE);
+        Assertions.assertEquals(((ClassLoaderAsset)asset).getSource(), EXISTING_RESOURCE);
     }
 }

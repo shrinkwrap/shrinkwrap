@@ -31,10 +31,10 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.nio2.file.ShrinkWrapFileSystems;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases to assert the ShrinkWrap implementation of the NIO.2 {@link Path} is working as contracted.
@@ -45,7 +45,7 @@ public class PathTestCase {
 
     private ShrinkWrapFileSystem fileSystem;
 
-    @Before
+    @BeforeEach
     public void createFileSystem() throws IOException {
 
         // Setup and mount the archive
@@ -55,7 +55,7 @@ public class PathTestCase {
         this.fileSystem = fs;
     }
 
-    @After
+    @AfterEach
     public void closeFs() {
         this.fileSystem.close();
     }
@@ -63,98 +63,98 @@ public class PathTestCase {
     @Test
     public void rootIsAbsolute() {
         final Path path = fileSystem.getPath("/");
-        Assert.assertTrue("Root path must be absolute", path.isAbsolute());
-        Assert.assertEquals("Root path should be equal to root archive path value", path.toString(), ArchivePaths
-            .root().get());
+        Assertions.assertTrue(path.isAbsolute(), "Root path must be absolute");
+        Assertions.assertEquals(path.toString(), ArchivePaths.root().get(),
+                "Root path should be equal to root archive path value");
     }
 
     @Test
     public void getFileSystem() {
         final Path path = fileSystem.getPath("/");
-        Assert.assertEquals("FileSystem not obtained correctly via Path", fileSystem, path.getFileSystem());
+        Assertions.assertEquals(fileSystem, path.getFileSystem(), "FileSystem not obtained correctly via Path");
     }
 
     @Test
     public void getPathEmptyPath() {
         final String empty = "";
         final Path path = fileSystem.getPath(empty);
-        Assert.assertEquals("Empty path should be resolved to empty path value", empty, path.toString());
+        Assertions.assertEquals(empty, path.toString(), "Empty path should be resolved to empty path value");
     }
 
     @Test
     public void getFileNameEmptyPath() {
         final String empty = "";
         final Path path = fileSystem.getPath(empty);
-        Assert.assertEquals("Empty path should return null file name", null, path.getFileName());
+        Assertions.assertNull(path.getFileName(), "Empty path should return null file name");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void getPathNullPath() {
-        fileSystem.getPath(null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> fileSystem.getPath(null));
     }
 
     @Test
     public void getPathRelative() {
         final String relative = "relative";
         final Path path = fileSystem.getPath(relative);
-        Assert.assertFalse("Relative paths must not be adjusted to absolute", path.isAbsolute());
-        Assert.assertEquals("Relative input was not resolved to path as expected", relative, path.toString());
+        Assertions.assertFalse(path.isAbsolute(), "Relative paths must not be adjusted to absolute");
+        Assertions.assertEquals(relative, path.toString(), "Relative input was not resolved to path as expected");
     }
 
     @Test
     public void getRoot() {
         final Path path = fileSystem.getPath("/someNode");
         final Path root = path.getRoot();
-        Assert.assertEquals("Did not return correct root", root.toString(), "/");
+        Assertions.assertEquals(root.toString(), "/", "Did not return correct root");
     }
 
     @Test
     public void getRootFromRelative() {
         final Path path = fileSystem.getPath("someNode");
         final Path root = path.getRoot();
-        Assert.assertNull("Relative path should have null root", root);
+        Assertions.assertNull(root, "Relative path should have null root");
     }
 
     @Test
     public void getRootFromNested() {
         final Path path = fileSystem.getPath("/someNode/child");
         final Path root = path.getRoot();
-        Assert.assertEquals("Did not return correct root", root.toString(), "/");
+        Assertions.assertEquals(root.toString(), "/", "Did not return correct root");
     }
 
     @Test
     public void getParent() {
         final Path path = fileSystem.getPath("parent/child");
         final Path parent = path.getParent();
-        Assert.assertEquals("Did not return correct parent", parent.toString(), "parent");
+        Assertions.assertEquals(parent.toString(), "parent", "Did not return correct parent");
     }
 
     @Test
     public void getParentRelative() {
         final Path path = fileSystem.getPath("relativeName");
         final Path parent = path.getParent();
-        Assert.assertNull("Single node relative paths should have no parent", parent);
+        Assertions.assertNull(parent, "Single node relative paths should have no parent");
     }
 
     @Test
     public void getParentNested() {
         final Path path = fileSystem.getPath("parent/child/grandchild");
         final Path parent = path.getParent();
-        Assert.assertEquals("Did not return correct parent", parent.toString(), "parent/child");
+        Assertions.assertEquals(parent.toString(), "parent/child", "Did not return correct parent");
     }
 
     @Test
     public void getParentAbsolute() {
         final Path path = fileSystem.getPath("/parent/child/grandchild");
         final Path parent = path.getParent();
-        Assert.assertEquals("Did not return correct parent", parent.toString(), "/parent/child");
+        Assertions.assertEquals(parent.toString(), "/parent/child", "Did not return correct parent");
     }
 
     @Test
     public void getParentRootIsNull() {
         final Path path = fileSystem.getPath("/");
         final Path parent = path.getParent();
-        Assert.assertNull("Parent of root should be null", parent);
+        Assertions.assertNull(parent, "Parent of root should be null");
     }
 
     @Test
@@ -163,93 +163,93 @@ public class PathTestCase {
         final String fileNameString = "fileName";
         final Path path = fileSystem.getPath(location + fileNameString);
         final Path fileName = path.getFileName();
-        Assert.assertEquals("File name was not as expected", fileNameString, fileName.toString());
+        Assertions.assertEquals(fileNameString, fileName.toString(), "File name was not as expected");
     }
 
     @Test
     public void getRootFileName() {
         final Path path = fileSystem.getPath("/");
         final Path fileName = path.getFileName();
-        Assert.assertNull("Root file name should be null", fileName);
+        Assertions.assertNull(fileName, "Root file name should be null");
     }
 
     @Test
     public void getRootNameCount() {
         final Path path = fileSystem.getPath("/");
         final int count = path.getNameCount();
-        Assert.assertEquals("Root should have no name count", 0, count);
+        Assertions.assertEquals(0, count, "Root should have no name count");
     }
 
     @Test
     public void getTopLevelNameCount() {
         final Path path = fileSystem.getPath("/toplevel");
         final int count = path.getNameCount();
-        Assert.assertEquals("Top-level element should have name count 1", 1, count);
+        Assertions.assertEquals(1, count, "Top-level element should have name count 1");
     }
 
     @Test
     public void getTopLevelAppendedSlashNameCount() {
         final Path path = fileSystem.getPath("/toplevel/");
         final int count = path.getNameCount();
-        Assert.assertEquals("Top-level element should have name count 1", 1, count);
+        Assertions.assertEquals(1, count, "Top-level element should have name count 1");
     }
 
     @Test
     public void getTopLevelNoPrecedingSlashNameCount() {
         final Path path = fileSystem.getPath("toplevel/");
         final int count = path.getNameCount();
-        Assert.assertEquals("Top-level element should have name count 1", 1, count);
+        Assertions.assertEquals(1, count, "Top-level element should have name count 1");
     }
 
     @Test
     public void nestedNameCount() {
         final Path path = fileSystem.getPath("toplevel/nested");
         final int count = path.getNameCount();
-        Assert.assertEquals("nested-level element should have name count 2", 2, count);
+        Assertions.assertEquals(2, count, "nested-level element should have name count 2");
     }
 
     @Test
     public void toAbsolutePath() {
         final Path path = fileSystem.getPath("toplevel");
-        Assert.assertEquals("toAbsolute should return the absolute form of the Path", "/toplevel", path
-            .toAbsolutePath().toString());
+        Assertions.assertEquals("/toplevel", path.toAbsolutePath().toString(),
+                "toAbsolute should return the absolute form of the Path");
     }
 
     @Test
     public void toAbsolutePathAlreadyAbsolute() {
         final String absolutePath = "/absolute";
         final Path path = fileSystem.getPath(absolutePath);
-        Assert.assertEquals("toAbsolute should return the absolute form of the Path", absolutePath, path
-            .toAbsolutePath().toString());
+        Assertions.assertEquals(absolutePath, path.toAbsolutePath().toString(),
+                "toAbsolute should return the absolute form of the Path");
     }
 
     @Test
     public void isAbsolute() {
         final Path path = fileSystem.getPath("/absolute");
-        Assert.assertTrue(path.isAbsolute());
+        Assertions.assertTrue(path.isAbsolute());
     }
 
     @Test
     public void isAbsoluteFalse() {
         final Path path = fileSystem.getPath("relative");
-        Assert.assertFalse(path.isAbsolute());
+        Assertions.assertFalse(path.isAbsolute());
     }
 
     @Test
     public void iterator() {
         final Path path = fileSystem.getPath("toplevel/second/third/fourth");
         final Iterator<Path> paths = path.iterator();
-        Assert.assertEquals("/toplevel", paths.next().toString());
-        Assert.assertEquals("/toplevel/second", paths.next().toString());
-        Assert.assertEquals("/toplevel/second/third", paths.next().toString());
-        Assert.assertEquals("/toplevel/second/third/fourth", paths.next().toString());
+        Assertions.assertEquals("/toplevel", paths.next().toString());
+        Assertions.assertEquals("/toplevel/second", paths.next().toString());
+        Assertions.assertEquals("/toplevel/second/third", paths.next().toString());
+        Assertions.assertEquals("/toplevel/second/third/fourth", paths.next().toString());
     }
 
     @Test
     public void iteratorRoot() {
         final Path path = fileSystem.getPath("/");
         final Iterator<Path> paths = path.iterator();
-        Assert.assertFalse("Iterator should not return root element", paths.hasNext());
+        Assertions.assertFalse(paths.hasNext(), "Iterator should not return root element");
     }
 
     @Test
@@ -257,68 +257,75 @@ public class PathTestCase {
         final Path path = fileSystem.getPath("/toplevel/second");
         final URI uri = path.toUri();
         final String expected = ShrinkWrapFileSystems.PROTOCOL + "://" + fileSystem.getArchive().getId() + path;
-        Assert.assertEquals("toUri did not return form as expected", expected, uri.toString());
+        Assertions.assertEquals(expected, uri.toString(), "toUri did not return form as expected");
     }
 
     @Test
     public void getName() {
         final Path path = fileSystem.getPath("/toplevel/second/third");
         final Path second = path.getName(2);
-        Assert.assertEquals("/toplevel/second/third", second.toString());
+        Assertions.assertEquals("/toplevel/second/third", second.toString());
     }
 
     @Test
     public void getNameRoot() {
         final Path path = fileSystem.getPath("/toplevel/second/third");
         final Path second = path.getName(0);
-        Assert.assertEquals("/toplevel", second.toString());
+        Assertions.assertEquals("/toplevel", second.toString());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void subpathNegativeBegin() {
-        fileSystem.getPath("/toplevel/second/third").subpath(-1, 1);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> fileSystem.getPath("/toplevel/second/third").subpath(-1, 1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void subpathNegativeEnd() {
-        fileSystem.getPath("/toplevel/second/third").subpath(0, -1);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> fileSystem.getPath("/toplevel/second/third").subpath(0, -1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void subpathEndBeforeBegin() {
-        fileSystem.getPath("/toplevel/second/third").subpath(2, 1);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> fileSystem.getPath("/toplevel/second/third").subpath(2, 1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void subpathBeginTooLarge() {
-        fileSystem.getPath("/toplevel/second/third").subpath(4, 5);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> fileSystem.getPath("/toplevel/second/third").subpath(4, 5));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void subpathEndTooLarge() {
-        fileSystem.getPath("/toplevel/second/third").subpath(2, 4);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> fileSystem.getPath("/toplevel/second/third").subpath(2, 4));
     }
 
     @Test
     public void subpath() {
         final Path subpath = fileSystem.getPath("/toplevel/second/third").subpath(1, 2);
-        Assert.assertEquals("/toplevel/second", subpath.toString());
+        Assertions.assertEquals("/toplevel/second", subpath.toString());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void startsWithNullPathInput() {
-        fileSystem.getPath("/toplevel/second/third").startsWith((Path) null);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> fileSystem.getPath("/toplevel/second/third").startsWith((Path) null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void startsWithNullStringInput() {
-        fileSystem.getPath("/toplevel/second/third").startsWith((String) null);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> fileSystem.getPath("/toplevel/second/third").startsWith((String) null));
     }
 
     @Test
     public void startsWithOtherPathImpl() {
         final boolean startsWith = fileSystem.getPath("/toplevel/second/third").startsWith(new MockPath());
-        Assert.assertFalse(startsWith);
+        Assertions.assertFalse(startsWith);
     }
 
     /**
@@ -330,83 +337,88 @@ public class PathTestCase {
         final String pathName = "/toplevel/second";
         final Path otherPath = otherFs.getPath(pathName);
         final boolean startsWith = fileSystem.getPath(pathName).startsWith(otherPath);
-        Assert.assertFalse(startsWith);
+        Assertions.assertFalse(startsWith);
     }
 
     @Test
     public void startsWith() {
         final Path path = fileSystem.getPath("/toplevel/second/third");
         final boolean startsWith = path.startsWith(fileSystem.getPath("/toplevel/second/"));
-        Assert.assertTrue(startsWith);
+        Assertions.assertTrue(startsWith);
     }
 
     @Test
     public void startsWithRelative() {
         final Path path = fileSystem.getPath("/toplevel/second/third");
         final boolean startsWith = path.startsWith(fileSystem.getPath("toplevel/second/"));
-        Assert.assertTrue(startsWith);
+        Assertions.assertTrue(startsWith);
     }
 
     @Test
     public void startsWithAbsolute() {
         final Path path = fileSystem.getPath("toplevel/second/third");
         final boolean startsWith = path.startsWith(fileSystem.getPath("/toplevel/second/third"));
-        Assert.assertFalse("Other absolute pah and this relative path cannot match startsWith", startsWith);
+        Assertions.assertFalse(startsWith, "Other absolute pah and this relative path cannot match startsWith");
     }
 
     @Test
     public void startsWithString() {
         final Path path = fileSystem.getPath("/toplevel/second/third");
         final boolean startsWith = path.startsWith("/toplevel/second/");
-        Assert.assertTrue(startsWith);
+        Assertions.assertTrue(startsWith);
     }
 
     @Test
     public void startsWithNegative() {
         final Path path = fileSystem.getPath("/toplevel/second/third");
         final boolean startsWith = path.startsWith(fileSystem.getPath("/top"));
-        Assert.assertFalse(startsWith);
+        Assertions.assertFalse(startsWith);
     }
 
     @Test
     public void startsWithBiggerThan() {
         final Path path = fileSystem.getPath("/toplevel/second/third");
         final boolean startsWith = path.startsWith(fileSystem.getPath("/toplevel/second/third/fourth"));
-        Assert.assertFalse(startsWith);
+        Assertions.assertFalse(startsWith);
     }
 
     // We don't interface w/ File API
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void toFile() {
-        fileSystem.getPath("/toplevel").toFile();
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> fileSystem.getPath("/toplevel").toFile());
     }
 
     // We don't support events
-    @Test(expected = UnsupportedOperationException.class)
-    public void register() throws IOException {
-        fileSystem.getPath("/toplevel").register(null, (Kind<?>) null);
+    @Test
+    public void register(){
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> fileSystem.getPath("/toplevel").register(null, (Kind<?>) null));
     }
 
     // We don't support events
-    @Test(expected = UnsupportedOperationException.class)
-    public void registerLongform() throws IOException {
-        fileSystem.getPath("/toplevel").register(null, (Kind<?>) null, null);
+    @Test
+    public void registerLongform() {
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> fileSystem.getPath("/toplevel").register(null, (Kind<?>) null, null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void endsWithNullPathInput() {
-        fileSystem.getPath("/toplevel/second/third").endsWith((Path) null);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> fileSystem.getPath("/toplevel/second/third").endsWith((Path) null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void endsWithNullStringInput() {
-        fileSystem.getPath("/toplevel/second/third").endsWith((String) null);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> fileSystem.getPath("/toplevel/second/third").endsWith((String) null));
     }
 
     @Test
     public void endsWithOtherPathImpl() {
         final boolean endsWith = fileSystem.getPath("/toplevel/second/third").endsWith(new MockPath());
-        Assert.assertFalse(endsWith);
+        Assertions.assertFalse(endsWith);
     }
 
     /**
@@ -417,56 +429,56 @@ public class PathTestCase {
         final FileSystem otherFs = ShrinkWrapFileSystems.newFileSystem(ShrinkWrap.create(GenericArchive.class));
         final Path otherPath = otherFs.getPath("/otherpath");
         final boolean endsWith = fileSystem.getPath("/toplevel/second/third").endsWith(otherPath);
-        Assert.assertFalse(endsWith);
+        Assertions.assertFalse(endsWith);
     }
 
     @Test
     public void endsWith() {
         final Path path = fileSystem.getPath("/toplevel/second/third");
         final boolean endsWith = path.endsWith(fileSystem.getPath("third"));
-        Assert.assertTrue("Should have identified path ends with last name component", endsWith);
+        Assertions.assertTrue(endsWith, "Should have identified path ends with last name component");
     }
 
     @Test
     public void endsString() {
         final Path path = fileSystem.getPath("/toplevel/second/third");
         final boolean endsWith = path.endsWith(fileSystem.getPath("third").toString());
-        Assert.assertTrue("Should have identified path ends with last name component", endsWith);
+        Assertions.assertTrue(endsWith, "Should have identified path ends with last name component");
     }
 
     @Test
     public void endsWithNested() {
         final Path path = fileSystem.getPath("/toplevel/second/third");
         final boolean endsWith = path.endsWith(fileSystem.getPath("second/third"));
-        Assert.assertTrue("Should have identified path ends with last and penultimate name component", endsWith);
+        Assertions.assertTrue(endsWith, "Should have identified path ends with last and penultimate name component");
     }
 
     @Test
     public void endsWithPartial() {
         final Path path = fileSystem.getPath("/toplevel/second/third");
         final boolean endsWith = path.endsWith(fileSystem.getPath("ird"));
-        Assert.assertFalse(endsWith);
+        Assertions.assertFalse(endsWith);
     }
 
     @Test
     public void endsWithIncorrectRoot() {
         final Path path = fileSystem.getPath("/toplevel/second/third");
         final boolean endsWith = path.endsWith(fileSystem.getPath("/third"));
-        Assert.assertFalse(endsWith);
+        Assertions.assertFalse(endsWith);
     }
 
     @Test
     public void endsWithNegative() {
         final Path path = fileSystem.getPath("/toplevel/second/third");
         final boolean endsWith = path.endsWith(fileSystem.getPath("/toplevel"));
-        Assert.assertFalse(endsWith);
+        Assertions.assertFalse(endsWith);
     }
 
     @Test
     public void endsWithBiggerThan() {
         final Path path = fileSystem.getPath("/toplevel/second/third");
         final boolean endsWith = path.endsWith(fileSystem.getPath("/toplevel/second/third/fourth"));
-        Assert.assertFalse(endsWith);
+        Assertions.assertFalse(endsWith);
     }
 
     @Test
@@ -475,42 +487,42 @@ public class PathTestCase {
         this.fileSystem.getArchive().add(EmptyAsset.INSTANCE, newPathName);
         final Path path = fileSystem.getPath(newPathName);
         final Path realPath = path.toRealPath((LinkOption[]) null);
-        Assert.assertEquals(path.toString(), realPath.toString());
+        Assertions.assertEquals(path.toString(), realPath.toString());
     }
 
-    @Test(expected = FileNotFoundException.class)
+    @Test
     public void toRealPathDoesntExist() throws IOException {
         final String newPathName = "/toplevel/myAsset";
         final Path path = fileSystem.getPath(newPathName);
-        path.toRealPath((LinkOption[]) null);
+        Assertions.assertThrows(FileNotFoundException.class, () -> path.toRealPath((LinkOption[]) null));
     }
 
     @Test
     public void normalizeNoop() {
         final Path path = fileSystem.getPath("/a/b");
         final Path normalized = path.normalize();
-        Assert.assertEquals(path.toString(), normalized.toString());
+        Assertions.assertEquals(path.toString(), normalized.toString());
     }
 
     @Test
     public void normalizeRelative() {
         final Path path = fileSystem.getPath("a/b");
         final Path normalized = path.normalize();
-        Assert.assertEquals(path.toString(), normalized.toString());
+        Assertions.assertEquals(path.toString(), normalized.toString());
     }
 
     @Test
     public void normalizeCurrentDirRefs() {
         final Path path = fileSystem.getPath("/a/./b/./c/d/./e");
         final Path normalized = path.normalize();
-        Assert.assertEquals("/a/b/c/d/e", normalized.toString());
+        Assertions.assertEquals("/a/b/c/d/e", normalized.toString());
     }
 
     @Test
     public void normalizeBackDirRefs() {
         final Path path = fileSystem.getPath("/a/../b/./c/d/../e");
         final Path normalized = path.normalize();
-        Assert.assertEquals("/b/c/e", normalized.toString());
+        Assertions.assertEquals("/b/c/e", normalized.toString());
     }
 
     @Test
@@ -518,7 +530,7 @@ public class PathTestCase {
         final Path path = fileSystem.getPath("/a/b");
         final Path other = fileSystem.getPath("/a/b/c/d");
         final Path relativized = path.relativize(other);
-        Assert.assertEquals("c/d", relativized.toString());
+        Assertions.assertEquals("c/d", relativized.toString());
     }
 
     @Test
@@ -526,7 +538,7 @@ public class PathTestCase {
         final Path path = fileSystem.getPath("/a/b/c");
         final Path other = fileSystem.getPath("/a/b/c/d");
         final Path relativized = path.relativize(other);
-        Assert.assertEquals("d", relativized.toString());
+        Assertions.assertEquals("d", relativized.toString());
     }
 
     @Test
@@ -534,7 +546,7 @@ public class PathTestCase {
         final Path path = fileSystem.getPath("/a/b");
         final Path other = fileSystem.getPath("/a/c");
         final Path relativized = path.relativize(other);
-        Assert.assertEquals("../c", relativized.toString());
+        Assertions.assertEquals("../c", relativized.toString());
     }
 
     @Test
@@ -542,13 +554,13 @@ public class PathTestCase {
         final Path path = fileSystem.getPath("/a/b");
         final Path other = fileSystem.getPath("/a/c/d");
         final Path relativized = path.relativize(other);
-        Assert.assertEquals("../c/d", relativized.toString());
+        Assertions.assertEquals("../c/d", relativized.toString());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void relativizeNull() {
         final Path path = fileSystem.getPath("/toplevel/myAsset");
-        path.relativize(null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> path.relativize(null));
     }
 
     @Test
@@ -556,8 +568,8 @@ public class PathTestCase {
         final Path path = fileSystem.getPath("/topLevel/secondLevel");
         final Path other = fileSystem.getPath("thirdLevel");
         final Path resolved = path.resolve(other);
-        Assert.assertEquals("Resolve should join other to this", "/topLevel/secondLevel/thirdLevel",
-            resolved.toString());
+        Assertions.assertEquals("/topLevel/secondLevel/thirdLevel", resolved.toString(),
+                "Resolve should join other to this");
     }
 
     @Test
@@ -565,8 +577,8 @@ public class PathTestCase {
         final Path path = fileSystem.getPath("/topLevel/secondLevel/");
         final Path other = fileSystem.getPath("thirdLevel");
         final Path resolved = path.resolve(other);
-        Assert.assertEquals("Resolve should join other to this", "/topLevel/secondLevel/thirdLevel",
-            resolved.toString());
+        Assertions.assertEquals("/topLevel/secondLevel/thirdLevel", resolved.toString(),
+                "Resolve should join other to this");
     }
 
     @Test
@@ -575,7 +587,7 @@ public class PathTestCase {
         final Path path = fileSystem.getPath(thisLocation);
         final Path other = fileSystem.getPath("");
         final Path resolved = path.resolve(other);
-        Assert.assertEquals("Resolve of empty path should return this path", thisLocation, resolved.toString());
+        Assertions.assertEquals(thisLocation, resolved.toString(), "Resolve of empty path should return this path");
     }
 
     @Test
@@ -584,12 +596,13 @@ public class PathTestCase {
         final Path other = fileSystem.getPath("/toplevel/myDir/myAsset");
         final Path resolved = path.resolve(other);
         // Since absolute, by spec return the value of the other path
-        Assert.assertEquals(other.toString(), resolved.toString());
+        Assertions.assertEquals(other.toString(), resolved.toString());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void resolveNull() {
-        fileSystem.getPath("/toplevel/myDir/").resolve((Path) null);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> fileSystem.getPath("/toplevel/myDir/").resolve((Path) null));
     }
 
     @Test
@@ -599,12 +612,13 @@ public class PathTestCase {
         final Path other = fileSystem.getPath(otherName);
         final Path resolved = path.resolve(otherName);
         // Since absolute, by spec return the value of the other path
-        Assert.assertEquals(other.toString(), resolved.toString());
+        Assertions.assertEquals(other.toString(), resolved.toString());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void resolveNullString() {
-        fileSystem.getPath("/toplevel/myDir/").resolve((String) null);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> fileSystem.getPath("/toplevel/myDir/").resolve((String) null));
     }
 
     /**
@@ -620,9 +634,8 @@ public class PathTestCase {
         final Path other = fileSystem.getPath("a/b/../c");
         final Path pathNormalized = path.normalize();
         final Path otherNormalized = other.normalize();
-        Assert.assertTrue("Failed check that relativize undoes resolve, taking into account normalization",
-            (pathNormalized.relativize(pathNormalized.resolve(otherNormalized)).equals(otherNormalized)));
-
+        Assertions.assertEquals(pathNormalized.relativize(pathNormalized.resolve(otherNormalized)), otherNormalized,
+                "Failed check that relativize undoes resolve, taking into account normalization");
     }
 
     @Test
@@ -631,12 +644,13 @@ public class PathTestCase {
         final Path other = fileSystem.getPath("/toplevel/myDir/myAsset");
         final Path resolved = path.resolveSibling(other);
         // Since absolute, by spec return the value of the other path
-        Assert.assertEquals(other.toString(), resolved.toString());
+        Assertions.assertEquals(other.toString(), resolved.toString());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void resolveSiblingNull() {
-        fileSystem.getPath("/toplevel/myDir/").resolveSibling((Path) null);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> fileSystem.getPath("/toplevel/myDir/").resolveSibling((Path) null));
     }
 
     @Test
@@ -646,12 +660,13 @@ public class PathTestCase {
         final Path other = fileSystem.getPath(otherName);
         final Path resolved = path.resolveSibling(otherName);
         // Since absolute, by spec return the value of the other path
-        Assert.assertEquals(other.toString(), resolved.toString());
+        Assertions.assertEquals(other.toString(), resolved.toString());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void resolveSublingNullString() {
-        fileSystem.getPath("/toplevel/myDir/").resolveSibling((String) null);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> fileSystem.getPath("/toplevel/myDir/").resolveSibling((String) null));
     }
 
     @Test
@@ -660,7 +675,7 @@ public class PathTestCase {
         final String otherName = "/toplevel/b";
         final Path other = fileSystem.getPath(otherName);
         final int compare = path.compareTo(other);
-        Assert.assertEquals(-1, compare);
+        Assertions.assertEquals(-1, compare);
     }
 
     @Test
@@ -669,7 +684,7 @@ public class PathTestCase {
         final String otherName = "/toplevel/a";
         final Path other = fileSystem.getPath(otherName);
         final int compare = path.compareTo(other);
-        Assert.assertEquals(1, compare);
+        Assertions.assertEquals(1, compare);
     }
 
     @Test
@@ -678,11 +693,12 @@ public class PathTestCase {
         final String otherName = "/toplevel/a";
         final Path other = fileSystem.getPath(otherName);
         final int compare = path.compareTo(other);
-        Assert.assertEquals(0, compare);
+        Assertions.assertEquals(0, compare);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void compareToNull() {
-        fileSystem.getPath("/toplevel/a").compareTo(null);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> fileSystem.getPath("/toplevel/a").compareTo(null));
     }
 }

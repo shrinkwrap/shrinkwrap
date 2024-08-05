@@ -27,8 +27,8 @@ import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -139,16 +139,16 @@ public final class ZipStoredExporterTestCase extends StreamExporterTestBase<ZipI
                 .as(ZipStoredExporter.class).exportTo(new File(target, "test-exporter.zip"), true);
 
         final File generatedFile = new File(target, "test-exporter.zip");
-        Assert.assertTrue(generatedFile.length() > 0);
+        Assertions.assertTrue(generatedFile.length() > 0);
 
         final InputStream contentsFromExportedFile = getContentsFromExportedFile(generatedFile, ArchivePaths.create("/org/jboss/shrinkwrap/impl/base/exporter/ZipStoredExporterTestCase.class"));
         final byte[] content = IOUtil.asByteArray(contentsFromExportedFile);
-        Assert.assertTrue(content.length > 0);
+        Assertions.assertTrue(content.length > 0);
 
         final InputStream contentsFromExportedFile2 = getContentsFromExportedFile(generatedFile, ArchivePaths.create("/content.txt"));
         final byte[] content2 = IOUtil.asByteArray(contentsFromExportedFile2);
-        Assert.assertTrue(content.length > 0);
-        Assert.assertEquals("My file content", new String(content2));
+        Assertions.assertTrue(content.length > 0);
+        Assertions.assertEquals("My file content", new String(content2));
     }
 
     // -------------------------------------------------------------------------------------||
@@ -173,7 +173,7 @@ public final class ZipStoredExporterTestCase extends StreamExporterTestBase<ZipI
         // Ensure we don't write the root Path
         // SHRINKWRAP-96
         ZipEntry rootEntry = expectedZip.getEntry("/");
-        Assert.assertNull("ZIP should not have explicit root path written (SHRINKWRAP-96)", rootEntry);
+        Assertions.assertNull(rootEntry, "ZIP should not have explicit root path written (SHRINKWRAP-96)");
     }
 
     /**
@@ -187,7 +187,7 @@ public final class ZipStoredExporterTestCase extends StreamExporterTestBase<ZipI
         final ZipEntry entry = this.getEntryFromZip(expectedZip, path);
         final byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
         final byte[] actualContents = IOUtil.asByteArray(expectedZip.getInputStream(entry));
-        Assert.assertArrayEquals(expectedContents, actualContents);
+        Assertions.assertArrayEquals(expectedContents, actualContents);
     }
 
     /**
@@ -202,7 +202,7 @@ public final class ZipStoredExporterTestCase extends StreamExporterTestBase<ZipI
             throws IllegalArgumentException {
         final String entryPath = PathUtil.optionallyRemovePrecedingSlash(path.get());
         final ZipEntry entry = expectedZip.getEntry(entryPath);
-        Assert.assertNotNull("Expected path not found in ZIP: " + path, entry);
+        Assertions.assertNotNull(entry,"Expected path not found in ZIP: " + path);
         return entry;
     }
 }

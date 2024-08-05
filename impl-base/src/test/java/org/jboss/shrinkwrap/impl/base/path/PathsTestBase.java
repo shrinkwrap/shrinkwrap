@@ -19,8 +19,8 @@ package org.jboss.shrinkwrap.impl.base.path;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.ArchivePath;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Base support for tests of {@link ArchivePath} implementations and factories
@@ -117,8 +117,8 @@ public abstract class PathsTestBase {
 
         // Ensure expected
         final String resolved = path.get();
-        Assert
-            .assertEquals("Null context should resolve to root path", String.valueOf(ArchivePath.SEPARATOR), resolved);
+        Assertions.assertEquals(String.valueOf(ArchivePath.SEPARATOR), resolved,
+                "Null context should resolve to root path");
         log.info("null argument resolves to: " + path);
     }
 
@@ -137,7 +137,7 @@ public abstract class PathsTestBase {
         // Ensure expected
         final String resolved = path.get();
         final String expected = ArchivePath.SEPARATOR + relative;
-        Assert.assertEquals("Relative paths should resolve to absolute", expected, resolved);
+        Assertions.assertEquals(expected, resolved, "Relative paths should resolve to absolute");
         log.info("\"" + relative + "\" resolves to: " + path);
     }
 
@@ -154,9 +154,7 @@ public abstract class PathsTestBase {
         final ArchivePath path = this.createPath(absoluteDir);
 
         // Ensure expected
-        final String resolved = path.get();
-        final String expected = absoluteDir;
-        Assert.assertEquals("Absolute directory contexts should be preserved", expected, resolved);
+        Assertions.assertEquals(absoluteDir, path.get(), "Absolute directory contexts should be preserved");
         log.info("\"" + absoluteDir + "\" resolves to: " + path);
     }
 
@@ -178,9 +176,8 @@ public abstract class PathsTestBase {
         final ArchivePath path = this.createPath(basePath, contextPath);
 
         // Ensure expected
-        final String resolved = path.get();
-        final String expected = ArchivePath.SEPARATOR + base + ArchivePath.SEPARATOR + context;
-        Assert.assertEquals("Context under base should resolve to relative", expected, resolved);
+        Assertions.assertEquals(ArchivePath.SEPARATOR + base + ArchivePath.SEPARATOR + context, path.get(),
+                "Context under base should resolve to relative");
         log.info("\"" + context + "\" under base " + basePath + " resolves to: " + path);
     }
 
@@ -201,9 +198,8 @@ public abstract class PathsTestBase {
         final ArchivePath path = this.createPath(basePath, context);
 
         // Ensure expected
-        final String resolved = path.get();
-        final String expected = ArchivePath.SEPARATOR + base + ArchivePath.SEPARATOR + context;
-        Assert.assertEquals("Context under base should resolve to relative", expected, resolved);
+        Assertions.assertEquals(ArchivePath.SEPARATOR + base + ArchivePath.SEPARATOR + context, path.get(),
+                "Context under base should resolve to relative");
         log.info("\"" + context + "\" under base " + basePath + " resolves to: " + path);
     }
 
@@ -224,9 +220,8 @@ public abstract class PathsTestBase {
         final ArchivePath path = this.createPath(base, context);
 
         // Ensure expected
-        final String resolved = path.get();
-        final String expected = ArchivePath.SEPARATOR + base + context.get();
-        Assert.assertEquals("Context under base should resolve to relative", expected, resolved);
+        Assertions.assertEquals(ArchivePath.SEPARATOR + base + context.get(), path.get(),
+                "Context under base should resolve to relative");
         log.info("\"" + context + "\" under base " + base + " resolves to: " + path);
     }
 
@@ -247,9 +242,8 @@ public abstract class PathsTestBase {
         final ArchivePath path = this.createPath(base, context);
 
         // Ensure expected
-        final String resolved = path.get();
-        final String expected = ArchivePath.SEPARATOR + base + ArchivePath.SEPARATOR + context;
-        Assert.assertEquals("Context under base should resolve to relative", expected, resolved);
+        Assertions.assertEquals(ArchivePath.SEPARATOR + base + ArchivePath.SEPARATOR + context, path.get(),
+                "Context under base should resolve to relative");
         log.info("\"" + context + "\" under base \"" + base + "\" resolves to: " + path);
     }
 
@@ -271,7 +265,7 @@ public abstract class PathsTestBase {
         final int hash2 = path2.hashCode();
 
         // Ensure expected
-        Assert.assertEquals("Paths with the same context should have equal hash codes", hash1, hash2);
+        Assertions.assertEquals(hash1, hash2, "Paths with the same context should have equal hash codes");
         log.info("Both " + path1 + " and " + path2 + " have hashCode: " + hash1);
     }
 
@@ -291,9 +285,9 @@ public abstract class PathsTestBase {
         final ArchivePath pathWithFollowingSlash = this.createPath(contextWithFollowingSlash);
 
         // Ensure expected
-        Assert.assertEquals("Paths with same context should be equal by value", path1, path2);
-        Assert.assertEquals("Paths with same context (regardless of following slash) should be equal by value", path1,
-            pathWithFollowingSlash);
+        Assertions.assertEquals(path1, path2, "Paths with same context should be equal by value");
+        Assertions.assertEquals(path1, pathWithFollowingSlash,
+                "Paths with same context (regardless of following slash) should be equal by value");
         log.info(path1 + " equal by value to " + path2);
     }
 
@@ -312,7 +306,7 @@ public abstract class PathsTestBase {
         final ArchivePath path2 = this.createPath(context2);
 
         // Ensure expected
-        Assert.assertTrue("Paths with different contexts should not be equal by value", !path1.equals(path2));
+        Assertions.assertNotEquals(path1, path2, "Paths with different contexts should not be equal by value");
         log.info(path1 + " not equal by value to " + path2);
     }
 }

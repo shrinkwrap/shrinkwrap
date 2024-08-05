@@ -16,7 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.importer;
 
-import org.junit.Assert;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -31,7 +30,8 @@ import org.jboss.shrinkwrap.api.importer.StreamImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -119,7 +119,7 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
         Archive<?> archive = ShrinkWrap.create(importerClass, "test.jar").importFrom(testFile).as(JavaArchive.class);
 
         // Ensure we don't have a null archive
-        Assert.assertNotNull("Should not return a null archive", archive);
+        Assertions.assertNotNull(archive, "Should not return a null archive");
 
         // Validate the contents of the imported archive match that of the file from
         // which it was created
@@ -143,11 +143,11 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
                 .importFrom(testFile, Filters.include(".*MANIFEST\\.MF")).as(JavaArchive.class);
 
         // Ensure we don't have a null archive
-        Assert.assertNotNull("Should not return a null archive", archive);
+        Assertions.assertNotNull(archive, "Should not return a null archive");
 
         // Validate the contents of the imported only contain filtered content
-        Assert.assertEquals(2, archive.getContent().size());
-        Assert.assertTrue(archive.contains(ArchivePaths.create("META-INF/MANIFEST.MF")));
+        Assertions.assertEquals(2, archive.getContent().size());
+        Assertions.assertTrue(archive.contains(ArchivePaths.create("META-INF/MANIFEST.MF")));
     }
 
     /**
@@ -163,18 +163,8 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
         // Import
         final Class<? extends StreamImporter<?>> importerClass = this.getImporterClass();
         assert importerClass != null : "Importer class must be specified by implementations";
-        try {
-            ShrinkWrap.create(importerClass, "test.jar").importFrom(testDir);
-        }
-        // Expected
-        catch (final IllegalArgumentException iae) {
-            // Good
-            return;
-        }
-
-        Assert.fail("Should have received " + IllegalArgumentException.class.getSimpleName()
-            + " on attempt to import a dir");
-
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ShrinkWrap.create(importerClass, "test.jar").importFrom(testDir),
+                "Should have received IllegalArgumentException on attempt to import a dir");
     }
 
     /**
@@ -195,7 +185,7 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
         assert importerClass != null : "Importer class must be specified by implementations";
         final Archive<?> archive = ShrinkWrap.create(importerClass, "test.jar").importFrom(testFile)
             .as(JavaArchive.class);
-        Assert.assertNotNull("Should not return a null archive", archive);
+        Assertions.assertNotNull(archive, "Should not return a null archive");
 
         // Add a new resource
         archive.add(new ClassLoaderAsset(EXISTING_RESOURCE), ArchivePaths.create("test.properties"));
@@ -204,7 +194,7 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
         File tempFile = new File("target/testOutput");
         tempFile.deleteOnExit();
         final Class<? extends StreamExporter> exporterClass = this.getExporterClass();
-        Assert.assertNotNull("Exporter class must be specified by implementations", exporterClass);
+        Assertions.assertNotNull(exporterClass, "Exporter class must be specified by implementations");
         final InputStream stream = archive.as(exporterClass).exportAsInputStream();
         IOUtil.copyWithClose(stream, new FileOutputStream(tempFile));
 
@@ -239,7 +229,7 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
         } finally {
             stream.close();
         }
-        Assert.assertNotNull("Should not return a null archive", archive);
+        Assertions.assertNotNull(archive, "Should not return a null archive");
 
         // Ensure the archive matches the file input
         delegate.assertContent(archive, testFile);
@@ -272,11 +262,11 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
         } finally {
             stream.close();
         }
-        Assert.assertNotNull("Should not return a null archive", archive);
+        Assertions.assertNotNull(archive, "Should not return a null archive");
 
         // Validate the contents of the imported only contain filtered content
-        Assert.assertEquals(2, archive.getContent().size());
-        Assert.assertTrue(archive.contains(ArchivePaths.create("META-INF/MANIFEST.MF")));
+        Assertions.assertEquals(2, archive.getContent().size());
+        Assertions.assertTrue(archive.contains(ArchivePaths.create("META-INF/MANIFEST.MF")));
     }
 
     /**
@@ -285,7 +275,7 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
      *
      * @throws Exception
      */
-    @Test(expected = ArchiveImportException.class)
+    @Test
     public void shouldThrowExceptionOnErrorInImportFromStream() throws Exception {
         final InputStream exceptionIn = this.getExceptionThrowingInputStream();
 
@@ -294,8 +284,8 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
         assert importerClass != null : "Importer class must be specified by implementations";
         final T importer = ShrinkWrap.create(importerClass, "test.jar");
         try {
-            final GenericArchive archive = importer.importFrom(exceptionIn).as(GenericArchive.class);
-            log.info("Imported: " + archive.toString(true));
+            Assertions.assertThrows(ArchiveImportException.class,
+                    () -> importer.importFrom(exceptionIn).as(GenericArchive.class));
         } finally {
             exceptionIn.close();
         }
@@ -321,9 +311,7 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
                 ArchivePaths.create("WEB-INF/lib", embeddedArchiveName),
                 this.getArchiveFormat());
 
-        Assert.assertTrue("roundtrip could not be obtained", roundtrip != null);
-        Assert.assertTrue(
-                "contents of embedded archive are not intact after roundtrip",
-                roundtrip.contains(emptyFileName));
+        Assertions.assertNotNull(roundtrip, "roundtrip could not be obtained");
+        Assertions.assertTrue(roundtrip.contains(emptyFileName), "contents of embedded archive are not intact after roundtrip");
     }
 }

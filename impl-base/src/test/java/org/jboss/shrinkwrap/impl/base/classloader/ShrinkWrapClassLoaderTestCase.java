@@ -34,10 +34,10 @@ import org.jboss.shrinkwrap.api.classloader.ShrinkWrapClassLoader;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Ensures the {@link ShrinkWrapClassLoader} is working as contracted
@@ -86,7 +86,7 @@ public class ShrinkWrapClassLoaderTestCase {
      * {@link Archive}. The {@link ClassLoader} will be isolated from the application classpath by specifying a null
      * parent explicitly.
      */
-    @Before
+    @BeforeEach
     public void createClassLoader() {
         shrinkWrapClassLoader = new ShrinkWrapClassLoader((ClassLoader)null , archive);
     }
@@ -94,7 +94,7 @@ public class ShrinkWrapClassLoaderTestCase {
     /**
      * Closes resources associated with the {@link ShrinkWrapClassLoaderTestCase#shrinkWrapClassLoader}
      */
-    @After
+    @AfterEach
     public void closeClassLoader() {
         if (shrinkWrapClassLoader instanceof Closeable) {
             try {
@@ -122,14 +122,13 @@ public class ShrinkWrapClassLoaderTestCase {
         log.info("Got " + loadedTestClass + " from " + loadedTestClassClassLoader);
 
         // Assertions
-        Assert.assertNotNull("Test class could not be found via the ClassLoader", loadedTestClass);
+        Assertions.assertNotNull(loadedTestClass, "Test class could not be found via the ClassLoader");
 
-        Assert.assertSame("Test class should have been loaded via the archive ClassLoader", shrinkWrapClassLoader,
-            loadedTestClassClassLoader);
+        Assertions.assertSame(shrinkWrapClassLoader, loadedTestClassClassLoader,
+                "Test class should have been loaded via the archive ClassLoader");
 
-        Assert.assertNotSame("Class Loaded from the CL should not be the same as the one on the appCL",
-            loadedTestClass, applicationClassLoaderClass);
-
+        Assertions.assertNotSame(loadedTestClass, applicationClassLoaderClass,
+                "Class Loaded from the CL should not be the same as the one on the appCL");
     }
 
     /**
@@ -156,14 +155,13 @@ public class ShrinkWrapClassLoaderTestCase {
         log.info("Got " + loadedTestClass + " from " + loadedTestClassClassLoader);
 
         // Assertions
-        Assert.assertNotNull("Test class could not be found via the ClassLoader", loadedTestClass);
+        Assertions.assertNotNull(loadedTestClass, "Test class could not be found via the ClassLoader");
 
-        Assert.assertSame("Test class should have been loaded via the web archive ClassLoader", webArchiveClassLoader,
-                loadedTestClassClassLoader);
+        Assertions.assertSame(webArchiveClassLoader, loadedTestClassClassLoader,
+                "Test class should have been loaded via the web archive ClassLoader");
 
-        Assert.assertNotSame("Class Loaded from the CL should not be the same as the one on the appCL",
-                loadedTestClass, applicationClassLoaderClass);
-
+        Assertions.assertNotSame(loadedTestClass, applicationClassLoaderClass,
+                "Class Loaded from the CL should not be the same as the one on the appCL");
     }
 
     /**
@@ -188,7 +186,7 @@ public class ShrinkWrapClassLoaderTestCase {
 
         // openStream on the URL to the parent directory; should return null, not throw an exception
         final InputStream in = nestedResourceUpALevelUrl.openStream();
-        Assert.assertNull("URLs pointing to a directory should openStream as null", in);
+        Assertions.assertNull(in, "URLs pointing to a directory should openStream as null");
     }
 
     /**
@@ -197,7 +195,7 @@ public class ShrinkWrapClassLoaderTestCase {
      *
      * SHRINKWRAP-308
      */
-    @Test(expected = FileNotFoundException.class)
+    @Test
     public void shouldNotBeAbleToOpenStreamOnNonexistantAsset() throws IOException {
         // Make a new Archive with some content in a directory
         final String nestedResourceName = "nested/test";
@@ -212,7 +210,7 @@ public class ShrinkWrapClassLoaderTestCase {
         final URL nestedResourceThatDoesntExistUrl = new URL(nestedResourceUrl, "../fake");
 
         // openStream on the URL that doesn't exist should throw FNFE
-        nestedResourceThatDoesntExistUrl.openStream();
+        Assertions.assertThrows(FileNotFoundException.class, nestedResourceThatDoesntExistUrl::openStream);
     }
 
     /**
@@ -225,8 +223,7 @@ public class ShrinkWrapClassLoaderTestCase {
         final URL resource = shrinkWrapClassLoader.getResource(getResourceNameOfClass(applicationClassLoaderClass));
 
         // Assertions
-        Assert.assertNotNull(resource);
-
+        Assertions.assertNotNull(resource);
     }
 
     /**
@@ -240,7 +237,7 @@ public class ShrinkWrapClassLoaderTestCase {
         URL resource = shrinkWrapClassLoader.getResource(resourceName);
 
         // Assertions
-        Assert.assertNotNull(resource);
+        Assertions.assertNotNull(resource);
 
         // Read the stream until EOF
         IOUtil.copyWithClose(resource.openStream(), new ByteArrayOutputStream());
@@ -249,7 +246,7 @@ public class ShrinkWrapClassLoaderTestCase {
         resource = shrinkWrapClassLoader.getResource(resourceName);
 
         // Assertions
-        Assert.assertNotNull(resource);
+        Assertions.assertNotNull(resource);
 
         // SHRINKWRAP-237: This throws IOException: Stream closed
         IOUtil.copyWithClose(resource.openStream(), new ByteArrayOutputStream());
@@ -264,7 +261,7 @@ public class ShrinkWrapClassLoaderTestCase {
        final ShrinkWrapClassLoader cl = new ShrinkWrapClassLoader((ClassLoader) null, archive);
        final Enumeration<URL> found = cl.findResources("META-INF/services/java.lang.Cloneable");
 
-       Assert.assertTrue("Service provider not found in WAR", found.hasMoreElements());
+       Assertions.assertTrue(found.hasMoreElements(), "Service provider not found in WAR");
      }
 
     @Test
@@ -273,7 +270,7 @@ public class ShrinkWrapClassLoaderTestCase {
        final ShrinkWrapClassLoader cl = new ShrinkWrapClassLoader((ClassLoader) null, archive);
        final Enumeration<URL> found = cl.findResources("/META-INF/services/java.lang.Cloneable");
 
-       Assert.assertTrue("Service provider not found in WAR", found.hasMoreElements());
+       Assertions.assertTrue(found.hasMoreElements(), "Service provider not found in WAR");
      }
 
     // -------------------------------------------------------------------------------------||

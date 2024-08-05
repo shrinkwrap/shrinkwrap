@@ -29,8 +29,8 @@ import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicEnterpriseContainerTestBase;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * EnterpriseArchiveImplTest
@@ -62,12 +62,12 @@ public class EnterpriseArchiveImplTestCase extends DynamicEnterpriseContainerTes
     // Lifecycle Methods ------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
-    @Before
+    @BeforeEach
     public void createEnterpriseArchive() {
         archive = createNewArchive();
     }
 
-    @After
+    @AfterEach
     public void ls() {
         System.out.println("test@jboss:/$ ls -l " + archive.getName());
         System.out.println(archive.toString(true));

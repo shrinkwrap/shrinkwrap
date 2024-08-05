@@ -1,14 +1,13 @@
 package org.jboss.shrinkwrap.impl.base.spec;
 
-import org.junit.Assert;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.spec.donotchange.DummyClassA;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Ken Finnigan
@@ -30,6 +29,6 @@ public class AddPackageFromJarContainingWebInfTestCase extends AddPackageTestBas
 
         WebArchive war = this.domain.getArchiveFactory().create(WebArchive.class);
         war.addPackage(DummyClassA.class.getPackage());
-        Assert.assertNotNull( war.get( "/WEB-INF/classes/" + DummyClassA.class.getName().replace( '.', '/' ) + ".class" ) );
+        Assertions.assertNotNull(war.get("/WEB-INF/classes/" + DummyClassA.class.getName().replace('.', '/') + ".class"));
     }
 }

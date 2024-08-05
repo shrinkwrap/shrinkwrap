@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
-import static org.junit.Assert.assertEquals;
-
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.exporter.TarBz2Exporter;
 import org.jboss.shrinkwrap.api.exporter.TarExporter;
@@ -27,7 +25,8 @@ import org.jboss.shrinkwrap.api.importer.TarBz2Importer;
 import org.jboss.shrinkwrap.api.importer.TarGzImporter;
 import org.jboss.shrinkwrap.api.importer.TarImporter;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Davide D'Alto
@@ -37,41 +36,41 @@ import org.junit.Test;
 public class ArchiveFormatStreamBindingsTestCase {
     @Test
     public void testZipImporter() {
-        assertEquals(ZipImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.ZIP).getImporter());
+        Assertions.assertEquals(ZipImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.ZIP).getImporter());
     }
 
     @Test
     public void testZipExporter() {
-        assertEquals(ZipExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.ZIP).getExporter());
+        Assertions.assertEquals(ZipExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.ZIP).getExporter());
     }
 
     @Test
     public void testTarImporter() {
-        assertEquals(TarImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR).getImporter());
+        Assertions.assertEquals(TarImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR).getImporter());
     }
 
     @Test
     public void testTarExporter() {
-        assertEquals(TarExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR).getExporter());
+        Assertions.assertEquals(TarExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR).getExporter());
     }
 
     @Test
     public void testTarGzImporter() {
-        assertEquals(TarGzImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_GZ).getImporter());
+        Assertions.assertEquals(TarGzImporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_GZ).getImporter());
     }
 
     @Test
     public void testTarGzExporter() {
-        assertEquals(TarGzExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_GZ).getExporter());
+        Assertions.assertEquals(TarGzExporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_GZ).getExporter());
     }
 
     @Test
     public void testTarBz2Importer() {
-        assertEquals(TarBz2Importer.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_BZ).getImporter());
+        Assertions.assertEquals(TarBz2Importer.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_BZ).getImporter());
     }
 
     @Test
     public void testTarBz2Exporter() {
-        assertEquals(TarBz2Exporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_BZ).getExporter());
+        Assertions.assertEquals(TarBz2Exporter.class, new ArchiveFormatStreamBindings(ArchiveFormat.TAR_BZ).getExporter());
     }
 }

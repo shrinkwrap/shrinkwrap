@@ -29,10 +29,10 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.nio2.file.ShrinkWrapFileSystems;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases to assert the ShrinkWrap implementation of the NIO.2 {@link FileStore} is working as contracted.
@@ -47,7 +47,7 @@ public class FileStoreTestCase {
 
     private FileSystem fileSystem;
 
-    @Before
+    @BeforeEach
     public void createStore() throws IOException {
         // Setup
         final String name = "test.jar";
@@ -61,7 +61,7 @@ public class FileStoreTestCase {
         this.fileSystem = fs;
     }
 
-    @After
+    @AfterEach
     public void closeFs() throws IOException {
         this.fileSystem.close();
     }
@@ -87,86 +87,85 @@ public class FileStoreTestCase {
         // Get size of the archive as reported by the FS
         final long sizeOfArchive = ((ShrinkWrapFileStore) this.fileStore).getUsedSpace();
 
-        Assert.assertEquals(
-            "Size of archive as reported by file store is not equal to the size of the contained class",
-            thisClassFileSize, sizeOfArchive);
+        Assertions.assertEquals(thisClassFileSize, sizeOfArchive,
+                "Size of archive as reported by file store is not equal to the size of the contained class");
     }
 
     @Test
     public void totalSpace() throws IOException {
         // We can't really test this value properly as the JVM can reallocate memory inbetween calls, so just ensure
         // we're returning something sane
-        Assert.assertTrue("Total space is not returning a positive integer", this.fileStore.getTotalSpace() > 0);
+        Assertions.assertTrue(this.fileStore.getTotalSpace() > 0, "Total space is not returning a positive integer");
     }
 
     @Test
     public void usableSpace() throws IOException {
         // We can't really test this value properly as the JVM can reallocate memory inbetween calls, so just ensure
         // we're returning something sane
-        Assert.assertTrue("Usable space is not returning a positive integer", this.fileStore.getUsableSpace() > 0);
+        Assertions.assertTrue(this.fileStore.getUsableSpace() > 0, "Usable space is not returning a positive integer");
     }
 
     @Test
     public void unallocatedSpace() throws IOException {
         // We can't really test this value properly as the JVM can reallocate memory inbetween calls, so just ensure
         // we're returning something sane
-        Assert.assertTrue("Unallocated space is not returning a positive integer",
-            this.fileStore.getUnallocatedSpace() > 0);
+        Assertions.assertTrue(this.fileStore.getUnallocatedSpace() > 0,
+                "Unallocated space is not returning a positive integer");
     }
 
     @Test
     public void name() {
-        Assert.assertEquals("Name of the file store should be equal to the name of the underlying archive",
-            this.archive.getName(), this.fileStore.name());
+        Assertions.assertEquals(this.archive.getName(), this.fileStore.name(),
+                "Name of the file store should be equal to the name of the underlying archive");
     }
 
     @Test
     public void type() {
-        Assert.assertEquals("Type of the file store should be \"shrinkwrap\"", "shrinkwrap", this.fileStore.type());
+        Assertions.assertEquals("shrinkwrap", this.fileStore.type(), "Type of the file store should be \"shrinkwrap\"");
     }
 
     @Test
     public void readOnly() {
-        Assert.assertEquals("ShrinkWrap file stores are not read-only", false, this.fileStore.isReadOnly());
+        Assertions.assertFalse(this.fileStore.isReadOnly(), "ShrinkWrap file stores are not read-only");
     }
 
     @Test
     public void supportsBasicFileAttributeView() {
-        Assert.assertEquals("ShrinkWrap file store must support basic file attribute view", true,
-            this.fileStore.supportsFileAttributeView("basic"));
+        Assertions.assertTrue(this.fileStore.supportsFileAttributeView("basic"),
+                "ShrinkWrap file store must support basic file attribute view");
     }
 
     @Test
     public void supportsBasicFileAttributeViewType() {
-        Assert.assertEquals("ShrinkWrap file store must support basic file attribute view", true,
-            this.fileStore.supportsFileAttributeView(BasicFileAttributeView.class));
+        Assertions.assertTrue(this.fileStore.supportsFileAttributeView(BasicFileAttributeView.class),
+                "ShrinkWrap file store must support basic file attribute view");
     }
 
     @Test
     public void supportsOtherFileAttributeView() {
-        Assert.assertEquals("ShrinkWrap file store should not support other file attribute views", false,
-            this.fileStore.supportsFileAttributeView("somethingelse"));
+        Assertions.assertFalse(this.fileStore.supportsFileAttributeView("somethingelse"),
+                "ShrinkWrap file store should not support other file attribute views");
     }
 
     @Test
     public void supportsOtherFileAttributeViewType() {
-        Assert.assertEquals("ShrinkWrap file store should not support other file attribute views", false,
-            this.fileStore.supportsFileAttributeView(((FileAttributeView) () -> "mock").getClass()));
+        Assertions.assertFalse(this.fileStore.supportsFileAttributeView(((FileAttributeView) () -> "mock").getClass()),
+                "ShrinkWrap file store should not support other file attribute views");
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void getAttribute() throws IOException {
-        this.fileStore.getAttribute("something");
+    @Test
+    public void getAttribute() {
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> this.fileStore.getAttribute("something"));
     }
 
     @Test
     public void getFileStoreAttributeView() {
-        Assert.assertNull(this.fileStore.getFileStoreAttributeView(FileStoreAttributeView.class));
+        Assertions.assertNull(this.fileStore.getFileStoreAttributeView(FileStoreAttributeView.class));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nullArgsProhibited() {
-        new ShrinkWrapFileStore(null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new ShrinkWrapFileStore(null));
     }
 
 }

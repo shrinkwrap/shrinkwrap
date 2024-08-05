@@ -17,14 +17,12 @@
 package org.jboss.shrinkwrap.impl.base;
 
 import java.io.File;
-
-import org.junit.Assert;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests that verify {@link Archive} implement the semantics of equals and hashCode correctly.
@@ -59,7 +57,7 @@ public class ArchiveEqualsHashCodeTestCase {
         final Archive<?> archive = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile);
         final Archive<?> archive2 = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile2);
 
-        Assert.assertEquals("Archives were not equal, but should be.", archive, archive2);
+        Assertions.assertEquals(archive, archive2, "Archives were not equal, but should be.");
 
     }
 
@@ -73,7 +71,7 @@ public class ArchiveEqualsHashCodeTestCase {
         final Archive<?> archive = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile);
         final Archive<?> archive2 = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile2);
 
-        Assert.assertEquals("Archives were not equal, but should be.", archive, archive2);
+        Assertions.assertEquals(archive, archive2, "Archives were not equal, but should be.");
     }
 
     @Test
@@ -84,9 +82,8 @@ public class ArchiveEqualsHashCodeTestCase {
         final File testFile = TestIOUtil.createFileFromResourceName(TEST_ZIP_1);
         final JavaArchive archive2 = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile);
 
-        Assert
-            .assertFalse("Archives were equal, but should not have been - contents differ.", archive.equals(archive2));
-
+        Assertions.assertNotEquals(archive, archive2,
+                "Archives were equal, but should not have been - contents differ.");
     }
 
     @Test
@@ -98,8 +95,8 @@ public class ArchiveEqualsHashCodeTestCase {
         final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, archiveName);
         final JavaArchive archive2 = ShrinkWrap.create(JavaArchive.class, archiveName2);
 
-        Assert.assertFalse("Archives were equal, but should not have been - names differ.", archive.equals(archive2));
-
+        Assertions.assertNotEquals(archive, archive2,
+                "Archives were equal, but should not have been - names differ.");
     }
 
     @Test
@@ -111,8 +108,7 @@ public class ArchiveEqualsHashCodeTestCase {
         final EnterpriseArchive ear1 = ShrinkWrap.createFromZipFile(EnterpriseArchive.class, testFile1);
         final EnterpriseArchive ear2 = ShrinkWrap.createFromZipFile(EnterpriseArchive.class, testFile2);
 
-        Assert.assertEquals("EnterpriseArchive instances were not equal, but should be.", ear1, ear2);
-
+        Assertions.assertEquals(ear1, ear2, "EnterpriseArchive instances were not equal, but should be.");
     }
 
     @Test
@@ -123,8 +119,7 @@ public class ArchiveEqualsHashCodeTestCase {
         final JavaArchive jar = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile1);
         final EnterpriseArchive ear = ShrinkWrap.createFromZipFile(EnterpriseArchive.class, testFile2);
 
-        Assert.assertEquals("JavaArchive and EnterpriseArchive were not equal, but should be.", jar, ear);
-
+        Assertions.assertEquals(jar, ear, "JavaArchive and EnterpriseArchive were not equal, but should be.");
     }
 
     /**
@@ -138,8 +133,8 @@ public class ArchiveEqualsHashCodeTestCase {
 
         final JavaArchive jar = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile1);
 
-        Assert.assertEquals("hashCode did not return consistent value for same instance", jar.hashCode(),
-            jar.hashCode());
+        Assertions.assertEquals(jar.hashCode(), jar.hashCode(),
+                "hashCode did not return consistent value for same instance");
     }
 
 }

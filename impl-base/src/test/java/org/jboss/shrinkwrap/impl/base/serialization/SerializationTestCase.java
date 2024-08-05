@@ -39,9 +39,9 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.serialization.SerializableView;
 import org.jboss.shrinkwrap.api.serialization.ZipSerializableView;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Ensures that serialization of Archives is possible via the {@link SerializableView}s.
@@ -83,7 +83,7 @@ public class SerializationTestCase {
     /**
      * Creates a payload archive to be used in serialization tests
      */
-    @Before
+    @BeforeEach
     public void createPayload() {
         payload = ShrinkWrap.create(JavaArchive.class, NAME_PAYLOAD_ARCHIVE).addClasses(SerializationTestCase.class,
             JavaArchive.class);
@@ -179,7 +179,7 @@ public class SerializationTestCase {
         final SerializableView roundtrip = serializeAndDeserialize(clientObject, targetType);
 
         // The type of the object put through roundtrip serialization must be of the type specified
-        Assert.assertEquals(targetType, roundtrip.getClass());
+        Assertions.assertEquals(targetType, roundtrip.getClass());
 
         // Return
         return roundtrip;
@@ -188,14 +188,14 @@ public class SerializationTestCase {
     private void testOriginalFields(final Archive<?> payload, final Archive<?> roundtrip) {
         final Map<ArchivePath, Node> originalContents = payload.getContent();
         final Map<ArchivePath, Node> roundtripContents = roundtrip.getContent();
-        Assert.assertEquals("Contents after serialization were not as expected", originalContents, roundtripContents);
-        Assert.assertEquals("Name of original archive was not as expected", NAME_PAYLOAD_ARCHIVE, payload.getName());
-        Assert.assertEquals("Name not as expected after serialization", payload.getName(), roundtrip.getName());
+        Assertions.assertEquals(originalContents, roundtripContents, "Contents after serialization were not as expected");
+        Assertions.assertEquals(NAME_PAYLOAD_ARCHIVE, payload.getName(), "Name of original archive was not as expected");
+        Assertions.assertEquals(payload.getName(), roundtrip.getName(), "Name not as expected after serialization");
     }
 
     private void testCurrentFields(final Archive<?> payload, final Archive<?> roundtrip) {
         this.testOriginalFields(payload, roundtrip);
-        Assert.assertEquals("ID not as expected after serialization", payload.getId(), roundtrip.getId());
+        Assertions.assertEquals(payload.getId(), roundtrip.getId(), "ID not as expected after serialization");
     }
 
     /**
@@ -206,8 +206,7 @@ public class SerializationTestCase {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private static SerializableView serializeAndDeserialize(final SerializableView archive) throws IOException,
-        ClassNotFoundException {
+    private static SerializableView serializeAndDeserialize(final SerializableView archive) throws IOException, ClassNotFoundException {
         assert archive != null : "Archive must be specified";
         final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
         final ObjectOutputStream out = new ObjectOutputStream(byteOut);

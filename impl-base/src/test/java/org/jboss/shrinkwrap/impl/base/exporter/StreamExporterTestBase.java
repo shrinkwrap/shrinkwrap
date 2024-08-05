@@ -46,8 +46,8 @@ import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.importer.StreamImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Base support for testing stream-based exporters
@@ -143,7 +143,7 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         final GenericArchive roundtrip = ShrinkWrap.create(this.getImporterClass(), "roundtrip.zip")
             .importFrom(new ByteArrayInputStream(exportedContents.toByteArray())).as(GenericArchive.class);
         log.info(roundtrip.toString(true));
-        Assert.assertTrue(roundtrip.contains(path));
+        Assertions.assertTrue(roundtrip.contains(path));
     }
 
     /**
@@ -184,20 +184,8 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         // Get an archive instance
         Archive<?> archive = createArchiveWithAssets();
 
-        // Export as File to a directory
-        try {
-            this.exportAsFile(archive, tempDirectory, true);
-        }
-        // Expected
-        catch (final IllegalArgumentException iae) {
-            // Good
-            return;
-        }
-
-        // Fail
-        Assert
-            .fail("Should have encountered " + IllegalArgumentException.class.getSimpleName() + " exporting to a dir");
-
+        Assertions.assertThrows(IllegalArgumentException.class, () -> this.exportAsFile(archive, tempDirectory, true),
+                "Should have encountered IllegalArgumentException exporting to a dir");
     }
 
     /**
@@ -244,18 +232,10 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         final OutputStream alreadyExistsOutputStream = new FileOutputStream(alreadyExists);
         alreadyExistsOutputStream.write(new byte[] {});
         alreadyExistsOutputStream.close();
-        Assert.assertTrue("The test setup is incorrect; an empty file should exist before writing the archive",
-            alreadyExists.exists());
+        Assertions.assertTrue(alreadyExists.exists(), "The test setup is incorrect; an empty file should exist before writing the archive");
 
-        // Should fail, as we're not overwriting
-        boolean gotExpectedException = false;
-        try {
-            this.exportAsFile(archive, alreadyExists, false);
-        } catch (final FileExistsException fee) {
-            gotExpectedException = true;
-        }
-        Assert.assertTrue("Should get " + FileExistsException.class.getSimpleName()
-            + " when exporting to an existing file when overwrite is false", gotExpectedException);
+        Assertions.assertThrows(FileExistsException.class, () -> this.exportAsFile(archive, alreadyExists, false),
+                "Should get FileExistsException when exporting to an existing file when overwrite is false");
     }
 
     /**
@@ -316,7 +296,7 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         this.ensureAssetInExportedFile(nestedTwoFile, PATH_TWO, ASSET_TWO);
     }
 
-    @Test(expected = ArchiveExportException.class)
+    @Test
     public void testExportThrowsArchiveExceptionOnAssetWriteFailure() throws IOException {
         log.info("testExportThrowsArchiveExceptionOnAssetWriteFailure");
         Archive<?> archive = createArchiveWithAssets();
@@ -339,8 +319,7 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
             public void write(int b) {
             }
         };
-        IOUtil.copyWithClose(in, sink);
-
+        Assertions.assertThrows(ArchiveExportException.class, () -> IOUtil.copyWithClose(in, sink));
     }
 
     // -------------------------------------------------------------------------------------||
@@ -379,7 +358,6 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
      * Exports the specified archive to an {@link OutputStream}
      *
      * @param archive
-     * @return
      */
     private void exportToOutputStream(final Archive<?> archive, final OutputStream out) {
         assert archive != null : "archive must be specified";
@@ -507,6 +485,6 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         assert actualStream != null : "No contents found at path " + path + " in " + file.getAbsolutePath();
         byte[] actualContents = IOUtil.asByteArray(actualStream);
         byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
-        Assert.assertArrayEquals(expectedContents, actualContents);
+        Assertions.assertArrayEquals(expectedContents, actualContents);
     }
 }

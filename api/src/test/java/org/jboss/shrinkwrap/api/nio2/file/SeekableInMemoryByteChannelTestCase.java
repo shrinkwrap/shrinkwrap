@@ -16,17 +16,17 @@
  */
 package org.jboss.shrinkwrap.api.nio2.file;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
 import java.nio.charset.StandardCharsets;
-
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * Tests to assert that the {@link SeekableInMemoryByteChannel} is working as contracted.
@@ -46,61 +46,61 @@ public class SeekableInMemoryByteChannelTestCase {
     private ByteBuffer smallerBuffer;
     private ByteBuffer biggerBuffer;
 
-    @Before
+    @BeforeEach
     public void init() {
         this.channel = new SeekableInMemoryByteChannel();
         smallerBuffer = ByteBuffer.wrap(CONTENTS_SMALLER_BUFFER.getBytes(StandardCharsets.UTF_8));
         biggerBuffer = ByteBuffer.wrap(CONTENTS_BIGGER_BUFFER.getBytes(StandardCharsets.UTF_8));
     }
 
-    @After
+    @AfterEach
     public void closeChannel() {
         if (this.channel.isOpen()) {
             this.channel.close();
         }
     }
 
-    @Test(expected = ClosedChannelException.class)
+    @Test
     public void readAfterCloseThrowsException() throws IOException {
         this.channel.close();
-        this.channel.read(ByteBuffer.wrap(new byte[] {}));
+        Assertions.assertThrows(ClosedChannelException.class, () -> this.channel.read(ByteBuffer.wrap(new byte[] {})));
     }
 
-    @Test(expected = ClosedChannelException.class)
+    @Test
     public void writeAfterCloseThrowsException() throws IOException {
         this.channel.close();
-        this.channel.write(ByteBuffer.wrap(new byte[] {}));
+        Assertions.assertThrows(ClosedChannelException.class, () -> this.channel.write(ByteBuffer.wrap(new byte[] {})));
     }
 
     @Test
     public void isOpenTrue() {
-        Assert.assertTrue("Channel should report open before it's closed", this.channel.isOpen());
+        Assertions.assertTrue(this.channel.isOpen(), "Channel should report open before it's closed");
     }
 
     @Test
     public void isOpenFalseAfterClose() {
         this.channel.close();
-        Assert.assertFalse("Channel should report not open after close", this.channel.isOpen());
+        Assertions.assertFalse(this.channel.isOpen(), "Channel should report not open after close");
     }
 
     @Test
     public void positionInit0() {
-        Assert.assertEquals("Channel should init to position 0", 0, this.channel.position());
+        Assertions.assertEquals(0, this.channel.position(), "Channel should init to position 0");
     }
 
     @Test
     public void sizeInit0() {
-        Assert.assertEquals("Channel should init to size 0", 0, this.channel.size());
+        Assertions.assertEquals(0, this.channel.size(), "Channel should init to size 0");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void readRequiresBuffer() throws IOException {
-        this.channel.read(null);
+    @Test
+    public void readRequiresBuffer() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> this.channel.read(null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void writeRequiresBuffer() throws IOException {
-        this.channel.write(null);
+    @Test
+    public void writeRequiresBuffer() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> this.channel.write(null));
     }
 
     @Test
@@ -112,8 +112,8 @@ public class SeekableInMemoryByteChannelTestCase {
         final int numBytesRead = this.channel.position(newPosition).read(ByteBuffer.wrap(contents));
         final String expected = "dr";
         final String contentsRead = new String(contents, StandardCharsets.UTF_8);
-        Assert.assertEquals("Read should report correct number of bytes read", contents.length, numBytesRead);
-        Assert.assertEquals("Channel should respect explicit position during reads", expected, contentsRead);
+        Assertions.assertEquals(contents.length, numBytesRead, "Read should report correct number of bytes read");
+        Assertions.assertEquals(expected, contentsRead, "Channel should respect explicit position during reads");
     }
 
     @Test
@@ -121,20 +121,19 @@ public class SeekableInMemoryByteChannelTestCase {
         this.channel.write(smallerBuffer);
         final BufferedReader reader = new BufferedReader(new InputStreamReader(this.channel.getContents()));
         final String contents = reader.readLine();
-        Assert.assertEquals("Contents read were not as expected", CONTENTS_SMALLER_BUFFER, contents);
-
+        Assertions.assertEquals(CONTENTS_SMALLER_BUFFER, contents, "Contents read were not as expected");
     }
 
     @Test
     public void readDestinationBiggerThanChannel() throws IOException {
         this.channel.write(smallerBuffer);
         final ByteBuffer destination = biggerBuffer;
-        Assert.assertTrue("Test setup incorrect, should be trying to read into a buffer greater than our size",
-            destination.remaining() > this.channel.size());
+        Assertions.assertTrue(destination.remaining() > this.channel.size(),
+                "Test setup incorrect, should be trying to read into a buffer greater than our size");
         // Read more bytes than we currently have size
         final int numBytesRead = this.channel.position(0).read(destination);
-        Assert.assertEquals("Read to a buffer greater than our size should read only up to our size",
-            this.channel.size(), numBytesRead);
+        Assertions.assertEquals(this.channel.size(), numBytesRead,
+                "Read to a buffer greater than our size should read only up to our size");
     }
 
     @Test
@@ -142,7 +141,7 @@ public class SeekableInMemoryByteChannelTestCase {
         this.channel.write(smallerBuffer);
         // Read a byte from a position past the size
         final int numBytesRead = this.channel.position(this.channel.size() + 3).read(ByteBuffer.wrap(new byte[1]));
-        Assert.assertEquals("Read on position > size should return -1", -1, numBytesRead);
+        Assertions.assertEquals(-1, numBytesRead, "Read on position > size should return -1");
     }
 
     @Test
@@ -155,8 +154,8 @@ public class SeekableInMemoryByteChannelTestCase {
         this.channel.position(newPosition).read(ByteBuffer.wrap(contents));
         final String expected = "DRe";
         final String read = new String(contents, StandardCharsets.UTF_8);
-        Assert.assertEquals("Write should report correct number of bytes written", 2, numBytesWritten);
-        Assert.assertEquals("Channel should respect explicit position during writes", expected, read);
+        Assertions.assertEquals(2, numBytesWritten, "Write should report correct number of bytes written");
+        Assertions.assertEquals(expected, read, "Channel should respect explicit position during writes");
     }
 
     @Test
@@ -167,47 +166,46 @@ public class SeekableInMemoryByteChannelTestCase {
         // Write again, after a gap past the current size
         this.channel.position(this.channel.size() + gap).write(smallerBuffer);
         smallerBuffer.clear();
-        Assert.assertEquals("Channel size should be equal to the size of the writes we put in, plus "
-            + "the gap when we set the position tpo be greater than the size", smallerBuffer.remaining() * 2 + gap,
-            this.channel.size());
+        Assertions.assertEquals(smallerBuffer.remaining() * 2 + gap, this.channel.size(),
+                "Channel size should be equal to the size of the writes we put in, plus "
+                + "the gap when we set the position tpo be greater than the size");
     }
 
     @Test
     public void positionSetPastSize() {
         final int newPosition = 30;
         this.channel.position(newPosition);
-        Assert.assertEquals("Channel should be able to be set past size", newPosition, this.channel.position());
+        Assertions.assertEquals(newPosition, this.channel.position(), "Channel should be able to be set past size");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void negativePositionProhibited() {
-        this.channel.position(-1);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> this.channel.position(-1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void exceedMaxIntegerPositionProhibited() {
         final long newPosition = Integer.MAX_VALUE + 1L;
-        Assert.assertTrue("Didn't set up new position to be out of int bounds", newPosition > Integer.MAX_VALUE);
-        this.channel.position(newPosition); // Exception expected
+        Assertions.assertTrue(newPosition > Integer.MAX_VALUE, "Didn't set up new position to be out of int bounds");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> this.channel.position(newPosition));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void negativeTruncateProhibited() {
-        this.channel.truncate(-1);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> this.channel.truncate(-1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void exceedMaxIntegerTruncateProhibited() {
         final long truncateValue = Integer.MAX_VALUE + 1L;
-        Assert.assertTrue("Didn't set up new truncate to be out of int bounds", truncateValue > Integer.MAX_VALUE);
-        this.channel.truncate(truncateValue); // Exception expected
+        Assertions.assertTrue(truncateValue > Integer.MAX_VALUE, "Didn't set up new truncate to be out of int bounds");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> this.channel.truncate(truncateValue));
     }
 
     @Test
     public void size() throws IOException {
         this.channel.write(smallerBuffer);
-        Assert.assertEquals("Channel should report correct size", this.smallerBuffer.clear().remaining(),
-            this.channel.size());
+        Assertions.assertEquals(this.smallerBuffer.clear().remaining(),this.channel.size(), "Channel should report correct size");
     }
 
     @Test
@@ -216,9 +214,9 @@ public class SeekableInMemoryByteChannelTestCase {
         final int newSize = (int) this.channel.size() - 3;
         this.channel.truncate(newSize);
         // Correct size?
-        Assert.assertEquals("Channel should report correct size after truncate", newSize, this.channel.size());
+        Assertions.assertEquals(newSize, this.channel.size(), "Channel should report correct size after truncate");
         // Correct position?
-        Assert.assertEquals("Channel should report adjusted position after truncate", newSize, this.channel.position());
+        Assertions.assertEquals(newSize, this.channel.position(), "Channel should report adjusted position after truncate");
     }
 
     @Test
@@ -228,11 +226,10 @@ public class SeekableInMemoryByteChannelTestCase {
         final int newSize = oldSize + 3;
         this.channel.truncate(newSize);
         // Size unchanged?
-        Assert.assertEquals("Channel should report unchanged size after truncate to bigger value", oldSize,
-            this.channel.size());
+        Assertions.assertEquals(oldSize, this.channel.size(), "Channel should report unchanged size after truncate to bigger value");
         // Correct position, beyond size?
-        Assert.assertEquals("Channel should report unchanged position after truncate to bigger value", oldSize,
-            this.channel.position());
+        Assertions.assertEquals(oldSize, this.channel.position(),
+                "Channel should report unchanged position after truncate to bigger value");
     }
 
 }

@@ -34,8 +34,6 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.junit.Assert;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -65,9 +63,10 @@ import org.jboss.shrinkwrap.impl.base.test.dummy.DummyInterfaceForTest;
 import org.jboss.shrinkwrap.impl.base.test.dummy.nested1.EmptyClassForFiltersTest1;
 import org.jboss.shrinkwrap.impl.base.test.dummy.nested2.EmptyClassForFiltersTest2;
 import org.jboss.shrinkwrap.impl.base.test.dummy.nested3.EmptyClassForFiltersTest3;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * DynamicContainerTestBase
@@ -76,7 +75,7 @@ import org.junit.runner.RunWith;
  * @version $Revision: $
  * @param <T>
  */
-@RunWith(ContainerTestRunner.class)
+@ExtendWith(ContainerTestExtension.class)
 public abstract class DynamicContainerTestBase<T extends Archive<T>> extends ArchiveTestBase<T> {
 
     // -------------------------------------------------------------------------------------||
@@ -119,11 +118,11 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         return new ClassLoaderAsset(name);
     }
 
-    @Before
+    @BeforeEach
     public void createEmptyDirectory() {
         File emptyDir = createDirectory("org/jboss/shrinkwrap/impl/base/recursion/empty");
-        Assert.assertTrue("Empty directory not found at " + emptyDir.getAbsolutePath(), emptyDir.exists());
-        Assert.assertEquals("Directory not empty", emptyDir.list().length, 0);
+        Assertions.assertTrue(emptyDir.exists(), "Empty directory not found at " + emptyDir.getAbsolutePath());
+        Assertions.assertEquals(0, emptyDir.list().length, "Directory not empty");
     }
 
     // -------------------------------------------------------------------------------------||
@@ -140,7 +139,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().setManifest(NAME_TEST_PROPERTIES);
 
         ArchivePath testPath = new BasicPath(getManifestPath(), MANIFEST_FILE);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -149,7 +148,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().setManifest(AssetUtil.class.getPackage(), "Test.properties");
 
         ArchivePath testPath = new BasicPath(getManifestPath(), MANIFEST_FILE);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     /**
@@ -163,7 +162,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().setManifest(getFileForClassResource(NAME_TEST_PROPERTIES));
 
         ArchivePath testPath = new BasicPath(getManifestPath(), MANIFEST_FILE);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     /**
@@ -176,7 +175,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().setManifest(getURLForClassResource(NAME_TEST_PROPERTIES));
 
         ArchivePath testPath = new BasicPath(getManifestPath(), MANIFEST_FILE);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     /**
@@ -189,7 +188,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().setManifest(getAssetForClassResource(NAME_TEST_PROPERTIES));
 
         ArchivePath testPath = new BasicPath(getManifestPath(), MANIFEST_FILE);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -198,16 +197,16 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().addAsManifestResource(NAME_TEST_PROPERTIES);
 
         ArchivePath testPath = new BasicPath(getManifestPath(), NAME_TEST_PROPERTIES);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ManifestContainer.class)
     public void testAddNonExistentManifestResource() {
         final String nonExistentResourceName = "ejb/security/ejb-jar.xml";
 
         // Since the resource doesn't exist the ManifestContainer implementation throws the expected exception
-        getManifestContainer().addAsManifestResource(nonExistentResourceName);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> getManifestContainer().addAsManifestResource(nonExistentResourceName));
     }
 
     @Test
@@ -225,7 +224,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().addAsManifestResource(getFileForClassResource(NAME_TEST_PROPERTIES));
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "Test.properties");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -290,7 +289,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath targetPath = new BasicPath("Test.properties");
         getManifestContainer().addAsManifestResource(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
         ArchivePath testPath = new BasicPath(getManifestPath(), targetPath);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -309,7 +308,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().addAsManifestResource(NAME_TEST_PROPERTIES, "Test.txt");
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -318,7 +317,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().addAsManifestResource(getFileForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -327,7 +326,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().addAsManifestResource(getURLForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -336,7 +335,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().addAsManifestResource(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -345,7 +344,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().addAsManifestResource(NAME_TEST_PROPERTIES, new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -355,7 +354,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -365,7 +364,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -375,7 +374,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -384,7 +383,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().addAsServiceProvider(DummyInterfaceForTest.class, DummyClassForTest.class);
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "services/" + DummyInterfaceForTest.class.getName());
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -395,35 +394,37 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().addAsServiceProvider(serviceInterface, impls);
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "services/" + serviceInterface);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath),"Archive should contain " + testPath);
 
         assertServiceProviderContent(getArchive().get(testPath), impls);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ManifestContainer.class)
     public void testAddServiceProviderStringInterfaceValidation() {
         String[] impls = { "do.not.exist.impl.Dummy1", "do.not.exist.impl.Dummy2", "do.not.exist.impl.Dummy3" };
-        getManifestContainer().addAsServiceProvider(null, impls);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> getManifestContainer().addAsServiceProvider(null, impls));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ManifestContainer.class)
     public void testAddServiceProviderStringImplementationsValidation() {
-        getManifestContainer().addAsServiceProvider("do.not.exist.impl.Dummy1", (String[]) null);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> getManifestContainer().addAsServiceProvider("do.not.exist.impl.Dummy1", (String[]) null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ManifestContainer.class)
     public void testAddServiceProviderStringImplementationsValueValidation() {
         String[] impls = { "do.not.exist.impl.Dummy1", null };
-        getManifestContainer().addAsServiceProvider("do.not.exist.impl.Dummy", impls);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> getManifestContainer().addAsServiceProvider("do.not.exist.impl.Dummy", impls));
     }
 
     protected void assertServiceProviderContent(Node node, String[] impls) throws IOException {
         try (BufferedReader reader = createReader(node.getAsset())) {
             for (String impl : impls) {
-                Assert.assertEquals("Wrong entry in service provider: " + impl, impl, reader.readLine());
+                Assertions.assertEquals(impl, reader.readLine(), "Wrong entry in service provider: " + impl);
             }
         }
     }
@@ -440,7 +441,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             DummyClassForTest.class);
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "services/" + DummyInterfaceForTest.class.getName());
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
 
         Class<?>[] expectedResources = { DummyInterfaceForTest.class, DummyClassForTest.class };
         for (Class<?> expectedResource : expectedResources) {
@@ -456,7 +457,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().addAsManifestResource(AssetUtil.class.getPackage(), "Test.properties");
 
         ArchivePath testPath = new BasicPath(getManifestPath(), NAME_TEST_PROPERTIES);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -467,8 +468,8 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath testPath = new BasicPath(getManifestPath(), NAME_TEST_PROPERTIES);
         ArchivePath testPath2 = new BasicPath(getManifestPath(), NAME_TEST_PROPERTIES_2);
 
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
-        Assert.assertTrue("Archive should contain " + testPath2, getArchive().contains(testPath2));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
+        Assertions.assertTrue(getArchive().contains(testPath2), "Archive should contain " + testPath2);
     }
 
     @Test
@@ -477,7 +478,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().addAsManifestResource(AssetUtil.class.getPackage(), "Test.properties", "Test.txt");
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -488,7 +489,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().addAsManifestResource(AssetUtil.class.getPackage(), "Test.properties", targetPath);
 
         ArchivePath testPath = new BasicPath(getManifestPath(), targetPath);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     // -------------------------------------------------------------------------------------||
@@ -501,7 +502,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getResourceContainer().addAsResource(NAME_TEST_PROPERTIES);
 
         ArchivePath testPath = new BasicPath(getResourcePath(), NAME_TEST_PROPERTIES);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -510,7 +511,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getResourceContainer().addAsResource(getFileForClassResource(NAME_TEST_PROPERTIES));
 
         ArchivePath testPath = new BasicPath(getResourcePath(), "Test.properties");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -566,7 +567,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath targetPath = new BasicPath("Test.properties");
         getResourceContainer().addAsResource(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
         ArchivePath testPath = new BasicPath(getResourcePath(), targetPath);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     /**
@@ -579,7 +580,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getManifestContainer().addAsManifestResource("java/lang/String.class", "String.class");
 
         ArchivePath testPath = new BasicPath(getManifestPath(), "String.class");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     /**
@@ -592,7 +593,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getResourceContainer().addAsResource("java/lang/String.class", "String.class");
 
         ArchivePath testPath = new BasicPath(getResourcePath(), "String.class");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
         Logger.getAnonymousLogger().info(getArchive().toString(true));
     }
 
@@ -605,7 +606,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getResourceContainer().addAsResource(NAME_TEST_PROPERTIES, "Test.txt");
 
         ArchivePath testPath = new BasicPath(getResourcePath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     /*
@@ -627,8 +628,8 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         }
 
         ArchivePath testPath = new BasicPath(getResourcePath(), "META-INF/Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
-        Assert.assertTrue(gotExpectedException);
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
+        Assertions.assertTrue(gotExpectedException);
     }
 
     @Test
@@ -637,7 +638,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getResourceContainer().addAsResource(getFileForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
 
         ArchivePath testPath = new BasicPath(getResourcePath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -647,7 +648,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getResourceContainer().addAsResource(getURLForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
 
         ArchivePath testPath = new BasicPath(getResourcePath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -687,7 +688,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getResourceContainer().addAsResource(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
 
         ArchivePath testPath = new BasicPath(getResourcePath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -696,7 +697,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getResourceContainer().addAsResource(NAME_TEST_PROPERTIES, new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getResourcePath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -705,7 +706,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getResourceContainer().addAsResource(getFileForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getResourcePath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -714,7 +715,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getResourceContainer().addAsResource(getURLForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getResourcePath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -723,7 +724,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getResourceContainer().addAsResource(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getResourcePath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -732,7 +733,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getResourceContainer().addAsResource(AssetUtil.class.getPackage(), "Test.properties");
 
         ArchivePath testPath = new BasicPath(getResourcePath(), NAME_TEST_PROPERTIES);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -743,8 +744,8 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath testPath = new BasicPath(getResourcePath(), NAME_TEST_PROPERTIES);
         ArchivePath testPath2 = new BasicPath(getResourcePath(), NAME_TEST_PROPERTIES_2);
 
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
-        Assert.assertTrue("Archive should contain " + testPath2, getArchive().contains(testPath2));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
+        Assertions.assertTrue(getArchive().contains(testPath2), "Archive should contain " + testPath2);
     }
 
     @Test
@@ -754,7 +755,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getResourceContainer().addAsResource(AssetUtil.class.getPackage(), "Test.properties", "Test.txt");
 
         ArchivePath testPath = new BasicPath(getResourcePath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -766,7 +767,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getResourceContainer().addAsResource(AssetUtil.class.getPackage(), "Test.properties", targetPath);
 
         ArchivePath testPath = new BasicPath(getResourcePath(), targetPath);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     // -------------------------------------------------------------------------------------||
@@ -813,10 +814,10 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         final ArchivePath expectedPathInnerClassParent = new BasicPath(getClassPath(),
             AssetUtil.getFullPathForClassResource(DummyClassParent.ParentInnerClass.class));
 
-        Assert.assertTrue("Adding a class should also add its inner classes",
-            getArchive().contains(expectedPathInnerClass));
-        Assert.assertFalse("Adding a class should not add the public inner classes of its parent", getArchive()
-            .contains(expectedPathInnerClassParent));
+        Assertions.assertTrue(getArchive().contains(expectedPathInnerClass),
+                "Adding a class should also add its inner classes");
+        Assertions.assertFalse(getArchive().contains(expectedPathInnerClassParent),
+                "Adding a class should not add the public inner classes of its parent");
 
         // Ensure anonymous/private inner classes are added
         final ArchivePath expectedPathPrivateInnerClass = new BasicPath(getClassPath(), AssetUtil
@@ -825,11 +826,10 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         final ArchivePath expectedPathAnonymousInnerClass = new BasicPath(getClassPath(), AssetUtil
             .getFullPathForClassResource(DummyClassA.InnerClass.class).get().replaceAll("InnerClass", "1"));
 
-        Assert.assertTrue("Adding a class should also add its private inner classes",
-            getArchive().contains(expectedPathPrivateInnerClass));
-        Assert.assertTrue("Adding a class should also add the anonymous inner classes",
-            getArchive().contains(expectedPathAnonymousInnerClass));
-
+        Assertions.assertTrue(getArchive().contains(expectedPathPrivateInnerClass),
+                "Adding a class should also add its private inner classes");
+        Assertions.assertTrue(getArchive().contains(expectedPathAnonymousInnerClass),
+                "Adding a class should also add the anonymous inner classes");
     }
 
     /**
@@ -882,7 +882,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             Thread.currentThread().setContextClassLoader(originalClassLoader);
         }
 
-        Assert.assertTrue("Classloader not used to load inner class", classCl.isUsedForInnerClasses());
+        Assertions.assertTrue(classCl.isUsedForInnerClasses(), "Classloader not used to load inner class");
         ArchivePath expectedClassPath = new BasicPath(getClassPath(),
             AssetUtil.getFullPathForClassResource("/test/classloader/DummyClass"));
         assertContainsClass(expectedClassPath);
@@ -900,8 +900,8 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         final ClassContainer<T> archive = this.getClassContainer();
         archive.addClass(String.class);
         final ArchivePath classRoot = this.getClassPath();
-        Assert.assertTrue("Archive does not contain class added from bootstrap CL",
-            ((Archive<?>) archive).contains(ArchivePaths.create(classRoot, "/java/lang/String.class")));
+        Assertions.assertTrue(((Archive<?>) archive).contains(ArchivePaths.create(classRoot, "/java/lang/String.class")),
+                "Archive does not contain class added from bootstrap CL");
     }
 
     @Test
@@ -920,7 +920,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             Thread.currentThread().setContextClassLoader(originalClassLoader);
         }
 
-        Assert.assertTrue("Classloader not used to load inner class", myClassLoader.isUsedForInnerClasses());
+        Assertions.assertTrue(myClassLoader.isUsedForInnerClasses(), "Classloader not used to load inner class");
         ArchivePath expectedClassPath = new BasicPath(getClassPath(),
             AssetUtil.getFullPathForClassResource("/test/classloader/DummyClass"));
         assertContainsClass(expectedClassPath);
@@ -943,7 +943,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
             Thread.currentThread().setContextClassLoader(originalClassLoader);
         }
 
-        Assert.assertTrue("Classloader not used to load inner class", myClassLoader.isUsedForInnerClasses());
+        Assertions.assertTrue(myClassLoader.isUsedForInnerClasses(), "Classloader not used to load inner class");
         String[] expetedResources = { "/test/classloader/DummyClass", "/test/classloader/DummyClass$DummyInnerClass" };
         for (String expectedResource : expetedResources) {
             ArchivePath expectedClassPath = new BasicPath(getClassPath(),
@@ -995,7 +995,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath expectedPath = new BasicPath(getClassPath(),
             AssetUtil.getFullPathForClassResource(DynamicContainerTestBase.class));
 
-        Assert.assertEquals("Should only be one class added", 1, numAssets(getArchive()));
+        Assertions.assertEquals(1, numAssets(getArchive()), "Should only be one class added");
 
         assertContainsClass(expectedPath);
     }
@@ -1043,7 +1043,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath expectedPath = new BasicPath(getClassPath(),
             AssetUtil.getFullPathForClassResource(DynamicContainerTestBase.class));
 
-        Assert.assertEquals("Should only be one class added", 1, numAssets(getArchive()));
+        Assertions.assertEquals(1, numAssets(getArchive()), "Should only be one class added");
 
         assertContainsClass(expectedPath);
     }
@@ -1052,13 +1052,13 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
      * SHRINKWRAP-233: Tests adding a non existent package doesn't add any asset to the archive.
      *
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testAddNonExistentPackage() {
         final String packageName = "non.existent.package";
         JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
 
         // Here the exception should be thrown
-        archive.addPackages(true, Package.getPackage(packageName));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> archive.addPackages(true, Package.getPackage(packageName)));
     }
 
     /**
@@ -1086,7 +1086,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath notExpectedPath2 = new BasicPath(getClassPath(),
             AssetUtil.getFullPathForClassResource(DummyClassForTest.class));
 
-        Assert.assertEquals("Should only include selected packages", 2, numAssets(getArchive()));
+        Assertions.assertEquals(2, numAssets(getArchive()), "Should only include selected packages");
 
         assertContainsClass(expectedPath1);
         assertContainsClass(expectedPath2);
@@ -1138,7 +1138,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath expectedPath2 = new BasicPath(getClassPath(),
             AssetUtil.getFullPathForClassResource(ArchiveType.class));
 
-        Assert.assertEquals("Should only include selected classes", 2, numAssets(getArchive()));
+        Assertions.assertEquals(2, numAssets(getArchive()), "Should only include selected classes");
 
         assertContainsClass(expectedPath);
 
@@ -1158,11 +1158,11 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath notExpectedPath2 = new BasicPath(getClassPath(),
             AssetUtil.getFullPathForClassResource(ArchiveType.class));
 
-        Assert.assertFalse("Archive should not contain " + notExpectedPath.get(), getArchive()
-            .contains(notExpectedPath));
+        Assertions.assertFalse(getArchive().contains(notExpectedPath),
+                "Archive should not contain " + notExpectedPath.get());
 
-        Assert.assertFalse("Archive should not contain " + notExpectedPath2.get(),
-            getArchive().contains(notExpectedPath2));
+        Assertions.assertFalse(getArchive().contains(notExpectedPath2),
+                "Archive should not contain " + notExpectedPath2.get());
     }
 
     /*
@@ -1211,14 +1211,12 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         assertNotContainsClass(getPrivInnerClassPath(DummyClassA.class, "Test"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ClassContainer.class)
     public void testDeleteClassNullParam() {
         addExemplaryClasses();
 
-        getClassContainer().deleteClass((Class<?>) null);
-
-        Assert.fail("Exception expected");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> getClassContainer().deleteClass((Class<?>) null));
     }
 
     @Test
@@ -1231,14 +1229,12 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         assertNotContainsClass(getArchivePathFromClass(DummyClassA.class));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ClassContainer.class)
     public void testDeleteClassByFqnNullParam() {
         addExemplaryClasses();
 
-        getClassContainer().deleteClass((String) null);
-
-        Assert.fail("Exception expected");
+        Assertions.assertThrows(IllegalArgumentException.class, () ->  getClassContainer().deleteClass((String) null));
     }
 
     @Test
@@ -1252,24 +1248,21 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         assertNotContainsClass(getArchivePathFromClass(DummyClassForTest.class));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ClassContainer.class)
     public void testDeleteClassesNullParam() {
         addExemplaryClasses();
 
-        getClassContainer().deleteClasses((Class<?>[]) null);
-
-        Assert.fail("Exception expected");
+        Assertions.assertThrows(IllegalArgumentException.class, () ->  getClassContainer().deleteClasses((Class<?>[]) null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ClassContainer.class)
     public void testDeleteClassesOneClassNull() {
         addExemplaryClasses();
 
-        getClassContainer().deleteClasses(DummyClassA.class, null, DummyClassForTest.class);
-
-        Assert.fail("Exception expected");
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () ->  getClassContainer().deleteClasses(DummyClassA.class, null, DummyClassForTest.class));
     }
 
     @Test
@@ -1282,7 +1275,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         // Replace with type-safe test class within default package?
         boolean actual = getArchive().contains("ClassInDefaultPackage.class");
 
-        Assert.assertFalse("Class from default package should not be in the archive", actual);
+        Assertions.assertFalse(actual, "Class from default package should not be in the archive");
     }
 
     @Test
@@ -1299,14 +1292,12 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         assertContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest1.class));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ClassContainer.class)
     public void testDeletePackageNullParam() {
         addExemplaryClasses();
 
-        getClassContainer().deletePackage((Package) null);
-
-        Assert.fail("Exception expected");
+        Assertions.assertThrows(IllegalArgumentException.class, () ->  getClassContainer().deletePackage((Package) null));
     }
 
     @Test
@@ -1323,14 +1314,12 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         assertContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest1.class));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ClassContainer.class)
     public void testDeletePackageAsStringNullParam() {
         addExemplaryClasses();
 
-        getClassContainer().deletePackage((String) null);
-
-        Assert.fail("Exception expected");
+        Assertions.assertThrows(IllegalArgumentException.class, () ->  getClassContainer().deletePackage((String) null));
     }
 
     @Test
@@ -1364,27 +1353,25 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         assertNotContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest1.class));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ClassContainer.class)
     public void testDeletePackagesNullParam() {
         addExemplaryClasses();
 
-        // Sub package parameter doesn't matter
-        getClassContainer().deletePackages(false, (Package[]) null);
-
-        Assert.fail("Exception expected");
+        Assertions.assertThrows(IllegalArgumentException.class,
+                // Sub package parameter doesn't matter
+                () ->  getClassContainer().deletePackages(false, (Package[]) null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ClassContainer.class)
     public void testDeletePackagesOnePackageNull() {
         addExemplaryClasses();
 
-        // Sub package parameter doesn't matter
-        getClassContainer().deletePackages(false, DummyClassForTest.class.getPackage(), null,
-            EmptyClassForFiltersTest1.class.getPackage());
-
-        Assert.fail("Exception expected");
+        Assertions.assertThrows(IllegalArgumentException.class,
+                // Sub package parameter doesn't matter
+                () ->  getClassContainer().deletePackages(false, DummyClassForTest.class.getPackage(), null,
+                EmptyClassForFiltersTest1.class.getPackage()));
     }
 
     @Test
@@ -1418,27 +1405,25 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         assertNotContainsClass(getArchivePathFromClass(EmptyClassForFiltersTest1.class));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ClassContainer.class)
     public void testDeletePackagesAsStringNullParam() {
         addExemplaryClasses();
 
-        // Sub package parameter doesn't matter
-        getClassContainer().deletePackages(false, (String[]) null);
-
-        Assert.fail("Exception expected");
+        Assertions.assertThrows(IllegalArgumentException.class,
+                // Sub package parameter doesn't matter
+                () -> getClassContainer().deletePackages(false, (String[]) null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ClassContainer.class)
     public void testDeletePackagesAsStringOnePackageNull() {
         addExemplaryClasses();
 
-        // Sub package parameter doesn't matter
-        getClassContainer().deletePackages(false, DummyClassForTest.class.getPackage().getName(), null,
-            EmptyClassForFiltersTest1.class.getPackage().getName());
-
-        Assert.fail("Exception expected");
+        Assertions.assertThrows(IllegalArgumentException.class,
+                // Sub package parameter doesn't matter
+                () -> getClassContainer().deletePackages(false, DummyClassForTest.class.getPackage().getName(), null,
+                        EmptyClassForFiltersTest1.class.getPackage().getName()));
     }
 
     @Test
@@ -1475,26 +1460,24 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         assertContainsClass(getArchivePathFromClass(DummyInterfaceForTest.class));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ClassContainer.class)
     public void testDeletePackagesFilteredNullFilter() {
         addExemplaryClasses();
 
-        // Sub package and package parameters don't matter
-        getClassContainer().deletePackages(false, (Filter<ArchivePath>) null, DummyClassForTest.class.getPackage());
-
-        Assert.fail("Exception expected");
+        Assertions.assertThrows(IllegalArgumentException.class,
+                // Sub package and package parameters don't matter
+                () -> getClassContainer().deletePackages(false, (Filter<ArchivePath>) null, DummyClassForTest.class.getPackage()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ClassContainer.class)
     public void testDeletePackagesFilteredNullPackage() {
         addExemplaryClasses();
 
-        // Sub package and filter parameters don't matter
-        getClassContainer().deletePackages(false, Filters.includeAll(), (Package) null);
-
-        Assert.fail("Exception expected");
+        Assertions.assertThrows(IllegalArgumentException.class,
+                // Sub package and filter parameters don't matter
+                () -> getClassContainer().deletePackages(false, Filters.includeAll(), (Package) null));
     }
 
     @Test
@@ -1531,27 +1514,25 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         assertContainsClass(getArchivePathFromClass(DummyInterfaceForTest.class));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ClassContainer.class)
     public void testDeletePackagesAsStringsFilteredNullFilter() {
         addExemplaryClasses();
 
-        // Sub package and package parameters don't matter
-        getClassContainer().deletePackages(false, (Filter<ArchivePath>) null,
-            DummyClassForTest.class.getPackage().getName());
-
-        Assert.fail("Exception expected");
+        Assertions.assertThrows(IllegalArgumentException.class,
+                // Sub package and package parameters don't matter
+                () -> getClassContainer().deletePackages(false, (Filter<ArchivePath>) null,
+                        DummyClassForTest.class.getPackage().getName()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(ClassContainer.class)
     public void testDeletePackagesAsStringsFilteredNullPackage() {
         addExemplaryClasses();
 
-        // Sub package and filter parameters don't matter
-        getClassContainer().deletePackages(false, Filters.includeAll(), (String[]) null);
-
-        Assert.fail("Exception expected");
+        Assertions.assertThrows(IllegalArgumentException.class,
+                // Sub package and filter parameters don't matter
+                () -> getClassContainer().deletePackages(false, Filters.includeAll(), (String[]) null));
     }
 
     // -------------------------------------------------------------------------------------||
@@ -1564,7 +1545,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getLibraryContainer().addAsLibrary(NAME_TEST_PROPERTIES);
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), NAME_TEST_PROPERTIES);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -1573,7 +1554,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getLibraryContainer().addAsLibrary(getFileForClassResource(NAME_TEST_PROPERTIES));
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), "Test.properties");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -1648,7 +1629,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         final ArchivePath targetPath = new BasicPath("Test.properties");
         getLibraryContainer().addAsLibrary(getURLForClassResource(NAME_TEST_PROPERTIES), targetPath);
         ArchivePath testPath = new BasicPath(getLibraryPath(), targetPath);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -1657,7 +1638,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getLibraryContainer().addAsLibrary(NAME_TEST_PROPERTIES, "Test.txt");
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -1666,7 +1647,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getLibraryContainer().addAsLibrary(getFileForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -1675,7 +1656,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getLibraryContainer().addAsLibrary(getURLForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -1684,7 +1665,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getLibraryContainer().addAsLibrary(getAssetForClassResource(NAME_TEST_PROPERTIES), "Test.txt");
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -1693,7 +1674,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getLibraryContainer().addAsLibrary(NAME_TEST_PROPERTIES, new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -1702,7 +1683,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getLibraryContainer().addAsLibrary(getFileForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -1711,7 +1692,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getLibraryContainer().addAsLibrary(getURLForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -1720,7 +1701,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getLibraryContainer().addAsLibrary(getAssetForClassResource(NAME_TEST_PROPERTIES), new BasicPath("Test.txt"));
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), "Test.txt");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -1730,7 +1711,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         getLibraryContainer().addAsLibrary(archive);
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), archive.getName());
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
 
     @Test
@@ -1740,8 +1721,8 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), NAME_TEST_PROPERTIES);
         ArchivePath testPath2 = new BasicPath(getLibraryPath(), NAME_TEST_PROPERTIES_2);
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
-        Assert.assertTrue("Archive should contain " + testPath2, getArchive().contains(testPath2));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
+        Assertions.assertTrue(getArchive().contains(testPath2), "Archive should contain " + testPath2);
     }
 
     @Test
@@ -1752,8 +1733,8 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), "Test.properties");
         ArchivePath testPath2 = new BasicPath(getLibraryPath(), "Test2.properties");
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
-        Assert.assertTrue("Archive should contain " + testPath2, getArchive().contains(testPath2));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
+        Assertions.assertTrue(getArchive().contains(testPath2), "Archive should contain " + testPath2);
     }
 
     @Test
@@ -1766,8 +1747,8 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), archive.getName());
         ArchivePath testPath2 = new BasicPath(getLibraryPath(), archive.getName());
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
-        Assert.assertTrue("Archive should contain " + testPath2, getArchive().contains(testPath2));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
+        Assertions.assertTrue(getArchive().contains(testPath2), "Archive should contain " + testPath2);
     }
 
     @Test
@@ -1783,8 +1764,8 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
         ArchivePath testPath = new BasicPath(getLibraryPath(), archive.getName());
         ArchivePath testPath2 = new BasicPath(getLibraryPath(), archive.getName());
-        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
-        Assert.assertTrue("Archive should contain " + testPath2, getArchive().contains(testPath2));
+        Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
+        Assertions.assertTrue(getArchive().contains(testPath2), "Archive should contain " + testPath2);
     }
 
     @Test
@@ -1803,15 +1784,14 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ArchivePath testPath2 = new BasicPath(getLibraryPath(), archive2.getName());
         ArchivePath testPath3 = new BasicPath(getLibraryPath(), archive3.getName());
         ArchivePath testPath4 = new BasicPath(getLibraryPath(), archive4.getName());
-        Assert.assertTrue("Archive should contain " + testPath1, getArchive().contains(testPath1));
-        Assert.assertTrue(
 
-        "Archive should contain " + testPath2, getArchive().contains(testPath2));
-        Assert.assertTrue("Archive should contain " + testPath3, getArchive().contains(testPath3));
-        Assert.assertTrue("Archive should contain " + testPath4, getArchive().contains(testPath4));
+        Assertions.assertTrue(getArchive().contains(testPath1), "Archive should contain " + testPath1);
+        Assertions.assertTrue(getArchive().contains(testPath2), "Archive should contain " + testPath2);
+        Assertions.assertTrue(getArchive().contains(testPath3), "Archive should contain " + testPath3);
+        Assertions.assertTrue(getArchive().contains(testPath4), "Archive should contain " + testPath4);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(LibraryContainer.class)
     public void testAddLibrariesArchiveArraysWithNullArguments() {
         Archive<?> archive1 = createNewArchive();
@@ -1820,10 +1800,10 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         Archive<?> archive4 = createNewArchive();
         Archive<?>[] archives = { archive1, archive2, archive3, archive4 };
 
-        getLibraryContainer().addAsLibraries(archives, null, null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> getLibraryContainer().addAsLibraries(archives, null, null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(LibraryContainer.class)
     public void testAddLibrariesArchiveArraysWithNullValues() {
         Archive<?> archive1 = createNewArchive();
@@ -1832,13 +1812,14 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         Archive<?> archive4 = createNewArchive();
         Archive<?>[] archives = { archive1, archive2, archive3, null, archive4, null };
 
-        getLibraryContainer().addAsLibraries(archives);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> getLibraryContainer().addAsLibraries(archives));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     @ArchiveType(LibraryContainer.class)
     public void testAddLibraryNotExistingResource() {
-        getLibraryContainer().addAsLibrary("notExistingPath/notExistingJar.jar", "notExistingJar.jar");
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> getLibraryContainer().addAsLibrary("notExistingPath/notExistingJar.jar", "notExistingJar.jar"));
     }
 
     /**
@@ -1850,11 +1831,10 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         String expectedManifestPath = "META-INF/MANIFEST.MF";
 
         JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
-        Assert.assertFalse("Archive should not contain manifest file", archive.contains(expectedManifestPath));
+        Assertions.assertFalse(archive.contains(expectedManifestPath), "Archive should not contain manifest file");
 
         archive.addManifest();
-        Assert.assertTrue("Archive should contain manifest file: " + expectedManifestPath,
-            archive.contains(expectedManifestPath));
+        Assertions.assertTrue(archive.contains(expectedManifestPath), "Archive should contain manifest file: " + expectedManifestPath);
     }
 
     /**
@@ -1865,10 +1845,10 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         String manifest = "Whitespace manifest.MF";
 
         JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
-        org.junit.Assert.assertFalse("Archive should not contain file", archive.contains(manifest));
+        Assertions.assertFalse(archive.contains(manifest), "Archive should not contain file");
         archive.addAsResource(manifest);
 
-        Assert.assertTrue("Archive should contain file: " + manifest, archive.contains(manifest));
+        Assertions.assertTrue(archive.contains(manifest), "Archive should contain file: " + manifest);
     }
 
     /**
@@ -1889,9 +1869,9 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
         final ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(out.toByteArray()));
         final ZipEntry entry = zis.getNextEntry();
-        Assert.assertNotNull("Missing '.svn/' Entry from Exported Archive", entry);
-        Assert.assertEquals("Zip Entry Missing Expected Name '.svn/'", ".svn/", entry.getName());
-        Assert.assertEquals("Zip Entry '.svn/' Not A Directory", true, entry.isDirectory());
+        Assertions.assertNotNull(entry, "Missing '.svn/' Entry from Exported Archive");
+        Assertions.assertEquals(".svn/", entry.getName(), "Zip Entry Missing Expected Name '.svn/'");
+        Assertions.assertTrue(entry.isDirectory(), "Zip Entry '.svn/' Not A Directory");
         zis.closeEntry();
         zis.close();
     }
@@ -1914,7 +1894,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
 
         final String contentFound = new BufferedReader(new InputStreamReader(archive.get(path).getAsset().openStream()))
             .readLine();
-        Assert.assertEquals(content, contentFound);
+        Assertions.assertEquals(content, contentFound);
     }
 
     /**
@@ -1929,16 +1909,8 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         final ArchivePath path = ArchivePaths.create("testPath");
         archive.addAsDirectories(path);
 
-        // Now try again with a new asset, and this should fail
-        try {
-            archive.add(new StringAsset("failContent"), path);
-        } catch (final IllegalOverwriteException ioe) {
-            // Good
-            return;
-        }
-
-        // Fail us
-        Assert.fail("Expected " + IllegalOverwriteException.class.getName() + " not received");
+        Assertions.assertThrows(IllegalOverwriteException.class, () -> archive.add(new StringAsset("failContent"), path),
+                "Expected IllegalOverwriteException not received");
     }
 
     /**
@@ -1952,11 +1924,11 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         final String file = archivePath + "file";
 
         archive.add(EmptyAsset.INSTANCE, ArchivePaths.create(file));
-        Assert.assertTrue(archive.contains(file));
+        Assertions.assertTrue(archive.contains(file));
 
         archive.delete(ArchivePaths.create("WEB-INF/classes/org/drools/guvnor/gwtutil"));
-        Assert.assertFalse(archive.contains(ArchivePaths.create(archivePath)));
-        Assert.assertFalse(archive.contains(ArchivePaths.create(file)));
+        Assertions.assertFalse(archive.contains(ArchivePaths.create(archivePath)));
+        Assertions.assertFalse(archive.contains(ArchivePaths.create(file)));
     }
 
     /**
@@ -1970,24 +1942,23 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         final String file = archivePath + "file";
 
         archive.add(EmptyAsset.INSTANCE, ArchivePaths.create(file));
-        Assert.assertTrue(archive.contains(file));
+        Assertions.assertTrue(archive.contains(file));
 
         archive.delete(ArchivePaths.create(archivePath));
-        Assert.assertFalse(archive.contains(ArchivePaths.create(archivePath)));
-        Assert.assertFalse(archive.contains(ArchivePaths.create(file)));
+        Assertions.assertFalse(archive.contains(ArchivePaths.create(archivePath)));
+        Assertions.assertFalse(archive.contains(ArchivePaths.create(file)));
     }
 
     private void assertNotContainsClass(ArchivePath notExpectedPath) {
-        Assert.assertFalse("Located unexpected class at " + notExpectedPath.get(),
-            getArchive().contains(notExpectedPath));
+        Assertions.assertFalse(getArchive().contains(notExpectedPath), "Located unexpected class at " + notExpectedPath.get());
     }
 
     private void assertNotContainsClass(String notExpectedPath) {
-        Assert.assertFalse("Located unexpected class at " + notExpectedPath, getArchive().contains(notExpectedPath));
+        Assertions.assertFalse(getArchive().contains(notExpectedPath), "Located unexpected class at " + notExpectedPath);
     }
 
     private void assertContainsClass(ArchivePath expectedPath) {
-        Assert.assertTrue("A class should be located at " + expectedPath.get(), getArchive().contains(expectedPath));
+        Assertions.assertTrue(getArchive().contains(expectedPath),"A class should be located at " + expectedPath.get());
     }
 
     // -------------------------------------------------------------------------------------||
@@ -1998,15 +1969,14 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
      */
     private void assertArchiveContainsFolderRecursively(File file, ArchivePath base, String target) {
         ArchivePath testPath = new BasicPath(base, target);
-        Assert.assertTrue("Archive should contain " + testPath, this.getArchive().contains(testPath));
+        Assertions.assertTrue(this.getArchive().contains(testPath), "Archive should contain " + testPath);
 
         if (file.isDirectory()) {
             for (File child : file.listFiles()) {
                 assertArchiveContainsFolderRecursively(child, base, target + "/" + child.getName());
             }
             int folderInArchiveSize = this.getArchive().get(testPath).getChildren().size();
-            Assert.assertEquals("Wrong number of files in the archive folder: " + testPath.get(),
-                file.listFiles().length, folderInArchiveSize);
+            Assertions.assertEquals(file.listFiles().length, folderInArchiveSize, "Wrong number of files in the archive folder: " + testPath.get());
         }
     }
 

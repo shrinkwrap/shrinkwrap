@@ -5,14 +5,13 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
 
-import org.junit.Assert;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.spec.donotchange.DummyClassA;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Ken Finnigan
@@ -26,7 +25,7 @@ public class AddPackageFromWarWithNonRootClassloaderTestCase extends AddPackageT
 
         JavaArchive jar = this.domain.getArchiveFactory().create(JavaArchive.class);
         jar.addPackage("org.jboss.shrinkwrap.impl.base.spec.donotchange" );
-        Assert.assertNotNull( jar.get( "/" + DummyClassA.class.getName().replace( '.', '/' ) + ".class" ) );
+        Assertions.assertNotNull(jar.get("/" + DummyClassA.class.getName().replace('.', '/') + ".class"));
     }
 
     @Override

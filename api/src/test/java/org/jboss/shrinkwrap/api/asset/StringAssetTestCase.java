@@ -16,13 +16,12 @@
  */
 package org.jboss.shrinkwrap.api.asset;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.logging.Logger;
-
-import org.junit.Assert;
-
-import org.junit.Test;
 
 /**
  * Test Cases for the {@link StringAsset}
@@ -67,10 +66,10 @@ public class StringAssetTestCase {
         while ((read = stream.read()) != -1) {
             out.write(read);
         }
-        String roundtrip = new String(out.toByteArray());
+        String roundtrip = out.toString();
         log.info("Roundtrip contents: " + roundtrip);
 
-        Assert.assertEquals("Roundtrip did not equal passed in contents", contents, roundtrip);
+        Assertions.assertEquals(contents, roundtrip, "Roundtrip did not equal passed in contents");
     }    
 
     @Test
@@ -78,6 +77,6 @@ public class StringAssetTestCase {
     	final String contents = StringAsset.class.getSimpleName();
     	final StringAsset asset = new StringAsset(contents);
         
-        Assert.assertTrue(contents.equals(((StringAsset)asset).getSource()));
+        Assertions.assertEquals(contents, asset.getSource());
     }
 }

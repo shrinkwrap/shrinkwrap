@@ -29,9 +29,9 @@ import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestCase to ensure the correctness of the ExplodedImporter
@@ -60,18 +60,18 @@ public class ExplodedImporterTestCase {
      *
      * @throws URISyntaxException
      */
-    @BeforeClass
+    @BeforeAll
     public static void makeEmptyDirectories() throws URISyntaxException {
         final File root = new File(ExplodedImporterTestCase.class.getProtectionDomain().getCodeSource().getLocation()
             .toURI());
         final File exlodedImportTest = new File(root, EXISTING_DIRECTORY_RESOURCE);
-        Assert.assertTrue("Import test folder does not exist: " + exlodedImportTest.getAbsolutePath(),
-            exlodedImportTest.exists());
+        Assertions.assertTrue(exlodedImportTest.exists(),
+                "Import test folder does not exist: " + exlodedImportTest.getAbsolutePath());
         final File empty = new File(exlodedImportTest, EMPTY_DIR_NAME);
-        Assert.assertTrue("Could not create the empty directory", empty.mkdir());
+        Assertions.assertTrue(empty.mkdir(), "Could not create the empty directory");
         final File parent = new File(exlodedImportTest, PARENT_DIR_NAME);
         final File parentEmpty = new File(parent, EMPTY_DIR_NAME);
-        Assert.assertTrue("Could not create the parent empty directory", parentEmpty.mkdirs());
+        Assertions.assertTrue(parentEmpty.mkdirs(), "Could not create the parent empty directory");
         parentEmpty.deleteOnExit();
         empty.deleteOnExit();
     }
@@ -85,24 +85,22 @@ public class ExplodedImporterTestCase {
                 SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE).toURI()
                     .getPath()).as(JavaArchive.class);
         Logger.getLogger(ExplodedImporterTestCase.class.getName()).info(archive.toString(true));
-        Assert.assertTrue("Root files should be imported", archive.contains(new BasicPath("/Test.properties")));
+        Assertions.assertTrue(archive.contains(new BasicPath("/Test.properties")), "Root files should be imported");
 
-        Assert.assertTrue("Nested files should be imported", archive.contains(new BasicPath("/META-INF/MANIFEST.FM")));
+        Assertions.assertTrue(archive.contains(new BasicPath("/META-INF/MANIFEST.FM")), "Nested files should be imported");
 
-        Assert.assertTrue("Nested files should be imported",
-            archive.contains(new BasicPath("/org/jboss/Test.properties")));
+        Assertions.assertTrue(archive.contains(new BasicPath("/org/jboss/Test.properties")), "Nested files should be imported");
 
-        Assert.assertTrue("Empty directories should be imported", archive.contains(new BasicPath("/empty_dir")));
+        Assertions.assertTrue(archive.contains(new BasicPath("/empty_dir")),"Empty directories should be imported");
 
-        Assert.assertTrue("Nested empty directories should be imported",
-            archive.contains(new BasicPath("/parent/empty_dir")));
+        Assertions.assertTrue(archive.contains(new BasicPath("/parent/empty_dir")), "Nested empty directories should be imported");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowExceptionIfImportingAFile() throws Exception {
-
+    @Test
+    public void shouldThrowExceptionIfImportingAFile() {
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
         ShrinkWrap.create(ExplodedImporter.class, "test.jar").importDirectory(
-            SecurityActions.getThreadContextClassLoader().getResource(EXISTING_FILE_RESOURCE).toURI().getPath());
+            SecurityActions.getThreadContextClassLoader().getResource(EXISTING_FILE_RESOURCE).toURI().getPath()));
     }
     
     @Test
@@ -116,8 +114,8 @@ public class ExplodedImporterTestCase {
         
         Logger.getLogger(ExplodedImporterTestCase.class.getName()).info(archive.toString(true));
 
-        Assert.assertEquals("Archive should contains only 2 paths", 2, archive.getContent().size());
-        Assert.assertTrue("Nested files should be imported", archive.contains(new BasicPath("/META-INF/MANIFEST.FM")));
+        Assertions.assertEquals(2, archive.getContent().size(), "Archive should contains only 2 paths");
+        Assertions.assertTrue(archive.contains(new BasicPath("/META-INF/MANIFEST.FM")), "Nested files should be imported");
     }
     
     @Test
@@ -130,18 +128,18 @@ public class ExplodedImporterTestCase {
             .as(JavaArchive.class);
         
         Logger.getLogger(ExplodedImporterTestCase.class.getName()).info(archive.toString(true));
-        
-        Assert.assertTrue("Root files should be imported", archive.contains(new BasicPath("/Test.properties")));
-        Assert.assertTrue("Nested files should be imported", archive.contains(new BasicPath("/org/jboss/Test.properties")));
-        Assert.assertTrue("Empty directories should be imported", archive.contains(new BasicPath("/empty_dir")));
-        Assert.assertTrue("Nested empty directories should be imported", archive.contains(new BasicPath("/parent/empty_dir")));
+
+        Assertions.assertTrue(archive.contains(new BasicPath("/Test.properties")), "Root files should be imported");
+        Assertions.assertTrue(archive.contains(new BasicPath("/org/jboss/Test.properties")), "Nested files should be imported");
+        Assertions.assertTrue(archive.contains(new BasicPath("/empty_dir")), "Empty directories should be imported");
+        Assertions.assertTrue(archive.contains(new BasicPath("/parent/empty_dir")),"Nested empty directories should be imported");
     }
     
     @Test // SHRINKWRAP-392
     public void shouldHaveEmptyDefaultExtension() {
         ExplodedImporter explodedImporter = ShrinkWrap.create(ExplodedImporter.class);
         String explodedImporterArchiveName = explodedImporter.as(JavaArchive.class).getName();
-        Assert.assertFalse(explodedImporterArchiveName.contains("."));
+        Assertions.assertFalse(explodedImporterArchiveName.contains("."));
     }
 
     @Test // SHRINKWRAP-453
@@ -164,9 +162,9 @@ public class ExplodedImporterTestCase {
         String fileName = SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE).toURI().getPath();
         final File importDirectory = new File(fileName, subdirectory);
         if (!importDirectory.exists()) {
-            Assert.assertTrue("Unable to create test folder: " + importDirectory.getAbsolutePath(), importDirectory.mkdir());
+            Assertions.assertTrue(importDirectory.mkdir(), "Unable to create test folder: " + importDirectory.getAbsolutePath());
         }
-        Assert.assertTrue("Import test folder does not exist: " + importDirectory.getAbsolutePath(), importDirectory.exists());
+        Assertions.assertTrue(importDirectory.exists(), "Import test folder does not exist: " + importDirectory.getAbsolutePath());
         importDirectory.deleteOnExit();
 
         ShrinkWrap.create(WebArchive.class, "test.war")
@@ -178,8 +176,8 @@ public class ExplodedImporterTestCase {
         WebArchive war = ShrinkWrap.create(WebArchive.class, "SHRINKWRAP-453.war")
                 .as(ExplodedImporter.class).importDirectory(importDirectory)
                 .as(WebArchive.class);
-        Assert.assertTrue("Expected imported web archive to be present at web archive root", war.contains("/test.war"));
-        Assert.assertTrue("Expected imported web archive to include web.xml", war.contains("/test.war/WEB-INF/web.xml"));
+        Assertions.assertTrue(war.contains("/test.war"), "Expected imported web archive to be present at web archive root");
+        Assertions.assertTrue(war.contains("/test.war/WEB-INF/web.xml"), "Expected imported web archive to include web.xml");
     }
 
 

@@ -17,18 +17,16 @@
 package org.jboss.shrinkwrap.impl.base.importer;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.junit.Assert;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * Delegate class for asserting that ZIP contents may be imported as expected
@@ -61,15 +59,15 @@ public class ZipContentAssertionDelegate extends ContentAssertionDelegateBase {
      *            The original classpath resource file
      */
     public void assertContent(Archive<?> importedArchive, File originalSource) throws Exception {
-        Assert.assertFalse("Should have imported something", importedArchive.getContent().isEmpty());
+        Assertions.assertFalse(importedArchive.getContent().isEmpty(), "Should have imported something");
 
         ZipFile testZip = new ZipFile(originalSource);
 
         List<? extends ZipEntry> entries = Collections.list(testZip.entries());
 
-        Assert.assertFalse("Test zip should contain data", entries.isEmpty());
-        Assert.assertEquals("Should have imported all files and directories", entries.size(), importedArchive
-            .getContent().size());
+        Assertions.assertFalse(entries.isEmpty(), "Test zip should contain data");
+        Assertions.assertEquals(entries.size(), importedArchive.getContent().size(),
+                "Should have imported all files and directories");
 
         boolean containsEmptyDir = false;
         boolean containsEmptyNestedDir = false;
@@ -86,20 +84,20 @@ public class ZipContentAssertionDelegate extends ContentAssertionDelegateBase {
                 continue;
             }
 
-            Assert.assertTrue("Importer should have imported " + originalEntry.getName() + " from " + originalSource,
-                importedArchive.contains(new BasicPath(originalEntry.getName())));
+            Assertions.assertTrue(importedArchive.contains(new BasicPath(originalEntry.getName())),
+                    "Importer should have imported " + originalEntry.getName() + " from " + originalSource);
 
             byte[] originalContent = IOUtil.asByteArray(testZip.getInputStream(originalEntry));
             final Node node = importedArchive.get(new BasicPath(originalEntry.getName()));
             byte[] importedContent = IOUtil.asByteArray(node.getAsset().openStream());
 
-            Assert.assertTrue("The content of " + originalEntry.getName() + " should be equal to the imported content",
-                Arrays.equals(importedContent, originalContent));
+            Assertions.assertArrayEquals(importedContent, originalContent,
+                    "The content of " + originalEntry.getName() + " should be equal to the imported content");
         }
 
         // Ensure empty directories have come in cleanly
-        Assert.assertTrue("Empty directory not imported", containsEmptyDir);
-        Assert.assertTrue("Empty nested directory not imported", containsEmptyNestedDir);
+        Assertions.assertTrue(containsEmptyDir, "Empty directory not imported");
+        Assertions.assertTrue(containsEmptyNestedDir, "Empty nested directory not imported");
     }
 
     // -------------------------------------------------------------------------------------||

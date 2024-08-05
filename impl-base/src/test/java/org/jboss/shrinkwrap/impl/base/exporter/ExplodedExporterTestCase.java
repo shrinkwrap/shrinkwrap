@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
@@ -36,8 +35,8 @@ import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * ExplodedExporterTestCase
@@ -110,11 +109,11 @@ public class ExplodedExporterTestCase extends ExportTestBase {
         File explodedDirectory = archive.as(ExplodedExporter.class).exportExploded(tempDirectory);
 
         // Validate the exploded directory was created
-        Assert.assertNotNull(explodedDirectory);
+        Assertions.assertNotNull(explodedDirectory);
 
         // Assert the directory has the correct name
         File expectedDirectory = new File(tempDirectory, archive.getName());
-        Assert.assertEquals(expectedDirectory, explodedDirectory);
+        Assertions.assertEquals(expectedDirectory, explodedDirectory);
 
         // Validate entries were written out
         assertAssetInExploded(explodedDirectory, PATH_ONE, ASSET_ONE);
@@ -141,11 +140,11 @@ public class ExplodedExporterTestCase extends ExportTestBase {
             "EXPLODED" + NAME_ARCHIVE);
 
         // Validate the exploded directory was created
-        Assert.assertNotNull(explodedDirectory);
+        Assertions.assertNotNull(explodedDirectory);
 
         // Assert the directory has the correct name
         File expectedDirectory = new File(tempDirectory, "EXPLODED" + NAME_ARCHIVE);
-        Assert.assertEquals(expectedDirectory, explodedDirectory);
+        Assertions.assertEquals(expectedDirectory, explodedDirectory);
 
         // Validate entries were written out
         assertAssetInExploded(explodedDirectory, PATH_ONE, ASSET_ONE);
@@ -171,11 +170,11 @@ public class ExplodedExporterTestCase extends ExportTestBase {
         File explodedDirectory = archive.as(ExplodedExporter.class).exportExploded(tempDirectory);
 
         // Validate the exploded directory was created
-        Assert.assertNotNull(explodedDirectory);
+        Assertions.assertNotNull(explodedDirectory);
 
         // Assert the directory has the correct name
         File expectedDirectory = new File(tempDirectory, archive.getName());
-        Assert.assertEquals(expectedDirectory, explodedDirectory);
+        Assertions.assertEquals(expectedDirectory, explodedDirectory);
 
         // Validate nested archive entries were written out
         ArchivePath nestedArchivePath = new BasicPath(NAME_NESTED_ARCHIVE + this.getArchiveExtension());
@@ -204,10 +203,10 @@ public class ExplodedExporterTestCase extends ExportTestBase {
         File explodedDirectory = archive.as(ExplodedExporter.class).exportExplodedInto(tempDirectory);
 
         // Validate the exploded directory was created
-        Assert.assertNotNull(explodedDirectory);
+        Assertions.assertNotNull(explodedDirectory);
 
         // Validate the exploded directory was created in same directory
-        Assert.assertEquals(tempDirectory, explodedDirectory);
+        Assertions.assertEquals(tempDirectory, explodedDirectory);
 
         // Validate entries were written out
         assertAssetInExploded(explodedDirectory, PATH_ONE, ASSET_ONE);
@@ -218,51 +217,54 @@ public class ExplodedExporterTestCase extends ExportTestBase {
      * Ensure an baseDirectory is required to export.
      *
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testExportExplodedRequiresBaseDirectroy() {
-        log.info("testExportExplodedRequiresBaseDirectroy");
-
-        ShrinkWrap.create(ExplodedExporter.class, "test.jar").exportExploded(null);
+    @Test
+    public void testExportExplodedRequiresBaseDirectory() {
+        log.info("testExportExplodedRequiresBaseDirectory");
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> ShrinkWrap.create(ExplodedExporter.class, "test.jar").exportExploded(null));
     }
 
     /**
      * Ensure an baseDirectory must exist is required to export.
      *
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testExportExplodedRequiresExistingDirectory() {
         log.info("testExportExplodedRequiresExisitingDirectroy");
 
         final File directory = this.getNonexistantDirectory();
-        ShrinkWrap.create(ExplodedExporter.class, "test.jar").exportExploded(directory);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> ShrinkWrap.create(ExplodedExporter.class, "test.jar").exportExploded(directory));
     }
 
     /**
      * Ensure ExpolodedExporter requires a directory
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testExportExplodedRequiresValidDirectory() {
         log.info("testExportExplodedRequiresValidDirectory");
         final File nonDirectory = new File(this.getTarget(), "tempFile.txt");
-        ShrinkWrap.create(ExplodedExporter.class, "test.jar").exportExploded(nonDirectory);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> ShrinkWrap.create(ExplodedExporter.class, "test.jar").exportExploded(nonDirectory));
     }
 
     /**
      * Ensure an ArchiveExportException is thrown when output directory can not be created
      */
-    @Test(expected = ArchiveExportException.class)
+    @Test
     public void testExportExplodedOutpuDirCreationFails() throws Exception {
         log.info("testExportExplodedOutpuDirCreationFails");
         final File directory = createTempDirectory("testExportExplodedOutpuDirCreationFails");
         directory.deleteOnExit();
 
-        ShrinkWrap.create(ExplodedExporter.class, "test/" + NAME_ARCHIVE).exportExploded(directory);
+        Assertions.assertThrows(ArchiveExportException.class,
+                () -> ShrinkWrap.create(ExplodedExporter.class, "test/" + NAME_ARCHIVE).exportExploded(directory));
     }
 
     /**
      * Ensure ArchiveException is thrown if Asset can not be written
      */
-    @Test(expected = ArchiveExportException.class)
+    @Test
     public void testExportExplodedThrowsExceptionOnAssetWrite() throws Exception {
         log.info("testExportExplodedThrowsExceptionOnAssetWrite");
         Archive<?> archive = createArchiveWithAssets();
@@ -271,7 +273,8 @@ public class ExplodedExporterTestCase extends ExportTestBase {
         }, new BasicPath("badAsset"));
         final File directory = createTempDirectory("testExportExplodedThrowsExceptionOnAssetWrite");
 
-        archive.as(ExplodedExporter.class).exportExploded(directory);
+        Assertions.assertThrows(ArchiveExportException.class,
+                () -> archive.as(ExplodedExporter.class).exportExploded(directory));
     }
 
     /**
@@ -284,25 +287,25 @@ public class ExplodedExporterTestCase extends ExportTestBase {
 
         File existingParentFolder = new File("target/");
         existingParentFolder.mkdirs();
-        Assert.assertTrue("Internal error, the directory need to exist for test case to work",
-            existingParentFolder.exists());
+        Assertions.assertTrue(existingParentFolder.exists(),
+                "Internal error, the directory need to exist for test case to work");
 
         File archiveFolder = new File(existingParentFolder, archive.getName());
         archiveFolder.mkdirs();
-        Assert.assertTrue("Internal error, the directory need to exist for test case to work",
-            existingParentFolder.exists());
+        Assertions.assertTrue(existingParentFolder.exists(),
+                "Internal error, the directory need to exist for test case to work");
 
         archive.as(ExplodedExporter.class).exportExploded(existingParentFolder);
 
-        Assert.assertTrue("A subfolder with archive name should have been created", new File(existingParentFolder,
-            archive.getName()).exists());
+        Assertions.assertTrue(new File(existingParentFolder, archive.getName()).exists(),
+                "A subfolder with archive name should have been created");
     }
 
     /**
      * https://jira.jboss.org/jira/browse/SHRINKWRAP-86 Ensure an IllegalArgumentException is thrown when output
      * directory is a file
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testExportExplodedOutpuDirIsAFile() throws Exception {
         log.info("testExportExplodedOutpuDirIsAFile");
         final File directory = createTempDirectory("testExportExplodedOutpuDirIsAFile");
@@ -312,9 +315,10 @@ public class ExplodedExporterTestCase extends ExportTestBase {
 
         IOUtil.copyWithClose(new ByteArrayInputStream("test-test".getBytes()), new FileOutputStream(existingFile));
 
-        Assert.assertEquals("Could not create test file", true, created);
+        Assertions.assertTrue(created, "Could not create test file");
 
-        createArchiveWithAssets().as(ExplodedExporter.class).exportExploded(directory);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> createArchiveWithAssets().as(ExplodedExporter.class).exportExploded(directory));
     }
 
     // -------------------------------------------------------------------------------------||
@@ -329,7 +333,7 @@ public class ExplodedExporterTestCase extends ExportTestBase {
         if (directory.exists()) {
             TestIOUtil.deleteDirectory(directory);
         }
-        Assert.assertTrue("Precondition Failure: Directory should not exist: " + directory, !directory.exists());
+        Assertions.assertFalse(directory.exists(), "Precondition Failure: Directory should not exist: " + directory);
         return directory;
     }
 
@@ -337,19 +341,16 @@ public class ExplodedExporterTestCase extends ExportTestBase {
      * Assert an asset is actually in the exploded directory
      *
      * @throws FileNotFoundException
-     * @throws IOException
-     * @throws IllegalArgumentException
      */
-    private void assertAssetInExploded(File explodedDirectory, ArchivePath path, Asset asset)
-        throws FileNotFoundException {
+    private void assertAssetInExploded(File explodedDirectory, ArchivePath path, Asset asset) throws FileNotFoundException {
         File assetFile = new File(explodedDirectory, path.get());
-        Assert.assertNotNull(assetFile);
-        Assert.assertTrue(assetFile.exists());
+        Assertions.assertNotNull(assetFile);
+        Assertions.assertTrue(assetFile.exists());
         byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
 
         InputStream inputStream = new FileInputStream(assetFile);
 
         byte[] actualContents = IOUtil.asByteArray(inputStream);
-        Assert.assertArrayEquals(expectedContents, actualContents);
+        Assertions.assertArrayEquals(expectedContents, actualContents);
     }
 }
