@@ -27,7 +27,7 @@ import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
  * ExplodedExporterImpl
- *
+ * <p>
  * Implementation of ExplodedExporter used to export an Archive as an exploded directory structure.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>

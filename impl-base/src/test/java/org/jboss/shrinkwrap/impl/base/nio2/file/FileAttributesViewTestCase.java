@@ -19,8 +19,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * ShrinkWrap implementation of {@link BasicFileAttributesView}; not all operations are supported
- * 
  * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>
  */
 public class FileAttributesViewTestCase {
@@ -62,7 +60,7 @@ public class FileAttributesViewTestCase {
 
         BasicFileAttributes attributes = attributeView.readAttributes();
         // the attributes are tested in FileAttributesTestCase
-        Assert.assertTrue("Atrributes are not instance of ShrinkWrapFileAttributes",
+        Assert.assertTrue("Attributes are not instance of ShrinkWrapFileAttributes",
             attributes instanceof ShrinkWrapFileAttributes);
     }
 

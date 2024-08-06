@@ -21,7 +21,7 @@ import java.io.InputStream;
 
 /**
  * ClassloaderAsset
- *
+ * <p>
  * Implementation of a {@link Asset} backed by a resource located in the Classloader.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

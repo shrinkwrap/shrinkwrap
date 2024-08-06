@@ -33,7 +33,7 @@ import org.junit.Before;
 
 /**
  * JavaArchiveImplTestCase
- *
+ * <p>
  * Test case to ensure that the JavaArchive follows the Jar spec.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

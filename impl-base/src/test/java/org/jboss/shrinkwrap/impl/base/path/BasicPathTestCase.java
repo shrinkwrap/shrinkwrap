@@ -20,7 +20,7 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 
 /**
  * BasicPathTestCase
- *
+ * <p>
  * Tests to ensure that the {@link BasicPath} implementation creates Paths as expected from various specified contexts
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>

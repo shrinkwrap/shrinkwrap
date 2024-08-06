@@ -126,7 +126,7 @@ public class TarImporterImplTestCase extends StreamImporterImplTestBase<TarImpor
         /**
          * Generates an exception when read
          *
-         * @see org.jboss.shrinkwrap.impl.base.io.tar.javatar.TarInputStream#read()
+         * @see org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream#read()
          */
         @Override
         public int read() {

@@ -37,6 +37,7 @@ class TarBz2OnDemandInputStream extends AbstractOnDemandInputStream<TarBzOutputS
      * Creates stream directly from archive.
      *
      * @param archive
+     *             The {@link Archive} to be exported as a TarBz2 archive.
      */
     TarBz2OnDemandInputStream(Archive<?> archive) {
         super(archive);

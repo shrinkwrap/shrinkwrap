@@ -159,6 +159,7 @@ public final class ZipStoredExporterTestCase extends StreamExporterTestBase<ZipI
      * Ensures that the specified {@link ZipFile} contains entries in the expected form
      *
      * @param expectedZip
+     *             The {@link ZipFile} to be validated.
      * @throws IOException
      */
     private void ensureZipFileInExpectedForm(final ZipFile expectedZip) throws IOException {
@@ -194,8 +195,10 @@ public final class ZipStoredExporterTestCase extends StreamExporterTestBase<ZipI
      * Obtains the entry from the specified ZIP file at the specified Path, ensuring it exists along the way
      *
      * @param expectedZip
+     *             The {@link ZipFile} from which to retrieve the entry.
      * @param path
-     * @return
+     *             The {@link ArchivePath} specifying the location of the entry in the ZIP file.
+     * @return The {@link ZipEntry} found at the specified path.
      * @throws IllegalArgumentException
      */
     private ZipEntry getEntryFromZip(final ZipFile expectedZip, final ArchivePath path)

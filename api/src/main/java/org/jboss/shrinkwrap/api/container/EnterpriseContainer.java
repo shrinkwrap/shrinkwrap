@@ -293,7 +293,7 @@ public interface EnterpriseContainer<T extends Archive<T>> {
      * @param resourcePackage
      *            The package of the resources
      * @param resourceNames
-     *            The names of the resources inside resoucePackage
+     *            The names of the resources inside resourcePackage
      * @return This virtual archive
      * @throws IllegalArgumentException
      *             if resourcePackage is null
@@ -310,7 +310,7 @@ public interface EnterpriseContainer<T extends Archive<T>> {
      * @param resourcePackage
      *            The package of the resource
      * @param resourceName
-     *            The name of the resource inside resoucePackage
+     *            The name of the resource inside resourcePackage
      * @return This virtual archive
      * @throws IllegalArgumentException
      *             if resourcePackage is null
@@ -327,7 +327,7 @@ public interface EnterpriseContainer<T extends Archive<T>> {
      * @param resourcePackage
      *            The package of the resource
      * @param resourceName
-     *            The name of the resource inside resoucePackage
+     *            The name of the resource inside resourcePackage
      * @param target
      *            The target location inside the container
      * @return This virtual archive
@@ -349,7 +349,7 @@ public interface EnterpriseContainer<T extends Archive<T>> {
      * @param resourcePackage
      *            The package of the resource
      * @param resourceName
-     *            The name of the resource inside resoucePackage
+     *            The name of the resource inside resourcePackage
      * @param target
      *            The target location inside the container
      * @return This virtual archive
@@ -364,7 +364,7 @@ public interface EnterpriseContainer<T extends Archive<T>> {
         throws IllegalArgumentException;
 
     /**
-     * Adds a archive to this {@link Archive}s module context. <br/>
+     * Adds an archive to this {@link Archive}s module context. <br/>
      * <br/>
      * The {@link Archive} name is used as path.
      *

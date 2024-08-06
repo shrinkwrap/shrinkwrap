@@ -55,6 +55,7 @@ public class ByteArrayAsset implements Asset {
      * Creates a new {@link Asset} instance backed by the specified byte array
      *
      * @param content
+     *            The byte array that will be used as the data source for the new {@link ByteArrayAsset}
      * @throws IllegalArgumentException
      *             If the contents were not specified
      */
@@ -77,9 +78,10 @@ public class ByteArrayAsset implements Asset {
     }
 
     /**
-     * Creates a new {@link Asset} instance backed by the bytes contained in the the specified {@link InputStream}
+     * Creates a new {@link Asset} instance backed by the bytes contained in the specified {@link InputStream}
      *
      * @param stream
+     *            The {@link InputStream} to read bytes from
      * @throws IllegalArgumentException
      *             If the stream is not specified
      */

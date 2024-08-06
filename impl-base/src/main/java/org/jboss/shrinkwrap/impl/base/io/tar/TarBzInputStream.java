@@ -22,7 +22,7 @@ import java.io.InputStream;
 import org.jboss.shrinkwrap.impl.base.io.tar.bzip.BZip2CompressorInputStream;
 
 /**
- * The {@link TarBzInputStream} reads a UNIX TAR archive, further encoded in BZIP compresssion, as an InputStream.
+ * The {@link TarBzInputStream} reads a UNIX TAR archive, further encoded in BZIP compression, as an InputStream.
  * Methods are provided to position at each successive entry in the archive, and the read each entry as a normal input
  * stream using read().
  *
@@ -33,6 +33,7 @@ public class TarBzInputStream extends TarInputStream {
 
     /**
      * @param is
+     *             The {@link InputStream} to read from.
      */
     public TarBzInputStream(InputStream is) throws IOException {
         super(new BZip2CompressorInputStream(is));
@@ -40,7 +41,9 @@ public class TarBzInputStream extends TarInputStream {
 
     /**
      * @param is
+     *             The {@link InputStream} to read from.
      * @param blockSize
+     *             The block size for the BZIP2 decompressor.
      */
     public TarBzInputStream(InputStream is, int blockSize) throws IOException {
         super(new BZip2CompressorInputStream(is), blockSize);
@@ -48,8 +51,11 @@ public class TarBzInputStream extends TarInputStream {
 
     /**
      * @param is
+     *             The {@link InputStream} to read from.
      * @param blockSize
+     *             The block size for the BZIP2 decompressor.
      * @param recordSize
+     *             The record size for the TAR input stream.
      */
     public TarBzInputStream(InputStream is, int blockSize, int recordSize) throws IOException {
         super(new BZip2CompressorInputStream(is), blockSize, recordSize);

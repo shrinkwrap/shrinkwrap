@@ -42,6 +42,7 @@ public class FileExistsException extends IllegalArgumentException {
 
     /**
      * @param s
+     *            The message explaining the exception
      */
     public FileExistsException(final String s) {
         super(s);

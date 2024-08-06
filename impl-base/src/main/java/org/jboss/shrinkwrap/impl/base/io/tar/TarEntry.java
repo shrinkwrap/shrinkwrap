@@ -103,7 +103,7 @@ import java.util.Date;
  *
  * Note that while the class does recognize GNU formatted headers, it does not perform proper processing of GNU
  * archives. I hope to add the GNU support someday.
- *
+ * <p>
  * Directory "size" fix contributed by: Bert Becker <becker@informatik.hu-berlin.de>
  *
  * @see TarHeader
@@ -122,7 +122,7 @@ public class TarEntry implements Cloneable {
     protected TarHeader header;
 
     /**
-     * Set to true if this is a "old-unix" format entry.
+     * Set to true if this is an "old-unix" format entry.
      */
     protected boolean unixFormat;
 
@@ -265,7 +265,8 @@ public class TarEntry implements Cloneable {
     /**
      * Determine if the two entries are equal. Equality is determined by the header names being equal.
      *
-     * @return it Entry to be checked for equality.
+     * @param it
+     *          Entry to be checked for equality.
      * @return True if the entries are equal.
      */
     public boolean equals(TarEntry it) {
@@ -295,10 +296,10 @@ public class TarEntry implements Cloneable {
      * descendant starting with this entry's name.
      *
      * @param desc
-     *            Entry to be checked as a descendent of this.
+     *            Entry to be checked as a descendant of this.
      * @return True if entry is a descendant of this.
      */
-    public boolean isDescendent(TarEntry desc) {
+    public boolean isDescendant(TarEntry desc) {
         return desc.header.name.toString().startsWith(this.header.name.toString());
     }
 
@@ -369,19 +370,19 @@ public class TarEntry implements Cloneable {
     }
 
     /**
-     * Get this entry's user name.
+     * Get this entry's username.
      *
-     * @return This entry's user name.
+     * @return This entry's username.
      */
     public String getUserName() {
         return this.header.userName.toString();
     }
 
     /**
-     * Set this entry's user name.
+     * Set this entry's username.
      *
      * @param userName
-     *            This entry's new user name.
+     *            This entry's new username.
      */
     public void setUserName(String userName) {
         this.header.userName = new StringBuffer(userName);
@@ -420,10 +421,10 @@ public class TarEntry implements Cloneable {
     }
 
     /**
-     * Convenience method to set this entry's group and user names.
+     * Convenience method to set this entry's group and usernames.
      *
      * @param userName
-     *            This entry's new user name.
+     *            This entry's new username.
      * @param groupName
      *            This entry's new group name.
      */
@@ -454,9 +455,6 @@ public class TarEntry implements Cloneable {
 
     /**
      * Set this entry's modification time.
-     *
-     * @param time
-     *            This entry's new modification time.
      */
     public Date getModTime() {
         return new Date(this.header.modTime * 1000);
@@ -491,7 +489,7 @@ public class TarEntry implements Cloneable {
     }
 
     /**
-     * Return whether or not this entry represents a directory.
+     * Return whether this entry represents a directory.
      *
      * @return True if this entry is a directory.
      */
@@ -527,7 +525,7 @@ public class TarEntry implements Cloneable {
         String name = file.getPath();
         String osname = System.getProperty("os.name");
         if (osname != null) {
-            // Strip off drive letters!
+            // Strip off-drive letters!
             // REVIEW Would a better check be "(File.separator == '\')"?
 
             // String Win32Prefix = "Windows";
@@ -630,7 +628,7 @@ public class TarEntry implements Cloneable {
      * @param outbuf
      *            The tar entry header buffer to fill in.
      * @throws InvalidHeaderException
-     *             If the name will not fit in the header.
+     *             If the name does not fit in the header.
      */
     public void writeEntryHeader(byte[] outbuf) throws InvalidHeaderException {
         int offset = 0;
@@ -691,12 +689,12 @@ public class TarEntry implements Cloneable {
 
     /**
      * Parse an entry's TarHeader information from a header buffer.
-     *
+     * <p>
      * Old unix-style code contributed by David Mehringer <dmehring@astro.uiuc.edu>.
      *
      * @param hdr
      *            The TarHeader to fill in from the buffer information.
-     * @param header
+     * @param headerBuf
      *            The tar entry header buffer to get information from.
      */
     public void parseTarHeader(TarHeader hdr, byte[] headerBuf) throws InvalidHeaderException {

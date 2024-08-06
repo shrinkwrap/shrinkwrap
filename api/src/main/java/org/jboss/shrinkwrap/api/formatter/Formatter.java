@@ -29,7 +29,8 @@ public interface Formatter {
      * Returns a formatted view of the specified archive
      *
      * @param archive
-     * @return
+     *            The archive to be formatted
+     * @return A string representing the formatted view of the archive
      * @throws IllegalArgumentException
      *             If the archive is not specified
      */

@@ -50,7 +50,7 @@ public class TarBz2ImporterImpl extends TarImporterBase<TarBzInputStream, TarBz2
      */
     @Override
     TarBzInputStream getInputStreamForRawStream(final InputStream in) throws IOException {
-        assert in != null : "Specified inputstream was null";
+        assert in != null : "Specified input stream was null";
         return new TarBzInputStream(in);
     }
 

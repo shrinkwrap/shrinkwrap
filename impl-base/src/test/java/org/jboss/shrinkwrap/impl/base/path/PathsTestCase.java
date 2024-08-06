@@ -21,7 +21,7 @@ import org.jboss.shrinkwrap.api.ArchivePaths;
 
 /**
  * PathsTestCase
- *
+ * <p>
  * Tests to ensure that the {@link ArchivePaths} implementation creates Paths as expected from various specified
  * contexts
  *

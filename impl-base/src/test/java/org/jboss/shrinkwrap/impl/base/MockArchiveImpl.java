@@ -34,7 +34,7 @@ public class MockArchiveImpl extends ContainerBase<MockArchive> implements MockA
     // -------------------------------------------------------------------------------------||
 
     /**
-     * Path to the manifests inside of the Archive.
+     * Path to the manifests inside the Archive.
      */
     private static final ArchivePath PATH = ArchivePaths.root();
 

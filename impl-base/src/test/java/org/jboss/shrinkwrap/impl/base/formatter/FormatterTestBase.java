@@ -102,8 +102,6 @@ public abstract class FormatterTestBase {
     /**
      * Obtains the output expected of the {@link Formatter} instance returned by
      * {@link FormatterTestBase#getFormatter()}
-     *
-     * @return
      */
     abstract String getExpectedOutput();
 }

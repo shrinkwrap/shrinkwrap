@@ -86,7 +86,7 @@ public class ShrinkWrapTestCase {
 
         // Test
         Assert.assertNotNull("A archive should have been created", archive);
-        Assert.assertEquals("Should have the same name as given imput", archiveName, archive.getName());
+        Assert.assertEquals("Should have the same name as given input", archiveName, archive.getName());
     }
 
     /**
@@ -163,7 +163,7 @@ public class ShrinkWrapTestCase {
         final Class<? extends Assignable> assignable = CustomArchive.class;
 
         // First ensure that we cannot get at the desired extension via traditional
-        // means (ie. TCCL)
+        // means (i.e. TCCL)
         try {
             ShrinkWrap.create(assignable);
         } catch (final UnknownExtensionTypeException uete) {
@@ -324,10 +324,10 @@ public class ShrinkWrapTestCase {
     }
 
     /**
-     * Ensures we can create a new Archive fro a ZIP file via {@link ShrinkWrap} convenience class
+     * Ensures we can create a new Archive from a ZIP file via {@link ShrinkWrap} convenience class
      */
     @Test
-    public void shouldBeAbleToimportZipFileViaShrinkWrap() throws Exception {
+    public void shouldBeAbleToImportZipFileViaShrinkWrap() throws Exception {
         // Get the test file
         final File testFile = delegate.getExistingResource();
 
@@ -342,10 +342,10 @@ public class ShrinkWrapTestCase {
     }
 
     /**
-     * Ensures we can create a new Archive fro a ZIP file via an {@link ArchiveFactory}
+     * Ensures we can create a new Archive from a ZIP file via an {@link ArchiveFactory}
      */
     @Test
-    public void shouldBeAbleToimportZipFileViaArchiveFactory() throws Exception {
+    public void shouldBeAbleToImportZipFileViaArchiveFactory() throws Exception {
         // Get the test file
         final File testFile = delegate.getExistingResource();
 
@@ -387,7 +387,7 @@ public class ShrinkWrapTestCase {
      *
      */
     @Test(expected = IllegalArgumentException.class)
-    public void importFromNonexistantlFileThrowsException() {
+    public void importFromNonexistentFileThrowsException() {
         final File file = new File("fileThatDoesntExist.tmp");
         Assert.assertFalse("Error in test setup, file should not exist: " + file.getAbsolutePath(), file.exists());
         ShrinkWrap.createFromZipFile(JavaArchive.class, null);

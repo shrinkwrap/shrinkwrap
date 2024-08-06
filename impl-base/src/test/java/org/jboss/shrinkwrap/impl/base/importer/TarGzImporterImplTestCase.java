@@ -115,7 +115,7 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
     private static final class ExceptionThrowingTarGzInputStream extends TarGzInputStream {
 
         static ExceptionThrowingTarGzInputStream create() throws IOException {
-            // First provide real GZIP content so we don't err out when initialized
+            // First provide real GZIP content, so we don't err out when initialized
             final byte[] test = "Something".getBytes();
             final ByteArrayOutputStream stream = new ByteArrayOutputStream();
             new GZIPOutputStream(stream).write(test);
@@ -130,7 +130,7 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
         /**
          * Generates an exception when read
          *
-         * @see org.jboss.shrinkwrap.impl.base.io.tar.javatar.TarInputStream#read()
+         * @see org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream#read()
          */
         @Override
         public int read() {

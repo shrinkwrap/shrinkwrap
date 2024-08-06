@@ -95,7 +95,7 @@ public class BZip2CompressorInputStream extends InputStream implements BZip2Cons
     private int origPtr;
 
     /**
-     * always: in the range 0 .. 9. The current block size is 100000 * this
+     * always: in the range 0 to 9. The current block size is 100000 * this
      * number.
      */
     private int blockSize100k;
@@ -146,7 +146,7 @@ public class BZip2CompressorInputStream extends InputStream implements BZip2Cons
 
     /**
      * Constructs a new BZip2CompressorInputStream which decompresses bytes
-     * read from the specified stream. This doesn't suppprt decompressing
+     * read from the specified stream. This doesn't support decompressing
      * concatenated .bz2 files.
      *
      * @throws IOException
@@ -361,10 +361,8 @@ public class BZip2CompressorInputStream extends InputStream implements BZip2Cons
             this.storedBlockCRC = bsGetInt();
             this.blockRandomised = bsR(1) == 1;
 
-            /**
-             * Allocate data here instead in constructor, so we do not allocate
-             * it if the input file is empty.
-             */
+            // Allocate data here instead in constructor, so we do not allocate
+            // it if the input file is empty.
             if (this.data == null) {
                 this.data = new Data(this.blockSize100k);
             }
@@ -1040,14 +1038,14 @@ public class BZip2CompressorInputStream extends InputStream implements BZip2Cons
         Data(int blockSize100k) {
             super();
 
-            this.ll8 = new byte[blockSize100k * BZip2Constants.BASEBLOCKSIZE];
+            this.ll8 = new byte[blockSize100k * BZip2Constants.BASE_BLOCK_SIZE];
         }
 
         /**
          * Initializes the {@link #tt} array.
-         *
+         * <p>
          * This method is called when the required length of the array is known.
-         * I don't initialize it at construction time to avoid unneccessary
+         * I don't initialize it at construction time to avoid unnecessary
          * memory allocation when compressing small files.
          */
         int[] initTT(int length) {

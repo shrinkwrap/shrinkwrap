@@ -21,7 +21,7 @@ import java.security.PrivilegedAction;
 
 /**
  * SecurityActions
- *
+ * <p>
  * A set of privileged actions that are not to leak out of this package
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>

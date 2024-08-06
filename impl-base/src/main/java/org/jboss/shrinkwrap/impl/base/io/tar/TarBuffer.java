@@ -32,8 +32,8 @@ import java.io.OutputStream;
  */
 
 public class TarBuffer {
-    public static final int DEFAULT_RCDSIZE = (512);
-    public static final int DEFAULT_BLKSIZE = (DEFAULT_RCDSIZE * 20);
+    public static final int DEFAULT_RECORD_SIZE = (512);
+    public static final int DEFAULT_BLOCK_SIZE = (DEFAULT_RECORD_SIZE * 20);
 
     private InputStream inStream;
     private OutputStream outStream;
@@ -48,11 +48,11 @@ public class TarBuffer {
     private boolean debug;
 
     public TarBuffer(InputStream inStream) {
-        this(inStream, TarBuffer.DEFAULT_BLKSIZE);
+        this(inStream, TarBuffer.DEFAULT_BLOCK_SIZE);
     }
 
     public TarBuffer(InputStream inStream, int blockSize) {
-        this(inStream, blockSize, TarBuffer.DEFAULT_RCDSIZE);
+        this(inStream, blockSize, TarBuffer.DEFAULT_RECORD_SIZE);
     }
 
     public TarBuffer(InputStream inStream, int blockSize, int recordSize) {
@@ -62,11 +62,11 @@ public class TarBuffer {
     }
 
     public TarBuffer(OutputStream outStream) {
-        this(outStream, TarBuffer.DEFAULT_BLKSIZE);
+        this(outStream, TarBuffer.DEFAULT_BLOCK_SIZE);
     }
 
     public TarBuffer(OutputStream outStream, int blockSize) {
-        this(outStream, blockSize, TarBuffer.DEFAULT_RCDSIZE);
+        this(outStream, blockSize, TarBuffer.DEFAULT_RECORD_SIZE);
     }
 
     public TarBuffer(OutputStream outStream, int blockSize, int recordSize) {
@@ -290,7 +290,7 @@ public class TarBuffer {
     }
 
     /**
-     * Write an archive record to the archive, where the record may be inside of a larger array buffer. The buffer must
+     * Write an archive record to the archive, where the record may be inside a larger array buffer. The buffer must
      * be "offset plus record size" long.
      *
      * @param buf

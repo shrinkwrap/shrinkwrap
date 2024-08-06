@@ -27,7 +27,7 @@ import org.junit.Test;
 
 /**
  * ByteArrayAssetTestCase
- * 
+ * <p>
  * Test Cases for the {@link ByteArrayAsset}
  * 
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>

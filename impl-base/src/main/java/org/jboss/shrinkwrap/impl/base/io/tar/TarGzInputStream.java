@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
 /**
- * The {@link TarGzInputStream} reads a UNIX TAR archive, further encoded in GZIP compresssion, as an InputStream.
+ * The {@link TarGzInputStream} reads a UNIX TAR archive, further encoded in GZIP compression, as an InputStream.
  * Methods are provided to position at each successive entry in the archive, and the read each entry as a normal input
  * stream using read().
  *
@@ -31,6 +31,7 @@ public class TarGzInputStream extends TarInputStream {
 
     /**
      * @param is
+     *             The {@link InputStream} to read from.
      */
     public TarGzInputStream(InputStream is) throws IOException {
         super(new GZIPInputStream(is));
@@ -38,7 +39,9 @@ public class TarGzInputStream extends TarInputStream {
 
     /**
      * @param is
+     *             The {@link InputStream} to read from.
      * @param blockSize
+     *             The block size for the TAR input stream.
      */
     public TarGzInputStream(InputStream is, int blockSize) throws IOException {
         super(new GZIPInputStream(is), blockSize);
@@ -46,8 +49,11 @@ public class TarGzInputStream extends TarInputStream {
 
     /**
      * @param is
+     *             The {@link InputStream} to read from.
      * @param blockSize
+     *             The block size for the TAR input stream.
      * @param recordSize
+     *             The record size for the TAR input stream.
      */
     public TarGzInputStream(InputStream is, int blockSize, int recordSize) throws IOException {
         super(new GZIPInputStream(is), blockSize, recordSize);

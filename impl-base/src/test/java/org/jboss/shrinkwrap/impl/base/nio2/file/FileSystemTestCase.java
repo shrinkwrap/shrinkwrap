@@ -119,7 +119,7 @@ public class FileSystemTestCase {
     public void supportedFileAttributeViews() {
 
         final Set<String> fileAttrViews = fileSystem.supportedFileAttributeViews();
-        // By contract we must support "basic", so we'll verify just that
+        // By contract, we must support "basic", so we'll verify just that
         Assert.assertEquals("Only support \"basic\" file att view", 1, fileAttrViews.size());
         Assert.assertTrue("By contract we must support the \"basic\" view", fileAttrViews.contains("basic"));
     }
@@ -181,7 +181,7 @@ public class FileSystemTestCase {
     }
 
     @Test
-    public void fileSystemClosedNewIsntanceCreated() throws IllegalArgumentException, IOException {
+    public void fileSystemClosedNewInstanceCreated() throws IllegalArgumentException, IOException {
         this.fileSystem.close();
 
         Assert.assertNotNull("", ShrinkWrapFileSystems.newFileSystem(archive));

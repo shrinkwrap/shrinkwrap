@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
@@ -41,7 +40,7 @@ import org.junit.Test;
 
 /**
  * ExplodedExporterTestCase
- *
+ * <p>
  * TestCase to ensure that the {@link ExplodedExporter} correctly exports archive.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
@@ -219,8 +218,8 @@ public class ExplodedExporterTestCase extends ExportTestBase {
      *
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testExportExplodedRequiresBaseDirectroy() {
-        log.info("testExportExplodedRequiresBaseDirectroy");
+    public void testExportExplodedRequiresBaseDirectory() {
+        log.info("testExportExplodedRequiresBaseDirectory");
 
         ShrinkWrap.create(ExplodedExporter.class, "test.jar").exportExploded(null);
     }
@@ -231,14 +230,14 @@ public class ExplodedExporterTestCase extends ExportTestBase {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testExportExplodedRequiresExistingDirectory() {
-        log.info("testExportExplodedRequiresExisitingDirectroy");
+        log.info("testExportExplodedRequiresExistingDirectory");
 
-        final File directory = this.getNonexistantDirectory();
+        final File directory = this.getNonexistentDirectory();
         ShrinkWrap.create(ExplodedExporter.class, "test.jar").exportExploded(directory);
     }
 
     /**
-     * Ensure ExpolodedExporter requires a directory
+     * Ensure ExplodedExporter requires a directory
      */
     @Test(expected = IllegalArgumentException.class)
     public void testExportExplodedRequiresValidDirectory() {
@@ -251,9 +250,9 @@ public class ExplodedExporterTestCase extends ExportTestBase {
      * Ensure an ArchiveExportException is thrown when output directory can not be created
      */
     @Test(expected = ArchiveExportException.class)
-    public void testExportExplodedOutpuDirCreationFails() throws Exception {
-        log.info("testExportExplodedOutpuDirCreationFails");
-        final File directory = createTempDirectory("testExportExplodedOutpuDirCreationFails");
+    public void testExportExplodedOutputDirCreationFails() throws Exception {
+        log.info("testExportExplodedOutputDirCreationFails");
+        final File directory = createTempDirectory("testExportExplodedOutputDirCreationFails");
         directory.deleteOnExit();
 
         ShrinkWrap.create(ExplodedExporter.class, "test/" + NAME_ARCHIVE).exportExploded(directory);
@@ -275,7 +274,8 @@ public class ExplodedExporterTestCase extends ExportTestBase {
     }
 
     /**
-     * https://jira.jboss.org/jira/browse/SHRINKWRAP-84 <br/>
+     * <a href="https://issues.redhat.com/browse/SHRINKWRAP-84">SHRINKWRAP-84</a>
+     * <br/>
      * Should be able to use a existing directory as parent directory for ExplodedExports
      */
     @Test
@@ -299,13 +299,13 @@ public class ExplodedExporterTestCase extends ExportTestBase {
     }
 
     /**
-     * https://jira.jboss.org/jira/browse/SHRINKWRAP-86 Ensure an IllegalArgumentException is thrown when output
-     * directory is a file
+     * <a href="https://issues.redhat.com/browse/SHRINKWRAP-86">SHRINKWRAP-86</a>
+     * Ensure an IllegalArgumentException is thrown when output directory is a file
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testExportExplodedOutpuDirIsAFile() throws Exception {
-        log.info("testExportExplodedOutpuDirIsAFile");
-        final File directory = createTempDirectory("testExportExplodedOutpuDirIsAFile");
+    public void testExportExplodedOutputDirIsAFile() throws Exception {
+        log.info("testExportExplodedOutputDirIsAFile");
+        final File directory = createTempDirectory("testExportExplodedOutputDirIsAFile");
         // Will cause the creation of Archive directory to fail
         final File existingFile = new File(directory, NAME_ARCHIVE + this.getArchiveExtension());
         final boolean created = existingFile.createNewFile();
@@ -324,7 +324,7 @@ public class ExplodedExporterTestCase extends ExportTestBase {
     /**
      * Obtains a reference to a directory that does not exist
      */
-    private File getNonexistantDirectory() {
+    private File getNonexistentDirectory() {
         final File directory = new File(this.getTarget(), "someNonExistentDirectory");
         if (directory.exists()) {
             TestIOUtil.deleteDirectory(directory);
@@ -337,7 +337,6 @@ public class ExplodedExporterTestCase extends ExportTestBase {
      * Assert an asset is actually in the exploded directory
      *
      * @throws FileNotFoundException
-     * @throws IOException
      * @throws IllegalArgumentException
      */
     private void assertAssetInExploded(File explodedDirectory, ArchivePath path, Asset asset)

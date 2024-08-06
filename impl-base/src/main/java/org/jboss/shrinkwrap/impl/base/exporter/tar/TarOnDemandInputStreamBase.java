@@ -35,6 +35,7 @@ abstract class TarOnDemandInputStreamBase<T extends TarOutputStreamImpl> extends
      * Creates stream directly from archive.
      *
      * @param archive
+     *             The {@link Archive} from which to create the stream.
      */
     TarOnDemandInputStreamBase(final Archive<?> archive) {
         super(archive);

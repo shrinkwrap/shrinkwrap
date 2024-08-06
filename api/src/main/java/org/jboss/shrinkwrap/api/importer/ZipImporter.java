@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.api.importer;
 
+import java.io.InputStream;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
@@ -43,7 +44,7 @@ public interface ZipImporter extends StreamImporter<ZipImporter> {
      *             If an error occurred during the import process
      * @throws IllegalArgumentException
      *             If no stream is specified
-     * @deprecated Use {@link ZipImporter#importFrom(ZipInputStream)}
+     * @deprecated Use {@link ZipImporter#importFrom(InputStream)}
      */
     @Deprecated
     ZipImporter importZip(ZipInputStream stream) throws ArchiveImportException;

@@ -18,7 +18,7 @@ package org.jboss.shrinkwrap.impl.base;
 
 /**
  * Validate
- *
+ * <p>
  * Validation utility
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

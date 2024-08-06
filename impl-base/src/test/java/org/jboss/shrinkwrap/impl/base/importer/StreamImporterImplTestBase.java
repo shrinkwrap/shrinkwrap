@@ -73,29 +73,22 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
 
     /**
      * Obtains the importer type used by these tests
-     *
-     * @return
      */
     protected abstract Class<T> getImporterClass();
 
     /**
      * Exporter used for roundtrip testing import/export/import
-     *
-     * @return
      */
     protected abstract Class<? extends StreamExporter> getExporterClass();
 
     /**
      * Obtains an {@link InputStream} used to throw an exception for testing
      * {@link StreamImporterImplTestBase#shouldThrowExceptionOnErrorInImportFromStream()}
-     *
-     * @return
      */
     protected abstract InputStream getExceptionThrowingInputStream();
 
     /**
      * Obtains the {@link org.jboss.shrinkwrap.api.ArchiveFormat} to be used
-     * @return
      */
     protected abstract ArchiveFormat getArchiveFormat();
 

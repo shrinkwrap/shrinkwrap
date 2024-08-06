@@ -109,11 +109,11 @@ public final class ShrinkWrap {
     }
 
     /**
-     * Creates a new archive of the specified type. The archive will be be backed by the default {@link Configuration}.
+     * Creates a new archive of the specified type. The archive will be backed by the default {@link Configuration}.
      * specific to this {@link ArchiveFactory}. Generates a random name for the archive and adds proper extension based
      * on the service descriptor properties file if extension property is present (e.g.
      * shrinkwrap/impl-base/src/main/resources/META-INF/services/org.jboss.shrinkwrap.api.spec.JavaArchive)
-     *
+     * <p>
      * Invoking this method is functionally equivalent to calling {@link ArchiveFactory#create(Class)} upon
      * {@link Domain#getArchiveFactory()} upon the domain returned by {@link ShrinkWrap#getDefaultDomain()}.
      *
@@ -137,7 +137,7 @@ public final class ShrinkWrap {
     }
 
     /**
-     * Creates a new archive of the specified type. The archive will be be backed by the default {@link Configuration}.
+     * Creates a new archive of the specified type. The archive will be backed by the default {@link Configuration}.
      * Invoking this method is functionally equivalent to calling {@link ArchiveFactory#create(Class, String)} upon
      * {@link Domain#getArchiveFactory()} upon the domain returned by {@link ShrinkWrap#getDefaultDomain()}.
      *
@@ -165,8 +165,8 @@ public final class ShrinkWrap {
 
     /**
      * Creates a new archive of the specified type as imported from the specified {@link File}. The file is expected to
-     * be encoded as ZIP (ie. JAR/WAR/EAR). The name of the archive will be set to {@link File#getName()}. The archive
-     * will be be backed by the {@link Configuration} within the {@link ShrinkWrap#getDefaultDomain()}
+     * be encoded as ZIP (i.e. JAR/WAR/EAR). The name of the archive will be set to {@link File#getName()}. The archive
+     * will be backed by the {@link Configuration} within the {@link ShrinkWrap#getDefaultDomain()}
      *
      * @param type
      *            The type of the archive e.g. {@link org.jboss.shrinkwrap.api.spec.WebArchive}

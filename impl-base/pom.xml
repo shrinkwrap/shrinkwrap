@@ -104,7 +104,7 @@
         <plugins>
 
           <!--
-            Stress Tests run in a separate profile so we don't bog down
+            Stress Tests run in a separate profile, so we don't bog down
             the main build
           -->
           <plugin>

@@ -64,7 +64,8 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
      * Obtains the correct {@link InputStream} wrapper type for the specified raw data input
      *
      * @param in
-     * @return
+     *             The raw data input {@link InputStream} to be wrapped.
+     * @return The wrapped {@link InputStream} of type {@link S}.
      * @throws IOException
      */
     abstract S getInputStreamForRawStream(InputStream in) throws IOException;
@@ -74,9 +75,9 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
     // -------------------------------------------------------------------------------------||
 
     /**
-     * Provides covarient return
+     * Provides covariant return
      */
-    private I covarientReturn() {
+    private I covariantReturn() {
         return this.getActualClass().cast(this);
     }
 
@@ -142,7 +143,7 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
         } catch (final RuntimeException | IOException exception) {
             throw new ArchiveImportException("Could not import stream", exception);
         }
-        return this.covarientReturn();
+        return this.covariantReturn();
     }
 
     /**
@@ -190,9 +191,9 @@ abstract class TarImporterBase<S extends TarInputStream, I extends StreamImporte
      *
      * @param file
      *            To open a stream to, must be specified
-     * @return
+     * @return The implementation-specific stream of type {@link S}
      * @throws IOException
-     *             If there was a problem getting an instream to the file
+     *             If there was a problem getting an input stream to the file
      */
     private S getInputStreamForFile(File file) throws IOException {
         assert file != null : "File must be specified";

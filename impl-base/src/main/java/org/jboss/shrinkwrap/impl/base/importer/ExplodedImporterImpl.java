@@ -33,7 +33,7 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
  * ExplodedImporterImpl
- *
+ * <p>
  * Importer used to import Exploded directory structures into a {@link Archive}
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
@@ -137,7 +137,7 @@ public class ExplodedImporterImpl extends AssignableBase<Archive<?>> implements 
      *            The Archive root folder
      * @param child
      *            The Child file
-     * @return a Path fort he child relative to root
+     * @return a Path for the child relative to root
      */
     private ArchivePath calculatePath(File root, File child) {
         String rootPath = unifyPath(root.getPath());
@@ -148,8 +148,6 @@ public class ExplodedImporterImpl extends AssignableBase<Archive<?>> implements 
 
     /**
      * Windows vs Linux will return different path separators, unify the paths.
-     *
-     * @return
      */
     private String unifyPath(String path) {
         return path.replaceAll("\\\\", "/");

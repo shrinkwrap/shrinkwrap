@@ -20,7 +20,7 @@ import java.io.InputStream;
 
 /**
  * ClassAsset
- *
+ * <p>
  * Implementation of a {@link Asset} backed by a loaded {@link Class}
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

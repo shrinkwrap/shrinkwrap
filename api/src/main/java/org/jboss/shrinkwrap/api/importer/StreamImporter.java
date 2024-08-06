@@ -43,7 +43,7 @@ public interface StreamImporter<I extends StreamImporter<I>> extends Assignable 
      * Imports provided stream as a {@link Archive}. It remains the responsibility of the caller to close the stream.
      *
      * @param stream
-     *            the stream to import; should be a raw type, not wrapped in any implementation-specific encoding (ie.
+     *            the stream to import; should be a raw type, not wrapped in any implementation-specific encoding (i.e.
      *            {@link FileInputStream} is appropriate, but {@link ZipInputStream} or {@link GZIPInputStream} is not).
      * @return Archive of the imported stream
      * @throws ArchiveImportException
@@ -57,7 +57,7 @@ public interface StreamImporter<I extends StreamImporter<I>> extends Assignable 
      * Imports provided stream as a {@link Archive}. It remains the responsibility of the caller to close the stream.
      *
      * @param stream
-     *            the stream to import; should be a raw type, not wrapped in any implementation-specific encoding (ie.
+     *            the stream to import; should be a raw type, not wrapped in any implementation-specific encoding (i.e.
      *            {@link FileInputStream} is appropriate, but {@link ZipInputStream} or {@link GZIPInputStream} is not).
      * @param filter
      *            Filter to match result

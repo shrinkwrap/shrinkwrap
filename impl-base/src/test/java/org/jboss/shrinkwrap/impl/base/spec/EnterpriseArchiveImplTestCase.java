@@ -34,7 +34,7 @@ import org.junit.Before;
 
 /**
  * EnterpriseArchiveImplTest
- *
+ * <p>
  * Test to ensure that EnterpriseArchiveImpl follow to java ear spec.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

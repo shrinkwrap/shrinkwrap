@@ -58,7 +58,7 @@ import org.junit.Test;
 
 /**
  * ArchiveTestBase
- *
+ * <p>
  * Base test for all Archive service providers to help ensure consistency between implementations.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
@@ -93,7 +93,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
     /**
      * Create a new {@link Archive} instance. <br/>
-     * Used to test Archive.add(Archive) type addings.
+     * Used to test Archive.add(Archive) type adding.
      *
      * @return A new Archive<T> instance.
      */
@@ -419,7 +419,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         Assert.assertEquals("Wrong asset received by handler", handler1.returnedAsset, handler2.savedAsset);    }
 
     @Test
-    public void testHandlerIsCalledWhenAddingAssetWithtStringPathAndName() throws Exception {
+    public void testHandlerIsCalledWhenAddingAssetWithStringPathAndName() throws Exception {
         final ReplaceAssetHandler handler1 = new ReplaceAssetHandler("unexpected");
         final ReplaceAssetHandler handler2 = new ReplaceAssetHandler("EXPECTED");
         getArchive().addHandlers(handler1, handler2);
@@ -828,7 +828,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     /**
-     * Ensure we can get a added Archive as a specific type
+     * Ensure we can get an added Archive as a specific type
      *
      */
     @Test
@@ -843,7 +843,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     /**
-     * Ensure we can get a added Archive as a specific type
+     * Ensure we can get an added Archive as a specific type
      *
      */
     @Test
@@ -858,7 +858,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     /**
-     * Ensure we can get a added Archive as a specific type
+     * Ensure we can get an added Archive as a specific type
      *
      */
     @Test
@@ -1341,7 +1341,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         Node nestedNode = archive.get(expectedPath);
 
         Assert.assertNotNull(
-            "Nested archive asset should be available through partent archive at " + expectedPath.get(),
+            "Nested archive asset should be available through parent archive at " + expectedPath.get(),
             nestedNode.getAsset());
     }
 
@@ -1398,7 +1398,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     @Test(expected = IllegalArchivePathException.class)
-    public void shouldNotMoveAssetBecauseOfInexistentPath() {
+    public void shouldNotMoveAssetBecauseOfNonexistentPath() {
        final Archive<JavaArchive> archive = ShrinkWrap.create(JavaArchive.class, "archive.jar");
        final String sourcePath = "non-existent-path1";
        final String targetPath = "path2";

@@ -35,7 +35,7 @@ import org.junit.Assert;
 
 /**
  * ExportTestBase
- *
+ * <p>
  * Base support for the exporter test cases
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
@@ -162,15 +162,11 @@ public abstract class ExportTestBase {
 
     /**
      * Obtains the extension for created archives
-     *
-     * @return
      */
     protected abstract String getArchiveExtension();
 
     /**
      * Returns the exporter type
-     *
-     * @return
      */
     protected abstract Class<? extends StreamExporter> getExporterClass();
 
@@ -212,6 +208,7 @@ public abstract class ExportTestBase {
      * Add basic contents to the archive
      *
      * @param archive
+     *            The archive to which the content will be added
      */
     protected void addContent(Archive<?> archive) {
         archive.add(ASSET_ONE, PATH_ONE);

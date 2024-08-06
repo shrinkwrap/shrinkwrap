@@ -48,7 +48,9 @@ public interface StreamExporter extends Assignable {
      * supplied the {@link OutputStream} in the first place).
      *
      * @param target
+     *             The {@link OutputStream} to which the archive will be written.
      * @throws ArchiveExportException
+     *             if the export process fails
      * @throws IllegalArgumentException
      *             If the target is not specified or is closed
      */
@@ -59,6 +61,7 @@ public interface StreamExporter extends Assignable {
      * If the target exists this call will fail with {@link IllegalArgumentException}
      *
      * @param target
+     *             The {@link File} to which the archive will be written.
      * @throws IllegalArgumentException
      *             If the target is not specified
      * @throws FileExistsException
@@ -74,6 +77,9 @@ public interface StreamExporter extends Assignable {
      * else the invocation will fail with {@link IllegalArgumentException}
      *
      * @param target
+     *             The {@link File} to which the archive will be written.
+     * @param overwrite
+     *             If true, allows overwriting an existing file.
      * @throws IllegalArgumentException
      *             If the target is not specified or is a directory
      * @throws FileExistsException

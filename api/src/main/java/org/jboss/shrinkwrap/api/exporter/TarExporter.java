@@ -22,7 +22,7 @@ import org.jboss.shrinkwrap.api.Assignable;
  * Exporter used to represent an {@link Assignable} in TAR format
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
- * @see http://www.gnu.org/software/tar/manual/html_node/Standard.html
+ * @see <a href="http://www.gnu.org/software/tar/manual/html_node/Standard.html">GNU Tar Manual</a>
  */
 public interface TarExporter extends StreamExporter {
     // -------------------------------------------------------------------------------------||

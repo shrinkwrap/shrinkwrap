@@ -56,10 +56,14 @@ final class SecurityActions {
     /**
      * Obtains the Constructor specified from the given Class and argument types
      *
+     *
      * @param clazz
+     *         The class from which to obtain the constructor
      * @param argumentTypes
-     * @return
+     *         The types of the constructor arguments
+     * @return The Constructor object corresponding to the requested constructor
      * @throws NoSuchMethodException
+     *         If matching method is not found.
      */
     static Constructor<?> getConstructor(final Class<?> clazz, final Class<?>... argumentTypes)
         throws NoSuchMethodException {
@@ -90,11 +94,16 @@ final class SecurityActions {
      * returns as the specified expected type
      *
      * @param <T>
+     *         The type of the object to be returned
      * @param clazz
+     *         The class of the object to be created
      * @param argumentTypes
+     *         The types of the constructor arguments
      * @param arguments
+     *         The values of the constructor arguments
      * @param expectedType
-     * @return
+     *         The expected type of the created instance
+     * @return A new instance of the specified class, cast to the expected type
      */
     static <T> T newInstance(final Class<?> clazz, final Class<?>[] argumentTypes, final Object[] arguments,
         final Class<T> expectedType) {
@@ -145,7 +154,7 @@ final class SecurityActions {
      * instantiation.
      *
      * @param className
-     *            Full classname of class to create
+     *            Full class name of class to create
      * @param argumentTypes
      *            The constructor argument types
      * @param arguments

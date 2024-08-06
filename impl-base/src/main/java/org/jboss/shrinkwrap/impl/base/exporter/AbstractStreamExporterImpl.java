@@ -63,9 +63,10 @@ public abstract class AbstractStreamExporterImpl extends AssignableBase<Archive<
      * Obtains an {@link OutputStream} to the provided {@link File}.
      *
      * @param target
+     *            The target file to write to
      * @param overwrite
      *            Whether we may overwrite an existing file
-     * @return
+     * @return The {@link OutputStream} to the target file
      * @throws FileExistsException
      *             If the specified file exists and the overwrite flag is false
      * @throws IllegalArgumentException
@@ -81,7 +82,7 @@ public abstract class AbstractStreamExporterImpl extends AssignableBase<Archive<
             throw new IllegalArgumentException("Cannot export a stream file to existing directory: "
                 + target.getAbsolutePath());
         }
-        // If target exists and we're not allowed to overwrite it
+        // If target exists, and we're not allowed to overwrite it
         if (target.exists() && !overwrite) {
             throw new FileExistsException("Target exists and we haven't been flagged to overwrite it: "
                 + target.getAbsolutePath());

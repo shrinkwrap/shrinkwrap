@@ -40,12 +40,12 @@ public class ServiceProviderAssetTestCase {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowExceptionOnNullArgumnet() {
+    public void shouldThrowExceptionOnNullArgument() {
         new ServiceProviderAsset((Class<?>[]) null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowExceptionOnNullArgumnetValue() {
+    public void shouldThrowExceptionOnNullArgumentValue() {
         new ServiceProviderAsset((Class<?>) null);
     }
 

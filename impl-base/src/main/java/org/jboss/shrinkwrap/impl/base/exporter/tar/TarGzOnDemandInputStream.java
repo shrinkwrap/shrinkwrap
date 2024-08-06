@@ -36,6 +36,7 @@ class TarGzOnDemandInputStream extends AbstractOnDemandInputStream<TarGzOutputSt
      * Creates stream directly from archive.
      *
      * @param archive
+     *             The {@link Archive} from which to create the stream.
      */
     TarGzOnDemandInputStream(final Archive<?> archive) {
         super(archive);

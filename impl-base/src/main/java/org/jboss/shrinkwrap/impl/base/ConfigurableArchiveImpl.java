@@ -17,12 +17,11 @@
 package org.jboss.shrinkwrap.impl.base;
 
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.spi.Configurable;
 
 /**
- * {@link Assignable} implementation view of an {@link ConfigurableArchive}. Provides access to the internal
+ * Implementation of the {@link Configurable} interface, providing access to the internal
  * {@link Configuration} of an {@link Archive}.
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>

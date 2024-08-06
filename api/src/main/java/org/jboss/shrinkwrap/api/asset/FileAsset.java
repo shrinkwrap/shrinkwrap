@@ -53,7 +53,7 @@ public class FileAsset implements Asset {
 
     /**
      * Opens a new FileInputStream for the given File.
-     *
+     * <p>
      * Can throw a Runtime exception if the file has been deleted in between the FileResource was created and the stream
      * is opened.
      *

@@ -186,7 +186,7 @@
             <requireMavenVersion>
               <version>[2.2.0,)</version>
               <!--
-                Must be more that 2.2 to support
+                Must be more than 2.2 to support
                 Assembly "includeModuleDirectory":
                 http://maven.apache.org/plugins/maven-assembly-plugin/assembly.html
               -->
