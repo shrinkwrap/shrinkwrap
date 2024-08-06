@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
-import java.util.logging.Logger;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
@@ -34,9 +32,6 @@ public class EnterpriseArchiveImpl extends EnterpriseContainerBase<EnterpriseArc
     // -------------------------------------------------------------------------------------||
     // Class Members ----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(JavaArchiveImpl.class.getName());
 
     /**
      * Path to the manifests inside of the Archive.

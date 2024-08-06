@@ -24,7 +24,6 @@ import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.spi.FileSystemProvider;
-import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -43,9 +42,6 @@ import org.junit.Test;
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
 public class PathsTestCase {
-
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(PathsTestCase.class.getName());
 
     /**
      * {@link FileSystem} under test

@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
-import java.util.logging.Logger;
-
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.spi.Identifiable;
 
@@ -28,12 +26,6 @@ import org.jboss.shrinkwrap.spi.Identifiable;
  * @version $Revision: $
  */
 public class IdentifiableArchiveImpl extends AssignableBase<ArchiveBase<?>> implements Identifiable {
-
-    /**
-     * Logger
-     */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(IdentifiableArchiveImpl.class.getName());
 
     public IdentifiableArchiveImpl(final ArchiveBase<?> archive) {
         super(archive);

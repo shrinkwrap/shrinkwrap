@@ -22,7 +22,6 @@ import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.nio2.file.SeekableInMemoryByteChannelTestCase;
 import org.junit.After;
@@ -37,9 +36,6 @@ import org.junit.Test;
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
 public class MemoryAssetTestCase {
-
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(MemoryAssetTestCase.class.getName());
 
     private static final String CONTENTS_BUFFER = "Andrew Lee Rubinger";
 

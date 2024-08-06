@@ -22,7 +22,6 @@ import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -35,9 +34,6 @@ import org.junit.Test;
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
 public class SeekableInMemoryByteChannelTestCase {
-
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(SeekableInMemoryByteChannelTestCase.class.getName());
 
     private static final String CONTENTS_SMALLER_BUFFER = "Andrew Lee Rubinger";
     private static final String CONTENTS_BIGGER_BUFFER = "Andrew Lee Rubinger, JBoss by Red Hat";

@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -47,15 +46,6 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  * @version $Revision: $
  */
 public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipImporter {
-    // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    /**
-     * Logger
-     */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(ZipImporterImpl.class.getName());
 
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||

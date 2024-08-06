@@ -20,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
 import org.jboss.shrinkwrap.api.ArchiveFormat;
@@ -40,12 +39,6 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
     // -------------------------------------------------------------------------------------||
     // Class Members -----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    /**
-     * Logger
-     */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(TarGzImporterImplTestCase.class.getName());
 
     /**
      * Delegate for performing TAR.GZ content assertions

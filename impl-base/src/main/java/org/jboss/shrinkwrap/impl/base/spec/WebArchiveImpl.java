@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
-import java.util.logging.Logger;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -34,9 +32,6 @@ public class WebArchiveImpl extends WebContainerBase<WebArchive> implements WebA
     // -------------------------------------------------------------------------------------||
     // Class Members ----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(WebArchiveImpl.class.getName());
 
     /**
      * Path to the web inside of the Archive.

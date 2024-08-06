@@ -24,7 +24,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
@@ -50,15 +49,6 @@ import org.jboss.shrinkwrap.api.UnknownExtensionTypeExceptionDelegator;
  * @version $Revision: $
  */
 public class ServiceExtensionLoader implements ExtensionLoader {
-    // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    /**
-     * Logger
-     */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(ServiceExtensionLoader.class.getName());
 
     // -------------------------------------------------------------------------------------||
     // Instance Members -------------------------------------------------------------------||

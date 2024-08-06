@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
-import java.util.logging.Logger;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
@@ -34,9 +32,6 @@ public class MockArchiveImpl extends ContainerBase<MockArchive> implements MockA
     // -------------------------------------------------------------------------------------||
     // Class Members ----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(MockArchiveImpl.class.getName());
 
     /**
      * Path to the manifests inside of the Archive.

@@ -23,7 +23,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.attribute.FileStoreAttributeView;
-import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -41,9 +40,6 @@ import org.junit.Test;
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
 public class FileStoreTestCase {
-
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(FileStoreTestCase.class.getName());
 
     private JavaArchive archive;
 

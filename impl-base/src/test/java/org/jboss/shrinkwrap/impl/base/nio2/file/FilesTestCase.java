@@ -46,7 +46,6 @@ import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -68,9 +67,6 @@ import org.junit.rules.ExpectedException;
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
 public class FilesTestCase {
-
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(FilesTestCase.class.getName());
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();

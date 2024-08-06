@@ -22,7 +22,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.logging.Logger;
 
 import org.junit.Assert;
 
@@ -41,9 +40,6 @@ import org.junit.Test;
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
 public class FileAttributesTestCase {
-
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(FileAttributesTestCase.class.getName());
 
     private FileSystem fs;
 

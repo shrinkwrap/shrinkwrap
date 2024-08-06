@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base.spec;
 
-import java.util.logging.Logger;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
@@ -35,9 +33,6 @@ public class ResourceAdapterArchiveImpl extends ResourceAdapterContainerBase<Res
     // -------------------------------------------------------------------------------------||
     // Class Members ----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(ResourceAdapterArchiveImpl.class.getName());
 
     /**
      * Path to the manifests inside of the Archive.

@@ -27,7 +27,6 @@ import java.nio.file.WatchEvent.Modifier;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 import org.junit.Assert;
 
@@ -40,9 +39,6 @@ import org.junit.Test;
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
 public class MemoryNamedAssetTestCase {
-
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(MemoryNamedAssetTestCase.class.getName());
 
     @Test
     public void nameViaString() {

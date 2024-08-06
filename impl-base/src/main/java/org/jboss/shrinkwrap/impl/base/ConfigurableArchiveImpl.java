@@ -16,8 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
-import java.util.logging.Logger;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.Configuration;
@@ -31,16 +29,6 @@ import org.jboss.shrinkwrap.spi.Configurable;
  * @version $Revision: $
  */
 public class ConfigurableArchiveImpl extends AssignableBase<ArchiveBase<?>> implements Configurable {
-
-    // -------------------------------------------------------------------------------------||
-    // Class Members ----------------------------------------------------------------------||
-    // -------------------------------------------------------------------------------------||
-
-    /**
-     * Logger
-     */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(ConfigurableArchiveImpl.class.getName());
 
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||

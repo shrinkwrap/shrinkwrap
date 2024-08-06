@@ -19,7 +19,6 @@ package org.jboss.shrinkwrap.impl.base.importer;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
@@ -39,12 +38,6 @@ public class TarImporterImplTestCase extends StreamImporterImplTestBase<TarImpor
     // -------------------------------------------------------------------------------------||
     // Class Members -----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
-
-    /**
-     * Logger
-     */
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(TarImporterImplTestCase.class.getName());
 
     /**
      * Delegate for performing TAR content assertions
