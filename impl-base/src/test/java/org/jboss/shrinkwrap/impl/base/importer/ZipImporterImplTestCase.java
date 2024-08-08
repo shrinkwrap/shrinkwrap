@@ -31,8 +31,8 @@ import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestCase to verify the ZipImporter functionality.
@@ -61,7 +61,7 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
      *
      * @throws Exception
      */
-    @Test(expected = ArchiveImportException.class)
+    @Test
     public void shouldThrowExceptionOnErrorInImportFromFile() throws Exception {
         final ContentAssertionDelegateBase delegate = this.getDelegate();
         assert delegate != null : "Delegate must be specified by implementations";
@@ -73,7 +73,8 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
                 throw new IllegalStateException("mock exception");
             }
         };
-        ShrinkWrap.create(ZipImporter.class, "test.jar").importFrom(testZip).as(JavaArchive.class);
+        Assertions.assertThrows(ArchiveImportException.class,
+                () -> ShrinkWrap.create(ZipImporter.class, "test.jar").importFrom(testZip).as(JavaArchive.class));
     }
 
     // -------------------------------------------------------------------------------------||
@@ -145,6 +146,6 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
     @Test
     public void createZipImporter() {
         final GenericArchive importer = ShrinkWrap.create(ZipImporter.class).as(GenericArchive.class);
-        Assert.assertTrue("Archive did not have expected suffix", importer.getName().endsWith(".jar"));
+        Assertions.assertTrue(importer.getName().endsWith(".jar"), "Archive did not have expected suffix");
     }
 }

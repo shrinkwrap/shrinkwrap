@@ -29,8 +29,8 @@ import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicResourceAdapterContainerTestBase;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * ResourceAdapterArchiveImplTestCase
@@ -63,12 +63,12 @@ public class ResourceAdapterArchiveImplTestCase extends DynamicResourceAdapterCo
     // Lifecycle Methods ------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
-    @Before
+    @BeforeEach
     public void createResourceAdapterArchive() {
         archive = createNewArchive();
     }
 
-    @After
+    @AfterEach
     public void ls() {
         System.out.println("test@jboss:/$ ls -l " + archive.getName());
         System.out.println(archive.toString(true));

@@ -30,10 +30,10 @@ import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.nio2.file.ShrinkWrapFileSystems;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases to assert the ShrinkWrap implementation of the NIO.2 {@link FileSystemProvider} is working as expected via
@@ -53,7 +53,7 @@ public class PathsTestCase {
      */
     private Archive<?> archive;
 
-    @Before
+    @BeforeEach
     public void createFileSystem() throws IOException {
         final String name = "test.jar";
         final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, name);
@@ -61,7 +61,7 @@ public class PathsTestCase {
         this.archive = archive;
     }
 
-    @After
+    @AfterEach
     public void closeFileSystem() throws IOException {
         if (this.fs.isOpen()) {
             this.fs.close();
@@ -72,19 +72,21 @@ public class PathsTestCase {
     public void get() {
         // Get a previously-opened filesystem by passing in a mounted URI
         final Path path = Paths.get(ShrinkWrapFileSystems.getRootUri(archive));
-        Assert.assertTrue("Wrong Path implementation returned", path instanceof ShrinkWrapPath);
-        Assert.assertEquals("Path returned is not correct", ArchivePaths.root().get(), path.toString());
+        Assertions.assertInstanceOf(ShrinkWrapPath.class, path, "Wrong Path implementation returned");
+        Assertions.assertEquals(ArchivePaths.root().get(), path.toString(), "Path returned is not correct");
     }
 
-    @Test(expected = FileSystemNotFoundException.class)
-    public void getNonexistantFilesystem() throws URISyntaxException {
-        Paths.get(new URI(ShrinkWrapFileSystems.PROTOCOL + "://fakeId"));
+    @Test
+    public void getNonexistantFilesystem() {
+        Assertions.assertThrows(FileSystemNotFoundException.class,
+                () -> Paths.get(new URI(ShrinkWrapFileSystems.PROTOCOL + "://fakeId")));
     }
 
-    @Test(expected = FileSystemNotFoundException.class)
+    @Test
     public void getClosedFilesystem() throws IOException {
         fs.close();
-        Paths.get(ShrinkWrapFileSystems.getRootUri(archive));
+        Assertions.assertThrows(FileSystemNotFoundException.class,
+                () -> Paths.get(ShrinkWrapFileSystems.getRootUri(archive)));
     }
 
 }

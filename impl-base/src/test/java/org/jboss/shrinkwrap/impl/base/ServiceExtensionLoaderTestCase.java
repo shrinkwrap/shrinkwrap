@@ -19,13 +19,12 @@ package org.jboss.shrinkwrap.impl.base;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.junit.Assert;
-
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.Assignable;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * ServiceExtensionLoaderTestCase
@@ -42,9 +41,9 @@ public class ServiceExtensionLoaderTestCase {
         Extension extension = createLoaderUsingTccl().load(Extension.class,
             ShrinkWrap.create(JavaArchive.class, "test.jar"));
 
-        Assert.assertNotNull(extension);
+        Assertions.assertNotNull(extension);
 
-        Assert.assertTrue(extension.getClass() == ExtensionImpl.class);
+        Assertions.assertSame(extension.getClass(), ExtensionImpl.class);
     }
 
     @Test
@@ -52,9 +51,9 @@ public class ServiceExtensionLoaderTestCase {
         Extension extension = createLoaderUsingTccl().addOverride(Extension.class, ExtensionImpl2.class).load(
             Extension.class, ShrinkWrap.create(JavaArchive.class, "test.jar"));
 
-        Assert.assertNotNull(extension);
+        Assertions.assertNotNull(extension);
 
-        Assert.assertTrue(extension.getClass() == ExtensionImpl2.class);
+        Assertions.assertSame(extension.getClass(), ExtensionImpl2.class);
     }
 
     @Test
@@ -62,17 +61,19 @@ public class ServiceExtensionLoaderTestCase {
         ServiceExtensionLoader loader = createLoaderUsingTccl();
         loader.load(Extension.class, ShrinkWrap.create(JavaArchive.class, "test.jar"));
 
-        Assert.assertTrue("Should be placed in cache", loader.isCached(Extension.class));
+        Assertions.assertTrue(loader.isCached(Extension.class), "Should be placed in cache");
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void shouldThrowExceptionOnMissingExtension() {
-        createLoaderUsingTccl().load(MissingExtension.class, ShrinkWrap.create(JavaArchive.class, "test.jar"));
+        Assertions.assertThrows(RuntimeException.class,
+                () -> createLoaderUsingTccl().load(MissingExtension.class, ShrinkWrap.create(JavaArchive.class, "test.jar")));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void shouldThrowExceptionOnWrongImplType() {
-        createLoaderUsingTccl().load(WrongImplExtension.class, ShrinkWrap.create(JavaArchive.class, "test.jar"));
+        Assertions.assertThrows(RuntimeException.class,
+                () -> createLoaderUsingTccl().load(WrongImplExtension.class, ShrinkWrap.create(JavaArchive.class, "test.jar")));
     }
 
     public interface WrongImplExtension extends Assignable {

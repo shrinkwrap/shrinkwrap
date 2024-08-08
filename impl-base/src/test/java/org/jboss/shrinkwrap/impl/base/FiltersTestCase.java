@@ -24,8 +24,8 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * FiltersTestCase
@@ -40,7 +40,7 @@ public class FiltersTestCase {
         List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/META-INF/"), ArchivePaths.create("/WEB-INF/"));
         List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.includeAll());
 
-        Assert.assertArrayEquals("Should include all paths", paths.toArray(), filteredPaths.toArray());
+        Assertions.assertArrayEquals(paths.toArray(), filteredPaths.toArray(), "Should include all paths");
     }
 
     @Test
@@ -48,9 +48,9 @@ public class FiltersTestCase {
         List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/META-INF/"), ArchivePaths.create("/WEB-INF/"));
         List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.include(".*META-INF.*"));
 
-        Assert.assertEquals("Should only contain one", 1, filteredPaths.size());
+        Assertions.assertEquals(1, filteredPaths.size(), "Should only contain one");
 
-        Assert.assertEquals("Should only contain metainf", ArchivePaths.create("/META-INF/"), filteredPaths.get(0));
+        Assertions.assertEquals(ArchivePaths.create("/META-INF/"), filteredPaths.get(0), "Should only contain metainf");
     }
 
     @Test
@@ -58,9 +58,9 @@ public class FiltersTestCase {
         List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/META-INF/"), ArchivePaths.create("/WEB-INF/"));
         List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.exclude(".*META-INF.*"));
 
-        Assert.assertEquals("Should only contain one", 1, filteredPaths.size());
+        Assertions.assertEquals(1, filteredPaths.size(), "Should only contain one");
 
-        Assert.assertEquals("Should only contain webinf", ArchivePaths.create("/WEB-INF/"), filteredPaths.get(0));
+        Assertions.assertEquals(ArchivePaths.create("/WEB-INF/"), filteredPaths.get(0), "Should only contain webinf");
     }
 
     @Test
@@ -68,9 +68,9 @@ public class FiltersTestCase {
         List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/A"), ArchivePaths.create("/B/"), ArchivePaths.create("/C/"));
         List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.includePaths("A", "B/"));
 
-        Assert.assertEquals("Should contain two", 2, filteredPaths.size());
-        Assert.assertEquals("Should contain A", ArchivePaths.create("/A"), filteredPaths.get(0));
-        Assert.assertEquals("Should contain B", ArchivePaths.create("/B"), filteredPaths.get(1));
+        Assertions.assertEquals(2, filteredPaths.size(), "Should contain two");
+        Assertions.assertEquals(ArchivePaths.create("/A"), filteredPaths.get(0), "Should contain A");
+        Assertions.assertEquals(ArchivePaths.create("/B"), filteredPaths.get(1), "Should contain B");
     }
 
     @Test
@@ -78,9 +78,9 @@ public class FiltersTestCase {
         List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/A"), ArchivePaths.create("/B/"), ArchivePaths.create("/C/"));
         List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.includePaths(Arrays.asList("A", "B/")));
 
-        Assert.assertEquals("Should contain two", 2, filteredPaths.size());
-        Assert.assertEquals("Should contain A", ArchivePaths.create("/A"), filteredPaths.get(0));
-        Assert.assertEquals("Should contain B", ArchivePaths.create("/B"), filteredPaths.get(1));
+        Assertions.assertEquals(2, filteredPaths.size(), "Should contain two");
+        Assertions.assertEquals(ArchivePaths.create("/A"), filteredPaths.get(0), "Should contain A");
+        Assertions.assertEquals(ArchivePaths.create("/B"), filteredPaths.get(1), "Should contain B");
     }
 
     @Test
@@ -88,8 +88,8 @@ public class FiltersTestCase {
         List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/A"), ArchivePaths.create("/B/"), ArchivePaths.create("/C/"));
         List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.excludePaths("/A", "/B/"));
 
-        Assert.assertEquals("Should only contain one", 1, filteredPaths.size());
-        Assert.assertEquals("Should only contain C", ArchivePaths.create("/C"), filteredPaths.get(0));
+        Assertions.assertEquals(1, filteredPaths.size(), "Should only contain one");
+        Assertions.assertEquals(ArchivePaths.create("/C"), filteredPaths.get(0), "Should only contain C");
     }
 
     @Test
@@ -97,8 +97,8 @@ public class FiltersTestCase {
         List<ArchivePath> paths = Arrays.asList(ArchivePaths.create("/A"), ArchivePaths.create("/B/"), ArchivePaths.create("/C/"));
         List<ArchivePath> filteredPaths = executeFilter(ArchivePath.class, paths, Filters.excludePaths(Arrays.asList("/A", "/B/")));
 
-        Assert.assertEquals("Should only contain one", 1, filteredPaths.size());
-        Assert.assertEquals("Should only contain C", ArchivePaths.create("/C"), filteredPaths.get(0));
+        Assertions.assertEquals(1, filteredPaths.size(), "Should only contain one");
+        Assertions.assertEquals(ArchivePaths.create("/C"), filteredPaths.get(0), "Should only contain C");
     }
 
     private <T> List<T> executeFilter(Class<T> clazz, List<T> items, Filter<T> filter) {

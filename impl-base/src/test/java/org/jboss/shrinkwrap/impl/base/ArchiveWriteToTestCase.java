@@ -26,8 +26,8 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author <a href="mailto:tommy.tynja@diabol.se">Tommy Tynj&auml;</a>
@@ -44,7 +44,7 @@ public class ArchiveWriteToTestCase {
             content[i] = (i + "").getBytes()[0];
         }
         IOUtil.bufferedWriteWithFlush(outputStream, content);
-        Assert.assertArrayEquals("Inconsistent writes?", content, outputStream.getContents());
+        Assertions.assertArrayEquals(content, outputStream.getContents(), "Inconsistent writes?");
     }
 
     @Test
@@ -57,13 +57,13 @@ public class ArchiveWriteToTestCase {
         byte[] archiveToString = archive.toString(Formatters.SIMPLE).getBytes();
         archive.writeTo(outputStream, Formatters.SIMPLE);
 
-        Assert.assertArrayEquals("Inconsistent writes?", archiveToString, outputStream.getContents());
+        Assertions.assertArrayEquals(archiveToString, outputStream.getContents(), "Inconsistent writes?");
 
         outputStream = new MockOutputStream();
         archiveToString = archive.toString(Formatters.VERBOSE).getBytes();
         archive.writeTo(outputStream, Formatters.VERBOSE);
 
-        Assert.assertArrayEquals("Inconsistent writes?", archiveToString, outputStream.getContents());
+        Assertions.assertArrayEquals(archiveToString, outputStream.getContents(), "Inconsistent writes?");
     }
 
     private class MockOutputStream extends PrintStream {

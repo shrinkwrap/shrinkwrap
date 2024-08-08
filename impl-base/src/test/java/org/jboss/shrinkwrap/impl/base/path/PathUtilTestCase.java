@@ -4,8 +4,8 @@ import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /*
  * JBoss, Home of Professional Open Source
@@ -56,8 +56,8 @@ public class PathUtilTestCase {
         final String precedingSlash = "/test/something";
         final String expected = precedingSlash.substring(1);
         final String result = PathUtil.optionallyRemovePrecedingSlash(precedingSlash);
-        Assert.assertEquals("Call to remove preceding slash should return everything in input except the first slash",
-            expected, result);
+        Assertions.assertEquals(expected, result,
+                "Call to remove preceding slash should return everything in input except the first slash");
     }
 
     /**
@@ -68,9 +68,8 @@ public class PathUtilTestCase {
         log.info("testRemovePrecedingSlash");
         final String noPrecedingSlash = "test/something";
         final String result = PathUtil.optionallyRemovePrecedingSlash(noPrecedingSlash);
-        Assert.assertEquals(
-            "Call to remove preceding slash on input with no preceding slash should return equal by value to input",
-            noPrecedingSlash, result);
+        Assertions.assertEquals(noPrecedingSlash, result,
+                "Call to remove preceding slash on input with no preceding slash should return equal by value to input");
     }
 
     /**
@@ -82,7 +81,7 @@ public class PathUtilTestCase {
         final String noPrecedingSlash = "test/something";
         final String expected = ArchivePath.SEPARATOR + noPrecedingSlash;
         final String result = PathUtil.optionallyPrependSlash(noPrecedingSlash);
-        Assert.assertEquals("Call to prepend a slash failed", expected, result);
+        Assertions.assertEquals(expected, result, "Call to prepend a slash failed");
     }
 
     /**
@@ -93,8 +92,7 @@ public class PathUtilTestCase {
         log.info("testRemovePrecedingSlash");
         final String precedingSlash = "/test/something";
         final String result = PathUtil.optionallyPrependSlash(precedingSlash);
-        Assert.assertEquals("Call to optionally prepend a slash upon input with slash prefix should return no-op",
-            precedingSlash, result);
+        Assertions.assertEquals(precedingSlash, result, "Call to optionally prepend a slash upon input with slash prefix should return no-op");
     }
 
     /**
@@ -106,7 +104,7 @@ public class PathUtilTestCase {
         final String noFollowingSlash = "test/something";
         final String expected = noFollowingSlash + ArchivePath.SEPARATOR;
         final String result = PathUtil.optionallyAppendSlash(noFollowingSlash);
-        Assert.assertEquals("Call to append a slash failed", expected, result);
+        Assertions.assertEquals(expected, result, "Call to append a slash failed");
     }
 
     /**
@@ -117,8 +115,8 @@ public class PathUtilTestCase {
         log.info("testRemovePrecedingSlash");
         final String followingSlash = "/test/something/";
         final String result = PathUtil.optionallyAppendSlash(followingSlash);
-        Assert.assertEquals("Call to optionally append a slash upon input with slash suffix should return no-op",
-            followingSlash, result);
+        Assertions.assertEquals(followingSlash, result,
+                "Call to optionally append a slash upon input with slash suffix should return no-op");
     }
 
     /**
@@ -130,8 +128,8 @@ public class PathUtilTestCase {
         final String absoulteWithoutTrailingSlash = "/test/something";
         final String expected = absoulteWithoutTrailingSlash.substring(1) + ArchivePath.SEPARATOR;
         final String result = PathUtil.adjustToRelativeDirectoryContext(absoulteWithoutTrailingSlash);
-        Assert.assertEquals("Adjusting to relative form should strip preceding slash and append a trailing one",
-            expected, result);
+        Assertions.assertEquals(expected, result,
+                "Adjusting to relative form should strip preceding slash and append a trailing one");
     }
 
     /**
@@ -143,8 +141,8 @@ public class PathUtilTestCase {
         final String relativeWithoutTrailingSlash = "test/something";
         final String expected = ArchivePath.SEPARATOR + relativeWithoutTrailingSlash + ArchivePath.SEPARATOR;
         final String result = PathUtil.adjustToAbsoluteDirectoryContext(relativeWithoutTrailingSlash);
-        Assert.assertEquals("Adjusting to absolute form should prepend preceding slash and append a trailing one",
-            expected, result);
+        Assertions.assertEquals(expected, result,
+                "Adjusting to absolute form should prepend preceding slash and append a trailing one");
     }
 
     /**
@@ -157,7 +155,7 @@ public class PathUtilTestCase {
         final String context = "somethingunder";
         final String expected = ArchivePath.SEPARATOR + base + ArchivePath.SEPARATOR + context;
         final String result = PathUtil.composeAbsoluteContext(base, context);
-        Assert.assertEquals("Composing an absolute context from base and context did not succeed", expected, result);
+        Assertions.assertEquals(expected, result, "Composing an absolute context from base and context did not succeed");
     }
 
     /**
@@ -179,13 +177,12 @@ public class PathUtilTestCase {
         final ArchivePath contextWithFollowingSlash = new BasicPath(subpath, contextWithFollowingSlashString);
 
         // Test
-        Assert.assertEquals("The parent of the context path should be equal to the initial subpath", subpath,
-            PathUtil.getParent(context));
-        Assert.assertEquals(
-            "The parent of the context path with a following slash should be equal to the initial subpath", subpath,
-            PathUtil.getParent(contextWithFollowingSlash));
-        Assert.assertEquals("The parent of the subpath should be the root", root, PathUtil.getParent(subpath));
-        Assert.assertNull("The parent of the root should be null", PathUtil.getParent(root));
+        Assertions.assertEquals(subpath, PathUtil.getParent(context),
+                "The parent of the context path should be equal to the initial subpath");
+        Assertions.assertEquals(subpath, PathUtil.getParent(contextWithFollowingSlash),
+                "The parent of the context path with a following slash should be equal to the initial subpath");
+        Assertions.assertEquals(root, PathUtil.getParent(subpath), "The parent of the subpath should be the root");
+        Assertions.assertNull(PathUtil.getParent(root), "The parent of the root should be null");
     }
 
 }

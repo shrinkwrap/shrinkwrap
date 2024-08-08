@@ -6,7 +6,8 @@ import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,9 +15,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /*
  * JBoss, Home of Professional Open Source
@@ -72,11 +70,11 @@ public class PreserveOrderOfEntriesTestCase {
             archive.addAsResource(new StringAsset("content"), name);
         }
 
-        assertEquals(expectedOrder, getPaths(archive));
+        Assertions.assertEquals(expectedOrder, getPaths(archive));
 
         archive.as(ZipExporter.class).exportTo(testJar, true);
 
-        assertTrue(testJar.exists());
+        Assertions.assertTrue(testJar.exists());
 
         // Verify Zip entries are in the right order.
         ArrayList<String> actualOrder = new ArrayList<>();
@@ -86,12 +84,12 @@ public class PreserveOrderOfEntriesTestCase {
             actualOrder.add(nextEntry.getName());
             nextEntry = zipInputStream.getNextEntry();
         }
-        assertEquals(expectedOrder, actualOrder);
+        Assertions.assertEquals(expectedOrder, actualOrder);
 
         // Verify imported archive stays in the right order.
         JavaArchive archive2 = ShrinkWrap.create(JavaArchive.class, testJar.getName());
         archive2.as(ZipImporter.class).importFrom(testJar);
-        assertEquals(expectedOrder, getPaths(archive2));
+        Assertions.assertEquals(expectedOrder, getPaths(archive2));
 
         testJar.delete();
     }

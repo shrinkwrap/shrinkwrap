@@ -18,15 +18,15 @@ package org.jboss.shrinkwrap.impl.base;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import org.junit.Assert;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveFactory;
@@ -47,7 +47,8 @@ import org.jboss.shrinkwrap.api.spec.ResourceAdapterArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.container.ContainerBase;
 import org.jboss.shrinkwrap.impl.base.importer.ZipContentAssertionDelegate;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests ensuring that the static entry point {@link ShrinkWrap} is working as contracted.
@@ -85,8 +86,8 @@ public class ShrinkWrapTestCase {
         final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, archiveName);
 
         // Test
-        Assert.assertNotNull("A archive should have been created", archive);
-        Assert.assertEquals("Should have the same name as given imput", archiveName, archive.getName());
+        Assertions.assertNotNull(archive, "A archive should have been created");
+        Assertions.assertEquals(archiveName, archive.getName(), "Should have the same name as given imput");
     }
 
     /**
@@ -99,15 +100,15 @@ public class ShrinkWrapTestCase {
         final Domain domain2 = ShrinkWrap.createDomain();
 
         // Ensure they exist
-        Assert.assertNotNull("Domain should exist", domain1);
-        Assert.assertNotNull("Domain should exist", domain2);
+        Assertions.assertNotNull(domain1, "Domain should exist");
+        Assertions.assertNotNull(domain2, "Domain should exist");
 
         // Ensure they're not equal
-        Assert.assertNotSame("Creation of domains should return new instances", domain1, domain2);
+        Assertions.assertNotSame(domain1, domain2, "Creation of domains should return new instances");
 
         // Ensure the underlying configs are not equal
-        Assert.assertNotSame("Creation of domains should have unique / isolated configurations",
-            domain1.getConfiguration(), domain2.getConfiguration());
+        Assertions.assertNotSame(domain1.getConfiguration(), domain2.getConfiguration(),
+                "Creation of domains should have unique / isolated configurations");
     }
 
     /**
@@ -124,11 +125,10 @@ public class ShrinkWrapTestCase {
             .extensionLoader(loader).build());
 
         // Test
-        Assert.assertEquals(ExecutorService.class.getSimpleName() + " specified was not contained in resultant "
-            + Domain.class.getSimpleName(), service, domain.getConfiguration().getExecutorService());
-        Assert.assertEquals(ExtensionLoader.class.getSimpleName() + " specified was not contained in resultant "
-            + Domain.class.getSimpleName(), loader, domain.getConfiguration().getExtensionLoader());
-
+        Assertions.assertEquals(service, domain.getConfiguration().getExecutorService(),
+                ExecutorService.class.getSimpleName() + " specified was not contained in resultant " + Domain.class.getSimpleName());
+        Assertions.assertEquals(loader, domain.getConfiguration().getExtensionLoader(),
+                ExtensionLoader.class.getSimpleName() + " specified was not contained in resultant " + Domain.class.getSimpleName());
     }
 
     /**
@@ -145,11 +145,10 @@ public class ShrinkWrapTestCase {
             .extensionLoader(loader));
 
         // Test
-        Assert.assertEquals(ExecutorService.class.getSimpleName() + " specified was not contained in resultant "
-            + Domain.class.getSimpleName(), service, domain.getConfiguration().getExecutorService());
-        Assert.assertEquals(ExtensionLoader.class.getSimpleName() + " specified was not contained in resultant "
-            + Domain.class.getSimpleName(), loader, domain.getConfiguration().getExtensionLoader());
-
+        Assertions.assertEquals(service, domain.getConfiguration().getExecutorService(),
+                ExecutorService.class.getSimpleName() + " specified was not contained in resultant " + Domain.class.getSimpleName());
+        Assertions.assertEquals(loader, domain.getConfiguration().getExtensionLoader(),
+                ExtensionLoader.class.getSimpleName() + " specified was not contained in resultant " + Domain.class.getSimpleName());
     }
 
     /**
@@ -197,9 +196,7 @@ public class ShrinkWrapTestCase {
 
         // Now try to get the archive we asked for
         final Assignable archive = factory.create(assignable);
-        Assert
-            .assertNotNull("Archive using custom extension available in explicit CL should have been loaded", archive);
-
+        Assertions.assertNotNull(archive, "Archive using custom extension available in explicit CL should have been loaded");
     }
 
     public interface CustomArchive extends Assignable {
@@ -217,17 +214,17 @@ public class ShrinkWrapTestCase {
     /**
      * Ensures we cannot create a new {@link Domain} with null {@link Configuration} specified
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void newDomainRequiresConfiguration() {
-        ShrinkWrap.createDomain((Configuration) null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ShrinkWrap.createDomain((Configuration) null));
     }
 
     /**
      * Ensures we cannot create a new {@link Domain} with null {@link ConfigurationBuilder} specified
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void newDomainRequiresConfigurationBuilder() {
-        ShrinkWrap.createDomain((ConfigurationBuilder) null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ShrinkWrap.createDomain((ConfigurationBuilder) null));
     }
 
     /**
@@ -240,14 +237,12 @@ public class ShrinkWrapTestCase {
         final Domain domain2 = ShrinkWrap.getDefaultDomain();
 
         // Ensure they exist
-        Assert.assertNotNull("Domain should exist", domain1);
-        Assert.assertNotNull("Domain should exist", domain2);
+        Assertions.assertNotNull(domain1, "Domain should exist");
+        Assertions.assertNotNull(domain2, "Domain should exist");
 
         // Ensure they're not equal
-        Assert.assertSame(
-            "Obtaining the default domain should always return the same instance (idempotent operation)", domain1,
-            domain2);
-
+        Assertions.assertSame(domain1, domain2,
+                "Obtaining the default domain should always return the same instance (idempotent operation)");
     }
 
     /**
@@ -260,51 +255,50 @@ public class ShrinkWrapTestCase {
         domain.getConfiguration().getExtensionLoader().addOverride(JavaArchive.class, MockJavaArchiveImpl.class);
         final JavaArchive archive = domain.getArchiveFactory().create(JavaArchive.class, "test.jar");
 
-        Assert.assertEquals("Should have overridden normal JavaArchive impl", MockJavaArchiveImpl.class,
-            archive.getClass());
-
+        Assertions.assertEquals(MockJavaArchiveImpl.class, archive.getClass(),
+                "Should have overridden normal JavaArchive impl");
     }
 
     @Test
     public void shouldCreateArchiveWithCorrectExtensionForJavaArchive() {
         JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class);
         String archiveExtension = javaArchive.getName().substring(javaArchive.getName().lastIndexOf("."));
-        Assert.assertEquals("JavaArchive should have proper extension", ".jar", archiveExtension);
+        Assertions.assertEquals(".jar", archiveExtension, "JavaArchive should have proper extension");
     }
 
     @Test
     public void shouldCreateJavaArchiveWithGivenName() {
         String archiveName = "testArchive";
         JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class, archiveName);
-        Assert.assertEquals("JavaArchive should have given name", archiveName, javaArchive.getName());
+        Assertions.assertEquals(archiveName, javaArchive.getName(), "JavaArchive should have given name");
     }
 
     @Test
     public void shouldCreateArchiveWithCorrectExtensionForWebArchive() {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class);
         String archiveExtension = webArchive.getName().substring(webArchive.getName().lastIndexOf("."));
-        Assert.assertEquals("WebArchive should have proper extension", ".war", archiveExtension);
+        Assertions.assertEquals(".war", archiveExtension, "WebArchive should have proper extension");
     }
 
     @Test
     public void shouldCreateWebArchiveWithGivenName() {
         String archiveName = "testArchive";
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class, archiveName);
-        Assert.assertEquals("WebArchive should have given name", archiveName, webArchive.getName());
+        Assertions.assertEquals(archiveName, webArchive.getName(), "WebArchive should have given name");
     }
 
     @Test
     public void shouldCreateArchiveWithCorrectExtensionForEnterpriseArchive() {
         EnterpriseArchive enterpriseArchive = ShrinkWrap.create(EnterpriseArchive.class);
         String archiveExtension = enterpriseArchive.getName().substring(enterpriseArchive.getName().lastIndexOf("."));
-        Assert.assertEquals("EnterpriseArchive should have proper extension", ".ear", archiveExtension);
+        Assertions.assertEquals(".ear", archiveExtension, "EnterpriseArchive should have proper extension");
     }
 
     @Test
     public void shouldCreateEnterpriseArchiveWithGivenName() {
         String archiveName = "testArchive";
         EnterpriseArchive enterpriseArchive = ShrinkWrap.create(EnterpriseArchive.class, archiveName);
-        Assert.assertEquals("EnterpriseArchive should have given name", archiveName, enterpriseArchive.getName());
+        Assertions.assertEquals(archiveName, enterpriseArchive.getName(), "EnterpriseArchive should have given name");
     }
 
     @Test
@@ -312,15 +306,15 @@ public class ShrinkWrapTestCase {
         ResourceAdapterArchive resourceAdapterArchive = ShrinkWrap.create(ResourceAdapterArchive.class);
         String archiveExtension = resourceAdapterArchive.getName().substring(
             resourceAdapterArchive.getName().lastIndexOf("."));
-        Assert.assertEquals("ResourceAdapterArchive should have proper extension", ".rar", archiveExtension);
+        Assertions.assertEquals(".rar", archiveExtension, "ResourceAdapterArchive should have proper extension");
     }
 
     @Test
     public void shouldCreateResourceAdapterArchiveWithGivenName() {
         String archiveName = "testArchive";
         ResourceAdapterArchive resourceAdapterArchive = ShrinkWrap.create(ResourceAdapterArchive.class, archiveName);
-        Assert.assertEquals("ResourceAdapterArchive should have given name", archiveName,
-            resourceAdapterArchive.getName());
+        Assertions.assertEquals(archiveName, resourceAdapterArchive.getName(),
+                "ResourceAdapterArchive should have given name");
     }
 
     /**
@@ -335,9 +329,9 @@ public class ShrinkWrapTestCase {
         final JavaArchive archive = ShrinkWrap.createFromZipFile(JavaArchive.class, testFile);
 
         // Assert
-        Assert.assertNotNull("Should not return a null archive", archive);
-        Assert.assertEquals("name of the archive imported from a ZIP file was not as expected", testFile.getName(),
-            archive.getName());
+        Assertions.assertNotNull(archive, "Should not return a null archive");
+        Assertions.assertEquals(testFile.getName(), archive.getName(),
+                "name of the archive imported from a ZIP file was not as expected");
         delegate.assertContent(archive, testFile);
     }
 
@@ -354,9 +348,9 @@ public class ShrinkWrapTestCase {
             .createFromZipFile(JavaArchive.class, testFile);
 
         // Assert
-        Assert.assertNotNull("Should not return a null archive", archive);
-        Assert.assertEquals("name of the archive imported from a ZIP file was not as expected", testFile.getName(),
-            archive.getName());
+        Assertions.assertNotNull(archive, "Should not return a null archive");
+        Assertions.assertEquals(testFile.getName(), archive.getName(),
+                "name of the archive imported from a ZIP file was not as expected");
         delegate.assertContent(archive, testFile);
     }
 
@@ -365,20 +359,23 @@ public class ShrinkWrapTestCase {
      *
      * @throws Exception
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void importFromNonZipFileThrowsException() throws Exception {
         final File nonZipFile = new File(TestSecurityActions.getThreadContextClassLoader()
-            .getResource(NAME_FILE_NON_ZIP).toURI());
-        ShrinkWrap.createFromZipFile(JavaArchive.class, nonZipFile);
+                .getResource(NAME_FILE_NON_ZIP).toURI());
+
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> ShrinkWrap.createFromZipFile(JavaArchive.class, nonZipFile));
     }
 
     /**
      * Ensures that attempting to import as ZIP from null file leads to {@link IllegalArgumentException}
      *
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void importFromNullFileThrowsException() {
-        ShrinkWrap.createFromZipFile(JavaArchive.class, null);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> ShrinkWrap.createFromZipFile(JavaArchive.class, null));
     }
 
     /**
@@ -386,11 +383,12 @@ public class ShrinkWrapTestCase {
      * {@link IllegalArgumentException}
      *
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void importFromNonexistantlFileThrowsException() {
         final File file = new File("fileThatDoesntExist.tmp");
-        Assert.assertFalse("Error in test setup, file should not exist: " + file.getAbsolutePath(), file.exists());
-        ShrinkWrap.createFromZipFile(JavaArchive.class, null);
+        Assertions.assertFalse(file.exists(), "Error in test setup, file should not exist: " + file.getAbsolutePath());
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> ShrinkWrap.createFromZipFile(JavaArchive.class, null));
     }
 
     /**
@@ -400,9 +398,10 @@ public class ShrinkWrapTestCase {
      * SHRINKWRAP-163
      *
      */
-    @Test(expected = UnknownExtensionTypeException.class)
+    @Test
     public void shouldThrowExceptionOnNoConfiguredMappingForType() {
-        ShrinkWrap.create(MockAssignable.class);
+        Assertions.assertThrows(UnknownExtensionTypeException.class,
+                () -> ShrinkWrap.create(MockAssignable.class));
     }
 
     // -------------------------------------------------------------------------------------||

@@ -31,7 +31,7 @@ import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.TestIOUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * ExportTestBase
@@ -129,10 +129,9 @@ public abstract class ExportTestBase {
         if (tempDirectory.exists()) {
             TestIOUtil.deleteDirectory(tempDirectory);
         }
-        Assert.assertTrue("Temp directory should be clear before start", !tempDirectory.exists());
+        Assertions.assertFalse(tempDirectory.exists(), "Temp directory should be clear before start");
         final boolean created = tempDirectory.mkdirs();
-        Assert.assertEquals("Could not create temp directory for tests: " + tempDirectory.getAbsolutePath(), true,
-            created);
+        Assertions.assertTrue(created, "Could not create temp directory for tests: " + tempDirectory.getAbsolutePath());
         return tempDirectory;
     }
 

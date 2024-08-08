@@ -28,7 +28,7 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarEntry;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * TestCase to ensure that the TAR exporters are working as contracted
@@ -72,7 +72,7 @@ public abstract class TarExporterTestBase<T extends StreamImporter<T>> extends S
         // Ensure we don't write the root Path
         // SHRINKWRAP-96
         InputStream rootEntry = this.getEntryFromTarFile(file, ArchivePaths.root());
-        Assert.assertNull("TAR.GZ should not have explicit root path written (SHRINKWRAP-96)", rootEntry);
+        Assertions.assertNull(rootEntry, "TAR.GZ should not have explicit root path written (SHRINKWRAP-96)");
     }
 
     /**
@@ -112,7 +112,7 @@ public abstract class TarExporterTestBase<T extends StreamImporter<T>> extends S
         final InputStream in = this.getEntryFromTarFile(archive, path);
         byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
         byte[] actualContents = IOUtil.asByteArray(in);
-        Assert.assertArrayEquals(expectedContents, actualContents);
+        Assertions.assertArrayEquals(expectedContents, actualContents);
     }
 
     /**
@@ -120,7 +120,6 @@ public abstract class TarExporterTestBase<T extends StreamImporter<T>> extends S
      * found. We have to iterate through all entries for a matching name, as the instream does not support random
      * access.
      *
-     * @param expectedZip
      * @param path
      * @return
      * @throws IllegalArgumentException
@@ -130,7 +129,7 @@ public abstract class TarExporterTestBase<T extends StreamImporter<T>> extends S
         throws IllegalArgumentException, IOException {
         String entryPath = PathUtil.optionallyRemovePrecedingSlash(path.get());
         final TarInputStream in = this.getTarInputStreamFromFile(archive);
-        TarEntry currentEntry = null;
+        TarEntry currentEntry;
         while ((currentEntry = in.getNextEntry()) != null) {
             final String entryName = currentEntry.getName();
             if (currentEntry.isDirectory()) {

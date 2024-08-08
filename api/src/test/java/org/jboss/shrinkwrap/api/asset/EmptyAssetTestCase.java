@@ -16,13 +16,12 @@
  */
 package org.jboss.shrinkwrap.api.asset;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.logging.Logger;
-
-import org.junit.Assert;
-
-import org.junit.Test;
 
 /**
  * Test Cases for the {@link EmptyAsset}
@@ -68,7 +67,7 @@ public class EmptyAssetTestCase {
             out.write(read);
         }
 
-        Assert.assertEquals("Roundtrip did not produce empty contents", 0, out.toByteArray().length);
+        Assertions.assertEquals(0, out.toByteArray().length, "Roundtrip did not produce empty contents");
     }
 
     @Test
@@ -76,7 +75,7 @@ public class EmptyAssetTestCase {
     	// Make contents
     	final Asset asset = EmptyAsset.INSTANCE;
         final byte[] contentFromGetSource = ((EmptyAsset)asset).getSource();
-        
-        Assert.assertTrue(contentFromGetSource.length == 0);
+
+        Assertions.assertEquals(0, contentFromGetSource.length);
     }
 }

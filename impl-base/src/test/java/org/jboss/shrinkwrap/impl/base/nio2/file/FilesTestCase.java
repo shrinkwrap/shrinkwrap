@@ -53,12 +53,10 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.nio2.file.ShrinkWrapFileSystems;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases to assert the ShrinkWrap implementation of the NIO.2 {@link FileSystem} is working as expected via the
@@ -68,22 +66,19 @@ import org.junit.rules.ExpectedException;
  */
 public class FilesTestCase {
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
     /**
      * {@link FileSystem} under test
      */
     private FileSystem fs;
 
-    @Before
+    @BeforeEach
     public void createFileSystem() throws IOException {
         final String name = "test.jar";
         final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, name);
         this.fs = ShrinkWrapFileSystems.newFileSystem(archive);
     }
 
-    @After
+    @AfterEach
     public void closeFileSystem() throws IOException {
         this.fs.close();
     }
@@ -97,14 +92,14 @@ public class FilesTestCase {
         archive.add(EmptyAsset.INSTANCE, pathString);
 
         // Ensure added
-        Assert.assertTrue(archive.contains(pathString));
+        Assertions.assertTrue(archive.contains(pathString));
 
         // Delete
         final Path path = fs.getPath(pathString);
         Files.delete(path);
 
         // Ensure deleted
-        Assert.assertFalse(archive.contains(pathString));
+        Assertions.assertFalse(archive.contains(pathString));
     }
 
     @Test
@@ -114,12 +109,12 @@ public class FilesTestCase {
         final String pathString = "nonexistant";
 
         // Ensure file doesn't exist
-        Assert.assertFalse(archive.contains(pathString));
+        Assertions.assertFalse(archive.contains(pathString));
 
         // Attempt delete
         final Path path = fs.getPath(pathString);
-        Assert.assertThrows("Request to remove nonexistant path should have thrown " + NoSuchFileException.class.getSimpleName(),
-                NoSuchFileException.class, () -> Files.delete(path));
+        Assertions.assertThrows(NoSuchFileException.class, () -> Files.delete(path),
+                "Request to remove nonexistant path should have thrown " + NoSuchFileException.class.getSimpleName());
     }
 
     @Test
@@ -131,14 +126,14 @@ public class FilesTestCase {
         archive.add(EmptyAsset.INSTANCE, pathString);
 
         // Ensure added
-        Assert.assertTrue(archive.contains(pathString));
+        Assertions.assertTrue(archive.contains(pathString));
 
         // Delete
         final Path path = fs.getPath(pathString);
         final boolean deleted = Files.deleteIfExists(path);
 
         // Ensure deleted
-        Assert.assertTrue("Did not report deleted", deleted);
+        Assertions.assertTrue(deleted, "Did not report deleted");
     }
 
     @Test
@@ -146,7 +141,7 @@ public class FilesTestCase {
         final String pathString = "fileWhichDoesNotExist";
         final Path path = fs.getPath(pathString);
         final boolean deleted = Files.deleteIfExists(path);
-        Assert.assertFalse("Should not report deleted", deleted);
+        Assertions.assertFalse(deleted, "Should not report deleted");
     }
 
     @Test
@@ -156,15 +151,15 @@ public class FilesTestCase {
         final Archive<?> archive = this.getArchive().addAsDirectory(directoryName);
 
         // Preconditions
-        Assert.assertNull("Test archive should contain the directory, not content", archive.get(directoryName)
-            .getAsset());
+        Assertions.assertNull(archive.get(directoryName).getAsset(),
+                "Test archive should contain the directory, not content");
 
         // Attempt delete
         final Path path = fs.getPath(directoryName);
         Files.delete(path);
 
         // Assertion
-        Assert.assertFalse("Archive should no longer contain directory ", archive.contains(directoryName));
+        Assertions.assertFalse(archive.contains(directoryName),"Archive should no longer contain directory ");
     }
 
     @Test
@@ -175,12 +170,13 @@ public class FilesTestCase {
         final Archive<?> archive = this.getArchive().addAsDirectory(subDirectoryName);
 
         // Preconditions
-        Assert.assertNull("Test archive should contain the directory, not content", archive.get(subDirectoryName)
-            .getAsset());
+        Assertions.assertNull(archive.get(subDirectoryName).getAsset(),
+                "Test archive should contain the directory, not content");
 
         // Attempt delete
         final Path path = fs.getPath(directoryName);
-        Assert.assertThrows("Should not be able to delete non-empty directory", DirectoryNotEmptyException.class, () -> Files.delete(path));
+        Assertions.assertThrows(DirectoryNotEmptyException.class, () -> Files.delete(path),
+                "Should not be able to delete non-empty directory");
     }
 
     @Test
@@ -190,13 +186,13 @@ public class FilesTestCase {
 
         // Ensure dir doesn't exist
         final Archive<?> archive = this.getArchive();
-        Assert.assertFalse(archive.contains(dirName));
+        Assertions.assertFalse(archive.contains(dirName));
 
         // Attempt create
         final Path createdDir = Files.createDirectory(dir, (FileAttribute<?>) null);
-        Assert.assertTrue("Archive does not contain created directory", archive.contains(dirName));
-        Assert.assertTrue("Created path is not a directory", archive.get(dirName).getAsset() == null);
-        Assert.assertEquals("Created directory name was not as expected", dirName, createdDir.toString());
+        Assertions.assertTrue(archive.contains(dirName), "Archive does not contain created directory");
+        Assertions.assertNull(archive.get(dirName).getAsset(), "Created path is not a directory");
+        Assertions.assertEquals(dirName, createdDir.toString(), "Created directory name was not as expected");
     }
 
     @Test
@@ -206,11 +202,11 @@ public class FilesTestCase {
 
         // Ensure dir doesn't exist
         final Archive<?> archive = this.getArchive();
-        Assert.assertFalse(archive.contains(dirName));
+        Assertions.assertFalse(archive.contains(dirName));
 
         // Attempt create
-        Assert.assertThrows("Should not be able to create directory unless parents are first present",
-                IOException.class, () -> Files.createDirectory(dir, (FileAttribute<?>) null));
+        Assertions.assertThrows(IOException.class, () -> Files.createDirectory(dir, (FileAttribute<?>) null),
+                "Should not be able to create directory unless parents are first present");
     }
 
     @Test
@@ -220,13 +216,13 @@ public class FilesTestCase {
 
         // Ensure dir doesn't exist
         final Archive<?> archive = this.getArchive();
-        Assert.assertFalse(archive.contains(dirName));
+        Assertions.assertFalse(archive.contains(dirName));
 
         // Attempt create
         final Path createdDir = Files.createDirectories(dir, (FileAttribute<?>) null);
-        Assert.assertTrue("Archive does not contain created directory", archive.contains(dirName));
-        Assert.assertTrue("Created path is not a directory", archive.get(dirName).getAsset() == null);
-        Assert.assertEquals("Created directory name was not as expected", dirName, createdDir.toString());
+        Assertions.assertTrue(archive.contains(dirName), "Archive does not contain created directory");
+        Assertions.assertNull(archive.get(dirName).getAsset(), "Created path is not a directory");
+        Assertions.assertEquals(dirName, createdDir.toString(), "Created directory name was not as expected");
     }
 
     @Test
@@ -239,8 +235,8 @@ public class FilesTestCase {
         final long bytesCopied = Files.copy(in, path);
         final String roundtrip = new BufferedReader(new InputStreamReader(this.getArchive().get(pathName).getAsset()
             .openStream())).readLine();
-        Assert.assertEquals("Contents after copy were not as expected", contents, roundtrip);
-        Assert.assertEquals(bytes.length, bytesCopied);
+        Assertions.assertEquals(contents, roundtrip, "Contents after copy were not as expected");
+        Assertions.assertEquals(bytes.length, bytesCopied);
     }
 
     @Test
@@ -251,7 +247,8 @@ public class FilesTestCase {
         // Add some dummy asset to the archive
         this.getArchive().add(EmptyAsset.INSTANCE, pathName);
         // Now try to copy to the same path as the dummy asset
-        Assert.assertThrows("Overwrite of existing path should fail", FileAlreadyExistsException.class, () -> Files.copy(in, path));
+        Assertions.assertThrows(FileAlreadyExistsException.class, () -> Files.copy(in, path),
+                "Overwrite of existing path should fail");
     }
 
     @Test
@@ -262,7 +259,8 @@ public class FilesTestCase {
         // Add some directory to the archive
         this.getArchive().addAsDirectories(pathName);
         // Now try to copy to the same path as the dir
-        Assert.assertThrows("Overwrite of existing directory should fail", FileAlreadyExistsException.class, () -> Files.copy(in, path));
+        Assertions.assertThrows(FileAlreadyExistsException.class, () -> Files.copy(in, path),
+                "Overwrite of existing directory should fail");
     }
 
     @Test
@@ -274,8 +272,8 @@ public class FilesTestCase {
         // Add some nested directory to the archive
         this.getArchive().addAsDirectories(subdir);
         // Now try to copy to a nonempty dir
-        Assert.assertThrows("Overwrite of existing non-empty dir should fail, even with replace option",
-                DirectoryNotEmptyException.class, () -> Files.copy(in, dirPath, StandardCopyOption.REPLACE_EXISTING));
+        Assertions.assertThrows(DirectoryNotEmptyException.class, () -> Files.copy(in, dirPath, StandardCopyOption.REPLACE_EXISTING),
+                "Overwrite of existing non-empty dir should fail, even with replace option");
     }
 
     @Test
@@ -291,8 +289,8 @@ public class FilesTestCase {
         final long bytesCopied = Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
         final String roundtrip = new BufferedReader(new InputStreamReader(this.getArchive().get(pathName).getAsset()
             .openStream())).readLine();
-        Assert.assertEquals("Contents after copy were not as expected", contents, roundtrip);
-        Assert.assertEquals(bytes.length, bytesCopied);
+        Assertions.assertEquals(contents, roundtrip, "Contents after copy were not as expected");
+        Assertions.assertEquals(bytes.length, bytesCopied);
     }
 
     @Test
@@ -306,8 +304,8 @@ public class FilesTestCase {
         final long bytesCopied = Files.copy(fs.getPath(path), out);
         // Get out the content
         final String roundtrip = new String(out.toByteArray(), StandardCharsets.UTF_8);
-        Assert.assertEquals("Contents after copy were not as expected", contents, roundtrip);
-        Assert.assertEquals(contents.length(), bytesCopied);
+        Assertions.assertEquals(contents, roundtrip, "Contents after copy were not as expected");
+        Assertions.assertEquals(contents.length(), bytesCopied);
     }
 
     @Test
@@ -317,8 +315,8 @@ public class FilesTestCase {
         this.getArchive().addAsDirectories(path);
         // Attempt to copy the dir
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Assert.assertThrows("Call to copy a directory contents to an output stream should not succeed",
-                IllegalArgumentException.class, () -> Files.copy(fs.getPath(path), out));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> Files.copy(fs.getPath(path), out),
+                "Call to copy a directory contents to an output stream should not succeed");
     }
 
     @Test
@@ -334,7 +332,8 @@ public class FilesTestCase {
         Files.write(path, appendContent.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
         final String newContents = new BufferedReader(new InputStreamReader(archive.get(pathName).getAsset()
             .openStream())).readLine();
-        Assert.assertEquals("New contents was not appended as expected", initialContent + appendContent, newContents);
+        Assertions.assertEquals(initialContent + appendContent, newContents,
+                "New contents was not appended as expected");
     }
 
     @Test
@@ -342,7 +341,7 @@ public class FilesTestCase {
         final String pathName = "fileToCreate";
         final Path path = fs.getPath(pathName);
         final Path newPath = Files.createFile(path, (FileAttribute<?>) null);
-        Assert.assertEquals(path.toString(), newPath.toString());
+        Assertions.assertEquals(path.toString(), newPath.toString());
     }
 
     @Test
@@ -350,8 +349,8 @@ public class FilesTestCase {
         final String pathName = "fileToCreate";
         this.getArchive().add(EmptyAsset.INSTANCE, pathName);
         final Path path = fs.getPath(pathName);
-        Assert.assertThrows("Create new file should fail if path already exists",
-                FileAlreadyExistsException.class, () -> Files.createFile(path, (FileAttribute<?>) null));
+        Assertions.assertThrows(FileAlreadyExistsException.class, () -> Files.createFile(path, (FileAttribute<?>) null),
+                "Create new file should fail if path already exists");
     }
 
     @Test
@@ -361,8 +360,8 @@ public class FilesTestCase {
         this.getArchive().add(EmptyAsset.INSTANCE, existingPathString);
         final Path linkToCreatePath = fs.getPath(linkToCreateString);
         final Path existingPath = fs.getPath(existingPathString);
-        Assert.assertThrows("We should not support creation of links",
-                UnsupportedOperationException.class, () -> Files.createLink(linkToCreatePath, existingPath));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> Files.createLink(linkToCreatePath, existingPath),
+                "We should not support creation of links");
     }
 
     @Test
@@ -372,8 +371,8 @@ public class FilesTestCase {
         this.getArchive().add(EmptyAsset.INSTANCE, existingPathString);
         final Path symbolicLinkToCreatePath = fs.getPath(symbolicLinkToCreateString);
         final Path existingPath = fs.getPath(existingPathString);
-        Assert.assertThrows("We should not support creation of symbolic links",
-                UnsupportedOperationException.class, () -> Files.createSymbolicLink(symbolicLinkToCreatePath, existingPath));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> Files.createSymbolicLink(symbolicLinkToCreatePath, existingPath),
+                "We should not support creation of symbolic links");
     }
 
     // This will fail until we establish relative Paths
@@ -384,16 +383,14 @@ public class FilesTestCase {
         final String prefix = "prefix";
         final Path tempDirPath = fs.getPath(tempDir);
         final Path newPath = Files.createTempDirectory(tempDirPath, prefix, new FileAttribute<?>[] {});
-        Assert.assertTrue("temp dir name was not in expected form",
-            newPath.toString().startsWith(tempDir + "/" + prefix));
+        Assertions.assertTrue(newPath.toString().startsWith(tempDir + "/" + prefix),
+                "temp dir name was not in expected form");
     }
 
     @Test
     public void existsFalse() {
-        final String pathString = "fileWhichDoesNotExist";
-        final Path path = fs.getPath(pathString);
-        final boolean exists = Files.exists(path);
-        Assert.assertFalse("Should report exists", exists);
+        final Path path = fs.getPath("fileWhichDoesNotExist");
+        Assertions.assertFalse(Files.exists(path), "Should report exists");
     }
 
     @Test
@@ -402,52 +399,54 @@ public class FilesTestCase {
         final String pathString = "file";
         archive.add(EmptyAsset.INSTANCE, pathString);
         final Path path = fs.getPath(pathString);
-        final boolean exists = Files.exists(path);
-        Assert.assertTrue("Should report exists", exists);
+        Assertions.assertTrue(Files.exists(path), "Should report exists");
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void getAttribute() throws IOException {
-        Files.getAttribute(fs.getPath("file"), "basic", (LinkOption) null);
+    @Test
+    public void getAttribute() {
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> Files.getAttribute(fs.getPath("file"), "basic", (LinkOption) null));
     }
 
     @Test
     public void getFileAttributeView() {
-        Assert.assertTrue(Files.getFileAttributeView(fs.getPath("file"), BasicFileAttributeView.class,
-            (LinkOption) null) instanceof ShrinkWrapFileAttributeView);
+        Assertions.assertInstanceOf(ShrinkWrapFileAttributeView.class, Files.getFileAttributeView(fs.getPath("file"),
+                BasicFileAttributeView.class, (LinkOption) null));
     }
 
     @Test
     public void getFileStore() throws IOException {
-        Assert.assertTrue("Returned file store was not as expected",
-            fs.getFileStores().iterator().next() == Files.getFileStore(fs.getPath("path")));
+        Assertions.assertSame(fs.getFileStores().iterator().next(), Files.getFileStore(fs.getPath("path")),
+                "Returned file store was not as expected");
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void getLastModifiedTime() throws IOException {
+    @Test
+    public void getLastModifiedTime() {
         this.getArchive().add(EmptyAsset.INSTANCE, "path");
-        Files.getLastModifiedTime(fs.getPath("path"), (LinkOption) null);
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> Files.getLastModifiedTime(fs.getPath("path"), (LinkOption) null));
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void getOwner() throws IOException {
-        Files.getOwner(fs.getPath("path"), (LinkOption) null);
+    @Test
+    public void getOwner() {
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> Files.getOwner(fs.getPath("path"), (LinkOption) null));
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void getPosixFilePermissions() throws IOException {
-        Files.getPosixFilePermissions(fs.getPath("path"), (LinkOption) null);
+    @Test
+    public void getPosixFilePermissions() {
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> Files.getPosixFilePermissions(fs.getPath("path"), (LinkOption) null));
     }
 
     @Test
     public void isDirectoryTrue() {
         this.getArchive().addAsDirectories("path");
-        Assert.assertTrue(Files.isDirectory(fs.getPath("path"), (LinkOption) null));
+        Assertions.assertTrue(Files.isDirectory(fs.getPath("path"), (LinkOption) null));
     }
 
     @Test
     public void isDirectoryFalse() {
-        Assert.assertFalse(Files.isDirectory(fs.getPath("path"), (LinkOption) null));
+        Assertions.assertFalse(Files.isDirectory(fs.getPath("path"), (LinkOption) null));
     }
 
     @Test
@@ -455,7 +454,7 @@ public class FilesTestCase {
     public void isExecutable() {
         final String path = "path";
         this.getArchive().add(EmptyAsset.INSTANCE, path);
-        Assert.assertTrue(Files.isExecutable(fs.getPath(path)));
+        Assertions.assertTrue(Files.isExecutable(fs.getPath(path)));
     }
 
     @Test
@@ -463,7 +462,7 @@ public class FilesTestCase {
     public void isHidden() throws IOException {
         final String path = "path";
         this.getArchive().add(EmptyAsset.INSTANCE, path);
-        Assert.assertFalse(Files.isHidden(fs.getPath(path)));
+        Assertions.assertFalse(Files.isHidden(fs.getPath(path)));
     }
 
     @Test
@@ -471,55 +470,55 @@ public class FilesTestCase {
     public void isReadable() {
         final String path = "path";
         this.getArchive().add(EmptyAsset.INSTANCE, path);
-        Assert.assertTrue(Files.isReadable(fs.getPath(path)));
+        Assertions.assertTrue(Files.isReadable(fs.getPath(path)));
     }
 
     @Test
     // No nonexistant paths are executable
     public void isExecutableNonexistant() {
         final String path = "path";
-        Assert.assertFalse(Files.isExecutable(fs.getPath(path)));
+        Assertions.assertFalse(Files.isExecutable(fs.getPath(path)));
     }
 
     @Test
     // No nonexistant paths are readable
     public void isReadableNonexistant() {
         final String path = "path";
-        Assert.assertFalse(Files.isReadable(fs.getPath(path)));
+        Assertions.assertFalse(Files.isReadable(fs.getPath(path)));
     }
 
     @Test
     public void isRegularFile() {
         final String path = "path";
         this.getArchive().add(EmptyAsset.INSTANCE, path);
-        Assert.assertTrue(Files.isRegularFile(fs.getPath(path)));
+        Assertions.assertTrue(Files.isRegularFile(fs.getPath(path)));
     }
 
     @Test
     public void isRegularFileFalse() {
         final String path = "path/";
-        Assert.assertFalse(Files.isRegularFile(fs.getPath(path)));
+        Assertions.assertFalse(Files.isRegularFile(fs.getPath(path)));
     }
 
     @Test
     public void isSameFile() throws IOException {
         final String path1 = "path/sub";
         final String path2 = "path/sub";
-        Assert.assertTrue(Files.isSameFile(fs.getPath(path1), fs.getPath(path2)));
+        Assertions.assertTrue(Files.isSameFile(fs.getPath(path1), fs.getPath(path2)));
     }
 
     @Test
     public void isSameFileFalse() throws IOException {
         final String path1 = "path/sub";
         final String path2 = "path/sub/notsame";
-        Assert.assertFalse(Files.isSameFile(fs.getPath(path1), fs.getPath(path2)));
+        Assertions.assertFalse(Files.isSameFile(fs.getPath(path1), fs.getPath(path2)));
     }
 
     @Test
     public void isSymbolicLink() {
         final String path = "path";
         // No symlinks
-        Assert.assertFalse(Files.isSymbolicLink(fs.getPath(path)));
+        Assertions.assertFalse(Files.isSymbolicLink(fs.getPath(path)));
     }
 
     @Test
@@ -527,14 +526,14 @@ public class FilesTestCase {
     public void isWritable() {
         final String path = "path";
         this.getArchive().add(EmptyAsset.INSTANCE, path);
-        Assert.assertTrue(Files.isWritable(fs.getPath(path)));
+        Assertions.assertTrue(Files.isWritable(fs.getPath(path)));
     }
 
     @Test
     // No nonexistant paths are writable
     public void isWritableNonexistant() {
         final String path = "path";
-        Assert.assertFalse(Files.isWritable(fs.getPath(path)));
+        Assertions.assertFalse(Files.isWritable(fs.getPath(path)));
     }
 
     @Test
@@ -546,10 +545,10 @@ public class FilesTestCase {
         final Path src = fs.getPath(source);
         final Path dst = fs.getPath(dest);
         final Path moved = Files.move(src, dst);
-        Assert.assertEquals(dest, moved.toString());
+        Assertions.assertEquals(dest, moved.toString());
         final String roundtrip = new BufferedReader(new InputStreamReader(this.getArchive().get(dest).getAsset()
             .openStream())).readLine();
-        Assert.assertEquals("Contents not as expected after move", contents, roundtrip);
+        Assertions.assertEquals(contents, roundtrip, "Contents not as expected after move");
     }
 
     @Test
@@ -560,8 +559,8 @@ public class FilesTestCase {
         final Path src = fs.getPath(source);
         final Path dst = fs.getPath(dest);
         final Path moved = Files.move(src, dst);
-        Assert.assertEquals(dest, moved.toString());
-        Assert.assertNull("Directory expected after move", this.getArchive().get(dest).getAsset());
+        Assertions.assertEquals(dest, moved.toString());
+        Assertions.assertNull(this.getArchive().get(dest).getAsset(), "Directory expected after move");
     }
 
     @Test
@@ -574,7 +573,7 @@ public class FilesTestCase {
         reader.read(buffer);
         reader.close();
         buffer.position(0);
-        Assert.assertEquals("Contents not read as expected from the buffered reader", contents, buffer.toString());
+        Assertions.assertEquals(contents, buffer.toString(), "Contents not read as expected from the buffered reader");
     }
 
     @Test
@@ -587,7 +586,7 @@ public class FilesTestCase {
         writer.close();
         final String roundtrip = new BufferedReader(new InputStreamReader(this.getArchive().get(path).getAsset()
             .openStream())).readLine();
-        Assert.assertEquals("Contents not written as expected from the buffered writer", contents, roundtrip);
+        Assertions.assertEquals(contents, roundtrip, "Contents not written as expected from the buffered writer");
     }
 
     @Test
@@ -605,13 +604,14 @@ public class FilesTestCase {
         final String roundtrip = new String(readBuffer.array());
         final String roundTripViaArchive = new BufferedReader(new InputStreamReader(this.getArchive().get(path)
             .getAsset().openStream())).readLine();
-        Assert.assertEquals("Contents not read as expected from the channel", contents, roundtrip);
-        Assert.assertEquals("Contents not read as expected from the archive", contents, roundTripViaArchive);
+        Assertions.assertEquals(contents, roundtrip, "Contents not read as expected from the channel");
+        Assertions.assertEquals(contents, roundTripViaArchive, "Contents not read as expected from the archive");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void newByteChannelForReadDoesntExist() throws IOException {
-        Files.newByteChannel(fs.getPath("path"), (OpenOption) null);
+    @Test
+    public void newByteChannelForReadDoesntExist() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> Files.newByteChannel(fs.getPath("path"), (OpenOption) null));
     }
 
     @Test
@@ -624,9 +624,9 @@ public class FilesTestCase {
         while (paths.hasNext()) {
             counter++;
             final Path path = paths.next();
-            Assert.assertTrue(this.getArchive().contains(path.toString()));
+            Assertions.assertTrue(this.getArchive().contains(path.toString()));
         }
-        Assert.assertEquals(1, counter);
+        Assertions.assertEquals(1, counter);
     }
 
     @Test
@@ -639,7 +639,7 @@ public class FilesTestCase {
         in.read(buffer);
         in.close();
         final String roundtrip = new String(buffer);
-        Assert.assertEquals("Contents not read as expected from the instream", contents, roundtrip);
+        Assertions.assertEquals(contents, roundtrip, "Contents not read as expected from the instream");
     }
 
     @Test
@@ -651,18 +651,18 @@ public class FilesTestCase {
         outStream.close();
         final String roundtrip = new BufferedReader(new InputStreamReader(this.getArchive().get(path).getAsset()
             .openStream())).readLine();
-        Assert.assertEquals("Contents not read as expected from the outstream", contents, roundtrip);
+        Assertions.assertEquals(contents, roundtrip, "Contents not read as expected from the outstream");
     }
 
     @Test
     public void notExistsTrue() {
-        Assert.assertTrue(Files.notExists(fs.getPath("fake"), LinkOption.NOFOLLOW_LINKS));
+        Assertions.assertTrue(Files.notExists(fs.getPath("fake"), LinkOption.NOFOLLOW_LINKS));
     }
 
     @Test
     public void notExistsFalse() {
         this.getArchive().add(EmptyAsset.INSTANCE, "path");
-        Assert.assertFalse(Files.notExists(fs.getPath("path"), LinkOption.NOFOLLOW_LINKS));
+        Assertions.assertFalse(Files.notExists(fs.getPath("path"), LinkOption.NOFOLLOW_LINKS));
     }
 
     @Test
@@ -671,7 +671,7 @@ public class FilesTestCase {
         final String contents = "contents";
         this.getArchive().add(new StringAsset(contents), path);
         // To be honest, I don't know WTF this is supposed to do, so we'll just check that it doesn't error out
-        Assert.assertNull(Files.probeContentType(fs.getPath(path)));
+        Assertions.assertNull(Files.probeContentType(fs.getPath(path)));
     }
 
     @Test
@@ -681,14 +681,14 @@ public class FilesTestCase {
         this.getArchive().add(new StringAsset(contents), path);
         final byte[] bytes = Files.readAllBytes(fs.getPath(path));
         final String roundtrip = new String(bytes);
-        Assert.assertEquals("Contents not read as expected from the readAllBytes", contents, roundtrip);
+        Assertions.assertEquals(contents, roundtrip, "Contents not read as expected from the readAllBytes");
     }
 
     @Test
     public void createdDirectoryIsADirectory() throws Exception {
         Path dirPath = fs.getPath("dir");
         Files.createDirectory(dirPath);
-        Assert.assertTrue("Created directory was not a directory", Files.isDirectory(dirPath));
+        Assertions.assertTrue(Files.isDirectory(dirPath), "Created directory was not a directory");
     }
 
     @Test
@@ -698,8 +698,8 @@ public class FilesTestCase {
         Files.createFile(dirPath.resolve("file"));
         DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath);
         Iterator<Path> it = stream.iterator();
-        Assert.assertEquals("/dir/file", it.next().toString());
-        Assert.assertFalse("No further elements expected in stream", it.hasNext());
+        Assertions.assertEquals("/dir/file", it.next().toString());
+        Assertions.assertFalse(it.hasNext(), "No further elements expected in stream");
     }
 
     @Test
@@ -714,9 +714,7 @@ public class FilesTestCase {
         stream.close();
 
         // then
-        expectedException.expect(IllegalStateException.class);
-        Iterator<Path> it = stream.iterator();
-
+        Assertions.assertThrows(IllegalStateException.class, stream::iterator);
     }
 
     @Test
@@ -731,8 +729,7 @@ public class FilesTestCase {
         Iterator<Path> it = stream.iterator();
 
         // then
-        expectedException.expect(IllegalStateException.class);
-        stream.iterator();
+        Assertions.assertThrows(IllegalStateException.class, stream::iterator);
     }
 
     @Test
@@ -740,8 +737,8 @@ public class FilesTestCase {
         Files.createDirectories(fs.getPath("dir/subdir"));
         DirectoryStream<Path> stream = Files.newDirectoryStream(fs.getPath("/"));
         Iterator<Path> it = stream.iterator();
-        Assert.assertEquals("/dir", it.next().toString());
-        Assert.assertFalse("No further elements expected in stream", it.hasNext());
+        Assertions.assertEquals("/dir", it.next().toString());
+        Assertions.assertFalse(it.hasNext(), "No further elements expected in stream");
     }
 
     @Test
@@ -757,7 +754,7 @@ public class FilesTestCase {
                 return super.visitFile(file, attrs);
             }
         });
-        Assert.assertEquals(1, visitFileCalled[0]);
+        Assertions.assertEquals(1, visitFileCalled[0]);
     }
 
     /**

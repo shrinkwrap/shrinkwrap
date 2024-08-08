@@ -23,9 +23,9 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveTestBase;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Base support for implementations of {@link Formatter}
@@ -65,7 +65,7 @@ public abstract class FormatterTestBase {
     /**
      * Creates the archive used in the test
      */
-    @Before
+    @BeforeEach
     public void createArchive() {
         archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).addClasses(FormatterTestBase.class,
             ArchiveTestBase.class);
@@ -87,7 +87,7 @@ public abstract class FormatterTestBase {
         log.info(formatted);
 
         // Ensure expected form
-        Assert.assertEquals("Formatter output did not match that expected", this.getExpectedOutput(), formatted);
+        Assertions.assertEquals(this.getExpectedOutput(), formatted, "Formatter output did not match that expected");
     }
 
     // -------------------------------------------------------------------------------------||

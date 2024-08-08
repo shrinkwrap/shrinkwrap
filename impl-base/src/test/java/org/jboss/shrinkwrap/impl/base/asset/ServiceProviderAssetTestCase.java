@@ -18,8 +18,8 @@ package org.jboss.shrinkwrap.impl.base.asset;
 
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * ServiceProviderAssetTestCase
@@ -36,17 +36,17 @@ public class ServiceProviderAssetTestCase {
         byte[] expectedContent = (TestImpl1.class.getName() + "\n" + TestImpl2.class.getName() + "\n").getBytes();
         byte[] content = IOUtil.asByteArray(asset.openStream());
 
-        Assert.assertArrayEquals(expectedContent, content);
+        Assertions.assertArrayEquals(expectedContent, content);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldThrowExceptionOnNullArgumnet() {
-        new ServiceProviderAsset((Class<?>[]) null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new ServiceProviderAsset((Class<?>[]) null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldThrowExceptionOnNullArgumnetValue() {
-        new ServiceProviderAsset((Class<?>) null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new ServiceProviderAsset((Class<?>) null));
     }
 
     private interface TestIF {

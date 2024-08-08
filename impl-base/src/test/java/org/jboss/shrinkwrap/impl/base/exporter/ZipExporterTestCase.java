@@ -27,6 +27,7 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.FileAsset;
+import org.jboss.shrinkwrap.api.exporter.FileExistsException;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
@@ -34,8 +35,8 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestCase to ensure that the {@link ZipExporter} correctly exports archives to ZIP format.
@@ -138,10 +139,11 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
      * SHRINKWRAP-93
      *
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void exportEmptyArchiveAsZip() {
         // Attempt to export an empty archive, should fail
-        ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).as(ZipExporter.class).exportAsInputStream();
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).as(ZipExporter.class).exportAsInputStream());
     }
 
     /**
@@ -152,18 +154,13 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
         File target = new File(createTempDirectory("exportShouldFailIfTargetExist").getAbsolutePath()
             + "exportShouldFailIfTargetExist.jar");
         if (target.exists()) {
-            Assert.assertTrue(target.delete());
+            Assertions.assertTrue(target.delete());
         }
-        Assert.assertFalse(target.exists());
+        Assertions.assertFalse(target.exists());
         createArchiveWithAssets().as(ZipExporter.class).exportTo(target);
-        Assert.assertTrue(target.exists());
-        try {
-            createArchiveWithAssets().as(ZipExporter.class).exportTo(target); // this line should throw a
-                                                                              // FileExistsException
-            Assert.fail("Expected a FileExistsException when exporting to an existing path");
-        } catch (Exception e) {
-            Assert.assertEquals(org.jboss.shrinkwrap.api.exporter.FileExistsException.class, e.getClass());
-        }
+        Assertions.assertTrue(target.exists());
+        Assertions.assertThrows(FileExistsException.class, () -> createArchiveWithAssets().as(ZipExporter.class).exportTo(target),
+                "Expected a FileExistsException when exporting to an existing path");
     }
 
     /**
@@ -175,7 +172,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
         final File target = new File("target");
         final File testClasses = new File(target, "test-classes");
         final File hsqldbJar = new File(testClasses, "hsqldb.jar");
-        Assert.assertTrue("test JAR must exist to run this test", hsqldbJar.exists() && !hsqldbJar.isDirectory());
+        Assertions.assertTrue(hsqldbJar.exists() && !hsqldbJar.isDirectory(), "test JAR must exist to run this test");
 
         final File file1 = new File(target, "testExportImportExport1.war");
         final File file2 = new File(target, "testExportImportExport2.war");
@@ -188,7 +185,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
         webArchive2.as(ZipExporter.class).exportTo(file2, true);
 
         // then compare sizes
-        Assert.assertEquals(file1.length(), file2.length());
+        Assertions.assertEquals(file1.length(), file2.length());
     }
 
     // -------------------------------------------------------------------------------------||
@@ -213,7 +210,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
         // Ensure we don't write the root Path
         // SHRINKWRAP-96
         ZipEntry rootEntry = expectedZip.getEntry("/");
-        Assert.assertNull("ZIP should not have explicit root path written (SHRINKWRAP-96)", rootEntry);
+        Assertions.assertNull(rootEntry, "ZIP should not have explicit root path written (SHRINKWRAP-96)");
     }
 
     /**
@@ -227,7 +224,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
         final ZipEntry entry = this.getEntryFromZip(expectedZip, path);
         final byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
         final byte[] actualContents = IOUtil.asByteArray(expectedZip.getInputStream(entry));
-        Assert.assertArrayEquals(expectedContents, actualContents);
+        Assertions.assertArrayEquals(expectedContents, actualContents);
     }
 
     /**
@@ -242,7 +239,7 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
         throws IllegalArgumentException {
         final String entryPath = PathUtil.optionallyRemovePrecedingSlash(path.get());
         final ZipEntry entry = expectedZip.getEntry(entryPath);
-        Assert.assertNotNull("Expected path not found in ZIP: " + path, entry);
+        Assertions.assertNotNull(entry, "Expected path not found in ZIP: " + path);
         return entry;
     }
 }

@@ -25,8 +25,8 @@ import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.nio2.file.ShrinkWrapFileSystems;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases to assert that the {@link ShrinkWrapFileSystems} convenience API is working as contracted.
@@ -35,25 +35,24 @@ import org.junit.Test;
  */
 public class ShrinkWrapFileSystemsTestCase {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void newFileSystemArchiveRequired() throws IOException {
-        ShrinkWrapFileSystems.newFileSystem(null);
+    @Test
+    public void newFileSystemArchiveRequired() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ShrinkWrapFileSystems.newFileSystem(null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void getRootUriArchiveRequired() {
-        ShrinkWrapFileSystems.getRootUri(null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ShrinkWrapFileSystems.getRootUri(null));
     }
 
     @Test
     public void protocol() {
-        Assert.assertEquals("Protocol is not as expected", "shrinkwrap", ShrinkWrapFileSystems.PROTOCOL);
+        Assertions.assertEquals("shrinkwrap", ShrinkWrapFileSystems.PROTOCOL, "Protocol is not as expected");
     }
 
     @Test
     public void fsEnvKeyArchive() {
-        Assert.assertEquals("FS environment key for archives is not as expected", "archive",
-            ShrinkWrapFileSystems.FS_ENV_KEY_ARCHIVE);
+        Assertions.assertEquals("archive", ShrinkWrapFileSystems.FS_ENV_KEY_ARCHIVE, "FS environment key for archives is not as expected");
     }
 
     @Test
@@ -61,22 +60,22 @@ public class ShrinkWrapFileSystemsTestCase {
         final GenericArchive archive = ShrinkWrap.create(GenericArchive.class);
         final URI uri = ShrinkWrapFileSystems.getRootUri(archive);
         final String expected = "shrinkwrap://" + archive.getId() + "/";
-        Assert.assertEquals("Root URI is not as expected", expected, uri.toString());
+        Assertions.assertEquals(expected, uri.toString(), "Root URI is not as expected");
     }
 
     @Test
     public void newFileSystem() throws IOException {
         final GenericArchive archive = ShrinkWrap.create(GenericArchive.class);
         final ShrinkWrapFileSystem fs = (ShrinkWrapFileSystem) ShrinkWrapFileSystems.newFileSystem(archive);
-        Assert.assertNotNull("Did not obtain a new File System as expected", fs);
-        Assert.assertTrue("Backing archive was not as expected", archive == fs.getArchive());
+        Assertions.assertNotNull(fs, "Did not obtain a new File System as expected");
+        Assertions.assertSame(archive, fs.getArchive(), "Backing archive was not as expected");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void noArchiveInEnvShouldResultInIAE() throws Exception {
-        FileSystems.newFileSystem(
-            ShrinkWrapFileSystems.getRootUri(
-                    ShrinkWrap.create(JavaArchive.class)), new HashMap<>());
+    @Test
+    public void noArchiveInEnvShouldResultInIAE() {
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> FileSystems.newFileSystem(ShrinkWrapFileSystems.getRootUri(
+                                ShrinkWrap.create(JavaArchive.class)), new HashMap()));
     }
 
 }

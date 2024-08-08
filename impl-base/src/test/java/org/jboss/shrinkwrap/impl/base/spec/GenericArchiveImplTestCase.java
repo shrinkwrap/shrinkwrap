@@ -28,8 +28,8 @@ import org.jboss.shrinkwrap.api.container.ServiceProviderContainer;
 import org.jboss.shrinkwrap.impl.base.GenericArchiveImpl;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveType;
 import org.jboss.shrinkwrap.impl.base.test.DynamicContainerTestBase;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Test case to ensure that the {@link GenericArchiveImpl} is working as contracted
@@ -59,12 +59,12 @@ public class GenericArchiveImplTestCase extends DynamicContainerTestBase<Generic
     // Lifecycle Methods ------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
-    @Before
+    @BeforeEach
     public void createArchive() {
         archive = createNewArchive();
     }
 
-    @After
+    @AfterEach
     public void ls() {
         System.out.println("test@jboss:/$ ls -l " + archive.getName());
         System.out.println(archive.toString(true));

@@ -28,10 +28,9 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.Iterator;
 
-import org.junit.Assert;
-
 import org.jboss.shrinkwrap.api.ArchivePath;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests to assert that the {@link MemoryNamedAsset} is working as contracted by the {@link NamedAsset} API
@@ -45,7 +44,7 @@ public class MemoryNamedAssetTestCase {
         final String name = "ALR";
         final MemoryNamedAsset asset = new MemoryNamedAsset(name);
         final String roundtrip = asset.getName();
-        Assert.assertEquals(name, roundtrip);
+        Assertions.assertEquals(name, roundtrip);
         try {
             asset.close();
         } catch (final IOException ioe) {
@@ -53,14 +52,9 @@ public class MemoryNamedAssetTestCase {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nameViaStringNull() {
-        try (final MemoryNamedAsset asset = new MemoryNamedAsset((String) null)) {
-            // The initialization is expected to fail with IAE for null
-            Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (final IOException ignored) {
-            // IOException due to try-with-resources, test will fail as it is not the expected exception
-        }
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new MemoryNamedAsset((String) null));
     }
 
     @Test
@@ -85,7 +79,7 @@ public class MemoryNamedAssetTestCase {
         };
         final MemoryNamedAsset asset = new MemoryNamedAsset(path);
         final String roundtrip = asset.getName();
-        Assert.assertEquals(name, roundtrip);
+        Assertions.assertEquals(name, roundtrip);
         try {
             asset.close();
         } catch (final IOException ioe) {
@@ -93,14 +87,9 @@ public class MemoryNamedAssetTestCase {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nameViaArchivePathNull() {
-        try (final MemoryNamedAsset asset = new MemoryNamedAsset((ArchivePath) null)) {
-            // The initialization is expected to fail with IAE for null
-            Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (final IOException ignored) {
-            // IOException due to try-with-resources, test will fail as it is not the expected exception
-        }
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new MemoryNamedAsset((ArchivePath) null));
     }
 
     @Test
@@ -247,7 +236,7 @@ public class MemoryNamedAssetTestCase {
         };
         final MemoryNamedAsset asset = new MemoryNamedAsset(path);
         final String roundtrip = asset.getName();
-        Assert.assertEquals(name, roundtrip);
+        Assertions.assertEquals(name, roundtrip);
         try {
             asset.close();
         } catch (final IOException ioe) {
@@ -255,14 +244,9 @@ public class MemoryNamedAssetTestCase {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void nameViaPathNull() {
-        try (final MemoryNamedAsset asset = new MemoryNamedAsset((Path) null)) {
-            // The initialization is expected to fail with IAE for null
-            Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (final IOException ignored) {
-            // IOException due to try-with-resources, test will fail as it is not the expected exception
-        }
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new MemoryNamedAsset((Path) null));
     }
 
 }

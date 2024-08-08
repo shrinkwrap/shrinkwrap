@@ -23,16 +23,15 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.attribute.BasicFileAttributes;
 
-import org.junit.Assert;
-
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.nio2.file.ShrinkWrapFileSystems;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases to assert the ShrinkWrap implementation of the NIO.2 {@link BasicFileAttributes} is working as contracted.
@@ -45,7 +44,7 @@ public class FileAttributesTestCase {
 
     private JavaArchive archive;
 
-    @Before
+    @BeforeEach
     public void createStore() throws IOException {
         // Setup
         final String name = "test.jar";
@@ -57,54 +56,54 @@ public class FileAttributesTestCase {
         this.fs = fs;
     }
 
-    @After
+    @AfterEach
     public void closeFs() throws IOException {
         this.fs.close();
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void getLastModifiedTime() {
-        this.getAttributes("path", true).lastModifiedTime();
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> this.getAttributes("path", true).lastModifiedTime());
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void lastAccessTime() {
-        this.getAttributes("path", true).lastAccessTime();
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> this.getAttributes("path", true).lastAccessTime());
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void creationTime() {
-        this.getAttributes("path", true).creationTime();
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> this.getAttributes("path", true).creationTime());
     }
 
     @Test
     public void isRegularFile() {
-        Assert.assertTrue(this.getAttributes("path", true).isRegularFile());
+        Assertions.assertTrue(this.getAttributes("path", true).isRegularFile());
     }
 
     @Test
     public void isRegularFileFalse() {
-        Assert.assertFalse(this.getAttributes("path/", true).isRegularFile());
+        Assertions.assertFalse(this.getAttributes("path/", true).isRegularFile());
     }
 
     @Test
     public void isDirectory() {
-        Assert.assertTrue(this.getAttributes("path/", true).isDirectory());
+        Assertions.assertTrue(this.getAttributes("path/", true).isDirectory());
     }
 
     @Test
     public void isDirectoryFalse() {
-        Assert.assertFalse(this.getAttributes("path", true).isDirectory());
+        Assertions.assertFalse(this.getAttributes("path", true).isDirectory());
     }
 
     @Test
     public void isOther() {
-        Assert.assertFalse(this.getAttributes("alwaysFalse", true).isOther());
+        Assertions.assertFalse(this.getAttributes("alwaysFalse", true).isOther());
     }
 
     @Test
     public void isSymbolicLink() {
-        Assert.assertFalse(this.getAttributes("alwaysFalse", true).isSymbolicLink());
+        Assertions.assertFalse(this.getAttributes("alwaysFalse", true).isSymbolicLink());
     }
 
     @Test
@@ -114,14 +113,14 @@ public class FileAttributesTestCase {
         final Asset kiloAsset = () -> new ByteArrayInputStream(new byte[size]);
         final String path = "path";
         this.archive.add(kiloAsset, path);
-        Assert.assertEquals("Size not reported as expected", size, this.getAttributes(path, false).size());
+        Assertions.assertEquals(size, this.getAttributes(path, false).size(), "Size not reported as expected");
     }
 
     @Test
     public void fileKey() {
         final String path = "path";
         final String expected = this.archive.getId() + "/" + path;
-        Assert.assertEquals("Filekey not as expected", expected, this.getAttributes(path, true).fileKey());
+        Assertions.assertEquals(expected, this.getAttributes(path, true).fileKey(), "Filekey not as expected");
     }
 
     private ShrinkWrapFileAttributes getAttributes(final String pathName, boolean create) {

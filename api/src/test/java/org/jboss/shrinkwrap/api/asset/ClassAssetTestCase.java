@@ -16,10 +16,10 @@
  */
 package org.jboss.shrinkwrap.api.asset;
 
-import java.io.InputStream;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import java.io.InputStream;
 
 /**
  * Test to ensure that we are able to use Classes as Resources.
@@ -37,9 +37,9 @@ public class ClassAssetTestCase {
         Asset asset = new ClassAsset(clazz);
         InputStream io = asset.openStream();
 
-        Assert.assertNotNull(io);
-        Assert.assertEquals("Loaded class should have the same size", ApiTestUtils.findLengthOfStream(io),
-            ApiTestUtils.findLengthOfClass(clazz));
+        Assertions.assertNotNull(io);
+        Assertions.assertEquals(ApiTestUtils.findLengthOfStream(io), ApiTestUtils.findLengthOfClass(clazz),
+                "Loaded class should have the same size");
     }
 
     /**
@@ -56,20 +56,15 @@ public class ClassAssetTestCase {
         Asset asset = new ClassAsset(bootstrapClass);
         InputStream io = asset.openStream();
 
-        Assert.assertNotNull(io);
-        Assert.assertEquals("Loaded class should have the same size", ApiTestUtils.findLengthOfStream(io),
-            ApiTestUtils.findLengthOfClass(bootstrapClass));
+        Assertions.assertNotNull(io);
+        Assertions.assertEquals(ApiTestUtils.findLengthOfStream(io), ApiTestUtils.findLengthOfClass(bootstrapClass),
+                "Loaded class should have the same size");
     }
 
     @Test
     public void shouldThrowExceptionOnNullClass() {
-        try {
-            new ClassAsset(null);
-            Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (Exception e) {
-            Assert.assertEquals("A null clazz argument should result in a IllegalArgumentException",
-                IllegalArgumentException.class, e.getClass());
-        }
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new ClassAsset(null),
+                "A null clazz argument should result in a IllegalArgumentException");
     }
     
     @Test
@@ -77,6 +72,6 @@ public class ClassAssetTestCase {
         final Class<?> clazz = ClassAssetTestCase.class;
         final Asset asset = new ClassAsset(clazz);
         
-        Assert.assertTrue(clazz.getName().equals(((ClassAsset)asset).getSource().getName()));
+        Assertions.assertEquals(clazz.getName(), ((ClassAsset)asset).getSource().getName());
     }
 }

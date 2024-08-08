@@ -16,14 +16,12 @@
  */
 package org.jboss.shrinkwrap.api.asset;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.logging.Logger;
-
-import org.junit.Assert;
-
-import org.junit.Test;
 
 /**
  * ByteArrayAssetTestCase
@@ -88,7 +86,7 @@ public class ByteArrayAssetTestCase {
 
         // Ensure the roundtrip matches the input (index number)
         for (int i = 0; i < length; i++) {
-            Assert.assertEquals("Roundtrip did not equal passed in contents", i, roundtrip[i]);
+            Assertions.assertEquals(i, roundtrip[i], "Roundtrip did not equal passed in contents");
         }
 
     }
@@ -106,11 +104,11 @@ public class ByteArrayAssetTestCase {
         final ByteArrayAsset asset = new ByteArrayAsset(contents);
         final byte[] contentFromGetSource = asset.getSource();
         
-        Assert.assertTrue(asset.getSource().length == contents.length);
+        Assertions.assertEquals(asset.getSource().length, contents.length);
      
         // Ensure the roundtrip matches the input (index number)
         for (int i = 0; i < length; i++) {
-            Assert.assertEquals("getSource() did not equal passed in contents", i, contentFromGetSource[i]);
+            Assertions.assertEquals(i, contentFromGetSource[i], "getSource() did not equal passed in contents");
         }
     }
 }

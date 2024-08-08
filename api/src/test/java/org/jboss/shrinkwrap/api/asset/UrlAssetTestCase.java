@@ -16,15 +16,14 @@
  */
 package org.jboss.shrinkwrap.api.asset;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-
-import org.junit.Assert;
-
-import org.junit.Test;
 
 /**
  * Test to ensure that we can use a URL as a resource.
@@ -43,20 +42,15 @@ public class UrlAssetTestCase {
 
         InputStream io = asset.openStream();
 
-        Assert.assertNotNull(io);
-        Assert.assertEquals("Should be able to read the content of the resource", "shrinkwrap=true",
-            ApiTestUtils.convertToString(io));
+        Assertions.assertNotNull(io);
+        Assertions.assertEquals("shrinkwrap=true", ApiTestUtils.convertToString(io),
+                "Should be able to read the content of the resource");
     }
 
     @Test
     public void shouldThrowExceptionOnNullURL() {
-        try {
-            new UrlAsset(null);
-            Assert.fail("Should have thrown IllegalArgumentException");
-        } catch (Exception e) {
-            Assert.assertEquals("A null url argument should result in a IllegalArgumentException",
-                IllegalArgumentException.class, e.getClass());
-        }
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new UrlAsset(null),
+                "A null url argument should result in a IllegalArgumentException");
     }
 
     @Test
@@ -77,12 +71,12 @@ public class UrlAssetTestCase {
         try {
             io = asset.openStream();
         } catch (Exception e) {
-            Assert.fail("Mutated URL leaked into the UrlAsset");
+            Assertions.fail("Mutated URL leaked into the UrlAsset");
         }
 
-        Assert.assertNotNull(io);
-        Assert
-            .assertEquals("Mutated URL leaked into the UrlAsset", "shrinkwrap=true", ApiTestUtils.convertToString(io));
+        Assertions.assertNotNull(io);
+        Assertions
+            .assertEquals("shrinkwrap=true", ApiTestUtils.convertToString(io), "Mutated URL leaked into the UrlAsset");
     }
 
     /*
@@ -121,7 +115,7 @@ public class UrlAssetTestCase {
     	final URL url = getThreadContextClassLoader().getResource(EXISTING_RESOURCE);
         final Asset asset = new UrlAsset(url);
         
-        Assert.assertTrue(url.sameFile(((UrlAsset)asset).getSource()));
+        Assertions.assertTrue(url.sameFile(((UrlAsset)asset).getSource()));
     }
     
     /**
