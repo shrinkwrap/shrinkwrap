@@ -34,7 +34,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 /**
  * EnterpriseArchiveImplTest
- *
+ * <p>
  * Test to ensure that EnterpriseArchiveImpl follow to java ear spec.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

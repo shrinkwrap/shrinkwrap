@@ -44,7 +44,7 @@ import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 
 /**
  * MemoryMapArchiveBase
- *
+ * <p>
  * A base implementation for all MemoryMap archives. Thread-safe.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
@@ -76,7 +76,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 
     /**
      * Constructor
-     *
+     * <p>
      * This constructor will generate a unique {@link Archive#getName()} per instance.
      *
      * @param configuration
@@ -90,10 +90,11 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 
     /**
      * Constructor
-     *
+     * <p>
      * This constructor will generate an {@link Archive} with the provided name.
      *
      * @param archiveName
+     *            The name for the archive
      * @param configuration
      *            The configuration for this archive
      * @throws IllegalArgumentException
@@ -201,7 +202,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 
             // we're adding dir, it exists, do nothing
         } else {
-            // Path does not exists, add new node
+            // Path does not exist, add new node
             addNewNode(path, handledAsset);
         }
 
@@ -222,7 +223,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 
     /**
      * {@inheritDoc}
-     * @see org.jboss.shrinkwrap.api.Archive#addListener(org.jboss.shrinkwrap.api.Filter, org.jboss.shrinkwrap.api.ArchiveEventHandler)
+     * @see org.jboss.shrinkwrap.api.Archive#addHandlers(ArchiveEventHandler...)
      */
     @Override
     public T addHandlers(ArchiveEventHandler... handlers) {
@@ -271,7 +272,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Archive#delete(org.jboss.declarchive.api.ArchivePath)
+     * @see org.jboss.shrinkwrap.api.Archive#delete(ArchivePath)
      */
     @Override
     public Node delete(ArchivePath path) {
@@ -313,7 +314,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
         if (node.getChildren() != null) {
             final Set<Node> children = node.getChildren();
 
-            // can't remove from collection inside of the iteration
+            // can't remove from collection inside the iteration
             final Set<Node> childrenCopy = new HashSet<>(children);
             for (Node child : childrenCopy) {
                 node.removeChild(child);
@@ -417,7 +418,8 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
      * Attempt to get the asset from a nested archive.
      *
      * @param path
-     * @return
+     *            The path to the asset in the nested archive
+     * @return The node corresponding to the asset in the nested archive, or {@code null} if not found
      */
     private Node getNestedNode(ArchivePath path) {
         // Iterate through nested archives
@@ -443,8 +445,11 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
      * Check to see if one path starts with another
      *
      * @param fullPath
+     *            The full path to check
      * @param startingPath
+     *            The path to compare against
      * @return
+     *            {@code true} if the full path starts with the starting path, {@code false} otherwise
      */
     private boolean startsWith(ArchivePath fullPath, ArchivePath startingPath) {
         final String context = fullPath.get();
@@ -458,8 +463,11 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
      * beginning.
      *
      * @param fullPath
+     *            The full path from which the base path should be removed
      * @param basePath
+     *            The base path to remove from the beginning of the full path
      * @return
+     *            The new path with the base path removed
      */
     private ArchivePath getNestedPath(ArchivePath fullPath, ArchivePath basePath) {
         final String context = fullPath.get();
@@ -472,7 +480,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
     }
 
     /**
-     * Used to retrieve a {@link Node} from the content of the {@link Archive}. If the {@link Node} doesn�t exists in
+     * Used to retrieve a {@link Node} from the content of the {@link Archive}. If the {@link Node} does not exist in
      * the specified location, it is created and added to the {@link Archive}. The same happens to all its non-existing
      * parents. However, if the {@link Node} is an asset, an IllegalArchivePathException is thrown.
      *
@@ -500,7 +508,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
             return node;
         }
 
-        // If the node doesn't exists, create it. Also create all possible non-existing
+        // If the node doesn't exist, create it. Also create all possible non-existing
         // parents
         node = new NodeImpl(path);
         NodeImpl parentNode = obtainParent(path.getParent());

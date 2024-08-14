@@ -83,6 +83,7 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
      * Creates stream directly from archive.
      *
      * @param archive
+     *              The archive from which the stream is created
      */
     public AbstractOnDemandInputStream(final Archive<?> archive) {
         final Collection<Node> nodes = archive.getContent().values();
@@ -166,6 +167,7 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
      * Performs copy operation between currentNodeStream and outputStream using buffer length.
      *
      * @throws IOException
+     *             If an I/O error occurs during the copy operation
      */
     private void doCopy() throws IOException {
         int copied = IOUtil.copy(currentNodeStream, outputStream, BUFFER_LENGTH);
@@ -180,7 +182,11 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
      * Start entry in stream.
      *
      * @param path
+     *            The path of the entry to start
+     * @param asset
+     *            The asset to be written
      * @throws IOException
+     *             If an I/O error occurs while starting the entry
      */
     private void startAsset(final String path, final Asset asset) throws IOException {
         putNextEntry(outputStream, path, asset);
@@ -190,6 +196,7 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
      * Close entry in stream.
      *
      * @throws IOException
+     *             If an I/O error occurs while closing the entry
      */
     private void endAsset() throws IOException {
         closeEntry(outputStream);
@@ -199,7 +206,8 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
      * Creates the real {@link OutputStream} to which we'll write, wrapping the provided target.
      *
      * @param outputStream
-     * @return
+     *            The underlying output stream to be wrapped
+     * @return The created output stream
      * @throws IOException
      *             If an error occurred in creating the stream
      */
@@ -209,7 +217,11 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
      * Writes the next entry (demarcates a new file/folder is to be written).
      *
      * @param outputStream
+     *            The output stream to write to
      * @param context
+     *            The context or path of the entry
+     * @param asset
+     *            The asset to be written
      * @throws IOException
      *             If an error occurred writing the entry
      */
@@ -219,6 +231,7 @@ public abstract class AbstractOnDemandInputStream<T extends OutputStream> extend
      * Closes the current entry context for the specified {@link OutputStream}.
      *
      * @param outputStream
+     *            The output stream to close the entry for
      */
     protected abstract void closeEntry(T outputStream) throws IOException;
 }

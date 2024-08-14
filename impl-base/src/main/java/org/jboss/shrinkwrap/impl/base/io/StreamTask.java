@@ -31,7 +31,7 @@ public interface StreamTask<S extends Closeable> {
     // -------------------------------------------------------------------------------------||
 
     /**
-     * This method execute's this StreamTask with the provided stream.
+     * This method executes this StreamTask with the provided stream.
      *
      * @param stream
      *            This parameter holds the stream that this StreamTask operates on to execute its task.

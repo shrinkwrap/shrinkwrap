@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Stress test to ensure that archives exported as ZIPs which have size larger than available RAM can be processed,
  * proving that we're buffering the encoding process.
- *
+ * <p>
  * SHRINKWRAP-116
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
@@ -95,7 +95,7 @@ public class ZipExporterStressTest {
         log.info("Started w/ free memory (MB): " + this.megaBytesFromBytes(startFreeMemBytes));
         log.info("Free memory before export (MB): " + this.megaBytesFromBytes(beforeExportFreeMemBytes));
 
-        // Export; at this point we have less than 50% available memory so
+        // Export; at this point we have less than 50% available memory, so
         // we can't carry the whole archive in RAM twice; this
         // should ensure the ZIP impl uses an internal buffer
         final InputStream in = archive.as(ZipExporter.class).exportAsInputStream();
@@ -121,7 +121,9 @@ public class ZipExporterStressTest {
      * Returns the number of MB the specified number of bytes represents
      *
      * @param bytes
-     * @return
+     *             The number of bytes to be converted to megabytes.
+     * @return The equivalent megabytes as a {@link BigDecimal}, rounded to 2 decimal places.
+
      */
     private BigDecimal megaBytesFromBytes(final long bytes) {
         return new BigDecimal(bytes).divide(MEGA).setScale(2, RoundingMode.HALF_UP);
@@ -131,7 +133,8 @@ public class ZipExporterStressTest {
      * Obtains an estimate of the total amount of free memory available to the JVM
      *
      * @param runtime
-     * @return
+     *             The {@link Runtime} instance to query for memory statistics.
+     * @return The estimated total amount of free memory in bytes.
      */
     private static long totalFreeMemory(final Runtime runtime) {
         return runtime.maxMemory() - runtime.totalMemory() + runtime.freeMemory();
@@ -155,9 +158,8 @@ public class ZipExporterStressTest {
         }
 
         static MegaByteAsset newInstance() {
-            /**
-             * Bytes must be random/distributed so that compressing these in ZIP isn't too efficient
-             */
+
+            //Bytes must be random/distributed so that compressing these in ZIP isn't too efficient
             final byte[] content = new byte[MEGA];
             random.nextBytes(content);
             return new MegaByteAsset(content);

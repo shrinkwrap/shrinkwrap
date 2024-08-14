@@ -36,12 +36,12 @@ import javax.activation.MimeTypeParseException;
  * only of the header record, and are followed by entries for the directory's contents. File entries consist of a header
  * record followed by the number of records needed to contain the file's contents. All entries are written on record
  * boundaries. Records are 512 bytes long.
- *
+ * <p>
  * TarArchives are instantiated in either read or write mode, based upon whether they are instantiated with an
  * InputStream or an OutputStream. Once instantiated TarArchives read/write mode can not be changed.
- *
+ * <p>
  * There is currently no support for random access to tar archives. However, it seems that subclassing TarArchive, and
- * using the TarBuffer.getCurrentRecordNum() and TarBuffer.getCurrentBlockNum() methods, this would be rather trvial.
+ * using the TarBuffer.getCurrentRecordNum() and TarBuffer.getCurrentBlockNum() methods, this would be rather trivial.
  *
  * @version $Revision: 1.15 $
  * @author Timothy Gerard Endres, <time@gjt.org>
@@ -75,17 +75,17 @@ public class TarArchive {
     protected TarProgressDisplay progressDisplay;
 
     /**
-     * The InputStream based constructors create a TarArchive for the purposes of e'x'tracting or lis't'ing a tar
+     * The InputStream based constructors create a TarArchive for the purposes of extracting or listing a tar
      * archive. Thus, use these constructors when you wish to extract files from or list the contents of an existing tar
      * archive.
      */
 
     public TarArchive(InputStream inStream) {
-        this(inStream, TarBuffer.DEFAULT_BLKSIZE);
+        this(inStream, TarBuffer.DEFAULT_BLOCK_SIZE);
     }
 
     public TarArchive(InputStream inStream, int blockSize) {
-        this(inStream, blockSize, TarBuffer.DEFAULT_RCDSIZE);
+        this(inStream, blockSize, TarBuffer.DEFAULT_RECORD_SIZE);
     }
 
     public TarArchive(InputStream inStream, int blockSize, int recordSize) {
@@ -94,16 +94,16 @@ public class TarArchive {
     }
 
     /**
-     * The OutputStream based constructors create a TarArchive for the purposes of 'c'reating a tar archive. Thus, use
+     * The OutputStream based constructors create a TarArchive for the purposes of creating a tar archive. Thus, use
      * these constructors when you wish to create a new tar archive and write files into it.
      */
 
     public TarArchive(OutputStream outStream) {
-        this(outStream, TarBuffer.DEFAULT_BLKSIZE);
+        this(outStream, TarBuffer.DEFAULT_BLOCK_SIZE);
     }
 
     public TarArchive(OutputStream outStream, int blockSize) {
-        this(outStream, blockSize, TarBuffer.DEFAULT_RCDSIZE);
+        this(outStream, blockSize, TarBuffer.DEFAULT_RECORD_SIZE);
     }
 
     public TarArchive(OutputStream outStream, int blockSize, int recordSize) {
@@ -195,11 +195,11 @@ public class TarArchive {
     }
 
     /**
-     * Set the ascii file translation flag. If ascii file translatio is true, then the MIME file type will be consulted
+     * Set the ascii file translation flag. If ascii file translation is true, then the MIME file type will be consulted
      * to determine if the file is of type 'text/*'. If the MIME type is not found, then the TransFileTyper is consulted
      * if it is not null. If either of these two checks indicates the file is an ascii text file, it will be translated.
      * The translation converts the local operating system's concept of line ends into the UNIX line end, '\n', which is
-     * the defacto standard for a TAR archive. This makes text files compatible with UNIX, and since most tar
+     * the de facto standard for a TAR archive. This makes text files compatible with UNIX, and since most tar
      * implementations for other platforms, compatible with most other platforms.
      *
      * @param asciiTranslate
@@ -223,13 +223,13 @@ public class TarArchive {
 
     /**
      * Set user and group information that will be used to fill in the tar archive's entry headers. Since Java currently
-     * provides no means of determining a user name, user id, group name, or group id for a given File, TarArchive
+     * provides no means of determining a username, user id, group name, or group id for a given File, TarArchive
      * allows the programmer to specify values to be used in their place.
      *
      * @param userId
-     *            The user Id to use in the headers.
+     *            The user ID to use in the headers.
      * @param userName
-     *            The user name to use in the headers.
+     *            The username to use in the headers.
      * @param groupId
      *            The group id to use in the headers.
      * @param groupName
@@ -254,9 +254,9 @@ public class TarArchive {
     }
 
     /**
-     * Get the user name being used for archive entry headers.
+     * Get the username being used for archive entry headers.
      *
-     * @return The current user name.
+     * @return The current username.
      */
 
     public String getUserName() {
@@ -309,8 +309,8 @@ public class TarArchive {
     /**
      * Get the archive's record size. Because of its history, tar supports the concept of buffered IO consisting of
      * BLOCKS of RECORDS. This allowed tar to match the IO characteristics of the physical device being used. Of course,
-     * in the Java world, this makes no sense, WITH ONE EXCEPTION - archives are expected to be propertly "blocked".
-     * Thus, all of the horrible TarBuffer support boils down to simply getting the "boundaries" correct.
+     * in the Java world, this makes no sense, WITH ONE EXCEPTION - archives are expected to be properly "blocked".
+     * Thus, all the horrible TarBuffer support boils down to simply getting the "boundaries" correct.
      *
      * @return The record size this archive is using.
      */
@@ -322,7 +322,7 @@ public class TarArchive {
             return this.tarOut.getRecordSize();
         }
 
-        return TarBuffer.DEFAULT_RCDSIZE;
+        return TarBuffer.DEFAULT_RECORD_SIZE;
     }
 
     /**
@@ -362,7 +362,7 @@ public class TarArchive {
 
     /**
      * Perform the "list" command and list the contents of the archive. NOTE That this method uses the progress display
-     * to actually list the conents. If the progress display is not set, nothing will be listed!
+     * to actually list the contents. If the progress display is not set, nothing will be listed!
      */
 
     public void listContents() throws IOException {
@@ -520,7 +520,7 @@ public class TarArchive {
      * and finally call closeEntry() for entries that are files. For directories, it will call putNextEntry(), and then,
      * if the recurse flag is true, process each entry that is a child of the directory.
      *
-     * @param entry
+     * @param oldEntry
      *            The TarEntry representing the entry to write to the archive.
      * @param recurse
      *            If true, process the children of directory entries.
@@ -533,7 +533,7 @@ public class TarArchive {
         File tFile = null;
         File eFile = oldEntry.getFile();
 
-        // Work on a copy of the entry so we can manipulate it.
+        // Work on a copy of the entry, so we can manipulate it.
         // Note that we must distinguish how the entry was constructed.
         //
         TarEntry entry = (TarEntry) oldEntry.clone();

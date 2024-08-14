@@ -20,7 +20,7 @@ import org.jboss.shrinkwrap.api.Archive;
 
 /**
  * MemoryMapArchive
- *
+ * <p>
  * A pure in memory Archive backed by a Map.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>

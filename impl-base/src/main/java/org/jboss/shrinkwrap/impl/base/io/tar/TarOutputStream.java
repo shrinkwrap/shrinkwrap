@@ -16,7 +16,7 @@ import java.util.zip.GZIPOutputStream;
 // typing.
 
 /**
- * Outputs TAR files; essentially a copy (ie. hack) of {@link TarGzOutputStream}, except the output is *not* encoded
+ * Outputs TAR files; essentially a copy (i.e. hack) of {@link TarGzOutputStream}, except the output is *not* encoded
  * with a {@link GZIPOutputStream} wrapper. In place temporarily until we determine a way to properly write entries and
  * automatically handle the proper "next entry" logic for TAR just as is done for TAR.GZ. Likely well centralize a lot
  * of this logic into a common base class.

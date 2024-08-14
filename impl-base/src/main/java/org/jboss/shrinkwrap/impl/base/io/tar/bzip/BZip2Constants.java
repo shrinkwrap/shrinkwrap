@@ -28,7 +28,7 @@ package org.jboss.shrinkwrap.impl.base.io.tar.bzip;
  */
 interface BZip2Constants {
 
-    int BASEBLOCKSIZE = 100000;
+    int BASE_BLOCK_SIZE = 100000;
     int MAX_ALPHA_SIZE = 258;
     int MAX_CODE_LEN = 23;
     int RUNA = 0;

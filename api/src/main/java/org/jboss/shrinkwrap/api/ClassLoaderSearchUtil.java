@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 /**
  * Utilities to search a series of {@link ClassLoader}s for a {@link Class} by name.
- *
+ * <p>
  * Not to be granted visibility outside of this package, unless scoped out to internals (this is not part of the public
  * user API)
  *
@@ -56,8 +56,10 @@ class ClassLoaderSearchUtil {
      * Finds a {@link Class} by name using a series of {@link ClassLoader}s as the search path
      *
      * @param className
+     *             The fully qualified name of the class to be found
      * @param classLoaders
-     * @return
+     *             An {@link Iterable} of {@link ClassLoader}s to be used as the search path
+     * @return The {@link Class} object for the class with the specified name, found using one of the provided {@link ClassLoader}s
      * @throws ClassNotFoundException
      *             If the {@link Class} could not be found in any of the specified CLs
      */

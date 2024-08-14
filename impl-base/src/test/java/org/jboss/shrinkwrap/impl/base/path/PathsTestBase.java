@@ -123,7 +123,7 @@ public abstract class PathsTestBase {
     }
 
     /**
-     * Ensures that a relative path resolves to absoulte form in the single-arg ctor
+     * Ensures that a relative path resolves to absolute form in the single-arg ctor
      */
     @Test
     public void testRelativeResolvedToAbsolute() {
@@ -292,7 +292,7 @@ public abstract class PathsTestBase {
     }
 
     /**
-     * Ensures that Paths with inequal contexts are equal by value
+     * Ensures that Paths with unequal contexts are equal by value
      */
     @Test
     public void testNotEqual() {

@@ -84,11 +84,11 @@ class ApiTestUtils {
 
     /**
      * Get a resourceName for a {@link Class} so that it can be found in the {@link ClassLoader}. <br/>
-     * class.getName.relace( . -> / ) + ".class"
+     * class.getName.replace( . -> / ) + ".class"
      * 
      * @param clazz
      *            The class to lookup
-     * @return
+     * @return The resource name for the class
      */
     static String getResourceNameForClass(Class<?> clazz) {
         String classResourceDelimiter = clazz.getName().replaceAll("\\.", "/");

@@ -67,7 +67,7 @@ public final class ArchivePaths {
      * Creates a new {@link ArchivePath} using the specified base and specified relative context.
      *
      * @param basePath
-     *            A absolute path
+     *            An absolute path
      * @param context
      *            A relative path to basePath
      * @return a new path
@@ -80,7 +80,7 @@ public final class ArchivePaths {
      * Creates a new {@link ArchivePath} using the specified base and specified relative context.
      *
      * @param basePath
-     *            A absolute path
+     *            An absolute path
      * @param context
      *            A relative path to basePath
      * @return a new path
@@ -93,7 +93,7 @@ public final class ArchivePaths {
      * Creates a new {@link ArchivePath} using the specified base and specified relative context.
      *
      * @param basePath
-     *            A absolute path
+     *            An absolute path
      * @param context
      *            A relative path to basePath
      * @return a new path
@@ -106,7 +106,7 @@ public final class ArchivePaths {
      * Creates a new {@link ArchivePath} using the specified base and specified relative context.
      *
      * @param basePath
-     *            A absolute path
+     *            An absolute path
      * @param context
      *            A relative path to basePath
      * @return a new path

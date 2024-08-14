@@ -132,16 +132,14 @@ public class ShrinkWrapClassLoaderTestCase {
     }
 
     /**
-     * Ensures we can load a Class instance from the {@link ShrinkWrapClassLoader} in a web archive
+     * Ensures we can load a Class instance from the {@link ShrinkWrapClassLoader} in a web archive.
+     * The Web Archive is read via a {@link ShrinkWrapClassLoaderTestCase#shrinkWrapClassLoader}.
+     * Classes are placed under WEB-INF/classes, so the class loader must respect this structure
+     * and know how to handle it.
      */
     @Test
     public void shouldBeAbleToLoadClassFromWebArchive() throws ClassNotFoundException {
 
-        /**
-         * Web Archive to be read via a {@link ShrinkWrapClassLoaderTestCase#shrinkWrapClassLoader}.
-         * Places classes under WEB-INF/classes, so with this different root needs the CL to respect that
-         * and know what to do
-         */
         final WebArchive webArchive = ShrinkWrap.create(WebArchive.class).addClass(
                 applicationClassLoaderClass);
         final ClassLoader webArchiveClassLoader = new ShrinkWrapClassLoader((ClassLoader) null,
@@ -166,8 +164,8 @@ public class ShrinkWrapClassLoaderTestCase {
 
     /**
      * Ensures that we can open up directory content as obtained via a {@link URL} from the
-     * {@link ShrinkWrapClassLoader} (ie. should return null, not throw an exception)
-     *
+     * {@link ShrinkWrapClassLoader} (i.e. should return null, not throw an exception)
+     * <p>
      * SHRINKWRAP-306
      */
     @Test
@@ -191,12 +189,12 @@ public class ShrinkWrapClassLoaderTestCase {
 
     /**
      * Ensures that we can open up an asset that doesn't exist via a {@link URL} from the {@link ShrinkWrapClassLoader}
-     * (ie. should throw {@link FileNotFoundException}
+     * i.e. should throw {@link FileNotFoundException}
      *
      * SHRINKWRAP-308
      */
     @Test
-    public void shouldNotBeAbleToOpenStreamOnNonexistantAsset() throws IOException {
+    public void shouldNotBeAbleToOpenStreamOnNonexistentAsset() throws IOException {
         // Make a new Archive with some content in a directory
         final String nestedResourceName = "nested/test";
         final Asset testAsset = new StringAsset("testContent");

@@ -59,7 +59,8 @@ public final class ShrinkWrapFileSystems {
      * {@link Map} under the key {@link ShrinkWrapFileSystems#FS_ENV_KEY_ARCHIVE}
      *
      * @param archive
-     * @return
+     *             The {@link Archive} for which a new file system is to be created. Must not be {@code null}.
+     * @return A new {@link FileSystem} associated with the given {@link Archive}.
      * @throws IllegalArgumentException
      *             If the archive is not specified
      * @throws IOException
@@ -79,11 +80,12 @@ public final class ShrinkWrapFileSystems {
 
     /**
      * Constructs a new {@link URI} with the form:
-     *
+     * <p>
      * <code>shrinkwrap://{archive.getId()}/</code>
      *
      * @param archive
-     * @return
+     *             The {@link Archive} for which the root URI is to be constructed. Must not be {@code null}.
+     * @return A new {@link URI} representing the root of the given {@link Archive}.
      * @throws IllegalArgumentException
      *             If the archive is not specified
      */

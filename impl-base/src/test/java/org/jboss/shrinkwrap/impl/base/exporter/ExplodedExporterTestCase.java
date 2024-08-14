@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * ExplodedExporterTestCase
- *
+ * <p>
  * TestCase to ensure that the {@link ExplodedExporter} correctly exports archive.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>
@@ -230,15 +230,15 @@ public class ExplodedExporterTestCase extends ExportTestBase {
      */
     @Test
     public void testExportExplodedRequiresExistingDirectory() {
-        log.info("testExportExplodedRequiresExisitingDirectroy");
+        log.info("testExportExplodedRequiresExistingDirectory");
 
-        final File directory = this.getNonexistantDirectory();
+        final File directory = this.getNonexistentDirectory();
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> ShrinkWrap.create(ExplodedExporter.class, "test.jar").exportExploded(directory));
     }
 
     /**
-     * Ensure ExpolodedExporter requires a directory
+     * Ensure ExplodedExporter requires a directory
      */
     @Test
     public void testExportExplodedRequiresValidDirectory() {
@@ -252,8 +252,8 @@ public class ExplodedExporterTestCase extends ExportTestBase {
      * Ensure an ArchiveExportException is thrown when output directory can not be created
      */
     @Test
-    public void testExportExplodedOutpuDirCreationFails() throws Exception {
-        log.info("testExportExplodedOutpuDirCreationFails");
+    public void testExportExplodedOutputDirCreationFails() throws Exception {
+        log.info("testExportExplodedOutputDirCreationFails");
         final File directory = createTempDirectory("testExportExplodedOutpuDirCreationFails");
         directory.deleteOnExit();
 
@@ -278,7 +278,8 @@ public class ExplodedExporterTestCase extends ExportTestBase {
     }
 
     /**
-     * https://jira.jboss.org/jira/browse/SHRINKWRAP-84 <br/>
+     * <a href="https://issues.redhat.com/browse/SHRINKWRAP-84">SHRINKWRAP-84</a>
+     * <br/>
      * Should be able to use a existing directory as parent directory for ExplodedExports
      */
     @Test
@@ -302,12 +303,12 @@ public class ExplodedExporterTestCase extends ExportTestBase {
     }
 
     /**
-     * https://jira.jboss.org/jira/browse/SHRINKWRAP-86 Ensure an IllegalArgumentException is thrown when output
-     * directory is a file
+     * <a href="https://issues.redhat.com/browse/SHRINKWRAP-86">SHRINKWRAP-86</a>
+     * Ensure an IllegalArgumentException is thrown when output directory is a file
      */
     @Test
-    public void testExportExplodedOutpuDirIsAFile() throws Exception {
-        log.info("testExportExplodedOutpuDirIsAFile");
+    public void testExportExplodedOutputDirIsAFile() throws Exception {
+        log.info("testExportExplodedOutputDirIsAFile");
         final File directory = createTempDirectory("testExportExplodedOutpuDirIsAFile");
         // Will cause the creation of Archive directory to fail
         final File existingFile = new File(directory, NAME_ARCHIVE + this.getArchiveExtension());
@@ -328,7 +329,7 @@ public class ExplodedExporterTestCase extends ExportTestBase {
     /**
      * Obtains a reference to a directory that does not exist
      */
-    private File getNonexistantDirectory() {
+    private File getNonexistentDirectory() {
         final File directory = new File(this.getTarget(), "someNonExistentDirectory");
         if (directory.exists()) {
             TestIOUtil.deleteDirectory(directory);

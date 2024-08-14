@@ -58,7 +58,7 @@ public class TarImporterImpl extends TarImporterBase<TarInputStream, TarImporter
      */
     @Override
     TarInputStream getInputStreamForRawStream(final InputStream in) {
-        assert in != null : "Specified inputstream was null";
+        assert in != null : "Specified input stream was null";
         return new TarInputStream(in);
     }
 

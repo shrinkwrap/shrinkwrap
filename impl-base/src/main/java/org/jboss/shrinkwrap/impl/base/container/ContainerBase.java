@@ -69,7 +69,7 @@ import org.jboss.shrinkwrap.spi.Configurable;
 
 /**
  * ContainerBase
- *
+ * <p>
  * Abstract class that helps implement the Archive, ManifestContainer, ResourceContainer, ClassContainer and
  * LibraryContainer.
  *
@@ -127,7 +127,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T add(final Archive<?> archive, final String path, final Class<? extends StreamExporter> exporter) {
         this.getArchive().add(archive, path, exporter);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -139,7 +139,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T add(final Archive<?> archive, final ArchivePath path, final Class<? extends StreamExporter> exporter) {
         this.getArchive().add(archive, path, exporter);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -151,7 +151,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T add(Asset asset, ArchivePath target) throws IllegalArgumentException {
         this.getArchive().add(asset, target);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -163,7 +163,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T add(Asset asset, ArchivePath path, String name) {
         this.getArchive().add(asset, path, name);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -175,7 +175,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T add(final Asset asset, final String target, final String name) throws IllegalArgumentException {
         this.getArchive().add(asset, target, name);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -186,7 +186,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T add(NamedAsset namedAsset) {
         this.getArchive().add(namedAsset);
-        return covarientReturn();
+        return covariantReturn();
 
     }
 
@@ -198,7 +198,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T addAsDirectories(ArchivePath... paths) throws IllegalArgumentException {
         this.getArchive().addAsDirectories(paths);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -209,7 +209,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T addAsDirectories(String... paths) throws IllegalArgumentException {
         this.getArchive().addAsDirectories(paths);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -220,7 +220,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T addAsDirectory(ArchivePath path) throws IllegalArgumentException {
         this.getArchive().addAsDirectory(path);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -231,21 +231,20 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T addAsDirectory(String path) throws IllegalArgumentException {
         this.getArchive().addAsDirectory(path);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Archive#addHandlers(org.jboss.shrinkwrap.api.Filter,
-     *      org.jboss.shrinkwrap.api.ArchiveEventHandler)
+     * @see org.jboss.shrinkwrap.api.Archive#addHandlers(org.jboss.shrinkwrap.api.ArchiveEventHandler...)
      */
     @Override
     public T addHandlers(ArchiveEventHandler... handlers) {
         for (ArchiveEventHandler handler : handlers) {
             this.getArchive().addHandlers(handler);
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -256,7 +255,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T merge(Archive<?> source) throws IllegalArgumentException {
         this.getArchive().merge(source);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -267,7 +266,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T merge(Archive<?> source, Filter<ArchivePath> filter) throws IllegalArgumentException {
         this.getArchive().merge(source, filter);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -279,7 +278,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T merge(Archive<?> source, ArchivePath path) throws IllegalArgumentException {
         this.getArchive().merge(source, path);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -291,7 +290,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T merge(Archive<?> source, ArchivePath path, Filter<ArchivePath> filter) throws IllegalArgumentException {
         this.getArchive().merge(source, path, filter);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -304,7 +303,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     public T merge(final Archive<?> source, final String path, final Filter<ArchivePath> filter)
         throws IllegalArgumentException {
         this.getArchive().merge(source, path, filter);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -315,7 +314,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T merge(final Archive<?> source, final String path) throws IllegalArgumentException {
         this.getArchive().merge(source, path);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -327,7 +326,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T move(ArchivePath source, ArchivePath target) throws IllegalArgumentException, IllegalArchivePathException {
         this.getArchive().move(source, target);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -338,7 +337,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T move(String source, String target) throws IllegalArgumentException, IllegalArchivePathException {
         this.getArchive().move(source, target);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -349,7 +348,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     @Override
     public T add(Asset asset, String name) {
         this.getArchive().add(asset, name);
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -548,7 +547,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     public Archive<T> shallowCopy(Filter<ArchivePath> filter) {
         Validate.notNull(filter, "Filter must be specified");
 
-        // Get the actual class type and make a shallow copy of the the underlying archive,
+        // Get the actual class type and make a shallow copy of the underlying archive,
         // using the same underlying configuration
         final Class<T> actualClass = this.getActualClass();
         final Archive<?> underlyingArchive = this.getArchive();
@@ -798,9 +797,14 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
      * itself
      *
      * @param resource
+     *            The {@link File} resource representing the nested JAR file
      * @param target
-     * @return
+     *            The {@link ArchivePath} specifying where in the archive the resource should be added
+     * @param base
+     *            The {@link ArchivePath} specifying the base path for the resource
+     * @return the updated instance of {@link T} (the current archive) with the resource added
      * @throws IllegalArgumentException
+     *            If the resource could not be found in any of the available class loaders
      */
     private T addNestedJarFileResource(final File resource, final ArchivePath target, final ArchivePath base)
         throws IllegalArgumentException {
@@ -854,7 +858,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
             ArchivePath child = ArchivePaths.create(file.getName());
             addAsManifestResource(file, new BasicPath(target, child));
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /*
@@ -905,7 +909,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         for (String resourceName : resourceNames) {
             addAsManifestResource(resourcePackage, resourceName);
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /*
@@ -1166,7 +1170,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
             ArchivePath child = ArchivePaths.create(file.getName());
             addAsResource(file, new BasicPath(target, child));
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /*
@@ -1216,7 +1220,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         for (String resourceName : resourceNames) {
             addAsResource(resourcePackage, resourceName);
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /*
@@ -1370,7 +1374,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
                  *
                  * @param path
                  *            The added classes
-                 * @return
+                 * @return {@code true} if the path matches the pattern for the given class resource, {@code false} otherwise
                  */
                 @Override
                 public boolean include(ArchivePath path) {
@@ -1382,7 +1386,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
             // Assumes a null package is a class in the default package
                 clazz.getPackage() == null ? DEFAULT_PACKAGE_NAME : clazz.getPackage().getName());
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /*
@@ -1467,7 +1471,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
      */
     @Override
     public T addPackages(boolean recursive, String... packages) throws IllegalArgumentException {
-        Validate.notNullAndNoNullValues(packages, "Pakcages must be specified and can not container null values");
+        Validate.notNullAndNoNullValues(packages, "Packages must be specified and can not container null values");
 
         return addPackages(recursive, Filters.includeAll(), packages);
     }
@@ -1492,7 +1496,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
                 addPackage(recursive, filter, classLoader, packageName);
             }
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     private T addPackages(final boolean recursive, final Filter<ArchivePath> filter, final ClassLoader classLoader,
@@ -1503,7 +1507,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         for (String packageName : packageNames) {
             addPackage(recursive, filter, classLoader, packageName);
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     private void addPackage(final boolean recursive, final Filter<ArchivePath> filter, final ClassLoader classLoader,
@@ -1549,7 +1553,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
         getArchive().delete(path);
 
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /*
@@ -1573,7 +1577,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
             getArchive().delete(path);
         }
 
-        return covarientReturn();
+        return covariantReturn();
     }
 
     private Set<ArchivePath> getInnerClasses(final ArchivePath path) {
@@ -1683,7 +1687,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
             }
         }
 
-        return covarientReturn();
+        return covariantReturn();
     }
 
     private void deletePackage(boolean recursive, final Filter<ArchivePath> filter, String packageName, ClassLoader classLoader) {
@@ -1838,7 +1842,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         for (File file : resource.listFiles()) {
             addAsLibrary(file, new BasicPath(target, file.getName()));
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /*
@@ -1868,7 +1872,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
             addAsLibrary(file, new BasicPath(target, file.getName()));
         }
 
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /*
@@ -1897,7 +1901,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         for (String resourceName : resourceNames) {
             addAsLibrary(resourceName);
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /*
@@ -1911,7 +1915,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         for (File resource : resources) {
             addAsLibrary(resource);
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /*
@@ -1925,7 +1929,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         for (final Archive<?> archive : archives) {
             addAsLibrary(archive);
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -1952,7 +1956,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
                 this.addAsLibraries(archive);
             }
         }
-        return covarientReturn();
+        return covariantReturn();
     }
 
     /**
@@ -1967,7 +1971,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     // Internal Helper Methods ------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
-    protected T covarientReturn() {
+    protected T covariantReturn() {
         return getActualClass().cast(this);
     }
 

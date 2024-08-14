@@ -77,7 +77,7 @@ public class PathsTestCase {
     }
 
     @Test
-    public void getNonexistantFilesystem() {
+    public void getNonexistentFilesystem() {
         Assertions.assertThrows(FileSystemNotFoundException.class,
                 () -> Paths.get(new URI(ShrinkWrapFileSystems.PROTOCOL + "://fakeId")));
     }

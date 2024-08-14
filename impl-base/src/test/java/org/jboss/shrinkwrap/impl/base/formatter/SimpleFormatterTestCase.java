@@ -20,7 +20,7 @@ import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.api.formatter.Formatters;
 
 /**
- * Ensures that the {@link Formatters.SIMPLE} is functioning as expected
+ * Ensures that the {@link Formatters#SIMPLE} is functioning as expected
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
@@ -34,7 +34,7 @@ public class SimpleFormatterTestCase extends FormatterTestBase {
     /**
      * The output expected of the formatter
      */
-    /* ArchiveTestBase contains an anonymous innerclass which must be accounted for. */
+    /* ArchiveTestBase contains an anonymous inner class which must be accounted for. */
     private static final String EXPECTED_OUTPUT = NAME_ARCHIVE + ": 3 assets";
 
     // -------------------------------------------------------------------------------------||

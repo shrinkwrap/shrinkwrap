@@ -26,8 +26,8 @@ import java.util.zip.ZipOutputStream;
 import java.io.InputStream;
 
 /**
- * Implementation of a ZIP exporter. Cannot handle archives with no content (as there'd be no
- * {@link java.util.zip.ZipEntry} s to write to the {@link ZipOutputStream}
+ * Implementation of a ZIP exporter. Cannot handle archives with no content (as there would be no
+ * {@link java.util.zip.ZipEntry}s to write to the {@link ZipOutputStream}
  *
  * @author <a href="mailto:mmatloka@gmail.com">Michal Matloka</a>
  */

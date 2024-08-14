@@ -47,6 +47,7 @@ public class MemoryAsset implements Asset, SeekableByteChannel {
      * {@link SeekableInMemoryByteChannel}
      *
      * @param delegate
+     *            The {@link SeekableInMemoryByteChannel} to use as the internal memory buffer
      */
     MemoryAsset(final SeekableInMemoryByteChannel delegate) throws IllegalArgumentException {
         assert delegate != null : "Delegate must be specified";
@@ -54,7 +55,6 @@ public class MemoryAsset implements Asset, SeekableByteChannel {
     }
 
     /**
-     * @return
      * @see java.nio.channels.Channel#isOpen()
      */
     @Override
@@ -73,7 +73,8 @@ public class MemoryAsset implements Asset, SeekableByteChannel {
 
     /**
      * @param dst
-     * @return
+     *            The buffer into which bytes are to be transferred
+     * @return The number of bytes read, or -1 if the end of the stream is reached
      * @throws IOException
      * @see java.nio.channels.SeekableByteChannel#read(java.nio.ByteBuffer)
      */
@@ -84,7 +85,8 @@ public class MemoryAsset implements Asset, SeekableByteChannel {
 
     /**
      * @param src
-     * @return
+     *            The buffer from which bytes are to be written
+     * @return The number of bytes written
      * @throws IOException
      * @see java.nio.channels.SeekableByteChannel#write(java.nio.ByteBuffer)
      */
@@ -94,7 +96,7 @@ public class MemoryAsset implements Asset, SeekableByteChannel {
     }
 
     /**
-     * @return
+     * @return The current position in the channel
      * @throws IOException
      * @see java.nio.channels.SeekableByteChannel#position()
      */

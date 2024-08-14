@@ -37,7 +37,7 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
     /**
      * Adds the {@link Class}, and all member (inner) {@link Class}es to the {@link Archive}.
      *
-     * @param class The class to add to the Archive
+     * @param clazz The class to add to the Archive
      * @return This archive
      * @throws IllegalArgumentException
      *             If no class were specified
@@ -190,7 +190,7 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
     /**
      * Deletes the {@link Class}, and all member (inner) {@link Class}es from the {@link Archive}.
      *
-     * @param class The class to be deleted from the Archive
+     * @param clazz The class to be deleted from the Archive
      * @return This archive
      * @throws IllegalArgumentException If no class was specified
      */
@@ -231,7 +231,7 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
      * Deletes all classes in the specified {@link Package} from the {@link Archive}. <br/>
      * SubPackages are excluded.
      *
-     * @param pack Package to be delete represented by a String ("my/package")
+     * @param pack Package to be deleted represented by a String ("my/package")
      * @return This archive
      * @throws IllegalArgumentException If no package was specified
      * @see #deletePackages(boolean, Package...)

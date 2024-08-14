@@ -18,9 +18,9 @@ package org.jboss.shrinkwrap.api;
 
 /**
  * ExtensionLoader
- *
+ * <p>
  * Describes a way for the {@link Archive} to load extensions. If an implementation is not set in the {@link Domain}'s
- * {@link Configuration}, {@link ServiceExtensionLoader} is set as the default strategy to load extensions.
+ * {@link Configuration}, a default strategy will be used to load extensions.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
@@ -32,6 +32,7 @@ public interface ExtensionLoader {
      * Load a Extension.
      *
      * @param <T>
+     *            The type of extension to be loaded.
      * @param extensionClass
      *            The Extension interface
      * @param baseArchive
@@ -41,8 +42,8 @@ public interface ExtensionLoader {
     <T extends Assignable> T load(Class<T> extensionClass, Archive<?> baseArchive);
 
     /**
-     * Add a Override to the normal Extension loading.
-     *
+     * Add an Override to the normal Extension loading.
+     * <p>
      * If a specific class is found to be overridden, the class will not be loaded using the normal strategy.
      *
      * @param <T>

@@ -50,7 +50,7 @@ public final class TarBz2ExporterTestCase extends TarExporterTestBase<TarBz2Impo
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.impl.base.exporter.ExportTestBase#getStreamExporter()
+     * @see ExportTestBase#getExporterClass()
      */
     @Override
     protected Class<? extends StreamExporter> getExporterClass() {

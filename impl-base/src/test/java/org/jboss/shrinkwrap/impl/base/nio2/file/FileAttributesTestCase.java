@@ -120,7 +120,7 @@ public class FileAttributesTestCase {
     public void fileKey() {
         final String path = "path";
         final String expected = this.archive.getId() + "/" + path;
-        Assertions.assertEquals(expected, this.getAttributes(path, true).fileKey(), "Filekey not as expected");
+        Assertions.assertEquals(expected, this.getAttributes(path, true).fileKey(), "File key not as expected");
     }
 
     private ShrinkWrapFileAttributes getAttributes(final String pathName, boolean create) {

@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * ServiceExtensionLoaderTestCase
- *
+ * <p>
  * Test to ensure the behaviour of ServiceExtensionLoader
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
@@ -102,8 +102,6 @@ public class ServiceExtensionLoaderTestCase {
 
     /**
      * Creates a new {@link ServiceExtensionLoader using the TCCL}
-     *
-     * @return
      */
     private ServiceExtensionLoader createLoaderUsingTccl() {
         final Collection<ClassLoader> cls = new ArrayList<>(1);

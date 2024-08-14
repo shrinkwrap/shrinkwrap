@@ -34,7 +34,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 /**
  * WebArchiveImplTestCase
- *
+ * <p>
  * Test case to ensure that the WebArchive follows the War spec.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>

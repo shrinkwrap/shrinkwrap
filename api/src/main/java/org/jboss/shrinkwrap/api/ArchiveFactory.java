@@ -79,7 +79,7 @@ public final class ArchiveFactory {
     // -------------------------------------------------------------------------------------||
 
     /**
-     * Creates a new archive of the specified type. The archive will be be backed by the {@link Configuration} specific
+     * Creates a new archive of the specified type. The archive will be backed by the {@link Configuration} specific
      * to this {@link ArchiveFactory}. Generates a random name for the archive and adds proper extension based on the
      * service descriptor properties file if extension property is present (e.g.
      * shrinkwrap/impl-base/src/main/resources/META-INF/services/org.jboss.shrinkwrap.api.spec.JavaArchive)
@@ -111,7 +111,7 @@ public final class ArchiveFactory {
     }
 
     /**
-     * Creates a new archive of the specified type. The archive will be be backed by the {@link Configuration} specific
+     * Creates a new archive of the specified type. The archive will be backed by the {@link Configuration} specific
      * to this {@link ArchiveFactory}.
      *
      * @param type
@@ -152,8 +152,8 @@ public final class ArchiveFactory {
 
     /**
      * Creates a new archive of the specified type as imported from the specified {@link File}. The file is expected to
-     * be encoded as ZIP (ie. JAR/WAR/EAR). The name of the archive will be set to {@link File#getName()}. The archive
-     * will be be backed by the {@link Configuration} specific to this {@link ArchiveFactory}.
+     * be encoded as ZIP (i.e. JAR/WAR/EAR). The name of the archive will be set to {@link File#getName()}. The archive
+     * will be backed by the {@link Configuration} specific to this {@link ArchiveFactory}.
      *
      * @param type
      *            The type of the archive e.g. {@link org.jboss.shrinkwrap.api.spec.WebArchive}

@@ -194,7 +194,7 @@ public abstract class DynamicEnterpriseContainerTestBase<T extends Archive<T>> e
 
     @Test
     @ArchiveType(EnterpriseContainer.class)
-    public void testAddAplicationResourcePackage() {
+    public void testAddApplicationResourcePackage() {
         getEnterpriseContainer().addAsApplicationResource(AssetUtil.class.getPackage(), "Test.properties");
 
         ArchivePath testPath = new BasicPath(getApplicationPath(), NAME_TEST_PROPERTIES);

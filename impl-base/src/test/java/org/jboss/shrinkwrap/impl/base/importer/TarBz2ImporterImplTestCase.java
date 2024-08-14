@@ -116,7 +116,7 @@ public class TarBz2ImporterImplTestCase extends StreamImporterImplTestBase<TarBz
     private static final class ExceptionThrowingTarBzInputStream extends TarBzInputStream {
 
         static ExceptionThrowingTarBzInputStream create() throws IOException {
-            // First provide real BZIP content so we don't err out when initialized
+            // First provide real BZIP content, so we don't err out when initialized
             final byte[] test = "Something more realistic than a single word".getBytes();
             final ByteArrayOutputStream stream = new ByteArrayOutputStream();
             BZip2CompressorOutputStream compressorOutputStream = new BZip2CompressorOutputStream(stream);
@@ -133,7 +133,7 @@ public class TarBz2ImporterImplTestCase extends StreamImporterImplTestBase<TarBz
         /**
          * Generates an exception when read
          *
-         * @see org.jboss.shrinkwrap.impl.base.io.tar.javatar.TarInputStream#read()
+         * @see org.jboss.shrinkwrap.impl.base.io.tar.TarInputStream#read()
          */
         @Override
         public int read() {

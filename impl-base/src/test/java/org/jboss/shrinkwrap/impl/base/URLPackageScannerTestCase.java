@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * URLPackageScannerTestCase for SHRINKWRAP-90.
- *
+ * <p>
  * Asserts parameter validation for more user friendly errors on invalid parameters.
  *
  * @author <a href="mailto:lightguard.jp@gmail.com">Jason Porter</a>

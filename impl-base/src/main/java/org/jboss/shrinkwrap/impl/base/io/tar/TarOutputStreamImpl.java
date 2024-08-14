@@ -22,7 +22,7 @@ import java.io.OutputStream;
 /**
  * The TarOutputStream writes a UNIX tar archive as an OutputStream. Methods are provided to put entries, and then write
  * their contents by writing to this stream using write().
- *
+ * <p>
  * Kerry Menzel <kmenzel@cfl.rr.com> Contributed the code to support file sizes greater than 2GB (longs versus ints).
  *
  * @version $Revision: 1.8 $
@@ -43,11 +43,11 @@ public class TarOutputStreamImpl extends FilterOutputStream {
     protected TarBuffer buffer;
 
     public TarOutputStreamImpl(OutputStream os) {
-        this(os, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE);
+        this(os, TarBuffer.DEFAULT_BLOCK_SIZE, TarBuffer.DEFAULT_RECORD_SIZE);
     }
 
     public TarOutputStreamImpl(OutputStream os, int blockSize) {
-        this(os, blockSize, TarBuffer.DEFAULT_RCDSIZE);
+        this(os, blockSize, TarBuffer.DEFAULT_RECORD_SIZE);
     }
 
     public TarOutputStreamImpl(OutputStream os, int blockSize, int recordSize) {
@@ -75,7 +75,7 @@ public class TarOutputStreamImpl extends FilterOutputStream {
     /**
      * Sets the debugging flag in this stream's TarBuffer.
      *
-     * @param debugF
+     * @param debug
      *            True to turn on debugging.
      */
     public void setBufferDebug(boolean debug) {
@@ -176,7 +176,7 @@ public class TarOutputStreamImpl extends FilterOutputStream {
 
     /**
      * Writes a byte to the current tar archive entry.
-     *
+     * <p>
      * This method simply calls read( byte[], int, int ).
      *
      * @param b
@@ -189,12 +189,11 @@ public class TarOutputStreamImpl extends FilterOutputStream {
 
     /**
      * Writes bytes to the current tar archive entry.
-     *
+     * <p>
      * This method simply calls read( byte[], int, int ).
      *
      * @param wBuf
      *            The buffer to write to the archive.
-     * @return The number of bytes read, or -1 at EOF.
      */
     public void write(byte[] wBuf) throws IOException {
         this.write(wBuf, 0, wBuf.length);
@@ -204,8 +203,8 @@ public class TarOutputStreamImpl extends FilterOutputStream {
      * Writes bytes to the current tar archive entry. This method is aware of the current entry and will throw an
      * exception if you attempt to write bytes past the length specified for the current entry. The method is also
      * (painfully) aware of the record buffering required by TarBuffer, and manages buffers that are not a multiple of
-     * recordsize in length, including assembling records from small buffers.
-     *
+     * record size in length, including assembling records from small buffers.
+     * <p>
      * This method simply calls read( byte[], int, int ).
      *
      * @param wBuf

@@ -78,7 +78,9 @@ public class BasicPath implements ArchivePath, Comparable<ArchivePath> {
      * Creates a new Path using the specified base and specified relative context.
      *
      * @param basePath
+     *            The base path from which the new path is constructed, provided as a {@link ArchivePath}
      * @param context
+     *            The relative context to be appended to the base path, provided as a {@link ArchivePath}
      */
     public BasicPath(final ArchivePath basePath, final ArchivePath context) {
         this(basePath, context.get());
@@ -88,7 +90,9 @@ public class BasicPath implements ArchivePath, Comparable<ArchivePath> {
      * Creates a new Path using the specified base and specified relative context.
      *
      * @param basePath
+     *            The base path from which the new path is constructed, provided as a {@link ArchivePath}
      * @param context
+     *            The relative context to be appended to the base path, provided as a {@link String}
      */
     public BasicPath(final ArchivePath basePath, final String context) {
         this(basePath.get(), context);
@@ -98,7 +102,9 @@ public class BasicPath implements ArchivePath, Comparable<ArchivePath> {
      * Creates a new Path using the specified base and specified relative context.
      *
      * @param basePath
+     *            The base path from which the new path is constructed, provided as a {@link String}
      * @param context
+     *            The relative context to be appended to the base path,  provided as a {@link ArchivePath}
      */
     public BasicPath(final String basePath, final ArchivePath context) {
         this(basePath, context.get());
@@ -108,7 +114,9 @@ public class BasicPath implements ArchivePath, Comparable<ArchivePath> {
      * Creates a new Path using the specified base and specified relative context.
      *
      * @param basePath
+     *            The base path from which the new path is constructed, provided as a {@link String}
      * @param context
+     *            The relative context to be appended to the base path, provided as a {@link String}
      */
     public BasicPath(final String basePath, String context) {
         this(PathUtil.composeAbsoluteContext(basePath, context));
@@ -158,7 +166,7 @@ public class BasicPath implements ArchivePath, Comparable<ArchivePath> {
         if (this.equals(parentOfSpecified)) {
             return -1;
         }
-        // If the specified if the parent of us, we're more
+        // If the specified is the parent of us, we're more
         if (path.equals(parentOfThis)) {
             return 1;
         }

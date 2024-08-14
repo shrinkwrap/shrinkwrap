@@ -126,7 +126,7 @@ public class ZipSerializableOriginalImpl implements ZipSerializableView {
 
     /**
      * Deserializes according to the custom form defined by
-     * {@link ZipSerializableViewImpl#writeObject(ObjectOutputStream)}
+     * {@link ZipSerializableOriginalImpl#writeObject(ObjectOutputStream)}
      */
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         // Get default form
@@ -150,7 +150,7 @@ public class ZipSerializableOriginalImpl implements ZipSerializableView {
         /*
          * Leave this bit here.
          *
-         * After reading in the ZIP stream contents, we need to also get to the EOF marker (which is not read in by the
+         * After reading in the ZIP stream contents, we need to also get to the EOF marker, which is not read in by the
          * ZIP import process because it's the ZIP header, not part of the true contents. Putting this loop here ensures
          * we reach the marker, which is *not* the true end of the stream. Object data may be read again after here via
          * something like:
@@ -159,7 +159,7 @@ public class ZipSerializableOriginalImpl implements ZipSerializableView {
          *
          * Without this loop we'll get an OptionalDataException when trying to read more objects in from the stream. In
          * the future we may add state which needs to be part of the serialization protocol, and things need to stay in
-         * order, so they'll be added *after* the archive ZIP contents. Thus we must be able to read them.
+         * order, so they'll be added *after* the archive ZIP contents. Thus, we must be able to read them.
          */
         while (in.read() != -1) {
             

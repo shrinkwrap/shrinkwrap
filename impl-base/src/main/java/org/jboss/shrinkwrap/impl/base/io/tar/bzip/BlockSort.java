@@ -28,7 +28,7 @@ import java.util.BitSet;
  * blocksort.c in his libbzip2</p>
  *
  * <p>The Burrows-Wheeler transform is a reversible transform of the
- * original data that is supposed to group similiar bytes close to
+ * original data that is supposed to group similar bytes close to
  * each other.  The idea is to sort all permutations of the input and
  * only keep the last byte of each permutation.  E.g. for "Commons
  * Compress" you'd get:</p>
@@ -52,7 +52,7 @@ import java.util.BitSet;
  * ssCommons Compre
  * </pre>
  *
- * <p>Which results in a new text "ss romooCCmmpnse", in adition the
+ * <p>Which results in a new text "ss romooCCmmpnse", in addition the
  * index of the first line that contained the original text is kept -
  * in this case it is 1.  The idea is that in a long English text all
  * permutations that start with "he" are likely suffixes of a "the" and
@@ -114,7 +114,7 @@ class BlockSort {
     /*
      * LBZ2: If you are ever unlucky/improbable enough to get a stack
      * overflow whilst sorting, increase the following constant and
-     * try again. In practice I have never seen the stack go above 27
+     * try again. In practice, I have never seen the stack go above 27
      * elems, so the following limit seems very generous.
      */
     private static final int QSORT_STACK_SIZE = 1000;
@@ -145,7 +145,7 @@ class BlockSort {
 
     /**
      * Array instance identical to Data's sfmap, both are used only
-     * temporarily and indepently, so we do not need to allocate
+     * temporarily and independently, so we do not need to allocate
      * additional memory.
      */
     private final char[] quadrant;
@@ -222,7 +222,7 @@ class BlockSort {
      * quicksort on all permutations of the bucket based on the index
      * of the bucket the second byte of the permutation belongs to,
      * thereby forming new buckets.  When arrived here the
-     * permutations are sorted up to the second character and we have
+     * permutations are sorted up to the second character, and we have
      * buckets of permutations that are identical up to two
      * characters.
      *
@@ -457,7 +457,7 @@ class BlockSort {
      * The C code uses an array of ints (each int holding 32 flags) to
      * represents the bucket-start flags (bhtab).  It also contains
      * optimizations to skip over 32 consecutively set or
-     * consecutively unset bits on word boundaries at once.  For now
+     * consecutively unset bits on word boundaries at once.  For now,
      * I've chosen to use the simpler but potentially slower code
      * using BitSet - also in the hope that using the BitSet#nextXXX
      * methods may be fast enough.
@@ -469,7 +469,6 @@ class BlockSort {
      *        partially sorted order
      * @param block the original data
      * @param nblock size of the block
-     * @param off offset of first byte to sort in block
      */
     final void fallbackSort(int[] fmap, byte[] block, int nblock) {
         final int[] ftab = new int[257];
@@ -590,7 +589,7 @@ class BlockSort {
      *
      * <p>
      * This is the version using unrolled loops. Normally I never use such ones
-     * in Java code. The unrolling has shown a noticable performance improvement
+     * in Java code. The unrolling has shown a noticeable performance improvement
      * on JRE 1.4.2 (Linux i586 / HotSpot Client). Of course it depends on the
      * JIT compiler of the vm.
      * </p>
@@ -1030,7 +1029,7 @@ class BlockSort {
             }
 
             // Step 2:
-            // LBZ2: Now scan this big bucket so as to synthesise the
+            // LBZ2: Now scan this big bucket to synthesise the
             // sorted order for small buckets [t, ss] for all t != ss.
 
             for (int j = 0; j <= 255; j++) {

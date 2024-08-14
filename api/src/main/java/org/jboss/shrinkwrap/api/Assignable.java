@@ -28,9 +28,10 @@ public interface Assignable {
     /**
      * Wraps an Archive in a different 'view'.
      *
-     * @see org.jboss.shrinkwrap.impl.base.ExtensionLoader
+     * @see org.jboss.shrinkwrap.api.ExtensionLoader
      *
      * @param <TYPE>
+     *            The type of the view to obtain.
      * @param clazz
      *            Extension interface to load
      * @return The Archive wrapped as TYPE

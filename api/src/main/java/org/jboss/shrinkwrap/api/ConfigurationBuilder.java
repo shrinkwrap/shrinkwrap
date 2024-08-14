@@ -104,7 +104,7 @@ public class ConfigurationBuilder {
     }
 
     /**
-     * @return
+     * @return the classLoader
      */
     public Iterable<ClassLoader> getClassLoaders() {
         return classLoaders;
@@ -114,7 +114,8 @@ public class ConfigurationBuilder {
      * Sets the {@link ExtensionLoader} to be used, returning this instance
      *
      * @param extensionLoader
-     * @return
+     *             The {@link ExtensionLoader} to be set
+     * @return the current instance of {@link ConfigurationBuilder}
      */
     public ConfigurationBuilder extensionLoader(final ExtensionLoader extensionLoader) {
         this.extensionLoader = extensionLoader;
@@ -125,7 +126,8 @@ public class ConfigurationBuilder {
      * Sets the {@link ExecutorService} to be used, returning this instance
      *
      * @param executorService
-     * @return
+     *             The {@link ExecutorService} to be set
+     * @return the current instance of {@link ConfigurationBuilder}
      */
     public ConfigurationBuilder executorService(final ExecutorService executorService) {
         this.executorService = executorService;
@@ -137,7 +139,8 @@ public class ConfigurationBuilder {
      * tasks requiring a CL by the {@link Archive}
      *
      * @param classLoaders
-     * @return
+     *             An {@link Iterable} of {@link ClassLoader}s to be used for resolving extensions
+     * @return the current instance of {@link ConfigurationBuilder}
      */
     public ConfigurationBuilder classLoaders(final Iterable<ClassLoader> classLoaders) {
         this.classLoaders = classLoaders;
@@ -149,7 +152,7 @@ public class ConfigurationBuilder {
      * been specified, it will be defaulted according to the rules set forth in this {@link ConfigurationBuilder}'s
      * contract.
      *
-     * @return
+     * @return a new {@link Configuration} instance
      */
     public Configuration build() {
         // Make a new configuration and return it.
@@ -213,7 +216,7 @@ public class ConfigurationBuilder {
     /**
      * Obtains the default {@link ExtensionLoader} to be used if none is specified
      *
-     * @return
+     * @return the default {@link ExtensionLoader}
      */
     ExtensionLoader createDefaultExtensionLoader() {
         // First find the right Class/ClassLoader

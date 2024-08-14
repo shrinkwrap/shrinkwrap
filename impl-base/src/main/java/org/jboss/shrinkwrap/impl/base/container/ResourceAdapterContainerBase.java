@@ -29,7 +29,7 @@ import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
  * ResourceAdapterContainerBase
- *
+ * <p>
  * Abstract class that helps implement the ResourceAdapter. Used by specs that extends the ResourceAdapter.
  *
  * @author <a href="mailto:baileyje@gmail.com">John Bailey</a>

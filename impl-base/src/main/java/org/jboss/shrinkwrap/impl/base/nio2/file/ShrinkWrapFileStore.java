@@ -99,7 +99,7 @@ public class ShrinkWrapFileStore extends FileStore {
      * Iterates through the underlying archive, counting the size of each {@link Asset}, returning the fully-tallied
      * count in bytes.
      *
-     * @return
+     * @return The total size in bytes of all assets within the archive.
      */
     public long getUsedSpace() {
         long count = 0L;

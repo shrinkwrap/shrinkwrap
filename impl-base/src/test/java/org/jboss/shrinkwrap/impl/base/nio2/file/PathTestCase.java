@@ -623,9 +623,9 @@ public class PathTestCase {
 
     /**
      * This case outlined in {@link Path#relativize(Path)} APIDocs:
-     * 
+     * <p>
      * For any two normalized paths p and q, where q does not have a root component,
-     * 
+     * <p>
      * <code>  p.relativize(p.resolve(q)).equals(q) </code>
      */
     @Test

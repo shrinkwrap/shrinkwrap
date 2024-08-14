@@ -56,7 +56,7 @@ public enum Formatters implements Formatter {
     // -------------------------------------------------------------------------------------||
 
     /**
-     * Constructs a new {@link Formatters} type using the specfied underlying {@link Formatter}
+     * Constructs a new {@link Formatters} type using the specified underlying {@link Formatter}
      */
     Formatters(final Formatter formatter) {
         this.formatter = formatter;

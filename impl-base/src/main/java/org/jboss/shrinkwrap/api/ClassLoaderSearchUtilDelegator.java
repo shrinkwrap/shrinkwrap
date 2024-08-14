@@ -42,8 +42,10 @@ public class ClassLoaderSearchUtilDelegator {
      * Finds a {@link Class} by name using a series of {@link ClassLoader}s as the search path
      *
      * @param className
+     *             The fully qualified name of the class to find.
      * @param classLoaders
-     * @return
+     *             An {@link Iterable} of {@link ClassLoader}s to be used as the search path
+     * @return The {@link Class} object representing the class found
      * @throws ClassNotFoundException
      *             If the {@link Class} could not be found in any of the specified CLs
      */

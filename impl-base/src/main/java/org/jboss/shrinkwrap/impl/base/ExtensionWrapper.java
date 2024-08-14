@@ -22,8 +22,9 @@ import java.util.Map;
 import org.jboss.shrinkwrap.api.Assignable;
 
 /**
- * ExtensionWrapper Wrapper used in the extensionMapping of {@link org.jboss.shrinkwrap.api.ExtensionLoader} Initialized
- * in {@link org.jboss.shrinkwrap.impl.base.ServiceExtensionLoader#loadExtensionMapping(Class)}
+ * ExtensionWrapper is a wrapper used to store the configuration of an extension.
+ * It is part of the mapping of extensions within the {@link org.jboss.shrinkwrap.api.ExtensionLoader}.
+ * The mapping is initialized by the {@link ServiceExtensionLoader}.
  *
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $

@@ -29,17 +29,14 @@ import org.jboss.shrinkwrap.api.formatter.Formatters;
 /**
  * Represents a collection of resources which may be constructed programmatically. In effect this represents a virtual
  * filesystem.
- *
  * <br />
  * <br />
  * All {@link Archive} types support the addition of {@link Node}s under a designated {@link ArchivePath} (context). The
  * contents of a {@link Node} are either a directory or {@link Asset}.
- *
  * <br />
  * <br />
  * {@link Archive}s are generally created via an {@link ArchiveFactory} or via the default configuration shortcut
  * {@link ShrinkWrap} utility class.
- *
  * <br />
  * <br />
  * Because {@link Archive}s are {@link Assignable}, they may be wrapped in another user "view" used to perform
@@ -54,26 +51,29 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     // -------------------------------------------------------------------------------------||
 
     /**
-     * Obtains the name of this archive (ie. myLibrary.jar)
+     * Obtains the name of this archive (i.e. myLibrary.jar)
+     *
+     * @return The name of the archive
      */
     String getName();
 
     /**
      * Obtains a globally-unique identifier for this {@link Archive}
      *
-     * @return
+     * @return The globally-unique identifier for the archive
      */
     String getId();
 
     /**
      * Adds the specified asset under the specified path into the target context
      *
-     * @param target
-     *            The context under which to add the assets
      * @param asset
-     * @return
+     *            The asset to add
+     * @param target
+     *            The context under which to add the asset
+     * @return This archive
      * @throws IllegalArgumentException
-     *             If no target or assets were specified
+     *             If no target or asset were specified
      * @throws IllegalArchivePathException
      *             If the target is invalid.
      */
@@ -81,14 +81,15 @@ public interface Archive<T extends Archive<T>> extends Assignable {
 
     /**
      * Adds the specified asset under the specified target (directory) using the specified name. The resultant path will
-     * be treating the specified path as a prefix namespace, then appending the name.
+     * treat the specified path as a prefix namespace, then append the name.
      *
+     * @param asset
+     *            The asset to add
      * @param target
      *            The context directory under which to add the asset
      * @param name
-     *            The name to assign the assent under the target namespace
-     * @param asset
-     * @return
+     *            The name to assign the asset under the target namespace
+     * @return This archive
      * @throws IllegalArgumentException
      *             If the target, name, or asset was not specified
      * @throws IllegalArchivePathException
@@ -98,14 +99,15 @@ public interface Archive<T extends Archive<T>> extends Assignable {
 
     /**
      * Adds the specified asset under the specified target (directory) using the specified name. The resultant path will
-     * be treating the specified path as a prefix namespace, then appending the name.
+     * treat the specified path as a prefix namespace, then append the name.
      *
+     * @param asset
+     *            The asset to add
      * @param target
      *            The context directory under which to add the asset
      * @param name
-     *            The name to assign the assent under the target namespace
-     * @param asset
-     * @return
+     *            The name to assign the asset under the target namespace
+     * @return This archive
      * @throws IllegalArgumentException
      *             If the target, name, or asset was not specified
      * @throws IllegalArchivePathException
@@ -118,7 +120,8 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * (directory)
      *
      * @param namedAsset
-     * @return
+     *            The named asset to add
+     * @return This archive
      * @throws IllegalArgumentException
      *             If either the target or asset is not specified
      * @throws IllegalArchivePathException
@@ -127,11 +130,13 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     T add(NamedAsset namedAsset) throws IllegalArgumentException;
 
     /**
-     * Adds the specified resource under the context denoted by the specified target
+     * Adds the specified asset under the context denoted by the specified target
      *
-     * @param target
      * @param asset
-     * @return
+     *            The asset to add
+     * @param target
+     *            The context under which to add the asset
+     * @return This archive
      * @throws IllegalArgumentException
      *             If either the target or asset is not specified
      * @throws IllegalArchivePathException
@@ -192,10 +197,10 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     T addAsDirectories(ArchivePath... paths) throws IllegalArgumentException;
 
     /**
-     * Add an array of listeners for call back based.
+     * Adds an array of handlers for callback-based operations.
      *
-     * @param listener
-     *            CallBack on add
+     * @param handlers
+     *            The handlers to be added for callback
      * @return This archive
      */
     T addHandlers(ArchiveEventHandler... handlers);
@@ -204,6 +209,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * Obtains the {@link Node} located at the specified path
      *
      * @param path
+     *            The path to the node within the archive
      * @return The {@link Node}, or null if nothing is found at the specified path
      * @throws IllegalArgumentException
      *             If the path is not specified
@@ -214,6 +220,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * Obtains the {@link Node} located at the specified path
      *
      * @param path
+     *            The path to the node within the archive
      * @return The {@link Node}, or null if nothing is found at the Path
      * @throws IllegalArgumentException
      *             If the path is not specified
@@ -224,9 +231,10 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * Get a nested {@link Archive} as a specific type.<br/>
      * <br/>
      *
-     * The found Archives must have been added as a Archive, no import is performed.
+     * The found Archives must have been added as an Archive, no import is performed.
      *
      * @param <X>
+     *            The type of archive
      * @param type
      *            The Type to return the Archive as
      * @param path
@@ -244,9 +252,10 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * Get a nested {@link Archive} as a specific type.<br/>
      * <br/>
      *
-     * The found Archives must have been added as a Archive, no import is performed.
+     * The found Archives must have been added as an Archive, no import is performed.
      *
      * @param <X>
+     *            The type of archive
      * @param type
      *            The Type to return the Archive as
      * @param path
@@ -263,9 +272,10 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * Get all nested {@link Archive} matching the filter as a specific type.<br/>
      * <br/>
      *
-     * The found Archives must have been added as a Archive, no import is performed.
+     * The found Archives must have been added as an Archive, no import is performed.
      *
      * @param <X>
+     *            The type of archive
      * @param type
      *            The Type to return the Archive as
      * @param filter
@@ -280,7 +290,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     <X extends Archive<X>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter);
 
     /**
-     * Get a nested {@link Archive} as a specific type using the specify {@code ArchiveFormat}
+     * Get a nested {@link Archive} as a specific type using the specified {@code ArchiveFormat}
      *
      * @param type
      *            The Type to return the Archive as
@@ -295,7 +305,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     <X extends Archive<X>> X getAsType(Class<X> type, String path, ArchiveFormat archiveFormat);
 
     /**
-     * Get a nested {@link Archive} located in a {@code ArchivePath} as a specific type using the specify
+     * Get a nested {@link Archive} located in a {@code ArchivePath} as a specific type using the specified
      * {@code ArchiveFormat}
      *
      * @param type
@@ -311,9 +321,10 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     <X extends Archive<X>> X getAsType(Class<X> type, ArchivePath path, ArchiveFormat archiveFormat);
 
     /**
-     * Get all nested {@link Archive} matching the filter as a specific type using the specify {@code ArchiveFormat}.
+     * Get all nested {@link Archive} matching the filter as a specific type using the specified {@code ArchiveFormat}.
      *
      * @param <X>
+     *            The type of archive
      * @param type
      *            The Type to return the Archive as
      * @param filter
@@ -326,13 +337,14 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * @see Archive#add(Archive, String, Class)
      */
     <X extends Archive<X>> Collection<X> getAsType(Class<X> type, Filter<ArchivePath> filter,
-        ArchiveFormat archiveFormat);
+                                                   ArchiveFormat archiveFormat);
 
     /**
      * Denotes whether this archive contains a resource at the specified path
      *
      * @param path
-     * @return
+     *            The path to the resource
+     * @return true if the archive contains the resource, false otherwise
      * @throws IllegalArgumentException
      *             If the path is not specified
      */
@@ -342,7 +354,8 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * Denotes whether this archive contains a resource at the specified path
      *
      * @param path
-     * @return
+     *            The path to the resource
+     * @return true if the archive contains the resource, false otherwise
      * @throws IllegalArgumentException
      *             If the path is not specified
      */
@@ -353,7 +366,10 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * recursively removes all contents. If the path does not exist, return null.
      *
      * @param path
+     *            The path to the node to be removed
      * @return The Node removed
+     * @throws IllegalArgumentException
+     *             If the path is not specified
      */
     Node delete(ArchivePath path) throws IllegalArgumentException;
 
@@ -363,7 +379,10 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * null.
      *
      * @param archivePath
+     *            The path to the node to be removed
      * @return The Node removed
+     * @throws IllegalArgumentException
+     *             If the path is not specified
      * @see #delete(ArchivePath)
      */
     Node delete(String archivePath) throws IllegalArgumentException;
@@ -372,7 +391,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * Obtains all assets in this archive, along with their respective paths. The returned Map will be an immutable
      * view.
      *
-     * @return
+     * @return A map of all paths and nodes in the archive
      */
     Map<ArchivePath, Node> getContent();
 
@@ -380,7 +399,9 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * Obtains all assets matching given filter in this archive, along with its respective Path. The returned Map will
      * be an immutable view.
      *
-     * @return
+     * @param filter
+     *            Filter to match assets
+     * @return A map of the paths and nodes found in the archive matching the filter
      */
     Map<ArchivePath, Node> getContent(Filter<ArchivePath> filter);
 
@@ -391,7 +412,8 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      *
      * @see org.jboss.shrinkwrap.api.Archive#shallowCopy(Filter)
      * @param filter
-     * @return
+     *            Filter to match assets
+     * @return A new archive containing the filtered assets
      */
     T filter(Filter<ArchivePath> filter);
 
@@ -399,13 +421,13 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * Add an archive under a specific context and maintain the archive name as context path.
      *
      * @param path
-     *            to use
+     *            The path to use
      * @param archive
-     *            to add
+     *            The archive to add
      * @param exporter
      *            Exporter type to use in fulfilling the {@link Asset#openStream()} contract for the added (nested)
      *            archive.
-     * @return
+     * @return This archive
      * @throws IllegalArgumentException
      *             If any argument is not specified
      */
@@ -416,13 +438,13 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * Add an archive under a specific context and maintain the archive name as context path.
      *
      * @param path
-     *            to use
+     *            The path to use
      * @param archive
-     *            to add
+     *            The archive to add
      * @param exporter
      *            Exporter type to use in fulfilling the {@link Asset#openStream()} contract for the added (nested)
      *            archive.
-     * @return
+     * @return This archive
      * @throws IllegalArgumentException
      *             If the path or archive are not specified
      */
@@ -433,7 +455,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      *
      * @param source
      *            Archive to add contents from
-     * @return
+     * @return This archive
      * @throws IllegalArgumentException
      *             If the existing archive is not specified
      */
@@ -441,12 +463,14 @@ public interface Archive<T extends Archive<T>> extends Assignable {
 
     /**
      * Merge the contents from an existing archive without maintaining the archive name in the context path.
-     *
-     * The filter control which {@link ArchivePath}s to include form the source {@link Archive}.
+     * <p>
+     * The filter controls which {@link ArchivePath}s to include from the source {@link Archive}.
      *
      * @param source
      *            Archive to add contents from
-     * @return
+     * @param filter
+     *            Filter to match paths to be included
+     * @return This archive
      * @throws IllegalArgumentException
      *             If the existing archive is not specified
      */
@@ -460,7 +484,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      *            Archive to add contents from
      * @param path
      *            Path to add contents to
-     * @return
+     * @return This archive
      * @throws IllegalArgumentException
      *             If the path or existing archive is not specified
      */
@@ -474,7 +498,7 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      *            Archive to add contents from
      * @param path
      *            Path to add contents to
-     * @return
+     * @return This archive
      * @throws IllegalArgumentException
      *             If the path or existing archive is not specified
      */
@@ -482,15 +506,15 @@ public interface Archive<T extends Archive<T>> extends Assignable {
 
     /**
      * Merge the contents from an existing archive in a specific path without maintaining the archive name in the
-     * context path. The filter control which {@link ArchivePath}s to include form the source {@link Archive}.
+     * context path. The filter controls which {@link ArchivePath}s to include from the source {@link Archive}.
      *
      * @param source
      *            Archive to add contents from
      * @param path
      *            Path to add contents to
      * @param filter
-     *            Filter to use for including {@link Asset}s in the merge.
-     * @return
+     *            Filter to match paths to be included
+     * @return This archive
      * @throws IllegalArgumentException
      *             If the path or existing archive is not specified
      */
@@ -498,15 +522,15 @@ public interface Archive<T extends Archive<T>> extends Assignable {
 
     /**
      * Merge the contents from an existing archive in a specific path without maintaining the archive name in the
-     * context path. The filter control which {@link ArchivePath}s to include form the source {@link Archive}.
+     * context path. The filter controls which {@link ArchivePath}s to include from the source {@link Archive}.
      *
      * @param source
      *            Archive to add contents from
      * @param path
      *            Path to add contents to
      * @param filter
-     *            Filter to use for including {@link Asset}s in the merge.
-     * @return
+     *            Filter to match paths to be included
+     * @return This archive
      * @throws IllegalArgumentException
      *             If the path or existing archive is not specified
      */
@@ -545,17 +569,19 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     /**
      * Acts as a shorthand for {@link Archive#toString(Formatter)} where the {@link Formatters#SIMPLE} is leveraged.
      *
-     * @return
+     * @return A string representation of the archive using the simple formatter
      */
     @Override
     String toString();
 
     /**
      * If "true" is specified, acts as a shorthand for {@link Archive#toString(Formatter)} where the
-     * {@link Formatters#VERBOSE} is leveraged. Otherwise the {@link Formatters#SIMPLE} will be used (equivalent to
+     * {@link Formatters#VERBOSE} is leveraged. Otherwise, the {@link Formatters#SIMPLE} will be used (equivalent to
      * {@link Archive#toString()}).
      *
-     * @return
+     * @param verbose
+     *            If true, use the verbose formatter; otherwise use the simple formatter
+     * @return A string representation of the archive
      */
     String toString(boolean verbose);
 
@@ -564,7 +590,8 @@ public interface Archive<T extends Archive<T>> extends Assignable {
      * use the predefined formatters located in {@link Formatters}
      *
      * @param formatter
-     * @return
+     *            The formatter to use
+     * @return A string representation of the archive using the specified formatter
      * @throws IllegalArgumentException
      *             If the formatter is not specified
      */

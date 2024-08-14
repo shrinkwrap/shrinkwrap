@@ -98,7 +98,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
     /**
      * Constructor
-     *
+     * <p>
      * Creates a new Archive with the specified name
      *
      * @param name
@@ -136,7 +136,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Archive#add(java.lang.String, org.jboss.shrinkwrap.api.asset.Asset)
+     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.asset.Asset, java.lang.String)
      */
     @Override
     public T add(final Asset asset, final String target) throws IllegalArgumentException {
@@ -167,8 +167,8 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.ArchivePath, java.lang.String,
-     *      org.jboss.shrinkwrap.api.asset.Asset)
+     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.asset.Asset,
+     *      org.jboss.shrinkwrap.api.ArchivePath, java.lang.String)
      */
     @Override
     public T add(final Asset asset, final ArchivePath path, final String name) {
@@ -493,8 +493,8 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.ArchivePath,
-     *      org.jboss.shrinkwrap.api.Archive)
+     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive,
+     *      org.jboss.shrinkwrap.api.ArchivePath)
      */
     @Override
     public T merge(final Archive<?> source, final ArchivePath path) throws IllegalArgumentException {
@@ -600,7 +600,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
     /**
      * {@inheritDoc}
      *
-     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.Path,
+     * @see org.jboss.shrinkwrap.api.Archive#merge(org.jboss.shrinkwrap.api.Archive, org.jboss.shrinkwrap.api.ArchivePath,
      *      org.jboss.shrinkwrap.api.Filter)
      */
     @Override
@@ -655,7 +655,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
         // move children
 
-        // can't remove from collection inside of the iteration
+        // can't remove from collection inside the iteration
         final Set<Node> nodeToMoveChildrenCopy = new HashSet<>(nodeToMove.getChildren());
         for (final Node child : nodeToMoveChildrenCopy) {
             final String childName = child.getPath().get().replaceFirst(child.getPath().getParent().get(), "");
@@ -746,8 +746,6 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
     /**
      * {@inheritDoc}
-     *
-     * @see org.jboss.shrinkwrap.api.Archive#hashCode()
      */
     @Override
     public int hashCode() {
@@ -760,8 +758,6 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
     /**
      * {@inheritDoc}
-     *
-     * @see org.jboss.shrinkwrap.api.Archive#equals(Object)
      */
     @Override
     public boolean equals(Object obj) {
@@ -806,7 +802,6 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
 
     /**
      * Exposes the actual class used in casting
-     * @return
      */
     protected abstract Class<T> getActualClass();
 

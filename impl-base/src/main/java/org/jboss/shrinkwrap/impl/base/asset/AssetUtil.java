@@ -21,7 +21,7 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 
 /**
  * AssetUtil
- *
+ * <p>
  * Util class to help extract name/paths from Assets.
  *
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
@@ -81,7 +81,7 @@ public final class AssetUtil {
     /**
      * Helper to convert from java package name to class loader package name <br/>
      * <br/>
-     * ie: javax.test + my.txt = javax/test/ + my.txt
+     * i.e.: javax.test + my.txt = javax/test/ + my.txt
      *
      * @param resourcePackage
      *            The base package
@@ -90,10 +90,10 @@ public final class AssetUtil {
      * @return {@link ClassLoader} resource location
      */
     public static String getClassLoaderResourceName(Package resourcePackage, String resourceName) {
-        String resourcePackaeName = resourcePackage.getName().replaceAll(DELIMITER_CLASS_NAME_PATH,
+        String resourcePackageName = resourcePackage.getName().replaceAll(DELIMITER_CLASS_NAME_PATH,
             DELIMITER_RESOURCE_PATH);
 
-        return resourcePackaeName + DELIMITER_RESOURCE_PATH + resourceName;
+        return resourcePackageName + DELIMITER_RESOURCE_PATH + resourceName;
     }
 
     /**
@@ -119,7 +119,9 @@ public final class AssetUtil {
      * ie: package.MyClass = package/MyClass.class
      *
      * @param clazz
+     *            The class whose resource path is to be extracted.
      * @return
+     *            An {@link ArchivePath} representing the full path of the class resource.
      */
     public static ArchivePath getFullPathForClassResource(Class<?> clazz) {
         String classResourceDelimiter = clazz.getName().replaceAll(DELIMITER_CLASS_NAME_PATH, DELIMITER_RESOURCE_PATH);
@@ -134,7 +136,9 @@ public final class AssetUtil {
      * ie: package.MyClass = package/MyClass.class
      *
      * @param className
+     *            The name of the class whose resource path is to be extracted.
      * @return
+     *            An {@link ArchivePath} representing the full path of the class resource.
      */
     public static ArchivePath getFullPathForClassResource(String className) {
         String classResourceDelimiter = className.replaceAll(DELIMITER_CLASS_NAME_PATH, DELIMITER_RESOURCE_PATH);

@@ -16,7 +16,7 @@
       <para>
          However useful, archives typically require the addition of a build step within the development lifecycle, 
          either via a script or extra tool.  The ShrinkWrap project provides a simple API to declaratively assemble 
-         archives in code, optionally allowing for export into ZIP or Exploded File formats.  This makes is very fast 
+         archives in code, optionally allowing for export into ZIP or Exploded File formats.  This makes it very fast
          to prototype "virtual" archives from resources scattered about the classpath, the filesystem or remote URLs.
       </para>
    </preface>

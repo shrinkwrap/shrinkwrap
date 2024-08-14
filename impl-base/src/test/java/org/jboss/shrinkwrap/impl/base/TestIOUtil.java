@@ -23,8 +23,8 @@ import java.net.URL;
 
 /**
  * IOUtil
- *
- * Inport/export utilities for test classes
+ * <p>
+ * Import/export utilities for test classes
  *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
@@ -49,6 +49,7 @@ public class TestIOUtil {
      * Recursively deletes a directory and all its contents
      *
      * @param directory
+     *            The directory to delete.
      */
     public static void deleteDirectory(final File directory) {
         if (directory.isDirectory() && directory.exists()) {
@@ -77,9 +78,11 @@ public class TestIOUtil {
     /**
      * Given an existing resource location, create and return a File
      *
-     * @param existingResourceLocation
-     * @return
+     * @param resourceName
+     *            The name of the resource.
+     * @return The File corresponding to the resource name.
      * @throws URISyntaxException
+     *             If the resource location URI is malformed.
      */
     public static File createFileFromResourceName(final String resourceName) throws URISyntaxException {
         assert resourceName != null : "Resource name must be specified";
@@ -88,7 +91,7 @@ public class TestIOUtil {
         return new File(resourceLocation.toURI());
     }
 
-    public static InputStream createInputstreamFromResourceName(final String resourceName) {
+    public static InputStream createInputStreamFromResourceName(final String resourceName) {
         assert resourceName != null : "Resource name must be specified";
         final InputStream resourceStream = TestSecurityActions.getThreadContextClassLoader().getResourceAsStream(
             resourceName);
