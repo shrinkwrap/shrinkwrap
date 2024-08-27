@@ -35,11 +35,12 @@ public class ClassAssetTestCase {
     public void shouldBeAbleToReadThisClass() throws Exception {
         Class<?> clazz = ClassAssetTestCase.class;
         Asset asset = new ClassAsset(clazz);
-        InputStream io = asset.openStream();
 
-        Assertions.assertNotNull(io);
-        Assertions.assertEquals(ApiTestUtils.findLengthOfStream(io), ApiTestUtils.findLengthOfClass(clazz),
-                "Loaded class should have the same size");
+        try (InputStream io = asset.openStream()) {
+            Assertions.assertNotNull(io);
+            Assertions.assertEquals(ApiTestUtils.findLengthOfStream(io), ApiTestUtils.findLengthOfClass(clazz),
+                    "Loaded class should have the same size");
+        }
     }
 
     /**
@@ -54,11 +55,12 @@ public class ClassAssetTestCase {
     public void shouldBeAbleAddBootstrapClass() throws Exception {
         Class<?> bootstrapClass = Class.class;
         Asset asset = new ClassAsset(bootstrapClass);
-        InputStream io = asset.openStream();
 
-        Assertions.assertNotNull(io);
-        Assertions.assertEquals(ApiTestUtils.findLengthOfStream(io), ApiTestUtils.findLengthOfClass(bootstrapClass),
-                "Loaded class should have the same size");
+        try (InputStream io = asset.openStream()) {
+            Assertions.assertNotNull(io);
+            Assertions.assertEquals(ApiTestUtils.findLengthOfStream(io), ApiTestUtils.findLengthOfClass(bootstrapClass),
+                    "Loaded class should have the same size");
+        }
     }
 
     @Test

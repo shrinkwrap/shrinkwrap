@@ -217,15 +217,14 @@ public class SerializationTestCase {
      */
     private static SerializableView serializeAndDeserialize(final SerializableView archive) throws IOException, ClassNotFoundException {
         assert archive != null : "Archive must be specified";
-        final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-        final ObjectOutputStream out = new ObjectOutputStream(byteOut);
-        out.writeObject(archive);
-        out.flush();
-        out.close();
-        final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(byteOut.toByteArray()));
-        final SerializableView roundtrip = (SerializableView) in.readObject();
-        in.close();
-        return roundtrip;
+        try (final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+                final ObjectOutputStream out = new ObjectOutputStream(byteOut)) {
+            out.writeObject(archive);
+            try (final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(byteOut.toByteArray()))) {
+                final SerializableView roundtrip = (SerializableView) in.readObject();
+                return roundtrip;
+            }
+        }
     }
 
     /**

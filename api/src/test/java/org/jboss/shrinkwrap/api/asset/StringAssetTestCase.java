@@ -60,16 +60,17 @@ public class StringAssetTestCase {
         final StringAsset asset = new StringAsset(contents);
 
         // Get the contents back out of the asset
-        final InputStream stream = asset.openStream();
-        final ByteArrayOutputStream out = new ByteArrayOutputStream(contents.length());
-        int read;
-        while ((read = stream.read()) != -1) {
-            out.write(read);
-        }
-        String roundtrip = out.toString();
-        log.info("Roundtrip contents: " + roundtrip);
+        try (final InputStream stream = asset.openStream();
+             final ByteArrayOutputStream out = new ByteArrayOutputStream(contents.length())) {
+            int read;
+            while ((read = stream.read()) != -1) {
+                out.write(read);
+            }
+            String roundtrip = out.toString();
+            log.info("Roundtrip contents: " + roundtrip);
 
-        Assertions.assertEquals(contents, roundtrip, "Roundtrip did not equal passed in contents");
+            Assertions.assertEquals(contents, roundtrip, "Roundtrip did not equal passed in contents");
+        }
     }    
 
     @Test

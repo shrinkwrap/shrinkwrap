@@ -302,22 +302,14 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
             return ArchiveAsset.class.cast(asset).getArchive().as(type);
         }
 
-        InputStream stream = null;
-        try {
-            stream = asset.openStream();
+        try (InputStream stream = asset.openStream()) {
             X archive = ShrinkWrap.create(formatBinding.getImporter(), path.get()).importFrom(stream).as(type);
             delete(path);
             add(new ArchiveAsset(archive, formatBinding.getExporter()), path);
 
             return archive;
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    throw new ArchiveImportException("Stream not closed after import", e);
-                }
-            }
+        } catch (IOException e) {
+            throw new ArchiveImportException(e);
         }
     }
 

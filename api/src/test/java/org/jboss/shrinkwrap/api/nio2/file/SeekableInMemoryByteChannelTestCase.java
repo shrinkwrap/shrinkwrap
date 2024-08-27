@@ -119,9 +119,11 @@ public class SeekableInMemoryByteChannelTestCase {
     @Test
     public void getContents() throws IOException {
         this.channel.write(smallerBuffer);
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(this.channel.getContents()));
-        final String contents = reader.readLine();
-        Assertions.assertEquals(CONTENTS_SMALLER_BUFFER, contents, "Contents read were not as expected");
+        try (final InputStreamReader inputStreamReader = new InputStreamReader(this.channel.getContents());
+             final BufferedReader reader = new BufferedReader(inputStreamReader)) {
+            final String contents = reader.readLine();
+            Assertions.assertEquals(CONTENTS_SMALLER_BUFFER, contents, "Contents read were not as expected");
+        }
     }
 
     @Test

@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.impl.base.importer;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -61,43 +62,47 @@ public class ZipContentAssertionDelegate extends ContentAssertionDelegateBase {
     public void assertContent(Archive<?> importedArchive, File originalSource) throws Exception {
         Assertions.assertFalse(importedArchive.getContent().isEmpty(), "Should have imported something");
 
-        ZipFile testZip = new ZipFile(originalSource);
+        try (ZipFile testZip = new ZipFile(originalSource)) {
+            List<? extends ZipEntry> entries = Collections.list(testZip.entries());
 
-        List<? extends ZipEntry> entries = Collections.list(testZip.entries());
+            Assertions.assertFalse(entries.isEmpty(), "Test zip should contain data");
+            Assertions.assertEquals(entries.size(), importedArchive.getContent().size(),
+                    "Should have imported all files and directories");
 
-        Assertions.assertFalse(entries.isEmpty(), "Test zip should contain data");
-        Assertions.assertEquals(entries.size(), importedArchive.getContent().size(),
-                "Should have imported all files and directories");
+            boolean containsEmptyDir = false;
+            boolean containsEmptyNestedDir = false;
 
-        boolean containsEmptyDir = false;
-        boolean containsEmptyNestedDir = false;
-
-        for (ZipEntry originalEntry : entries) {
-            if (originalEntry.isDirectory()) {
-                // Check for expected empty dirs
-                if (originalEntry.getName().equals(EXPECTED_EMPTY_DIR)) {
-                    containsEmptyDir = true;
+            for (ZipEntry originalEntry : entries) {
+                if (originalEntry.isDirectory()) {
+                    // Check for expected empty dirs
+                    if (originalEntry.getName().equals(EXPECTED_EMPTY_DIR)) {
+                        containsEmptyDir = true;
+                    }
+                    if (originalEntry.getName().equals(EXPECTED_NESTED_EMPTY_DIR)) {
+                        containsEmptyNestedDir = true;
+                    }
+                    continue;
                 }
-                if (originalEntry.getName().equals(EXPECTED_NESTED_EMPTY_DIR)) {
-                    containsEmptyNestedDir = true;
+
+                Assertions.assertTrue(importedArchive.contains(new BasicPath(originalEntry.getName())),
+                        "Importer should have imported " + originalEntry.getName() + " from " + originalSource);
+
+                try (final InputStream inputStream = testZip.getInputStream(originalEntry)) {
+                    byte[] originalContent = IOUtil.asByteArray(inputStream);
+                    final Node node = importedArchive.get(new BasicPath(originalEntry.getName()));
+                    try (final InputStream inputStreamAsset = node.getAsset().openStream()) {
+                        byte[] importedContent = IOUtil.asByteArray(inputStreamAsset);
+
+                        Assertions.assertArrayEquals(importedContent, originalContent,
+                                "The content of " + originalEntry.getName() + " should be equal to the imported content");
+                    }
                 }
-                continue;
             }
 
-            Assertions.assertTrue(importedArchive.contains(new BasicPath(originalEntry.getName())),
-                    "Importer should have imported " + originalEntry.getName() + " from " + originalSource);
-
-            byte[] originalContent = IOUtil.asByteArray(testZip.getInputStream(originalEntry));
-            final Node node = importedArchive.get(new BasicPath(originalEntry.getName()));
-            byte[] importedContent = IOUtil.asByteArray(node.getAsset().openStream());
-
-            Assertions.assertArrayEquals(importedContent, originalContent,
-                    "The content of " + originalEntry.getName() + " should be equal to the imported content");
+            // Ensure empty directories have come in cleanly
+            Assertions.assertTrue(containsEmptyDir, "Empty directory not imported");
+            Assertions.assertTrue(containsEmptyNestedDir, "Empty nested directory not imported");
         }
-
-        // Ensure empty directories have come in cleanly
-        Assertions.assertTrue(containsEmptyDir, "Empty directory not imported");
-        Assertions.assertTrue(containsEmptyNestedDir, "Empty nested directory not imported");
     }
 
     // -------------------------------------------------------------------------------------||

@@ -333,11 +333,13 @@ public class PathTestCase {
      */
     @Test
     public void startsWithOtherFs() throws IOException {
-        final FileSystem otherFs = ShrinkWrapFileSystems.newFileSystem(ShrinkWrap.create(GenericArchive.class));
         final String pathName = "/toplevel/second";
-        final Path otherPath = otherFs.getPath(pathName);
-        final boolean startsWith = fileSystem.getPath(pathName).startsWith(otherPath);
-        Assertions.assertFalse(startsWith);
+
+        try (final FileSystem otherFs = ShrinkWrapFileSystems.newFileSystem(ShrinkWrap.create(GenericArchive.class))) {
+            final Path otherPath = otherFs.getPath(pathName);
+            final boolean startsWith = fileSystem.getPath(pathName).startsWith(otherPath);
+            Assertions.assertFalse(startsWith);
+        }
     }
 
     @Test
@@ -426,10 +428,11 @@ public class PathTestCase {
      */
     @Test
     public void endsWithOtherFs() throws IOException {
-        final FileSystem otherFs = ShrinkWrapFileSystems.newFileSystem(ShrinkWrap.create(GenericArchive.class));
-        final Path otherPath = otherFs.getPath("/otherpath");
-        final boolean endsWith = fileSystem.getPath("/toplevel/second/third").endsWith(otherPath);
-        Assertions.assertFalse(endsWith);
+        try (final FileSystem otherFs = ShrinkWrapFileSystems.newFileSystem(ShrinkWrap.create(GenericArchive.class))) {
+            final Path otherPath = otherFs.getPath("/otherpath");
+            final boolean endsWith = fileSystem.getPath("/toplevel/second/third").endsWith(otherPath);
+            Assertions.assertFalse(endsWith);
+        }
     }
 
     @Test

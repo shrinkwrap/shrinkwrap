@@ -281,9 +281,9 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
                 if (options.contains(StandardOpenOption.APPEND)) {
                     // Read in the existing content
                     channel.position(0);
-                    final InputStream in = archive.get(archivePath).getAsset().openStream();
-                    this.copy(in, channel);
-                    in.close();
+                    try (InputStream in = archive.get(archivePath).getAsset().openStream()) {
+                        this.copy(in, channel);
+                    }
                     // Delete the existing asset and associate the channel as the new asset
                     archive.delete(archivePath);
                     archive.add(channel);
@@ -315,12 +315,13 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         }
 
         // Existing asset is read into the channel
-        final InputStream in = asset.openStream();
-        final SeekableByteChannel outChannel = new SeekableInMemoryByteChannel();
-        this.copy(in, outChannel);
-        // Set the position to 0, so it can be read from the beginning
-        outChannel.position(0);
-        return outChannel;
+        try (InputStream in = asset.openStream()) {
+            final SeekableByteChannel outChannel = new SeekableInMemoryByteChannel();
+            this.copy(in, outChannel);
+            // Set the position to 0, so it can be read from the beginning
+            outChannel.position(0);
+            return outChannel;
+        }
 
     }
 

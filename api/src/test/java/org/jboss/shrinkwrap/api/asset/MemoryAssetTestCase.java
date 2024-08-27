@@ -70,22 +70,24 @@ public class MemoryAssetTestCase {
         final int newPosition = 2;
         final byte[] contents = new byte[2];
         // Read 2 bytes from the new position
-        final SeekableByteChannel channel = this.asset.position(newPosition);
-        Assertions.assertEquals(this.asset, channel, "Setting position should return the asset");
-        final int numBytesRead = channel.read(ByteBuffer.wrap(contents));
-        final String expected = "dr";
-        final String contentsRead = new String(contents, StandardCharsets.UTF_8);
-        Assertions.assertEquals(contents.length, numBytesRead, "Read should report correct number of bytes read");
-        Assertions.assertEquals(expected, contentsRead, "Channel should respect explicit position during reads");
+        try (final SeekableByteChannel channel = this.asset.position(newPosition)) {
+            Assertions.assertEquals(this.asset, channel, "Setting position should return the asset");
+            final int numBytesRead = channel.read(ByteBuffer.wrap(contents));
+            final String expected = "dr";
+            final String contentsRead = new String(contents, StandardCharsets.UTF_8);
+            Assertions.assertEquals(contents.length, numBytesRead, "Read should report correct number of bytes read");
+            Assertions.assertEquals(expected, contentsRead, "Channel should respect explicit position during reads");
+        }
     }
 
     @Test
     public void openStream() throws IOException {
         this.asset.write(buffer);
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(this.asset.openStream()));
-        final String contents = reader.readLine();
-        Assertions.assertEquals(CONTENTS_BUFFER, contents, "Contents read were not as expected");
-
+        try (final InputStreamReader inputStreamReader = new InputStreamReader(this.asset.openStream());
+             final BufferedReader reader = new BufferedReader(inputStreamReader) ) {
+            final String contents = reader.readLine();
+            Assertions.assertEquals(CONTENTS_BUFFER, contents, "Contents read were not as expected");
+        }
     }
 
     @Test
@@ -112,11 +114,12 @@ public class MemoryAssetTestCase {
     public void truncate() throws IOException {
         this.asset.write(buffer);
         final int newSize = (int) this.asset.size() - 3;
-        final SeekableByteChannel channel = this.asset.truncate(newSize);
-        Assertions.assertEquals(this.asset, channel, "Truncating should return the asset");
-        // Correct size?
-        Assertions.assertEquals(newSize, this.asset.size(), "Channel should report correct size after truncate");
-        // Correct position?
-        Assertions.assertEquals(newSize, this.asset.position(), "Channel should report adjusted position after truncate");
+        try (final SeekableByteChannel channel = this.asset.truncate(newSize)) {
+            Assertions.assertEquals(this.asset, channel, "Truncating should return the asset");
+            // Correct size?
+            Assertions.assertEquals(newSize, this.asset.size(), "Channel should report correct size after truncate");
+            // Correct position?
+            Assertions.assertEquals(newSize, this.asset.position(), "Channel should report adjusted position after truncate");
+        }
     }
 }

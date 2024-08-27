@@ -119,10 +119,12 @@ public abstract class TarExporterTestBase<T extends StreamImporter<T>> extends S
      */
     private void assertAssetInTar(final File archive, final ArchivePath path, final Asset asset)
         throws IllegalArgumentException, IOException {
-        final InputStream in = this.getEntryFromTarFile(archive, path);
-        byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
-        byte[] actualContents = IOUtil.asByteArray(in);
-        Assertions.assertArrayEquals(expectedContents, actualContents);
+        try (final InputStream in = this.getEntryFromTarFile(archive, path);
+             final InputStream inputStreamAsset = asset.openStream()) {
+            byte[] expectedContents = IOUtil.asByteArray(inputStreamAsset);
+            byte[] actualContents = IOUtil.asByteArray(in);
+            Assertions.assertArrayEquals(expectedContents, actualContents);
+        }
     }
 
     /**

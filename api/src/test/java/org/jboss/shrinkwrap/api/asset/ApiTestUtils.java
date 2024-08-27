@@ -40,14 +40,14 @@ class ApiTestUtils {
      * @throws Exception
      */
     static String convertToString(InputStream in) throws Exception {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        int b;
-        while ((b = in.read()) != -1) {
-            out.write(b);
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            int b;
+            while ((b = in.read()) != -1) {
+                out.write(b);
+            }
+            in.close();
+            return new String(out.toByteArray(), StandardCharsets.UTF_8);
         }
-        out.close();
-        in.close();
-        return new String(out.toByteArray(), StandardCharsets.UTF_8);
     }
 
     /**
@@ -78,8 +78,9 @@ class ApiTestUtils {
      */
     static int findLengthOfClass(Class<?> clazz) throws Exception {
         String classResourceName = getResourceNameForClass(clazz);
-        InputStream in = SecurityActions.getThreadContextClassLoader().getResourceAsStream(classResourceName);
-        return findLengthOfStream(in);
+        try (InputStream in = SecurityActions.getThreadContextClassLoader().getResourceAsStream(classResourceName)) {
+            return findLengthOfStream(in);
+        }
     }
 
     /**

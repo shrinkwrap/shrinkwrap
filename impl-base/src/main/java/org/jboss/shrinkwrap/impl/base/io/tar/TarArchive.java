@@ -574,24 +574,21 @@ public class TarArchive {
 
                 tFile = new File(tempFileName);
 
-                BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(eFile)));
+                try (FileInputStream fileInputStream = new FileInputStream(eFile);
+                     InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+                     BufferedReader in = new BufferedReader(inputStreamReader);
+                     FileOutputStream fileOutputStream = new FileOutputStream(tFile);
+                     BufferedOutputStream out = new BufferedOutputStream(fileOutputStream)) {
+                    for (;;) {
+                        String line = in.readLine();
+                        if (line == null) {
+                            break;
+                        }
 
-                BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tFile));
-
-                for (;;) {
-                    String line = in.readLine();
-                    if (line == null) {
-                        break;
+                        out.write(line.getBytes());
+                        out.write((byte) '\n');
                     }
-
-                    out.write(line.getBytes());
-                    out.write((byte) '\n');
                 }
-
-                in.close();
-                out.flush();
-                out.close();
-
                 entry.setSize(tFile.length());
 
                 eFile = tFile;
@@ -629,20 +626,18 @@ public class TarArchive {
                 }
             }
         } else {
-            FileInputStream in = new FileInputStream(eFile);
+            try (FileInputStream in = new FileInputStream(eFile)) {
+                byte[] eBuf = new byte[32 * 1024];
+                for (;;) {
+                    int numRead = in.read(eBuf, 0, eBuf.length);
 
-            byte[] eBuf = new byte[32 * 1024];
-            for (;;) {
-                int numRead = in.read(eBuf, 0, eBuf.length);
+                    if (numRead == -1) {
+                        break;
+                    }
 
-                if (numRead == -1) {
-                    break;
+                    this.tarOut.write(eBuf, 0, numRead);
                 }
-
-                this.tarOut.write(eBuf, 0, numRead);
             }
-
-            in.close();
 
             if (tFile != null) {
                 tFile.delete();

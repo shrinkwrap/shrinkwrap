@@ -37,11 +37,12 @@ public class ClassLoaderAssetTestCase {
     @Test
     public void shouldBeAbleToReadResource() throws Exception {
         Asset asset = new ClassLoaderAsset(EXISTING_RESOURCE);
-        InputStream io = asset.openStream();
 
-        Assertions.assertNotNull(io);
-        Assertions.assertEquals("shrinkwrap=true", ApiTestUtils.convertToString(io),
-                "Should be able to read the content of the resource");
+        try (InputStream io = asset.openStream()) {
+            Assertions.assertNotNull(io);
+            Assertions.assertEquals("shrinkwrap=true", ApiTestUtils.convertToString(io),
+                    "Should be able to read the content of the resource");
+        }
     }
 
     @Test

@@ -229,68 +229,86 @@ public class FilesTestCase {
     public void copyFromInputStreamToPath() throws IOException {
         final String contents = "Hello, testing content writing!";
         final byte[] bytes = contents.getBytes(StandardCharsets.UTF_8);
-        final InputStream in = new ByteArrayInputStream(bytes);
         final String pathName = "content";
         final Path path = fs.getPath(pathName);
-        final long bytesCopied = Files.copy(in, path);
-        final String roundtrip = new BufferedReader(new InputStreamReader(this.getArchive().get(pathName).getAsset()
-            .openStream())).readLine();
-        Assertions.assertEquals(contents, roundtrip, "Contents after copy were not as expected");
-        Assertions.assertEquals(bytes.length, bytesCopied);
+
+        try (final InputStream in = new ByteArrayInputStream(bytes)) {
+            final long bytesCopied = Files.copy(in, path);
+
+            try (final InputStreamReader inputStreamReader = new InputStreamReader(this.getArchive().get(pathName).getAsset()
+                    .openStream());
+                 final BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+                final String roundtrip = bufferedReader.readLine();
+                Assertions.assertEquals(contents, roundtrip, "Contents after copy were not as expected");
+                Assertions.assertEquals(bytes.length, bytesCopied);
+            }
+        }
     }
 
     @Test
     public void copyFromInputStreamToExistingPath() throws IOException {
-        final InputStream in = new ByteArrayInputStream("test".getBytes(StandardCharsets.UTF_8));
         final String pathName = "content";
         final Path path = fs.getPath(pathName);
         // Add some dummy asset to the archive
         this.getArchive().add(EmptyAsset.INSTANCE, pathName);
-        // Now try to copy to the same path as the dummy asset
-        Assertions.assertThrows(FileAlreadyExistsException.class, () -> Files.copy(in, path),
-                "Overwrite of existing path should fail");
+
+        try (final InputStream in = new ByteArrayInputStream("test".getBytes(StandardCharsets.UTF_8))) {
+            // Now try to copy to the same path as the dummy asset
+            Assertions.assertThrows(FileAlreadyExistsException.class, () -> Files.copy(in, path),
+                    "Overwrite of existing path should fail");
+        }
     }
 
     @Test
     public void copyFromInputStreamToExistingDirectory() throws IOException {
-        final InputStream in = new ByteArrayInputStream("test".getBytes(StandardCharsets.UTF_8));
         final String pathName = "directory";
         final Path path = fs.getPath(pathName);
         // Add some directory to the archive
         this.getArchive().addAsDirectories(pathName);
-        // Now try to copy to the same path as the dir
-        Assertions.assertThrows(FileAlreadyExistsException.class, () -> Files.copy(in, path),
-                "Overwrite of existing directory should fail");
+
+        try (final InputStream in = new ByteArrayInputStream("test".getBytes(StandardCharsets.UTF_8))) {
+            // Now try to copy to the same path as the dir
+            Assertions.assertThrows(FileAlreadyExistsException.class, () -> Files.copy(in, path),
+                    "Overwrite of existing directory should fail");
+        }
     }
 
     @Test
     public void copyFromInputStreamToExistingNonEmptyDirectoryWithReplaceExistingOption() throws IOException {
-        final InputStream in = new ByteArrayInputStream("test".getBytes(StandardCharsets.UTF_8));
         final String dir = "/directory";
         final String subdir = dir + "/subdir";
         final Path dirPath = fs.getPath(dir);
         // Add some nested directory to the archive
         this.getArchive().addAsDirectories(subdir);
-        // Now try to copy to a nonempty dir
-        Assertions.assertThrows(DirectoryNotEmptyException.class, () -> Files.copy(in, dirPath, StandardCopyOption.REPLACE_EXISTING),
-                "Overwrite of existing non-empty dir should fail, even with replace option");
+
+        try (final InputStream in = new ByteArrayInputStream("test".getBytes(StandardCharsets.UTF_8))) {
+            // Now try to copy to a nonempty dir
+            Assertions.assertThrows(DirectoryNotEmptyException.class, () -> Files.copy(in, dirPath, StandardCopyOption.REPLACE_EXISTING),
+                    "Overwrite of existing non-empty dir should fail, even with replace option");
+        }
     }
 
     @Test
     public void copyFromInputStreamToExistingPathWithOverwriteOption() throws IOException {
         final String contents = "Hello, testing content writing!";
         final byte[] bytes = contents.getBytes(StandardCharsets.UTF_8);
-        final InputStream in = new ByteArrayInputStream(bytes);
         final String pathName = "content";
         final Path path = fs.getPath(pathName);
         // Add some dummy asset to the archive
         this.getArchive().add(EmptyAsset.INSTANCE, pathName);
-        // Now try to copy to the same path as the dummy asset, using the option to overwrite
-        final long bytesCopied = Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
-        final String roundtrip = new BufferedReader(new InputStreamReader(this.getArchive().get(pathName).getAsset()
-            .openStream())).readLine();
-        Assertions.assertEquals(contents, roundtrip, "Contents after copy were not as expected");
-        Assertions.assertEquals(bytes.length, bytesCopied);
+
+        try (final InputStream in = new ByteArrayInputStream(bytes)) {
+            // Now try to copy to the same path as the dummy asset, using the option to overwrite
+            final long bytesCopied = Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
+
+            try (final InputStreamReader inputStreamReader = new InputStreamReader(this.getArchive().get(pathName).getAsset()
+                    .openStream());
+                 final BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+                final String roundtrip = bufferedReader.readLine();
+                Assertions.assertEquals(contents, roundtrip, "Contents after copy were not as expected");
+                Assertions.assertEquals(bytes.length, bytesCopied);
+            }
+        }
     }
 
     @Test
@@ -299,13 +317,15 @@ public class FilesTestCase {
         final String contents = "Here we're gonna test reading from the archive and writing the contents to an OutStream";
         final String path = "contentPath";
         this.getArchive().add(new StringAsset(contents), path);
-        // Copy
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        final long bytesCopied = Files.copy(fs.getPath(path), out);
-        // Get out the content
-        final String roundtrip = new String(out.toByteArray(), StandardCharsets.UTF_8);
-        Assertions.assertEquals(contents, roundtrip, "Contents after copy were not as expected");
-        Assertions.assertEquals(contents.length(), bytesCopied);
+
+        try (final ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            // Copy
+            final long bytesCopied = Files.copy(fs.getPath(path), out);
+            // Get out the content
+            final String roundtrip = new String(out.toByteArray(), StandardCharsets.UTF_8);
+            Assertions.assertEquals(contents, roundtrip, "Contents after copy were not as expected");
+            Assertions.assertEquals(contents.length(), bytesCopied);
+        }
     }
 
     @Test
@@ -330,10 +350,14 @@ public class FilesTestCase {
         archive.add(new StringAsset(initialContent), pathName);
         // Write in append mode
         Files.write(path, appendContent.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-        final String newContents = new BufferedReader(new InputStreamReader(archive.get(pathName).getAsset()
-            .openStream())).readLine();
-        Assertions.assertEquals(initialContent + appendContent, newContents,
-                "New contents was not appended as expected");
+
+        try (final InputStreamReader inputStreamReader = new InputStreamReader(archive.get(pathName).getAsset()
+                .openStream());
+             final BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+            final String newContents = bufferedReader.readLine();
+            Assertions.assertEquals(initialContent + appendContent, newContents,
+                    "New contents was not appended as expected");
+        }
     }
 
     @Test
@@ -546,9 +570,13 @@ public class FilesTestCase {
         final Path dst = fs.getPath(dest);
         final Path moved = Files.move(src, dst);
         Assertions.assertEquals(dest, moved.toString());
-        final String roundtrip = new BufferedReader(new InputStreamReader(this.getArchive().get(dest).getAsset()
-            .openStream())).readLine();
-        Assertions.assertEquals(contents, roundtrip, "Contents not as expected after move");
+
+        try (final InputStreamReader inputStreamReader = new InputStreamReader(this.getArchive().get(dest).getAsset()
+                .openStream());
+             final BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+            final String roundtrip = bufferedReader.readLine();
+            Assertions.assertEquals(contents, roundtrip, "Contents not as expected after move");
+        }
     }
 
     @Test
@@ -568,25 +596,31 @@ public class FilesTestCase {
         final String path = "path";
         final String contents = "contents";
         this.getArchive().add(new StringAsset(contents), path);
-        final BufferedReader reader = Files.newBufferedReader(fs.getPath(path), Charset.defaultCharset());
-        final CharBuffer buffer = CharBuffer.allocate(contents.length());
-        reader.read(buffer);
-        reader.close();
-        buffer.position(0);
-        Assertions.assertEquals(contents, buffer.toString(), "Contents not read as expected from the buffered reader");
+
+        try (final BufferedReader reader = Files.newBufferedReader(fs.getPath(path), Charset.defaultCharset())) {
+            final CharBuffer buffer = CharBuffer.allocate(contents.length());
+            reader.read(buffer);
+            buffer.position(0);
+            Assertions.assertEquals(contents, buffer.toString(), "Contents not read as expected from the buffered reader");
+        }
     }
 
     @Test
     public void newBufferedWriter() throws IOException {
         final String path = "path";
         final String contents = "contents";
-        final BufferedWriter writer = Files.newBufferedWriter(fs.getPath(path), Charset.defaultCharset(),
-            (OpenOption) null);
-        writer.write(contents);
-        writer.close();
-        final String roundtrip = new BufferedReader(new InputStreamReader(this.getArchive().get(path).getAsset()
-            .openStream())).readLine();
-        Assertions.assertEquals(contents, roundtrip, "Contents not written as expected from the buffered writer");
+
+        try (final BufferedWriter writer = Files.newBufferedWriter(fs.getPath(path), Charset.defaultCharset(),
+                (OpenOption) null)) {
+            writer.write(contents);
+        }
+
+        try (final InputStreamReader inputStreamReader = new InputStreamReader(this.getArchive().get(path).getAsset()
+                .openStream());
+             final BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+            final String roundtrip = bufferedReader.readLine();
+            Assertions.assertEquals(contents, roundtrip, "Contents not written as expected from the buffered writer");
+        }
     }
 
     @Test
@@ -594,18 +628,23 @@ public class FilesTestCase {
         final String path = "path";
         final String contents = "ALR is putting some contents into here.";
         // Open for reading and writing
-        final SeekableByteChannel channel = Files.newByteChannel(fs.getPath(path), StandardOpenOption.READ,
-            StandardOpenOption.WRITE);
-        final ByteBuffer writeBuffer = ByteBuffer.wrap(contents.getBytes());
-        channel.write(writeBuffer);
-        final ByteBuffer readBuffer = ByteBuffer.allocate(contents.length());
-        channel.position(0);
-        channel.read(readBuffer);
-        final String roundtrip = new String(readBuffer.array());
-        final String roundTripViaArchive = new BufferedReader(new InputStreamReader(this.getArchive().get(path)
-            .getAsset().openStream())).readLine();
-        Assertions.assertEquals(contents, roundtrip, "Contents not read as expected from the channel");
-        Assertions.assertEquals(contents, roundTripViaArchive, "Contents not read as expected from the archive");
+        try (final SeekableByteChannel channel = Files.newByteChannel(fs.getPath(path), StandardOpenOption.READ,
+                StandardOpenOption.WRITE)) {
+            final ByteBuffer writeBuffer = ByteBuffer.wrap(contents.getBytes());
+            channel.write(writeBuffer);
+            final ByteBuffer readBuffer = ByteBuffer.allocate(contents.length());
+            channel.position(0);
+            channel.read(readBuffer);
+            final String roundtrip = new String(readBuffer.array());
+
+            try (final InputStreamReader inputStreamReader = new InputStreamReader(this.getArchive().get(path)
+                    .getAsset().openStream());
+                 final BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+                final String roundTripViaArchive = bufferedReader.readLine();
+                Assertions.assertEquals(contents, roundtrip, "Contents not read as expected from the channel");
+                Assertions.assertEquals(contents, roundTripViaArchive, "Contents not read as expected from the archive");
+            }
+        }
     }
 
     @Test
@@ -618,15 +657,16 @@ public class FilesTestCase {
     public void newDirectoryStream() throws IOException {
         final String dirs = "a/b/c/d/e";
         this.getArchive().addAsDirectories(dirs);
-        final DirectoryStream<Path> stream = Files.newDirectoryStream(fs.getPath("/"));
-        final Iterator<Path> paths = stream.iterator();
-        int counter = 0;
-        while (paths.hasNext()) {
-            counter++;
-            final Path path = paths.next();
-            Assertions.assertTrue(this.getArchive().contains(path.toString()));
+        try (final DirectoryStream<Path> stream = Files.newDirectoryStream(fs.getPath("/"))) {
+            final Iterator<Path> paths = stream.iterator();
+            int counter = 0;
+            while (paths.hasNext()) {
+                counter++;
+                final Path path = paths.next();
+                Assertions.assertTrue(this.getArchive().contains(path.toString()));
+            }
+            Assertions.assertEquals(1, counter);
         }
-        Assertions.assertEquals(1, counter);
     }
 
     @Test
@@ -634,24 +674,29 @@ public class FilesTestCase {
         final String path = "path";
         final String contents = "contents";
         this.getArchive().add(new StringAsset(contents), path);
-        final InputStream in = Files.newInputStream(fs.getPath(path), StandardOpenOption.READ);
         final byte[] buffer = new byte[contents.length()];
-        in.read(buffer);
-        in.close();
-        final String roundtrip = new String(buffer);
-        Assertions.assertEquals(contents, roundtrip, "Contents not read as expected from the instream");
+        try (final InputStream in = Files.newInputStream(fs.getPath(path), StandardOpenOption.READ)) {
+            in.read(buffer);
+            final String roundtrip = new String(buffer);
+            Assertions.assertEquals(contents, roundtrip, "Contents not read as expected from the instream");
+        }
     }
 
     @Test
     public void newOutputStream() throws IOException {
         final String path = "path";
         final String contents = "contents";
-        final OutputStream outStream = Files.newOutputStream(fs.getPath(path), StandardOpenOption.WRITE);
-        outStream.write(contents.getBytes());
-        outStream.close();
-        final String roundtrip = new BufferedReader(new InputStreamReader(this.getArchive().get(path).getAsset()
-            .openStream())).readLine();
-        Assertions.assertEquals(contents, roundtrip, "Contents not read as expected from the outstream");
+
+        try (final OutputStream outStream = Files.newOutputStream(fs.getPath(path), StandardOpenOption.WRITE)) {
+            outStream.write(contents.getBytes());
+        }
+
+        try (final InputStreamReader inputStreamReader = new InputStreamReader(this.getArchive().get(path).getAsset()
+                .openStream());
+             final BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+            final String roundtrip = bufferedReader.readLine();
+            Assertions.assertEquals(contents, roundtrip, "Contents not read as expected from the outstream");
+        }
     }
 
     @Test
@@ -696,10 +741,11 @@ public class FilesTestCase {
         Path dirPath = fs.getPath("dir");
         Files.createDirectory(dirPath);
         Files.createFile(dirPath.resolve("file"));
-        DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath);
-        Iterator<Path> it = stream.iterator();
-        Assertions.assertEquals("/dir/file", it.next().toString());
-        Assertions.assertFalse(it.hasNext(), "No further elements expected in stream");
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath)) {
+            Iterator<Path> it = stream.iterator();
+            Assertions.assertEquals("/dir/file", it.next().toString());
+            Assertions.assertFalse(it.hasNext(), "No further elements expected in stream");
+        }
     }
 
     @Test
@@ -723,22 +769,22 @@ public class FilesTestCase {
         Path dirPath = fs.getPath("dir");
         Files.createDirectory(dirPath);
         Files.createFile(dirPath.resolve("file"));
-        DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath);
-
-        // when
-        Iterator<Path> it = stream.iterator();
-
-        // then
-        Assertions.assertThrows(IllegalStateException.class, stream::iterator);
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath)) {
+            // when
+            Iterator<Path> it = stream.iterator();
+            // then
+            Assertions.assertThrows(IllegalStateException.class, stream::iterator);
+        }
     }
 
     @Test
     public void directoryStreamDoesNotContainSubfolders() throws Exception {
         Files.createDirectories(fs.getPath("dir/subdir"));
-        DirectoryStream<Path> stream = Files.newDirectoryStream(fs.getPath("/"));
-        Iterator<Path> it = stream.iterator();
-        Assertions.assertEquals("/dir", it.next().toString());
-        Assertions.assertFalse(it.hasNext(), "No further elements expected in stream");
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(fs.getPath("/"))) {
+            Iterator<Path> it = stream.iterator();
+            Assertions.assertEquals("/dir", it.next().toString());
+            Assertions.assertFalse(it.hasNext(), "No further elements expected in stream");
+        }
     }
 
     @Test

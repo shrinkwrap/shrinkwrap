@@ -98,19 +98,19 @@ public class ZipExporterStressTest {
         // Export; at this point we have less than 50% available memory, so
         // we can't carry the whole archive in RAM twice; this
         // should ensure the ZIP impl uses an internal buffer
-        final InputStream in = archive.as(ZipExporter.class).exportAsInputStream();
-        final CountingOutputStream out = new CountingOutputStream();
+        try (final InputStream in = archive.as(ZipExporter.class).exportAsInputStream();
+             final CountingOutputStream out = new CountingOutputStream()) {
+            // Copy, counting the final size of the exported ZIP
+            IOUtil.copyWithClose(in, out);
 
-        // Copy, counting the final size of the exported ZIP
-        IOUtil.copyWithClose(in, out);
-
-        // Ensure we've just exported a ZIP larger than our available memory (proving we've buffered the encoding
-        // process)
-        Assertions.assertTrue(out.bytesWritten > beforeExportFreeMemBytes,
-                "Test setup failed; we should be writing out more bytes than we have free memory");
-        log.info("Final ZIP export was: " + this.megaBytesFromBytes(out.bytesWritten) + " MB");
-        final long afterExportFreeMemBytes = totalFreeMemory(runtime);
-        log.info("Free memory after export (MB): " + this.megaBytesFromBytes(afterExportFreeMemBytes));
+            // Ensure we've just exported a ZIP larger than our available memory (proving we've buffered the encoding
+            // process)
+            Assertions.assertTrue(out.bytesWritten > beforeExportFreeMemBytes,
+                    "Test setup failed; we should be writing out more bytes than we have free memory");
+            log.info("Final ZIP export was: " + this.megaBytesFromBytes(out.bytesWritten) + " MB");
+            final long afterExportFreeMemBytes = totalFreeMemory(runtime);
+            log.info("Free memory after export (MB): " + this.megaBytesFromBytes(afterExportFreeMemBytes));
+        }
     }
 
     // -------------------------------------------------------------------------------------||

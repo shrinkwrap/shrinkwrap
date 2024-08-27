@@ -19,6 +19,7 @@ package org.jboss.shrinkwrap.impl.base.importer;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -71,48 +72,52 @@ public class TarBz2ContentAssertionDelegate extends ContentAssertionDelegateBase
         boolean containsEmptyDir = false;
         boolean containsEmptyNestedDir = false;
 
-        final TarBzInputStream stream = new TarBzInputStream(new FileInputStream(originalSource));
+        try (final FileInputStream fileInputStream = new FileInputStream(originalSource);
+             final TarBzInputStream stream = new TarBzInputStream(fileInputStream)) {
+            TarEntry originalEntry;
+            while ((originalEntry = (stream.getNextEntry())) != null) {
+                if (originalEntry.isDirectory()) {
+                    // TAR impl doesn't report dirs with trailing slashes, so adjust
+                    final String originalEntryName = PathUtil.optionallyAppendSlash(originalEntry.getName());
+                    log.info(originalEntryName);
 
-        TarEntry originalEntry;
-        while ((originalEntry = (stream.getNextEntry())) != null) {
-            if (originalEntry.isDirectory()) {
-                // TAR impl doesn't report dirs with trailing slashes, so adjust
-                final String originalEntryName = PathUtil.optionallyAppendSlash(originalEntry.getName());
-                log.info(originalEntryName);
+                    // Check for expected empty dirs
+                    if (originalEntryName.equals(EXPECTED_EMPTY_DIR)) {
+                        containsEmptyDir = true;
+                    }
+                    if (originalEntryName.equals(EXPECTED_NESTED_EMPTY_DIR)) {
+                        containsEmptyNestedDir = true;
+                    }
+                    continue;
+                }
 
-                // Check for expected empty dirs
-                if (originalEntryName.equals(EXPECTED_EMPTY_DIR)) {
-                    containsEmptyDir = true;
+                // Ensure the archive contains the current entry as read from the file
+                final ArchivePath entryName = ArchivePaths.create(originalEntry.getName());
+                Assertions.assertTrue(importedArchive.contains(entryName),
+                        "Importer should have imported " + entryName.get() + " from " + originalSource);
+
+                // Check contents
+                try (final ByteArrayOutputStream output = new ByteArrayOutputStream(8192)) {
+                    byte[] content = new byte[4096];
+                    int readBytes;
+                    while ((readBytes = stream.read(content, 0, content.length)) != -1) {
+                        output.write(content, 0, readBytes);
+                    }
+                    byte[] originalContent = output.toByteArray();
+                    final Node node = importedArchive.get(entryName);
+                    try (final InputStream inputStreamAsset = node.getAsset().openStream()) {
+                        byte[] importedContent = IOUtil.asByteArray(inputStreamAsset);
+
+                        Assertions.assertArrayEquals(importedContent, originalContent,
+                                "The content of " + originalSource.getName() + " should be equal to the imported content");
+                    }
                 }
-                if (originalEntryName.equals(EXPECTED_NESTED_EMPTY_DIR)) {
-                    containsEmptyNestedDir = true;
-                }
-                continue;
             }
 
-            // Ensure the archive contains the current entry as read from the file
-            final ArchivePath entryName = ArchivePaths.create(originalEntry.getName());
-            Assertions.assertTrue(importedArchive.contains(entryName),
-                    "Importer should have imported " + entryName.get() + " from " + originalSource);
-
-            // Check contents
-            ByteArrayOutputStream output = new ByteArrayOutputStream(8192);
-            byte[] content = new byte[4096];
-            int readBytes;
-            while ((readBytes = stream.read(content, 0, content.length)) != -1) {
-                output.write(content, 0, readBytes);
-            }
-            byte[] originalContent = output.toByteArray();
-            final Node node = importedArchive.get(entryName);
-            byte[] importedContent = IOUtil.asByteArray(node.getAsset().openStream());
-
-            Assertions.assertArrayEquals(importedContent, originalContent,
-                    "The content of " + originalSource.getName() + " should be equal to the imported content");
+            // Ensure empty directories have come in cleanly
+            Assertions.assertTrue(containsEmptyDir, "Empty directory not imported");
+            Assertions.assertTrue(containsEmptyNestedDir, "Empty nested directory not imported");
         }
-
-        // Ensure empty directories have come in cleanly
-        Assertions.assertTrue(containsEmptyDir, "Empty directory not imported");
-        Assertions.assertTrue(containsEmptyNestedDir, "Empty nested directory not imported");
     }
 
     // -------------------------------------------------------------------------------------||
