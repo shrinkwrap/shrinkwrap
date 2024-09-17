@@ -38,7 +38,9 @@ import org.jboss.shrinkwrap.api.IllegalOverwriteException;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.TargetArchiveAwareAsset;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
+import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.path.PathUtil;
 
@@ -125,6 +127,22 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
         Validate.notNull(path, "No path was specified");
 
         return addAsset(path, asset);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see org.jboss.shrinkwrap.api.Archive#add(org.jboss.shrinkwrap.api.asset.TargetArchiveAwareAsset)
+     */
+    @Override
+    public T add(TargetArchiveAwareAsset asset) {
+        Validate.notNull(asset, "No asset was specified");
+
+        Node node = AssetUtil.arrangeAsset(asset, this);
+
+        addNewNode(node.getPath(), node.getAsset());
+
+        return covariantReturn();
     }
 
     /**
