@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 /**
  * ByteArrayIOUtilTest
@@ -37,16 +38,17 @@ public class ByteArrayIOUtilTestCase {
     }
 
     @Test
-    public void shouldReturnByteArrayWithSameContentAsPassedIntoInputStream() {
+    public void shouldReturnByteArrayWithSameContentAsPassedIntoInputStream() throws IOException {
         final int length = 10;
         final byte[] contents = new byte[length];
         for (int i = 0; i < length; i++) {
             contents[i] = (byte) i;
         }
-        byte[] output = ByteArrayIOUtil.asByteArray(new ByteArrayInputStream(contents));
-
-        for (int i = 0; i < output.length; i++) {
-            Assertions.assertEquals(output[i], contents[i], "output content did not equal input content");
+        try (final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(contents)) {
+            byte[] output = ByteArrayIOUtil.asByteArray(byteArrayInputStream);
+            for (int i = 0; i < output.length; i++) {
+                Assertions.assertEquals(output[i], contents[i], "output content did not equal input content");
+            }
         }
     }
 }

@@ -60,14 +60,15 @@ public class EmptyAssetTestCase {
         final Asset asset = EmptyAsset.INSTANCE;
 
         // Get the contents back out of the asset
-        final InputStream stream = asset.openStream();
-        final ByteArrayOutputStream out = new ByteArrayOutputStream(0);
-        int read;
-        while ((read = stream.read()) != -1) {
-            out.write(read);
-        }
+        try (final InputStream stream = asset.openStream();
+             final ByteArrayOutputStream out = new ByteArrayOutputStream(0)) {
+            int read;
+            while ((read = stream.read()) != -1) {
+                out.write(read);
+            }
 
-        Assertions.assertEquals(0, out.toByteArray().length, "Roundtrip did not produce empty contents");
+            Assertions.assertEquals(0, out.toByteArray().length, "Roundtrip did not produce empty contents");
+        }
     }
 
     @Test

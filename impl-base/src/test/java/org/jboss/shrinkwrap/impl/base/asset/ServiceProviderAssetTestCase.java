@@ -21,6 +21,9 @@ import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * ServiceProviderAssetTestCase
  *
@@ -30,13 +33,15 @@ import org.junit.jupiter.api.Test;
 public class ServiceProviderAssetTestCase {
 
     @Test
-    public void shouldCreateServiceProviderFile() {
+    public void shouldCreateServiceProviderFile() throws IOException {
         Asset asset = new ServiceProviderAsset(TestImpl1.class, TestImpl2.class);
 
         byte[] expectedContent = (TestImpl1.class.getName() + "\n" + TestImpl2.class.getName() + "\n").getBytes();
-        byte[] content = IOUtil.asByteArray(asset.openStream());
+        try (final InputStream inputStreamAsset = asset.openStream()) {
+            byte[] content = IOUtil.asByteArray(inputStreamAsset);
 
-        Assertions.assertArrayEquals(expectedContent, content);
+            Assertions.assertArrayEquals(expectedContent, content);
+        }
     }
 
     @Test

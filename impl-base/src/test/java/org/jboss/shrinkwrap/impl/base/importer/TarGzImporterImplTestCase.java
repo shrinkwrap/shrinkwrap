@@ -118,7 +118,9 @@ public class TarGzImporterImplTestCase extends StreamImporterImplTestBase<TarGzI
             // First provide real GZIP content, so we don't err out when initialized
             final byte[] test = "Something".getBytes();
             final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            new GZIPOutputStream(stream).write(test);
+            try (final GZIPOutputStream gzipOutputStream = new GZIPOutputStream(stream)) {
+                gzipOutputStream.write(test);
+            }
             final InputStream in = new ByteArrayInputStream(stream.toByteArray());
             return new ExceptionThrowingTarGzInputStream(in);
         }

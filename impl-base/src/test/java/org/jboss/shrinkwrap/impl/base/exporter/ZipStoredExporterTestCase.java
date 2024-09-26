@@ -88,10 +88,10 @@ public final class ZipStoredExporterTestCase extends StreamExporterTestBase<ZipI
         assert file != null : "file must be specified";
 
         // Get as ZipFile
-        final ZipFile zip = new ZipFile(file);
-
-        // Validate
-        this.ensureZipFileInExpectedForm(zip);
+        try (final ZipFile zip = new ZipFile(file)) {
+            // Validate
+            this.ensureZipFileInExpectedForm(zip);
+        }
     }
 
     /**
@@ -107,13 +107,16 @@ public final class ZipStoredExporterTestCase extends StreamExporterTestBase<ZipI
         assert path != null : "path must be specified";
 
         // Get as Zip File
-        final ZipFile zipFile = new ZipFile(file);
-        final ZipEntry entry = zipFile.getEntry(PathUtil.optionallyRemovePrecedingSlash(path.get()));
-        if (entry == null) {
-            return null;
+        try (final ZipFile zipFile = new ZipFile(file)) {
+            final ZipEntry entry = zipFile.getEntry(PathUtil.optionallyRemovePrecedingSlash(path.get()));
+            if (entry == null) {
+                return null;
+            }
+            try (final InputStream inputStream = zipFile.getInputStream(entry)) {
+                final byte[] actualContents = IOUtil.asByteArray(inputStream);
+                return new ByteArrayInputStream(actualContents);
+            }
         }
-        final byte[] actualContents = IOUtil.asByteArray(zipFile.getInputStream(entry));
-        return new ByteArrayInputStream(actualContents);
     }
 
     /**
@@ -141,14 +144,17 @@ public final class ZipStoredExporterTestCase extends StreamExporterTestBase<ZipI
         final File generatedFile = new File(target, "test-exporter.zip");
         Assertions.assertTrue(generatedFile.length() > 0);
 
-        final InputStream contentsFromExportedFile = getContentsFromExportedFile(generatedFile, ArchivePaths.create("/org/jboss/shrinkwrap/impl/base/exporter/ZipStoredExporterTestCase.class"));
-        final byte[] content = IOUtil.asByteArray(contentsFromExportedFile);
-        Assertions.assertTrue(content.length > 0);
+        try (final InputStream contentsFromExportedFile = getContentsFromExportedFile(generatedFile,
+                ArchivePaths.create("/org/jboss/shrinkwrap/impl/base/exporter/ZipStoredExporterTestCase.class"))) {
+            final byte[] content = IOUtil.asByteArray(contentsFromExportedFile);
+            Assertions.assertTrue(content.length > 0);
 
-        final InputStream contentsFromExportedFile2 = getContentsFromExportedFile(generatedFile, ArchivePaths.create("/content.txt"));
-        final byte[] content2 = IOUtil.asByteArray(contentsFromExportedFile2);
-        Assertions.assertTrue(content.length > 0);
-        Assertions.assertEquals("My file content", new String(content2));
+            try (final InputStream contentsFromExportedFile2 = getContentsFromExportedFile(generatedFile, ArchivePaths.create("/content.txt"))) {
+                final byte[] content2 = IOUtil.asByteArray(contentsFromExportedFile2);
+                Assertions.assertTrue(content.length > 0);
+                Assertions.assertEquals("My file content", new String(content2));
+            }
+        }
     }
 
     // -------------------------------------------------------------------------------------||
@@ -186,9 +192,12 @@ public final class ZipStoredExporterTestCase extends StreamExporterTestBase<ZipI
     private void assertAssetInZip(ZipFile expectedZip, ArchivePath path, Asset asset) throws IllegalArgumentException,
             IOException {
         final ZipEntry entry = this.getEntryFromZip(expectedZip, path);
-        final byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
-        final byte[] actualContents = IOUtil.asByteArray(expectedZip.getInputStream(entry));
-        Assertions.assertArrayEquals(expectedContents, actualContents);
+        try (final InputStream inputStreamAsset = asset.openStream();
+             final InputStream inputStream = expectedZip.getInputStream(entry)) {
+            final byte[] expectedContents = IOUtil.asByteArray(inputStreamAsset);
+            final byte[] actualContents = IOUtil.asByteArray(inputStream);
+            Assertions.assertArrayEquals(expectedContents, actualContents);
+        }
     }
 
     /**

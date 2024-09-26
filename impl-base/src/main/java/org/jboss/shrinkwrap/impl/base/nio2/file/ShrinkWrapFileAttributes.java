@@ -127,19 +127,17 @@ final class ShrinkWrapFileAttributes implements BasicFileAttributes {
         }
 
         final Asset asset = this.getArchive().get(this.path.toString()).getAsset();
-        final InputStream stream = asset.openStream();
         int totalRead = 0;
         final byte[] buffer = new byte[1024 * 4];
         int read = 0;
-        try {
+        try (InputStream stream = asset.openStream()) {
             while ((read = stream.read(buffer, 0, buffer.length)) != -1) {
                 totalRead += read;
             }
+            return totalRead;
         } catch (final IOException ioe) {
             throw new RuntimeException(ioe);
         }
-
-        return totalRead;
     }
 
     /**

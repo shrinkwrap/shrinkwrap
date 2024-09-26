@@ -96,8 +96,8 @@ public final class IOUtil {
         StringBuilder buffer = new StringBuilder();
         String line;
 
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+        try (InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
+             BufferedReader reader = new BufferedReader(inputStreamReader)) {
             while ((line = reader.readLine()) != null) {
                 buffer.append(line).append(Character.LINE_SEPARATOR);
             }

@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -114,14 +115,15 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         Archive<?> archive = createArchiveWithAssets();
 
         // Export as InputStream
-        final InputStream exportStream = this.exportAsInputStream(archive);
-
-        // Validate
-        final File tempDirectory = createTempDirectory("testExport");
-        final File serialized = new File(tempDirectory, archive.getName());
-        final FileOutputStream out = new FileOutputStream(serialized);
-        IOUtil.copyWithClose(exportStream, out);
-        ensureInExpectedForm(serialized);
+        try (final InputStream exportStream = this.exportAsInputStream(archive)) {
+            // Validate
+            final File tempDirectory = createTempDirectory("testExport");
+            final File serialized = new File(tempDirectory, archive.getName());
+            try (final FileOutputStream out = new FileOutputStream(serialized)) {
+                IOUtil.copyWithClose(exportStream, out);
+                ensureInExpectedForm(serialized);
+            }
+        }
     }
 
     /**
@@ -134,14 +136,15 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         final Archive<?> archive = ShrinkWrap.create(JavaArchive.class, NAME_ARCHIVE).addAsDirectories(path);
 
         // Fully export by reading all content (export is on-demand)
-        final InputStream content = this.exportAsInputStream(archive);
-        final ByteArrayOutputStream exportedContents = new ByteArrayOutputStream();
-        IOUtil.copyWithClose(content, exportedContents);
+        try (final InputStream content = this.exportAsInputStream(archive);
+             final ByteArrayOutputStream exportedContents = new ByteArrayOutputStream()) {
+            IOUtil.copyWithClose(content, exportedContents);
 
-        final GenericArchive roundtrip = ShrinkWrap.create(this.getImporterClass(), "roundtrip.zip")
-            .importFrom(new ByteArrayInputStream(exportedContents.toByteArray())).as(GenericArchive.class);
-        log.info(roundtrip.toString(true));
-        Assertions.assertTrue(roundtrip.contains(path));
+            final GenericArchive roundtrip = ShrinkWrap.create(this.getImporterClass(), "roundtrip.zip")
+                    .importFrom(new ByteArrayInputStream(exportedContents.toByteArray())).as(GenericArchive.class);
+            log.info(roundtrip.toString(true));
+            Assertions.assertTrue(roundtrip.contains(path));
+        }
     }
 
     /**
@@ -197,8 +200,9 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
 
         // Export as OutStream and flush to a file manually
         final File serializedArchive = new File(tempDirectory, archive.getName());
-        final OutputStream out = new FileOutputStream(serializedArchive);
-        this.exportToOutputStream(archive, out);
+        try (final OutputStream out = new FileOutputStream(serializedArchive)) {
+            this.exportToOutputStream(archive, out);
+        }
 
         // Validate
         this.ensureInExpectedForm(serializedArchive);
@@ -219,9 +223,9 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
 
         // Export as File
         final File alreadyExists = new File(tempDirectory, archive.getName());
-        final OutputStream alreadyExistsOutputStream = new FileOutputStream(alreadyExists);
-        alreadyExistsOutputStream.write(new byte[] {});
-        alreadyExistsOutputStream.close();
+        try (final OutputStream alreadyExistsOutputStream = Files.newOutputStream(alreadyExists.toPath())) {
+            alreadyExistsOutputStream.write(new byte[] {});
+        }
         Assertions.assertTrue(alreadyExists.exists(), "The test setup is incorrect; an empty file should exist before writing the archive");
 
         Assertions.assertThrows(FileExistsException.class, () -> this.exportAsFile(archive, alreadyExists, false),
@@ -242,46 +246,48 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         final Archive<?> archive = createArchiveWithNestedArchives();
 
         // Export as InputStream
-        final InputStream exportStream = this.exportAsInputStream(archive);
+        try (final InputStream exportStream = this.exportAsInputStream(archive)) {
+            // Write out and retrieve as exported file
+            final File exported = new File(tempDirectory, NAME_ARCHIVE + this.getArchiveExtension());
+            try (final OutputStream exportedOut = Files.newOutputStream(exported.toPath())) {
+                IOUtil.copyWithClose(exportStream, exportedOut);
+            }
+            // Validate entries were written out
+            this.ensureAssetInExportedFile(exported, PATH_ONE, ASSET_ONE);
+            this.ensureAssetInExportedFile(exported, PATH_TWO, ASSET_TWO);
 
-        // Write out and retrieve as exported file
-        final File exported = new File(tempDirectory, NAME_ARCHIVE + this.getArchiveExtension());
-        final OutputStream exportedOut = new FileOutputStream(exported);
-        IOUtil.copyWithClose(exportStream, exportedOut);
+            // Validate nested archive entries were written out
+            final ArchivePath nestedArchivePath = ArchivePaths.create(NAME_NESTED_ARCHIVE + this.getArchiveExtension());
 
-        // Validate entries were written out
-        this.ensureAssetInExportedFile(exported, PATH_ONE, ASSET_ONE);
-        this.ensureAssetInExportedFile(exported, PATH_TWO, ASSET_TWO);
+            // Get input stream for entry
+            try (final InputStream nestedArchiveStream = this.getContentsFromExportedFile(exported, nestedArchivePath)) {
+                // Write out and retrieve nested contents
+                final File nestedFile = new File(tempDirectory, NAME_NESTED_ARCHIVE + this.getArchiveExtension());
+                try (final OutputStream nestedOut = Files.newOutputStream(nestedFile.toPath())) {
+                    IOUtil.copyWithClose(nestedArchiveStream, nestedOut);
+                }
 
-        // Validate nested archive entries were written out
-        final ArchivePath nestedArchivePath = ArchivePaths.create(NAME_NESTED_ARCHIVE + this.getArchiveExtension());
+                // Ensure contents are in the nested
+                this.ensureAssetInExportedFile(nestedFile, PATH_ONE, ASSET_ONE);
+                this.ensureAssetInExportedFile(nestedFile, PATH_TWO, ASSET_TWO);
+            }
 
-        // Get input stream for entry
-        final InputStream nestedArchiveStream = this.getContentsFromExportedFile(exported, nestedArchivePath);
+            // Validate nested archive entries were written out
+            final ArchivePath nestedArchiveTwoPath = ArchivePaths.create(NESTED_PATH,
+                    NAME_NESTED_ARCHIVE_2 + this.getArchiveExtension());
+            this.getContentsFromExportedFile(exported, nestedArchiveTwoPath);
+            try (final InputStream nestedArchiveTwoStream = this.getContentsFromExportedFile(exported, nestedArchiveTwoPath)) {
+                // Write out and retrieve second nested contents
+                final File nestedTwoFile = new File(tempDirectory, NAME_NESTED_ARCHIVE_2 + this.getArchiveExtension());
+                try (final OutputStream nestedTwoOut = Files.newOutputStream(nestedTwoFile.toPath())) {
+                    IOUtil.copyWithClose(nestedArchiveTwoStream, nestedTwoOut);
+                }
 
-        // Write out and retrieve nested contents
-        final File nestedFile = new File(tempDirectory, NAME_NESTED_ARCHIVE + this.getArchiveExtension());
-        final OutputStream nestedOut = new FileOutputStream(nestedFile);
-        IOUtil.copyWithClose(nestedArchiveStream, nestedOut);
-
-        // Ensure contents are in the nested
-        this.ensureAssetInExportedFile(nestedFile, PATH_ONE, ASSET_ONE);
-        this.ensureAssetInExportedFile(nestedFile, PATH_TWO, ASSET_TWO);
-
-        // Validate nested archive entries were written out
-        final ArchivePath nestedArchiveTwoPath = ArchivePaths.create(NESTED_PATH,
-            NAME_NESTED_ARCHIVE_2 + this.getArchiveExtension());
-        this.getContentsFromExportedFile(exported, nestedArchiveTwoPath);
-        final InputStream nestedArchiveTwoStream = this.getContentsFromExportedFile(exported, nestedArchiveTwoPath);
-
-        // Write out and retrieve second nested contents
-        final File nestedTwoFile = new File(tempDirectory, NAME_NESTED_ARCHIVE_2 + this.getArchiveExtension());
-        final OutputStream nestedTwoOut = new FileOutputStream(nestedTwoFile);
-        IOUtil.copyWithClose(nestedArchiveTwoStream, nestedTwoOut);
-
-        // Ensure contents are in the second nested
-        this.ensureAssetInExportedFile(nestedTwoFile, PATH_ONE, ASSET_ONE);
-        this.ensureAssetInExportedFile(nestedTwoFile, PATH_TWO, ASSET_TWO);
+                // Ensure contents are in the second nested
+                this.ensureAssetInExportedFile(nestedTwoFile, PATH_ONE, ASSET_ONE);
+                this.ensureAssetInExportedFile(nestedTwoFile, PATH_TWO, ASSET_TWO);
+            }
+        }
     }
 
     @Test
@@ -299,15 +305,15 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         }, PATH_ONE);
 
         // Export
-        final InputStream in = this.exportAsInputStream(archive);
-
-        // Read in the full content (to in turn empty the underlying buffer and ensure we complete)
-        final OutputStream sink = new OutputStream() {
-            @Override
-            public void write(int b) {
-            }
-        };
-        Assertions.assertThrows(ArchiveExportException.class, () -> IOUtil.copyWithClose(in, sink));
+        try (final InputStream in = this.exportAsInputStream(archive);
+             // Read in the full content (to in turn empty the underlying buffer and ensure we complete)
+             final OutputStream sink = new OutputStream() {
+                 @Override
+                 public void write(int b) {
+                 }
+             }) {
+            Assertions.assertThrows(ArchiveExportException.class, () -> IOUtil.copyWithClose(in, sink));
+        }
     }
 
     // -------------------------------------------------------------------------------------||
@@ -476,10 +482,11 @@ public abstract class StreamExporterTestBase<T extends StreamImporter<T>> extend
         assert asset != null : "asset must be specified";
 
         // Get as Exported File
-        final InputStream actualStream = this.getContentsFromExportedFile(file, path);
-        assert actualStream != null : "No contents found at path " + path + " in " + file.getAbsolutePath();
-        byte[] actualContents = IOUtil.asByteArray(actualStream);
-        byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
-        Assertions.assertArrayEquals(expectedContents, actualContents);
+        try (final InputStream actualStream = this.getContentsFromExportedFile(file, path)) {
+            assert actualStream != null : "No contents found at path " + path + " in " + file.getAbsolutePath();
+            byte[] actualContents = IOUtil.asByteArray(actualStream);
+            byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
+            Assertions.assertArrayEquals(expectedContents, actualContents);
+        }
     }
 }

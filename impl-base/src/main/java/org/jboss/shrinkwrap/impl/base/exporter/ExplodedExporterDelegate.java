@@ -125,13 +125,13 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File> {
                         log.fine("Writing asset " + path.get() + " to " + assetFile.getAbsolutePath());
                     }
                     // Get the asset streams
-                    final InputStream assetInputStream = node.getAsset().openStream();
-                    final FileOutputStream assetFileOutputStream = new FileOutputStream(assetFile);
-                    final BufferedOutputStream assetBufferedOutputStream = new BufferedOutputStream(
-                        assetFileOutputStream, 8192);
-
-                    // Write contents
-                    IOUtil.copyWithClose(assetInputStream, assetBufferedOutputStream);
+                    try (InputStream assetInputStream = node.getAsset().openStream();
+                         FileOutputStream assetFileOutputStream = new FileOutputStream(assetFile);
+                         BufferedOutputStream assetBufferedOutputStream = new BufferedOutputStream(
+                                 assetFileOutputStream, 8192)) {
+                        // Write contents
+                        IOUtil.copyWithClose(assetInputStream, assetBufferedOutputStream);
+                    }
                 } catch (final Exception e) {
                     // Provide a more detailed exception than the outer block
                     throw new ArchiveExportException("Failed to write asset " + path + " to " + assetFile, e);

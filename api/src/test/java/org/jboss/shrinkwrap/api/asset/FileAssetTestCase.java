@@ -40,11 +40,12 @@ public class FileAssetTestCase {
     @Test
     public void shouldBeAbleToReadFile() throws Exception {
         Asset asset = new FileAsset(new File(EXISTING_FILE));
-        InputStream io = asset.openStream();
 
-        Assertions.assertNotNull(io);
-        Assertions.assertEquals("shrinkwrap=true", ApiTestUtils.convertToString(io),
-                "Should be able to read the content of the resource");
+        try (InputStream io = asset.openStream()) {
+            Assertions.assertNotNull(io);
+            Assertions.assertEquals("shrinkwrap=true", ApiTestUtils.convertToString(io),
+                    "Should be able to read the content of the resource");
+        }
     }
 
     @Test

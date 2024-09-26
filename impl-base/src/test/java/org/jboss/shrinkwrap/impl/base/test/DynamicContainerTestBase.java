@@ -422,16 +422,13 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     }
 
     protected void assertServiceProviderContent(Node node, String[] impls) throws IOException {
-        try (BufferedReader reader = createReader(node.getAsset())) {
+        try (final InputStream openStream = node.getAsset().openStream();
+             final InputStreamReader inputStreamReader = new InputStreamReader(openStream);
+             final BufferedReader reader = new BufferedReader(inputStreamReader)) {
             for (String impl : impls) {
                 Assertions.assertEquals(impl, reader.readLine(), "Wrong entry in service provider: " + impl);
             }
         }
-    }
-
-    private BufferedReader createReader(Asset asset) {
-        InputStream openStream = asset.openStream();
-        return new BufferedReader(new InputStreamReader(openStream));
     }
 
     @Test
@@ -910,17 +907,17 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ClassLoader emptyClassLoader = new ClassLoader(null) {
         };
         ClassLoader originalClassLoader = SecurityActions.getThreadContextClassLoader();
-        ClassLoaderTester myClassLoader = new ClassLoaderTester("cl-test.jar");
 
-        try {
+        try (ClassLoaderTester myClassLoader = new ClassLoaderTester("cl-test.jar")) {
             Thread.currentThread().setContextClassLoader(emptyClassLoader);
             Class<?> dummyClass = myClassLoader.loadClass("test.classloader.DummyClass");
             getClassContainer().addClass(dummyClass);
+
+            Assertions.assertTrue(myClassLoader.isUsedForInnerClasses(), "Classloader not used to load inner class");
         } finally {
             Thread.currentThread().setContextClassLoader(originalClassLoader);
         }
 
-        Assertions.assertTrue(myClassLoader.isUsedForInnerClasses(), "Classloader not used to load inner class");
         ArchivePath expectedClassPath = new BasicPath(getClassPath(),
             AssetUtil.getFullPathForClassResource("/test/classloader/DummyClass"));
         assertContainsClass(expectedClassPath);
@@ -932,18 +929,18 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         ClassLoader emptyClassLoader = new ClassLoader(null) {
         };
         ClassLoader originalClassLoader = SecurityActions.getThreadContextClassLoader();
-        ClassLoaderTester myClassLoader = new ClassLoaderTester("cl-test.jar");
 
-        try {
+        try (ClassLoaderTester myClassLoader = new ClassLoaderTester("cl-test.jar")) {
             Thread.currentThread().setContextClassLoader(emptyClassLoader);
             Class<?> dummyClass = myClassLoader.loadClass("test.classloader.DummyClass");
             Class<?> dummyInnerClass = myClassLoader.loadClass("test.classloader.DummyClass$DummyInnerClass");
             getClassContainer().addClasses(dummyClass, dummyInnerClass);
+
+            Assertions.assertTrue(myClassLoader.isUsedForInnerClasses(), "Classloader not used to load inner class");
         } finally {
             Thread.currentThread().setContextClassLoader(originalClassLoader);
         }
 
-        Assertions.assertTrue(myClassLoader.isUsedForInnerClasses(), "Classloader not used to load inner class");
         String[] expectedResources = { "/test/classloader/DummyClass", "/test/classloader/DummyClass$DummyInnerClass" };
         for (String expectedResource : expectedResources) {
             ArchivePath expectedClassPath = new BasicPath(getClassPath(),
@@ -1864,17 +1861,17 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         svn.deleteOnExit();
         svn.mkdirs();
 
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try (final ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            ShrinkWrap.create(JavaArchive.class).addAsResource(directory, "/").as(ZipExporter.class).exportTo(out);
 
-        ShrinkWrap.create(JavaArchive.class).addAsResource(directory, "/").as(ZipExporter.class).exportTo(out);
-
-        final ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(out.toByteArray()));
-        final ZipEntry entry = zis.getNextEntry();
-        Assertions.assertNotNull(entry, "Missing '.svn/' Entry from Exported Archive");
-        Assertions.assertEquals(".svn/", entry.getName(), "Zip Entry Missing Expected Name '.svn/'");
-        Assertions.assertTrue(entry.isDirectory(), "Zip Entry '.svn/' Not A Directory");
-        zis.closeEntry();
-        zis.close();
+            try (final ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(out.toByteArray()))) {
+                final ZipEntry entry = zis.getNextEntry();
+                Assertions.assertNotNull(entry, "Missing '.svn/' Entry from Exported Archive");
+                Assertions.assertEquals(".svn/", entry.getName(), "Zip Entry Missing Expected Name '.svn/'");
+                Assertions.assertTrue(entry.isDirectory(), "Zip Entry '.svn/' Not A Directory");
+                zis.closeEntry();
+            }
+        }
     }
 
     /**
@@ -1893,9 +1890,10 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         final String content = "newContent";
         archive.add(new StringAsset(content), path);
 
-        final String contentFound = new BufferedReader(new InputStreamReader(archive.get(path).getAsset().openStream()))
-            .readLine();
-        Assertions.assertEquals(content, contentFound);
+        try (final InputStreamReader inputStreamReader = new InputStreamReader(archive.get(path).getAsset().openStream());
+             final BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+            Assertions.assertEquals(content, bufferedReader.readLine());
+        }
     }
 
     /**

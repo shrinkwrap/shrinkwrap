@@ -67,14 +67,13 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
         assert delegate != null : "Delegate must be specified by implementations";
         final File testFile = delegate.getExistingResource();
 
-        ZipFile testZip = new ZipFile(testFile) {
+        try (ZipFile testZip = new ZipFile(testFile) {
             @Override
             public Enumeration<? extends ZipEntry> entries() {
-                throw new IllegalStateException("mock exception");
-            }
-        };
-        Assertions.assertThrows(ArchiveImportException.class,
-                () -> ShrinkWrap.create(ZipImporter.class, "test.jar").importFrom(testZip).as(JavaArchive.class));
+                throw new IllegalStateException("mock exception"); }}) {
+            Assertions.assertThrows(ArchiveImportException.class,
+                    () -> ShrinkWrap.create(ZipImporter.class, "test.jar").importFrom(testZip).as(JavaArchive.class));
+        }
     }
 
     // -------------------------------------------------------------------------------------||

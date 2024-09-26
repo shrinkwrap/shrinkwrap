@@ -75,18 +75,19 @@ public class ByteArrayAssetTestCase {
         log.info("Contents after change: " + Arrays.toString(contents));
 
         // Get the contents back out of the asset
-        final InputStream stream = asset.openStream();
-        final ByteArrayOutputStream out = new ByteArrayOutputStream(length);
-        int read;
-        while ((read = stream.read()) != -1) {
-            out.write(read);
-        }
-        byte[] roundtrip = out.toByteArray();
-        log.info("Roundtrip contents: " + Arrays.toString(roundtrip));
+        try (final InputStream stream = asset.openStream();
+             final ByteArrayOutputStream out = new ByteArrayOutputStream(length)) {
+            int read;
+            while ((read = stream.read()) != -1) {
+                out.write(read);
+            }
+            byte[] roundtrip = out.toByteArray();
+            log.info("Roundtrip contents: " + Arrays.toString(roundtrip));
 
-        // Ensure the roundtrip matches the input (index number)
-        for (int i = 0; i < length; i++) {
-            Assertions.assertEquals(i, roundtrip[i], "Roundtrip did not equal passed in contents");
+            // Ensure the roundtrip matches the input (index number)
+            for (int i = 0; i < length; i++) {
+                Assertions.assertEquals(i, roundtrip[i], "Roundtrip did not equal passed in contents");
+            }
         }
 
     }

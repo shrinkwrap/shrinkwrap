@@ -92,10 +92,10 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
         assert file != null : "file must be specified";
 
         // Get as ZipFile
-        final ZipFile zip = new ZipFile(file);
-
-        // Validate
-        this.ensureZipFileInExpectedForm(zip);
+        try (final ZipFile zip = new ZipFile(file)) {
+            // Validate
+            this.ensureZipFileInExpectedForm(zip);
+        }
     }
 
     /**
@@ -111,13 +111,16 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
         assert path != null : "path must be specified";
 
         // Get as Zip File
-        final ZipFile zipFile = new ZipFile(file);
-        final ZipEntry entry = zipFile.getEntry(PathUtil.optionallyRemovePrecedingSlash(path.get()));
-        if (entry == null) {
-            return null;
+        try (final ZipFile zipFile = new ZipFile(file)) {
+            final ZipEntry entry = zipFile.getEntry(PathUtil.optionallyRemovePrecedingSlash(path.get()));
+            if (entry == null) {
+                return null;
+            }
+            try (final InputStream inputStream = zipFile.getInputStream(entry)) {
+                final byte[] actualContents = IOUtil.asByteArray(inputStream);
+                return new ByteArrayInputStream(actualContents);
+            }
         }
-        final byte[] actualContents = IOUtil.asByteArray(zipFile.getInputStream(entry));
-        return new ByteArrayInputStream(actualContents);
     }
 
 /**
@@ -223,9 +226,12 @@ public final class ZipExporterTestCase extends StreamExporterTestBase<ZipImporte
     private void assertAssetInZip(ZipFile expectedZip, ArchivePath path, Asset asset) throws IllegalArgumentException,
         IOException {
         final ZipEntry entry = this.getEntryFromZip(expectedZip, path);
-        final byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
-        final byte[] actualContents = IOUtil.asByteArray(expectedZip.getInputStream(entry));
-        Assertions.assertArrayEquals(expectedContents, actualContents);
+        try (final InputStream inputStreamAsset = asset.openStream();
+             final InputStream inputStream = expectedZip.getInputStream(entry)) {
+            final byte[] expectedContents = IOUtil.asByteArray(inputStreamAsset);
+            final byte[] actualContents = IOUtil.asByteArray(inputStream);
+            Assertions.assertArrayEquals(expectedContents, actualContents);
+        }
     }
 
     /**

@@ -119,9 +119,9 @@ public class TarBz2ImporterImplTestCase extends StreamImporterImplTestBase<TarBz
             // First provide real BZIP content, so we don't err out when initialized
             final byte[] test = "Something more realistic than a single word".getBytes();
             final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            BZip2CompressorOutputStream compressorOutputStream = new BZip2CompressorOutputStream(stream);
-            compressorOutputStream.write(test);
-            compressorOutputStream.close();
+            try (final BZip2CompressorOutputStream compressorOutputStream = new BZip2CompressorOutputStream(stream)) {
+                compressorOutputStream.write(test);
+            }
             final InputStream in = new ByteArrayInputStream(stream.toByteArray());
             return new ExceptionThrowingTarBzInputStream(in);
         }

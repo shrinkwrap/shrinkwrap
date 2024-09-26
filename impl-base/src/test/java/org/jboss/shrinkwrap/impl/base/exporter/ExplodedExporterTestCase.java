@@ -19,9 +19,9 @@ package org.jboss.shrinkwrap.impl.base.exporter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -314,7 +314,10 @@ public class ExplodedExporterTestCase extends ExportTestBase {
         final File existingFile = new File(directory, NAME_ARCHIVE + this.getArchiveExtension());
         final boolean created = existingFile.createNewFile();
 
-        IOUtil.copyWithClose(new ByteArrayInputStream("test-test".getBytes()), new FileOutputStream(existingFile));
+        try (final FileOutputStream fileOutputStream = new FileOutputStream(existingFile);
+             final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream("test-test".getBytes())) {
+            IOUtil.copyWithClose(byteArrayInputStream, fileOutputStream);
+        }
 
         Assertions.assertTrue(created, "Could not create test file");
 
@@ -341,17 +344,17 @@ public class ExplodedExporterTestCase extends ExportTestBase {
     /**
      * Assert an asset is actually in the exploded directory
      *
-     * @throws FileNotFoundException
+     * @throws IOException
      */
-    private void assertAssetInExploded(File explodedDirectory, ArchivePath path, Asset asset) throws FileNotFoundException {
+    private void assertAssetInExploded(File explodedDirectory, ArchivePath path, Asset asset) throws IOException {
         File assetFile = new File(explodedDirectory, path.get());
         Assertions.assertNotNull(assetFile);
         Assertions.assertTrue(assetFile.exists());
-        byte[] expectedContents = IOUtil.asByteArray(asset.openStream());
-
-        InputStream inputStream = new FileInputStream(assetFile);
-
-        byte[] actualContents = IOUtil.asByteArray(inputStream);
-        Assertions.assertArrayEquals(expectedContents, actualContents);
+        try (final InputStream inputStreamAsset = asset.openStream();
+             final InputStream inputStream = new FileInputStream(assetFile)) {
+            byte[] expectedContents = IOUtil.asByteArray(inputStreamAsset);
+            byte[] actualContents = IOUtil.asByteArray(inputStream);
+            Assertions.assertArrayEquals(expectedContents, actualContents);
+        }
     }
 }

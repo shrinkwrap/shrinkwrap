@@ -113,23 +113,16 @@ public abstract class AbstractStreamExporterImpl extends AssignableBase<Archive<
         }
 
         // Get Stream
-        final InputStream in = this.exportAsInputStream();
-
-        try {
+        try (InputStream in = this.exportAsInputStream()) {
             // Write out
             try {
                 IOUtil.copy(in, target);
             } catch (final IOException e) {
                 throw new ArchiveExportException("Error encountered in exporting archive to " + target, e);
             }
-        } finally {
-            // Close
-            try {
-                in.close();
-            } catch (final IOException ioe) {
-                // Just log
-                log.warning("Could not close " + in + ": " + ioe);
-            }
+        } catch (final IOException ioe) {
+            // Just log
+            log.warning("Could not close stream: " + ioe);
         }
     }
 
@@ -142,19 +135,12 @@ public abstract class AbstractStreamExporterImpl extends AssignableBase<Archive<
     public final void exportTo(final File target, final boolean overwrite) throws ArchiveExportException,
         FileExistsException {
         // Get stream and perform precondition checks
-        final OutputStream out = this.getOutputStreamToFile(target, overwrite);
-
-        try {
+        try (OutputStream out = this.getOutputStreamToFile(target, overwrite)) {
             // Write out
             this.exportTo(out);
-        } finally {
-            // Close
-            try {
-                out.close();
-            } catch (final IOException ioe) {
-                // Just log
-                log.warning("Could not close " + out + ": " + ioe);
-            }
+        } catch (final IOException ioe) {
+            // Just log
+            log.warning("Could not close stream: " + ioe);
         }
     }
 

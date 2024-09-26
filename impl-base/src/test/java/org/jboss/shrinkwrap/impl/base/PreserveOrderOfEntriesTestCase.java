@@ -78,11 +78,13 @@ public class PreserveOrderOfEntriesTestCase {
 
         // Verify Zip entries are in the right order.
         ArrayList<String> actualOrder = new ArrayList<>();
-        ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(testJar));
-        ZipEntry nextEntry = zipInputStream.getNextEntry();
-        while( nextEntry!=null ) {
-            actualOrder.add(nextEntry.getName());
-            nextEntry = zipInputStream.getNextEntry();
+        try (final FileInputStream fileInputStream = new FileInputStream(testJar);
+             final ZipInputStream zipInputStream = new ZipInputStream(fileInputStream)) {
+            ZipEntry nextEntry = zipInputStream.getNextEntry();
+            while( nextEntry!=null ) {
+                actualOrder.add(nextEntry.getName());
+                nextEntry = zipInputStream.getNextEntry();
+            }
         }
         Assertions.assertEquals(expectedOrder, actualOrder);
 

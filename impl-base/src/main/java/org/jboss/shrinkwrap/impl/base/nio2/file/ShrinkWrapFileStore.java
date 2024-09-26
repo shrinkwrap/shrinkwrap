@@ -112,18 +112,17 @@ public class ShrinkWrapFileStore extends FileStore {
             if (asset == null) {
                 continue; // Directory
             }
-            final InputStream in = new BufferedInputStream(asset.openStream(), bufferSize);
-            final byte[] buffer = new byte[bufferSize];
 
-            int read = 0;
-            try {
+            try (InputStream in = new BufferedInputStream(asset.openStream(), bufferSize)) {
+                final byte[] buffer = new byte[bufferSize];
+                int read = 0;
                 while ((read = in.read(buffer)) != -1) {
                     // Just count
                     count += read;
                 }
             } catch (final IOException ioe) {
                 throw new RuntimeException("Could not count size of archive " + this.archive.getName() + " at "
-                    + asset, ioe);
+                        + asset, ioe);
             }
 
         }

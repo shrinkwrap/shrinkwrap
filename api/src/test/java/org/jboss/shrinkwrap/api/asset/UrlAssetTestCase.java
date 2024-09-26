@@ -40,11 +40,11 @@ public class UrlAssetTestCase {
     public void shouldBeAbleToReadURL() throws Exception {
         Asset asset = new UrlAsset(getThreadContextClassLoader().getResource(EXISTING_RESOURCE));
 
-        InputStream io = asset.openStream();
-
-        Assertions.assertNotNull(io);
-        Assertions.assertEquals("shrinkwrap=true", ApiTestUtils.convertToString(io),
-                "Should be able to read the content of the resource");
+        try (InputStream io = asset.openStream()) {
+            Assertions.assertNotNull(io);
+            Assertions.assertEquals("shrinkwrap=true", ApiTestUtils.convertToString(io),
+                    "Should be able to read the content of the resource");
+        }
     }
 
     @Test

@@ -188,8 +188,10 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
         tempFile.deleteOnExit();
         final Class<? extends StreamExporter> exporterClass = this.getExporterClass();
         Assertions.assertNotNull(exporterClass, "Exporter class must be specified by implementations");
-        final InputStream stream = archive.as(exporterClass).exportAsInputStream();
-        IOUtil.copyWithClose(stream, new FileOutputStream(tempFile));
+        try (final InputStream stream = archive.as(exporterClass).exportAsInputStream();
+             final FileOutputStream fileOutputStream = new FileOutputStream(tempFile)) {
+            IOUtil.copyWithClose(stream, fileOutputStream);
+        }
 
         // Ensure the exported view matches that of the archive
         delegate.assertContent(archive, tempFile);
@@ -208,24 +210,19 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
         final File testFile = delegate.getExistingResource();
 
         // Get the input as a stream
-        InputStream stream = new FileInputStream(testFile);
+        try (final InputStream stream = new FileInputStream(testFile)) {
+            // Get the importer
+            final Class<T> importerClass = this.getImporterClass();
+            assert importerClass != null : "Importer class must be specified by implementations";
 
-        // Get the importer
-        final Class<T> importerClass = this.getImporterClass();
-        assert importerClass != null : "Importer class must be specified by implementations";
+            // Import as a stream
+            final T importer = ShrinkWrap.create(importerClass, "test.jar");
+            final Archive<?> archive = importer.importFrom(stream).as(GenericArchive.class);
+            Assertions.assertNotNull(archive, "Should not return a null archive");
 
-        // Import as a stream
-        final T importer = ShrinkWrap.create(importerClass, "test.jar");
-        final Archive<?> archive;
-        try {
-            archive = importer.importFrom(stream).as(GenericArchive.class);
-        } finally {
-            stream.close();
+            // Ensure the archive matches the file input
+            delegate.assertContent(archive, testFile);
         }
-        Assertions.assertNotNull(archive, "Should not return a null archive");
-
-        // Ensure the archive matches the file input
-        delegate.assertContent(archive, testFile);
     }
 
     /**
@@ -241,25 +238,20 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
         final File testFile = delegate.getExistingResource();
 
         // Get the input as a stream
-        InputStream stream = new FileInputStream(testFile);
+        try (final InputStream stream = new FileInputStream(testFile)) {
+            // Get the importer
+            final Class<T> importerClass = this.getImporterClass();
+            assert importerClass != null : "Importer class must be specified by implementations";
 
-        // Get the importer
-        final Class<T> importerClass = this.getImporterClass();
-        assert importerClass != null : "Importer class must be specified by implementations";
+            // Import as a stream
+            final T importer = ShrinkWrap.create(importerClass, "test.jar");
+            final Archive<?> archive = importer.importFrom(stream, Filters.include(".*MANIFEST\\.MF")).as(GenericArchive.class);
+            Assertions.assertNotNull(archive, "Should not return a null archive");
 
-        // Import as a stream
-        final T importer = ShrinkWrap.create(importerClass, "test.jar");
-        final Archive<?> archive;
-        try {
-            archive = importer.importFrom(stream, Filters.include(".*MANIFEST\\.MF")).as(GenericArchive.class);
-        } finally {
-            stream.close();
+            // Validate the contents of the imported only contain filtered content
+            Assertions.assertEquals(2, archive.getContent().size());
+            Assertions.assertTrue(archive.contains(ArchivePaths.create("META-INF/MANIFEST.MF")));
         }
-        Assertions.assertNotNull(archive, "Should not return a null archive");
-
-        // Validate the contents of the imported only contain filtered content
-        Assertions.assertEquals(2, archive.getContent().size());
-        Assertions.assertTrue(archive.contains(ArchivePaths.create("META-INF/MANIFEST.MF")));
     }
 
     /**
@@ -270,17 +262,13 @@ public abstract class StreamImporterImplTestBase<T extends StreamImporter<T>> {
      */
     @Test
     public void shouldThrowExceptionOnErrorInImportFromStream() throws Exception {
-        final InputStream exceptionIn = this.getExceptionThrowingInputStream();
-
-        // Get the importer
-        final Class<T> importerClass = this.getImporterClass();
-        assert importerClass != null : "Importer class must be specified by implementations";
-        final T importer = ShrinkWrap.create(importerClass, "test.jar");
-        try {
+        try (final InputStream exceptionIn = this.getExceptionThrowingInputStream()) {
+            // Get the importer
+            final Class<T> importerClass = this.getImporterClass();
+            assert importerClass != null : "Importer class must be specified by implementations";
+            final T importer = ShrinkWrap.create(importerClass, "test.jar");
             Assertions.assertThrows(ArchiveImportException.class,
                     () -> importer.importFrom(exceptionIn).as(GenericArchive.class));
-        } finally {
-            exceptionIn.close();
         }
     }
 

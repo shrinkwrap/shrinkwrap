@@ -176,15 +176,16 @@ public class ShrinkWrapClassLoaderTestCase {
         final GenericArchive archive = ShrinkWrap.create(GenericArchive.class).add(testAsset, nestedResourceName);
 
         // Make a CL to load the content
-        final ClassLoader swCl = new ShrinkWrapClassLoader(archive);
+        try (final ShrinkWrapClassLoader swCl = new ShrinkWrapClassLoader(archive)) {
+            // Get the URL to the parent directory
+            final URL nestedResourceUrl = swCl.getResource(nestedResourceName);
+            final URL nestedResourceUpALevelUrl = new URL(nestedResourceUrl, "../");
 
-        // Get the URL to the parent directory
-        final URL nestedResourceUrl = swCl.getResource(nestedResourceName);
-        final URL nestedResourceUpALevelUrl = new URL(nestedResourceUrl, "../");
-
-        // openStream on the URL to the parent directory; should return null, not throw an exception
-        final InputStream in = nestedResourceUpALevelUrl.openStream();
-        Assertions.assertNull(in, "URLs pointing to a directory should openStream as null");
+            // openStream on the URL to the parent directory; should return null, not throw an exception
+            try (final InputStream in = nestedResourceUpALevelUrl.openStream()) {
+                Assertions.assertNull(in, "URLs pointing to a directory should openStream as null");
+            }
+        }
     }
 
     /**
@@ -201,14 +202,14 @@ public class ShrinkWrapClassLoaderTestCase {
         final GenericArchive archive = ShrinkWrap.create(GenericArchive.class).add(testAsset, nestedResourceName);
 
         // Make a CL to load the content
-        final ClassLoader swCl = new ShrinkWrapClassLoader(archive);
+        try (final ShrinkWrapClassLoader swCl = new ShrinkWrapClassLoader(archive)) {
+            // Get the URL to something that doesn't exist
+            final URL nestedResourceUrl = swCl.getResource(nestedResourceName);
+            final URL nestedResourceThatDoesntExistUrl = new URL(nestedResourceUrl, "../fake");
 
-        // Get the URL to something that doesn't exist
-        final URL nestedResourceUrl = swCl.getResource(nestedResourceName);
-        final URL nestedResourceThatDoesntExistUrl = new URL(nestedResourceUrl, "../fake");
-
-        // openStream on the URL that doesn't exist should throw FNFE
-        Assertions.assertThrows(FileNotFoundException.class, nestedResourceThatDoesntExistUrl::openStream);
+            // openStream on the URL that doesn't exist should throw FNFE
+            Assertions.assertThrows(FileNotFoundException.class, nestedResourceThatDoesntExistUrl::openStream);
+        }
     }
 
     /**
@@ -256,19 +257,21 @@ public class ShrinkWrapClassLoaderTestCase {
     @Test
     public void shouldBeAbleToFindServiceProviderInWAR() throws Exception {
        final WebArchive archive = ShrinkWrap.create(WebArchive.class).addAsServiceProvider(Cloneable.class, String.class);
-       final ShrinkWrapClassLoader cl = new ShrinkWrapClassLoader((ClassLoader) null, archive);
-       final Enumeration<URL> found = cl.findResources("META-INF/services/java.lang.Cloneable");
+       try (final ShrinkWrapClassLoader cl = new ShrinkWrapClassLoader((ClassLoader) null, archive)) {
+           final Enumeration<URL> found = cl.findResources("META-INF/services/java.lang.Cloneable");
 
-       Assertions.assertTrue(found.hasMoreElements(), "Service provider not found in WAR");
+           Assertions.assertTrue(found.hasMoreElements(), "Service provider not found in WAR");
+       }
      }
 
     @Test
     public void shouldBeAbleToFindServiceProviderInWARWithSlash() throws Exception {
        final WebArchive archive = ShrinkWrap.create(WebArchive.class).addAsServiceProvider(Cloneable.class, String.class);
-       final ShrinkWrapClassLoader cl = new ShrinkWrapClassLoader((ClassLoader) null, archive);
-       final Enumeration<URL> found = cl.findResources("/META-INF/services/java.lang.Cloneable");
+       try (final ShrinkWrapClassLoader cl = new ShrinkWrapClassLoader((ClassLoader) null, archive)) {
+           final Enumeration<URL> found = cl.findResources("/META-INF/services/java.lang.Cloneable");
 
-       Assertions.assertTrue(found.hasMoreElements(), "Service provider not found in WAR");
+           Assertions.assertTrue(found.hasMoreElements(), "Service provider not found in WAR");
+       }
      }
 
     // -------------------------------------------------------------------------------------||
