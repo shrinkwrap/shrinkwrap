@@ -159,7 +159,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     public void testAddRequiresAssets() {
         Archive<T> archive = getArchive();
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> archive.add((Asset) null, new BasicPath("/", "Test.properties")),
+        Assertions.assertThrows(IllegalArgumentException.class, () -> archive.add(null, new BasicPath("/", "Test.properties")),
                 "Should have throw an IllegalArgumentException");
     }
 
@@ -199,7 +199,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     public void testAddWithStringPathRequiresAssets() {
         Archive<T> archive = getArchive();
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> archive.add((Asset) null, "/Test.properties"),
+        Assertions.assertThrows(IllegalArgumentException.class, () -> archive.add(null, "/Test.properties"),
                 "Should have throw an IllegalArgumentException");
     }
 
@@ -934,7 +934,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     public void testAddArchiveToPathRequireArchive() {
         Archive<T> archive = getArchive();
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> archive.add((Archive<?>) null, ArchivePaths.root(), ZipExporter.class),
+        Assertions.assertThrows(IllegalArgumentException.class, () -> archive.add(null, ArchivePaths.root(), ZipExporter.class),
                 "Should have throw an IllegalArgumentException");
     }
 

@@ -100,7 +100,7 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File> {
 
         // Handle Archive assets separately
         if (node != null && node.getAsset() instanceof ArchiveAsset) {
-            ArchiveAsset nesteArchiveAsset = ArchiveAsset.class.cast(node.getAsset());
+            ArchiveAsset nesteArchiveAsset = (ArchiveAsset) node.getAsset();
             processArchiveAsset(assetParent, nesteArchiveAsset);
             return;
         }

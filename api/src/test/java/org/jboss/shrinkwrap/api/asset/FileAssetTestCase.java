@@ -63,8 +63,8 @@ public class FileAssetTestCase {
     @Test
     public void shouldBeAbleToReturnFile() {
     	final File exitingFile = new File(EXISTING_FILE);
-    	final Asset asset = new FileAsset(exitingFile);
-    	
-        Assertions.assertTrue(exitingFile.equals(((FileAsset)asset).getSource()));
+    	final FileAsset asset = new FileAsset(exitingFile);
+
+        Assertions.assertEquals(exitingFile, asset.getSource());
     }
 }

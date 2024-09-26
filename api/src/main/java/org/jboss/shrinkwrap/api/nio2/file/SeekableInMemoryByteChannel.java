@@ -110,7 +110,7 @@ public class SeekableInMemoryByteChannel implements SeekableByteChannel {
 
             // We'll read in either the number of bytes remaining in content or the amount of space in the buffer,
             // whichever is smaller
-            numBytesToRead = numBytesRemainingInContent >= spaceInBuffer ? spaceInBuffer : numBytesRemainingInContent;
+            numBytesToRead = Math.min(numBytesRemainingInContent, spaceInBuffer);
             // Copy a sub-array of the bytes we'll put into the buffer
             destination.put(this.contents, this.position, numBytesToRead);
 

@@ -142,7 +142,7 @@ public class ShrinkWrapClassLoaderTestCase {
 
         final WebArchive webArchive = ShrinkWrap.create(WebArchive.class).addClass(
                 applicationClassLoaderClass);
-        final ClassLoader webArchiveClassLoader = new ShrinkWrapClassLoader((ClassLoader) null,
+        final ClassLoader webArchiveClassLoader = new ShrinkWrapClassLoader(null,
                 "WEB-INF/classes", webArchive);
 
         // Load the test class from the CL
@@ -283,10 +283,7 @@ public class ShrinkWrapClassLoaderTestCase {
      */
     private static String getResourceNameOfClass(final Class<?> clazz) {
         assert clazz != null : "clazz must be specified";
-        final StringBuilder sb = new StringBuilder();
         final String className = clazz.getName().replace('.', '/');
-        sb.append(className);
-        sb.append(".class");
-        return sb.toString();
+        return className + ".class";
     }
 }
