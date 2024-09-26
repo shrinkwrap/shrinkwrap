@@ -406,7 +406,7 @@ public class FilesTestCase {
         this.getArchive().addAsDirectories(tempDir);
         final String prefix = "prefix";
         final Path tempDirPath = fs.getPath(tempDir);
-        final Path newPath = Files.createTempDirectory(tempDirPath, prefix, new FileAttribute<?>[] {});
+        final Path newPath = Files.createTempDirectory(tempDirPath, prefix);
         Assertions.assertTrue(newPath.toString().startsWith(tempDir + "/" + prefix),
                 "temp dir name was not in expected form");
     }

@@ -113,9 +113,9 @@ public class UrlAssetTestCase {
     @Test
     public void shouldBeAbleToReturnURL() {
     	final URL url = getThreadContextClassLoader().getResource(EXISTING_RESOURCE);
-        final Asset asset = new UrlAsset(url);
+        final UrlAsset asset = new UrlAsset(url);
         
-        Assertions.assertTrue(url.sameFile(((UrlAsset)asset).getSource()));
+        Assertions.assertTrue(url.sameFile(asset.getSource()));
     }
     
     /**

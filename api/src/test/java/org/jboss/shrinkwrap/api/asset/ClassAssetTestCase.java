@@ -72,8 +72,8 @@ public class ClassAssetTestCase {
     @Test
     public void shouldBeAbleToReturnThisClass() {
         final Class<?> clazz = ClassAssetTestCase.class;
-        final Asset asset = new ClassAsset(clazz);
+        final ClassAsset asset = new ClassAsset(clazz);
         
-        Assertions.assertEquals(clazz.getName(), ((ClassAsset)asset).getSource().getName());
+        Assertions.assertEquals(clazz.getName(), asset.getSource().getName());
     }
 }
