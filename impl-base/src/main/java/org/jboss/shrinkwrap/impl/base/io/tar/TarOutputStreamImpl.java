@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.impl.base.io.tar;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 /**
  * The TarOutputStream writes a UNIX tar archive as an OutputStream. Methods are provided to put entries, and then write
@@ -276,9 +277,7 @@ public class TarOutputStreamImpl extends FilterOutputStream {
      * Write an EOF (end of archive) record to the tar archive. An EOF record consists of a record of all zeros.
      */
     private void writeEOFRecord() throws IOException {
-        for (int i = 0; i < this.recordBuf.length; ++i) {
-            this.recordBuf[i] = 0;
-        }
+        Arrays.fill(this.recordBuf, (byte) 0);
         this.buffer.writeRecord(this.recordBuf);
     }
 

@@ -65,8 +65,8 @@ public class ClassLoaderAssetTestCase {
     
     @Test
     public void shouldBeAbleToReturnResource() {
-        final Asset asset = new ClassLoaderAsset(EXISTING_RESOURCE);
+        final ClassLoaderAsset asset = new ClassLoaderAsset(EXISTING_RESOURCE);
         
-        Assertions.assertEquals(((ClassLoaderAsset)asset).getSource(), EXISTING_RESOURCE);
+        Assertions.assertEquals(asset.getSource(), EXISTING_RESOURCE);
     }
 }

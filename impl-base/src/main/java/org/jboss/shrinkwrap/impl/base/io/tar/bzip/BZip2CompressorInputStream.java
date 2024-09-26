@@ -254,12 +254,6 @@ public class BZip2CompressorInputStream extends InputStream implements BZip2Cons
         case EOF:
             return -1;
 
-        case START_BLOCK_STATE:
-            throw new IllegalStateException();
-
-        case RAND_PART_A_STATE:
-            throw new IllegalStateException();
-
         case RAND_PART_B_STATE:
             setupRandPartB();
             break;
@@ -267,9 +261,6 @@ public class BZip2CompressorInputStream extends InputStream implements BZip2Cons
         case RAND_PART_C_STATE:
             setupRandPartC();
             break;
-
-        case NO_RAND_PART_A_STATE:
-            throw new IllegalStateException();
 
         case NO_RAND_PART_B_STATE:
             setupNoRandPartB();
@@ -701,7 +692,6 @@ public class BZip2CompressorInputStream extends InputStream implements BZip2Cons
                         if (thech >= 0) {
                             bsBuffShadow = (bsBuffShadow << 8) | thech;
                             bsLiveShadow += 8;
-                            continue;
                         } else {
                             throw new IOException("unexpected end of stream");
                         }
@@ -717,7 +707,6 @@ public class BZip2CompressorInputStream extends InputStream implements BZip2Cons
                             if (thech >= 0) {
                                 bsBuffShadow = (bsBuffShadow << 8) | thech;
                                 bsLiveShadow += 8;
-                                continue;
                             } else {
                                 throw new IOException(
                                                       "unexpected end of stream");
@@ -784,7 +773,6 @@ public class BZip2CompressorInputStream extends InputStream implements BZip2Cons
                     if (thech >= 0) {
                         bsBuffShadow = (bsBuffShadow << 8) | thech;
                         bsLiveShadow += 8;
-                        continue;
                     } else {
                         throw new IOException("unexpected end of stream");
                     }
@@ -800,7 +788,6 @@ public class BZip2CompressorInputStream extends InputStream implements BZip2Cons
                         if (thech >= 0) {
                             bsBuffShadow = (bsBuffShadow << 8) | thech;
                             bsLiveShadow += 8;
-                            continue;
                         } else {
                             throw new IOException("unexpected end of stream");
                         }
@@ -835,7 +822,6 @@ public class BZip2CompressorInputStream extends InputStream implements BZip2Cons
                 if (thech >= 0) {
                     bsBuffShadow = (bsBuffShadow << 8) | thech;
                     bsLiveShadow += 8;
-                    continue;
                 } else {
                     throw new IOException("unexpected end of stream");
                 }

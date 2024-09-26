@@ -290,7 +290,7 @@ public class TarInputStream extends FilterInputStream {
         if (num == -1) {
             return num;
         } else {
-            return (int) this.oneBuf[0];
+            return this.oneBuf[0] & 0xFF;
         }
     }
 
@@ -333,7 +333,7 @@ public class TarInputStream extends FilterInputStream {
         }
 
         if (this.readBuf != null) {
-            int sz = (numToRead > this.readBuf.length) ? this.readBuf.length : numToRead;
+            int sz = Math.min(numToRead, this.readBuf.length);
 
             System.arraycopy(this.readBuf, 0, buf, offset, sz);
 

@@ -74,8 +74,8 @@ public class EmptyAssetTestCase {
     @Test
     public void shouldBeAbleToReturnByteArray() {
     	// Make contents
-    	final Asset asset = EmptyAsset.INSTANCE;
-        final byte[] contentFromGetSource = ((EmptyAsset)asset).getSource();
+    	final EmptyAsset asset = EmptyAsset.INSTANCE;
+        final byte[] contentFromGetSource = asset.getSource();
 
         Assertions.assertEquals(0, contentFromGetSource.length);
     }

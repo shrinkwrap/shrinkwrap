@@ -52,9 +52,9 @@ enum SimpleFormatter implements Formatter {
         }
 
         // Format: "name: X assets"
-        return new StringBuilder().append(archive.getName()).append(FormattingConstants.COLON)
-            .append(FormattingConstants.SPACE).append(this.getNumAssets(archive)).append(FormattingConstants.SPACE)
-            .append(ASSETS).toString();
+        return archive.getName() + FormattingConstants.COLON +
+                FormattingConstants.SPACE + this.getNumAssets(archive) + FormattingConstants.SPACE +
+                ASSETS;
     }
 
     /**

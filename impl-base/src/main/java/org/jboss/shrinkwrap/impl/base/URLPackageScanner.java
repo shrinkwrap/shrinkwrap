@@ -79,7 +79,6 @@ public class URLPackageScanner {
     public static URLPackageScanner newInstance(boolean addRecursively, final ClassLoader classLoader,
                                                 final Callback callback, final String packageName) {
         Validate.notNull(packageName, "Package name must be specified");
-        Validate.notNull(addRecursively, "AddRecursively must be specified");
         Validate.notNull(classLoader, "ClassLoader must be specified");
         Validate.notNull(callback, "Callback must be specified");
 
