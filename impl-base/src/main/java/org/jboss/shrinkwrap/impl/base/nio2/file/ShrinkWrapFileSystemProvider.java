@@ -131,7 +131,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         final Object archiveArg = env.get(ENV_KEY_ARCHIVE);
         if (archiveArg != null) {
             try {
-                archive = Archive.class.cast(archiveArg);
+                archive = (Archive<?>) archiveArg;
                 // Ensure the name of the archive matches the host specified in the URI
                 if (!archive.getId().equals(id)) {
                     throw new IllegalArgumentException("Specified archive " + archive
@@ -445,7 +445,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         }
 
         // Source exists?
-        if (!Files.exists(source, new LinkOption[] {})) {
+        if (!Files.exists(source, LinkOption.NOFOLLOW_LINKS)) {
             throw new IllegalArgumentException("Source file doesn't exist: " + source);
         }
 

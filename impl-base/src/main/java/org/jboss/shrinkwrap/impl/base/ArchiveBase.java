@@ -299,7 +299,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
         }
         // If we already have an archive asset, just return it as-is; don't reimport
         if (asset.getClass() == ArchiveAsset.class) {
-            return ArchiveAsset.class.cast(asset).getArchive().as(type);
+            return ((ArchiveAsset) asset).getArchive().as(type);
         }
 
         try (InputStream stream = asset.openStream()) {
@@ -453,7 +453,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
      */
     @Override
     public String getId() {
-        return this.id.toString();
+        return this.id;
     }
 
     @Override
@@ -565,7 +565,7 @@ public abstract class ArchiveBase<T extends Archive<T>> implements Archive<T>, C
          *
          */
         @SuppressWarnings("unchecked")
-        final Archive<T> to = Archive.class.cast(new MemoryMapArchiveImpl(configuration));
+        final Archive<T> to = (Archive<T>) new MemoryMapArchiveImpl(configuration);
 
         // Now loop through and add all content
         for (final ArchivePath path : from.getContent().keySet()) {

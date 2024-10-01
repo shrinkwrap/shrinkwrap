@@ -153,7 +153,7 @@ public final class Filters {
         StringBuilder classExpression = new StringBuilder();
         for (Package pack : packages) {
             classExpression.append("|");
-            classExpression.append("(.*" + pack.getName().replaceAll("\\.", "\\.") + ".*)");
+            classExpression.append("(.*").append(pack.getName().replaceAll("\\.", ".")).append(".*)");
         }
         classExpression.deleteCharAt(0);
 
@@ -187,7 +187,7 @@ public final class Filters {
         StringBuilder classExpression = new StringBuilder();
         for (Class<?> clazz : classes) {
             classExpression.append("|");
-            classExpression.append("(.*" + clazz.getName().replaceAll("\\.", "\\.") + "\\.class)");
+            classExpression.append("(.*").append(clazz.getName().replaceAll("\\.", ".")).append("\\.class)");
         }
         classExpression.deleteCharAt(0);
 

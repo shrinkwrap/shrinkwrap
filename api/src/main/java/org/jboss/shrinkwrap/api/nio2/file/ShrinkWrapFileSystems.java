@@ -93,12 +93,11 @@ public final class ShrinkWrapFileSystems {
         if (archive == null) {
             throw new IllegalArgumentException("Archive must be specified");
         }
-        final StringBuilder sb = new StringBuilder();
-        sb.append(PROTOCOL);
-        sb.append(URI_PROTOCOL_SUFFIX);
-        sb.append(archive.getId());
-        sb.append('/');
-        final URI uri = URI.create(sb.toString());
+        String sb = PROTOCOL +
+                URI_PROTOCOL_SUFFIX +
+                archive.getId() +
+                '/';
+        final URI uri = URI.create(sb);
         return uri;
     }
 
