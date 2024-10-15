@@ -815,7 +815,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         String adjustedPath = path;
         final int indexOfExclamationPoint = path.indexOf('!' + File.separator);
         if(indexOfExclamationPoint!=-1){
-            adjustedPath = path.substring(indexOfExclamationPoint + 2, path.length());
+            adjustedPath = path.substring(indexOfExclamationPoint + 2);
         }
         adjustedPath = adjustedPath.replace(File.separator, "/");
 
@@ -1996,8 +1996,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         String resourcePath = resourceUrl.getFile();
         if (resourceUrl.getProtocol().startsWith(PROTOCOL_JRT)) {
             resourcePath = resourcePath.substring(
-                    resourcePath.indexOf('/', resourcePath.indexOf('/') + 1) + 1,
-                    resourcePath.length());
+                    resourcePath.indexOf('/', resourcePath.indexOf('/') + 1) + 1);
         }
         try {
             // Have to URL decode the string as the ClassLoader.getResource(String) returns an URL encoded URL
