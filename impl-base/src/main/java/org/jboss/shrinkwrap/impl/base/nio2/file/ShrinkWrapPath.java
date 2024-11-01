@@ -420,13 +420,12 @@ public class ShrinkWrapPath implements Path {
         }
 
         // Else join other to this
-        final StringBuilder sb = new StringBuilder(this.path);
+        String s = this.path;
         if (!this.path.endsWith(ArchivePath.SEPARATOR_STRING)) {
-            sb.append(ArchivePath.SEPARATOR);
+            s += ArchivePath.SEPARATOR;
         }
-        sb.append(other);
-        final Path newPath = new ShrinkWrapPath(sb.toString(), this.fileSystem);
-        return newPath;
+        s += other;
+        return new ShrinkWrapPath(s, this.fileSystem);
     }
 
     /**

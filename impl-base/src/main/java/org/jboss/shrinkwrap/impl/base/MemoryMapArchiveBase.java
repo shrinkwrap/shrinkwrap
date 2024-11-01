@@ -159,7 +159,7 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 
         // Make sure it is an ArchiveAsset
         if (node.getAsset() != null && node.getAsset() instanceof ArchiveAsset) {
-            final ArchiveAsset archiveAsset = ArchiveAsset.class.cast(node.getAsset());
+            final ArchiveAsset archiveAsset = (ArchiveAsset) node.getAsset();
             // Add asset to ArchiveAsset Map
             nestedArchives.put(archivePath, archiveAsset);
         }

@@ -270,7 +270,7 @@ public class TarEntry implements Cloneable {
      * @return True if the entries are equal.
      */
     public boolean equals(TarEntry it) {
-        return this.header.name.toString().equals(it.header.name.toString());
+        return this.header.name.toString().contentEquals(it.header.name);
     }
 
     @Override
@@ -558,7 +558,7 @@ public class TarEntry implements Cloneable {
             name = name.substring(1);
         }
 
-        hdr.linkName = new StringBuffer("");
+        hdr.linkName = new StringBuffer();
 
         hdr.name = new StringBuffer(name);
 
@@ -720,32 +720,31 @@ public class TarEntry implements Cloneable {
             this.unixFormat = false;
             this.ustarFormat = false;
         } else {
-            StringBuffer buf = new StringBuffer(128);
 
-            buf.append("header magic is not 'ustar' or unix-style zeros, it is '");
-            buf.append(headerBuf[257]);
-            buf.append(headerBuf[258]);
-            buf.append(headerBuf[259]);
-            buf.append(headerBuf[260]);
-            buf.append(headerBuf[261]);
-            buf.append(headerBuf[262]);
-            buf.append(headerBuf[263]);
-            buf.append("', or (dec) ");
-            buf.append((int) headerBuf[257]);
-            buf.append(", ");
-            buf.append((int) headerBuf[258]);
-            buf.append(", ");
-            buf.append((int) headerBuf[259]);
-            buf.append(", ");
-            buf.append((int) headerBuf[260]);
-            buf.append(", ");
-            buf.append((int) headerBuf[261]);
-            buf.append(", ");
-            buf.append((int) headerBuf[262]);
-            buf.append(", ");
-            buf.append((int) headerBuf[263]);
+            String buf = "header magic is not 'ustar' or unix-style zeros, it is '" +
+                    headerBuf[257] +
+                    headerBuf[258] +
+                    headerBuf[259] +
+                    headerBuf[260] +
+                    headerBuf[261] +
+                    headerBuf[262] +
+                    headerBuf[263] +
+                    "', or (dec) " +
+                    headerBuf[257] +
+                    ", " +
+                    headerBuf[258] +
+                    ", " +
+                    headerBuf[259] +
+                    ", " +
+                    headerBuf[260] +
+                    ", " +
+                    headerBuf[261] +
+                    ", " +
+                    headerBuf[262] +
+                    ", " +
+                    headerBuf[263];
 
-            throw new InvalidHeaderException(buf.toString());
+            throw new InvalidHeaderException(buf);
         }
 
         hdr.name = TarHeader.parseFileName(headerBuf);
@@ -803,9 +802,9 @@ public class TarEntry implements Cloneable {
         } else {
             hdr.devMajor = 0;
             hdr.devMinor = 0;
-            hdr.magic = new StringBuffer("");
-            hdr.userName = new StringBuffer("");
-            hdr.groupName = new StringBuffer("");
+            hdr.magic = new StringBuffer();
+            hdr.userName = new StringBuffer();
+            hdr.groupName = new StringBuffer();
         }
     }
 
@@ -839,20 +838,22 @@ public class TarEntry implements Cloneable {
 
         hdr.linkFlag = isDir ? TarHeader.LF_DIR : TarHeader.LF_NORMAL;
 
-        hdr.linkName = new StringBuffer("");
-        hdr.userName = new StringBuffer("");
-        hdr.groupName = new StringBuffer("");
+        hdr.linkName = new StringBuffer();
+        hdr.userName = new StringBuffer();
+        hdr.groupName = new StringBuffer();
 
         hdr.devMajor = 0;
         hdr.devMinor = 0;
     }
 
     public String toString() {
-        StringBuffer result = new StringBuffer(128);
-        return result.append("[TarEntry name=").append(this.getName()).append(", isDir=").append(this.isDirectory())
-            .append(", size=").append(this.getSize()).append(", userId=").append(this.getUserId()).append(", user=")
-            .append(this.getUserName()).append(", groupId=").append(this.getGroupId()).append(", group=")
-            .append(this.getGroupName()).append("]").toString();
+        return "[TarEntry name=" + this.getName() +
+                ", isDir=" + this.isDirectory() +
+                ", size=" + this.getSize() +
+                ", userId=" + this.getUserId() +
+                ", user=" + this.getUserName() +
+                ", groupId=" + this.getGroupId() +
+                ", group=" + this.getGroupName() + "]";
     }
 
 }

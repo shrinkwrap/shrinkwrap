@@ -108,7 +108,7 @@ public final class AssetUtil {
     public static String getNameForClassloaderResource(String resourceName) {
         String fileName = resourceName;
         if (resourceName.indexOf('/') != -1) {
-            fileName = resourceName.substring(resourceName.lastIndexOf('/') + 1, resourceName.length());
+            fileName = resourceName.substring(resourceName.lastIndexOf('/') + 1);
         }
         return fileName;
     }

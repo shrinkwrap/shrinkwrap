@@ -122,8 +122,7 @@ class BlockSort {
     private static final int FALLBACK_QSORT_STACK_SIZE = 100;
 
     private static final int STACK_SIZE =
-        QSORT_STACK_SIZE < FALLBACK_QSORT_STACK_SIZE
-        ? FALLBACK_QSORT_STACK_SIZE : QSORT_STACK_SIZE;
+            Math.max(QSORT_STACK_SIZE, FALLBACK_QSORT_STACK_SIZE);
 
     /*
      * Used when sorting. If too many long comparisons happen, we stop sorting,
@@ -321,7 +320,7 @@ class BlockSort {
     }
 
     private int fmin(int a, int b) {
-        return a < b ? a : b;
+        return Math.min(a, b);
     }
 
     private void fpush(int sp, int lz, int hz) {
@@ -646,7 +645,7 @@ class BlockSort {
                         if (onceRunned) {
                             fmap[j] = a;
                             if ((j -= h) <= mj) {
-                                break HAMMER;
+                                break;
                             }
                         } else {
                             onceRunned = true;
@@ -665,7 +664,7 @@ class BlockSort {
                                         if (block[i1 + 5] == block[i2 + 5]) {
                                             if (block[(i1 += 6)] == block[(i2 += 6)]) {
                                                 int x = lastShadow;
-                                                X: while (x > 0) {
+                                                while (x > 0) {
                                                     x -= 4;
 
                                                     if (block[i1 + 1] == block[i2 + 1]) {
@@ -683,7 +682,6 @@ class BlockSort {
                                                                                         i2 -= lastPlus1;
                                                                                     }
                                                                                     workDoneShadow++;
-                                                                                    continue X;
                                                                                 } else if ((quadrant[i1 + 3] > quadrant[i2 + 3])) {
                                                                                     continue HAMMER;
                                                                                 } else {
@@ -726,39 +724,33 @@ class BlockSort {
                                                     }
 
                                                 }
-                                                break HAMMER;
+                                                break;
                                             } // while x > 0
                                             else {
                                                 if ((block[i1] & 0xff) > (block[i2] & 0xff)) {
-                                                    continue HAMMER;
                                                 } else {
-                                                    break HAMMER;
+                                                    break;
                                                 }
                                             }
                                         } else if ((block[i1 + 5] & 0xff) > (block[i2 + 5] & 0xff)) {
-                                            continue HAMMER;
                                         } else {
-                                            break HAMMER;
+                                            break;
                                         }
                                     } else if ((block[i1 + 4] & 0xff) > (block[i2 + 4] & 0xff)) {
-                                        continue HAMMER;
                                     } else {
-                                        break HAMMER;
+                                        break;
                                     }
                                 } else if ((block[i1 + 3] & 0xff) > (block[i2 + 3] & 0xff)) {
-                                    continue HAMMER;
                                 } else {
-                                    break HAMMER;
+                                    break;
                                 }
                             } else if ((block[i1 + 2] & 0xff) > (block[i2 + 2] & 0xff)) {
-                                continue HAMMER;
                             } else {
-                                break HAMMER;
+                                break;
                             }
                         } else if ((block[i1 + 1] & 0xff) > (block[i2 + 1] & 0xff)) {
-                            continue HAMMER;
                         } else {
-                            break HAMMER;
+                            break;
                         }
 
                     } // HAMMER
@@ -883,11 +875,9 @@ class BlockSort {
                     stack_dd[sp] = d1;
                     sp++;
                 } else {
-                    int n = ((ltLo - lo) < (unLo - ltLo)) ? (ltLo - lo)
-                        : (unLo - ltLo);
+                    int n = Math.min((ltLo - lo), (unLo - ltLo));
                     vswap(fmap, lo, unLo - n, n);
-                    int m = ((hi - gtHi) < (gtHi - unHi)) ? (hi - gtHi)
-                        : (gtHi - unHi);
+                    int m = Math.min((hi - gtHi), (gtHi - unHi));
                     vswap(fmap, unLo, hi - m + 1, m);
 
                     n = lo + unLo - ltLo - 1;
