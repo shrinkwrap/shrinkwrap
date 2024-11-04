@@ -232,10 +232,9 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
 
         final String pathComponent = uri.getPath();
         final ArchivePath archivePath = ArchivePaths.create(pathComponent);
-        final Path path = new ShrinkWrapPath(archivePath, fs);
 
         // Return
-        return path;
+        return new ShrinkWrapPath(archivePath, fs);
     }
 
     /**
@@ -511,8 +510,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
      */
     @Override
     public FileStore getFileStore(final Path path) {
-        final FileStore fileStore = path.getFileSystem().getFileStores().iterator().next();
-        return fileStore;
+        return path.getFileSystem().getFileStores().iterator().next();
     }
 
     /**
@@ -582,8 +580,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
         if (!((ShrinkWrapFileSystem) swPath.getFileSystem()).getArchive().contains(path.toString())) {
             throw new NoSuchFileException(path.toString());
         }
-        final A attributes = type.cast(new ShrinkWrapFileAttributes((ShrinkWrapPath) path, getArchive(path)));
-        return attributes;
+        return type.cast(new ShrinkWrapFileAttributes((ShrinkWrapPath) path, getArchive(path)));
     }
 
     /**

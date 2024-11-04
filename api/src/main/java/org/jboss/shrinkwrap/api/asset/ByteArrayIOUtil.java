@@ -69,10 +69,7 @@ class ByteArrayIOUtil {
             // We don't need to close the out-stream, it's a byte array out
         }
 
-        // Represent as byte array
-        final byte[] content = out.toByteArray();
-
-        // Return
-        return content;
+        // Return represented as byte array
+        return out.toByteArray();
     }
 }

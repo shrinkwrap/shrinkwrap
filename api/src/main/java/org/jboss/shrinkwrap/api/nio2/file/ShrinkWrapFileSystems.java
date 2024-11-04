@@ -74,8 +74,7 @@ public final class ShrinkWrapFileSystems {
         final Map<String, Archive<?>> environment = new HashMap<>();
         environment.put(FS_ENV_KEY_ARCHIVE, archive);
         final URI uri = getRootUri(archive);
-        final FileSystem fs = FileSystems.newFileSystem(uri, environment);
-        return fs;
+        return FileSystems.newFileSystem(uri, environment);
     }
 
     /**
@@ -97,8 +96,7 @@ public final class ShrinkWrapFileSystems {
                 URI_PROTOCOL_SUFFIX +
                 archive.getId() +
                 '/';
-        final URI uri = URI.create(sb);
-        return uri;
+        return URI.create(sb);
     }
 
 }

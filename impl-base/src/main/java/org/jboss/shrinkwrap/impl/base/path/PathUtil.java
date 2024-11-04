@@ -66,10 +66,9 @@ public final class PathUtil {
         // Compose
         final String relative = PathUtil.adjustToAbsoluteDirectoryContext(base);
         final String reformedContext = PathUtil.optionallyRemovePrecedingSlash(context);
-        final String actual = relative + reformedContext;
 
         // Return
-        return actual;
+        return relative + reformedContext;
     }
 
     /**
@@ -91,10 +90,9 @@ public final class PathUtil {
         // Strip absolute form
         final String removedPrefix = optionallyRemovePrecedingSlash(path);
         // Add end of context slash
-        final String addedPostfix = optionallyAppendSlash(removedPrefix);
 
         // Return
-        return addedPostfix;
+        return optionallyAppendSlash(removedPrefix);
     }
 
     /**
@@ -115,11 +113,9 @@ public final class PathUtil {
 
         // Add prefix slash
         final String prefixedPath = optionallyPrependSlash(path);
-        // Add end of context slash
-        final String addedPostfix = optionallyAppendSlash(prefixedPath);
 
-        // Return
-        return addedPostfix;
+        // Return (add end of context slash)
+        return optionallyAppendSlash(prefixedPath);
     }
 
     /**

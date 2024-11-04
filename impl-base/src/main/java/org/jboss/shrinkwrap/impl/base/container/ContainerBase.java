@@ -1584,9 +1584,8 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
     private Set<ArchivePath> getInnerClasses(final ArchivePath path) {
         Map<ArchivePath, Node> content = getContent(object -> {
             String expression = path.get().replace(".class", "\\$.*");
-            final boolean matches = object.get().matches(expression);
 
-            return matches;
+            return object.get().matches(expression);
         });
 
         return content.keySet();
@@ -2023,8 +2022,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
 
     private Iterable<ClassLoader> getArchiveClassLoaders() {
         final Archive<?> archive = getArchive();
-        final Iterable<ClassLoader> cls = ((Configurable) archive).getConfiguration().getClassLoaders();
 
-        return cls;
+        return ((Configurable) archive).getConfiguration().getClassLoaders();
     }
 }

@@ -187,9 +187,8 @@ public class ShrinkWrapFileSystem extends FileSystem {
         }
 
         final String merged = this.merge(first, more);
-        final Path path = new ShrinkWrapPath(merged, this);
 
-        return path;
+        return new ShrinkWrapPath(merged, this);
     }
 
     /**
