@@ -97,9 +97,8 @@ public class ClassAsset implements Asset {
         // Build the name
         final String fqn = clazz.getName();
         final String nameAsResourcePath = fqn.replace(DELIMITER_CLASS_NAME_PATH, DELIMITER_RESOURCE_PATH);
-        final String resourceName = nameAsResourcePath + EXTENSION_CLASS;
 
         // Return
-        return resourceName;
+        return nameAsResourcePath + EXTENSION_CLASS;
     }
 }

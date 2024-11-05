@@ -271,9 +271,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     public void testAddAssetWithNameRequiresName() {
         Archive<T> archive = getArchive();
         final ArchivePath path = new BasicPath("/", "Test.properties");
-        final String resource = NAME_TEST_PROPERTIES;
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> archive.add(new ClassLoaderAsset(resource), path, null),
+        Assertions.assertThrows(IllegalArgumentException.class, () -> archive.add(new ClassLoaderAsset(NAME_TEST_PROPERTIES), path, null),
                 "Should have throw an IllegalArgumentException");
     }
 
@@ -470,9 +469,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     @Test
     public void testDeleteAssetWithArchivePath() {
         Archive<T> archive = getArchive();
-        String resource = NAME_TEST_PROPERTIES;
         ArchivePath location = new BasicPath("/", "test.properties");
-        final Asset asset = new ClassLoaderAsset(resource);
+        final Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
         archive.add(asset, location);
         Assertions.assertTrue(archive.contains(location)); // Sanity check
 
@@ -490,9 +488,8 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     @Test
     public void testDeleteAssetWithStringPath() {
         Archive<T> archive = getArchive();
-        String resource = NAME_TEST_PROPERTIES;
         String location = "/test.properties";
-        final Asset asset = new ClassLoaderAsset(resource);
+        final Asset asset = new ClassLoaderAsset(NAME_TEST_PROPERTIES);
         archive.add(asset, location);
         Assertions.assertTrue(archive.contains(location)); // Sanity check
 

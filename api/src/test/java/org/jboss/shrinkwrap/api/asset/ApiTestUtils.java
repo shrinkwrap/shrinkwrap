@@ -93,7 +93,6 @@ class ApiTestUtils {
      */
     static String getResourceNameForClass(Class<?> clazz) {
         String classResourceDelimiter = clazz.getName().replaceAll("\\.", "/");
-        String classFullPath = classResourceDelimiter + ".class";
-        return classFullPath;
+        return classResourceDelimiter + ".class";
     }
 }

@@ -808,8 +808,7 @@ public class FilesTestCase {
      */
     private Archive<?> getArchive() {
         final ShrinkWrapFileSystem swfs = (ShrinkWrapFileSystem) this.fs;
-        final Archive<?> archive = swfs.getArchive();
-        return archive;
+        return swfs.getArchive();
     }
 
 }

@@ -53,8 +53,7 @@ public class FileSystemTestCase {
         // Setup and mount the archive
         final String name = "test.jar";
         final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, name);
-        final FileSystem fs = ShrinkWrapFileSystems.newFileSystem(archive);
-        this.fileSystem = fs;
+        this.fileSystem = ShrinkWrapFileSystems.newFileSystem(archive);
         this.archive = archive;
     }
 

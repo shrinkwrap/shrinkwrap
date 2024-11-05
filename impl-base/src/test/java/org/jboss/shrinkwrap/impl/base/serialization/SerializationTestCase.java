@@ -221,8 +221,7 @@ public class SerializationTestCase {
                 final ObjectOutputStream out = new ObjectOutputStream(byteOut)) {
             out.writeObject(archive);
             try (final ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(byteOut.toByteArray()))) {
-                final SerializableView roundtrip = (SerializableView) in.readObject();
-                return roundtrip;
+                return (SerializableView) in.readObject();
             }
         }
     }

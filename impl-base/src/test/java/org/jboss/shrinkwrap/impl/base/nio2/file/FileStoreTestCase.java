@@ -53,10 +53,9 @@ public class FileStoreTestCase {
         final String name = "test.jar";
         final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, name);
         final FileSystem fs = ShrinkWrapFileSystems.newFileSystem(archive);
-        final FileStore fileStore = fs.getFileStores().iterator().next();
 
         // Set
-        this.fileStore = fileStore;
+        this.fileStore = fs.getFileStores().iterator().next();
         this.archive = archive;
         this.fileSystem = fs;
     }

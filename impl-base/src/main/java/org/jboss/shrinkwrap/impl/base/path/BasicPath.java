@@ -175,8 +175,7 @@ public class BasicPath implements ArchivePath, Comparable<ArchivePath> {
         final int comparedContexts = path.get().compareTo(this.get());
 
         // Return the inverted value of the contents (in this ordering, less is more)
-        final int adjusted = 0 - comparedContexts;
-        return adjusted;
+        return -comparedContexts;
     }
 
     // -------------------------------------------------------------------------------------||

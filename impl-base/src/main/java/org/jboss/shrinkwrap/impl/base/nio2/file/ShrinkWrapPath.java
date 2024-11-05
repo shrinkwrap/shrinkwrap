@@ -149,8 +149,7 @@ public class ShrinkWrapPath implements Path {
         } else {
             final List<String> tokens = tokenize(this);
             // Furthest out
-            final Path fileName = new ShrinkWrapPath(tokens.get(tokens.size() - 1), this.fileSystem);
-            return fileName;
+            return new ShrinkWrapPath(tokens.get(tokens.size() - 1), this.fileSystem);
         }
     }
 
@@ -234,8 +233,7 @@ public class ShrinkWrapPath implements Path {
     @Override
     public Path getName(final int index) {
         // Precondition checks handled by subpath impl
-        final Path subpath = this.subpath(0, index + 1);
-        return subpath;
+        return this.subpath(0, index + 1);
     }
 
     /**
@@ -269,8 +267,7 @@ public class ShrinkWrapPath implements Path {
             newPathBuilder.append(ArchivePath.SEPARATOR);
             newPathBuilder.append(tokens.get(i));
         }
-        final Path newPath = this.fromString(newPathBuilder.toString());
-        return newPath;
+        return this.fromString(newPathBuilder.toString());
     }
 
     /**
@@ -396,8 +393,7 @@ public class ShrinkWrapPath implements Path {
     @Override
     public Path normalize() {
         final String normalizedString = normalize(tokenize(this), this.isAbsolute());
-        final Path normalized = new ShrinkWrapPath(normalizedString, this.fileSystem);
-        return normalized;
+        return new ShrinkWrapPath(normalizedString, this.fileSystem);
     }
 
     /**
@@ -487,8 +483,7 @@ public class ShrinkWrapPath implements Path {
         }
 
         // Recursive relativization
-        final Path newPath = relativizeCommonRoot(this, this, other, other, 0);
-        return newPath;
+        return relativizeCommonRoot(this, this, other, other, 0);
     }
 
     /**
@@ -501,8 +496,7 @@ public class ShrinkWrapPath implements Path {
         final URI root = ShrinkWrapFileSystems.getRootUri(this.fileSystem.getArchive());
         // Compose a new URI location, stripping out the extra "/" root
         final String location = root + this.toString().substring(1);
-        final URI uri = URI.create(location);
-        return uri;
+        return URI.create(location);
     }
 
     /**
@@ -520,8 +514,7 @@ public class ShrinkWrapPath implements Path {
 
         // Else construct a new absolute path and normalize it
         final Path absolutePath = new ShrinkWrapPath(ArchivePath.SEPARATOR + this.path, this.fileSystem);
-        final Path normalized = absolutePath.normalize();
-        return normalized;
+        return absolutePath.normalize();
     }
 
     /**
