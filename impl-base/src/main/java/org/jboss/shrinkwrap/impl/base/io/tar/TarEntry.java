@@ -596,6 +596,7 @@ public class TarEntry implements Cloneable {
 
         String[] list = this.file.list();
 
+        assert list != null;
         TarEntry[] result = new TarEntry[list.length];
 
         for (int i = 0; i < list.length; ++i) {
@@ -631,7 +632,7 @@ public class TarEntry implements Cloneable {
      *             If the name does not fit in the header.
      */
     public void writeEntryHeader(byte[] outbuf) throws InvalidHeaderException {
-        int offset = 0;
+        int offset;
 
         if (this.isUnixTarFormat()) {
             if (this.header.name.length() > 100) {
@@ -698,7 +699,7 @@ public class TarEntry implements Cloneable {
      *            The tar entry header buffer to get information from.
      */
     public void parseTarHeader(TarHeader hdr, byte[] headerBuf) throws InvalidHeaderException {
-        int offset = 0;
+        int offset;
 
         //
         // NOTE Recognize archive header format.
@@ -714,7 +715,7 @@ public class TarEntry implements Cloneable {
             this.gnuFormat = false;
             this.unixFormat = false;
         } else if (headerBuf[257] == 'u' && headerBuf[258] == 's' && headerBuf[259] == 't' && headerBuf[260] == 'a'
-            && headerBuf[261] == 'r' && headerBuf[262] != 0 && headerBuf[263] != 0) {
+            && headerBuf[261] == 'r' && headerBuf[263] != 0) {
             // REVIEW
             this.gnuFormat = true;
             this.unixFormat = false;

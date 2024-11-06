@@ -727,29 +727,23 @@ class BlockSort {
                                                 break;
                                             } // while x > 0
                                             else {
-                                                if ((block[i1] & 0xff) > (block[i2] & 0xff)) {
-                                                } else {
+                                                if ((block[i1] & 0xff) <= (block[i2] & 0xff)) {
                                                     break;
                                                 }
                                             }
-                                        } else if ((block[i1 + 5] & 0xff) > (block[i2 + 5] & 0xff)) {
-                                        } else {
+                                        } else if ((block[i1 + 5] & 0xff) <= (block[i2 + 5] & 0xff)) {
                                             break;
                                         }
-                                    } else if ((block[i1 + 4] & 0xff) > (block[i2 + 4] & 0xff)) {
-                                    } else {
+                                    } else if ((block[i1 + 4] & 0xff) <= (block[i2 + 4] & 0xff)) {
                                         break;
                                     }
-                                } else if ((block[i1 + 3] & 0xff) > (block[i2 + 3] & 0xff)) {
-                                } else {
+                                } else if ((block[i1 + 3] & 0xff) <= (block[i2 + 3] & 0xff)) {
                                     break;
                                 }
-                            } else if ((block[i1 + 2] & 0xff) > (block[i2 + 2] & 0xff)) {
-                            } else {
+                            } else if ((block[i1 + 2] & 0xff) <= (block[i2 + 2] & 0xff)) {
                                 break;
                             }
-                        } else if ((block[i1 + 1] & 0xff) > (block[i2 + 1] & 0xff)) {
-                        } else {
+                        } else if ((block[i1 + 1] & 0xff) <= (block[i2 + 1] & 0xff)) {
                             break;
                         }
 

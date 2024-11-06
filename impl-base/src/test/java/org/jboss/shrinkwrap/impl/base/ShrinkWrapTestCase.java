@@ -23,6 +23,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -359,8 +360,8 @@ public class ShrinkWrapTestCase {
      */
     @Test
     public void importFromNonZipFileThrowsException() throws Exception {
-        final File nonZipFile = new File(TestSecurityActions.getThreadContextClassLoader()
-                .getResource(NAME_FILE_NON_ZIP).toURI());
+        final File nonZipFile = new File(Objects.requireNonNull(TestSecurityActions.getThreadContextClassLoader()
+                .getResource(NAME_FILE_NON_ZIP)).toURI());
 
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> ShrinkWrap.createFromZipFile(JavaArchive.class, nonZipFile));

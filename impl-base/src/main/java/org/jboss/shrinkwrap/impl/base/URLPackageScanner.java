@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -148,7 +149,7 @@ public class URLPackageScanner {
     }
 
     private void handle(File file, String packageName) {
-        for (File child : file.listFiles()) {
+        for (File child : Objects.requireNonNull(file.listFiles())) {
             if (!child.isDirectory() && child.getName().endsWith(SUFFIX_CLASS)) {
                 final String packagePrefix = !packageName.isEmpty() ? packageName + "." : packageName;
                 String className = packagePrefix + child.getName().substring(0, child.getName().lastIndexOf(SUFFIX_CLASS));

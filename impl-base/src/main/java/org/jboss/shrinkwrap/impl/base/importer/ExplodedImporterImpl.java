@@ -17,6 +17,7 @@
 package org.jboss.shrinkwrap.impl.base.importer;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -108,7 +109,7 @@ public class ExplodedImporterImpl extends AssignableBase<Archive<?>> implements 
             throw new IllegalArgumentException("Given file is not a directory " + file.getAbsolutePath());
         }
 
-        doImport(file, file.listFiles(), filter);
+        doImport(file, Objects.requireNonNull(file.listFiles()), filter);
         return this;
     }
 
@@ -122,7 +123,7 @@ public class ExplodedImporterImpl extends AssignableBase<Archive<?>> implements 
             if( filter.include(path) ) {
                 if (file.isDirectory()) {
                     archive.addAsDirectory(path);
-                    doImport(root, file.listFiles(), filter);
+                    doImport(root, Objects.requireNonNull(file.listFiles()), filter);
                 } else {
                     archive.add(new FileAsset(file), path);
                 }

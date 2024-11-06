@@ -151,7 +151,6 @@ public final class ZipStoredExporterTestCase extends StreamExporterTestBase<ZipI
 
             try (final InputStream contentsFromExportedFile2 = getContentsFromExportedFile(generatedFile, ArchivePaths.create("/content.txt"))) {
                 final byte[] content2 = IOUtil.asByteArray(contentsFromExportedFile2);
-                Assertions.assertTrue(content.length > 0);
                 Assertions.assertEquals("My file content", new String(content2));
             }
         }

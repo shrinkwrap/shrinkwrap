@@ -35,9 +35,9 @@ import org.jboss.shrinkwrap.impl.base.io.tar.bzip.BZip2CompressorOutputStream;
  */
 
 public class TarBzOutputStream extends TarOutputStreamImpl {
-    private TarOutputStreamImpl tos = null;
-    private BZip2CompressorOutputStream bzip = null;
-    private ByteArrayOutputStream bos = null;
+    private final TarOutputStreamImpl tos;
+    private final BZip2CompressorOutputStream bzip;
+    private ByteArrayOutputStream bos;
     private TarEntry currentEntry = null;
 
     public TarBzOutputStream(OutputStream out) throws IOException {

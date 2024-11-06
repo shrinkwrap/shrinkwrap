@@ -188,7 +188,6 @@ public class SeekableInMemoryByteChannelTestCase {
     @Test
     public void exceedMaxIntegerPositionProhibited() {
         final long newPosition = Integer.MAX_VALUE + 1L;
-        Assertions.assertTrue(newPosition > Integer.MAX_VALUE, "Didn't set up new position to be out of int bounds");
         Assertions.assertThrows(IllegalArgumentException.class, () -> this.channel.position(newPosition));
     }
 
@@ -200,7 +199,6 @@ public class SeekableInMemoryByteChannelTestCase {
     @Test
     public void exceedMaxIntegerTruncateProhibited() {
         final long truncateValue = Integer.MAX_VALUE + 1L;
-        Assertions.assertTrue(truncateValue > Integer.MAX_VALUE, "Didn't set up new truncate to be out of int bounds");
         Assertions.assertThrows(IllegalArgumentException.class, () -> this.channel.truncate(truncateValue));
     }
 

@@ -402,7 +402,6 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
     private Archive<?> getArchive(final Path path) {
         assert path != null : "Path must be specified";
         final FileSystem fs = path.getFileSystem();
-        assert fs != null : "File system is null";
         // Could be user error in this case, passing in a Path from another provider
         if (!(fs instanceof ShrinkWrapFileSystem)) {
             throw new IllegalArgumentException("This path is not associated with a "
@@ -620,7 +619,7 @@ public class ShrinkWrapFileSystemProvider extends FileSystemProvider {
 
         final byte[] backingBuffer = new byte[1024 * 4];
         final ByteBuffer byteBuffer = ByteBuffer.wrap(backingBuffer);
-        int bytesRead = 0;
+        int bytesRead;
         while ((bytesRead = in.read(backingBuffer, 0, backingBuffer.length)) > -1) {
             // Limit to the amount we've actually read in, so we don't overflow into old data blocks
             byteBuffer.limit(bytesRead);

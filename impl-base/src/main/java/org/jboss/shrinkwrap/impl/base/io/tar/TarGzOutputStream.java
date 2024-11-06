@@ -23,9 +23,9 @@ import java.util.zip.GZIPOutputStream;
  */
 
 public class TarGzOutputStream extends TarOutputStreamImpl {
-    private TarOutputStreamImpl tos = null;
-    private GZIPOutputStream gzip = null;
-    private ByteArrayOutputStream bos = null;
+    private final TarOutputStreamImpl tos;
+    private final GZIPOutputStream gzip;
+    private ByteArrayOutputStream bos;
     private TarEntry currentEntry = null;
 
     public TarGzOutputStream(OutputStream out) throws IOException {

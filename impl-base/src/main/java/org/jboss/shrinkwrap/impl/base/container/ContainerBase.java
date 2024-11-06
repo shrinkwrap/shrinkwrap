@@ -26,6 +26,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -855,7 +856,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
             return addAsManifestResource(new FileAsset(resource), target);
         }
 
-        for (File file : resource.listFiles()) {
+        for (File file : Objects.requireNonNull(resource.listFiles())) {
             ArchivePath child = ArchivePaths.create(file.getName());
             addAsManifestResource(file, new BasicPath(target, child));
         }
@@ -1167,7 +1168,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
             return addAsDirectory(new BasicPath(getResourcePath(), target));
         }
 
-        for (File file : resource.listFiles()) {
+        for (File file : Objects.requireNonNull(resource.listFiles())) {
             ArchivePath child = ArchivePaths.create(file.getName());
             addAsResource(file, new BasicPath(target, child));
         }
@@ -1835,11 +1836,11 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
             return addAsLibrary(new FileAsset(resource), target);
         }
 
-        if (resource.listFiles().length == 0) {
+        if (Objects.requireNonNull(resource.listFiles()).length == 0) {
             return addAsLibrary(new FileAsset(resource), target);
         }
 
-        for (File file : resource.listFiles()) {
+        for (File file : Objects.requireNonNull(resource.listFiles())) {
             addAsLibrary(file, new BasicPath(target, file.getName()));
         }
         return covariantReturn();
@@ -1864,11 +1865,11 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
             return addAsLibrary(new UrlAsset(resource), target);
         }
 
-        if (resourceFile.listFiles().length == 0) {
+        if (Objects.requireNonNull(resourceFile.listFiles()).length == 0) {
             return addAsLibrary(new UrlAsset(resource), target);
         }
 
-        for (File file : resourceFile.listFiles()) {
+        for (File file : Objects.requireNonNull(resourceFile.listFiles())) {
             addAsLibrary(file, new BasicPath(target, file.getName()));
         }
 

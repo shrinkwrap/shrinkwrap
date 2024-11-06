@@ -51,7 +51,7 @@ class ByteArrayIOUtil {
         final ByteArrayOutputStream out = new ByteArrayOutputStream(8192);
         final int len = 4096;
         final byte[] buffer = new byte[len];
-        int read = 0;
+        int read;
         try {
             while (((read = in.read(buffer)) != -1)) {
                 out.write(buffer, 0, read);

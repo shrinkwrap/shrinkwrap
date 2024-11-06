@@ -30,6 +30,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -122,7 +123,7 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     public void createEmptyDirectory() {
         File emptyDir = createDirectory("org/jboss/shrinkwrap/impl/base/recursion/empty");
         Assertions.assertTrue(emptyDir.exists(), "Empty directory not found at " + emptyDir.getAbsolutePath());
-        Assertions.assertEquals(0, emptyDir.list().length, "Directory not empty");
+        Assertions.assertEquals(0, Objects.requireNonNull(emptyDir.list()).length, "Directory not empty");
     }
 
     // -------------------------------------------------------------------------------------||
@@ -1855,22 +1856,28 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
     @Test
     public void testAddingEmptyResourceDirectory() throws Exception {
         final File directory = File.createTempFile("resources", null);
+        // remove if exists
         directory.delete();
+        // remove temp file after testing because resource directory used by inheritor classes
         directory.deleteOnExit();
         final File svn = new File(directory, ".svn");
+        // remove file after testing because it is used by inheritor classes
         svn.deleteOnExit();
-        svn.mkdirs();
 
-        try (final ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            ShrinkWrap.create(JavaArchive.class).addAsResource(directory, "/").as(ZipExporter.class).exportTo(out);
+        if (svn.mkdirs()) {
+            try (final ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                ShrinkWrap.create(JavaArchive.class).addAsResource(directory, "/").as(ZipExporter.class).exportTo(out);
 
-            try (final ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(out.toByteArray()))) {
-                final ZipEntry entry = zis.getNextEntry();
-                Assertions.assertNotNull(entry, "Missing '.svn/' Entry from Exported Archive");
-                Assertions.assertEquals(".svn/", entry.getName(), "Zip Entry Missing Expected Name '.svn/'");
-                Assertions.assertTrue(entry.isDirectory(), "Zip Entry '.svn/' Not A Directory");
-                zis.closeEntry();
+                try (final ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(out.toByteArray()))) {
+                    final ZipEntry entry = zis.getNextEntry();
+                    Assertions.assertNotNull(entry, "Missing '.svn/' Entry from Exported Archive");
+                    Assertions.assertEquals(".svn/", entry.getName(), "Zip Entry Missing Expected Name '.svn/'");
+                    Assertions.assertTrue(entry.isDirectory(), "Zip Entry '.svn/' Not A Directory");
+                    zis.closeEntry();
+                }
             }
+        } else {
+            throw new IllegalStateException("Directory not created.");
         }
     }
 
@@ -1971,11 +1978,11 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         Assertions.assertTrue(this.getArchive().contains(testPath), "Archive should contain " + testPath);
 
         if (file.isDirectory()) {
-            for (File child : file.listFiles()) {
+            for (File child : Objects.requireNonNull(file.listFiles())) {
                 assertArchiveContainsFolderRecursively(child, base, target + "/" + child.getName());
             }
             int folderInArchiveSize = this.getArchive().get(testPath).getChildren().size();
-            Assertions.assertEquals(file.listFiles().length, folderInArchiveSize, "Wrong number of files in the archive folder: " + testPath.get());
+            Assertions.assertEquals(Objects.requireNonNull(file.listFiles()).length, folderInArchiveSize, "Wrong number of files in the archive folder: " + testPath.get());
         }
     }
 

@@ -287,13 +287,13 @@ public class ExplodedExporterTestCase extends ExportTestBase {
         Archive<?> archive = createArchiveWithAssets();
 
         File existingParentFolder = new File("target/");
+        // this returns false if target exists
         existingParentFolder.mkdirs();
         Assertions.assertTrue(existingParentFolder.exists(),
                 "Internal error, the directory need to exist for test case to work");
 
         File archiveFolder = new File(existingParentFolder, archive.getName());
-        archiveFolder.mkdirs();
-        Assertions.assertTrue(existingParentFolder.exists(),
+        Assertions.assertTrue(archiveFolder.mkdirs(),
                 "Internal error, the directory need to exist for test case to work");
 
         archive.as(ExplodedExporter.class).exportExploded(existingParentFolder);

@@ -129,7 +129,7 @@ final class ShrinkWrapFileAttributes implements BasicFileAttributes {
         final Asset asset = this.getArchive().get(this.path.toString()).getAsset();
         int totalRead = 0;
         final byte[] buffer = new byte[1024 * 4];
-        int read = 0;
+        int read;
         try (InputStream stream = asset.openStream()) {
             while ((read = stream.read(buffer, 0, buffer.length)) != -1) {
                 totalRead += read;

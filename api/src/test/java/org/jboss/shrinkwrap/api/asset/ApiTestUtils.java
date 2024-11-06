@@ -76,6 +76,7 @@ class ApiTestUtils {
     static int findLengthOfClass(Class<?> clazz) throws Exception {
         String classResourceName = getResourceNameForClass(clazz);
         try (InputStream in = SecurityActions.getThreadContextClassLoader().getResourceAsStream(classResourceName)) {
+            assert in != null;
             return findLengthOfStream(in);
         }
     }

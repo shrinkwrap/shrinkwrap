@@ -26,9 +26,9 @@ import java.util.zip.GZIPOutputStream;
  */
 
 public class TarOutputStream extends TarOutputStreamImpl {
-    private TarOutputStreamImpl tos = null;
+    private final TarOutputStreamImpl tos;
 
-    private ByteArrayOutputStream bos = null;
+    private ByteArrayOutputStream bos;
 
     private TarEntry currentEntry = null;
 
