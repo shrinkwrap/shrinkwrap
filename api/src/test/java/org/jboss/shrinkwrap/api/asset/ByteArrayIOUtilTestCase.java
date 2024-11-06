@@ -26,7 +26,7 @@ import java.io.IOException;
  * ByteArrayIOUtilTest
  * <p/>
  * Test Cases for the {@link org.jboss.shrinkwrap.api.asset.ByteArrayIOUtil}
- * 
+ *
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */

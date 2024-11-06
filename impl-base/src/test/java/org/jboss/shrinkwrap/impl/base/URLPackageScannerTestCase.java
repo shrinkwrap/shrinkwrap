@@ -16,7 +16,6 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
-import org.jboss.shrinkwrap.api.asset.Asset;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

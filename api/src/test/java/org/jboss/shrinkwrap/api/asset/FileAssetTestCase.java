@@ -26,9 +26,7 @@ import java.io.InputStream;
  * Test to ensure that we can use a File as a resource.
  * <p>
  * <a href="https://issues.redhat.com/browse/TMPARCH-5">TMPARCH-5</a>
- * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- * 
  */
 public class FileAssetTestCase {
     private static final String BASE_PATH = "src/test/resources/org/jboss/shrinkwrap/api/asset/";
@@ -59,11 +57,11 @@ public class FileAssetTestCase {
         Assertions.assertThrows(IllegalArgumentException.class, () -> new FileAsset(new File(NON_EXISTING_FILE)),
                 "A non existing file should result in a IllegalArgumentException");
     }
-    
+
     @Test
     public void shouldBeAbleToReturnFile() {
-    	final File exitingFile = new File(EXISTING_FILE);
-    	final FileAsset asset = new FileAsset(exitingFile);
+        final File exitingFile = new File(EXISTING_FILE);
+        final FileAsset asset = new FileAsset(exitingFile);
 
         Assertions.assertEquals(exitingFile, asset.getSource());
     }

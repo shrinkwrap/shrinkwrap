@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 /**
  * Test Cases for the {@link EmptyAsset}
- * 
+ *
  * @author <a href="mailto:dan.j.allen@gmail.com">Dan Allen</a>
  * @version $Revision: $
  */
@@ -73,8 +73,8 @@ public class EmptyAssetTestCase {
 
     @Test
     public void shouldBeAbleToReturnByteArray() {
-    	// Make contents
-    	final EmptyAsset asset = EmptyAsset.INSTANCE;
+        // Make contents
+        final EmptyAsset asset = EmptyAsset.INSTANCE;
         final byte[] contentFromGetSource = asset.getSource();
 
         Assertions.assertEquals(0, contentFromGetSource.length);

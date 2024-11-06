@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * ApiTestUtils
- * 
+ *
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
  * @version $Revision: $
@@ -33,9 +33,8 @@ class ApiTestUtils {
      * Convert a {@link InputStream} to a UTF-8 string. <br/>
      * Helper for testing the content of loaded resources. <br/>
      * This method will close the stream when done.
-     * 
-     * @param in
-     *            Open InputStream
+     *
+     * @param in Open InputStream
      * @return The InputStream as a String
      * @throws Exception
      */
@@ -53,9 +52,8 @@ class ApiTestUtils {
     /**
      * Read the byte size of a {@link InputStream}. <br/>
      * This method will close the stream when done.
-     * 
-     * @param in
-     *            Stream to get the size of.
+     *
+     * @param in Stream to get the size of.
      * @return The byte size of the stream
      * @throws Exception
      */
@@ -70,9 +68,8 @@ class ApiTestUtils {
 
     /**
      * Read the byte size of a {@link Class}.
-     * 
-     * @param clazz
-     *            The class
+     *
+     * @param clazz The class
      * @return The byte size of the given {@link Class}
      * @throws Exception
      */
@@ -86,9 +83,8 @@ class ApiTestUtils {
     /**
      * Get a resourceName for a {@link Class} so that it can be found in the {@link ClassLoader}. <br/>
      * class.getName.replace( . -> / ) + ".class"
-     * 
-     * @param clazz
-     *            The class to lookup
+     *
+     * @param clazz The class to lookup
      * @return The resource name for the class
      */
     static String getResourceNameForClass(Class<?> clazz) {

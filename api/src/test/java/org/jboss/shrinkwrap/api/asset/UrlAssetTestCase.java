@@ -29,9 +29,7 @@ import java.security.PrivilegedAction;
  * Test to ensure that we can use a URL as a resource.
  * <p>
  * <a href="https://issues.redhat.com/browse/TMPARCH-5">TMPARCH-5</a>
- * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- * 
  */
 public class UrlAssetTestCase {
     private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/api/asset/Test.properties";
@@ -112,12 +110,12 @@ public class UrlAssetTestCase {
 
     @Test
     public void shouldBeAbleToReturnURL() {
-    	final URL url = getThreadContextClassLoader().getResource(EXISTING_RESOURCE);
+        final URL url = getThreadContextClassLoader().getResource(EXISTING_RESOURCE);
         final UrlAsset asset = new UrlAsset(url);
-        
+
         Assertions.assertTrue(url.sameFile(asset.getSource()));
     }
-    
+
     /**
      * Obtains the Thread Context ClassLoader
      */

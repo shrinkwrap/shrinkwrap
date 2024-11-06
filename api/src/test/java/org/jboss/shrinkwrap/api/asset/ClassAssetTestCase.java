@@ -68,12 +68,12 @@ public class ClassAssetTestCase {
         Assertions.assertThrows(IllegalArgumentException.class, () -> new ClassAsset(null),
                 "A null clazz argument should result in a IllegalArgumentException");
     }
-    
+
     @Test
     public void shouldBeAbleToReturnThisClass() {
         final Class<?> clazz = ClassAssetTestCase.class;
         final ClassAsset asset = new ClassAsset(clazz);
-        
+
         Assertions.assertEquals(clazz.getName(), asset.getSource().getName());
     }
 }

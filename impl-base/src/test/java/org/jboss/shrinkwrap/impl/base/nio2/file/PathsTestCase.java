@@ -18,7 +18,6 @@ package org.jboss.shrinkwrap.impl.base.nio2.file;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Path;
