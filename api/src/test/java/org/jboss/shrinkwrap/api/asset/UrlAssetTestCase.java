@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -60,7 +60,12 @@ public class UrlAssetTestCase {
 
         // mutate the URL - can't be sure that some malicious code or user won't do this?
         try {
-            mutateURL(mutableURL);
+            mutateUrlField(mutableURL, "host", "");
+            mutateUrlField(mutableURL, "port");
+            mutateUrlField(mutableURL, "path", "/UNKNOWN_FILE");
+            mutateUrlField(mutableURL, "file", "file");
+            mutateUrlField(mutableURL, "hashCode");
+            mutateUrlField(mutableURL, "authority", "");
         } catch (final UnsupportedOperationForThisJREException e) {
             // We're all good; this URL can't be mutated in this JDK so ignore it and let the test finish
         }
@@ -79,34 +84,58 @@ public class UrlAssetTestCase {
             .assertEquals("shrinkwrap=true", ApiTestUtils.convertToString(io), "Mutated URL leaked into the UrlAsset");
     }
 
-    /*
-     * Ugly reflection needed to mutate a URL - not 100% sure how to do this other than using reflection, but seems
-     * possible that other libraries may be doing this same thing, so we must protect for it.
+    /**
+     * Uses reflection to modify fields in a URL with String values.
      */
-    private void mutateURL(final URL mutableURL) throws Exception {
-        Class<?>[] parameterTypes = { String.class, String.class, Integer.TYPE, String.class, String.class };
-        final Method m;
+    private void mutateUrlField(URL mutableURL, String fieldName, String setValue) throws Exception {
         try {
-            m = URL.class.getDeclaredMethod("set", parameterTypes);
-        } catch (final NoSuchMethodException nsme) {
-            // This is OK; we're in a JDK that cannot mutate URLs. Throw this so the test can recognize that.
-            throw new UnsupportedOperationForThisJREException(nsme);
+            Field field = URL.class.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(mutableURL, setValue);
+        } catch (Exception e) {
+            handleInaccessibleFieldException(e);
         }
+    }
 
-        Object[] arguments = { "file", "", -1, "/UNKNOWN_FILE", null };
-        m.setAccessible(true);
-        m.invoke(mutableURL, arguments);
+    /**
+     * Uses reflection to modify fields in a URL with int values.
+     */
+    private void mutateUrlField(URL mutableURL, String fieldName) throws Exception {
+        try {
+            Field field = URL.class.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(mutableURL, -1);
+        } catch (Exception e) {
+            handleInaccessibleFieldException(e);
+        }
+    }
+
+    /**
+     * Handles exceptions related to inaccessible fields.
+     */
+    private void handleInaccessibleFieldException(Exception e) throws Exception {
+        if (isInaccessibleObjectException(e) || e instanceof IllegalAccessException) {
+            throw new UnsupportedOperationForThisJREException(e);
+        } else {
+            throw e;
+        }
+    }
+
+    /**
+     * Helper method to check for InaccessibleObjectException by class name.
+     * This avoids compilation issues on Java 8.
+     */
+    private boolean isInaccessibleObjectException(Exception e) {
+        return e.getClass().getName().equals("java.lang.reflect.InaccessibleObjectException");
     }
 
     /**
      * Indicates that an operation is unsupported for this JRE.
      * <p>
-     * Used because we want to protect against mutable URLs in JDK8, JDK11. But
-     * JDK 17 removes the "set" method, thus making URLs immutable
      */
     private static class UnsupportedOperationForThisJREException extends Exception {
-        UnsupportedOperationForThisJREException(final NoSuchMethodException nsme) {
-            super(nsme);
+        UnsupportedOperationForThisJREException(Exception e) {
+            super(e);
         }
     }
 
