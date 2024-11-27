@@ -38,7 +38,7 @@ import org.junit.jupiter.api.BeforeEach;
  * Base class for AddPackage* tests operating with a custom classloader.
  *
  * @author Falko Modler
- * @author Bob McWhirter 
+ * @author Bob McWhirter
  */
 public abstract class AddPackageTestBase {
 
@@ -52,7 +52,7 @@ public abstract class AddPackageTestBase {
     public void setUp() throws IOException {
 
         Archive<?> archive = buildArchive();
-        
+
         tempFile = File.createTempFile("test", archive instanceof WebArchive ? ".war" : ".jar");
         archive.as(ZipExporter.class).exportTo(tempFile, true);
         URL archiveUrl = tempFile.toURI().toURL();
@@ -78,12 +78,12 @@ public abstract class AddPackageTestBase {
     @AfterEach
     public void tearDown() {
         // URLClassLoader.close() requires JDK7+
-        
+
         if (tempFile.isFile() && !tempFile.delete()) {
             LOG.warning("Potential file leak: Could not delete " + tempFile);
         }
     }
-    
+
     /**
      * Classloader to ensure the donotchange bits are not loaded through the app-classloader,
      * while still enabling the default ShrinkWrap bits to be found through the junit test.

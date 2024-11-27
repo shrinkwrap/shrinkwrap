@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 /**
  * Test Cases for the {@link StringAsset}
- * 
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @author <a href="mailto:dan.j.allen@gmail.com">Dan Allen</a>
  * @version $Revision: $
@@ -71,13 +71,13 @@ public class StringAssetTestCase {
 
             Assertions.assertEquals(contents, roundtrip, "Roundtrip did not equal passed in contents");
         }
-    }    
+    }
 
     @Test
     public void shouldBeAbleToReturnString() {
-    	final String contents = StringAsset.class.getSimpleName();
-    	final StringAsset asset = new StringAsset(contents);
-        
+        final String contents = StringAsset.class.getSimpleName();
+        final StringAsset asset = new StringAsset(contents);
+
         Assertions.assertEquals(contents, asset.getSource());
     }
 }

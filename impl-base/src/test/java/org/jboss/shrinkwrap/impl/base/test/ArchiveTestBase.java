@@ -1162,7 +1162,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         Assertions.assertThrows(IllegalArgumentException.class, () -> archive.merge(createNewArchive(), (ArchivePath) null),
                 "Should have throw an IllegalArgumentException");
     }
-    
+
     /**
      * Tests merging of two archives containing directories with same names.
      */
@@ -1205,7 +1205,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
         }
         return count;
     }
-    
+
     /**
      * Ensure adding an archive to a path successfully stores all assets to specific path including the archive name
      *
@@ -1378,7 +1378,7 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
 
         Assertions.assertTrue(copyArchive.contains("location"));
     }
-    
+
     @Test
     public void ensureShallowCopyOperatesOnNestedAssets() {
         Archive<T> archive = getArchive();

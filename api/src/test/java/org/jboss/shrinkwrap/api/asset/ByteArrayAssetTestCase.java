@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  * ByteArrayAssetTestCase
  * <p>
  * Test Cases for the {@link ByteArrayAsset}
- * 
+ *
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
@@ -89,12 +89,11 @@ public class ByteArrayAssetTestCase {
                 Assertions.assertEquals(i, roundtrip[i], "Roundtrip did not equal passed in contents");
             }
         }
-
     }
-    
+
     @Test
     public void shouldBeAbleToReturnByteArray() {
-    	// Make contents
+        // Make contents
         final int length = 10;
         final byte[] contents = new byte[length];
         for (int i = 0; i < length; i++) {
@@ -104,9 +103,9 @@ public class ByteArrayAssetTestCase {
         // Make Asset
         final ByteArrayAsset asset = new ByteArrayAsset(contents);
         final byte[] contentFromGetSource = asset.getSource();
-        
+
         Assertions.assertEquals(asset.getSource().length, contents.length);
-     
+
         // Ensure the roundtrip matches the input (index number)
         for (int i = 0; i < length; i++) {
             Assertions.assertEquals(i, contentFromGetSource[i], "getSource() did not equal passed in contents");

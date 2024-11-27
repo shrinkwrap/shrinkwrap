@@ -102,31 +102,31 @@ public class ExplodedImporterTestCase {
         ShrinkWrap.create(ExplodedImporter.class, "test.jar").importDirectory(
             SecurityActions.getThreadContextClassLoader().getResource(EXISTING_FILE_RESOURCE).toURI().getPath()));
     }
-    
+
     @Test
     public void shouldBeAbleToImportADirectoryWithIncludeFilter() throws Exception {
         String fileName = SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE).toURI().getPath();
-        
+
         Archive<?> archive = ShrinkWrap
             .create(ExplodedImporter.class, "test.jar")
             .importDirectory(fileName, Filters.include(".*META-INF.*"))
             .as(JavaArchive.class);
-        
+
         Logger.getLogger(ExplodedImporterTestCase.class.getName()).info(archive.toString(true));
 
         Assertions.assertEquals(2, archive.getContent().size(), "Archive should contains only 2 paths");
         Assertions.assertTrue(archive.contains(new BasicPath("/META-INF/MANIFEST.FM")), "Nested files should be imported");
     }
-    
+
     @Test
     public void shouldBeAbleToImportADirectoryWithExcludeFilter() throws Exception {
         String fileName = SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE).toURI().getPath();
-        
+
         Archive<?> archive = ShrinkWrap
             .create(ExplodedImporter.class, "test.jar")
             .importDirectory(fileName, Filters.exclude(".*META-INF.*"))
             .as(JavaArchive.class);
-        
+
         Logger.getLogger(ExplodedImporterTestCase.class.getName()).info(archive.toString(true));
 
         Assertions.assertTrue(archive.contains(new BasicPath("/Test.properties")), "Root files should be imported");
@@ -134,7 +134,7 @@ public class ExplodedImporterTestCase {
         Assertions.assertTrue(archive.contains(new BasicPath("/empty_dir")), "Empty directories should be imported");
         Assertions.assertTrue(archive.contains(new BasicPath("/parent/empty_dir")),"Nested empty directories should be imported");
     }
-    
+
     @Test // SHRINKWRAP-392
     public void shouldHaveEmptyDefaultExtension() {
         ExplodedImporter explodedImporter = ShrinkWrap.create(ExplodedImporter.class);

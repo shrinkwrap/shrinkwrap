@@ -41,11 +41,10 @@ public class AddPackageFromWarWithNonRootClassloaderTestCase extends AddPackageT
     }
 
     private static class NonRootURLClassloader extends URLClassLoader {
-        
         public NonRootURLClassloader(URL[] urls, ClassLoader parent) {
             super(urls, parent);
         }
-        
+
         @Override
         public Enumeration<URL> findResources(String name) throws IOException {
             return super.findResources("WEB-INF/classes/" + name);

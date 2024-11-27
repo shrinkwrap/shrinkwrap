@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test cases to assert the ShrinkWrap implementation of the NIO.2 {@link Path} is working as contracted.
- * 
+ *
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
 public class PathTestCase {

@@ -25,9 +25,7 @@ import java.io.InputStream;
  * Test to ensure that we are can use a ClassLoader Resource as a resource.
  * <p>
  * <a href="https://issues.redhat.com/browse/TMPARCH-5">TMPARCH-5</a>
- * 
  * @author <a href="mailto:aslak@conduct.no">Aslak Knutsen</a>
- * 
  */
 public class ClassLoaderAssetTestCase {
     private static final String EXISTING_RESOURCE = "org/jboss/shrinkwrap/api/asset/Test.properties";
@@ -62,11 +60,11 @@ public class ClassLoaderAssetTestCase {
         Assertions.assertThrows(IllegalArgumentException.class, () -> new ClassLoaderAsset(NON_EXISTING_RESOURCE),
                 "A resource that is not found in the classLoader should result in a IllegalArgumentException");
     }
-    
+
     @Test
     public void shouldBeAbleToReturnResource() {
         final ClassLoaderAsset asset = new ClassLoaderAsset(EXISTING_RESOURCE);
-        
+
         Assertions.assertEquals(asset.getSource(), EXISTING_RESOURCE);
     }
 }
