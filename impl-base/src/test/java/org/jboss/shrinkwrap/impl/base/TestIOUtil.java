@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Objects;
 
 /**
  * IOUtil
@@ -54,7 +55,7 @@ public class TestIOUtil {
     public static void deleteDirectory(final File directory) {
         if (directory.isDirectory() && directory.exists()) {
             // For each file in the directory run cleanup
-            for (File file : directory.listFiles()) {
+            for (File file : Objects.requireNonNull(directory.listFiles())) {
                 if (file.isDirectory()) {
                     // A nested directory, recurse
                     deleteDirectory(file);

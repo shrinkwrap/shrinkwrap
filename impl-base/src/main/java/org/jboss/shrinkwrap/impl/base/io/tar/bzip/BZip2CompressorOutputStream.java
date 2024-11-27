@@ -185,7 +185,7 @@ public class BZip2CompressorOutputStream extends OutputStream
                 heap[1] = heap[nHeap];
                 nHeap--;
 
-                int yy = 0;
+                int yy;
                 int zz = 1;
                 int tmp = heap[1];
 
@@ -215,7 +215,6 @@ public class BZip2CompressorOutputStream extends OutputStream
                 heap[1] = heap[nHeap];
                 nHeap--;
 
-                yy = 0;
                 zz = 1;
                 tmp = heap[1];
 
@@ -253,7 +252,6 @@ public class BZip2CompressorOutputStream extends OutputStream
                 nHeap++;
                 heap[nHeap] = nNodes;
 
-                tmp = 0;
                 zz = nHeap;
                 tmp = heap[zz];
                 final int weight_tmp = weight[tmp];

@@ -326,7 +326,7 @@ public class SerializationTestCase {
                 throw new RuntimeException("Found instance of " + className + "." + " Expected instance of " + oldName
                     + ".");
             }
-            return className == oldName ? newName : className;
+            return className.equals(oldName) ? newName : className;
         }
 
         boolean hasWriteObjectMethod(Class<?> clazz) {

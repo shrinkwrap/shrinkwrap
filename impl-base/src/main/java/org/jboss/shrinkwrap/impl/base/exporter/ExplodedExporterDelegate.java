@@ -107,6 +107,7 @@ public class ExplodedExporterDelegate extends AbstractExporterDelegate<File> {
 
         // Handle directory assets separately
         try {
+            assert node != null;
             final boolean isDirectory = (node.getAsset() == null);
             if (isDirectory) {
                 // If it doesn't already exist

@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.api.asset;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.util.Objects;
 
 /**
  * ClassloaderAsset
@@ -88,7 +89,7 @@ public class ClassLoaderAsset implements Asset {
      */
     @Override
     public InputStream openStream() {
-        return new BufferedInputStream(classLoader.getResourceAsStream(resourceName), 8192);
+        return new BufferedInputStream(Objects.requireNonNull(classLoader.getResourceAsStream(resourceName)), 8192);
     }
 
 }

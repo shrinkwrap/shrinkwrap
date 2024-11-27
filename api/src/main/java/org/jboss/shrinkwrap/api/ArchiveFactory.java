@@ -107,7 +107,7 @@ public final class ArchiveFactory {
         String archiveName = UUID.randomUUID().toString();
 
         // Delegate
-        return create(type, archiveName += extension);
+        return create(type, archiveName + extension);
     }
 
     /**

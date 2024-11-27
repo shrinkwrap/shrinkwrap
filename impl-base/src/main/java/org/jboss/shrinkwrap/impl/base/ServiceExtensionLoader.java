@@ -204,9 +204,6 @@ public class ServiceExtensionLoader implements ExtensionLoader {
      */
     private <T extends Assignable> T createFromLoadExtension(Class<T> extensionClass, Archive<?> archive) {
         ExtensionWrapper extensionWrapper = loadExtensionMapping(extensionClass);
-        if (extensionWrapper == null) {
-            throw new RuntimeException("Failed to load ExtensionMapping");
-        }
 
         Class<T> extensionImplClass = loadExtension(extensionWrapper);
 

@@ -472,6 +472,7 @@ public class TarArchive {
                     }
 
                     if (this.debug) {
+                        assert mime != null;
                         System.err.println("EXTRACT TRANS? '" + asciiTrans + "'  ContentType='" + contentType
                             + "'  PrimaryType='" + mime.getPrimaryType() + "'");
                     }
@@ -565,6 +566,7 @@ public class TarArchive {
             }
 
             if (this.debug) {
+                assert mime != null;
                 System.err.println("CREATE TRANS? '" + asciiTrans + "'  ContentType='" + contentType
                     + "'  PrimaryType='" + mime.getPrimaryType() + "'");
             }
@@ -622,7 +624,7 @@ public class TarArchive {
                         dirEntry.setUnixTarFormat();
                     }
 
-                    this.writeEntry(dirEntry, recurse);
+                    this.writeEntry(dirEntry, true);
                 }
             }
         } else {
@@ -640,7 +642,9 @@ public class TarArchive {
             }
 
             if (tFile != null) {
-                tFile.delete();
+                if (!tFile.delete()) {
+                    throw new IllegalStateException("File not deleted.");
+                }
             }
 
             this.tarOut.closeEntry();

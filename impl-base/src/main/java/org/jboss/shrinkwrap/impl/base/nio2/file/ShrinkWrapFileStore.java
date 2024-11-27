@@ -115,7 +115,7 @@ public class ShrinkWrapFileStore extends FileStore {
 
             try (InputStream in = new BufferedInputStream(asset.openStream(), bufferSize)) {
                 final byte[] buffer = new byte[bufferSize];
-                int read = 0;
+                int read;
                 while ((read = in.read(buffer)) != -1) {
                     // Just count
                     count += read;

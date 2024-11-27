@@ -51,8 +51,10 @@ public class PreserveOrderOfEntriesTestCase {
     @Test
     public void canPreserveOrder() throws Exception {
         File target = new File("target");
+        // this returns false if target exists
         target.mkdirs();
         File testJar = new File(target, "test.jar");
+        // this returns false if testJar in target does not exist
         testJar.delete();
 
         if( testJar.exists() ) {
@@ -93,7 +95,7 @@ public class PreserveOrderOfEntriesTestCase {
         archive2.as(ZipImporter.class).importFrom(testJar);
         Assertions.assertEquals(expectedOrder, getPaths(archive2));
 
-        testJar.delete();
+        Assertions.assertTrue(testJar.delete(), "There is a problem removing testJar.");
     }
 
     private ArrayList<String> getPaths(JavaArchive archive2) {

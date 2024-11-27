@@ -599,7 +599,9 @@ public class FilesTestCase {
 
         try (final BufferedReader reader = Files.newBufferedReader(fs.getPath(path), Charset.defaultCharset())) {
             final CharBuffer buffer = CharBuffer.allocate(contents.length());
-            reader.read(buffer);
+            if (reader.read(buffer) == -1) {
+                throw new IllegalStateException("Nothing to read, buffer is at its end.");
+            }
             buffer.position(0);
             Assertions.assertEquals(contents, buffer.toString(), "Contents not read as expected from the buffered reader");
         }
@@ -676,7 +678,9 @@ public class FilesTestCase {
         this.getArchive().add(new StringAsset(contents), path);
         final byte[] buffer = new byte[contents.length()];
         try (final InputStream in = Files.newInputStream(fs.getPath(path), StandardOpenOption.READ)) {
-            in.read(buffer);
+            if (in.read(buffer) == -1) {
+                throw new IllegalStateException("Nothing to read, buffer is at its end.");
+            }
             final String roundtrip = new String(buffer);
             Assertions.assertEquals(contents, roundtrip, "Contents not read as expected from the instream");
         }

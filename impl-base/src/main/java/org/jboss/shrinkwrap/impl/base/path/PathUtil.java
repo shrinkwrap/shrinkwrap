@@ -84,7 +84,7 @@ public final class PathUtil {
     public static String adjustToRelativeDirectoryContext(final String path) {
         // Return nulls
         if (path == null) {
-            return path;
+            return null;
         }
 
         // Strip absolute form
@@ -108,7 +108,7 @@ public final class PathUtil {
     public static String adjustToAbsoluteDirectoryContext(String path) {
         // Return nulls
         if (path == null) {
-            return path;
+            return null;
         }
 
         // Add prefix slash

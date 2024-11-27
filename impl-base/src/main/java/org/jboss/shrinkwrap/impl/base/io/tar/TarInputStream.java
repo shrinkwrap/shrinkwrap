@@ -227,7 +227,9 @@ public class TarInputStream extends FilterInputStream {
             }
 
             if (numToSkip > 0) {
-                this.skip(numToSkip);
+                if (this.skip(numToSkip) != numToSkip) {
+                    throw new IllegalStateException("The number of actually skipped bytes differs form the number of bytes that should be skipped.");
+                }
             }
 
             this.readBuf = null;

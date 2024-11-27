@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.impl.base.importer;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -82,8 +83,9 @@ public class ExplodedImporterTestCase {
         Archive<?> archive = ShrinkWrap
             .create(ExplodedImporter.class, "test.jar")
             .importDirectory(
-                SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE).toURI()
-                    .getPath()).as(JavaArchive.class);
+                Objects.requireNonNull(SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE))
+                        .toURI().getPath())
+                .as(JavaArchive.class);
         Logger.getLogger(ExplodedImporterTestCase.class.getName()).info(archive.toString(true));
         Assertions.assertTrue(archive.contains(new BasicPath("/Test.properties")), "Root files should be imported");
 
@@ -100,12 +102,14 @@ public class ExplodedImporterTestCase {
     public void shouldThrowExceptionIfImportingAFile() {
         Assertions.assertThrows(IllegalArgumentException.class, () ->
         ShrinkWrap.create(ExplodedImporter.class, "test.jar").importDirectory(
-            SecurityActions.getThreadContextClassLoader().getResource(EXISTING_FILE_RESOURCE).toURI().getPath()));
+            Objects.requireNonNull(SecurityActions.getThreadContextClassLoader().getResource(EXISTING_FILE_RESOURCE))
+                    .toURI().getPath()));
     }
 
     @Test
     public void shouldBeAbleToImportADirectoryWithIncludeFilter() throws Exception {
-        String fileName = SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE).toURI().getPath();
+        String fileName = Objects.requireNonNull(SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE))
+                .toURI().getPath();
 
         Archive<?> archive = ShrinkWrap
             .create(ExplodedImporter.class, "test.jar")
@@ -120,7 +124,8 @@ public class ExplodedImporterTestCase {
 
     @Test
     public void shouldBeAbleToImportADirectoryWithExcludeFilter() throws Exception {
-        String fileName = SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE).toURI().getPath();
+        String fileName = Objects.requireNonNull(SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE))
+                .toURI().getPath();
 
         Archive<?> archive = ShrinkWrap
             .create(ExplodedImporter.class, "test.jar")
@@ -159,7 +164,8 @@ public class ExplodedImporterTestCase {
 
     // SHRINKWRAP-453
     private void shouldImportDirectory(final String subdirectory) throws Exception {
-        String fileName = SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE).toURI().getPath();
+        String fileName = Objects.requireNonNull(SecurityActions.getThreadContextClassLoader().getResource(EXISTING_DIRECTORY_RESOURCE))
+                .toURI().getPath();
         final File importDirectory = new File(fileName, subdirectory);
         if (!importDirectory.exists()) {
             Assertions.assertTrue(importDirectory.mkdir(), "Unable to create test folder: " + importDirectory.getAbsolutePath());

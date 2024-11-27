@@ -75,9 +75,10 @@ public class FileStoreTestCase {
         final String pathToClass = classToAdd.getName().replace('.', ArchivePath.SEPARATOR) + ".class";
         long thisClassFileSize = 0L;
         final byte[] buffer = new byte[8 * 1024];
-        int read = 0;
+        int read;
 
         try (final InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(pathToClass)) {
+            assert in != null;
             while ((read = in.read(buffer)) != -1) {
                 // Just count
                 thisClassFileSize += read;
