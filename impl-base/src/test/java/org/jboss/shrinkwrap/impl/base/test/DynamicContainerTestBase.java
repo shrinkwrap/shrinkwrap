@@ -45,6 +45,7 @@ import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.api.asset.DescriptiveAsset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.container.ClassContainer;
@@ -1953,6 +1954,26 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         archive.delete(ArchivePaths.create(archivePath));
         Assertions.assertFalse(archive.contains(ArchivePaths.create(archivePath)));
         Assertions.assertFalse(archive.contains(ArchivePaths.create(file)));
+    }
+
+    @Test
+    @ArchiveType(JavaArchive.class)
+    public void shouldAddBeansXmlToMetaInf() throws Exception {
+        getArchive().add(new DescriptiveAsset("beans.xml"));
+
+        ArchivePath testPath = new BasicPath(getManifestPath(), "beans.xml");
+        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assert.assertEquals(-1, getArchive().get(testPath).getAsset().openStream().read());
+    }
+
+    @Test
+    @ArchiveType(JavaArchive.class)
+    public void shouldAddFacesConfigToMetaInf() throws Exception {
+        getArchive().add(new DescriptiveAsset("faces-config.xml"));
+
+        ArchivePath testPath = new BasicPath(getManifestPath(), "faces-config.xml");
+        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assert.assertEquals(-1, getArchive().get(testPath).getAsset().openStream().read());
     }
 
     private void assertNotContainsClass(ArchivePath notExpectedPath) {
