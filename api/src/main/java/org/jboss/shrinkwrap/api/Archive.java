@@ -66,7 +66,8 @@ public interface Archive<T extends Archive<T>> extends Assignable {
 
     /**
      * Adds the specified asset under the specified path into the target context
-     *
+     * <p>
+     * If an asset already exists at the specified path, it will be replaced.
      * @param asset
      *            The asset to add
      * @param target
@@ -82,7 +83,8 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     /**
      * Adds the specified asset under the specified target (directory) using the specified name. The resultant path will
      * treat the specified path as a prefix namespace, then append the name.
-     *
+     * <p>
+     * If an asset already exists at the specified path, it will be replaced.
      * @param asset
      *            The asset to add
      * @param target
@@ -100,6 +102,8 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     /**
      * Adds the specified asset under the specified target (directory) using the specified name. The resultant path will
      * treat the specified path as a prefix namespace, then append the name.
+     * <p>
+     * If an asset already exists at the specified path, it will be replaced.
      *
      * @param asset
      *            The asset to add
@@ -118,6 +122,8 @@ public interface Archive<T extends Archive<T>> extends Assignable {
     /**
      * Adds the asset encapsulated within the specified {@link NamedAsset} under the encapsulated name and target
      * (directory)
+     * <p>
+     * If an asset already exists at the specified path, it will be replaced.
      *
      * @param namedAsset
      *            The named asset to add
@@ -131,6 +137,8 @@ public interface Archive<T extends Archive<T>> extends Assignable {
 
     /**
      * Adds the specified asset under the context denoted by the specified target
+     * <p>
+     * If an asset already exists at the specified path, it will be replaced.
      *
      * @param asset
      *            The asset to add
