@@ -19,18 +19,25 @@ package org.jboss.shrinkwrap.impl.base.importer;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.GenericArchive;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.exporter.StreamExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.impl.base.asset.ZipFileEntryAsset;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -52,28 +59,12 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
     private static final ZipContentAssertionDelegate delegate = new ZipContentAssertionDelegate();
 
     // -------------------------------------------------------------------------------------||
-    // Tests -------------------------------------------------------------------------------||
+    // Lifecycle --------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
 
-    /**
-     * Ensures that an import of {@link ZipFile} results in {@link ArchiveImportException} if an unexpected error
-     * occurred.
-     *
-     * @throws Exception
-     */
-    @Test
-    public void shouldThrowExceptionOnErrorInImportFromFile() throws Exception {
-        final ContentAssertionDelegateBase delegate = this.getDelegate();
-        assert delegate != null : "Delegate must be specified by implementations";
-        final File testFile = delegate.getExistingResource();
-
-        try (ZipFile testZip = new ZipFile(testFile) {
-            @Override
-            public Enumeration<? extends ZipEntry> entries() {
-                throw new IllegalStateException("mock exception"); }}) {
-            Assertions.assertThrows(ArchiveImportException.class,
-                    () -> ShrinkWrap.create(ZipImporter.class, "test.jar").importFrom(testZip).as(JavaArchive.class));
-        }
+    @AfterEach
+    public void clearDiskBufferThreshold() {
+        System.clearProperty("shrinkwrap.zipImporter.diskBufferThresholdMb");
     }
 
     // -------------------------------------------------------------------------------------||
@@ -138,6 +129,87 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
     // -------------------------------------------------------------------------------------||
     // Tests -------------------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
+
+    /**
+     * Ensures that an import of {@link ZipFile} results in {@link ArchiveImportException} if an unexpected error
+     * occurred.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void shouldThrowExceptionOnErrorInImportFromFile() throws Exception {
+        final ContentAssertionDelegateBase delegate = this.getDelegate();
+        assert delegate != null : "Delegate must be specified by implementations";
+        final File testFile = delegate.getExistingResource();
+
+        try (ZipFile testZip = new ZipFile(testFile) {
+            @Override
+            public Enumeration<? extends ZipEntry> entries() {
+                throw new IllegalStateException("mock exception"); }}) {
+            Assertions.assertThrows(ArchiveImportException.class,
+                    () -> ShrinkWrap.create(ZipImporter.class, "test.jar").importFrom(testZip).as(JavaArchive.class));
+        }
+    }
+
+    /**
+     * Ensures that importing a stream smaller than the disk buffer threshold
+     * processes the archive in memory and produces correct content.
+     */
+    @Test
+    public void shouldImportStreamInMemoryWhenBelowThreshold() throws Exception {
+        final File testFile = delegate.getExistingResource();
+
+        try (InputStream stream = Files.newInputStream(testFile.toPath())) {
+            final Archive<?> archive = ShrinkWrap.create(ZipImporter.class, "test.jar")
+                    .importFrom(stream).as(JavaArchive.class);
+
+            Assertions.assertNotNull(archive, "Should not return a null archive");
+            delegate.assertContent(archive, testFile);
+
+            int fileEntries = 0;
+            for (Node node : archive.getContent().values()) {
+                final Asset asset = node.getAsset();
+                if (asset == null) {
+                    continue;
+                }
+                fileEntries++;
+                Assertions.assertInstanceOf(ByteArrayAsset.class, asset,
+                        "In-memory path should use ByteArrayAsset but found " + asset.getClass().getSimpleName());
+            }
+            Assertions.assertTrue(fileEntries > 0, "Archive should contain at least one file entry");
+        }
+    }
+
+    /**
+     * Ensures that importing a stream larger than the disk buffer threshold
+     * spills to disk and still produces correct content.
+     */
+    @Test
+    public void shouldImportStreamViaDiskWhenAboveThreshold() throws Exception {
+        System.setProperty("shrinkwrap.zipImporter.diskBufferThresholdMb", "0");
+
+        final File testFile = delegate.getExistingResource();
+
+        try (InputStream stream = Files.newInputStream(testFile.toPath())) {
+            final Archive<?> archive = ShrinkWrap.create(ZipImporter.class, "test.jar")
+                    .importFrom(stream).as(JavaArchive.class);
+
+            Assertions.assertNotNull(archive, "Should not return a null archive");
+            delegate.assertContent(archive, testFile);
+
+            int fileEntries = 0;
+            for (Node node : archive.getContent().values()) {
+                final Asset asset = node.getAsset();
+                if (asset == null) {
+                    continue;
+                }
+                fileEntries++;
+                Assertions.assertInstanceOf(ZipFileEntryAsset.class, asset,
+                        "Disk spill path should use ZipFileEntryAsset but found " + asset.getClass().getSimpleName());
+            }
+            Assertions.assertTrue(fileEntries > 0, "Archive should contain at least one file entry");
+        }
+    }
 
     /**
      * SHRINKWRAP-259
