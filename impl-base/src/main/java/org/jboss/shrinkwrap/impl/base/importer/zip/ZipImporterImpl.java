@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.impl.base.importer.zip;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -46,6 +47,18 @@ import org.jboss.shrinkwrap.impl.base.path.BasicPath;
  * @version $Revision: $
  */
 public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipImporter {
+
+    /**
+     * System property to override the default disk buffer threshold (in MB).
+     */
+    private static final String DISK_BUFFER_THRESHOLD_PROPERTY = "shrinkwrap.zipImporter.diskBufferThresholdMb";
+
+    /**
+     * Archives smaller than this threshold are kept in memory for performance.
+     * Larger archives are buffered to a temporary file to avoid OutOfMemoryErrors.
+     * Defaults to 100 MB, configurable via the {@value #DISK_BUFFER_THRESHOLD_PROPERTY} system property.
+     */
+    private static final int DISK_BUFFER_THRESHOLD = Integer.getInteger(DISK_BUFFER_THRESHOLD_PROPERTY, 100) * 1024 * 1024;
 
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||
@@ -104,15 +117,39 @@ public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipIm
         Validate.notNull(filter, "Filter must be specified");
 
         try {
-            // Wrap in ZipInputStream if we haven't been given one
-            final ZipInputStream zipStream = new ZipInputStream(stream);
+            // Buffer the stream into memory, tracking total size
+            final ByteArrayOutputStream memoryBuffer = new ByteArrayOutputStream(8192);
+            final byte[] buf = new byte[4096];
+            int bytesRead;
+            int totalRead = 0;
+
+            while ((bytesRead = stream.read(buf)) != -1) {
+                memoryBuffer.write(buf, 0, bytesRead);
+                totalRead += bytesRead;
+
+                if (totalRead > DISK_BUFFER_THRESHOLD) {
+                    // Threshold exceeded, spill to disk
+                    final File tempFile = File.createTempFile("shrinkwrap-buffer", ".tmp");
+                    tempFile.deleteOnExit();
+
+                    try (FileOutputStream fileOutput = new FileOutputStream(tempFile)) {
+                        memoryBuffer.writeTo(fileOutput);
+                        IOUtil.copy(stream, fileOutput);
+                    }
+
+                    return importFrom(tempFile, filter);
+                }
+            }
+
+            // Small archive, process directly from memory using ZipInputStream
+            final ZipInputStream zipStream = new ZipInputStream(new java.io.ByteArrayInputStream(memoryBuffer.toByteArray()));
 
             ZipEntry entry;
             while ((entry = zipStream.getNextEntry()) != null) {
                 // Get the name
                 final String entryName = entry.getName();
 
-                if(!filter.include(ArchivePaths.create(entryName))) {
+                if (!filter.include(ArchivePaths.create(entryName))) {
                     zipStream.closeEntry();
                     continue;
                 }
@@ -131,10 +168,11 @@ public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipIm
                 archive.add(new ByteArrayAsset(output.toByteArray()), entryName);
                 zipStream.closeEntry();
             }
+            return this;
+
         } catch (IOException e) {
             throw new ArchiveImportException("Could not import stream", e);
         }
-        return this;
     }
 
     /**
