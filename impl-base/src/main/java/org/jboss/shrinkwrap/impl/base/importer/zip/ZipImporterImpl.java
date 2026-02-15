@@ -16,8 +16,8 @@
  */
 package org.jboss.shrinkwrap.impl.base.importer.zip;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -30,7 +30,6 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
-import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
@@ -104,37 +103,19 @@ public class ZipImporterImpl extends AssignableBase<Archive<?>> implements ZipIm
         Validate.notNull(filter, "Filter must be specified");
 
         try {
-            // Wrap in ZipInputStream if we haven't been given one
-            final ZipInputStream zipStream = new ZipInputStream(stream);
+            // Create a temporary file to act as the buffer
+            final File tempFile = File.createTempFile("shrinkwrap-buffer", ".tmp");
+            tempFile.deleteOnExit();
 
-            ZipEntry entry;
-            while ((entry = zipStream.getNextEntry()) != null) {
-                // Get the name
-                final String entryName = entry.getName();
-
-                if(!filter.include(ArchivePaths.create(entryName))) {
-                    zipStream.closeEntry();
-                    continue;
-                }
-
-                // Get the archive
-                final Archive<?> archive = this.getArchive();
-
-                // Handle directories separately
-                if (entry.isDirectory()) {
-                    archive.addAsDirectory(entryName);
-                    continue;
-                }
-
-                final ByteArrayOutputStream output = new ByteArrayOutputStream(8192);
-                IOUtil.copy(zipStream, output);
-                archive.add(new ByteArrayAsset(output.toByteArray()), entryName);
-                zipStream.closeEntry();
+            try (FileOutputStream output = new FileOutputStream(tempFile)) {
+                IOUtil.copy(stream, output);
             }
+
+            return importFrom(tempFile, filter);
+
         } catch (IOException e) {
             throw new ArchiveImportException("Could not import stream", e);
         }
-        return this;
     }
 
     /**
