@@ -17,8 +17,12 @@
 package org.jboss.shrinkwrap.impl.base.unit;
 
 import org.jboss.shrinkwrap.api.ArchiveFormat;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
+import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.test.ArchiveTestBase;
 import org.jboss.shrinkwrap.spi.MemoryMapArchive;
 import org.junit.jupiter.api.Assertions;
@@ -87,6 +91,37 @@ public class MemoryMapArchiveTestCase extends ArchiveTestBase<MemoryMapArchive> 
     @Test
     public void testConstructorRequiresExtensionLoader() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> new MemoryMapArchiveImpl("test.jar", null));
+    }
+
+    /**
+     * Ensures that overwriting an asset updates both the content Map and the
+     * parent Node's children Tree.
+     */
+    @Test
+    public void testOverwriteUpdatesTreeStructure() {
+        ArchivePath path = new BasicPath("test.txt");
+        Asset asset1 = new org.jboss.shrinkwrap.api.asset.StringAsset("version1");
+        Asset asset2 = new org.jboss.shrinkwrap.api.asset.StringAsset("version2");
+
+        archive.add(asset1, path);
+
+        Node nodeFromMap = archive.get(path);
+        Node nodeFromTree = archive.get(new BasicPath("/")).getChildren().iterator().next();
+
+        Assertions.assertEquals(asset1, nodeFromMap.getAsset(), "Map should have version 1");
+        Assertions.assertEquals(asset1, nodeFromTree.getAsset(), "Tree should have version 1");
+
+        // Overwrite asset
+        archive.add(asset2, path);
+
+        // 3. Verify consistency
+        Node nodeFromMapAfter = archive.get(path);
+        Assertions.assertEquals(asset2, nodeFromMapAfter.getAsset(), "Map should have version 2");
+
+        Node nodeFromTreeAfter = archive.get(new BasicPath("/")).getChildren().iterator().next();
+        Assertions.assertEquals(asset2, nodeFromTreeAfter.getAsset(), "Tree should have version 2");
+
+        Assertions.assertSame(nodeFromMapAfter, nodeFromTreeAfter, "Map and Tree should point to the same Node instance");
     }
 
     @Override

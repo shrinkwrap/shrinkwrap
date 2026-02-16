@@ -217,6 +217,8 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
         // Add the new node to the parent as a child
         final NodeImpl parentNode = obtainParent(path.getParent());
         if (parentNode != null) {
+            parentNode.removeChild(newNode);
+
             parentNode.addChild(newNode);
         }
     }
