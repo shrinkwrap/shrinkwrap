@@ -224,7 +224,7 @@ JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "myFilteredArchive.ja
 
 ### Contributing
 
-If you have suggestions for improvements or would like to contribute to ShrinkWrap, please visit our [issue tracker](https://issues.redhat.com/projects/SHRINKWRAP/issues) for the SHRINKWRAP project.
+If you have suggestions for improvements or would like to contribute to ShrinkWrap, please visit our [issue tracker](https://github.com/shrinkwrap/shrinkwrap/issues) for the SHRINKWRAP project.
 
 
 
