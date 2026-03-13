@@ -222,6 +222,10 @@ JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "myFilteredArchive.ja
     .filter(Filters.exclude(".*\\.log"));  // Exclude all .log files
 ```
 
+### Configuration
+
+When importing large ZIP archives from streams, ShrinkWrap buffers the content to a temporary file to avoid `OutOfMemoryError`. The threshold defaults to 100 MB and can be adjusted via `-Dshrinkwrap.zipImporter.diskBufferThresholdMb=<value>`.
+
 ### Contributing
 
 If you have suggestions for improvements or would like to contribute to ShrinkWrap, please visit our [issue tracker](https://github.com/shrinkwrap/shrinkwrap/issues) for the SHRINKWRAP project.
