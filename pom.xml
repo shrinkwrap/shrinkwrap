@@ -42,7 +42,8 @@
     <version.org.apache.maven.plugins.maven-checkstyle-plugin>3.6.0</version.org.apache.maven.plugins.maven-checkstyle-plugin>
 
     <!-- Versions of test dependencies -->
-    <version.org.junit-jupiter>5.11.3</version.org.junit-jupiter>
+    <version.org.junit-jupiter>5.14.4</version.org.junit-jupiter>
+    <version.maven-surefire-plugin>3.5.5</version.maven-surefire-plugin>
   </properties>
   
   <!-- SCM -->
@@ -134,6 +135,7 @@
       <!-- Surefire -->
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>${version.maven-surefire-plugin}</version>
         <configuration>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <trimStackTrace>false</trimStackTrace>
@@ -142,7 +144,6 @@
             <include>**/*TestCase.java</include>
             <include>**/*TestSuite.java</include>
           </includes>
-          <forkMode>always</forkMode>
         </configuration>
       </plugin>
 
