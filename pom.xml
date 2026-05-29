@@ -44,6 +44,10 @@
     <!-- Versions of test dependencies -->
     <version.org.junit-jupiter>5.14.4</version.org.junit-jupiter>
     <version.maven-surefire-plugin>3.5.6</version.maven-surefire-plugin>
+
+    <!-- Repository URLs -->
+    <jboss.releases.repo.url>https://repository.jboss.org/nexus/repository/shrinkwrap-staging/</jboss.releases.repo.url>
+    <jboss.snapshots.repo.url>https://repository.jboss.org/nexus/repository/snapshots/</jboss.snapshots.repo.url>
   </properties>
   
   <!-- SCM -->
