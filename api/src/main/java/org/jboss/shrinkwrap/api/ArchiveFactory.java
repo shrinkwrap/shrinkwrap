@@ -24,6 +24,7 @@ import java.util.zip.ZipFile;
 
 import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
+import org.jboss.shrinkwrap.api.internal.ClassLoaderSearchUtil;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 /**

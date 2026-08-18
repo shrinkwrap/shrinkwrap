@@ -21,6 +21,8 @@ import java.util.regex.Pattern;
 
 import javax.annotation.processing.Filer;
 
+import org.jboss.shrinkwrap.api.internal.ClassLoaderSearchUtil;
+
 /**
  * Factory class for the creation of new {@link Filter} instances. Filter instances using this shorthand class will be
  * created using the {@link ClassLoader} associated with the default {@link Domain}'s {@link Configuration}.

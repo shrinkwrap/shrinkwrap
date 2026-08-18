@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api;
+package org.jboss.shrinkwrap.api.internal;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,12 +22,11 @@ import java.util.logging.Logger;
 /**
  * Utilities to search a series of {@link ClassLoader}s for a {@link Class} by name.
  * <p>
- * Not to be granted visibility outside of this package, unless scoped out to internals (this is not part of the public
- * user API)
+ * This is an internal class not part of the public ShrinkWrap API.
  *
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
  */
-class ClassLoaderSearchUtil {
+public class ClassLoaderSearchUtil {
     // -------------------------------------------------------------------------------------||
     // Class Members ----------------------------------------------------------------------||
     // -------------------------------------------------------------------------------------||
@@ -63,7 +62,7 @@ class ClassLoaderSearchUtil {
      * @throws ClassNotFoundException
      *             If the {@link Class} could not be found in any of the specified CLs
      */
-    static Class<?> findClassFromClassLoaders(final String className, final Iterable<ClassLoader> classLoaders)
+    public static Class<?> findClassFromClassLoaders(final String className, final Iterable<ClassLoader> classLoaders)
         throws ClassNotFoundException, IllegalArgumentException {
         // Precondition checks
         assert className != null && !className.isEmpty() : "Class Name must be specified";

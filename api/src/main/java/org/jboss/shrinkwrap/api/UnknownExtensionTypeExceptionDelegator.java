@@ -23,7 +23,9 @@ package org.jboss.shrinkwrap.api;
  *
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
+ * @deprecated Internal ShrinkWrap utility retained only for backward compatibility; scheduled for removal. Do not use.
  */
+@Deprecated(since = "2.0.0", forRemoval = true)
 public class UnknownExtensionTypeExceptionDelegator {
     /**
      *

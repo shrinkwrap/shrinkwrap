@@ -23,6 +23,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jboss.shrinkwrap.api.internal.ClassLoaderSearchUtil;
+
 /**
  * Mutable construction object for new instances of {@link Configuration}. Provides defaults for each property if not
  * specified (null) according to the following:

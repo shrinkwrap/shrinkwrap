@@ -41,8 +41,10 @@ public class UnknownExtensionTypeException extends RuntimeException {
 
     /**
      * Creates a new instance with message indicating the missing type
+     *
+     * @param type The type for which no extension mapping was found
      */
-    private <T extends Assignable> UnknownExtensionTypeException(final Class<T> type) {
+    public <T extends Assignable> UnknownExtensionTypeException(final Class<T> type) {
         super("The current configuration has no mapping for type " + type.getCanonicalName()
             + ", unable to determine extension. You should provide extension in the services descriptor file");
     }

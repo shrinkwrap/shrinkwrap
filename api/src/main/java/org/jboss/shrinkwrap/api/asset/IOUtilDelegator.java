@@ -18,6 +18,8 @@ package org.jboss.shrinkwrap.api.asset;
 
 import java.io.InputStream;
 
+import org.jboss.shrinkwrap.api.internal.ByteArrayIOUtil;
+
 /**
  * IOUtilDelegator
  * <p>
@@ -25,7 +27,9 @@ import java.io.InputStream;
  *
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
+ * @deprecated Internal ShrinkWrap utility retained only for backward compatibility; scheduled for removal. Do not use.
  */
+@Deprecated(since = "2.0.0", forRemoval = true)
 public class IOUtilDelegator {
     /**
      * Delegates to {@link ByteArrayIOUtil#asByteArray(java.io.InputStream)}

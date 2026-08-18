@@ -16,16 +16,17 @@
  */
 package org.jboss.shrinkwrap.api.asset;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+
+import org.jboss.shrinkwrap.api.internal.ByteArrayIOUtil;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * ByteArrayIOUtilTest
  * <p/>
- * Test Cases for the {@link org.jboss.shrinkwrap.api.asset.ByteArrayIOUtil}
+ * Test Cases for the {@link ByteArrayIOUtil}
  *
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
