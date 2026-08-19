@@ -88,6 +88,16 @@
         </configuration>
       </plugin>
 
+      <!-- Surefire - open test packages for JUnit reflection -->
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>
+            --add-opens org.jboss.shrinkwrap.impl.base/org.jboss.shrinkwrap.impl.base.test=ALL-UNNAMED
+          </argLine>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 
