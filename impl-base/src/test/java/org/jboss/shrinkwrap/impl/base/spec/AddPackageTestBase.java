@@ -21,8 +21,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
-import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
@@ -48,6 +48,8 @@ public abstract class AddPackageTestBase {
 
     private File tempFile;
 
+    private URLClassLoader archiveCl;
+
     @BeforeEach
     public void setUp() throws IOException {
 
@@ -57,7 +59,7 @@ public abstract class AddPackageTestBase {
         archive.as(ZipExporter.class).exportTo(tempFile, true);
         URL archiveUrl = tempFile.toURI().toURL();
 
-        URLClassLoader archiveCl = buildArchiveClassLoader(archiveUrl);
+        archiveCl = buildArchiveClassLoader(archiveUrl);
 
         ClassLoader shrinkwrapCl = new FilteringClassLoader(this.getClass().getClassLoader());
 
@@ -76,9 +78,10 @@ public abstract class AddPackageTestBase {
     }
 
     @AfterEach
-    public void tearDown() {
-        // URLClassLoader.close() requires JDK7+
-
+    public void tearDown() throws IOException {
+        if (archiveCl != null) {
+            archiveCl.close();
+        }
         if (tempFile.isFile() && !tempFile.delete()) {
             LOG.warning("Potential file leak: Could not delete " + tempFile);
         }
@@ -92,19 +95,6 @@ public abstract class AddPackageTestBase {
      * @author Falko Modler
      */
     private static class FilteringClassLoader extends ClassLoader {
-
-        private static final Enumeration<URL> EMPTY_ENUMERATION = new Enumeration<URL>() {
-
-            @Override
-            public URL nextElement() {
-                throw new NoSuchElementException();
-            }
-
-            @Override
-            public boolean hasMoreElements() {
-                return false;
-            }
-        };
 
         public FilteringClassLoader(final ClassLoader parent) {
             super(parent);
@@ -121,8 +111,7 @@ public abstract class AddPackageTestBase {
         @Override
         public Enumeration<URL> getResources(final String name) throws IOException {
             if (name.contains("donotchange")) {
-                // Collections.emptyEnumeration() requires JDK7+
-                return EMPTY_ENUMERATION;
+                return Collections.emptyEnumeration();
             }
             return super.getResources(name);
         }

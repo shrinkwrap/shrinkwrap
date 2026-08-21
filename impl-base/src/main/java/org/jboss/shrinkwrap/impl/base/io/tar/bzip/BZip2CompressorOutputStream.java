@@ -472,16 +472,6 @@ public class BZip2CompressorOutputStream extends OutputStream
         }
     }
 
-    /**
-     * Overridden to close the stream.
-     */
-    @Override
-    protected void finalize() throws Throwable {
-        finish();
-        super.finalize();
-    }
-
-
     public void finish() throws IOException {
         if (out != null) {
             try {
