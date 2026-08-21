@@ -35,9 +35,9 @@ This project uses GitHub Issues to manage issues. All issues can be found [here]
 ## Setting up your Developer Environment
 You will need:
 
-* JDK 8
+* JDK 11 or later
 * Git
-* Maven 3.3.9 or later
+* Maven 3.6.3 or later
 * An [IDE](https://en.wikipedia.org/wiki/Comparison_of_integrated_development_environments#Java)
 (e.g., [IntelliJ IDEA](https://www.jetbrains.com/idea/download/), [Eclipse](https://www.eclipse.org/downloads/), etc.)
 
