@@ -263,6 +263,7 @@
     <module>depchain</module>
     <module>dist</module>
     <module>impl-base</module>
+    <module>jpms-tests</module>
     <module>spi</module>
   </modules>
   

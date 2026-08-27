@@ -17,6 +17,10 @@
   <moduleSets>
     <moduleSet>
       <useAllReactorProjects>true</useAllReactorProjects>
+      <!-- Test-only module, not part of the distribution -->
+      <excludes>
+        <exclude>org.jboss.shrinkwrap:shrinkwrap-jpms-tests</exclude>
+      </excludes>
       <sources>
         <fileSets>
           <fileSet>
