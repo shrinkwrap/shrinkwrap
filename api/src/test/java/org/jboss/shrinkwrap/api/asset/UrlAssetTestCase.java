@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -112,19 +113,11 @@ public class UrlAssetTestCase {
      * Handles exceptions related to inaccessible fields.
      */
     private void handleInaccessibleFieldException(Exception e) throws Exception {
-        if (isInaccessibleObjectException(e) || e instanceof IllegalAccessException) {
+        if (e instanceof InaccessibleObjectException || e instanceof IllegalAccessException) {
             throw new UnsupportedOperationForThisJREException(e);
         } else {
             throw e;
         }
-    }
-
-    /**
-     * Helper method to check for InaccessibleObjectException by class name.
-     * This avoids compilation issues on Java 8.
-     */
-    private boolean isInaccessibleObjectException(Exception e) {
-        return e.getClass().getName().equals("java.lang.reflect.InaccessibleObjectException");
     }
 
     /**

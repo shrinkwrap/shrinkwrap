@@ -5,8 +5,8 @@ This is especially useful for integration testing, where you need to deploy spec
 
 ## Requirements
 
-- **JDK**: Version 8 or newer.
-- **Maven**: Version 3.2.5 or newer.
+- **JDK**: Version 11 or newer.
+- **Maven**: Version 3.6.3 or newer.
 
 ## Using Shrinkwrap
 

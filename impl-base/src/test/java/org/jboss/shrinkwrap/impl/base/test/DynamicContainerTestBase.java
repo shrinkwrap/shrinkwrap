@@ -1052,11 +1052,10 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
      */
     @Test
     public void testAddNonExistentPackage() {
-        final String packageName = "non.existent.package";
         JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
 
         // Here the exception should be thrown
-        Assertions.assertThrows(IllegalArgumentException.class, () -> archive.addPackages(true, Package.getPackage(packageName)));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> archive.addPackages(true, (Package) null));
     }
 
     /**

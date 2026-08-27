@@ -33,7 +33,7 @@ public interface ArchivePath extends Comparable<ArchivePath> {
     /**
      * Separator character as a {@link String}
      */
-    String SEPARATOR_STRING = new Character(SEPARATOR).toString();
+    String SEPARATOR_STRING = String.valueOf(SEPARATOR);
 
     /**
      * Obtains the context which this {@link ArchivePath} represents
