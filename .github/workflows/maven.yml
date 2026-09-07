@@ -22,6 +22,10 @@ concurrency:
   group: '${{ github.workflow }} @ ${{ github.head_ref || github.ref }}'
   cancel-in-progress: true
 
+env:
+  # by default, `MAVEN_ARGS` is used in maven 3.9.0+ for all of its mvn commands
+  MAVEN_ARGS: '--batch-mode --show-version --errors --no-transfer-progress'
+
 jobs:
   build-and-test:
     name: JDK ${{matrix.java-version}} on ${{ matrix.os }}
