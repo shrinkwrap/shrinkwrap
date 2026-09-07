@@ -18,6 +18,10 @@ on:
       - 'LICENSE'
       - 'NOTICE.txt'
 
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
 jobs:
   build-and-test:
     name: JDK ${{matrix.java-version}} on ${{ matrix.os }}
