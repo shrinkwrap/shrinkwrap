@@ -3,8 +3,20 @@ name: Shrinkwrap build and tests
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+      - '.gitattributes'
+      - 'LICENSE'
+      - 'NOTICE.txt'
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+      - '.gitattributes'
+      - 'LICENSE'
+      - 'NOTICE.txt'
 
 jobs:
   build-and-test:
