@@ -32,10 +32,10 @@ jobs:
         os: [ ubuntu-latest, windows-latest ]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         name: Checkout
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         name: Set up JDK ${{ matrix.java-version }} - ${{ matrix.os }}
         with:
           distribution: temurin
