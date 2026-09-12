@@ -18,6 +18,7 @@ package org.jboss.shrinkwrap.impl.base.test;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.asset.DescriptiveAsset;
 import org.jboss.shrinkwrap.api.container.ResourceAdapterContainer;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
@@ -74,4 +75,15 @@ public abstract class DynamicResourceAdapterContainerTestBase<T extends Archive<
         ArchivePath testPath = new BasicPath(getResourceAdapterPath(), "ra.xml");
         Assertions.assertTrue(getArchive().contains(testPath), "Archive should contain " + testPath);
     }
+
+    @Test
+    @ArchiveType(ResourceAdapterContainer.class)
+    public void testAddBeansXmlDescriptiveAsset() throws Exception {
+        getArchive().add(new DescriptiveAsset("beans.xml"));
+
+        ArchivePath testPath = new BasicPath(getResourceAdapterPath(), "beans.xml");
+        Assert.assertTrue("Archive should contain " + testPath, getArchive().contains(testPath));
+        Assert.assertEquals(-1, getArchive().get(testPath).getAsset().openStream().read());
+    }
+
 }
