@@ -52,6 +52,8 @@ public class URLPackageScanner {
 
     private static final String SUFFIX_CLASS = ".class";
 
+    private static final String MODULE_INFO_CLASS = "module-info" + SUFFIX_CLASS;
+
     private static final String WEB_INF_CLASSES_DIR = "WEB-INF/classes/";
 
     private final String packageName;
@@ -126,6 +128,7 @@ public class URLPackageScanner {
                 ZipEntry entry = entries.nextElement();
                 String name = entry.getName();
                 if (name.startsWith(prefix + packageNamePath) && name.endsWith(SUFFIX_CLASS)
+                        && !name.endsWith(MODULE_INFO_CLASS)
                         && (addRecursively || !name.substring((prefix + packageNamePath).length() + 1).contains("/"))) {
                     String className = name.replace("/", ".").substring(prefix.length(), name.length() - SUFFIX_CLASS.length());
                     foundClass(className, name);
@@ -150,7 +153,8 @@ public class URLPackageScanner {
 
     private void handle(File file, String packageName) {
         for (File child : Objects.requireNonNull(file.listFiles())) {
-            if (!child.isDirectory() && child.getName().endsWith(SUFFIX_CLASS)) {
+            if (!child.isDirectory() && child.getName().endsWith(SUFFIX_CLASS)
+                    && !child.getName().equals(MODULE_INFO_CLASS)) {
                 final String packagePrefix = !packageName.isEmpty() ? packageName + "." : packageName;
                 String className = packagePrefix + child.getName().substring(0, child.getName().lastIndexOf(SUFFIX_CLASS));
                 foundClass(className, prefix + className.replace('.', '/') + SUFFIX_CLASS);
