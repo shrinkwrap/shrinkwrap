@@ -7,7 +7,6 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /*
@@ -93,11 +92,7 @@ public class DefaultPackageAddTestCase {
      * Makes sure classes in the default package, and only in the default package, are added.
      * <p>
      * SHRINKWRAP-233, SHRINKWRAP-302
-     *
-     * DISABLED (SHRINKWRAP-543) - After replacing JUnit 4 with JUnit 5 the test is failing - size of archive should
-     * be 3 but is 4 (module-info.class was added)
      */
-    @Disabled
     @Test
     public void testAddDefaultPackage() {
         JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
