@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jboss.shrinkwrap.api.internal.ByteArrayIOUtil;
+
 /**
  * Implementation of an {@link Asset} backed by a byte array
  *

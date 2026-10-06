@@ -35,7 +35,7 @@ import org.jboss.shrinkwrap.api.ArchiveFactory;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.ClassLoaderSearchUtilDelegator;
+import org.jboss.shrinkwrap.api.internal.ClassLoaderSearchUtil;
 import org.jboss.shrinkwrap.api.Configuration;
 import org.jboss.shrinkwrap.api.Domain;
 import org.jboss.shrinkwrap.api.Filter;
@@ -1314,7 +1314,7 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         // Find the class in the configured CLs
         final Class<?> classToAdd;
         try {
-            classToAdd = ClassLoaderSearchUtilDelegator.findClassFromClassLoaders(fullyQualifiedClassName, cls);
+            classToAdd = ClassLoaderSearchUtil.findClassFromClassLoaders(fullyQualifiedClassName, cls);
         } catch (final ClassNotFoundException cnfe) {
             throw new IllegalArgumentException("Could not find the requested Class " + fullyQualifiedClassName
                 + " in any of the configured ClassLoaders for this archive", cnfe);

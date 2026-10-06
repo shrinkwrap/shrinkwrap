@@ -26,7 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jboss.shrinkwrap.api.asset.IOUtilDelegator;
+import org.jboss.shrinkwrap.api.internal.ByteArrayIOUtil;
 import org.jboss.shrinkwrap.impl.base.Validate;
 
 /**
@@ -78,7 +78,7 @@ public final class IOUtil {
      * @return the byte[] for the given InputStream
      */
     public static byte[] asByteArray(final InputStream in) throws IllegalArgumentException {
-        return IOUtilDelegator.asByteArray(in);
+        return ByteArrayIOUtil.asByteArray(in);
     }
 
     /**

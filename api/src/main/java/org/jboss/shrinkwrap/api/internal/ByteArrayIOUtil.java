@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.shrinkwrap.api.asset;
+package org.jboss.shrinkwrap.api.internal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,12 +23,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Package private class that helps get byte array from {@link InputStream}. Needed by the common assets in api.
+ * Utility class that helps get byte array from {@link InputStream}.
+ * <p>
+ * This is an internal class not part of the public ShrinkWrap API.
  *
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
-class ByteArrayIOUtil {
+public class ByteArrayIOUtil {
 
     private static final Logger log = Logger.getLogger(ByteArrayIOUtil.class.getName());
 
@@ -41,7 +43,7 @@ class ByteArrayIOUtil {
      *             If the stream was not specified
      * @return the byte[] for the given InputStream
      */
-    static byte[] asByteArray(final InputStream in) throws IllegalArgumentException {
+    public static byte[] asByteArray(final InputStream in) throws IllegalArgumentException {
         // Precondition check
         if (in == null) {
             throw new IllegalArgumentException("stream must be specified");

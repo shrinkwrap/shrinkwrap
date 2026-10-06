@@ -228,6 +228,7 @@
           <failsOnError>true</failsOnError>
           <linkXRef>false</linkXRef>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          <excludes>**/module-info.java</excludes>
         </configuration>
       </plugin>
 
@@ -262,6 +263,7 @@
     <module>depchain</module>
     <module>dist</module>
     <module>impl-base</module>
+    <module>jpms-tests</module>
     <module>spi</module>
   </modules>
   

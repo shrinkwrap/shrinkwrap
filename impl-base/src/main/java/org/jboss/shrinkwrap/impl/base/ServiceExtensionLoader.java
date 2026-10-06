@@ -28,11 +28,10 @@ import java.util.Properties;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
 import org.jboss.shrinkwrap.api.Assignable;
-import org.jboss.shrinkwrap.api.ClassLoaderSearchUtilDelegator;
 import org.jboss.shrinkwrap.api.ConfigurationBuilder;
 import org.jboss.shrinkwrap.api.ExtensionLoader;
 import org.jboss.shrinkwrap.api.UnknownExtensionTypeException;
-import org.jboss.shrinkwrap.api.UnknownExtensionTypeExceptionDelegator;
+import org.jboss.shrinkwrap.api.internal.ClassLoaderSearchUtil;
 
 /**
  * ServiceExtensionLoader
@@ -152,7 +151,7 @@ public class ServiceExtensionLoader implements ExtensionLoader {
         }
         extensionWrapper = extensionMappings.get(type);
         if (extensionWrapper == null) {
-            throw UnknownExtensionTypeExceptionDelegator.newExceptionInstance(type);
+            throw new UnknownExtensionTypeException(type);
         }
         return extensionWrapper.getProperty("extension");
     }
@@ -169,7 +168,7 @@ public class ServiceExtensionLoader implements ExtensionLoader {
         }
         extensionWrapper = extensionMappings.get(type);
         if (extensionWrapper == null) {
-            throw UnknownExtensionTypeExceptionDelegator.newExceptionInstance(type);
+            throw new UnknownExtensionTypeException(type);
         }
         String archiveFormat = extensionWrapper.getProperty("archiveFormat");
         return ArchiveFormat.valueOf(archiveFormat);
@@ -256,7 +255,7 @@ public class ServiceExtensionLoader implements ExtensionLoader {
      * @return An {@link InputStream} representing <code>extensionClass</code>'s configuration file
      * @throws RuntimeException
      *         if it doesn't find a provider-configuration file for <code>extensionClass</code>
-     * @throws UnknownExtensionTypeExceptionDelegator
+     * @throws UnknownExtensionTypeException if no extension found
      */
     private <T extends Assignable> InputStream findExtensionImpl(final Class<T> extensionClass) {
         try {
@@ -272,7 +271,7 @@ public class ServiceExtensionLoader implements ExtensionLoader {
             throw new RuntimeException("No extension implementation found for " + extensionClass.getName()
                 + ", please verify classpath or add a extensionOverride");
         } catch (Exception e) {
-            throw UnknownExtensionTypeExceptionDelegator.newExceptionInstance(extensionClass);
+            throw new UnknownExtensionTypeException(extensionClass);
         }
     }
 
@@ -312,7 +311,7 @@ public class ServiceExtensionLoader implements ExtensionLoader {
 
     /**
      * Delegates class loading of <code>extensionClassName</code> to
-     * {@link ClassLoaderSearchUtilDelegator#findClassFromClassLoaders(String, Iterable)} passing the
+     * {@link ClassLoaderSearchUtil#findClassFromClassLoaders(String, Iterable)} passing the
      * <code>extensionClassName</code> and the instance's <code>classLoaders</code>.
      *
      * @param <T>
@@ -325,7 +324,7 @@ public class ServiceExtensionLoader implements ExtensionLoader {
     @SuppressWarnings("unchecked")
     private <T extends Assignable> Class<T> loadExtensionClass(String extensionClassName) {
         try {
-            return (Class<T>) ClassLoaderSearchUtilDelegator.findClassFromClassLoaders(extensionClassName,
+            return (Class<T>) ClassLoaderSearchUtil.findClassFromClassLoaders(extensionClassName,
                 getClassLoaders());
         } catch (final ClassNotFoundException e) {
             throw new RuntimeException("Could not load class " + extensionClassName, e);

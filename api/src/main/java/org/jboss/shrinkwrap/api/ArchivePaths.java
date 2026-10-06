@@ -19,6 +19,8 @@ package org.jboss.shrinkwrap.api;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.jboss.shrinkwrap.api.internal.ClassLoaderSearchUtil;
+
 /**
  * A Factory for {@link ArchivePath} creation. Instances using this shorthand class will be created using the
  * {@link ClassLoader} associated with the default {@link Domain}'s {@link Configuration}.

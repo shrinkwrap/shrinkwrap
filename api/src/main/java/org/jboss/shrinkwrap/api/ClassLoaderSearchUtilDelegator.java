@@ -16,12 +16,16 @@
  */
 package org.jboss.shrinkwrap.api;
 
+import org.jboss.shrinkwrap.api.internal.ClassLoaderSearchUtil;
+
 /**
  * Widens visibility such that any package within ShrinkWrap impl-base may access the utilities provided by
  * {@link ClassLoaderSearchUtil}
  *
  * @author <a href="mailto:alr@jboss.org">Andrew Lee Rubinger</a>
+ * @deprecated Internal ShrinkWrap utility retained only for backward compatibility; scheduled for removal. Do not use.
  */
+@Deprecated(since = "2.0.0", forRemoval = true)
 public class ClassLoaderSearchUtilDelegator {
     // -------------------------------------------------------------------------------------||
     // Constructor ------------------------------------------------------------------------||
