@@ -24,6 +24,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
@@ -48,6 +50,15 @@ import org.jboss.shrinkwrap.api.internal.ClassLoaderSearchUtil;
  * @version $Revision: $
  */
 public class ServiceExtensionLoader implements ExtensionLoader {
+
+    // -------------------------------------------------------------------------------------||
+    // Class Members ----------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+
+    private static final Logger log = Logger.getLogger(ServiceExtensionLoader.class.getName());
+
+    private static final String DESCRIPTOR_PATH = "META-INF/shrinkwrap/";
+    private static final String LEGACY_DESCRIPTOR_PATH = "META-INF/services/";
 
     // -------------------------------------------------------------------------------------||
     // Instance Members -------------------------------------------------------------------||
@@ -245,8 +256,8 @@ public class ServiceExtensionLoader implements ExtensionLoader {
     }
 
     /**
-     * Iterates through the classloaders to load the provider-configuration file for <code>extensionClass</code> in
-     * META-INF/services/ using its binary name.
+     * Iterates through the classloaders to load the provider-configuration file for <code>extensionClass</code>.
+     * First checks META-INF/shrinkwrap/, then falls back to META-INF/services/ for backwards compatibility.
      *
      * @param <T>
      *         The type of the extension class that extends {@link Assignable}.
@@ -259,10 +270,24 @@ public class ServiceExtensionLoader implements ExtensionLoader {
      */
     private <T extends Assignable> InputStream findExtensionImpl(final Class<T> extensionClass) {
         try {
-            // Add all extension impls found in all CLs
+            // Try new path first (META-INF/shrinkwrap/)
             for (final ClassLoader cl : this.getClassLoaders()) {
-                final InputStream stream = cl.getResourceAsStream("META-INF/services/" + extensionClass.getName());
+                final InputStream stream = cl.getResourceAsStream(DESCRIPTOR_PATH + extensionClass.getName());
                 if (stream != null) {
+                    return stream;
+                }
+            }
+
+            // Fall back to legacy path (META-INF/services/) for backwards compatibility
+            for (final ClassLoader cl : this.getClassLoaders()) {
+                final InputStream stream = cl.getResourceAsStream(LEGACY_DESCRIPTOR_PATH + extensionClass.getName());
+                if (stream != null) {
+                    if (log.isLoggable(Level.WARNING)) {
+                        log.warning("Extension descriptor for " + extensionClass.getName()
+                            + " found in deprecated location " + LEGACY_DESCRIPTOR_PATH
+                            + ". Please move it to " + DESCRIPTOR_PATH
+                            + " to avoid conflicts with Java ServiceLoader and JPMS.");
+                    }
                     return stream;
                 }
             }
