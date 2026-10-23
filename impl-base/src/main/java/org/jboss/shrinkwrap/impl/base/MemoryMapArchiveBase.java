@@ -16,6 +16,7 @@
  */
 package org.jboss.shrinkwrap.impl.base;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -187,17 +188,23 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 
         // Disallow if we're dealing with a non-empty dir
         if (contains(path)) {
+            final Node node = this.get(path);
             if (asset != null) {
                 // we're adding a file
-                final Node node = this.get(path);
                 if (node.getAsset() == null) {
-                    // Path exists as a dir, throw an exception
-                    throw new IllegalOverwriteException("Cannot add requested asset " + asset + " to path "
-                        + path.get() + " to archive " + this.getName() + "; path already exists as directory");
+                    // Path exists as a dir; tolerate a content-less entry denoting the very same
+                    // directory (see #promoteToDirectory), otherwise throw an exception
+                    if (!isEmpty(handledAsset)) {
+                        throw new IllegalOverwriteException("Cannot add requested asset " + asset + " to path "
+                            + path.get() + " to archive " + this.getName() + "; path already exists as directory");
+                    }
                 } else {
                     // path exists as a file, overwrite
                     addNewNode(path, handledAsset);
                 }
+            } else if (node.getAsset() != null && isEmpty(node.getAsset())) {
+                // we're adding a dir over a content-less entry of the same name; promote it
+                promoteToDirectory(path);
             }
 
             // we're adding dir, it exists, do nothing
@@ -500,10 +507,15 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
 
         // If the node exists, just return it
         if (node != null) {
-            // if the node is an asset, throw an exception
+            // if the node is an asset, throw an exception, unless the asset has no content at all,
+            // in which case it really denotes the directory we are about to create
             if (node.getAsset() != null) {
-                throw new IllegalArchivePathException("Could not create node under " + path.getParent()
-                    + ". It points to an asset.");
+                if (!isEmpty(node.getAsset())) {
+                    throw new IllegalArchivePathException("Could not create node under " + path.getParent()
+                        + ". It points to an asset.");
+                }
+
+                return promoteToDirectory(path);
             }
 
             return node;
@@ -522,5 +534,52 @@ public abstract class MemoryMapArchiveBase<T extends Archive<T>> extends Archive
         content.put(path, node);
 
         return node;
+    }
+
+    /**
+     * Replaces the content-less {@link Node} in the specified path with a directory {@link Node}.
+     * <p>
+     * Some archives contain a zero-length entry denoting a directory without the customary trailing slash, for
+     * instance {@code META-INF/versions/9} in multi-release JARs built by certain tools. Such an entry carries no
+     * content, so it is safe to represent it as the directory it stands for.
+     *
+     * @param path
+     *            The {@link ArchivePath} of the {@link Node} to replace
+     * @return The directory {@link Node} now placed in the specified path
+     */
+    private NodeImpl promoteToDirectory(final ArchivePath path) {
+        final NodeImpl directory = new NodeImpl(path);
+        content.put(path, directory);
+
+        final NodeImpl parentNode = obtainParent(path.getParent());
+        if (parentNode != null) {
+            // Nodes are equal by path, so this drops the replaced node
+            parentNode.removeChild(directory);
+            parentNode.addChild(directory);
+        }
+
+        return directory;
+    }
+
+    /**
+     * Determines whether the specified {@link Asset} provides any content.
+     *
+     * @param asset
+     *            The {@link Asset} to inspect, may be {@code null}
+     * @return {@code true} if the asset has no content, {@code false} otherwise or if the content can't be read
+     */
+    private static boolean isEmpty(final Asset asset) {
+        if (asset == null) {
+            return false;
+        }
+        // Reading a nested archive means exporting it, and it's never content-less anyway
+        if (asset instanceof ArchiveAsset) {
+            return false;
+        }
+        try (InputStream stream = asset.openStream()) {
+            return stream == null || stream.read() == -1;
+        } catch (final Exception e) {
+            return false;
+        }
     }
 }

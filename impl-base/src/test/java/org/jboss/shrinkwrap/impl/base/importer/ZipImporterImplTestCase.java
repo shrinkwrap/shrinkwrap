@@ -19,13 +19,17 @@ package org.jboss.shrinkwrap.impl.base.importer;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchiveFormat;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -37,9 +41,11 @@ import org.jboss.shrinkwrap.api.importer.ArchiveImportException;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.asset.ZipFileEntryAsset;
+import org.jboss.shrinkwrap.impl.base.io.IOUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
  * TestCase to verify the ZipImporter functionality.
@@ -57,6 +63,21 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
      * Delegate for performing ZIP content assertions
      */
     private static final ZipContentAssertionDelegate delegate = new ZipContentAssertionDelegate();
+
+    /**
+     * Content used for the versioned entry of the synthetic multi-release archives
+     */
+    private static final byte[] MULTI_RELEASE_CONTENT = "versioned".getBytes(StandardCharsets.UTF_8);
+
+    // -------------------------------------------------------------------------------------||
+    // Instance Members --------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+
+    /**
+     * Directory hosting the archives created by the tests
+     */
+    @TempDir
+    private File tempDir;
 
     // -------------------------------------------------------------------------------------||
     // Lifecycle --------------------------------------------------------------------------||
@@ -208,6 +229,108 @@ public class ZipImporterImplTestCase extends StreamImporterImplTestBase<ZipImpor
                         "Disk spill path should use ZipFileEntryAsset but found " + asset.getClass().getSimpleName());
             }
             Assertions.assertTrue(fileEntries > 0, "Archive should contain at least one file entry");
+        }
+    }
+
+    /**
+     * Ensures that a multi-release archive carrying a content-less entry for the versions directory, i.e. one
+     * written without the customary trailing slash, may be imported from a stream.
+     * <p>
+     * SHRINKWRAP-119
+     */
+    @Test
+    public void shouldImportMultiReleaseArchiveFromStream() throws Exception {
+        final File testFile = createMultiReleaseArchive("mr-stream.jar", false);
+
+        try (InputStream stream = Files.newInputStream(testFile.toPath())) {
+            final Archive<?> archive = ShrinkWrap.create(ZipImporter.class, "test.jar").importFrom(stream)
+                    .as(JavaArchive.class);
+
+            assertMultiReleaseContent(archive);
+        }
+    }
+
+    /**
+     * Ensures that a multi-release archive carrying a content-less entry for the versions directory, i.e. one
+     * written without the customary trailing slash, may be imported from a {@link File}.
+     * <p>
+     * SHRINKWRAP-119
+     */
+    @Test
+    public void shouldImportMultiReleaseArchiveFromFile() throws Exception {
+        final File testFile = createMultiReleaseArchive("mr-file.jar", false);
+
+        final Archive<?> archive = ShrinkWrap.create(ZipImporter.class, "test.jar").importFrom(testFile)
+                .as(JavaArchive.class);
+
+        assertMultiReleaseContent(archive);
+    }
+
+    /**
+     * Ensures that the content-less entry is tolerated regardless of whether it precedes or follows the directory
+     * entry it duplicates.
+     * <p>
+     * SHRINKWRAP-119
+     */
+    @Test
+    public void shouldImportMultiReleaseArchiveWithDirectoryEntryFirst() throws Exception {
+        final File testFile = createMultiReleaseArchive("mr-reordered.jar", true);
+
+        final Archive<?> archive = ShrinkWrap.create(ZipImporter.class, "test.jar").importFrom(testFile)
+                .as(JavaArchive.class);
+
+        assertMultiReleaseContent(archive);
+    }
+
+    /**
+     * Creates an archive mimicking a multi-release JAR which holds a zero-length {@code META-INF/versions/9} entry
+     * in addition to the {@code META-INF/versions/9/} directory entry.
+     *
+     * @param name
+     *            The name of the archive file to create
+     * @param directoryEntryFirst
+     *            Whether the directory entry is to be written before the content-less one
+     * @return The created archive file
+     */
+    private File createMultiReleaseArchive(final String name, final boolean directoryEntryFirst) throws IOException {
+        final File file = new File(tempDir, name);
+
+        try (ZipOutputStream out = new ZipOutputStream(Files.newOutputStream(file.toPath()))) {
+            writeEntry(out, "META-INF/MANIFEST.MF", "Manifest-Version: 1.0\nMulti-Release: true\n\n".getBytes(
+                    StandardCharsets.UTF_8));
+            writeEntry(out, "META-INF/versions/", new byte[0]);
+            if (directoryEntryFirst) {
+                writeEntry(out, "META-INF/versions/9/", new byte[0]);
+                writeEntry(out, "META-INF/versions/9", new byte[0]);
+            } else {
+                writeEntry(out, "META-INF/versions/9", new byte[0]);
+                writeEntry(out, "META-INF/versions/9/", new byte[0]);
+            }
+            writeEntry(out, "META-INF/versions/9/module-info.class", MULTI_RELEASE_CONTENT);
+        }
+
+        return file;
+    }
+
+    private void writeEntry(final ZipOutputStream out, final String name, final byte[] content) throws IOException {
+        out.putNextEntry(new ZipEntry(name));
+        out.write(content);
+        out.closeEntry();
+    }
+
+    private void assertMultiReleaseContent(final Archive<?> archive) throws IOException {
+        Assertions.assertNotNull(archive, "Should not return a null archive");
+
+        final ArchivePath versionPath = ArchivePaths.create("META-INF/versions/9");
+        final Node versionNode = archive.get(versionPath);
+        Assertions.assertNotNull(versionNode, "Versions directory should have been imported");
+        Assertions.assertNull(versionNode.getAsset(), "Versions directory should not hold any asset");
+
+        final Node versioned = archive.get("META-INF/versions/9/module-info.class");
+        Assertions.assertNotNull(versioned, "Versioned content should have been imported");
+        try (InputStream content = versioned.getAsset().openStream()) {
+            Assertions.assertArrayEquals(MULTI_RELEASE_CONTENT, IOUtil.asByteArray(content),
+                    "Versioned content should have been imported intact");
         }
     }
 

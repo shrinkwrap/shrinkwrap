@@ -972,6 +972,61 @@ public abstract class ArchiveTestBase<T extends Archive<T>> {
     }
 
     /**
+     * Ensure that a content-less asset is turned into a directory once content is added underneath it
+     * <p>
+     * SHRINKWRAP-119
+     */
+    @Test
+    public void shouldPromoteEmptyAssetToDirectory() {
+        Archive<T> archive = getArchive();
+
+        // add an empty asset, as found in archives holding a directory entry without a trailing slash
+        archive.add(EmptyAsset.INSTANCE, "/somewhere");
+
+        archive.add(new ClassLoaderAsset(NAME_TEST_PROPERTIES), "/somewhere/test.properties");
+
+        Assertions.assertNull(archive.get("/somewhere").getAsset(),
+                "Empty asset should have been promoted to a directory");
+        Assertions.assertNotNull(archive.get("/somewhere/test.properties").getAsset(),
+                "Nested asset should have been added");
+    }
+
+    /**
+     * Ensure that a content-less asset added on top of an existing directory leaves the directory intact
+     * <p>
+     * SHRINKWRAP-119
+     */
+    @Test
+    public void shouldNotOverwriteDirectoryWithEmptyAsset() {
+        Archive<T> archive = getArchive();
+
+        archive.add(new ClassLoaderAsset(NAME_TEST_PROPERTIES), "/somewhere/test.properties");
+
+        archive.add(EmptyAsset.INSTANCE, "/somewhere");
+
+        Assertions.assertNull(archive.get("/somewhere").getAsset(), "Directory should have been left intact");
+        Assertions.assertNotNull(archive.get("/somewhere/test.properties").getAsset(),
+                "Nested asset should have been retained");
+    }
+
+    /**
+     * Ensure that a content-less directory entry is tolerated when it duplicates an existing directory
+     * <p>
+     * SHRINKWRAP-119
+     */
+    @Test
+    public void shouldPromoteEmptyAssetToDirectoryWhenAddedAsDirectory() {
+        Archive<T> archive = getArchive();
+
+        archive.add(EmptyAsset.INSTANCE, "/somewhere");
+
+        archive.addAsDirectory("/somewhere");
+
+        Assertions.assertNull(archive.get("/somewhere").getAsset(),
+                "Empty asset should have been promoted to a directory");
+    }
+
+    /**
      * Ensure merging content requires a source archive
      *
      */
